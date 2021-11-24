@@ -1,552 +1,550 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Horse Link</title>
+    <meta name="description" content="Coming Soon" />
+    <style type="text/css">
+      html,
+      body,
+      p,
+      ol,
+      ul,
+      li,
+      dl,
+      dt,
+      dd,
+      blockquote,
+      figure,
+      fieldset,
+      legend,
+      textarea,
+      pre,
+      iframe,
+      hr,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        margin: 0;
+        padding: 0;
+      }
 
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Horse Link</title>
-  <meta name="description" content="Comming Soon">
-  <style type="text/css">
-    html,
-    body,
-    p,
-    ol,
-    ul,
-    li,
-    dl,
-    dt,
-    dd,
-    blockquote,
-    figure,
-    fieldset,
-    legend,
-    textarea,
-    pre,
-    iframe,
-    hr,
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-      margin: 0;
-      padding: 0
-    }
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-size: 100%;
+        font-weight: normal;
+      }
 
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-      font-size: 100%;
-      font-weight: normal
-    }
+      ul {
+        list-style: none;
+      }
 
-    ul {
-      list-style: none
-    }
+      button,
+      input,
+      select {
+        margin: 0;
+      }
 
-    button,
-    input,
-    select {
-      margin: 0
-    }
+      html {
+        box-sizing: border-box;
+      }
 
-    html {
-      box-sizing: border-box
-    }
+      *,
+      *::before,
+      *::after {
+        box-sizing: inherit;
+      }
 
-    *,
-    *::before,
-    *::after {
-      box-sizing: inherit
-    }
+      img,
+      video {
+        height: auto;
+        max-width: 100%;
+      }
 
-    img,
-    video {
-      height: auto;
-      max-width: 100%
-    }
+      iframe {
+        border: 0;
+      }
 
-    iframe {
-      border: 0
-    }
+      table {
+        border-collapse: collapse;
+        border-spacing: 0;
+      }
 
-    table {
-      border-collapse: collapse;
-      border-spacing: 0
-    }
+      td,
+      th {
+        padding: 0;
+      }
 
-    td,
-    th {
-      padding: 0
-    }
-
-    body {
-      background: #60BF6E;
-      font-family: museo-sans-rounded, sans-serif;
-      font-weight: 500
-    }
-
-    .paragraph,
-    .site-header .title {
-      width: 100%;
-      max-width: 45rem;
-      line-height: 1.35;
-      font-size: 1.125rem;
-      margin-bottom: 1.2em
-    }
-
-    @media (min-width: 900px) {
+      body {
+        background: #60bf6e;
+        font-family: museo-sans-rounded, sans-serif;
+        font-weight: 500;
+      }
 
       .paragraph,
       .site-header .title {
-        font-size: 1.25rem
+        width: 100%;
+        max-width: 45rem;
+        line-height: 1.35;
+        font-size: 1.125rem;
+        margin-bottom: 1.2em;
       }
-    }
 
-    .paragraph a,
-    .site-header .title a {
-      color: inherit
-    }
+      @media (min-width: 900px) {
+        .paragraph,
+        .site-header .title {
+          font-size: 1.25rem;
+        }
+      }
 
-    .paragraph+.buttons-container,
-    .site-header .title+.buttons-container {
-      margin-top: .5rem
-    }
+      .paragraph a,
+      .site-header .title a {
+        color: inherit;
+      }
 
-    .centered {
-      text-align: center
-    }
+      .paragraph + .buttons-container,
+      .site-header .title + .buttons-container {
+        margin-top: 0.5rem;
+      }
 
-    .h2,
-    .footer-out,
-    .outro-paragraph {
-      width: 100%;
-      max-width: 45rem;
-      font-size: 1.5rem;
-      line-height: 1.2
-    }
-
-    @media (min-width: 900px) {
+      .centered {
+        text-align: center;
+      }
 
       .h2,
       .footer-out,
       .outro-paragraph {
-        font-size: 1.75em
+        width: 100%;
+        max-width: 45rem;
+        font-size: 1.5rem;
+        line-height: 1.2;
       }
-    }
 
-    .site-header {
-      display: flex;
-      justify-content: space-between;
-      flex-direction: column;
-      align-items: center;
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 2rem
-    }
+      @media (min-width: 900px) {
+        .h2,
+        .footer-out,
+        .outro-paragraph {
+          font-size: 1.75em;
+        }
+      }
 
-    @media (min-width: 900px) {
       .site-header {
-        flex-direction: row
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        align-items: center;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 2rem;
       }
-    }
 
-    .site-header .title {
-      text-transform: uppercase;
-      font-weight: bold;
-      margin-bottom: 2rem;
-      width: auto
-    }
+      @media (min-width: 900px) {
+        .site-header {
+          flex-direction: row;
+        }
+      }
 
-    @media (min-width: 900px) {
       .site-header .title {
-        margin-bottom: 0
+        text-transform: uppercase;
+        font-weight: bold;
+        margin-bottom: 2rem;
+        width: auto;
       }
-    }
 
-    .site-header .button {
-      flex: none;
-      font-size: .9rem;
-      margin-left: 0
-    }
+      @media (min-width: 900px) {
+        .site-header .title {
+          margin-bottom: 0;
+        }
+      }
 
-    @media (min-width: 900px) {
       .site-header .button {
-        font-size: 1rem
+        flex: none;
+        font-size: 0.9rem;
+        margin-left: 0;
       }
-    }
 
-    .site-header .button:last-child {
-      margin-left: 0
-    }
+      @media (min-width: 900px) {
+        .site-header .button {
+          font-size: 1rem;
+        }
+      }
 
-    .outer-container {
-      display: flex;
-      flex-direction: column;
-      max-width: 65rem;
-      margin: 0 auto;
-      align-items: center;
-      padding: 1rem 0
-    }
+      .site-header .button:last-child {
+        margin-left: 0;
+      }
 
-    @media (min-width: 900px) {
       .outer-container {
-        padding: 4rem 0
+        display: flex;
+        flex-direction: column;
+        max-width: 65rem;
+        margin: 0 auto;
+        align-items: center;
+        padding: 1rem 0;
       }
-    }
 
-    .header-container {
-      background: url("/assets/header_squiggle.svg") no-repeat;
-      background-position: 25% 50%;
-      background-size: contain;
-      padding: 1rem 0;
-      width: 100%
-    }
+      @media (min-width: 900px) {
+        .outer-container {
+          padding: 4rem 0;
+        }
+      }
 
-    @media (min-width: 900px) {
       .header-container {
-        padding: 4rem 0
+        background: url("/assets/header_squiggle.svg") no-repeat;
+        background-position: 25% 50%;
+        background-size: contain;
+        padding: 1rem 0;
+        width: 100%;
       }
-    }
 
-    .h1 {
-      display: flex;
-      flex-direction: column;
-      max-width: 45rem;
-      width: 100%;
-      font-family: program-narrow, sans-serif;
-      font-weight: 900;
-      font-size: 8.25rem;
-      text-transform: uppercase;
-      color: #0A2E36;
-      line-height: .7;
-      font-size: clamp(8.25rem, 24rem, 45vw)
-    }
+      @media (min-width: 900px) {
+        .header-container {
+          padding: 4rem 0;
+        }
+      }
 
-    @media (min-width: 900px) {
       .h1 {
-        font-size: 24rem
+        display: flex;
+        flex-direction: column;
+        max-width: 45rem;
+        width: 100%;
+        font-family: program-narrow, sans-serif;
+        font-weight: 900;
+        font-size: 8.25rem;
+        text-transform: uppercase;
+        color: #0a2e36;
+        line-height: 0.7;
+        font-size: clamp(8.25rem, 24rem, 45vw);
       }
-    }
 
-    .h1-big {
-      font-size: 1.04em
-    }
+      @media (min-width: 900px) {
+        .h1 {
+          font-size: 24rem;
+        }
+      }
 
-    .h1-medium {
-      font-size: .72em
-    }
+      .h1-big {
+        font-size: 1.04em;
+      }
 
-    .h1-small {
-      font-size: .508em
-    }
+      .h1-medium {
+        font-size: 0.72em;
+      }
 
-    .inner {
-      max-width: 45rem;
-      margin: 0 auto
-    }
+      .h1-small {
+        font-size: 0.508em;
+      }
 
-    .footer-component {
-      padding: 4rem 1rem 2rem;
-      background: #000000
-    }
+      .inner {
+        max-width: 45rem;
+        margin: 0 auto;
+      }
 
-    .intro-paragraph,
-    .quote-text {
-      font-size: 1.5rem;
-      line-height: 1.2;
-      max-width: 45rem;
-      margin-bottom: 1.2em
-    }
-
-    @media (min-width: 900px) {
+      .footer-component {
+        padding: 4rem 1rem 2rem;
+        background: #000000;
+      }
 
       .intro-paragraph,
       .quote-text {
-        font-size: 4.8rem
+        font-size: 1.5rem;
+        line-height: 1.2;
+        max-width: 45rem;
+        margin-bottom: 1.2em;
       }
-    }
 
-    .outro-paragraph {
-      text-align: center
-    }
+      @media (min-width: 900px) {
+        .intro-paragraph,
+        .quote-text {
+          font-size: 4.8rem;
+        }
+      }
 
-    .wrapper {
-      width: 100%;
-      padding: 1rem 2rem;
-      margin: 0 auto
-    }
+      .outro-paragraph {
+        text-align: center;
+      }
 
-    @media (min-width: 900px) {
       .wrapper {
-        padding: 4rem 0 0
+        width: 100%;
+        padding: 1rem 2rem;
+        margin: 0 auto;
       }
-    }
 
-    .quote {
-      display: flex;
-      flex-direction: column;
-      background: url("/assets/quote_squiggle.svg") no-repeat;
-      background-size: contain;
-      background-position: 50%;
-      align-items: center;
-      margin: 3rem 0
-    }
+      @media (min-width: 900px) {
+        .wrapper {
+          padding: 4rem 0 0;
+        }
+      }
 
-    @media (min-width: 900px) {
       .quote {
-        flex-direction: row;
-        max-width: 90%
+        display: flex;
+        flex-direction: column;
+        background: url("/assets/quote_squiggle.svg") no-repeat;
+        background-size: contain;
+        background-position: 50%;
+        align-items: center;
+        margin: 3rem 0;
       }
-    }
 
-    .quote-image {
-      display: block;
-      border-radius: 50%;
-      width: 90vw;
-      height: auto;
-      max-width: 15rem;
-      max-height: 15rem;
-      flex: 0 1 20rem;
-      margin-bottom: 1rem
-    }
+      @media (min-width: 900px) {
+        .quote {
+          flex-direction: row;
+          max-width: 90%;
+        }
+      }
 
-    @media (min-width: 900px) {
       .quote-image {
-        margin-right: 3rem;
-        max-width: 20rem;
-        max-height: 20rem;
-        margin-bottom: 0
+        display: block;
+        border-radius: 50%;
+        width: 90vw;
+        height: auto;
+        max-width: 15rem;
+        max-height: 15rem;
+        flex: 0 1 20rem;
+        margin-bottom: 1rem;
       }
-    }
 
-    .quote-text {
-      text-align: center
-    }
+      @media (min-width: 900px) {
+        .quote-image {
+          margin-right: 3rem;
+          max-width: 20rem;
+          max-height: 20rem;
+          margin-bottom: 0;
+        }
+      }
 
-    @media (min-width: 900px) {
       .quote-text {
-        padding-right: 8rem;
-        text-align: left
+        text-align: center;
       }
-    }
 
-    .quote-text__bold {
-      font-weight: 900
-    }
+      @media (min-width: 900px) {
+        .quote-text {
+          padding-right: 8rem;
+          text-align: left;
+        }
+      }
 
-    .quote-text__thin {
-      font-weight: 200
-    }
+      .quote-text__bold {
+        font-weight: 900;
+      }
 
-    .buttons-container {
-      width: 100%;
-      max-width: 45rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      margin: 2rem 0
-    }
+      .quote-text__thin {
+        font-weight: 200;
+      }
 
-    @media (min-width: 900px) {
       .buttons-container {
-        flex-direction: row
+        width: 100%;
+        max-width: 45rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 2rem 0;
       }
-    }
 
-    .buttons-container .button {
-      max-width: 25rem
-    }
-
-    @media (min-width: 900px) {
-      .buttons-container .button:first-child {
-        margin-bottom: 0;
-        margin-right: 2rem
+      @media (min-width: 900px) {
+        .buttons-container {
+          flex-direction: row;
+        }
       }
-    }
 
-    @media (min-width: 900px) {
-      .buttons-container .button:last-child {
-        margin-left: 2rem
+      .buttons-container .button {
+        max-width: 25rem;
       }
-    }
 
-    .heart-text {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center
-    }
+      @media (min-width: 900px) {
+        .buttons-container .button:first-child {
+          margin-bottom: 0;
+          margin-right: 2rem;
+        }
+      }
 
-    .heart-text:before {
-      content: '';
-      display: block;
-      width: 1em;
-      height: 1em;
-      background: url("/assets/icon_heart.svg") no-repeat;
-      margin-right: .5em
-    }
+      @media (min-width: 900px) {
+        .buttons-container .button:last-child {
+          margin-left: 2rem;
+        }
+      }
 
-    .button {
-      flex: 1;
-      display: inline-block;
-      border: 4px solid #061D22;
-      border-radius: 1.5rem;
-      background: #000000;
-      color: white;
-      padding: .75rem 3rem;
-      text-decoration: none;
-      text-align: center;
-      font-size: 1.125rem
-    }
+      .heart-text {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+      }
 
-    @media (min-width: 900px) {
+      .heart-text:before {
+        content: "";
+        display: block;
+        width: 1em;
+        height: 1em;
+        background: url("/assets/icon_heart.svg") no-repeat;
+        margin-right: 0.5em;
+      }
+
       .button {
-        font-size: 1.25rem
+        flex: 1;
+        display: inline-block;
+        border: 4px solid #061d22;
+        border-radius: 1.5rem;
+        background: #000000;
+        color: white;
+        padding: 0.75rem 3rem;
+        text-decoration: none;
+        text-align: center;
+        font-size: 1.125rem;
       }
-    }
 
-    .button__ghost {
-      background: #60BF6E;
-      color: #000000
-    }
+      @media (min-width: 900px) {
+        .button {
+          font-size: 1.25rem;
+        }
+      }
 
-    .button .download-text {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center
-    }
+      .button__ghost {
+        background: #60bf6e;
+        color: #000000;
+      }
 
-    .button .download-text:before {
-      content: '';
-      display: block;
-      width: 1em;
-      height: 1em;
-      background: url("/assets/icon_download.svg") no-repeat;
-      margin-right: .5em
-    }
+      .button .download-text {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+      }
 
-    .footer-header {
-      color: white;
-      max-width: 45rem;
-      margin: 0 auto;
-      text-align: center
-    }
+      .button .download-text:before {
+        content: "";
+        display: block;
+        width: 1em;
+        height: 1em;
+        background: url("/assets/icon_download.svg") no-repeat;
+        margin-right: 0.5em;
+      }
 
-    .footer-header a {
-      color: inherit
-    }
+      .footer-header {
+        color: white;
+        max-width: 45rem;
+        margin: 0 auto;
+        text-align: center;
+      }
 
-    .author-list {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      max-width: 45rem;
-      margin: 0 auto;
-      padding: 4rem 0
-    }
+      .footer-header a {
+        color: inherit;
+      }
 
-    .author-list li {
-      flex: 0 0 100%;
-      text-align: center;
-      color: #9BB2B7;
-      margin: 2rem 0
-    }
+      .author-list {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        max-width: 45rem;
+        margin: 0 auto;
+        padding: 4rem 0;
+      }
 
-    @media (min-width: 600px) {
       .author-list li {
-        flex: 0 0 50%
+        flex: 0 0 100%;
+        text-align: center;
+        color: #9bb2b7;
+        margin: 2rem 0;
       }
-    }
 
-    @media (min-width: 900px) {
-      .author-list li {
-        flex: 0 0 25%
+      @media (min-width: 600px) {
+        .author-list li {
+          flex: 0 0 50%;
+        }
       }
-    }
 
-    .author-list a {
-      color: inherit;
-      text-decoration: none
-    }
-
-    .creds {
-      color: white;
-      text-align: center;
-      margin: 0 auto
-    }
-
-    .creds a {
-      color: inherit
-    }
-
-    .footer-out {
-      width: 100%;
-      max-width: 45rem;
-      margin: 0 auto 2rem;
-      background: #ffffff;
-      border-radius: .5rem;
-      padding: 1rem;
-      text-align: center
-    }
-
-    .footer-out a {
-      color: inherit
-    }
-  </style>
-  <meta property="og:url" content="https://horse.link">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Horse Link">
-  <meta property="og:description" content="Comming Soon">
-  <meta property="og:image" content="/images/horse2.png">
-
-  <style>
-    @media print {
-      #ghostery-tracker-tally {
-        display: none !important
+      @media (min-width: 900px) {
+        .author-list li {
+          flex: 0 0 25%;
+        }
       }
-    }
-  </style>
-</head>
 
-<body>
+      .author-list a {
+        color: inherit;
+        text-decoration: none;
+      }
 
-  <main class="wrapper">
-    <div class="header-container outer-container">
-      <img loading="lazy" alt="" src="./images/horse-link.png">
-    </div>
-    <div class="outer-container">
-      <img loading="lazy" width="700" alt="" src="./images/horse2.png">
-    </div>
-    <section class="outer-container">
-      <h1 class="intro-paragraph">
-        Coming soon.
-      </h1>
-      <p class="paragraph">
-        Aenean in dictum massa. Integer posuere erat lorem, in commodo eros fringilla non. Donec
-        ullamcorper porta tortor a dapibus. Maecenas volutpat augue quis tortor commodo eleifend. Mauris fermentum
-        imperdiet diam sed sodales.
-      </p>
-      <p class="paragraph">
-        Aenean et rhoncus risus. Curabitur in libero ac elit varius vestibulum non vitae
-        nisi. Nullam ut sem tincidunt, rutrum enim vel, accumsan tortor. Nam blandit mollis lacus eget ullamcorper.
-        Morbi pulvinar erat rhoncus diam luctus, ac congue velit fringilla.
-      </p>
-      <div class="buttons-container">
-        <a target="_blank" href="https://dltx.io/" class="button button__ghost"><span class="download-text">Download
-            Whitepaper</span></a>
+      .creds {
+        color: white;
+        text-align: center;
+        margin: 0 auto;
+      }
+
+      .creds a {
+        color: inherit;
+      }
+
+      .footer-out {
+        width: 100%;
+        max-width: 45rem;
+        margin: 0 auto 2rem;
+        background: #ffffff;
+        border-radius: 0.5rem;
+        padding: 1rem;
+        text-align: center;
+      }
+
+      .footer-out a {
+        color: inherit;
+      }
+    </style>
+    <meta property="og:url" content="https://horse.link" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Horse Link" />
+    <meta property="og:description" content="Coming Soon" />
+    <meta property="og:image" content="/images/horse.png" />
+
+    <style>
+      @media print {
+        #ghostery-tracker-tally {
+          display: none !important;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <main class="wrapper">
+      <div class="header-container outer-container">
+        <img loading="lazy" alt="Lets go!" src="./images/horse-link.png" />
       </div>
-      <div class="buttons-container">
+      <div class="outer-container">
+        <img loading="lazy" width="700" alt="Giddy up" src="./images/horse.png" />
       </div>
-    </section>
-  </main>
-<!-- 
+      <section class="outer-container">
+        <h1 class="intro-paragraph">Coming soon.</h1>
+        <p class="paragraph">
+          Aenean in dictum massa. Integer posuere erat lorem, in commodo eros
+          fringilla non. Donec ullamcorper porta tortor a dapibus. Maecenas
+          volutpat augue quis tortor commodo eleifend. Mauris fermentum
+          imperdiet diam sed sodales.
+        </p>
+        <p class="paragraph">
+          Aenean et rhoncus risus. Curabitur in libero ac elit varius vestibulum
+          non vitae nisi. Nullam ut sem tincidunt, rutrum enim vel, accumsan
+          tortor. Nam blandit mollis lacus eget ullamcorper. Morbi pulvinar erat
+          rhoncus diam luctus, ac congue velit fringilla.
+        </p>
+        <div class="buttons-container">
+          <a
+            target="_blank"
+            href="https://dltx.io/"
+            class="button button__ghost"
+            ><span class="download-text">Download Whitepaper</span></a
+          >
+        </div>
+        <div class="buttons-container"></div>
+      </section>
+    </main>
+    <!-- 
   <footer class="footer-component">
 
     <h2 class="footer-out">
@@ -555,7 +553,5 @@
     </h2>
     <p class="paragraph creds">Built with ♥ by <a href="https://www.dltx.io/" rel="nofollow">DLTx</a></p>
   </footer> -->
-
-</body>
-
+  </body>
 </html>
