@@ -487,3 +487,6 @@ html,
       .footer-out a {
         color: inherit;
       }
+      a:hover {
+      background-color: #ffffff;
+      }
