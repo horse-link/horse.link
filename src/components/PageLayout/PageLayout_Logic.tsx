@@ -1,6 +1,4 @@
-import { useEffect } from "react";
-import { useHistory, useLocation } from "react-router";
-import useAuth from "../../hooks/useAuth";
+import { useLocation } from "react-router";
 import PageLayoutView from "./PayLayout_View";
 
 type Props = {
@@ -9,18 +7,11 @@ type Props = {
 };
 
 const PageLayout: React.FC<Props> = props => {
-  const { user, loading: loadingAuth } = useAuth();
-  const history = useHistory();
   const location = useLocation();
 
-  useEffect(() => {
-    if (props.requiresAuth && !user && !loadingAuth) {
-      history.push("/login");
-    }
-  }, [user, loadingAuth, props.requiresAuth]);
 
   return (
-    <PageLayoutView loading={false} user={user} currentPath={location.pathname}>
+    <PageLayoutView loading={false} currentPath={location.pathname}>
       {props.children}
     </PageLayoutView>
   );

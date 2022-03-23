@@ -12,7 +12,7 @@ const DashboardView: React.FC<Props> = () => {
     { name: "Collateral to Debt Ratio", stat: "201.19%" }
   ];
   return (
-    <PageLayout requiresAuth={true}>
+    <PageLayout requiresAuth={false}>
       <div className="mb-6">
         <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
           {stats.map(item => (

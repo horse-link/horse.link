@@ -25,11 +25,10 @@ const userNavigation = [
 type Props = {
   loading: boolean;
   currentPath: string;
-  user: any | undefined;
 };
 
 const PageLayoutView: React.FC<Props> = props => {
-  if (!props.user || props.loading) {
+  if (props.loading) {
     return (
       <div className="min-h-screen flex bg-white">
         <div className="m-auto">
@@ -164,14 +163,6 @@ const PageLayoutView: React.FC<Props> = props => {
                       className="block h-6 w-6 hover:text-gray-500"
                       aria-hidden="true"
                     />
-                  </div>
-                  <div className="ml-3">
-                    <div className="text-base font-medium text-gray-800">
-                      {props.user?.firstName + " " + props.user?.lastName}
-                    </div>
-                    <div className="text-sm font-medium text-gray-500">
-                      {props.user?.email}
-                    </div>
                   </div>
                   <button
                     type="button"
