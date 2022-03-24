@@ -29,8 +29,8 @@ const PageLayoutView: React.FC<Props> = props => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <Disclosure as="nav" className="bg-white border-b border-gray-200">
+    <div className="min-h-screen bg-green-500">
+      <Disclosure as="nav" className="bg-white border-b border-green-200">
         {({ open }) => (
           <>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

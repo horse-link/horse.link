@@ -3,36 +3,36 @@ import { PageLayout } from "../../components";
 import moment from "moment";
 import { Link } from "react-router-dom";
 
+
 type Props = {};
 
 const DashboardView: React.FC<Props> = () => {
   const stats = [
     { name: "Total Liquidity", stat: "$71,897.87" },
-    { name: "Total Winnings", stat: "$21,829.16" },
-    { name: "Liquidity to Winnings Ratio", stat: "329.36%" }
+    { name: "In Play", stat: "$21,829.16" },
+    { name: "Perfomace", stat: "329.36%" }
   ];
   return (
     <PageLayout requiresAuth={false}>
       <div className="mb-6">
-      <div className="container-fluid px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
-        <h1 className="mb-3 text-2xl">
-          Horse Link
-        </h1>
-        {/*<img loading="lazy" alt="Horse:Link" src="../../../public/images/horse-link.png" />*/}
+      <div className="container-fluid px-4 py-5 bg-green-700 shadow rounded-lg overflow-hidden sm:p-6">
+        <div className="flex justify-between">
+          <img loading="lazy" alt="Horse-Link" src="/images/horse-link.png" className="mt-2 mb-8"/>
+          <img loading="lazy" alt="Horse" src="/images/horse.png" className="h-20"/>
+        </div>
         <p className="text-xs my-2">
-          Horse Link is a privacy focused crypto sports betting site. We do not
-          capture any personal infomation and only ask our punters to supply
-          a payout address. We do not hold any of our customers funds and
-          payout immediately once bets have been confirmed on the
-          blockchain.
+          Defi’s global racing liquidity market
         </p>
         <p className="text-xs my-2">
-          We encourage all our punters to use PGP encrypted mail should you
-          need to contact us. Our PGP public key can be found at MIT or protonmail.
+          Aenean in dictum massa. Integer posuere erat lorem, in commodo eros fringilla non. Donec ullamcorper porta tortor a dapibus. Maecenas volutpat augue quis tortor commodo eleifend. Mauris fermentum imperdiet diam sed sodales.
         </p>
         <p className="text-xs my-2">
-          In order to use the site, you must add a payout address which is stored in your browsers local storage.
+          Aenean et rhoncus risus. Curabitur in libero ac elit varius vestibulum non vitae nisi. Nullam ut sem tincidunt, rutrum enim vel, accumsan tortor. Nam blandit mollis lacus eget ullamcorper. Morbi pulvinar erat rhoncus diam luctus, ac congue velit fringilla
         </p>
+
+        <a href="https://github.com/horse-link/whitepaper" target="_blank" className="inline-block bg-indigo-500 text-white text-sm px-4 py-2 rounded-full my-2" rel="noreferrer">
+          Download Whitepaper
+        </a>
       </div>
         <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
           {stats.map(item => (
@@ -138,7 +138,7 @@ const Table: React.FC = () => {
       return "Completed";
     }
 
-    return _time.toString();
+    return `${_time.toString()} hr`;
   }
 
   return (
@@ -193,16 +193,17 @@ const Table: React.FC = () => {
                   { meets.map(meet => (
                     <tr key={meet.location}>
                       <td className="px-3 py-4 whitespace-nowrap">{meet.name} ({meet.location})</td>
-                      
                       { meet.races.map(race => (
-                        <td className="px-3 py-4 whitespace-nowrap text-sm">
-                          <Link to={{ pathname: `/horses/${meet.mnemonic}/${race.index}` }}>R{race.index}</Link>
+                        <td className="px-3 py-4 whitespace-nowrap text-sm hover:bg-gray-200">
+                          <Link to={{ pathname: `/horses/${meet.name}/${race.index}` }}>
+                          R{race.index}
                           <br></br>
                           {
-                            `${asLocaltime(race.time)} hr`
+                            asLocaltime(race.time)
                           }
                           <br></br>
                           {moment.utc(race.time).local().format("H:mm")}
+                          </Link>
                         </td>
                       ))}
 
