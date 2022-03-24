@@ -86,13 +86,19 @@ const HorseRaceView: React.FC<Props> = () => {
   const { name, id } = useParams();
   // TODO: Add check to see if race is complete
   // If race is complete show race results data instead
-  //const { data, error } = useSWR(`/horseracing/${mnemonic}/${id}`);
+  //const { data, error } = useSWR(`/horseracing/${name}/${id}`);
   return (
     <PageLayout requiresAuth={false}>
-      <div className="mb-6">
-      Track: {name}
-      <br />
-      Race id: {id}
+      <div className="flex mb-6 p-2 shadow overflow-hidden border-b bg-white border-gray-200 sm:rounded-lg justify-around">
+        <h1>
+          Track: {name}
+        </h1>
+        <h1>
+          Race id: {id}
+        </h1>
+        <h1>
+          Date: {moment().format("DD-MM-YY")}
+        </h1>
       </div>
       <div className="flex flex-col">
         <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">

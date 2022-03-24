@@ -4,9 +4,12 @@ import moment from "moment";
 import { Link } from "react-router-dom";
 
 
-type Props = {};
+type Props = {
+  asLocaltime: (raceTime: number) => string;
+};
 
-const DashboardView: React.FC<Props> = () => {
+const DashboardView: React.FC<Props> = (props: Props) => {
+  const { asLocaltime } = props;
   const stats = [
     { name: "Total Liquidity", stat: "$71,897.87" },
     { name: "In Play", stat: "$21,829.16" },
@@ -16,7 +19,7 @@ const DashboardView: React.FC<Props> = () => {
     <PageLayout requiresAuth={false}>
       <div className="mb-6">
       <div className="container-fluid px-4 py-5 bg-green-700 shadow rounded-lg overflow-hidden sm:p-6">
-        <div className="flex justify-between">
+        <div className="flex flex-wrap justify-between">
           <img loading="lazy" alt="Horse-Link" src="/images/horse-link.png" className="mt-2 mb-8"/>
           <img loading="lazy" alt="Horse" src="/images/horse.png" className="h-20"/>
         </div>
@@ -51,13 +54,14 @@ const DashboardView: React.FC<Props> = () => {
         </dl>
       </div>
       <div className="grid grid-cols-2 gap-4 items-start lg:gap-8">
-        <Table />
+        <Table asLocaltime={asLocaltime}/>
       </div>
     </PageLayout>
   );
 };
 
-const Table: React.FC = () => {
+const Table: React.FC<Props> = (props: Props) => {
+  const { asLocaltime } = props;
   const meets = [
     {
       name: "Ipswich",
@@ -130,17 +134,6 @@ const Table: React.FC = () => {
     },
   ];
 
-  const asLocaltime = (raceTime: number) => {
-    
-    const _time = moment.utc(raceTime).diff(moment(), "h");
-
-    if (Date.now() / 1000 > moment.utc(raceTime).unix()) {
-      return "Completed";
-    }
-
-    return `${_time.toString()} hr`;
-  }
-
   return (
     <div className="col-span-2">
       <h3 className="text-lg mb-3 font-medium text-gray-900">Meets</h3>
@@ -148,7 +141,7 @@ const Table: React.FC = () => {
         <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
             <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-              <table className="min-w-full divide-y divide-gray-200">
+              <table className="min-w-full divide-y divide-gray-200 bg-white">
                 <thead className="bg-gray-50">
                   <tr>
                     <th
