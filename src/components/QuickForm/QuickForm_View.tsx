@@ -1,53 +1,65 @@
-import { Formik, Form } from "formik";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
-import { Button } from "..";
+import { Form, Formik } from "formik";
+import React from "react";
+
+import Button from "../Button/Button_View";
+import Loader from "../Loader/Loader_View";
 
 type Props<T> = {
   initialValues: T;
   onSubmit(data: T): void | Promise<void>;
-  validator(data: T): Partial<{ [key in keyof T]: string }>;
-  error: string | undefined;
+  validationSchema?: any;
+  error: string | string[] | undefined;
   children: React.ReactNode;
   buttonTitle: string;
   disableButton?: boolean;
   formClassName?: string;
   disabled?: boolean;
+  validateOnMount?: boolean;
+  enableReinitialize?: boolean;
 };
 
-const QuickForm = <T extends {}>(props: Props<T>) => {
+const QuickForm = <T extends Record<string, unknown>>(props: Props<T>) => {
   return (
     <Formik<T>
       initialValues={props.initialValues}
-      validate={props.validator}
       onSubmit={data => props.onSubmit(data)}
       validateOnChange={true}
+      validateOnMount={props.validateOnMount}
+      enableReinitialize={props.enableReinitialize}
+      validationSchema={props.validationSchema}
     >
-      {({ isSubmitting }) => (
-        <Form className={props.formClassName}>
-          {props.children}
-          {props.error && (
-            <div className="flex rounded-md bg-yellow-50 p-4 mb-6">
-              <FontAwesomeIcon
-                icon={faExclamationCircle}
-                className="h-5 w-5 text-yellow-400"
-              />
-              <div className="ml-3">
-                <h3 className="text-sm font-medium text-yellow-800">
-                  {props.error}
-                </h3>
-              </div>
-            </div>
-          )}
+      {({ isSubmitting, isValid }) => {
+        return (
+          <Form className={props.formClassName}>
+            {props.children}
+            {props.error && (
+              <div className="flex rounded-xl bg-yellow-50 p-2 mb-6">
 
-          <Button
-            title={props.buttonTitle}
-            type="submit"
-            loading={isSubmitting}
-            disabled={props.disabled}
-          />
-        </Form>
-      )}
+                <div className="ml-3">
+                  <h4 className="text-sm font-medium text-yellow-800">
+                    {props.error}
+                  </h4>
+                </div>
+              </div>
+            )}
+            {isSubmitting ? (
+              <div className=" flex justify-center">
+                <Loader className="text-lg " />
+              </div>
+            ) : (
+              <Button
+                type="submit"
+                className="text-white font-semibold blue-background w-full"
+                loading={isSubmitting}
+                disabled={!isValid || props.disableButton}
+              >
+                {" "}
+                {props.buttonTitle}
+              </Button>
+            )}
+          </Form>
+        );
+      }}
     </Formik>
   );
 };
