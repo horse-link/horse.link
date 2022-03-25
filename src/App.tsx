@@ -1,5 +1,4 @@
 import { SWRConfig } from "swr";
-import { AuthProvider } from "./providers/Auth";
 import { ApiProvider } from "./providers/Api";
 import Navigation from "./Navigation";
 import { GlobalErrorProvider } from "./providers/GlobalError";
@@ -13,9 +12,7 @@ function App() {
     <SWRConfig value={swrConfig}>
       <GlobalErrorProvider>
         <ApiProvider>
-          <AuthProvider>
-            <Navigation />
-          </AuthProvider>
+          <Navigation />
         </ApiProvider>
       </GlobalErrorProvider>
     </SWRConfig>
