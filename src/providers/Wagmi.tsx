@@ -15,22 +15,20 @@ const defaultChain = chain.rinkeby; // Change to mainnet for production
 // Set up connectors
 type ConnectorsConfig = { chainId?: number };
 const connectors = ({ chainId }: ConnectorsConfig) => {
-  return [
-    new InjectedConnector({ chains }),
-  ];
+  return [new InjectedConnector({ chains })];
 };
 
 // Set up providers
 type ProviderConfig = { chainId?: number; connector?: Connector };
 const isChainSupported = (chainId?: number) =>
-  chains.some(x => x.id === chainId);
+  chains.some((x) => x.id === chainId);
 
 // Set up providers
 const provider = ({ chainId }: ProviderConfig) =>
   providers.getDefaultProvider(
     isChainSupported(chainId) ? chainId : defaultChain.id,
     {
-      infuraId
+      infuraId,
     }
   );
 const webSocketProvider = ({ chainId }: ConnectorsConfig) =>
@@ -47,7 +45,7 @@ export type WagmiContextType = {
 export const WagmiContext = createContext<WagmiContextType>(null as any);
 
 export const WagmiProvider: React.FC<{ children: React.ReactNode }> = ({
-  children
+  children,
 }) => {
   return (
     <Provider

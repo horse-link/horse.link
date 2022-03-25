@@ -5,7 +5,6 @@ import HorseRace from "./pages/HorseRace/HorseRace_Logic";
 
 export const history = createBrowserHistory();
 
-
 const Navigation = () => {
   return (
     <BrowserRouter>

@@ -351,3 +351,6 @@ MigrationBackup/
 
 node_modules
 dist
+.idea/
+
+.env

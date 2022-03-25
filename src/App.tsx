@@ -4,7 +4,7 @@ import Navigation from "./Navigation";
 import { GlobalErrorProvider } from "./providers/GlobalError";
 import { WagmiProvider } from "./providers/Wagmi";
 
-function App() {
+const App = () => {
   const swrConfig = {
     fetcher: (url: string) => url,
     shouldRetryOnError: false
