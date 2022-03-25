@@ -1,0 +1,31 @@
+name: uat-ci
+
+on:
+  push:
+    branches: [development]
+
+jobs:
+  deploy:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Deploy FrontEnd Client to UAT
+        uses: appleboy/ssh-action@v0.1.4
+        with:
+          host: ${{ secrets.DO_DEPLOY_IP }}
+          username: ${{ secrets.DO_DEPLOY_USERNAME }}
+          key: ${{ secrets.DO_DEPLOY_KEY }}
+          script: |
+            cd ~/website
+            git stash
+            git checkout development
+            git pull
+            yarn
+            cd client
+            yarn build
+            rm -r /var/www/html
+            mv ~/website/packages/web-app/build /var/www/html
+

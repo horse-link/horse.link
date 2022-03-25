@@ -1,0 +1,41 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "strict": true,
+    "target": "es6",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "allowUnreachableCode": false,
+    "noImplicitAny": true,
+    "noImplicitReturns": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "rootDir": "./src",
+    "outDir": "./build",
+    "sourceMap": true,
+    "lib": [
+      "dom",
+      "es2015"
+    ],
+    "jsx": "react-jsx",
+    "allowSyntheticDefaultImports": true,
+    "noEmit": true,
+    "allowJs": false,
+    "isolatedModules": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": [
+    "./src/**/*.d.ts",
+    "./src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "*/dist/*",
+    "*/build/*"
+  ]
+}
