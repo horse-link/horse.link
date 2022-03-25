@@ -12,7 +12,7 @@ const DashboardView: React.FC<Props> = (props: Props) => {
   const stats = [
     { name: "Total Liquidity", stat: "$71,897.87" },
     { name: "In Play", stat: "$21,829.16" },
-    { name: "Perfomace", stat: "329.36%" },
+    { name: "Performance", stat: "329.36%" },
   ];
   return (
     <PageLayout requiresAuth={false}>
@@ -32,7 +32,7 @@ const DashboardView: React.FC<Props> = (props: Props) => {
               className="h-20"
             />
           </div>
-          <h2 className="text-xs my-2">Defi Wager Protocol</h2>
+          <h2 className="text-lg mb-3 font-medium text-gray-900">Todays Meets</h2>
           <p className="text-xs my-2">
             Aenean in dictum massa. Integer posuere erat lorem, in commodo eros
             fringilla non. Donec ullamcorper porta tortor a dapibus. Maecenas
@@ -139,7 +139,7 @@ const Table: React.FC<Props> = (props: Props) => {
 
   return (
     <div className="col-span-2">
-      <h3 className="text-lg mb-3 font-medium text-gray-900">Meets</h3>
+      <h3 className="text-lg mb-3 font-medium text-gray-900">Todays Meets</h3>
       <div className="flex flex-col">
         <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
