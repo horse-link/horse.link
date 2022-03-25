@@ -2,7 +2,7 @@ name: uat-ci
 
 on:
   push:
-    branches: [development]
+    branches: [main]
 
 jobs:
   deploy:
@@ -21,7 +21,7 @@ jobs:
           script: |
             cd ~/website
             git stash
-            git checkout development
+            git checkout main
             git pull
             yarn
             cd client

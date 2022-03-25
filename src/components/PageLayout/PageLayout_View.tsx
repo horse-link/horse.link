@@ -1,12 +1,15 @@
+import React, { useState, useEffect } from "react";
 import classnames from "classnames";
 import { Link } from "react-router-dom";
 import { Loader } from "..";
 import { Disclosure } from "@headlessui/react";
+import WalletConnectButton from "../ConnectWalletButton/ConnectWalletButton_View";
+import WalletModal from "../WalletModal";
 import {
   MenuIcon,
-  XIcon,
-  UserCircleIcon
+  XIcon
 } from "@heroicons/react/outline";
+import { useAccount } from "wagmi";
 
 const navigation = [
   { name: "Dashboard", path: "/dashboard" },
@@ -18,6 +21,16 @@ type Props = {
 };
 
 const PageLayoutView: React.FC<Props> = props => {
+  const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
+  const [{ data: accountData, loading }] = useAccount({
+    fetchEns: true
+  });
+
+  useEffect(() => {
+    if (accountData) {
+      setIsWalletModalOpen(false);
+    }
+  }, [accountData]);
   if (props.loading) {
     return (
       <div className="min-h-screen flex bg-white">
@@ -36,7 +49,6 @@ const PageLayoutView: React.FC<Props> = props => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex justify-between h-16">
                 <div className="flex">
-                  <div className="flex-shrink-0 flex items-center"></div>
                   <div className="hidden sm:-my-px sm:flex sm:space-x-8">
                     {navigation.map(item => {
                       const active = item.path === props.currentPath;
@@ -71,6 +83,9 @@ const PageLayoutView: React.FC<Props> = props => {
                     )}
                   </Disclosure.Button>
                 </div>
+                <div className="hidden sm:flex">
+                  < WalletConnectButton loading={loading} setIsWalletModalOpen={setIsWalletModalOpen} />
+                </div>
               </div>
             </div>
 
@@ -96,16 +111,7 @@ const PageLayoutView: React.FC<Props> = props => {
                     </Link>
                   );
                 })}
-              </div>
-              <div className="pt-4 pb-3 border-t border-gray-200">
-                <div className="flex items-center px-4">
-                  <div className="flex-shrink-0">
-                    <UserCircleIcon
-                      className="block h-6 w-6 hover:text-gray-500"
-                      aria-hidden="true"
-                    />
-                  </div>
-                </div>
+                < WalletConnectButton loading={loading} setIsWalletModalOpen={setIsWalletModalOpen} />
               </div>
             </Disclosure.Panel>
           </>
@@ -114,6 +120,10 @@ const PageLayoutView: React.FC<Props> = props => {
 
       <div className="py-10">
         <main>
+          <WalletModal
+            isModalOpen={isWalletModalOpen}
+            setIsModalOpen={setIsWalletModalOpen}
+          />
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {props.children}
           </div>
