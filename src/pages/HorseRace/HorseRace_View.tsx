@@ -1,9 +1,9 @@
 //import { Fragment, useState } from "react";
 import { PageLayout } from "../../components";
-import useSWR from "swr";
+// import useSWR from "swr";
 import { useParams } from "react-router-dom";
 import moment from "moment";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 
 type Props = {};
 
