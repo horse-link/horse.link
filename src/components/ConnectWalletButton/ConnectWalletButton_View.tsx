@@ -47,7 +47,7 @@ const WalletConnectButton: React.FC<Props> = (props: Props) => {
               <Button
                 onClick={() => props.setIsWalletModalOpen(true)}
               >
-                Connect
+                Connect your Wallet
               </Button>
             </div>
           )}

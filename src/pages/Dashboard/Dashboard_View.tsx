@@ -32,7 +32,7 @@ const DashboardView: React.FC<Props> = (props: Props) => {
               className="h-20"
             />
           </div>
-          <h2 className="text-lg mb-3 font-medium text-gray-900">Todays Meets</h2>
+          <h2 className="text-lg mb-3 font-medium text-gray-900">Wager on sports markets with deep liquidity</h2>
           <p className="text-xs my-2">
             Aenean in dictum massa. Integer posuere erat lorem, in commodo eros
             fringilla non. Donec ullamcorper porta tortor a dapibus. Maecenas
