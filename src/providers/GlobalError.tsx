@@ -11,10 +11,6 @@ export const GlobalErrorProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [globalError, setGlobalError] = useState<any | undefined>(undefined);
 
-  // const handleCloseModal = () => {
-  //   setGlobalError(undefined);
-  // };
-
   useEffect(() => {
     if (globalError) {
       console.log(globalError);
