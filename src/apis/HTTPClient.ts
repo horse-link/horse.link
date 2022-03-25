@@ -9,26 +9,13 @@ export default class HTTPClient {
   private client: AxiosInstance;
   private customOnError: Function | undefined;
 
-  constructor(baseUrl: string, secure: boolean) {
+  constructor(baseUrl: string) {
     this.client = axios.create({
       baseURL: baseUrl,
       headers: {
         "Cache-Control": "no-store"
       }
     });
-
-    if (secure) {
-      this.client.interceptors.request.use(
-        async config => {
-          const token = window.localStorage.getItem("token");
-          if (token) config.headers.Authorization = `Bearer ${token}`;
-          return config;
-        },
-        error => {
-          return Promise.reject(error);
-        }
-      );
-    }
   }
 
   protected get = <T>(
