@@ -2,6 +2,7 @@ import { SWRConfig } from "swr";
 import { ApiProvider } from "./providers/Api";
 import Navigation from "./Navigation";
 import { GlobalErrorProvider } from "./providers/GlobalError";
+import { WagmiProvider } from "./providers/Wagmi";
 
 function App() {
   const swrConfig = {
@@ -12,7 +13,9 @@ function App() {
     <SWRConfig value={swrConfig}>
       <GlobalErrorProvider>
         <ApiProvider>
-          <Navigation />
+          <WagmiProvider>
+            <Navigation />
+          </WagmiProvider>
         </ApiProvider>
       </GlobalErrorProvider>
     </SWRConfig>
