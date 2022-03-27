@@ -69,78 +69,7 @@ const DashboardView: React.FC<Props> = (props: Props) => {
 const Table: React.FC<Props> = (props: Props) => {
   const { asLocaltime } = props;
   const { meets } = props;
-  // const meets = [
-  //   {
-  //     name: "Ipswich",
-  //     location: "QLD",
-  //     races: [
-  //       {
-  //         time: moment().valueOf(),
-  //         index: 1,
-  //       },
-  //       {
-  //         time: moment().add(2, "h").valueOf(),
-  //         index: 2,
-  //       },
-  //       {
-  //         time: moment().add(4, "h").valueOf(),
-  //         index: 3,
-  //       },
-  //       {
-  //         time: moment().add(5, "h").valueOf(),
-  //         index: 4,
-  //       },
-  //     ],
-  //     mnemonic: "",
-  //   },
-  //   {
-  //     name: "Hawkesbury",
-  //     location: "NSW",
-  //     races: [
-  //       {
-  //         time: moment().valueOf(),
-  //         index: 1,
-  //       },
-  //       {
-  //         time: moment().add(2, "h").valueOf(),
-  //         index: 2,
-  //       },
-  //       {
-  //         time: moment().add(4, "h").valueOf(),
-  //         index: 3,
-  //       },
-  //     ],
-  //     mnemonic: "",
-  //   },
-  //   {
-  //     name: "Pakenham",
-  //     location: "VIC",
-  //     races: [
-  //       {
-  //         time: moment().valueOf(),
-  //         index: 1,
-  //       },
-  //       {
-  //         time: moment().add(2, "h").valueOf(),
-  //         index: 2,
-  //       },
-  //       {
-  //         time: moment().add(4, "h").valueOf(),
-  //         index: 3,
-  //       },
-  //       {
-  //         time: moment().add(6, "h").valueOf(),
-  //         index: 4,
-  //       },
-  //       {
-  //         time: moment().add(8, "h").valueOf(),
-  //         index: 5,
-  //       },
-  //     ],
-  //     mnemonic: "",
-  //   },
-  // ];
-
+  
   return (
     <div className="col-span-2">
       <h3 className="text-lg mb-3 font-medium text-gray-900">Todays Meets</h3>

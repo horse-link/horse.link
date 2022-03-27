@@ -18,25 +18,15 @@ const Dashboard: React.FC<Props> = () => {
       name: "Ipswich",
       location: "QLD",
     },
-    {
-      id: "2",
-      name: "Hawkesbury",
-      location: "NSW",
-    },
-    {
-      id: "3",
-      name: "Pakenham",
-      location: "VIC",
-    }
   ];
 
   const api = useApi();
   const [data, setData] = useState<Meet[]>(meets);
 
   const load = async () => {
-    const results: string[] = await api.getMeetings();
+    const results: Meet[] = await api.getMeetings();
     console.log(results);
-    // setData(results);
+    setData(results);
   };
 
   load();
