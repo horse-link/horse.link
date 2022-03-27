@@ -13,11 +13,11 @@ export type Meet = {
 
 const Dashboard: React.FC<Props> = () => {
   const meets: Meet[] = [
-    {
-      id: "1",
-      name: "Ipswich",
-      location: "QLD",
-    },
+    // {
+    //   id: "1",
+    //   name: "Ipswich",
+    //   location: "QLD",
+    // },
   ];
 
   const api = useApi();
