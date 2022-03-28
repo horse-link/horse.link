@@ -67,8 +67,7 @@ const DashboardView: React.FC<Props> = (props: Props) => {
 };
 
 const Table: React.FC<Props> = (props: Props) => {
-  const { asLocaltime } = props;
-  const { meets } = props;
+  const { asLocaltime, meets } = props;
   
   return (
     <div className="col-span-2">
