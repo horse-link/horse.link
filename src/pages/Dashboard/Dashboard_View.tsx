@@ -2,18 +2,21 @@
 import { PageLayout } from "../../components";
 import moment from "moment";
 import { Link } from "react-router-dom";
+import { Meet } from "./Dashboard_Logic";
 
 type Props = {
   asLocaltime: (raceTime: number) => string;
+  meets: Meet[];
 };
 
 const DashboardView: React.FC<Props> = (props: Props) => {
-  const { asLocaltime } = props;
+  const { asLocaltime, meets } = props;
   const stats = [
     { name: "Total Liquidity", stat: "$71,897.87" },
     { name: "In Play", stat: "$21,829.16" },
     { name: "Performance", stat: "329.36%" },
   ];
+
   return (
     <PageLayout requiresAuth={false}>
       <div className="mb-6">
@@ -57,86 +60,15 @@ const DashboardView: React.FC<Props> = (props: Props) => {
         </dl>
       </div>
       <div className="grid grid-cols-2 gap-4 items-start lg:gap-8">
-        <Table asLocaltime={asLocaltime} />
+        <Table asLocaltime={asLocaltime} meets={meets} />
       </div>
     </PageLayout>
   );
 };
 
 const Table: React.FC<Props> = (props: Props) => {
-  const { asLocaltime } = props;
-  const meets = [
-    {
-      name: "Ipswich",
-      location: "QLD",
-      races: [
-        {
-          time: moment().valueOf(),
-          index: 1,
-        },
-        {
-          time: moment().add(2, "h").valueOf(),
-          index: 2,
-        },
-        {
-          time: moment().add(4, "h").valueOf(),
-          index: 3,
-        },
-        {
-          time: moment().add(5, "h").valueOf(),
-          index: 4,
-        },
-      ],
-      mnemonic: "",
-    },
-    {
-      name: "Hawkesbury",
-      location: "NSW",
-      races: [
-        {
-          time: moment().valueOf(),
-          index: 1,
-        },
-        {
-          time: moment().add(2, "h").valueOf(),
-          index: 2,
-        },
-        {
-          time: moment().add(4, "h").valueOf(),
-          index: 3,
-        },
-      ],
-      mnemonic: "",
-    },
-    {
-      name: "Pakenham",
-      location: "VIC",
-      races: [
-        {
-          time: moment().valueOf(),
-          index: 1,
-        },
-        {
-          time: moment().add(2, "h").valueOf(),
-          index: 2,
-        },
-        {
-          time: moment().add(4, "h").valueOf(),
-          index: 3,
-        },
-        {
-          time: moment().add(6, "h").valueOf(),
-          index: 4,
-        },
-        {
-          time: moment().add(8, "h").valueOf(),
-          index: 5,
-        },
-      ],
-      mnemonic: "",
-    },
-  ];
-
+  const { asLocaltime, meets } = props;
+  
   return (
     <div className="col-span-2">
       <h3 className="text-lg mb-3 font-medium text-gray-900">Todays Meets</h3>
@@ -191,7 +123,7 @@ const Table: React.FC<Props> = (props: Props) => {
                       <td className="px-3 py-4 whitespace-nowrap">
                         {meet.name} ({meet.location})
                       </td>
-                      {meet.races.map((race) => (
+                      {/* {meet.races.map((race) => (
                         <td className="px-3 py-4 whitespace-nowrap text-sm hover:bg-gray-200">
                           <Link
                             to={{
@@ -205,7 +137,7 @@ const Table: React.FC<Props> = (props: Props) => {
                             {moment.utc(race.time).local().format("H:mm")}
                           </Link>
                         </td>
-                      ))}
+                      ))} */}
                     </tr>
                   ))}
                 </tbody>
