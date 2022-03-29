@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "../IMintable.sol";
 import "../IBurnable.sol";
 
-struct Rewards {
+struct Reward {
     uint256 balance;
     uint256 start;
 }

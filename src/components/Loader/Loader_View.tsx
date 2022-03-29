@@ -1,5 +1,4 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import classnames from "classnames";
+import { SpinnerCircular } from 'spinners-react';
 
 type Props = {
   className?: string;
@@ -7,10 +6,7 @@ type Props = {
 
 const Loader: React.FC<Props> = props => {
   return (
-    <FontAwesomeIcon
-      className={classnames("animate-spin", props.className)}
-      icon="spinner"
-    />
+    <SpinnerCircular />
   );
 };
 

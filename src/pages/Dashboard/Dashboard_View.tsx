@@ -3,17 +3,27 @@ import { PageLayout } from "../../components";
 import moment from "moment";
 import { Link } from "react-router-dom";
 import { Meet } from "./Dashboard_Logic";
+import Loader from "../../components/Loader/Loader_View";
 
 type Props = {
+  asLocaltime: (raceTime: number) => string;
+  meets: Meet[];
+  inPlay: string | undefined;
+  numberOfBets: number;
+  connected: boolean;
+};
+
+type TableProps = {
   asLocaltime: (raceTime: number) => string;
   meets: Meet[];
 };
 
 const DashboardView: React.FC<Props> = (props: Props) => {
-  const { asLocaltime, meets } = props;
+  const { asLocaltime, meets, inPlay, connected, numberOfBets } = props;
   const stats = [
-    { name: "Total Liquidity", stat: "$71,897.87" },
-    { name: "In Play", stat: "$21,829.16" },
+    { name: "Total Liquidity", stat: `$ ${numberOfBets}` },
+    // Todo: Fix loader so it spins
+    { name: "In Play", stat: inPlay === "" ? <Loader className="text-lg" /> : `$ ${inPlay}` },
     { name: "Performance", stat: "329.36%" },
   ];
 
@@ -44,7 +54,8 @@ const DashboardView: React.FC<Props> = (props: Props) => {
           </p>
         </div>
         <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
-          {stats.map((item) => (
+          {connected &&
+          stats.map((item) => (
             <div
               key={item.name}
               className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6"
@@ -58,6 +69,12 @@ const DashboardView: React.FC<Props> = (props: Props) => {
             </div>
           ))}
         </dl>
+        {!connected &&
+          (
+            <h2 className="px-4 py-5 text-lg bg-white shadow rounded-lg text-center overflow-hidden sm:p-6">
+              Connect your wallet to begin!
+            </h2>
+          )}
       </div>
       <div className="grid grid-cols-2 gap-4 items-start lg:gap-8">
         <Table asLocaltime={asLocaltime} meets={meets} />
@@ -66,8 +83,8 @@ const DashboardView: React.FC<Props> = (props: Props) => {
   );
 };
 
-const Table: React.FC<Props> = (props: Props) => {
-  const { asLocaltime, meets } = props;
+const Table: React.FC<TableProps> = (props: TableProps) => {
+  const { asLocaltime, meets, } = props;
   
   return (
     <div className="col-span-2">
