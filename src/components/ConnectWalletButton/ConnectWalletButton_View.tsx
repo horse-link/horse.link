@@ -2,7 +2,6 @@ import React from "react";
 import Button from "../Button/Button_View";
 import { useAccount, useNetwork } from "wagmi";
 import { shortenAddress } from "../../utils/shortenAddress";
-import { Loader } from "../";
 
 type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   loading?: boolean;
@@ -17,7 +16,6 @@ const WalletConnectButton: React.FC<Props> = (props: Props) => {
 
   return (
     <>
-      <Loader className={loading ? "hidden" : ""} />
       <div className={loading ? "hidden" : "inline-flex items-center px-1 pt-1 text-sm font-medium justify-self-end"}>
           {accountData?.address ? (
             <div className="flex mx-2">
