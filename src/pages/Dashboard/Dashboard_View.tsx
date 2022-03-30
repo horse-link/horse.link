@@ -100,7 +100,7 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
                       scope="col"
                       className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
-                      Race Course
+                      Venue
                     </th>
                     <th
                       scope="col"
@@ -131,6 +131,36 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
                       className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
                       Race 5
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Race 6
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Race 7
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Race 8
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Race 9
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Race 10
                     </th>
                   </tr>
                 </thead>

@@ -11,7 +11,7 @@ const horses = [
   {
     id: "1",
     name: "Horse 1",
-    jocky: "Jocky 1",
+    Rider: "Rider 1",
     barrier: "8",
     weight: 58,
     win: 4,
@@ -20,7 +20,7 @@ const horses = [
   {
     id: "2",
     name: "Horse 2",
-    jocky: "Jocky 2",
+    Rider: "Rider 2",
     barrier: "2",
     weight: 51,
     win: 4.6,
@@ -29,7 +29,7 @@ const horses = [
   {
     id: "3",
     name: "Horse 3",
-    jocky: "Jocky 3",
+    Rider: "Rider 3",
     barrier: "1",
     weight: 48,
     win: 8.6,
@@ -38,7 +38,7 @@ const horses = [
   {
     id: "4",
     name: "Horse 4",
-    jocky: "Jocky 4",
+    Rider: "Rider 4",
     barrier: "3",
     weight: 53,
     win: 3,
@@ -47,7 +47,7 @@ const horses = [
   {
     id: "5",
     name: "Horse 5",
-    jocky: "Jocky 5",
+    Rider: "Rider 5",
     barrier: "5",
     weight: 50,
     win: 8,
@@ -56,7 +56,7 @@ const horses = [
   {
     id: "6",
     name: "Horse 6",
-    jocky: "Jocky 6",
+    Rider: "Rider 6",
     barrier: "4",
     weight: 52,
     win: 3.6,
@@ -65,7 +65,7 @@ const horses = [
   {
     id: "7",
     name: "Horse 7",
-    jocky: "Jocky 7",
+    Rider: "Rider 7",
     barrier: "6",
     weight: 58,
     win: 4,
@@ -74,7 +74,7 @@ const horses = [
   {
     id: "8",
     name: "Horse 8",
-    jocky: "Jocky 8",
+    Rider: "Rider 8",
     barrier: "7",
     weight: 45,
     win: 3.5,
@@ -146,7 +146,7 @@ const HorseRaceView: React.FC<Props> = () => {
                       <td className="px-2 py-4 whitespace-nowrap">
                         {horse.name} ({horse.barrier})
                         <br />
-                        {horse.jocky}
+                        {horse.Rider}
                       </td>
                       <td className="px-2 py-4 whitespace-nowrap">{horse.weight}</td>
                       <td className="px-2 py-4 whitespace-nowrap">{horse.win}</td>

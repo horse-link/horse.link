@@ -5,58 +5,44 @@ type Props = {};
 const pools = [
   {
     id: "1",
-    pair: [
-      {
-        image: "/images/dai.png",
-        name: "DAI",
-        symbol: "DAI",
-      },
-      {
-        image: "/images/cusdc.png",
+    underlying: {
+        image: "/images/usdc.png",
         name: "USD Coin",
         symbol: "USDC",
-      },
-    ],
+    },
     supplied: 25000000,
     inPlay: 2000000,
     ownerAddress: "0x18a5ff44dcc65e8bFD01F48496f8f4Be6980CaA9",
   },
   {
     id: "2",
-    pair: [
-      {
-        image: "/images/ether.png",
-        name: "Ether",
-        symbol: "ETH",
-      },
-      {
+    underlying: {
         image: "/images/tether.png",
         name: "Tether",
         symbol: "USDT",
-      },
-    ],
+    },
     supplied: 37000000,
     inPlay: 2690000,
     ownerAddress: "0x14a09AFAaD55649571B59006060B7D1A6a9c2bA5",
-  },
-  {
-    id: "3",
-    pair: [
-      {
-        image: "/images/trueusd.png",
-        name: "True USD",
-        symbol: "TUSD",
-      },
-      {
-        image: "/images/ether.png",
-        name: "Ether",
-        symbol: "ETH",
-      },
-    ],
-    supplied: 7000000,
-    inPlay: 90000,
-    ownerAddress: "0x18a5ff44dcc65e8bFD01F48496f8f4Be6980CaA9",
-  },
+  }
+  // {
+  //   id: "3",
+  //   pair: [
+  //     {
+  //       image: "/images/trueusd.png",
+  //       name: "True USD",
+  //       symbol: "TUSD",
+  //     },
+  //     {
+  //       image: "/images/ether.png",
+  //       name: "Ether",
+  //       symbol: "ETH",
+  //     },
+  //   ],
+  //   supplied: 7000000,
+  //   inPlay: 90000,
+  //   ownerAddress: "0x18a5ff44dcc65e8bFD01F48496f8f4Be6980CaA9",
+  // },
 ];
 
 const PoolsView: React.FC<Props> = () => {
@@ -105,13 +91,10 @@ const PoolsView: React.FC<Props> = () => {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {pools.map(pool => (
                     <tr key={pool.id}>
-                      <td className="px-2 py-4 whitespace-nowrap">{pool.id}</td>
+                      <td className="px-2 py-4 whitespace-nowrap"> {pool.id} </td>
                       <td className="flex px-2 py-4 items-center">
-                        <img src={pool.pair[0].image} alt={pool.pair[0].name} className="h-4" />
-                        <img src={pool.pair[1].image} alt={pool.pair[1].name} className="h-4 mr-2" />
-                        <span>{pool.pair[0].symbol}</span>
-                        /
-                        <span>{pool.pair[1].symbol}</span>
+                        <img src={pool.underlying.image} alt={pool.underlying.name} className="h-4" />
+                        <span> {pool.underlying.symbol} </span>
                       </td>
                       <td className="px-2 py-4 whitespace-nowrap">{pool.supplied}</td>
                       <td className="px-2 py-4 whitespace-nowrap">{pool.inPlay}</td>
