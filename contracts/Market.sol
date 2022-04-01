@@ -26,6 +26,10 @@ contract Market is Ownable {
     uint256 private _totalInPlay;
     uint256 private _totalDebt;
 
+    address public oracle;
+
+    uint256 public timeout;
+
     function getTotalInplay() public view returns (uint256) {
         //return _totalInPlay;
         // Note: Hardcode this for testing
@@ -72,11 +76,11 @@ contract Market is Ownable {
         return _bets.length;
     }
 
-    function payoutAll() public {
+    function claimAll() public {
 
     }
 
-    function payout(uint256 index) public {
+    function claim(uint256 index) public {
 
     }
 
