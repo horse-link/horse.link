@@ -1,5 +1,3 @@
-[![uat-ci](https://github.com/horse-link/horse.link/actions/workflows/uat-ci.yml/badge.svg)](https://github.com/horse-link/horse.link/actions/workflows/uat-ci.yml)
-
 # Dapp
 Offical dapp for https://horse.link
 
