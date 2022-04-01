@@ -4,6 +4,7 @@ pragma solidity =0.8.10;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./IPool.sol";
+import "./IMarket.sol";
 
 struct Bet {
     bytes32 id;
@@ -14,7 +15,7 @@ struct Bet {
     address owner;
 }
 
-contract Market is Ownable {
+contract Market is IMarket, Ownable {
 
     address private immutable _pool;
     uint256 private immutable _fee;
@@ -29,6 +30,7 @@ contract Market is Ownable {
     address public oracle;
 
     uint256 public timeout;
+    uint256 public min;
 
     function getTotalInplay() public view returns (uint256) {
         //return _totalInPlay;
@@ -40,10 +42,6 @@ contract Market is Ownable {
         return _bets.length;
     }
 
-    // function getBet(uint256 index) public view returns (bytes32, uint256, uint256, uint256, bool, address) {
-    //     return (_bets[index].id, _bets[index].amount, _bets[index].payout, _bets[index].payoutDate, _bets[index].claimed, _bets[index].owner);
-    // }
- 
     function getPoolAddress() external view returns (address) {
         return _pool;
     }
@@ -51,6 +49,9 @@ contract Market is Ownable {
     constructor(address pool, uint256 fee) {
         _pool = pool;
         _fee = fee;
+
+        timeout = 30 days;
+        min = 1 hours;
     }
 
     function getBet(uint256 index) external view returns (uint256, uint256, uint256, bool, address) {
@@ -80,8 +81,9 @@ contract Market is Ownable {
 
     }
 
-    function claim(uint256 index) public {
-
+    function claim(uint256 index) external {
+        require(_bets[index].claimed == false, "Bet has already been claimed");
+        require(_bets[index].end < block.timestamp + payoutDate, "Betting end time has not passed");
     }
 
     function recoverSigner(bytes32 message, bytes memory signature)
@@ -122,4 +124,5 @@ contract Market is Ownable {
     }
 
     event BetPlaced(uint256 index, uint256 amount, uint256 payout, address indexed owner);
+    event Claimed(uint256 index, uint256 amount, uint256 payout, address indexed owner);
 }
