@@ -32,9 +32,14 @@ contract Pool is Ownable {
 
     // uint256 private constant PRECISSION = 1_000;
 
-    address public _market;
+    address private _market;
 
-    function getMarket(address market) external onlyOwner() {
+    function getMarket() external view returns (address) {
+        assert(_market != address(0));
+        return _market;
+    }
+
+    function setMarket(address market) public onlyOwner() {
         require(_market != address(0), "Market already set");
         _market = market;
     }
@@ -47,13 +52,17 @@ contract Pool is Ownable {
         return IERC20(_underlying).balanceOf(address(this));
     }
 
-    function getPoolPerformance() external returns (uint256) {
+    function getPoolPerformance() external view returns (uint256) {
         return _getPoolPerformance();
     }
 
-    function _getPoolPerformance() private returns (uint256) {
+    function _getPoolPerformance() private view returns (uint256) {
         uint256 underlyingBalance = IERC20(_underlying).balanceOf(address(this));
-        return _totalReserves() / underlyingBalance;
+
+        if (underlyingBalance > 0)
+            return _totalReserves() / underlyingBalance;
+
+        return 0;
     }
 
     // function getLPTokenAddress() external view returns (address) {
@@ -74,7 +83,7 @@ contract Pool is Ownable {
         return underlyingBalance - inPlay;
     }
 
-    function supplied(address who) public view returns (uint256) {
+    function deposited(address who) public view returns (uint256) {
         return _lps[who];
     }
 
@@ -83,6 +92,7 @@ contract Pool is Ownable {
     }
 
     constructor(address underlying) {
+        // todo: create 2 on xxx-HL
         // require(lpToken != address(0) && underlying != address(0), "Invalid address");
         // _lpToken = lpToken;
         _underlying = underlying;
@@ -90,7 +100,7 @@ contract Pool is Ownable {
     }
 
     // Add underlying tokens to the pool
-    function supply(uint256 amount) external {
+    function deposit(uint256 amount) external {
         require(amount > 0, "Value must be greater than 0");
 
         IERC20(_underlying).transferFrom(msg.sender, _self, amount);
