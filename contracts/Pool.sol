@@ -42,9 +42,9 @@ contract Pool is Ownable {
         return _getPoolPerformance();
     }
 
-    function _getPoolPerformance() private returns (uint256) {
+    function _getPoolPerformance() private returns (int256) {
         uint256 underlyingBalance = IERC20(_underlying).balanceOf(address(this));
-        return _supplied * 1e6 / underlyingBalance * 1e6;
+        return _totalReserves() / underlyingBalance;
     }
 
     function getLPTokenAddress() external view returns (address) {
@@ -55,12 +55,13 @@ contract Pool is Ownable {
         return _supplied;
     }
 
-    function totalReserves() external view returns (uint256) {
+    function totalReserves() external view returns (int256) {
         return _totalReserves();
     }
 
-    function _totalReserves() private returns (uint256) {
-        return _supplied + _inPlay;
+    function _totalReserves() private returns (int256) {
+        uint256 inPlay = IMarket(_market).getInPlay();
+        return _supplied - inPlay;
     }
 
     function supplied(address who) public returns (uint256) {
