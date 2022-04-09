@@ -1,8 +1,12 @@
 const Pool = artifacts.require("Pool");
+const Mock = artifacts.require("Mock");
 
 contract("Pool", (accounts) => {
+  let mock;
   let pool;
+
   beforeEach(async () => {
+    mock = await Mock.new();
     pool = await Pool.new();
   });
 

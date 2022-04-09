@@ -10,7 +10,7 @@ struct Bet {
     bytes32 id;
     uint256 amount;
     uint256 payout;
-    uint256 payoutDate;
+    uint256 payoutDate;    
     bool claimed;
     address owner;
 }
@@ -63,7 +63,7 @@ contract Market is IMarket, Ownable {
         bytes32 message = keccak256(abi.encodePacked(id, amount, odds, start, end));
         address owner = recoverSigner(message, signature);
 
-        require(owner == msg.sender, "Only the owner can back");
+        require(owner == msg.sender, "Invalid signature");
         address underlying = IPool(_pool).getUnderlying();
 
         IERC20(underlying).transferFrom(msg.sender, address(this), amount);
@@ -83,7 +83,7 @@ contract Market is IMarket, Ownable {
 
     function claim(uint256 index) external {
         require(_bets[index].claimed == false, "Bet has already been claimed");
-        require(_bets[index].end < block.timestamp + payoutDate, "Betting end time has not passed");
+        require(_bets[index].payoutDate < block.timestamp + _bets[index].payoutDate, "Market not closed");
     }
 
     function recoverSigner(bytes32 message, bytes memory signature)
