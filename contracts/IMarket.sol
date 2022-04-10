@@ -2,6 +2,7 @@
 pragma solidity =0.8.10;
 
 interface IMarket {
+    function getTarget() external view returns (uint256);
     function getTotalInplay() external view returns (uint256);
     function getInplayCount() external view returns (uint256);
     function getBet(uint256 index) external view returns (uint256, uint256, uint256, bool, address);

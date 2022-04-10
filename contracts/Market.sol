@@ -27,8 +27,10 @@ contract Market is IMarket, Ownable {
     uint256 private _totalInPlay;
     uint256 private _totalDebt;
 
+    // Oracle if bet is not claimed
     address public oracle;
 
+    // Can claim after this period regardless
     uint256 public timeout;
     uint256 public min;
 
