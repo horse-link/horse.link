@@ -54,16 +54,16 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, Ownable {
         return owner;
     }
 
-    function ownerOfByName(bytes32 name) public view returns (address) {
-        uint256 tokenId = _tracksToId[name];
+    function ownerOfByName(bytes32 _name) public view returns (address) {
+        uint256 tokenId = _tracksToId[_name];
         return ownerOf(tokenId);
     }
 
-    function name() public view override returns (string memory) {
+    function name() public pure override returns (string memory) {
         return "Horse Link Tracks";
     }
 
-    function symbol() public view override returns (string memory) {
+    function symbol() public pure override returns (string memory) {
         return "HTL";
     }
 

@@ -1,21 +1,54 @@
 const Pool = artifacts.require("Pool");
+const Token = artifacts.require("MockToken");
 
 contract("Pool", (accounts) => {
+  let token;
   let pool;
+
+  let owner = accounts[0];
+  let alice = accounts[1];
+
   beforeEach(async () => {
-    pool = await Pool.new();
+    token = await Token.new();
+    await token.transfer(alice, 100);
+
+    pool = await Pool.new(token.address);
   });
 
-  describe("results", () => {
-    it("should have 0 count", async () => {
-      const count = await horse.count();
-      assert.equal(count, 0, "Should have no values");
+  describe("Pool", () => {
+    it("should have 0 properties on deploy", async () => {
+      const totalSupplied = await pool.totalSupplied();
+      assert.equal(totalSupplied, 0, "Should have no values");
+
+      const underlyingBalance = await pool.getUnderlyingBalance();
+      assert.equal(underlyingBalance, 0, "Should have no values");
+
+      const poolPerformance = await pool.getPoolPerformance();
+      assert.equal(poolPerformance, 0, "Should have no values");
+
+      const underlying = await pool.getUnderlying();
+      assert.equal(underlying, token.address, "Should have token address as underlying");
     });
 
-    it("should add a result", async () => {
-        await horse.addResult("0x414e47", 2021, 9, 18, 1, [12, 4, 8, 11]);
-        const count = await horse.count();
-        assert.equal(count, 1, "Should have no values");
-      });
+    it("should deposit 10 underlying tokens from alice", async () => {
+      await token.approve(pool.address, 10, { from: alice });
+      await pool.deposit(10, { from: alice });
+
+      // check alice balance
+      const balance = await token.balanceOf(alice);
+      assert.equal(balance, 90, "Should have 90 tokens");
+
+      // check pool balance
+      const poolBalance = await token.balanceOf(pool.address);
+      assert.equal(poolBalance, 10, "Should have 10 tokens");
+
+      // check alice supply
+      const totalDeposited = await pool.deposited(alice);
+      assert.equal(totalDeposited, 10, "Should have 10 tokens");
+
+      // check the pool's performance
+      const poolPerformance = await pool.getPoolPerformance();
+      assert.equal(poolPerformance, 0, "Pool performance should be 0 with no bets");
+    });
   });
 });
