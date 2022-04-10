@@ -59,7 +59,8 @@
     "dev": "vite",
     "start": "craco start",
     "build": "BUILD_PATH='./dist' craco build",
-    "test": "craco test"
+    "test": "craco test",
+    "test:contracts": "truffle test"
   },
   "eslintConfig": {
     "extends": [
