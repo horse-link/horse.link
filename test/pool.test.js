@@ -46,9 +46,27 @@ contract("Pool", (accounts) => {
       const totalDeposited = await pool.deposited(alice);
       assert.equal(totalDeposited, 10, "Should have 10 tokens");
 
-      // check the pool's performance
-      const poolPerformance = await pool.getPoolPerformance();
-      assert.equal(poolPerformance, 0, "Pool performance should be 0 with no bets");
+      // // check the pool's performance
+      // const poolPerformance = await pool.getPoolPerformance();
+      // assert.equal(poolPerformance, 0, "Pool performance should be 0 with no bets");
+    });
+
+    it("should exit from pool", async () => {
+      // check alice balance
+      let balance = await token.balanceOf(alice);
+      assert.equal(balance, 100, "Should have 100 tokens");
+
+      await token.approve(pool.address, 10, { from: alice });
+      await pool.deposit(10, { from: alice });
+
+      // check alice balance
+      balance = await token.balanceOf(alice);
+      assert.equal(balance, 90, "Should have 90 tokens");
+
+      await pool.exit({ from: alice });
+
+      balance = await token.balanceOf(alice);
+      assert.equal(balance, 100, "Should have 100 tokens");
     });
   });
 });

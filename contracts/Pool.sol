@@ -73,12 +73,15 @@ contract Pool is Ownable {
         return IERC20(_underlying).balanceOf(address(this));
     }
 
-    function totalReserves() external view returns (int256) {
+    function totalReserves() external view returns (uint256) {
         return _totalReserves();
     }
 
     function _totalReserves() private view returns (uint256) {
-        uint256 inPlay = IMarket(_market).getTotalInplay();
+        uint256 inPlay;
+        if (_market != address(0))
+            inPlay = IMarket(_market).getTotalInplay();
+
         uint256 underlyingBalance = IERC20(_underlying).balanceOf(address(this));
         return underlyingBalance - inPlay;
     }
@@ -88,7 +91,13 @@ contract Pool is Ownable {
     }
 
     function balanceOf(address who) external view returns (uint256) {
-        return _lps[who] / _totalReserves();
+        return _balanceOf(who);
+    }
+
+    function _balanceOf(address who) private view returns (uint256) {
+        // calculate the portion of the pool that is in play
+
+        return _lps[who] / (_lps[who] / _totalReserves());
     }
 
     constructor(address underlying) {
@@ -99,8 +108,9 @@ contract Pool is Ownable {
 
         _self = address(this);
 
-        string name = IERC20(lpToken).name() + "-" + IERC20(underlying).name();
-        string symbol = IERC20(lpToken).symbol() + "-" + IERC20(underlying).symbol();
+        // TODO: MINT CONTRACT ON DEPLOYMENT
+        // string name = IERC20(_underlying).name() + "-" + IERC20(underlying).name();
+        // string symbol = IERC20(_underlying).symbol() + "-" + IERC20(underlying).symbol();
 
         // deploy ERC20 contract
     }
@@ -119,15 +129,15 @@ contract Pool is Ownable {
     }
 
     // Exit your position
-    function exit(uint256 amount) external {
-        require(amount > IERC20(_underlying).balanceOf(msg.sender), "You must have a balance to exit");
+    function exit() external {
+        uint256 balance = _balanceOf(msg.sender);
+        require(balance > 0, "You have no position to exit");
 
-        uint256 truePosition = _lps[msg.sender];
+        _lps[msg.sender] = 0;
+        IERC20(_underlying).transfer(msg.sender, balance);
 
         // IBurnable(_lpToken).burnFrom(msg.sender, amount);
-        _totalSupplied -= amount;
-
-        emit Exited(msg.sender, amount);
+        emit Exited(msg.sender, balance);
     }
 
     modifier onlyMarket() {

@@ -34,7 +34,11 @@ contract Market is IMarket, Ownable {
     uint256 public timeout;
     uint256 public min;
 
-    function getTotalInplay() public view returns (uint256) {
+    function getTarget() public pure returns (uint256) {
+        return 500;
+    }
+
+    function getTotalInplay() public pure returns (uint256) {
         //return _totalInPlay;
         // Note: Hardcode this for testing
         return 21829;
@@ -61,6 +65,8 @@ contract Market is IMarket, Ownable {
     }
 
     function back(bytes32 id, uint256 amount, uint256 odds, uint256 start, uint256 end, bytes memory signature) external returns (uint256) {
+        require(_pool != address(0), "Pool address not set");
+        require(start > 0, "Start must be greater than 0");
         require(start < block.timestamp, "Betting start time has passed");
         bytes32 message = keccak256(abi.encodePacked(id, amount, odds, start, end));
         address owner = recoverSigner(message, signature);
@@ -79,9 +85,9 @@ contract Market is IMarket, Ownable {
         return _bets.length;
     }
 
-    function claimAll() public {
+    // function claimAll() public {
 
-    }
+    // }
 
     function claim(uint256 index) external {
         require(_bets[index].claimed == false, "Bet has already been claimed");
@@ -89,7 +95,7 @@ contract Market is IMarket, Ownable {
     }
 
     function recoverSigner(bytes32 message, bytes memory signature)
-        internal
+        private
         pure
         returns (address)
     {
@@ -103,7 +109,7 @@ contract Market is IMarket, Ownable {
     }
 
     function splitSignature(bytes memory signature)
-        internal
+        private
         pure
         returns (uint8, bytes32, bytes32)
     {
