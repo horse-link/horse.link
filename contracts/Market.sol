@@ -7,7 +7,7 @@ import "./IPool.sol";
 import "./IMarket.sol";
 
 struct Bet {
-    bytes32 id;
+    // bytes32 id;
     uint256 amount;
     uint256 payout;
     uint256 payoutDate;    
@@ -22,7 +22,8 @@ contract Market is IMarket, Ownable {
 
     // mapping(address => Bet[]) private _bets;
 
-    Bet[] private _bets;
+    bytes32[] private _betsIndexes;
+    mapping(bytes32 => Bet) private _bets;
 
     uint256 private _totalInPlay;
     uint256 private _totalDebt;
@@ -39,13 +40,11 @@ contract Market is IMarket, Ownable {
     }
 
     function getTotalInplay() public pure returns (uint256) {
-        //return _totalInPlay;
-        // Note: Hardcode this for testing
-        return 21829;
+        return _totalInPlay;
     }
 
     function getInplayCount() public view returns (uint256) {
-        return _bets.length;
+        return _betsIndexes.length;
     }
 
     function getPoolAddress() external view returns (address) {
@@ -61,37 +60,46 @@ contract Market is IMarket, Ownable {
     }
 
     function getBet(uint256 index) external view returns (uint256, uint256, uint256, bool, address) {
-        return (_bets[index].amount, _bets[index].payout, _bets[index].payoutDate, _bets[index].claimed, _bets[index].owner);
+        bytes32 id = _betsIndexes[index];
+        Bet memory bet = _bets[id];
+        return (bet.amount, bet.payout, bet.payoutDate, bet.claimed, bet.owner);
     }
 
-    function back(bytes32 id, uint256 amount, uint256 odds, uint256 start, uint256 end, bytes memory signature) external returns (uint256) {
+    function back(bytes32 id, uint256 amount, uint256 odds, uint256 start, uint256 end, bytes calldata signature) external {
         require(_pool != address(0), "Pool address not set");
         require(start > 0, "Start must be greater than 0");
         require(start < block.timestamp, "Betting start time has passed");
+        
         bytes32 message = keccak256(abi.encodePacked(id, amount, odds, start, end));
-        address owner = recoverSigner(message, signature);
+        address marketOwner = recoverSigner(message, signature);
+        require(marketOwner == owner(), "Invalid signature");
 
-        require(owner == msg.sender, "Invalid signature");
         address underlying = IPool(_pool).getUnderlying();
 
         IERC20(underlying).transferFrom(msg.sender, address(this), amount);
-        _bets.push(Bet(id, amount, amount * odds, start, false, owner));
+        // _bets.push(Bet(id, amount, amount * odds, start, false, owner));
+        _bets[id] = Bet(amount, amount * odds, start, false, msg.sender);
 
         _totalInPlay += amount;
         _totalDebt += amount * odds;
 
-        // emit BetPlaced(id, amount, odds, start, end, owner);
-
-        return _bets.length;
+        emit BetPlaced(id, amount, amount * odds, msg.sender);
     }
 
-    // function claimAll() public {
+    function claim(bytes32 id, bytes calldata signature) external {
+        bytes32 message = keccak256(abi.encodePacked(id));
+        address marketOwner = recoverSigner(message, signature);
+        require(marketOwner == owner(), "Invalid signature");
 
-    // }
+        require(_bets[id].claimed == false, "Bet has already been claimed");
+        require(_bets[id].payoutDate < block.timestamp + _bets[id].payoutDate, "Market not closed");
 
-    function claim(uint256 index) external {
-        require(_bets[index].claimed == false, "Bet has already been claimed");
-        require(_bets[index].payoutDate < block.timestamp + _bets[index].payoutDate, "Market not closed");
+        _bets[id].claimed = true;
+        _totalInPlay -= _bets[id].amount;
+
+        IERC20(_pool).transferFrom(address(this), _bets[id].owner, _bets[id].payout);
+
+        emit BetClaimed(id, _bets[id].payout, _bets[id].owner);
     }
 
     function recoverSigner(bytes32 message, bytes memory signature)
@@ -131,6 +139,6 @@ contract Market is IMarket, Ownable {
         return (v, r, s);
     }
 
-    event BetPlaced(uint256 index, uint256 amount, uint256 payout, address indexed owner);
-    event Claimed(uint256 index, uint256 amount, uint256 payout, address indexed owner);
+    event BetClaimed(bytes32 id, uint256 payout, address indexed owner);
+    event BetPlaced(bytes32 id, uint256 amount, uint256 payout, address indexed owner);
 }
