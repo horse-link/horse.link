@@ -24,6 +24,17 @@ const pools = [
     supplied: 37000000,
     inPlay: 2690000,
     ownerAddress: "0x14a09AFAaD55649571B59006060B7D1A6a9c2bA5",
+  },
+  {
+    id: "2",
+    underlying: {
+        image: "/images/tether.png",
+        name: "Tether",
+        symbol: "USDT",
+    },
+    supplied: 37000000,
+    inPlay: 2690000,
+    ownerAddress: "0x14a09AFAaD55649571B59006060B7D1A6a9c2bA5",
   }
   // {
   //   id: "3",
