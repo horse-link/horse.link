@@ -3,9 +3,13 @@ pragma solidity =0.8.10;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+
+import { IBet } from "./IMintable.sol";
 import "./IPool.sol";
 import "./IMarket.sol";
 
+// Put these in the ERC721 contract
 struct Bet {
     // bytes32 id;
     uint256 amount;
@@ -17,6 +21,7 @@ struct Bet {
 
 contract Market is IMarket, Ownable {
 
+    address private immutable _bet;
     address private immutable _pool;
     uint256 private immutable _fee;
 
@@ -29,17 +34,17 @@ contract Market is IMarket, Ownable {
     uint256 private _totalDebt;
 
     // Oracle if bet is not claimed
-    address public oracle;
+    // address public immutable oracle;
 
     // Can claim after this period regardless
-    uint256 public timeout;
-    uint256 public min;
+    uint256 public immutable timeout;
+    uint256 public immutable min;
 
-    function getTarget() public pure returns (uint256) {
-        return 500;
+    function getTarget() public view returns (uint256) {
+        return _fee;
     }
 
-    function getTotalInplay() public pure returns (uint256) {
+    function getTotalInplay() public view returns (uint256) {
         return _totalInPlay;
     }
 
@@ -51,10 +56,12 @@ contract Market is IMarket, Ownable {
         return _pool;
     }
 
-    constructor(address pool, uint256 fee) {
+    constructor(address pool, address erc721, uint256 fee) {
+        require(pool != address(0), "Pool address cannot be 0");
         _pool = pool;
+        _bet = erc721;
         _fee = fee;
-
+        
         timeout = 30 days;
         min = 1 hours;
     }
@@ -65,7 +72,7 @@ contract Market is IMarket, Ownable {
         return (bet.amount, bet.payout, bet.payoutDate, bet.claimed, bet.owner);
     }
 
-    function back(bytes32 id, uint256 amount, uint256 odds, uint256 start, uint256 end, bytes calldata signature) external {
+    function back(bytes32 id, uint256 amount, uint256 odds, uint256 start, uint256 end, bytes calldata signature) external returns (uint256) {
         require(_pool != address(0), "Pool address not set");
         require(start > 0, "Start must be greater than 0");
         require(start < block.timestamp, "Betting start time has passed");
@@ -80,10 +87,15 @@ contract Market is IMarket, Ownable {
         // _bets.push(Bet(id, amount, amount * odds, start, false, owner));
         _bets[id] = Bet(amount, amount * odds, start, false, msg.sender);
 
+        // Mint the 721
+        uint256 tokenId = IBet(_bet).mint(msg.sender);
+
         _totalInPlay += amount;
-        _totalDebt += amount * odds;
+        _totalDebt += (amount * odds);
 
         emit BetPlaced(id, amount, amount * odds, msg.sender);
+
+        return tokenId; // token ID
     }
 
     function claim(bytes32 id, bytes calldata signature) external {

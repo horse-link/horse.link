@@ -5,3 +5,7 @@ pragma solidity =0.8.10;
 interface IMintable {
     function mintTo(address to, uint256 amount) external;
 }
+
+interface IBet {
+    function mint(address to) external;
+}

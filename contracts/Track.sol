@@ -28,11 +28,11 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, Ownable {
         // _symbol = "HLT";
     }
 
-    function mint(bytes32 name) public onlyOwner returns (uint256) {
+    function mint(bytes32 name) public view onlyOwner returns (uint256) {
         uint256 tokenId = _tracksToId[name];
     }
 
-    function mintTo(bytes32 name, address owner) public onlyOwner returns (uint256) {
+    function mintTo(bytes32 name, address owner) public view onlyOwner returns (uint256) {
         uint256 tokenId = _tracksToId[name];
     }
 
