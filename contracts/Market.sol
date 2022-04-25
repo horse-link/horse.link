@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
-import { IBet } from "./IMintable.sol";
+import { IBet } from "./IBet.sol";
 import "./IPool.sol";
 import "./IMarket.sol";
 

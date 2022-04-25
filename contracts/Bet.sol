@@ -3,8 +3,9 @@ pragma solidity ^0.8.10;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "./IBet.sol";
 
-contract Bet is ERC721 {
+contract Bet is IBet, ERC721 {
 
     address public immutable _owner;
     using Counters for Counters.Counter;
@@ -14,11 +15,11 @@ contract Bet is ERC721 {
         _owner = msg.sender;
     }
 
-    function mint(address who) public returns (uint256) {
+    function mint(address to) public returns (uint256) {
         _tokenIds.increment();
 
         uint256 id = _tokenIds.current();
-        _mint(who, id);
+        _mint(to, id);
         return id;
     }
 
