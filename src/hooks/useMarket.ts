@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Contract } from "@ethersproject/contracts";
 import { ethers } from "ethers";
 import { useProvider, useAccount } from "wagmi";
