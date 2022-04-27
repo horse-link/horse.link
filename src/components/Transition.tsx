@@ -24,7 +24,7 @@ function useIsInitialRender() {
 }
 
 interface TransitionProps {
-  children?: React.ReactNode;
+  children?: JSX.Element;
   show?: boolean;
   enter?: string;
   enterFrom?: string;
