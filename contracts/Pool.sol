@@ -17,15 +17,13 @@ contract Pool is Ownable {
     // mapping(address => Reward) private _rewards;
     // uint256 private constant REWARDS_PER_BLOCK;
 
-    // Bets
-    uint256 private _inPlay;
-
     // LP
     // Deposits of LPs
     mapping(address => uint256) private _lps;
     uint256 private _supplied; // total added to the contract from LPs
 
-    // address private immutable _lpToken;
+    address private _lpToken;
+
     // address private immutable _rewardsToken;
     address private immutable _underlying;
     address private immutable _self;
@@ -65,9 +63,22 @@ contract Pool is Ownable {
         return 0;
     }
 
-    // function getLPTokenAddress() external view returns (address) {
-    //     return _lpToken;
-    // }
+    function getLPTokenAddress() external view returns (address) {
+        return _lpToken;
+    }
+
+    function setLPTOken(address token) public onlyOwner() {
+        require(_lpToken == address(0), "LP token already set");
+        _lpToken = token;
+    }
+
+    function getInPlay() external view returns (uint256) {
+        return _getInPlay();
+    }
+
+    function _getInPlay() private view returns (uint256) {
+        return IMarket(_market).getTotalInplay();
+    }
 
     function totalSupplied() external view returns (uint256) {
         return IERC20(_underlying).balanceOf(address(this));
@@ -78,12 +89,8 @@ contract Pool is Ownable {
     }
 
     function _totalReserves() private view returns (uint256) {
-        uint256 inPlay;
-        if (_market != address(0))
-            inPlay = IMarket(_market).getTotalInplay();
-
         uint256 underlyingBalance = IERC20(_underlying).balanceOf(address(this));
-        return underlyingBalance - inPlay;
+        return underlyingBalance - _getInPlay();
     }
 
     function deposited(address who) public view returns (uint256) {
@@ -128,15 +135,28 @@ contract Pool is Ownable {
         emit Supplied(msg.sender, amount);
     }
 
+    function quote(uint256 amount) external view returns (uint256) {
+        return _quote(amount);
+    }
+
+    function _quote(uint256 amount) private view returns (uint256) {
+        uint256 underlyingBalance = IERC20(_underlying).balanceOf(address(this));
+        uint256 inPlay = _getInPlay();
+
+        return amount * underlyingBalance / (underlyingBalance + inPlay);
+    }
+
     // Exit your position
     function exit() external {
         uint256 balance = _balanceOf(msg.sender);
         require(balance > 0, "You have no position to exit");
 
-        _lps[msg.sender] = 0;
-        IERC20(_underlying).transfer(msg.sender, balance);
+        uint256 amount = _quote(balance);
 
-        // IBurnable(_lpToken).burnFrom(msg.sender, amount);
+        _lps[msg.sender] = 0;
+        IERC20(_underlying).transfer(msg.sender, amount);
+        IBurnable(_lpToken).burnFrom(msg.sender, balance);
+
         emit Exited(msg.sender, balance);
     }
 
