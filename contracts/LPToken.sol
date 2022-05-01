@@ -8,7 +8,7 @@ import "./IMintable.sol";
 
 contract LPToken is IMintable, IBurnable, ERC20, Ownable {
 
-    constructor() ERC20("Horse Link LP Tokens", "HORSE") {
+    constructor(string memory name_, string memory symbol_) ERC20(name_, symbol_) {
     }
 
     function mintTo(address to, uint256 amount) external onlyOwner {

@@ -28,8 +28,7 @@ contract Pool is Ownable {
     address private immutable _underlying;
     address private immutable _self;
 
-    // uint256 private constant PRECISSION = 1_000;
-
+    uint256 private constant PRECISSION = 1_000;
     address private _market;
 
     function getMarket() external view returns (address) {
@@ -58,7 +57,7 @@ contract Pool is Ownable {
         uint256 underlyingBalance = IERC20(_underlying).balanceOf(address(this));
 
         if (underlyingBalance > 0)
-            return _totalReserves() / underlyingBalance;
+            return _totalReserves() * PRECISSION / underlyingBalance;
 
         return 0;
     }
@@ -67,7 +66,7 @@ contract Pool is Ownable {
         return _lpToken;
     }
 
-    function setLPTOken(address token) public onlyOwner() {
+    function setLPToken(address token) public onlyOwner() {
         require(_lpToken == address(0), "LP token already set");
         _lpToken = token;
     }
@@ -103,7 +102,6 @@ contract Pool is Ownable {
 
     function _balanceOf(address who) private view returns (uint256) {
         // calculate the portion of the pool that is in play
-
         return _lps[who] / (_lps[who] / _totalReserves());
     }
 

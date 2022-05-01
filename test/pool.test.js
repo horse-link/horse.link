@@ -28,6 +28,9 @@ contract("Pool", (accounts) => {
 
       const underlying = await pool.getUnderlying();
       assert.equal(underlying, token.address, "Should have token address as underlying");
+
+      const market = await pool.getMarket();
+      assert.equal(market, "0x00", "Should have no market address");
     });
 
     it("should deposit 10 underlying tokens from alice", async () => {
