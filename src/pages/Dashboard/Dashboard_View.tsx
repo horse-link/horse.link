@@ -17,6 +17,7 @@ type TableProps = {
 
 const DashboardView: React.FC<Props> = (props: Props) => {
   const { asLocaltime, meets, inPlay, connected, numberOfBets } = props;
+  
   const stats = [
     { name: "Total Liquidity", stat: `$ ${numberOfBets}` },
     // Todo: Fix loader so it spins
