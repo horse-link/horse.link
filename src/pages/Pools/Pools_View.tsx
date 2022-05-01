@@ -4,7 +4,7 @@ type Props = {};
 
 const pools = [
   {
-    id: "1",
+    id: "USDC",
     underlying: {
         image: "/images/usdc.png",
         name: "USD Coin",
@@ -15,7 +15,7 @@ const pools = [
     ownerAddress: "0x18a5ff44dcc65e8bFD01F48496f8f4Be6980CaA9",
   },
   {
-    id: "2",
+    id: "USDT",
     underlying: {
         image: "/images/tether.png",
         name: "Tether",
@@ -26,11 +26,11 @@ const pools = [
     ownerAddress: "0x14a09AFAaD55649571B59006060B7D1A6a9c2bA5",
   },
   {
-    id: "3",
+    id: "wBTC",
     underlying: {
-        image: "/images/dia.png",
-        name: "Dia",
-        symbol: "DIA",
+        image: "/images/bitcoin.png",
+        name: "Wrapped BTc",
+        symbol: "wBTC",
     },
     supplied: 1000000,
     inPlay: 10000,
