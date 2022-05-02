@@ -1,6 +1,6 @@
 const LPToken = artifacts.require("LPToken");
 const MockToken = artifacts.require("MockToken");
-const HorseLink = artifacts.require("HorseLink");
+const Pool = artifacts.require("Pool");
 
 module.exports = async (deployer) => {
   await deployer.deploy(MockToken, "USDT", "Mock USDT");
@@ -15,5 +15,5 @@ module.exports = async (deployer) => {
   await deployer.deploy(LPToken, "hlDIA", "Horse Link DIA");
   const hldai = await LPToken.deployed();
 
-  // await deployer.deploy(HorseLink, token.address);
+  await deployer.deploy(Pool, usdt.address);
 };

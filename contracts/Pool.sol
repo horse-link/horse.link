@@ -41,11 +41,11 @@ contract Pool is Ownable {
         _market = market;
     }
 
-    function getUnderlying() external view returns (address) {
+    function asset() external view returns (address assetTokenAddress) {
         return _underlying;
     }
 
-    function getUnderlyingBalance() public view returns (uint256) {
+    function totalAssets() public view returns (uint256) {
         return IERC20(_underlying).balanceOf(address(this));
     }
 
@@ -57,7 +57,7 @@ contract Pool is Ownable {
         uint256 underlyingBalance = IERC20(_underlying).balanceOf(address(this));
 
         if (underlyingBalance > 0)
-            return _totalReserves() * PRECISSION / underlyingBalance;
+            return _totalAssets() * PRECISSION / underlyingBalance;
 
         return 0;
     }
@@ -79,15 +79,15 @@ contract Pool is Ownable {
         return IMarket(_market).getTotalInplay();
     }
 
-    function totalSupplied() external view returns (uint256) {
-        return IERC20(_underlying).balanceOf(address(this));
-    }
+    // function totalSupplied() external view returns (uint256) {
+    //     return IERC20(_underlying).balanceOf(address(this));
+    // }
 
     function totalReserves() external view returns (uint256) {
-        return _totalReserves();
+        return _totalAssets();
     }
 
-    function _totalReserves() private view returns (uint256) {
+    function _totalAssets() private view returns (uint256) {
         uint256 underlyingBalance = IERC20(_underlying).balanceOf(address(this));
         return underlyingBalance - _getInPlay();
     }
@@ -120,32 +120,41 @@ contract Pool is Ownable {
         // deploy ERC20 contract
     }
 
-    // Add underlying tokens to the pool
-    function deposit(uint256 amount) external {
-        require(amount > 0, "Value must be greater than 0");
+    function previewDeposit(uint256 amount) external view returns (uint256 shares) {
+        shares = _lps[msg.sender] + amount;
+    }
 
-        IERC20(_underlying).transferFrom(msg.sender, _self, amount);
+    // Add underlying tokens to the pool
+    function deposit(uint256 assets) external returns (uint256 shares) {
+        require(assets > 0, "Value must be greater than 0");
+
+        IERC20(_underlying).transferFrom(msg.sender, _self, assets);
         // IMintable(_lpToken).mintTo(msg.sender, amount);
 
-        _lps[msg.sender] += amount;
-        _supplied += amount;
+        _lps[msg.sender] += assets;
+        _supplied += assets;
 
-        emit Supplied(msg.sender, amount);
+        emit Supplied(msg.sender, assets);
+        shares = _lps[msg.sender];
     }
 
-    function quote(uint256 amount) external view returns (uint256) {
-        return _quote(amount);
+    function maxWithdraw(address owner) external view returns (uint256 maxAssets) {
+        maxAssets = _lps[owner];
     }
 
-    function _quote(uint256 amount) private view returns (uint256) {
+    function previewWithdraw(uint256 assets) external view returns (uint256 shares) {
+        shares = _quote(assets);
+    }
+
+    function _quote(uint256 assets) private view returns (uint256) {
         uint256 underlyingBalance = IERC20(_underlying).balanceOf(address(this));
         uint256 inPlay = _getInPlay();
 
-        return amount * underlyingBalance / (underlyingBalance + inPlay);
+        return assets * underlyingBalance / (underlyingBalance + inPlay);
     }
 
     // Exit your position
-    function exit() external {
+    function withdraw() external {
         uint256 balance = _balanceOf(msg.sender);
         require(balance > 0, "You have no position to exit");
 
