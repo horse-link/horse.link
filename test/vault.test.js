@@ -1,9 +1,9 @@
-const Pool = artifacts.require("Pool");
+const Vault = artifacts.require("Vault");
 const Token = artifacts.require("MockToken");
 
-contract("Pool", (accounts) => {
+contract("Vault", (accounts) => {
   let token;
-  let pool;
+  let vault;
 
   let owner = accounts[0];
   let alice = accounts[1];
@@ -12,61 +12,61 @@ contract("Pool", (accounts) => {
     token = await Token.new();
     await token.transfer(alice, 100);
 
-    pool = await Pool.new(token.address);
+    vault = await Vault.new(token.address);
   });
 
-  describe("Pool", () => {
+  describe("Vault", () => {
     it("should have 0 properties on deploy", async () => {
-      const totalSupplied = await pool.totalSupplied();
+      const totalSupplied = await vault.totalSupplied();
       assert.equal(totalSupplied, 0, "Should have no values");
 
-      const underlyingBalance = await pool.getUnderlyingBalance();
+      const underlyingBalance = await vault.getUnderlyingBalance();
       assert.equal(underlyingBalance, 0, "Should have no values");
 
-      const poolPerformance = await pool.getPoolPerformance();
-      assert.equal(poolPerformance, 0, "Should have no values");
+      const vaultPerformance = await vault.getvaultPerformance();
+      assert.equal(vaultPerformance, 0, "Should have no values");
 
-      const underlying = await pool.getUnderlying();
+      const underlying = await vault.getUnderlying();
       assert.equal(underlying, token.address, "Should have token address as underlying");
 
-      const market = await pool.getMarket();
+      const market = await vault.getMarket();
       assert.equal(market, "0x00", "Should have no market address");
     });
 
     it("should deposit 10 underlying tokens from alice", async () => {
-      await token.approve(pool.address, 10, { from: alice });
-      await pool.deposit(10, { from: alice });
+      await token.approve(vault.address, 10, { from: alice });
+      await vault.deposit(10, { from: alice });
 
       // check alice balance
       const balance = await token.balanceOf(alice);
       assert.equal(balance, 90, "Should have 90 tokens");
 
-      // check pool balance
-      const poolBalance = await token.balanceOf(pool.address);
-      assert.equal(poolBalance, 10, "Should have 10 tokens");
+      // check vault balance
+      const vaultBalance = await token.balanceOf(vault.address);
+      assert.equal(vaultBalance, 10, "Should have 10 tokens");
 
       // check alice supply
-      const totalDeposited = await pool.deposited(alice);
+      const totalDeposited = await vault.deposited(alice);
       assert.equal(totalDeposited, 10, "Should have 10 tokens");
 
-      // // check the pool's performance
-      // const poolPerformance = await pool.getPoolPerformance();
-      // assert.equal(poolPerformance, 0, "Pool performance should be 0 with no bets");
+      // // check the vault's performance
+      // const vaultPerformance = await vault.getvaultPerformance();
+      // assert.equal(vaultPerformance, 0, "vault performance should be 0 with no bets");
     });
 
-    it("should exit from pool", async () => {
+    it("should exit from vault", async () => {
       // check alice balance
       let balance = await token.balanceOf(alice);
       assert.equal(balance, 100, "Should have 100 tokens");
 
-      await token.approve(pool.address, 10, { from: alice });
-      await pool.deposit(10, { from: alice });
+      await token.approve(vault.address, 10, { from: alice });
+      await vault.deposit(10, { from: alice });
 
       // check alice balance
       balance = await token.balanceOf(alice);
       assert.equal(balance, 90, "Should have 90 tokens");
 
-      await pool.exit({ from: alice });
+      await vault.exit({ from: alice });
 
       balance = await token.balanceOf(alice);
       assert.equal(balance, 100, "Should have 100 tokens");

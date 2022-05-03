@@ -2,6 +2,7 @@
 pragma solidity =0.8.10;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./IBurnable.sol";
 import "./IMintable.sol";
@@ -12,16 +13,25 @@ struct Reward {
     uint256 start;
 }
 
-contract Pool is Ownable {
+contract Vault is Ownable {
+
+    // ERC20
+    mapping(address => uint256) private _balances;
+    mapping(address => mapping(address => uint256)) private _allowances;
+
+    uint256 private _totalSupply;
+    string private _name;
+    string private _symbol;
+    uint8 private _decimals;
+
     // Rewards
     // mapping(address => Reward) private _rewards;
     // uint256 private constant REWARDS_PER_BLOCK;
 
     // LP
     // Deposits of LPs
-    mapping(address => uint256) private _lps;
-    uint256 private _supplied; // total added to the contract from LPs
-
+    // mapping(address => uint256) private _lps;
+    // uint256 private _supplied; // total added to the contract from LPs
     address private _lpToken;
 
     // address private immutable _rewardsToken;
@@ -49,11 +59,11 @@ contract Pool is Ownable {
         return IERC20(_underlying).balanceOf(address(this));
     }
 
-    function getPoolPerformance() external view returns (uint256) {
-        return _getPoolPerformance();
+    function gePerformance() external view returns (uint256) {
+        return _getPerformance();
     }
 
-    function _getPoolPerformance() private view returns (uint256) {
+    function _getPerformance() private view returns (uint256) {
         uint256 underlyingBalance = IERC20(_underlying).balanceOf(address(this));
 
         if (underlyingBalance > 0)
@@ -92,36 +102,35 @@ contract Pool is Ownable {
         return underlyingBalance - _getInPlay();
     }
 
-    function deposited(address who) public view returns (uint256) {
-        return _lps[who];
-    }
+    // function deposited(address who) public view returns (uint256) {
+    //     return _balances[who];
+    // }
 
     function balanceOf(address who) external view returns (uint256) {
-        return _balanceOf(who);
+        return _balances[who];
     }
 
-    function _balanceOf(address who) private view returns (uint256) {
-        // calculate the portion of the pool that is in play
-        return _lps[who] / (_lps[who] / _totalReserves());
-    }
+    // function _balanceOf(address who) private view returns (uint256) {
+    //     // calculate the portion of the pool that is in play
+    //     return _lps[who] / (_lps[who] / _totalAssets());
+    // }
 
     constructor(address underlying) {
         // todo: create 2 on xxx-HL
         // require(lpToken != address(0) && underlying != address(0), "Invalid address");
         // _lpToken = lpToken;
         _underlying = underlying;
-
         _self = address(this);
 
         // TODO: MINT CONTRACT ON DEPLOYMENT
-        // string name = IERC20(_underlying).name() + "-" + IERC20(underlying).name();
-        // string symbol = IERC20(_underlying).symbol() + "-" + IERC20(underlying).symbol();
+        _name = ERC20(underlying).name();
+        _symbol = ERC20(underlying).symbol();
 
         // deploy ERC20 contract
     }
 
     function previewDeposit(uint256 amount) external view returns (uint256 shares) {
-        shares = _lps[msg.sender] + amount;
+        shares = _balances[msg.sender] + amount;
     }
 
     // Add underlying tokens to the pool
@@ -131,22 +140,22 @@ contract Pool is Ownable {
         IERC20(_underlying).transferFrom(msg.sender, _self, assets);
         // IMintable(_lpToken).mintTo(msg.sender, amount);
 
-        _lps[msg.sender] += assets;
-        _supplied += assets;
+        _balances[msg.sender] += assets;
+        _totalSupply += assets;
 
         emit Supplied(msg.sender, assets);
-        shares = _lps[msg.sender];
+        shares = _balances[msg.sender];
     }
 
     function maxWithdraw(address owner) external view returns (uint256 maxAssets) {
-        maxAssets = _lps[owner];
+        maxAssets = _balances[owner];
     }
 
     function previewWithdraw(uint256 assets) external view returns (uint256 shares) {
-        shares = _quote(assets);
+        shares = _previewWithdraw(assets);
     }
 
-    function _quote(uint256 assets) private view returns (uint256) {
+    function _previewWithdraw(uint256 assets) private view returns (uint256) {
         uint256 underlyingBalance = IERC20(_underlying).balanceOf(address(this));
         uint256 inPlay = _getInPlay();
 
@@ -155,12 +164,13 @@ contract Pool is Ownable {
 
     // Exit your position
     function withdraw() external {
-        uint256 balance = _balanceOf(msg.sender);
+        uint256 balance = _balances[msg.sender];
         require(balance > 0, "You have no position to exit");
 
-        uint256 amount = _quote(balance);
-
-        _lps[msg.sender] = 0;
+        uint256 amount = _previewWithdraw(balance);
+        _totalSupply -= amount;
+        _balances[msg.sender] = 0;
+        
         IERC20(_underlying).transfer(msg.sender, amount);
         IBurnable(_lpToken).burnFrom(msg.sender, balance);
 
