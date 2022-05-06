@@ -41,6 +41,26 @@ contract Vault is IERC20, Ownable {
     uint256 private constant PRECISSION = 1_000;
     address private _market;
 
+    function name() public view returns (string memory) {
+        return _name;
+    }
+
+    function symbol() public view returns (string memory) {
+        return _symbol;
+    }
+
+    function decimals() public view returns (uint8) {
+        return 18;
+    }
+
+    function totalSupply() public view returns (uint256) {
+        return _totalSupply;
+    }
+
+    function balanceOf(address account) public view returns (uint256) {
+        return _balances[account];
+    }
+
     function getMarket() external view returns (address) {
         assert(_market != address(0));
         return _market;
@@ -89,10 +109,6 @@ contract Vault is IERC20, Ownable {
         return IMarket(_market).getTotalInplay();
     }
 
-    // function totalSupplied() external view returns (uint256) {
-    //     return IERC20(_underlying).balanceOf(address(this));
-    // }
-
     function totalReserves() external view returns (uint256) {
         return _totalAssets();
     }
@@ -105,10 +121,6 @@ contract Vault is IERC20, Ownable {
     // function deposited(address who) public view returns (uint256) {
     //     return _balances[who];
     // }
-
-    function balanceOf(address who) external view returns (uint256) {
-        return _balances[who];
-    }
 
     // function _balanceOf(address who) private view returns (uint256) {
     //     // calculate the portion of the pool that is in play
@@ -127,6 +139,46 @@ contract Vault is IERC20, Ownable {
         _symbol = ERC20(underlying).symbol();
 
         // deploy ERC20 contract
+    }
+
+    function transfer(address to, uint256 amount) public returns (bool) {
+        address owner = _msgSender();
+        _transfer(owner, to, amount);
+        return true;
+    }
+
+    function allowance(address owner, address spender) public view returns (uint256) {
+        return _allowances[owner][spender];
+    }
+
+    function approve(address spender, uint256 amount) public returns (bool) {
+        address owner = _msgSender();
+        _approve(owner, spender, amount);
+        return true;
+    }
+
+    function transferFrom(address from, address to, uint256 amount) public returns (bool) {
+        address spender = _msgSender();
+        _spendAllowance(from, spender, amount);
+        _transfer(from, to, amount);
+        return true;
+    }
+
+    function increaseAllowance(address spender, uint256 addedValue) public virtual returns (bool) {
+        address owner = _msgSender();
+        _approve(owner, spender, _allowances[owner][spender] + addedValue);
+        return true;
+    }
+
+    function decreaseAllowance(address spender, uint256 subtractedValue) public virtual returns (bool) {
+        address owner = _msgSender();
+        uint256 currentAllowance = _allowances[owner][spender];
+        require(currentAllowance >= subtractedValue, "ERC20: decreased allowance below zero");
+        unchecked {
+            _approve(owner, spender, currentAllowance - subtractedValue);
+        }
+
+        return true;
     }
 
     function previewDeposit(uint256 amount) external view returns (uint256 shares) {
@@ -175,6 +227,38 @@ contract Vault is IERC20, Ownable {
         IBurnable(_lpToken).burnFrom(msg.sender, balance);
 
         emit Exited(msg.sender, balance);
+    }
+
+    function _transfer(address from, address to,uint256 amount) internal {
+        require(from != address(0), "ERC20: transfer from the zero address");
+        require(to != address(0), "ERC20: transfer to the zero address");
+
+        uint256 fromBalance = _balances[from];
+        require(fromBalance >= amount, "ERC20: transfer amount exceeds balance");
+        unchecked {
+            _balances[from] = fromBalance - amount;
+        }
+        _balances[to] += amount;
+
+        emit Transfer(from, to, amount);
+    }
+
+    function _approve(address owner, address spender, uint256 amount) internal {
+        require(owner != address(0), "ERC20: approve from the zero address");
+        require(spender != address(0), "ERC20: approve to the zero address");
+
+        _allowances[owner][spender] = amount;
+        emit Approval(owner, spender, amount);
+    }
+
+    function _spendAllowance(address owner, address spender, uint256 amount) internal {
+        uint256 currentAllowance = allowance(owner, spender);
+        if (currentAllowance != type(uint256).max) {
+            require(currentAllowance >= amount, "ERC20: insufficient allowance");
+            unchecked {
+                _approve(owner, spender, currentAllowance - amount);
+            }
+        }
     }
 
     modifier onlyMarket() {
