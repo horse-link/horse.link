@@ -5,15 +5,15 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./IBurnable.sol";
-import "./IMintable.sol";
 import "./IMarket.sol";
+import "./IMintable.sol";
 
 struct Reward {
     uint256 balance;
     uint256 start;
 }
 
-contract Vault is Ownable {
+contract Vault is IERC20, Ownable {
 
     // ERC20
     mapping(address => uint256) private _balances;
