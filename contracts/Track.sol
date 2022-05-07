@@ -28,13 +28,13 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, Ownable {
         // _symbol = "HLT";
     }
 
-    function mint(bytes32 name) public view onlyOwner returns (uint256) {
-        uint256 tokenId = _tracksToId[name];
-    }
+    // function mint(bytes32 name) public view onlyOwner returns (uint256) {
+    //     uint256 tokenId = _tracksToId[name];
+    // }
 
-    function mintTo(bytes32 name, address owner) public view onlyOwner returns (uint256) {
-        uint256 tokenId = _tracksToId[name];
-    }
+    // function mintTo(bytes32 name, address owner) public view onlyOwner returns (uint256) {
+    //     uint256 tokenId = _tracksToId[name];
+    // }
 
     function supportsInterface(bytes4 interfaceId) public view override(ERC165, IERC165) returns (bool) {
         return
@@ -172,8 +172,6 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, Ownable {
         require(to != address(0), "ERC721: mint to the zero address");
         require(!_exists(tokenId), "ERC721: token already minted");
 
-        _beforeTokenTransfer(address(0), to, tokenId);
-
         _balances[to] += 1;
         _owners[tokenId] = to;
 
@@ -182,8 +180,6 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, Ownable {
 
     function _burn(uint256 tokenId) internal virtual {
         address owner = ERC721.ownerOf(tokenId);
-
-        _beforeTokenTransfer(owner, address(0), tokenId);
 
         // Clear approvals
         _approve(address(0), tokenId);
@@ -201,8 +197,6 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, Ownable {
     ) internal virtual {
         require(ERC721.ownerOf(tokenId) == from, "ERC721: transfer of token that is not own");
         require(to != address(0), "ERC721: transfer to the zero address");
-
-        _beforeTokenTransfer(from, to, tokenId);
 
         // Clear approvals from the previous owner
         _approve(address(0), tokenId);
@@ -241,10 +235,4 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, Ownable {
             return true;
         }
     }
-
-    function _beforeTokenTransfer(
-        address from,
-        address to,
-        uint256 tokenId
-    ) internal virtual {}
 }

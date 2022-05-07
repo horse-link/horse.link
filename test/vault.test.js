@@ -9,28 +9,28 @@ contract("Vault", (accounts) => {
   let alice = accounts[1];
 
   beforeEach(async () => {
-    token = await Token.new();
-    await token.transfer(alice, 100);
+    token = await Token.new("Mock USDT", "USDT");
+    await token.transfer(alice, 2000);
 
     vault = await Vault.new(token.address);
   });
 
   describe("Vault", () => {
-    it("should have 0 properties on deploy", async () => {
-      const totalSupplied = await vault.totalSupplied();
-      assert.equal(totalSupplied, 0, "Should have no values");
+    it.only("should set properties on deploy", async () => {
+      const totalSupply = await vault.totalSupply();
+      assert.equal(totalSupply, 0, "Should have no tokens");
 
-      const underlyingBalance = await vault.getUnderlyingBalance();
-      assert.equal(underlyingBalance, 0, "Should have no values");
-
-      const vaultPerformance = await vault.getvaultPerformance();
+      const vaultPerformance = await vault.getPerformance();
       assert.equal(vaultPerformance, 0, "Should have no values");
 
       const underlying = await vault.getUnderlying();
       assert.equal(underlying, token.address, "Should have token address as underlying");
 
-      const market = await vault.getMarket();
-      assert.equal(market, "0x00", "Should have no market address");
+      // const market = await vault.getMarket();
+      // assert.equal(market, "0x00", "Should have no market address");
+
+      const name = await vault.name();
+      assert.equal(name, "Mock USDT", "Should have name as Mock USDT");
     });
 
     it("should deposit 10 underlying tokens from alice", async () => {

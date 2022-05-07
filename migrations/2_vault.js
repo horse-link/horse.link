@@ -15,5 +15,5 @@ module.exports = async (deployer) => {
   await deployer.deploy(LPToken, "hlDIA", "Horse Link DIA");
   const hldai = await LPToken.deployed();
 
-  await deployer.deploy(Vault, usdt.address);
+  // await deployer.deploy(Vault, usdt.address);
 };

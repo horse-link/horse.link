@@ -14,7 +14,6 @@ struct Reward {
 }
 
 contract Vault is IERC20, Ownable {
-
     // ERC20
     mapping(address => uint256) private _balances;
     mapping(address => mapping(address => uint256)) private _allowances;
@@ -32,7 +31,7 @@ contract Vault is IERC20, Ownable {
     // Deposits of LPs
     // mapping(address => uint256) private _lps;
     // uint256 private _supplied; // total added to the contract from LPs
-    address private _lpToken;
+
 
     // address private immutable _rewardsToken;
     address private immutable _underlying;
@@ -50,7 +49,7 @@ contract Vault is IERC20, Ownable {
     }
 
     function decimals() public view returns (uint8) {
-        return 18;
+        return _decimals;
     }
 
     function totalSupply() public view returns (uint256) {
@@ -79,7 +78,7 @@ contract Vault is IERC20, Ownable {
         return IERC20(_underlying).balanceOf(address(this));
     }
 
-    function gePerformance() external view returns (uint256) {
+    function getPerformance() external view returns (uint256) {
         return _getPerformance();
     }
 
@@ -92,13 +91,8 @@ contract Vault is IERC20, Ownable {
         return 0;
     }
 
-    function getLPTokenAddress() external view returns (address) {
-        return _lpToken;
-    }
-
-    function setLPToken(address token) public onlyOwner() {
-        require(_lpToken == address(0), "LP token already set");
-        _lpToken = token;
+    function getUnderlying() external view returns (address) {
+        return _underlying;
     }
 
     function getInPlay() external view returns (uint256) {
@@ -122,23 +116,15 @@ contract Vault is IERC20, Ownable {
     //     return _balances[who];
     // }
 
-    // function _balanceOf(address who) private view returns (uint256) {
-    //     // calculate the portion of the pool that is in play
-    //     return _lps[who] / (_lps[who] / _totalAssets());
-    // }
-
     constructor(address underlying) {
-        // todo: create 2 on xxx-HL
-        // require(lpToken != address(0) && underlying != address(0), "Invalid address");
-        // _lpToken = lpToken;
+        require(underlying != address(0), "Underlying token is not set");
+
         _underlying = underlying;
         _self = address(this);
 
-        // TODO: MINT CONTRACT ON DEPLOYMENT
+        _symbol = string(abi.encodePacked("HL", ERC20(underlying).symbol()));
         _name = ERC20(underlying).name();
-        _symbol = ERC20(underlying).symbol();
-
-        // deploy ERC20 contract
+        _decimals = ERC20(underlying).decimals();
     }
 
     function transfer(address to, uint256 amount) public returns (bool) {
@@ -190,7 +176,6 @@ contract Vault is IERC20, Ownable {
         require(assets > 0, "Value must be greater than 0");
 
         IERC20(_underlying).transferFrom(msg.sender, _self, assets);
-        // IMintable(_lpToken).mintTo(msg.sender, amount);
 
         _balances[msg.sender] += assets;
         _totalSupply += assets;
@@ -220,11 +205,10 @@ contract Vault is IERC20, Ownable {
         require(balance > 0, "You have no position to exit");
 
         uint256 amount = _previewWithdraw(balance);
-        _totalSupply -= amount;
+        _totalSupply -= balance;
         _balances[msg.sender] = 0;
         
         IERC20(_underlying).transfer(msg.sender, amount);
-        IBurnable(_lpToken).burnFrom(msg.sender, balance);
 
         emit Exited(msg.sender, balance);
     }

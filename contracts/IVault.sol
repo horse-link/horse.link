@@ -4,6 +4,7 @@ pragma solidity =0.8.10;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 interface IVault {
+    function getUnderlying() external view returns (address);
     function gePerformance() external returns (uint256);
     function totalReserves() external returns (uint256);
     function supply(uint256 value) external;
