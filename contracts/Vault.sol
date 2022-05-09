@@ -67,6 +67,10 @@ contract Vault is IERC20, Ownable {
 
     function setMarket(address market) public onlyOwner() {
         require(_market == address(0), "Market already set");
+
+        // could do some checks here
+        require(IMarket(_market).getTarget() < 2, "Market target is too high");
+
         _market = market;
     }
 
@@ -111,10 +115,6 @@ contract Vault is IERC20, Ownable {
         uint256 underlyingBalance = IERC20(_underlying).balanceOf(address(this));
         return underlyingBalance - _getInPlay();
     }
-
-    // function deposited(address who) public view returns (uint256) {
-    //     return _balances[who];
-    // }
 
     constructor(address underlying) {
         require(underlying != address(0), "Underlying token is not set");

@@ -15,14 +15,13 @@ struct Bet {
     uint256 amount;
     uint256 payout;
     uint256 payoutDate;
-    uint256 expires;  
     bool claimed;
     address owner;
 }
 
 contract Market is IMarket, Ownable {
 
-    address private immutable _bet;
+    IERC721 private immutable _bet;
     uint256 private immutable _fee;
     address private immutable _vault;
 
@@ -60,7 +59,7 @@ contract Market is IMarket, Ownable {
     constructor(address vault, address erc721, uint256 fee) {
         require(vault != address(0), "Pool address cannot be 0");
         _vault = vault;
-        _bet = erc721;
+        _bet = IERC721(erc721);
         _fee = fee;
         
         timeout = 30 days;
@@ -86,7 +85,7 @@ contract Market is IMarket, Ownable {
 
         IERC20(underlying).transferFrom(msg.sender, address(this), amount);
         // _bets.push(Bet(id, amount, amount * odds, start, false, owner));
-        _bets[id] = Bet(amount, amount * odds, start, end + timeout, false, msg.sender);
+        _bets[id] = Bet(amount, amount * odds, end, false, msg.sender);
 
         // Mint the 721
         uint256 tokenId = IBet(_bet).mint(msg.sender);
@@ -120,7 +119,7 @@ contract Market is IMarket, Ownable {
     }
 
     function _getExpiry(bytes32 id) private view returns (uint256) {
-        return _bets[id].expires;
+        return _bets[id].payoutDate + 30 days;
     }
 
     function sweep(bytes32 id) external {
@@ -128,6 +127,8 @@ contract Market is IMarket, Ownable {
         require(_bets[id].claimed == false, "Bet has already been claimed");
         _bets[id].claimed = true;
         _totalInPlay -= _bets[id].amount;
+
+        // give sweeper a cut
     }
 
     function recoverSigner(bytes32 message, bytes memory signature)
