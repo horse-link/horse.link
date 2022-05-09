@@ -70,7 +70,6 @@ contract Vault is IERC20, Ownable {
 
         // could do some checks here
         require(IMarket(_market).getTarget() < 2, "Market target is too high");
-
         _market = market;
     }
 
@@ -167,8 +166,8 @@ contract Vault is IERC20, Ownable {
         return true;
     }
 
-    function previewDeposit(uint256 amount) external view returns (uint256 shares) {
-        shares = _balances[msg.sender] + amount;
+    function previewDeposit(uint256 amount) external pure returns (uint256 shares) {
+        return amount;
     }
 
     // Add underlying tokens to the pool

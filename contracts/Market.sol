@@ -86,16 +86,17 @@ contract Market is IMarket, Ownable {
         IERC20(underlying).transferFrom(msg.sender, address(this), amount);
         // _bets.push(Bet(id, amount, amount * odds, start, false, owner));
         _bets[id] = Bet(amount, amount * odds, end, false, msg.sender);
-
+        _betsIndexes.push(id);
+        
         // Mint the 721
-        uint256 tokenId = IBet(_bet).mint(msg.sender);
+        // uint256 tokenId = IBet(_bet).mint(msg.sender);
 
         _totalInPlay += amount;
         _totalLiability += (amount * odds);
 
         emit Placed(id, amount, amount * odds, msg.sender);
 
-        return tokenId; // token ID
+        return _betsIndexes.length; // token ID
     }
 
     function claim(bytes32 id, bytes calldata signature) external {
