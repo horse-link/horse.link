@@ -103,12 +103,13 @@ contract Vault is IERC20, Ownable {
     }
 
     function _getInPlay() private view returns (uint256) {
-        return IMarket(_market).getTotalInplay();
+        // return IMarket(_market).getTotalInplay();
+        return IERC20(_underlying).balanceOf(_market);
     }
 
-    function totalReserves() external view returns (uint256) {
-        return _totalAssets();
-    }
+    // function totalReserves() external view returns (uint256) {
+    //     return _totalAssets();
+    // }
 
     function _totalAssets() private view returns (uint256) {
         uint256 underlyingBalance = IERC20(_underlying).balanceOf(address(this));
@@ -175,6 +176,7 @@ contract Vault is IERC20, Ownable {
         require(assets > 0, "Value must be greater than 0");
 
         IERC20(_underlying).transferFrom(msg.sender, _self, assets);
+        increaseAllowance(_market, assets);
 
         _balances[msg.sender] += assets;
         _totalSupply += assets;
@@ -208,6 +210,7 @@ contract Vault is IERC20, Ownable {
         _balances[msg.sender] = 0;
         
         IERC20(_underlying).transfer(msg.sender, amount);
+        decreaseAllowance(_market, amount);
 
         emit Exited(msg.sender, balance);
     }

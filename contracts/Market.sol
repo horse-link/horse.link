@@ -24,17 +24,13 @@ contract Market is IMarket, Ownable {
     IERC721 private immutable _bet;
     uint256 private immutable _fee;
     address private immutable _vault;
-
-    // mapping(address => Bet[]) private _bets;
+    address private immutable _self;
 
     bytes32[] private _betsIndexes;
     mapping(bytes32 => Bet) private _bets;
 
     uint256 private _totalInPlay;
     uint256 private _totalLiability;
-
-    // Oracle if bet is not claimed
-    // address public immutable oracle;
 
     // Can claim after this period regardless
     uint256 public immutable timeout;
@@ -58,6 +54,7 @@ contract Market is IMarket, Ownable {
 
     constructor(address vault, address erc721, uint256 fee) {
         require(vault != address(0), "Pool address cannot be 0");
+        _self = address(this);
         _vault = vault;
         _bet = IERC721(erc721);
         _fee = fee;
@@ -72,6 +69,18 @@ contract Market is IMarket, Ownable {
         return (bet.amount, bet.payout, bet.payoutDate, bet.claimed, bet.owner);
     }
 
+    function getMaxPayout(uint256 amount, uint256 odds) public returns (uint256) {
+        return _getMaxPayout(amount, odds);
+    }
+
+    function _getMaxPayout(uint256 amount, uint256 odds) private returns (uint256) {
+        uint256 totalAssets = IVault(_vault).totalAssets();
+        if (totalAssets > amount * odds) {
+            return amount * odds;
+        }
+        return totalAssets;
+    }
+
     function back(bytes32 id, uint256 amount, uint256 odds, uint256 start, uint256 end, bytes calldata signature) external returns (uint256) {
         require(_vault != address(0), "Vault address not set");
         require(start > 0, "Start must be greater than 0");
@@ -83,14 +92,22 @@ contract Market is IMarket, Ownable {
 
         address underlying = IVault(_vault).getUnderlying();
 
-        IERC20(underlying).transferFrom(msg.sender, address(this), amount);
-        // _bets.push(Bet(id, amount, amount * odds, start, false, owner));
+        // add underlying to the market
+        uint256 potentialPayout = _getMaxPayout(amount, odds);
+        assert(potentialPayout > amount);
+
+        IERC20(underlying).transferFrom(msg.sender, _self, amount);
+        IERC20(underlying).transferFrom(_vault, _self, potentialPayout - amount);
+
+        assert(IERC20(underlying).balanceOf(_self) >= potentialPayout);
+
         _bets[id] = Bet(amount, amount * odds, end, false, msg.sender);
         _betsIndexes.push(id);
-        
+
         // Mint the 721
         // uint256 tokenId = IBet(_bet).mint(msg.sender);
 
+        // TODO: REMOVE
         _totalInPlay += amount;
         _totalLiability += (amount * odds);
 
@@ -110,7 +127,7 @@ contract Market is IMarket, Ownable {
         _bets[id].claimed = true;
         _totalInPlay -= _bets[id].amount;
 
-        IERC20(_vault).transferFrom(address(this), _bets[id].owner, _bets[id].payout);
+        IERC20(_vault).transferFrom(_self, _bets[id].owner, _bets[id].payout);
 
         emit Claimed(id, _bets[id].payout, _bets[id].owner);
     }
@@ -126,10 +143,14 @@ contract Market is IMarket, Ownable {
     function sweep(bytes32 id) external {
         require(_getExpiry(id) > block.timestamp, "Bet has not expired");
         require(_bets[id].claimed == false, "Bet has already been claimed");
+        
         _bets[id].claimed = true;
         _totalInPlay -= _bets[id].amount;
 
-        // give sweeper a cut
+        // TODO: give sweeper a cut
+
+        // refund the vault
+        IERC20(_self).transferFrom(_self, _vault, _bets[id].payout);
     }
 
     function recoverSigner(bytes32 message, bytes memory signature)
