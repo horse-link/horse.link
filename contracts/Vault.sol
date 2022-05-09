@@ -66,7 +66,7 @@ contract Vault is IERC20, Ownable {
     }
 
     function setMarket(address market) public onlyOwner() {
-        require(_market != address(0), "Market already set");
+        require(_market == address(0), "Market already set");
         _market = market;
     }
 
@@ -75,7 +75,7 @@ contract Vault is IERC20, Ownable {
     }
 
     function totalAssets() public view returns (uint256) {
-        return IERC20(_underlying).balanceOf(address(this));
+        return IERC20(_underlying).balanceOf(_self);
     }
 
     function getPerformance() external view returns (uint256) {
@@ -83,7 +83,7 @@ contract Vault is IERC20, Ownable {
     }
 
     function _getPerformance() private view returns (uint256) {
-        uint256 underlyingBalance = IERC20(_underlying).balanceOf(address(this));
+        uint256 underlyingBalance = IERC20(_underlying).balanceOf(_self);
 
         if (underlyingBalance > 0)
             return _totalAssets() * PRECISSION / underlyingBalance;
@@ -123,7 +123,7 @@ contract Vault is IERC20, Ownable {
         _self = address(this);
 
         _symbol = string(abi.encodePacked("HL", ERC20(underlying).symbol()));
-        _name = ERC20(underlying).name();
+        _name = string(abi.encodePacked("HL ", ERC20(underlying).name()));
         _decimals = ERC20(underlying).decimals();
     }
 

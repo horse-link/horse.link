@@ -14,7 +14,8 @@ struct Bet {
     // bytes32 id;
     uint256 amount;
     uint256 payout;
-    uint256 payoutDate;    
+    uint256 payoutDate;
+    uint256 expires;  
     bool claimed;
     address owner;
 }
@@ -31,7 +32,7 @@ contract Market is IMarket, Ownable {
     mapping(bytes32 => Bet) private _bets;
 
     uint256 private _totalInPlay;
-    uint256 private _totalDebt;
+    uint256 private _totalLiability;
 
     // Oracle if bet is not claimed
     // address public immutable oracle;
@@ -85,13 +86,13 @@ contract Market is IMarket, Ownable {
 
         IERC20(underlying).transferFrom(msg.sender, address(this), amount);
         // _bets.push(Bet(id, amount, amount * odds, start, false, owner));
-        _bets[id] = Bet(amount, amount * odds, start, false, msg.sender);
+        _bets[id] = Bet(amount, amount * odds, start, end + timeout, false, msg.sender);
 
         // Mint the 721
         uint256 tokenId = IBet(_bet).mint(msg.sender);
 
         _totalInPlay += amount;
-        _totalDebt += (amount * odds);
+        _totalLiability += (amount * odds);
 
         emit Placed(id, amount, amount * odds, msg.sender);
 
@@ -112,6 +113,21 @@ contract Market is IMarket, Ownable {
         IERC20(_vault).transferFrom(address(this), _bets[id].owner, _bets[id].payout);
 
         emit Claimed(id, _bets[id].payout, _bets[id].owner);
+    }
+
+    function getExpiry(bytes32 id) external view returns (uint256) {
+        return _getExpiry(id);
+    }
+
+    function _getExpiry(bytes32 id) private view returns (uint256) {
+        return _bets[id].expires;
+    }
+
+    function sweep(bytes32 id) external {
+        require(_getExpiry(id) > block.timestamp, "Bet has not expired");
+        require(_bets[id].claimed == false, "Bet has already been claimed");
+        _bets[id].claimed = true;
+        _totalInPlay -= _bets[id].amount;
     }
 
     function recoverSigner(bytes32 message, bytes memory signature)

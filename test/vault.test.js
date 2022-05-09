@@ -30,7 +30,10 @@ contract("Vault", (accounts) => {
       // assert.equal(market, "0x00", "Should have no market address");
 
       const name = await vault.name();
-      assert.equal(name, "Mock USDT", "Should have name as Mock USDT");
+      assert.equal(name, "HL Mock USDT", "Should have name as HL Mock USDT");
+
+      const symbol = await vault.symbol();
+      assert.equal(symbol, "HLUSDT", "Should have name as HLUSDT");
     });
 
     it("should deposit 10 underlying tokens from alice", async () => {
