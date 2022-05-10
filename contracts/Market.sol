@@ -107,7 +107,7 @@ contract Market is IMarket, Ownable {
         // Mint the 721
         // uint256 tokenId = IBet(_bet).mint(msg.sender);
 
-        // TODO: REMOVE
+        // TODO: REMOVE TOTAL IN PLAY
         _totalInPlay += amount;
         _totalLiability += (amount * odds);
 

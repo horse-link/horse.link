@@ -13,7 +13,7 @@ struct Reward {
     uint256 start;
 }
 
-contract Vault is IERC20, Ownable {
+contract Vault is Ownable { // todo is IERC20
     // ERC20
     mapping(address => uint256) private _balances;
     mapping(address => mapping(address => uint256)) private _allowances;
@@ -226,7 +226,7 @@ contract Vault is IERC20, Ownable {
         }
         _balances[to] += amount;
 
-        emit Transfer(from, to, amount);
+        // emit Transfer(from, to, amount);
     }
 
     function _approve(address owner, address spender, uint256 amount) internal {
@@ -234,7 +234,7 @@ contract Vault is IERC20, Ownable {
         require(spender != address(0), "ERC20: approve to the zero address");
 
         _allowances[owner][spender] = amount;
-        emit Approval(owner, spender, amount);
+        // emit Approval(owner, spender, amount);
     }
 
     function _spendAllowance(address owner, address spender, uint256 amount) internal {
