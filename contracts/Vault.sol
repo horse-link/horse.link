@@ -107,10 +107,6 @@ contract Vault is Ownable { // todo is IERC20
         return IERC20(_underlying).balanceOf(_market);
     }
 
-    // function totalReserves() external view returns (uint256) {
-    //     return _totalAssets();
-    // }
-
     function _totalAssets() private view returns (uint256) {
         uint256 underlyingBalance = IERC20(_underlying).balanceOf(address(this));
         return underlyingBalance - _getInPlay();
