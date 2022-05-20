@@ -8,7 +8,10 @@ import WalletModal from "../WalletModal";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import { useAccount } from "wagmi";
 
-const navigation = [{ name: "Dashboard", path: "/dashboard" }, { name: "Pools", path: "/pools" }, { name: "White Paper", path: "https://github.com/horse-link/whitepaper" }];
+const navigation = [
+  { name: "Dashboard", path: "/dashboard" }, 
+  { name: "Vaults", path: "/vaults" }, 
+  { name: "White Paper", path: "https://github.com/horse-link/whitepaper" }];
 
 type Props = {
   loading: boolean;
