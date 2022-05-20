@@ -11,7 +11,7 @@ import "./IMarket.sol";
 
 // Put these in the ERC721 contract
 struct Bet {
-    // bytes32 id;
+    bytes32 proposition;
     uint256 amount;
     uint256 payout;
     uint256 payoutDate;
@@ -81,7 +81,7 @@ contract Market is IMarket, Ownable {
         return totalAssets;
     }
 
-    function back(bytes32 id, uint256 amount, uint256 odds, uint256 start, uint256 end, bytes calldata signature) external returns (uint256) {
+    function back(bytes32 marketId, bytes32 proposition, uint256 amount, uint256 odds, uint256 start, uint256 end, bytes calldata signature) external returns (uint256) {
         require(_vault != address(0), "Vault address not set");
         require(start > 0, "Start must be greater than 0");
         require(start < block.timestamp, "Betting start time has passed");
