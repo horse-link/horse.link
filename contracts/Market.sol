@@ -29,12 +29,23 @@ contract Market is IMarket, Ownable {
     bytes32[] private _betsIndexes;
     mapping(bytes32 => Bet) private _bets;
 
+    // MarketID => amount bet
+    mapping(bytes32 => uint256) private _marketTotal;
+    // mapping(bytes32 => uint256[]) private _marketBets;
+
+    // MarketID => PropositionsID => amount bet
+    mapping(bytes32 => mapping(uint16 => uint256)) private _marketBetAmount;
+
+
     uint256 private _totalInPlay;
     uint256 private _totalLiability;
 
     // Can claim after this period regardless
     uint256 public immutable timeout;
     uint256 public immutable min;
+
+
+
 
     function getTarget() public view returns (uint256) {
         return _fee;
@@ -69,7 +80,7 @@ contract Market is IMarket, Ownable {
         return (bet.amount, bet.payout, bet.payoutDate, bet.claimed, bet.owner);
     }
 
-    function getMaxPayout(uint256 amount, uint256 odds) public returns (uint256) {
+    function getMaxPayout(uint256 amount, uint256 odds) external returns (uint256) {
         return _getMaxPayout(amount, odds);
     }
 
@@ -78,19 +89,37 @@ contract Market is IMarket, Ownable {
         if (totalAssets > amount * odds) {
             return amount * odds;
         }
+        
         return totalAssets;
     }
 
-    function back(bytes32 marketId, bytes32 proposition, uint256 amount, uint256 odds, uint256 start, uint256 end, bytes calldata signature) external returns (uint256) {
+    function _getMaxPayoutForBet(uint256 amount, uint256 odds, bytes32 marketId, uint16 propositionID) private returns (uint256) {
+        uint256 totalAssets = IVault(_vault).totalAssets();
+
+        uint256 totalAmountBet = _marketBetAmount[marketId][propositionID];
+        
+        if (totalAssets > amount * odds) {
+            return amount * odds;
+        }
+
+        return totalAssets;
+    }
+
+    function back(bytes32 marketId, uint16 proposition, uint256 amount, uint256 odds, uint256 start, uint256 end, bytes calldata signature) external returns (uint256) {
         require(_vault != address(0), "Vault address not set");
         require(start > 0, "Start must be greater than 0");
         require(start < block.timestamp, "Betting start time has passed");
         
-        bytes32 message = keccak256(abi.encodePacked(id, amount, odds, start, end));
+        bytes32 message = keccak256(abi.encodePacked(proposition, amount, odds, start, end));
         address marketOwner = recoverSigner(message, signature);
         require(marketOwner == owner(), "Invalid signature");
 
         address underlying = IVault(_vault).getUnderlying();
+
+
+        // add to the market
+        _marketTotal[marketId] = _marketTotal[marketId] += amount;
+
 
         // add underlying to the market
         uint256 potentialPayout = _getMaxPayout(amount, odds);
@@ -101,8 +130,20 @@ contract Market is IMarket, Ownable {
 
         assert(IERC20(underlying).balanceOf(_self) >= potentialPayout);
 
-        _bets[id] = Bet(amount, amount * odds, end, false, msg.sender);
-        _betsIndexes.push(id);
+
+
+        
+
+
+
+
+        _marketBetAmount[marketId][proposition] += amount; // potentialPayout;
+
+
+
+
+        // _bets[id] = Bet(amount, amount * odds, end, false, msg.sender);
+        // _betsIndexes.push(id);
 
         // Mint the 721
         // uint256 tokenId = IBet(_bet).mint(msg.sender);
