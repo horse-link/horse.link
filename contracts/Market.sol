@@ -11,7 +11,7 @@ import "./IMarket.sol";
 
 // Put these in the ERC721 contract
 struct Bet {
-    bytes32 proposition;
+    bytes32 marketId;
     uint256 amount;
     uint256 payout;
     uint256 payoutDate;
@@ -19,7 +19,10 @@ struct Bet {
     address owner;
 }
 
-contract Market is IMarket, Ownable {
+// IMarket, 
+contract Market is Ownable {
+
+    uint256 private constant MAX = 32;
 
     IERC721 private immutable _bet;
     uint256 private immutable _fee;
@@ -27,7 +30,10 @@ contract Market is IMarket, Ownable {
     address private immutable _self;
 
     bytes32[] private _betsIndexes;
-    mapping(bytes32 => Bet) private _bets;
+
+    // Market ID => Proposition ID
+    mapping(bytes32 => mapping(bytes32 => Bet)) private _bets;
+    mapping(bytes32 => Bet[]) private _betsPerMarket;
 
     uint256 private _totalInPlay;
     uint256 private _totalLiability;
@@ -81,12 +87,12 @@ contract Market is IMarket, Ownable {
         return totalAssets;
     }
 
-    function back(bytes32 marketId, bytes32 proposition, uint256 amount, uint256 odds, uint256 start, uint256 end, bytes calldata signature) external returns (uint256) {
+    function back(bytes32 id, bytes32 nonce, bytes32 marketId, uint256 amount, uint256 odds, uint256 start, uint256 end, bytes calldata signature) external returns (uint256) {
         require(_vault != address(0), "Vault address not set");
         require(start > 0, "Start must be greater than 0");
         require(start < block.timestamp, "Betting start time has passed");
         
-        bytes32 message = keccak256(abi.encodePacked(id, amount, odds, start, end));
+        bytes32 message = keccak256(abi.encodePacked(nonce, marketId, id, amount, odds, start, end));
         address marketOwner = recoverSigner(message, signature);
         require(marketOwner == owner(), "Invalid signature");
 
@@ -101,7 +107,7 @@ contract Market is IMarket, Ownable {
 
         assert(IERC20(underlying).balanceOf(_self) >= potentialPayout);
 
-        _bets[id] = Bet(amount, amount * odds, end, false, msg.sender);
+        _bets[marketId][id] = Bet(amount, amount * odds, end, false, msg.sender);
         _betsIndexes.push(id);
 
         // Mint the 721
