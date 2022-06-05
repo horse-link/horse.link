@@ -33,11 +33,12 @@ contract Market is Ownable {
 
     // MarketID => amount bet
     mapping(bytes32 => uint256) private _marketTotal;
-    // mapping(bytes32 => uint256[]) private _marketBets;
 
-    // MarketID => PropositionsID => amount bet
+    // MarketID => PropositionID => amount bet
     mapping(bytes32 => mapping(uint16 => uint256)) private _marketBetAmount;
 
+    mapping(uint64 => Bet) private _bets;
+    uint64 private _betsIndex;
 
     uint256 private _totalInPlay;
     uint256 private _totalLiability;
@@ -45,9 +46,6 @@ contract Market is Ownable {
     // Can claim after this period regardless
     uint256 public immutable timeout;
     uint256 public immutable min;
-
-
-
 
     function getTarget() public view returns (uint256) {
         return _fee;
@@ -65,6 +63,14 @@ contract Market is Ownable {
         return _vault;
     }
 
+    function getExpiry(uint64 id) external view returns (uint256) {
+        return _getExpiry(id);
+    }
+
+    function _getExpiry(uint64 id) private view returns (uint256) {
+        return _bets[id].payoutDate + 30 days;
+    }
+
     constructor(address vault, address erc721, uint256 fee) {
         require(vault != address(0), "Pool address cannot be 0");
         _self = address(this);
@@ -76,11 +82,22 @@ contract Market is Ownable {
         min = 1 hours;
     }
 
-    function getBet(uint256 index) external view returns (uint256, uint256, uint256, bool, address) {
-        bytes32 id = _betsIndexes[index];
+    function getBet(uint64 id) external view returns (uint256, uint256, uint256, bool, address) {
+        return _getBet(id);
+    }
+
+    function _getBet(uint64 id) private view returns (uint256, uint256, uint256, bool, address) {
+        // bytes32 index = _betsIndexes[id];
         Bet memory bet = _bets[id];
         return (bet.amount, bet.payout, bet.payoutDate, bet.claimed, bet.owner);
     }
+
+    // function getBetById(bytes32 id) external view returns (uint256, uint256, uint256, bool, address) {
+    //     // bytes32 index = _betsIndexes[id];
+    //     // Bet memory bet = _bets[id];
+    //     // return (bet.amount, bet.payout, bet.payoutDate, bet.claimed, bet.owner);
+    //     return 0;
+    // }
 
     function getMaxPayout(uint256 amount, uint256 odds) external returns (uint256) {
         return _getMaxPayout(amount, odds);
@@ -98,7 +115,7 @@ contract Market is Ownable {
     function _getMaxPayoutForBet(uint256 amount, uint256 odds, bytes32 marketId, uint16 propositionID) private returns (uint256) {
         uint256 totalAssets = IVault(_vault).totalAssets();
 
-        uint256 totalAmountBet = _marketBetAmount[marketId][propositionID];
+        // uint256 totalAmountBet = _marketBetAmount[marketId][propositionID];
         
         if (totalAssets > amount * odds) {
             return amount * odds;
@@ -107,23 +124,19 @@ contract Market is Ownable {
         return totalAssets;
     }
 
-    function back(bytes32 marketId, uint16 proposition, uint256 amount, uint256 odds, uint256 start, uint256 end, bytes calldata signature) external returns (uint256) {
     function back(bytes32 id, bytes32 nonce, bytes32 marketId, uint256 amount, uint256 odds, uint256 start, uint256 end, bytes calldata signature) external returns (uint256) {
         require(_vault != address(0), "Vault address not set");
         require(start > 0, "Start must be greater than 0");
-        require(start < block.timestamp, "Betting start time has passed");
+        require(start < block.timestamp && end > block.timestamp, "Betting start time has passed");
         
-        bytes32 message = keccak256(abi.encodePacked(proposition, amount, odds, start, end));
         bytes32 message = keccak256(abi.encodePacked(nonce, marketId, id, amount, odds, start, end));
         address marketOwner = recoverSigner(message, signature);
         require(marketOwner == owner(), "Invalid signature");
 
         address underlying = IVault(_vault).getUnderlying();
 
-
         // add to the market
         _marketTotal[marketId] = _marketTotal[marketId] += amount;
-
 
         // add underlying to the market
         uint256 potentialPayout = _getMaxPayout(amount, odds);
@@ -134,18 +147,11 @@ contract Market is Ownable {
 
         assert(IERC20(underlying).balanceOf(_self) >= potentialPayout);
 
-        _bets[marketId][id] = Bet(amount, amount * odds, end, false, msg.sender);
+        // _bets[marketId][id] = Bet(amount, amount * odds, end, false, msg.sender);
         _betsIndexes.push(id);
 
 
-        
-
-
-
-
-        _marketBetAmount[marketId][proposition] += amount; // potentialPayout;
-
-
+        // _marketBetAmount[marketId][proposition] += amount; // potentialPayout;
 
 
         // _bets[id] = Bet(amount, amount * odds, end, false, msg.sender);
@@ -163,7 +169,23 @@ contract Market is Ownable {
         return _betsIndexes.length; // token ID
     }
 
-    function claim(bytes32 id, bytes calldata signature) external {
+    // function claim(bytes32 id, bytes calldata signature) external {
+    //     bytes32 message = keccak256(abi.encodePacked(id));
+    //     address marketOwner = recoverSigner(message, signature);
+    //     require(marketOwner == owner(), "Invalid signature");
+
+    //     require(_bets[id].claimed == false, "Bet has already been claimed");
+    //     require(_bets[id].payoutDate < block.timestamp + _bets[id].payoutDate, "Market not closed");
+
+    //     _bets[id].claimed = true;
+    //     _totalInPlay -= _bets[id].amount;
+
+    //     IERC20(_vault).transferFrom(_self, _bets[id].owner, _bets[id].payout);
+
+    //     emit Claimed(id, _bets[id].payout, _bets[id].owner);
+    // }
+
+    function claim(uint64 id, bytes calldata signature) external {
         bytes32 message = keccak256(abi.encodePacked(id));
         address marketOwner = recoverSigner(message, signature);
         require(marketOwner == owner(), "Invalid signature");
@@ -179,15 +201,20 @@ contract Market is Ownable {
         emit Claimed(id, _bets[id].payout, _bets[id].owner);
     }
 
-    function getExpiry(bytes32 id) external view returns (uint256) {
-        return _getExpiry(id);
-    }
+    // function sweep(bytes32 id) external {
+    //     require(_getExpiry(id) > block.timestamp, "Bet has not expired");
+    //     require(_bets[id].claimed == false, "Bet has already been claimed");
+        
+    //     _bets[id].claimed = true;
+    //     _totalInPlay -= _bets[id].amount;
 
-    function _getExpiry(bytes32 id) private view returns (uint256) {
-        return _bets[id].payoutDate + 30 days;
-    }
+    //     // TODO: give sweeper a cut
 
-    function sweep(bytes32 id) external {
+    //     // refund the vault
+    //     IERC20(_self).transferFrom(_self, _vault, _bets[id].payout);
+    // }
+
+    function sweep(uint64 id) external {
         require(_getExpiry(id) > block.timestamp, "Bet has not expired");
         require(_bets[id].claimed == false, "Bet has already been claimed");
         
@@ -237,6 +264,6 @@ contract Market is Ownable {
         return (v, r, s);
     }
 
-    event Claimed(bytes32 id, uint256 payout, address indexed owner);
+    event Claimed(uint64 id, uint256 payout, address indexed owner);
     event Placed(bytes32 id, uint256 amount, uint256 payout, address indexed owner);
 }

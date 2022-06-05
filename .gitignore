@@ -354,3 +354,5 @@ dist
 .idea/
 
 .env
+
+build/contracts/

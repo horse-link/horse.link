@@ -1,10 +1,10 @@
-const Pool = artifacts.require("Pool");
+const Vault = artifacts.require("Vault");
 const Market = artifacts.require("Market");
 const Token = artifacts.require("MockToken");
 
 contract("Market", (accounts) => {
-  let token;
-  let pool;
+  let unerlying;
+  let vault;
 
   let owner = accounts[0];
   let alice = accounts[1];
@@ -13,7 +13,7 @@ contract("Market", (accounts) => {
     token = await Token.new();
     await token.transfer(alice, 100);
 
-    pool = await Pool.new(token.address);
+    vault = await Vault.new(token.address);
   });
 
   describe("Market", () => {

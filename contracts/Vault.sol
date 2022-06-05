@@ -171,7 +171,7 @@ contract Vault is Ownable { // todo is IERC20
     function deposit(uint256 assets) external returns (uint256 shares) {
         require(assets > 0, "Value must be greater than 0");
 
-        IERC20(_underlying).transferFrom(msg.sender, _self, assets);
+        // IERC20(_underlying).transferFrom(msg.sender, _self, assets);
         increaseAllowance(_market, assets);
 
         _balances[msg.sender] += assets;
@@ -222,7 +222,7 @@ contract Vault is Ownable { // todo is IERC20
         }
         _balances[to] += amount;
 
-        // emit Transfer(from, to, amount);
+        emit Transfer(from, to, amount);
     }
 
     function _approve(address owner, address spender, uint256 amount) internal {
@@ -230,7 +230,7 @@ contract Vault is Ownable { // todo is IERC20
         require(spender != address(0), "ERC20: approve to the zero address");
 
         _allowances[owner][spender] = amount;
-        // emit Approval(owner, spender, amount);
+        emit Approval(owner, spender, amount);
     }
 
     function _spendAllowance(address owner, address spender, uint256 amount) internal {
@@ -249,6 +249,8 @@ contract Vault is Ownable { // todo is IERC20
         _;
     }
 
+    event Approval(address indexed owner, address indexed spender, uint256 value);
     event Exited(address indexed who, uint256 value);
     event Supplied(address indexed owner, uint256 value);
+    event Transfer(address indexed from, address indexed to, uint256 value);
 }
