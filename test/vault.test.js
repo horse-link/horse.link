@@ -1,10 +1,12 @@
 /* eslint-disable no-undef */
 const Vault = artifacts.require("Vault");
 const Token = artifacts.require("MockToken");
+const Market = artifacts.require("Market");
 
 contract("Vault", (accounts) => {
   let underlying;
   let vault;
+  let market;
 
   let owner = accounts[0];
   let alice = accounts[1];
@@ -14,10 +16,15 @@ contract("Vault", (accounts) => {
     await underlying.transfer(alice, 2000);
 
     vault = await Vault.new(underlying.address);
+
+    // address vault, address erc721, uint256 fee
+    market = await Market.new(vault.address, 0x0000000000000000000000000000000000000000, 100);
+
+    await vault.setMarket(market.address);
   });
 
   describe("Vault", () => {
-    it("should set properties on deploy", async () => {
+    it.only("should set properties on deploy", async () => {
       const totalSupply = await vault.totalSupply();
       assert.equal(totalSupply, 0, "Should have no tokens");
 
@@ -35,6 +42,9 @@ contract("Vault", (accounts) => {
 
       const symbol = await vault.symbol();
       assert.equal(symbol, "HLUSDT", "Should have name as HLUSDT");
+
+      const _market = await vault.getMarket();
+      assert.equal(_market, market.address, "Should have market set");
     });
 
     it.only("should deposit $10 USDT underlying from alice", async () => {

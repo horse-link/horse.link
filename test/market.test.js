@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const Vault = artifacts.require("Vault");
 const Market = artifacts.require("Market");
 const Token = artifacts.require("MockToken");
