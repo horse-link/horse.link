@@ -113,11 +113,11 @@ contract Vault is Ownable { // todo is IERC20
     }
 
     constructor(address underlying) {
-        require(underlying != address(0), "Underlying token is not set");
+        require(underlying != address(0), "Underlying address is invalid");
 
-        _underlying = underlying;
         _self = address(this);
-
+        _underlying = underlying;
+        
         _symbol = string(abi.encodePacked("HL", ERC20(underlying).symbol()));
         _name = string(abi.encodePacked("HL ", ERC20(underlying).name()));
         _decimals = ERC20(underlying).decimals();

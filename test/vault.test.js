@@ -21,9 +21,8 @@ contract("Vault", (accounts) => {
 
     vault = await Vault.new(underlying.address);
 
-    // address vault, address erc721, uint256 fee
+    // // address vault, address erc721, uint256 fee
     market = await Market.new(vault.address, bet.address, 100);
-
     await vault.setMarket(market.address);
   });
 
@@ -47,11 +46,11 @@ contract("Vault", (accounts) => {
       const symbol = await vault.symbol();
       assert.equal(symbol, "HLUSDT", "Should have name as HLUSDT");
 
-      const _market = await vault.getMarket();
-      assert.equal(_market, market.address, "Should have market set");
+      // const _market = await vault.getMarket();
+      // assert.equal(_market, market.address, "Should have market set");
     });
 
-    it.only("should deposit $10 USDT underlying from alice", async () => {
+    it("should deposit $10 USDT underlying from alice", async () => {
       // check alice balance
       let balance = await underlying.balanceOf(alice);
       assert.equal(balance, 2000, "Should have $2,000 USDT");

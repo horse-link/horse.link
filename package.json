@@ -2,6 +2,7 @@
   "name": "horse.link",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "dependencies": {
     "@chainlink/contracts": "^0.4.0",
     "@craco/craco": "^6.1.2",
