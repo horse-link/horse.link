@@ -1,9 +1,11 @@
 /* eslint-disable no-undef */
+const Bet = artifacts.require("Bet");
 const Vault = artifacts.require("Vault");
 const Token = artifacts.require("MockToken");
 const Market = artifacts.require("Market");
 
 contract("Vault", (accounts) => {
+  let bet;
   let underlying;
   let vault;
   let market;
@@ -12,13 +14,15 @@ contract("Vault", (accounts) => {
   let alice = accounts[1];
 
   beforeEach(async () => {
+    bet = await Bet.new();
+
     underlying = await Token.new("Mock USDT", "USDT");
     await underlying.transfer(alice, 2000);
 
     vault = await Vault.new(underlying.address);
 
     // address vault, address erc721, uint256 fee
-    market = await Market.new(vault.address, 0x0000000000000000000000000000000000000000, 100);
+    market = await Market.new(vault.address, bet.address, 100);
 
     await vault.setMarket(market.address);
   });

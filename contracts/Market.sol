@@ -24,7 +24,7 @@ contract Market is Ownable {
 
     uint256 private constant MAX = 32;
 
-    IERC721 private immutable _bet;
+    IERC721 private _bet;
     uint256 private immutable _fee;
     address private immutable _vault;
     address private immutable _self;
@@ -75,7 +75,7 @@ contract Market is Ownable {
         require(vault != address(0), "Pool address cannot be 0");
         _self = address(this);
         _vault = vault;
-        _bet = IERC721(erc721);
+        // _bet = IERC721(erc721);
         _fee = fee;
         
         timeout = 30 days;
