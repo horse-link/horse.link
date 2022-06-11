@@ -73,9 +73,9 @@ contract("Vault", (accounts) => {
       // const totalDeposited = await vault.deposited(alice);
       // assert.equal(totalDeposited, 10, "Should have 10 tokens");
 
-      // // check the vault's performance
-      // const vaultPerformance = await vault.getvaultPerformance();
-      // assert.equal(vaultPerformance, 0, "vault performance should be 0 with no bets");
+      // check the vault's performance
+      const vaultPerformance = await vault.getPerformance();
+      assert.equal(vaultPerformance, 0, "Vault performance should be 0 with no bets");
     });
 
     it("should exit from vault", async () => {
