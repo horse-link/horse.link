@@ -69,7 +69,7 @@ contract Vault is Ownable { // todo is IERC20
         require(_market == address(0), "Market already set");
 
         // could do some checks here
-        require(IMarket(_market).getTarget() < 2, "Market target is too high");
+        // require(IMarket(_market).getTarget() < 200, "Market target is too high");
         _market = market;
     }
 
@@ -171,11 +171,13 @@ contract Vault is Ownable { // todo is IERC20
     function deposit(uint256 assets) external returns (uint256 shares) {
         require(assets > 0, "Value must be greater than 0");
 
-        // IERC20(_underlying).transferFrom(msg.sender, _self, assets);
+        IERC20(_underlying).transferFrom(msg.sender, _self, assets);
         increaseAllowance(_market, assets);
 
         _balances[msg.sender] += assets;
         _totalSupply += assets;
+
+        // todo: mint LP token
 
         emit Supplied(msg.sender, assets);
         shares = _balances[msg.sender];

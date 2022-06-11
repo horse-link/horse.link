@@ -25,7 +25,7 @@ contract Market is Ownable {
     uint256 private constant MAX = 32;
 
     IERC721 private _bet;
-    uint256 private immutable _fee;
+    uint8 private immutable _fee;
     address private immutable _vault;
     address private immutable _self;
 
@@ -47,7 +47,7 @@ contract Market is Ownable {
     uint256 public immutable timeout;
     uint256 public immutable min;
 
-    function getTarget() public view returns (uint256) {
+    function getTarget() public view returns (uint8) {
         return _fee;
     }
 
@@ -71,7 +71,7 @@ contract Market is Ownable {
         return _bets[id].payoutDate + 30 days;
     }
 
-    constructor(address vault, address erc721, uint256 fee) {
+    constructor(address vault, address erc721, uint8 fee) {
         require(vault != address(0), "Pool address cannot be 0");
         _self = address(this);
         _vault = vault;
@@ -112,7 +112,7 @@ contract Market is Ownable {
         return totalAssets;
     }
 
-    function _getMaxPayoutForBet(uint256 amount, uint256 odds, bytes32 marketId, uint16 propositionID) private returns (uint256) {
+    function _getMaxPayoutForBet(uint256 amount, uint256 odds, bytes32 marketId, uint16 propositionId) private returns (uint256) {
         uint256 totalAssets = IVault(_vault).totalAssets();
 
         // uint256 totalAmountBet = _marketBetAmount[marketId][propositionID];
