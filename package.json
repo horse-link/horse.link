@@ -63,6 +63,8 @@
     "start": "craco start",
     "build": "BUILD_PATH='./dist' craco build",
     "build:contracts": "truffle compile",
+    "compile": "truffle compile",
+    "compile:contracts": "truffle compile",
     "test": "craco test",
     "test:contracts": "truffle test",
     "test:sc": "truffle test"

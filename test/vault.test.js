@@ -75,7 +75,7 @@ contract("Vault", (accounts) => {
 
       // check the vault's performance
       const vaultPerformance = await vault.getPerformance();
-      assert.equal(vaultPerformance, 0, "Vault performance should be 0 with no bets");
+      assert.equal(vaultPerformance, 100, "Vault performance should be 100 with no bets");
     });
 
     it("should exit from vault", async () => {
