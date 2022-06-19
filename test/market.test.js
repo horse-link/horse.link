@@ -16,15 +16,18 @@ contract("Market", (accounts) => {
 
     vault = await Vault.new(underlying.address);
 
-    await underlying.approve(vault.address, 100, { from: alice });
-    await vault.deposit(100, { from: alice });
-
     const fee = 100;
     market = await Market.new(vault.address, fee);
+
+    vault.setMarket(market.address);
+
+    console.log(vault.address);
+    await underlying.approve(vault.address, 100, { from: alice });
+    await vault.deposit(100, { from: alice });
   });
 
   describe("Market", () => {
-    it("should have 0 properties on deploy", async () => {
+    it.only("should have 0 properties on deploy", async () => {
       const inPlay = await market.getTotalInplay();
       assert.equal(inPlay, 0, "Should have $0 play");
 
