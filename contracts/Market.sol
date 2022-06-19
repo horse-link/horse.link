@@ -83,7 +83,7 @@ contract Market is Ownable {
         return _bets[id].payoutDate + 30 days;
     }
 
-    constructor(address vault, address erc721, uint8 fee) {
+    constructor(address vault, uint8 fee) {
         require(vault != address(0), "Invalid address");
         _self = address(this);
         _vault = vault;

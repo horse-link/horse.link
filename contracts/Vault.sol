@@ -89,7 +89,6 @@ contract Vault is Ownable { // todo is IERC20
         uint256 underlyingBalance = IERC20(_underlying).balanceOf(_self);
 
         if (underlyingBalance > 0)
-            // return _totalAssets() * PRECISSION / underlyingBalance * PRECISSION;
             return (_totalAssets() / underlyingBalance) * 100;
 
         return 0;
