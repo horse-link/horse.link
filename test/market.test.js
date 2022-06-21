@@ -21,7 +21,6 @@ contract("Market", (accounts) => {
 
     vault.setMarket(market.address);
 
-    console.log(vault.address);
     await underlying.approve(vault.address, 100, { from: alice });
     await vault.deposit(100, { from: alice });
   });
@@ -38,16 +37,9 @@ contract("Market", (accounts) => {
       assert.equal(target, 100, "Should have fee of 1%");
     });
 
-    it("should allow $100 punt", async () => {
+    it.only("should allow a $100 punt at 5:1", async () => {
       // check alice balance
       let balance = await underlying.balanceOf(alice);
-      assert.equal(balance, 2000, "Should have $2,000 USDT");
-
-      await underlying.approve(vault.address, 100, { from: alice });
-      await vault.deposit(100, { from: alice });
-
-      // check alice balance
-      balance = await underlying.balanceOf(alice);
       assert.equal(balance, 1900, "Should have $1,900 USDT");
 
       // check vault balance
@@ -56,10 +48,6 @@ contract("Market", (accounts) => {
 
       const totalAssets = await vault.totalAssets();
       assert.equal(totalAssets, 100, "Should have $100 USDT");
-
-      // // check alice supply
-      // const totalDeposited = await vault.deposited(alice);
-      // assert.equal(totalDeposited, 10, "Should have 10 tokens");
 
       // check the vault's performance
       const vaultPerformance = await vault.getPerformance();

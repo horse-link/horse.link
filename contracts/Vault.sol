@@ -18,6 +18,8 @@ contract Vault is Ownable { // todo is IERC20
     mapping(address => uint256) private _balances;
     mapping(address => mapping(address => uint256)) private _allowances;
 
+    mapping(address => uint256) private _shares;
+
     uint256 private _totalSupply;
     string private _name;
     string private _symbol;
@@ -163,8 +165,8 @@ contract Vault is Ownable { // todo is IERC20
         return true;
     }
 
-    function previewDeposit(uint256 amount) external pure returns (uint256 shares) {
-        return amount;
+    function previewDeposit(uint256 assets) external pure returns (uint256 shares) {
+        return assets;
     }
 
     // Add underlying tokens to the pool
@@ -178,6 +180,7 @@ contract Vault is Ownable { // todo is IERC20
         _totalSupply += assets;
 
         // todo: mint LP token
+        _shares[msg.sender] += assets;
 
         emit Supplied(msg.sender, assets);
         shares = _balances[msg.sender];
