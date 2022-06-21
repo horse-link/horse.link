@@ -69,10 +69,6 @@ contract("Vault", (accounts) => {
       const totalAssets = await vault.totalAssets();
       assert.equal(totalAssets, 100, "Should have $100 USDT");
 
-      // // check alice supply
-      // const totalDeposited = await vault.deposited(alice);
-      // assert.equal(totalDeposited, 10, "Should have 10 tokens");
-
       // check the vault's performance
       const vaultPerformance = await vault.getPerformance();
       assert.equal(vaultPerformance, 100, "Vault performance should be 100 with no bets");

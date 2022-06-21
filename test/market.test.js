@@ -1,3 +1,5 @@
+const { assert } = require("console");
+
 /* eslint-disable no-undef */
 const Vault = artifacts.require("Vault");
 const Market = artifacts.require("Market");
@@ -9,16 +11,17 @@ contract("Market", (accounts) => {
 
   let owner = accounts[0];
   let alice = accounts[1];
+  let bob = accounts[2];
 
   beforeEach(async () => {
     underlying = await Token.new("Mock USDT", "USDT");
     await underlying.transfer(alice, 2000);
+    await underlying.transfer(bob, 1000);
 
     vault = await Vault.new(underlying.address);
-
     const fee = 100;
-    market = await Market.new(vault.address, fee);
 
+    market = await Market.new(vault.address, fee);
     vault.setMarket(market.address);
 
     await underlying.approve(vault.address, 100, { from: alice });
@@ -38,20 +41,32 @@ contract("Market", (accounts) => {
     });
 
     it.only("should allow a $100 punt at 5:1", async () => {
-      // check alice balance
-      let balance = await underlying.balanceOf(alice);
-      assert.equal(balance, 1900, "Should have $1,900 USDT");
+      // // check vault balance
+      // const vaultBalance = await underlying.balanceOf(vault.address);
+      // assert.equal(vaultBalance, 100, "Should have $100 USDT");
 
-      // check vault balance
-      const vaultBalance = await underlying.balanceOf(vault.address);
-      assert.equal(vaultBalance, 100, "Should have $100 USDT");
+      // const totalAssets = await vault.totalAssets();
+      // assert.equal(totalAssets, 100, "Should have $100 USDT");
 
-      const totalAssets = await vault.totalAssets();
-      assert.equal(totalAssets, 100, "Should have $100 USDT");
+      // // check the vault's performance
+      // const vaultPerformance = await vault.getPerformance();
+      // assert.equal(vaultPerformance, 100, "Vault performance should be 100 with no bets");
 
-      // check the vault's performance
-      const vaultPerformance = await vault.getPerformance();
-      assert.equal(vaultPerformance, 100, "Vault performance should be 100 with no bets");
+      const maxPayout = await getMaxPayout(100, 5);
+      assert.equal(maxPayout, 5000, "Should be $5,000");
+
+      const nonce = "1";
+
+      // Runner 1
+      const propositionId = "1";
+
+      // Arbitary market ID set by the opperator
+      const market = "BNE-2022-01-15-R1-W";
+
+      const wager = 100;
+
+      // odds of 5 to 1 at 1_000 precission
+      const odds = 5000;
     });
   });
 });
