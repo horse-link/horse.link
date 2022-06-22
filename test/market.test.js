@@ -1,11 +1,10 @@
-const { assert } = require("console");
-
 /* eslint-disable no-undef */
 const Vault = artifacts.require("Vault");
 const Market = artifacts.require("Market");
 const Token = artifacts.require("MockToken");
 
 contract("Market", (accounts) => {
+  let market;
   let underlying;
   let vault;
 
@@ -24,8 +23,8 @@ contract("Market", (accounts) => {
     market = await Market.new(vault.address, fee);
     vault.setMarket(market.address);
 
-    await underlying.approve(vault.address, 100, { from: alice });
-    await vault.deposit(100, { from: alice });
+    await underlying.approve(vault.address, 1000, { from: alice });
+    await vault.deposit(1000, { from: alice });
   });
 
   describe("Market", () => {
@@ -38,9 +37,12 @@ contract("Market", (accounts) => {
 
       const target = await market.getTarget();
       assert.equal(target, 100, "Should have fee of 1%");
+
+      const maxPayout = await market.getMaxPayout.call(100, 5);
+      assert.equal(maxPayout, 500, "Should be $500");
     });
 
-    it.only("should allow a $100 punt at 5:1", async () => {
+    it("should allow a $100 punt at 5:1", async () => {
       // // check vault balance
       // const vaultBalance = await underlying.balanceOf(vault.address);
       // assert.equal(vaultBalance, 100, "Should have $100 USDT");
@@ -52,7 +54,7 @@ contract("Market", (accounts) => {
       // const vaultPerformance = await vault.getPerformance();
       // assert.equal(vaultPerformance, 100, "Vault performance should be 100 with no bets");
 
-      const maxPayout = await getMaxPayout(100, 5);
+      const maxPayout = await market.getMaxPayout.call(100, 5);
       assert.equal(maxPayout, 5000, "Should be $5,000");
 
       const nonce = "1";
@@ -61,12 +63,21 @@ contract("Market", (accounts) => {
       const propositionId = "1";
 
       // Arbitary market ID set by the opperator
-      const market = "BNE-2022-01-15-R1-W";
+      const market = "20220115-BNE";
 
       const wager = 100;
 
       // odds of 5 to 1 at 1_000 precission
-      const odds = 5000;
+      const odds = 5;
+
+      const payload = `${market}-w${propositionId}`
+
+      // sign
+      const private_key = "0x29d6dec1a1698e7190a24c42d1a104d1d773eadf680d5d353cf15c3129aab729";
+      const ethAccounts = new accounts();
+      const signature = ethAccounts.sign(payload, private_key);
+
+      
     });
   });
 });

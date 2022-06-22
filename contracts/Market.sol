@@ -15,7 +15,7 @@ struct Bet {
     uint256 amount;
     uint256 payout;
     uint256 payoutDate;
-    bool claimed;
+    bool settled;
     address owner;
 }
 
@@ -177,12 +177,19 @@ contract Market is Ownable {
         return _count; // token ID
     }
 
-    function settleMarket(bytes32 marketId, bytes32 propostionId) public {
+    function settleMarket(bytes32 nonce, bytes32 marketId, bytes32 propositionId, bytes calldata signature) public {
+        require(marketId != 0 && propositionId != 0, "Invalid ID");
+
+        bytes32 message = keccak256(abi.encodePacked(nonce, propositionId, marketId));
+        address marketOwner = recoverSigner(message, signature);
+        require(marketOwner == owner(), "Invalid signature");
+        
         uint256 count = _marketBets[marketId].length;
+        assert(count < MAX);
         for (uint256 i = 0; i < count; i++) {
             uint256 index = _marketBets[marketId][i];
 
-            if (!_bets[index].claimed) {
+            if (!_bets[index].claimed && _bets[index].propositionId == propositionId) {
                 _claim(i);
             }
         }
@@ -209,14 +216,14 @@ contract Market is Ownable {
         address marketOwner = recoverSigner(message, signature);
         require(marketOwner == owner(), "Invalid signature");
 
-        _claim(id);
+        _settle(id);
     }
 
-    function _claim(uint256 id) private {
-        require(_bets[id].claimed == false, "Bet has already been claimed");
+    function _settle(uint256 id) private {
+        require(_bets[id].settled == false, "Bet has already been settled");
         require(_bets[id].payoutDate < block.timestamp + _bets[id].payoutDate, "Market not closed");
 
-        _bets[id].claimed = true;
+        _bets[id].settled = true;
         _totalInPlay -= _bets[id].payout;
 
         IERC20(_vault).transferFrom(_self, _bets[id].owner, _bets[id].payout);
@@ -287,6 +294,6 @@ contract Market is Ownable {
         return (v, r, s);
     }
 
-    event Claimed(uint256 id, uint256 payout, address indexed owner);
     event Placed(bytes32 propositionId, uint256 amount, uint256 payout, address indexed owner);
+    event Settled(uint256 id, uint256 payout, address indexed owner);
 }
