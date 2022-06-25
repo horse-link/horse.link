@@ -1,6 +1,10 @@
 # Dapp
 Offical Dapp for https://horse.link
 
+# Market makers
+Market makers can run the the dapp and set their own odds
+
+
 ## Kovan
 Owner: `0xfDBe64ec50cA548c7A304959D0f385A01D315a71`   
 Horse Link: `0xaFab468B37c77C35223E5d1b11F378F09E0326C9`   
