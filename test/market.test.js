@@ -63,7 +63,7 @@ contract("Market", (accounts) => {
       const propositionId = "1";
 
       // Arbitary market ID set by the opperator
-      const market = "20220115-BNE";
+      const market = "20220115-BNE-R1-w";
 
       const wager = 100;
 
