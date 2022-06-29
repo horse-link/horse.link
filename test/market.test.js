@@ -3,6 +3,8 @@ const Vault = artifacts.require("Vault");
 const Market = artifacts.require("Market");
 const Token = artifacts.require("MockToken");
 
+const ethers = require("ethers");
+
 contract("Market", (accounts) => {
   let market;
   let underlying;
@@ -57,20 +59,22 @@ contract("Market", (accounts) => {
       const maxPayout = await market.getMaxPayout.call(100, 5);
       assert.equal(maxPayout, 5000, "Should be $5,000");
 
-      const nonce = "1";
+      const nonce = ethers.utils.formatBytes32String("60dfe1e0-8913-4024-b886-f832292ee6af");
 
-      // Runner 1
-      const propositionId = "1";
+      // Runner 1 for a Win
+      const propositionId = ethers.utils.formatBytes32String("1");
 
       // Arbitary market ID set by the opperator
-      const market = "20220115-BNE-R1-w";
+      const marketId = ethers.utils.formatBytes32String("20220115-BNE-R1-w");
 
       const wager = 100;
 
       // odds of 5 to 1 at 1_000 precission
       const odds = 5;
+      const close = 0;
+      const end = 1000000000000;
 
-      const payload = `${market}-w${propositionId}`
+      const payload = `${nonce}${propositionId}${market}${wager}${odds}${close}${end}`;
 
       // sign
       const private_key = "0x29d6dec1a1698e7190a24c42d1a104d1d773eadf680d5d353cf15c3129aab729";
@@ -78,6 +82,7 @@ contract("Market", (accounts) => {
       const signature = ethAccounts.sign(payload, private_key);
 
       
+      await market.punt(nonce, propositionId, marketId, odds, close, end);
     });
   });
 });

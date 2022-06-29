@@ -51,7 +51,6 @@ contract Market is Ownable {
     // PropositionID => amount bet
     mapping(bytes32 => uint256) private _potentialPayout;
 
-
     uint256 private _totalInPlay;
     uint256 private _totalLiability;
 
@@ -136,7 +135,7 @@ contract Market is Ownable {
         return tlv;
     }
 
-    function back(bytes32 nonce, bytes32 propositionId, bytes32 marketId, uint256 amount, uint256 odds, uint256 close, uint256 end, bytes calldata signature) external returns (uint256) {
+    function punt(bytes32 nonce, bytes32 propositionId, bytes32 marketId, uint256 amount, uint256 odds, uint256 close, uint256 end, bytes calldata signature) external returns (uint256) {
         require(_vault != address(0), "Vault address not set");
         require(end > block.timestamp && block.timestamp > close, "Invalid date");
         
@@ -190,7 +189,7 @@ contract Market is Ownable {
             uint256 index = _marketBets[marketId][i];
 
             if (!_bets[index].claimed && _bets[index].propositionId == propositionId) {
-                _settle(id);(i);
+                _settle(i);
             }
         }
     }
