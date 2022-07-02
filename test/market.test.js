@@ -30,7 +30,7 @@ contract("Market", (accounts) => {
   });
 
   describe("Market", () => {
-    it.only("should have 0 properties on deploy", async () => {
+    it("should have 0 properties on deploy", async () => {
       const inPlay = await market.getTotalInplay();
       assert.equal(inPlay, 0, "Should have $0 play");
 
@@ -57,9 +57,9 @@ contract("Market", (accounts) => {
       // assert.equal(vaultPerformance, 100, "Vault performance should be 100 with no bets");
 
       const maxPayout = await market.getMaxPayout.call(100, 5);
-      assert.equal(maxPayout, 5000, "Should be $5,000");
+      assert.equal(maxPayout, 500, "Should be $500");
 
-      const nonce = ethers.utils.formatBytes32String("60dfe1e0-8913-4024-b886-f832292ee6af");
+      const nonce = ethers.utils.formatBytes32String("1");
 
       // Runner 1 for a Win
       const propositionId = ethers.utils.formatBytes32String("1");
@@ -77,11 +77,15 @@ contract("Market", (accounts) => {
       const payload = `${nonce}${propositionId}${market}${wager}${odds}${close}${end}`;
 
       // sign
-      const private_key = "0x29d6dec1a1698e7190a24c42d1a104d1d773eadf680d5d353cf15c3129aab729";
-      const ethAccounts = new accounts();
-      const signature = ethAccounts.sign(payload, private_key);
+      const private_key = "29d6dec1a1698e7190a24c42d1a104d1d773eadf680d5d353cf15c3129aab729";
+      const signer = new ethers.Wallet(private_key);
+
+      const signature = await signer.signMessage(payload);
+      console.log(signature);
+
+      // const signature = ethers.sign(payload, private_key);
       
-      await market.punt(nonce, propositionId, marketId, odds, close, end, signature);
+      await market.punt(nonce, propositionId, marketId, wager, odds, close, end, signature);
     });
   });
 });

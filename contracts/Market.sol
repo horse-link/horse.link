@@ -139,10 +139,10 @@ contract Market is Ownable {
         require(_vault != address(0), "Vault address not set");
         require(end > block.timestamp && block.timestamp > close, "Invalid date");
         
-        bytes32 message = keccak256(abi.encodePacked(nonce, propositionId, marketId, amount, odds, close, end));
-        address marketOwner = recoverSigner(message, signature);
-        require(marketOwner == owner(), "Invalid signature");
+        bytes32 messageHash = keccak256(abi.encodePacked(nonce, propositionId, marketId, amount, odds, close, end));
+        bytes32 ethSignedMessageHash = getEthSignedMessageHash(messageHash);
 
+        require(recoverSigner(ethSignedMessageHash, signature) == owner(), "Invalid signature");
         address underlying = IVault(_vault).getUnderlying();
 
         // add to the market
@@ -188,7 +188,7 @@ contract Market is Ownable {
         for (uint256 i = 0; i < count; i++) {
             uint256 index = _marketBets[marketId][i];
 
-            if (!_bets[index].claimed && _bets[index].propositionId == propositionId) {
+            if (!_bets[index].settled && _bets[index].propositionId == propositionId) {
                 _settle(i);
             }
         }
@@ -245,15 +245,27 @@ contract Market is Ownable {
 
     function sweep(uint64 id) external {
         require(_getExpiry(id) > block.timestamp, "Bet has not expired");
-        require(_bets[id].claimed == false, "Bet has already been claimed");
+        require(_bets[id].settled == false, "Bet has already been settled");
         
-        _bets[id].claimed = true;
+        _bets[id].settled = true;
         _totalInPlay -= _bets[id].amount;
 
         // TODO: give sweeper a cut
 
         // refund the vault
         IERC20(_self).transferFrom(_self, _vault, _bets[id].payout);
+    }
+
+    function getEthSignedMessageHash(bytes32 messageHash)
+        internal
+        pure
+        returns (bytes32)
+    {
+        /*
+        Signature is produced by signing a keccak256 hash with the following format:
+        "\x19Ethereum Signed Message\n" + len(msg) + msg
+        */
+        return keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", messageHash));
     }
 
     function recoverSigner(bytes32 message, bytes memory signature)
