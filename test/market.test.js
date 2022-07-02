@@ -44,7 +44,7 @@ contract("Market", (accounts) => {
       assert.equal(maxPayout, 500, "Should be $500");
     });
 
-    it("should allow a $100 punt at 5:1", async () => {
+    it.only("should allow a $100 punt at 5:1", async () => {
       // // check vault balance
       // const vaultBalance = await underlying.balanceOf(vault.address);
       // assert.equal(vaultBalance, 100, "Should have $100 USDT");
@@ -80,9 +80,8 @@ contract("Market", (accounts) => {
       const private_key = "0x29d6dec1a1698e7190a24c42d1a104d1d773eadf680d5d353cf15c3129aab729";
       const ethAccounts = new accounts();
       const signature = ethAccounts.sign(payload, private_key);
-
       
-      await market.punt(nonce, propositionId, marketId, odds, close, end);
+      await market.punt(nonce, propositionId, marketId, odds, close, end, signature);
     });
   });
 });

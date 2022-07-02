@@ -100,7 +100,7 @@ contract Market is Ownable {
     function _getBet(uint256 index) private view returns (uint256, uint256, uint256, bool, address) {
         // bytes32 index = _betsIndexes[id];
         Bet memory bet = _bets[index];
-        return (bet.amount, bet.payout, bet.payoutDate, bet.claimed, bet.owner);
+        return (bet.amount, bet.payout, bet.payoutDate, bet.settled, bet.owner);
     }
 
     // function getBetById(bytes32 id) external view returns (uint256, uint256, uint256, bool, address) {
@@ -227,7 +227,7 @@ contract Market is Ownable {
 
         IERC20(_vault).transferFrom(_self, _bets[id].owner, _bets[id].payout);
 
-        emit Claimed(id, _bets[id].payout, _bets[id].owner);
+        emit Settled(id, _bets[id].payout, _bets[id].owner);
     }
 
     // function sweep(bytes32 id) external {
