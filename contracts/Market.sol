@@ -110,6 +110,13 @@ contract Market is Ownable {
     //     return 0;
     // }
 
+    function getOdds(int amount, int256 odds) external returns (int256) {
+        require(odds > 0, "Cannot have negative odds");
+        int256 p = int256(IVault(_vault).totalAssets());
+        
+        return odds + amount * (odds / -p);
+    }
+
     function getMaxPayout(uint256 amount, uint256 odds) external returns (uint256) {
         return _getMaxPayout(amount, odds);
     }
