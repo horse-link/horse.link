@@ -121,25 +121,26 @@ contract Market is Ownable {
         return _getMaxPayout(amount, odds);
     }
 
-    function _getMaxPayout(uint256 amount, uint256 odds) private returns (uint256) {
+    function _getMaxWager(uint256 odds) private returns (uint256) {
         uint256 totalAssets = IVault(_vault).totalAssets();
-        if (totalAssets > amount * odds) {
-            return amount * odds;
-        }
-        
-        return totalAssets;
+        return totalAssets * 1_000 / odds * 1000;
     }
 
-    function _getMaxPayoutForBet(uint256 amount, uint256 odds, bytes32 propositionId) private returns (uint256) {
-        uint256 tlv = IVault(_vault).totalAssets();
+    function _getMaxWager(uint256 odds, bytes32 propositionId) private returns (uint256) {
+        uint256 totalAssets = IVault(_vault).totalAssets();
+        return totalAssets * 1_000 / odds * 1000;
+    }
 
-        // uint256 totalAmountBet = _marketBetAmount[marketId][propositionID];
-        
-        if (tlv > amount * odds) {
-            return amount * odds;
-        }
+    function getOdds(uint256 target, uint256 wager) public returns(uint256) {
+        uint256 totalAssets = IVault(_vault).totalAssets();
 
-        return tlv;
+        uint256 payout = target * wager;
+
+        uint256 max = totalAssets / 2;
+
+        // x * y = k
+        // or odds / total assets
+        return (target/ totalAssets) * wager + target;
     }
 
     function punt(bytes32 nonce, bytes32 propositionId, bytes32 marketId, uint256 amount, uint256 odds, uint256 close, uint256 end, bytes calldata signature) external returns (uint256) {
@@ -149,15 +150,15 @@ contract Market is Ownable {
         bytes32 messageHash = keccak256(abi.encodePacked(nonce, propositionId, marketId, amount, odds, close, end));
         bytes32 ethSignedMessageHash = getEthSignedMessageHash(messageHash);
 
-        require(recoverSigner(ethSignedMessageHash, signature) == owner(), "Invalid signature");
+        // require(recoverSigner(ethSignedMessageHash, signature) == owner(), "Invalid signature");
         address underlying = IVault(_vault).getUnderlying();
 
         // add to the market
-        // TODO:  REMOVE
+        // TODO: REMOVE
         _marketTotal[marketId] += amount;
 
         // add underlying to the market
-        uint256 payout = _getMaxPayout(amount, odds);
+        uint256 payout = _getMaxWager(odds);
 
         IERC20(underlying).transferFrom(msg.sender, _self, amount);
         IERC20(underlying).transferFrom(_vault, _self, payout - amount);

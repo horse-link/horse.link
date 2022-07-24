@@ -80,7 +80,9 @@ contract("Market", (accounts) => {
       const private_key = "29d6dec1a1698e7190a24c42d1a104d1d773eadf680d5d353cf15c3129aab729";
       const signer = new ethers.Wallet(private_key);
 
-      const signature = await signer.signMessage(payload);
+      // \x19Ethereum Signed Message:\n32
+      const x = "\x19Ethereum Signed Message:\n32" + Keccak256(message)
+      const signature = await signer.signMessage(x);
       console.log(signature);
 
       // const signature = ethers.sign(payload, private_key);
