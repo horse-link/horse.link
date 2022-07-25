@@ -111,8 +111,30 @@ contract Market is Ownable {
     //     return 0;
     // }
 
-    // function getMaxWager(uint256 odds) external returns (uint256) {
-    //     return _getMaxWager(odds);
+    function getOdds(int wager, int256 odds, bytes32 propositionId) public returns (int256) {
+        require(odds > 0, "Cannot have negative odds");
+        int256 p = int256(IVault(_vault).totalAssets());
+
+        // need to not include this guy
+        p -=  int256(_potentialPayout[propositionId]);
+        
+        return odds + wager * (odds / -p);
+    }
+
+    // function getOdds(uint256 target, uint256 wager) public returns(uint256) {
+    //     uint256 totalAssets = IVault(_vault).totalAssets();
+
+    //     uint256 payout = target * wager;
+
+    //     uint256 max = totalAssets / 2;
+
+    //     // x * y = k
+    //     // or odds / total assets
+    //     return (target/ totalAssets) * wager + target;
+    // }
+
+    // function getMaxPayout(uint256 amount, uint256 odds) external returns (uint256) {
+    //     return _getMaxPayout(amount, odds);
     // }
 
     // function _getMaxWager(uint256 odds) private returns (uint256) {
@@ -125,23 +147,13 @@ contract Market is Ownable {
     //     return totalAssets * 1_000 / odds * 1000;
     // }
 
-    function getOdds(uint256 target, uint256 amount) public returns(uint256) {
-        uint256 p = IVault(_vault).totalAssets();
 
-        uint256 payout = target * wager;
 
-        uint256 max = totalAssets / 2;
-
-        // x * y = k
-        // or odds / total assets
-        return (target/ totalAssets) * wager + target;
-    }
-
-    function punt(bytes32 nonce, bytes32 propositionId, bytes32 marketId, uint256 amount, uint256 odds, uint256 close, uint256 end, bytes calldata signature) external returns (uint256) {
+    function punt(bytes32 nonce, bytes32 propositionId, bytes32 marketId, uint256 wager, uint256 odds, uint256 close, uint256 end, bytes calldata signature) external returns (uint256) {
         require(_vault != address(0), "Vault address not set");
         require(end > block.timestamp && block.timestamp > close, "Invalid date");
         
-        bytes32 messageHash = keccak256(abi.encodePacked(nonce, propositionId, marketId, amount, odds, close, end));
+        bytes32 messageHash = keccak256(abi.encodePacked(nonce, propositionId, marketId, wager, odds, close, end));
         bytes32 ethSignedMessageHash = getEthSignedMessageHash(messageHash);
 
         // require(recoverSigner(ethSignedMessageHash, signature) == owner(), "Invalid signature");
@@ -149,17 +161,17 @@ contract Market is Ownable {
 
         // add to the market
         // TODO: REMOVE
-        _marketTotal[marketId] += amount;
+        _marketTotal[marketId] += wager;
 
         // add underlying to the market
-        uint256 payout = _getMaxWager(odds);
+        uint256 payout = getOdds(int256(wager), );
 
-        IERC20(underlying).transferFrom(msg.sender, _self, amount);
-        IERC20(underlying).transferFrom(_vault, _self, payout - amount);
+        IERC20(underlying).transferFrom(msg.sender, _self, wager);
+        IERC20(underlying).transferFrom(_vault, _self, payout - wager);
 
         assert(IERC20(underlying).balanceOf(_self) >= payout);
 
-        _bets.push(Bet(propositionId, amount, payout, end, false, msg.sender));
+        _bets.push(Bet(propositionId, wager, payout, end, false, msg.sender));
         _marketBets[marketId].push(_count);
         _count++;
 
@@ -170,10 +182,10 @@ contract Market is Ownable {
         // uint256 tokenId = IBet(_bet).mint(msg.sender);
 
         // TODO: REMOVE TOTAL IN PLAY
-        _totalInPlay += amount;
+        _totalInPlay += wager;
         _totalLiability += payout;
 
-        emit Placed(propositionId, amount, amount * odds, msg.sender);
+        emit Placed(propositionId, wager, wager * odds, msg.sender);
 
         return _count; // token ID
     }
