@@ -87,7 +87,8 @@ contract Market is Ownable {
         _self = address(this);
         _vault = vault;
         // _bet = IERC721(erc721);
-        _fee = fee;
+        if (_fee > 0)
+            _fee = fee;
         
         timeout = 30 days;
         min = 1 hours;
@@ -110,22 +111,22 @@ contract Market is Ownable {
     //     return 0;
     // }
 
-    function getMaxWager(uint256 odds) external returns (uint256) {
-        return _getMaxWager(odds);
-    }
+    // function getMaxWager(uint256 odds) external returns (uint256) {
+    //     return _getMaxWager(odds);
+    // }
 
-    function _getMaxWager(uint256 odds) private returns (uint256) {
-        uint256 totalAssets = IVault(_vault).totalAssets();
-        return totalAssets * 1_000 / odds * 1000;
-    }
+    // function _getMaxWager(uint256 odds) private returns (uint256) {
+    //     uint256 totalAssets = IVault(_vault).totalAssets();
+    //     return totalAssets * 1_000 / odds * 1000;
+    // }
 
-    function _getMaxWager(uint256 odds, bytes32 propositionId) private returns (uint256) {
-        uint256 totalAssets = IVault(_vault).totalAssets();
-        return totalAssets * 1_000 / odds * 1000;
-    }
+    // function _getMaxWager(uint256 odds, bytes32 propositionId) private returns (uint256) {
+    //     uint256 totalAssets = IVault(_vault).totalAssets();
+    //     return totalAssets * 1_000 / odds * 1000;
+    // }
 
-    function getOdds(uint256 target, uint256 wager) public returns(uint256) {
-        uint256 totalAssets = IVault(_vault).totalAssets();
+    function getOdds(uint256 target, uint256 amount) public returns(uint256) {
+        uint256 p = IVault(_vault).totalAssets();
 
         uint256 payout = target * wager;
 
