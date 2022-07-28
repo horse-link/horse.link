@@ -104,8 +104,7 @@ contract Vault is Ownable { // todo is IERC20
         return _getInPlay();
     }
 
-    function _getInPlay() private view returns (uint256) {
-        // return IMarket(_market).getTotalInplay();
+    function _getInPlay() private view returns (uint256) {        
         return IERC20(_underlying).balanceOf(_market);
     }
 
@@ -172,9 +171,10 @@ contract Vault is Ownable { // todo is IERC20
     // Add underlying tokens to the pool
     function deposit(uint256 assets) external returns (uint256 shares) {
         require(assets > 0, "Value must be greater than 0");
+        require(_market != address(0), "Deposits not allowed until market is set"); // make this a modifier
 
         IERC20(_underlying).transferFrom(msg.sender, _self, assets);
-        increaseAllowance(_market, assets);
+        IERC20(_underlying).approve(_market, assets);
 
         _balances[msg.sender] += assets;
         _totalSupply += assets;

@@ -4,7 +4,7 @@ const Vault = artifacts.require("Vault");
 const Token = artifacts.require("MockToken");
 const Market = artifacts.require("Market");
 
-contract("Vault", (accounts) => {
+contract("Vault", accounts => {
   let bet;
   let underlying;
   let vault;
@@ -38,7 +38,11 @@ contract("Vault", (accounts) => {
       assert.equal(vaultPerformance, 0, "Should have no values");
 
       const _underlying = await vault.getUnderlying();
-      assert.equal(_underlying, underlying.address, "Should have token address as underlying");
+      assert.equal(
+        _underlying,
+        underlying.address,
+        "Should have token address as underlying"
+      );
 
       const _market = await vault.getMarket();
       assert.equal(_market, market.address, "Should have no market address");
@@ -71,7 +75,11 @@ contract("Vault", (accounts) => {
 
       // check the vault's performance
       const vaultPerformance = await vault.getPerformance();
-      assert.equal(vaultPerformance, 100, "Vault performance should be 100 with no bets");
+      assert.equal(
+        vaultPerformance,
+        100,
+        "Vault performance should be 100 with no bets"
+      );
     });
 
     it.skip("should exit from vault", async () => {

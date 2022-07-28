@@ -8,22 +8,49 @@ const Horse = require("./build/contracts/HorseLink.json");
 
 const getCount = async () => {
   // const projectID = process.env.PROJECT_ID;
-  const web3 = new Web3(process.env.NODE);  // new Web3(`https://kovan.infura.io/v3/${projectID}`);
-  const contract = new web3.eth.Contract(Horse.abi, process.env.CONTRACT_ADDRESS);
-  
+  const web3 = new Web3(process.env.NODE); // new Web3(`https://kovan.infura.io/v3/${projectID}`);
+  const contract = new web3.eth.Contract(
+    Horse.abi,
+    process.env.CONTRACT_ADDRESS
+  );
+
   const count = await contract.methods.count().call();
   console.log(count);
-}
+};
 
-const addResult = (result) => {
-  _addResult(result.track, result.year, result.month, result.day, result.number, result.first, result.second, result.third, result.forth);
-}
+const addResult = result => {
+  _addResult(
+    result.track,
+    result.year,
+    result.month,
+    result.day,
+    result.number,
+    result.first,
+    result.second,
+    result.third,
+    result.forth
+  );
+};
 
-const addResultAsync = async (result) => {
-  console.log(`Adding result for Race ${result.number} at track ${result.track} ${result.day}-${result.month}-${result.year}`);
-  const results = [Number(result.first), Number(result.second), Number(result.third), Number(result.forth)];
-  await _addResultAsync(result.track, Number(result.year), Number(result.month), Number(result.day), Number(result.number), results);
-}
+const addResultAsync = async result => {
+  console.log(
+    `Adding result for Race ${result.number} at track ${result.track} ${result.day}-${result.month}-${result.year}`
+  );
+  const results = [
+    Number(result.first),
+    Number(result.second),
+    Number(result.third),
+    Number(result.forth)
+  ];
+  await _addResultAsync(
+    result.track,
+    Number(result.year),
+    Number(result.month),
+    Number(result.day),
+    Number(result.number),
+    results
+  );
+};
 
 const _addResultAsync = async (track, year, month, day, race, results) => {
   // const projectID = process.env.PROJECT_ID;
@@ -32,13 +59,16 @@ const _addResultAsync = async (track, year, month, day, race, results) => {
     mnemonic: {
       phrase: process.env.MNEMONIC
     },
-    providerOrUrl: process.env.P_NODE //`https://kovan.infura.io/v3/${projectID}`
+    providerOrUrl: process.env.NODE //`https://kovan.infura.io/v3/${projectID}`
   });
 
   const web3 = new Web3(provider);
   const accounts = await web3.eth.getAccounts();
 
-  const contract = new web3.eth.Contract(Horse.abi, process.env.CONTRACT_ADDRESS);
+  const contract = new web3.eth.Contract(
+    Horse.abi,
+    process.env.CONTRACT_ADDRESS
+  );
   const _nm = bytes32({ input: track });
 
   const exists = await contract.methods.results(_nm, year, month, day, race);
@@ -46,15 +76,27 @@ const _addResultAsync = async (track, year, month, day, race, results) => {
 
   if (!exists) {
     try {
-      const result = await contract.methods.addResult(_nm, year, month, day, race, results).send({ from: accounts[0]}); // , gas: 50000, gasPrice: 10e9
+      const result = await contract.methods
+        .addResult(_nm, year, month, day, race, results)
+        .send({ from: accounts[0] }); // , gas: 50000, gasPrice: 10e9
       console.log(result);
     } catch (e) {
       console.log(e);
     }
   }
-}
+};
 
-const _addResult = (track, year, month, day, race, first, second, third, forth) => {
+const _addResult = (
+  track,
+  year,
+  month,
+  day,
+  race,
+  first,
+  second,
+  third,
+  forth
+) => {
   const projectID = process.env.PROJECT_ID;
   const privateKey = process.env.PRIVATE_KEY;
   const provider = new HDWalletProvider({
@@ -65,17 +107,22 @@ const _addResult = (track, year, month, day, race, first, second, third, forth) 
   });
 
   const web3 = new Web3(provider);
-  const contract = new web3.eth.Contract(Horse.abi, process.env.CONTRACT_ADDRESS);
+  const contract = new web3.eth.Contract(
+    Horse.abi,
+    process.env.CONTRACT_ADDRESS
+  );
   const _nm = bytes32({ input: track });
-  contract.methods.addResult(_nm, year, month, day, race, [first, second, third, forth]).send({ from: accounts[0]}); // , gas: 50000, gasPrice: 10e9
-}
+  contract.methods
+    .addResult(_nm, year, month, day, race, [first, second, third, forth])
+    .send({ from: accounts[0] }); // , gas: 50000, gasPrice: 10e9
+};
 
 const getTodaysMeetingNames = async () => {
   const result = await axios.get(
     `https://api.beta.tab.com.au/v1/tab-info-service/racing/dates/2021-11-14/meetings?jurisdiction=QLD&&returnOffers=false&returnPromo=false`
   );
 
-  const meetingsName = result.data.meetings.map((element) => {
+  const meetingsName = result.data.meetings.map(element => {
     return element.meetingName;
   });
 
@@ -103,10 +150,12 @@ const getRaces = async (yyyy, mm, dd) => {
   // );
 
   let results = [];
-  result.data.meetings.forEach(async (element) => {
-    element.races.forEach(async (race) => {
+  result.data.meetings.forEach(async element => {
+    element.races.forEach(async race => {
       if (race.results && race.results.length > 0) {
-        console.log(`${element.meetingDate} ${element.meetingName} ${element.venueMnemonic}`);
+        console.log(
+          `${element.meetingDate} ${element.meetingName} ${element.venueMnemonic}`
+        );
         console.log(`${race.raceNumber} ${race.raceName}`);
         console.log(race.results);
 
@@ -116,11 +165,11 @@ const getRaces = async (yyyy, mm, dd) => {
           month: mm,
           day: dd,
           number: race.raceNumber,
-          first: race.results[0] || 0, 
-          second: race.results[1] || 0, 
-          third: race.results[2] || 0, 
+          first: race.results[0] || 0,
+          second: race.results[1] || 0,
+          third: race.results[2] || 0,
           forth: race.results[3] || 0
-        }
+        };
 
         results.push(_result);
       }
@@ -134,12 +183,12 @@ const getAndAddTodaysRaces = async () => {
   const todaysResults = await getTodaysRaces();
 
   for (let i = 0; i < todaysResults.length; i++) {
-  //for (let i = 2; i < 5; i++) {
+    //for (let i = 2; i < 5; i++) {
     await addResultAsync(todaysResults[i]);
   }
 
   console.log("done!");
-}
+};
 
 const getAndAddRaces = async (yyyy, mm, dd) => {
   const results = await getRaces(yyyy, mm, dd);
@@ -149,7 +198,7 @@ const getAndAddRaces = async (yyyy, mm, dd) => {
   }
 
   console.log("done!");
-}
+};
 
 // getTodaysMeetingNames().then(async (meetings) => {
 //   console.log(meetings);
@@ -157,4 +206,3 @@ const getAndAddRaces = async (yyyy, mm, dd) => {
 
 getCount();
 getAndAddTodaysRaces();
-
