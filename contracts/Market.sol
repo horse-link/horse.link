@@ -73,6 +73,10 @@ contract Market is Ownable {
         return _getExpiry(id);
     }
 
+    function getMarketTotal(bytes32 marketId) external view returns (uint256) {
+        return _marketTotal[marketId];
+    }
+
     function _getExpiry(uint64 id) private view returns (uint256) {
         return _bets[id].payoutDate + 30 days;
     }
@@ -149,21 +153,20 @@ contract Market is Ownable {
         // require(recoverSigner(ethSignedMessageHash, signature) == owner(), "Invalid signature");
         address underlying = IVault(_vault).getUnderlying();
 
-
         // add underlying to the market
         int256 trueOdds = getOdds(int256(wager), int256(odds), propositionId);
         assert(trueOdds > 0);
 
         uint256 payout = _getPayout(propositionId, wager, odds);
-        
-        // add to the market
-        _marketTotal[marketId] += wager;
 
         // escrow
         IERC20(underlying).transferFrom(msg.sender, _self, wager);
-        IERC20(underlying).transferFrom(_vault, _self, payout - wager);
+        IERC20(underlying).transferFrom(_vault, _self, (payout - wager));
 
         assert(IERC20(underlying).balanceOf(_self) >= payout);
+
+        // add to the market
+        _marketTotal[marketId] += wager;
 
         _bets.push(Bet(propositionId, wager, payout, end, false, msg.sender));
         _marketBets[marketId].push(_count);
@@ -173,7 +176,7 @@ contract Market is Ownable {
         // uint256 tokenId = IBet(_bet).mint(msg.sender);
 
         // TODO: REMOVE TOTAL IN PLAY
-        _totalInPlay += wager;
+        _totalInPlay += (wager + payout);
         _totalLiability += payout;
 
         emit Placed(propositionId, wager, wager * odds, msg.sender);

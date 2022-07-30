@@ -174,10 +174,11 @@ contract Vault is Ownable { // todo is IERC20
         require(_market != address(0), "Deposits not allowed until market is set"); // make this a modifier
 
         IERC20(_underlying).transferFrom(msg.sender, _self, assets);
-        IERC20(_underlying).approve(_market, assets);
 
         _balances[msg.sender] += assets;
         _totalSupply += assets;
+
+        IERC20(_underlying).approve(_market, _totalSupply);
 
         // todo: mint LP token
         _shares[msg.sender] += assets;
