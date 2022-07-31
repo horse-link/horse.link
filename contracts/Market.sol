@@ -78,7 +78,7 @@ contract Market is Ownable {
     }
 
     function _getExpiry(uint64 id) private view returns (uint256) {
-        return _bets[id].payoutDate + 30 days;
+        return _bets[id].payoutDate + timeout;
     }
 
     constructor(address vault, uint8 fee) {
@@ -118,10 +118,13 @@ contract Market is Ownable {
         require(odds > 0, "Cannot have negative odds");
         int256 p = int256(IVault(_vault).totalAssets());
 
+
+        // f(x) = odds - odds*(wager/pool) 
+
         // need to not include this guy
-        p -=  int256(_potentialPayout[propositionId]);
+        p -= int256(_potentialPayout[propositionId]);
         
-        return odds + wager * (odds / -p);
+        return odds - odds * (wager / -p);
     }
 
     function _getPayout(bytes32 propositionId, uint256 wager, uint256 odds) private returns (uint256) {

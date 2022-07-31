@@ -123,7 +123,7 @@ contract("Market", accounts => {
 
       const wager = 200;
 
-      // odds of 5 to 1 at 1_000 precission
+      // odds of 2 to 1 at 1_000 precission
       const odds = 2;
       const close = 0;
       const end = 1000000000000;
