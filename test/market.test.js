@@ -15,8 +15,10 @@ contract("Market", accounts => {
   const bob = accounts[2];
   const carol = accounts[3];
 
+  const DECIMALS = 6;
+
   const getMarketMakerSigner = () => {
-      // // owner private key
+      // owner private key
       const private_key = "29d6dec1a1698e7190a24c42d1a104d1d773eadf680d5d353cf15c3129aab729";
       const signer = new ethers.Wallet(private_key);
 
@@ -25,9 +27,9 @@ contract("Market", accounts => {
 
   beforeEach(async () => {
     underlying = await Token.new("Mock USDT", "USDT");
-    await underlying.transfer(alice, 2000);
-    await underlying.transfer(bob, 1000);
-    await underlying.transfer(carol, 1000);
+    await underlying.transfer(alice, ethers.utils.parseUnits("2000", DECIMALS));
+    await underlying.transfer(bob, ethers.utils.parseUnits("1000", DECIMALS));
+    await underlying.transfer(carol, ethers.utils.parseUnits("1000", DECIMALS));
 
     vault = await Vault.new(underlying.address);
     const fee = 100;
@@ -35,8 +37,10 @@ contract("Market", accounts => {
     market = await Market.new(vault.address, fee);
     vault.setMarket(market.address);
 
-    await underlying.approve(vault.address, 1000, { from: alice });
-    await vault.deposit(1000, { from: alice });
+    await underlying.approve(vault.address, ethers.utils.parseUnits("1000", DECIMALS), { from: alice });
+    await vault.deposit(ethers.utils.parseUnits("1000", DECIMALS), { from: alice });
+
+    // console.log(ethers.utils.parseUnits("2000", DECIMALS));
   });
 
   describe("Market", () => {
@@ -56,84 +60,83 @@ contract("Market", accounts => {
 
     it.only("should allow Bob a $100 punt at 5:1", async () => {
       let balance = await underlying.balanceOf(bob);
-      assert.equal(balance, 1000, "Should have $1,000 USDT");
+      assert.equal(balance, 1000000000, "Should have $1,000 USDT");
 
-      const wager = 100;
+      const wager = ethers.utils.parseUnits("100", 6);
 
       // odds of 5 to 1 at 1_000 precission
-      const odds = 5;
+      const odds = ethers.utils.parseUnits("5", DECIMALS);
       const close = 0;
       const end = 1000000000000;
 
       // check vault balance
       let vaultBalance = await underlying.balanceOf(vault.address);
-      assert.equal(vaultBalance, 1000, "Should have $1,000 USDT");
+      assert.equal(vaultBalance, 1000000000, "Should have $1,000 USDT");
+      //expect(vaultBalance).to.eql(ethers.utils.parseUnits(1000, DECIMALS));
 
-      const totalAssets = await vault.totalAssets();
-      assert.equal(totalAssets, 1000, "Should have $1,000 USDT");
+      // const totalAssets = await vault.totalAssets();
+      // assert.equal(totalAssets, 1000000000, "Should have $1,000 USDT");
 
-      await underlying.approve(market.address, 100, { from: bob });
+      // await underlying.approve(market.address, ethers.utils.parseUnits("100", DECIMALS), { from: bob });
 
-      // Runner 1 for a Win
-      const propositionId = ethers.utils.formatBytes32String("1");
+      // // Runner 1 for a Win
+      // const propositionId = ethers.utils.formatBytes32String("1");
 
-      const trueodds = await market.getOdds.call(100, odds, propositionId);
-      assert.equal(trueodds, 5, "Should be no slippage on $100 in a $1,000 pool");
+      // const trueodds = await market.getOdds.call(ethers.utils.parseUnits(100, DECIMALS), odds, propositionId);
+      // assert.equal(trueodds, 5, "Should be no slippage on $100 in a $1,000 pool");
 
-      const nonce = ethers.utils.formatBytes32String("1");
+      // const nonce = ethers.utils.formatBytes32String("1");
 
-      // Arbitary market ID set by the opperator
-      const marketId = ethers.utils.formatBytes32String("20220115-BNE-R1-w");
+      // // Arbitary market ID set by the opperator
+      // const marketId = ethers.utils.formatBytes32String("20220115-BNE-R1-w");
 
-      const payload = `${nonce}${propositionId}${marketId}${wager}${odds}${close}${end}`;
+      // const payload = `${nonce}${propositionId}${marketId}${wager}${odds}${close}${end}`;
 
-      // owner private key
-      const private_key =
-        "29d6dec1a1698e7190a24c42d1a104d1d773eadf680d5d353cf15c3129aab729";
-      const signer = new ethers.Wallet(private_key);
+      // // owner private key
+      // const private_key = "29d6dec1a1698e7190a24c42d1a104d1d773eadf680d5d353cf15c3129aab729";
+      // const signer = new ethers.Wallet(private_key);
 
-      const signature = await signer.signMessage(payload);
-      console.log(signature);
+      // const signature = await signer.signMessage(payload);
+      // console.log(signature);
 
-      await market.punt(
-        nonce,
-        propositionId,
-        marketId,
-        wager,
-        odds,
-        close,
-        end,
-        signature, { from: bob }
-      );
+      // await market.punt(
+      //   nonce,
+      //   propositionId,
+      //   marketId,
+      //   wager,
+      //   odds,
+      //   close,
+      //   end,
+      //   signature, { from: bob }
+      // );
 
+      // balance = await underlying.balanceOf(bob);
+      // assert.equal(balance, ethers.utils.parseUnits("900", DECIMALS), "Should have $900 USDT after $100 bet");
 
-      balance = await underlying.balanceOf(bob);
-      assert.equal(balance, 900, "Should have $900 USDT after $100 bet");
+      // const inPlay = await market.getTotalInplay();
+      // assert.equal(inPlay, ethers.utils.parseUnits("600", DECIMALS), "Should be $600 USDT in play after $100 bet @ 5:1");
 
-      const inPlay = await market.getTotalInplay();
-      assert.equal(inPlay, 600, "Should be $600 USDT in play after $100 bet @ 5:1");
-
-      vaultBalance = await underlying.balanceOf(vault.address);
-      assert.equal(vaultBalance, 600, "Should have $600 USDT");
+      // vaultBalance = await underlying.balanceOf(vault.address);
+      // assert.equal(vaultBalance, ethers.utils.parseUnits("600", DECIMALS), "Should have $600 USDT");
     });
 
-    it.only("should allow Carol a $200 punt at 2:1", async () => {
+    it.skip("should allow Carol a $200 punt at 2:1", async () => {
       let balance = await underlying.balanceOf(carol);
-      assert.equal(balance, 1000, "Should have $1,000 USDT");
+      assert.equal(balance, ethers.utils.formatEther(1000, DECIMALS), "Should have $1,000 USDT");
 
       const wager = 200;
 
       // odds of 2 to 1 at 1_000 precission
-      const odds = 2;
+      const odds = 2000;
       const close = 0;
       const end = 1000000000000;
 
       // check vault balance
       const vaultBalance = await underlying.balanceOf(vault.address);
-      assert.equal(vaultBalance, 1000, "Should have $500 USDT");
+      assert.equal(vaultBalance, ethers.utils.formatEther(1000, DECIMALS), "Should have $500 USDT");
 
       const totalAssets = await vault.totalAssets();
-      assert.equal(totalAssets, 1000, "Should have $1,000 USDT");
+      assert.equal(totalAssets, ethers.utils.formatEther(1000, DECIMALS), "Should have $1,000 USDT");
 
       await underlying.approve(market.address, 200, { from: carol });
 
@@ -149,7 +152,6 @@ contract("Market", accounts => {
       const marketId = ethers.utils.formatBytes32String("20220115-BNE-R1-w");
 
       const payload = `${nonce}${propositionId}${marketId}${wager}${odds}${close}${end}`;
-
 
       // const signature = await signer.signMessage(payload);
       // console.log(signature);

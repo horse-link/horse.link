@@ -118,8 +118,7 @@ contract Market is Ownable {
         require(odds > 0, "Cannot have negative odds");
         int256 p = int256(IVault(_vault).totalAssets());
 
-
-        // f(x) = odds - odds*(wager/pool) 
+        // f(wager) = odds - odds*(wager/pool) 
 
         // need to not include this guy
         p -= int256(_potentialPayout[propositionId]);
