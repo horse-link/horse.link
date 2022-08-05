@@ -72,32 +72,32 @@ contract("Market", accounts => {
       // check vault balance
       let vaultBalance = await underlying.balanceOf(vault.address);
       assert.equal(vaultBalance, 1000000000, "Should have $1,000 USDT");
-      //expect(vaultBalance).to.eql(ethers.utils.parseUnits(1000, DECIMALS));
+      // expect(vaultBalance).to.eql(ethers.utils.parseUnits(1000, DECIMALS));
 
-      // const totalAssets = await vault.totalAssets();
-      // assert.equal(totalAssets, 1000000000, "Should have $1,000 USDT");
+      const totalAssets = await vault.totalAssets();
+      assert.equal(totalAssets, 1000000000, "Should have $1,000 USDT");
 
-      // await underlying.approve(market.address, ethers.utils.parseUnits("100", DECIMALS), { from: bob });
+      await underlying.approve(market.address, ethers.utils.parseUnits("100", DECIMALS), { from: bob });
 
-      // // Runner 1 for a Win
-      // const propositionId = ethers.utils.formatBytes32String("1");
+      // Runner 1 for a Win
+      const propositionId = ethers.utils.formatBytes32String("1");
 
-      // const trueodds = await market.getOdds.call(ethers.utils.parseUnits(100, DECIMALS), odds, propositionId);
-      // assert.equal(trueodds, 5, "Should be no slippage on $100 in a $1,000 pool");
+      const trueodds = await market.getOdds.call(ethers.utils.parseUnits("100", DECIMALS), odds, propositionId);
+      assert.equal(trueodds, 5000000, "Should be no slippage on $100 in a $1,000 pool");
 
-      // const nonce = ethers.utils.formatBytes32String("1");
+      const nonce = ethers.utils.formatBytes32String("1");
 
-      // // Arbitary market ID set by the opperator
-      // const marketId = ethers.utils.formatBytes32String("20220115-BNE-R1-w");
+      // Arbitary market ID set by the opperator
+      const marketId = ethers.utils.formatBytes32String("20220115-BNE-R1-w");
 
-      // const payload = `${nonce}${propositionId}${marketId}${wager}${odds}${close}${end}`;
+      const payload = `${nonce}${propositionId}${marketId}${wager}${odds}${close}${end}`;
 
-      // // owner private key
-      // const private_key = "29d6dec1a1698e7190a24c42d1a104d1d773eadf680d5d353cf15c3129aab729";
-      // const signer = new ethers.Wallet(private_key);
+      // owner private key
+      const private_key = "29d6dec1a1698e7190a24c42d1a104d1d773eadf680d5d353cf15c3129aab729";
+      const signer = new ethers.Wallet(private_key);
 
-      // const signature = await signer.signMessage(payload);
-      // console.log(signature);
+      const signature = await signer.signMessage(payload);
+      console.log(signature);
 
       // await market.punt(
       //   nonce,
