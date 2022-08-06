@@ -19,10 +19,11 @@ struct Bet {
     address owner;
 }
 
-// IMarket, 
+// IMarket
 contract Market is Ownable {
 
     uint256 private constant MAX = 32;
+    uint256 private constant PRECESSION = 1_000;
 
     IERC721 private _bet;
     uint8 private immutable _fee;
@@ -122,8 +123,7 @@ contract Market is Ownable {
 
         // need to not include this guy
         p -= int256(_potentialPayout[propositionId]);
-        
-        // return o - (o * (w * 1_000 / p) / 1_000);
+
         return odds - (odds * (wager * 1_000 / p) / 1_000);
     }
 

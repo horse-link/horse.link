@@ -58,13 +58,12 @@ contract("Market", accounts => {
       assert.equal(maxPayout, 500, "Should be $500");
     });
 
-    it.only("should allow Bob a $100 punt at 5:1", async () => {
+    it.only("should allow Bob a $50 punt at 5:1", async () => {
       let balance = await underlying.balanceOf(bob);
       assert.equal(balance, 1000000000, "Should have $1,000 USDT");
 
       const wager = ethers.utils.parseUnits("100", 6);
 
-      // odds of 5 to 1 at 1_000 precission
       const odds = ethers.utils.parseUnits("5", DECIMALS);
       const close = 0;
       const end = 1000000000000;
@@ -77,13 +76,13 @@ contract("Market", accounts => {
       const totalAssets = await vault.totalAssets();
       assert.equal(totalAssets, 1000000000, "Should have $1,000 USDT");
 
-      await underlying.approve(market.address, ethers.utils.parseUnits("100", DECIMALS), { from: bob });
+      await underlying.approve(market.address, ethers.utils.parseUnits("50", DECIMALS), { from: bob });
 
       // Runner 1 for a Win
       const propositionId = ethers.utils.formatBytes32String("1");
 
-      const trueodds = await market.getOdds.call(ethers.utils.parseUnits("100", DECIMALS), odds, propositionId);
-      assert.equal(trueodds, 5000000, "Should be no slippage on $100 in a $1,000 pool");
+      const trueodds = await market.getOdds.call(ethers.utils.parseUnits("50", DECIMALS), odds, propositionId);
+      assert.equal(trueodds, 4750000, "Should have true odds of 1:4.75 on $100 in a $1,000 pool");
 
       const nonce = ethers.utils.formatBytes32String("1");
 
@@ -124,10 +123,9 @@ contract("Market", accounts => {
       let balance = await underlying.balanceOf(carol);
       assert.equal(balance, ethers.utils.formatEther(1000, DECIMALS), "Should have $1,000 USDT");
 
-      const wager = 200;
+      const wager = ethers.utils.parseUnits("200", 6);
 
-      // odds of 2 to 1 at 1_000 precission
-      const odds = 2000;
+      const odds = ethers.utils.parseUnits("2", DECIMALS);
       const close = 0;
       const end = 1000000000000;
 
@@ -153,8 +151,8 @@ contract("Market", accounts => {
 
       const payload = `${nonce}${propositionId}${marketId}${wager}${odds}${close}${end}`;
 
-      // const signature = await signer.signMessage(payload);
-      // console.log(signature);
+      const signature = await signer.signMessage(payload);
+      console.log(signature);
 
       // await market.punt(
       //   nonce,
