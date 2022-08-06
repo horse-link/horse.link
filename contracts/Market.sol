@@ -123,7 +123,8 @@ contract Market is Ownable {
         // need to not include this guy
         p -= int256(_potentialPayout[propositionId]);
         
-        return odds - odds * (wager / -p);
+        // return o - (o * (w * 1_000 / p) / 1_000);
+        return odds - (odds * (wager * 1_000 / p) / 1_000);
     }
 
     function _getPayout(bytes32 propositionId, uint256 wager, uint256 odds) private returns (uint256) {
