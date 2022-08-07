@@ -9,6 +9,12 @@ import useMarket from "../../hooks/useMarket";
 
 type Props = {};
 
+export type SignedResponse = {
+  data: Meet[];
+  signature: string;
+  hash: string;
+}
+
 export type Meet = {
   id: string;
   name: string;
@@ -16,6 +22,7 @@ export type Meet = {
 };
 
 const Dashboard: React.FC<Props> = () => {
+  // const response: SignedResponse;
   const meets: Meet[] = [];
 
   const [{ data: accountData }] = useAccount({
@@ -27,10 +34,11 @@ const Dashboard: React.FC<Props> = () => {
   const { inPlay, numberOfBets } = useMarket();
   const api = useApi();
   const [data, setData] = useState<Meet[]>(meets);
+  // const [data, setData] = useState<SignedResponse>(meets);
 
   const load = async () => {
-    const results: Meet[] = await api.getMeetings();
-    setData(results);
+    const results: SignedResponse = await api.getMeetings();
+    setData(results.data);
   };
 
   useEffect(() => {
