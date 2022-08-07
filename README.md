@@ -6,6 +6,8 @@ Market makers can run the the dapp and set their own odds
 
 ## Goerli
 Owner: `0x155c21c846b68121ca59879B3CCB5194F5Ae115E`
+Vault: `0x4EAae2348DDD6fa09890aaFA749Af6dF89BdA0a6`
+Market: `0xc70159C83891dad84620B586d54AF20A3E4e33f4`
 
 ## Poly Mumbia
 
