@@ -150,11 +150,11 @@ contract Market is Ownable {
         require(_vault != address(0), "Vault address not set");
         require(end > block.timestamp && block.timestamp > close, "Invalid date");
         
-        // bytes32 messageHash = keccak256(abi.encodePacked(nonce, propositionId, marketId, wager, odds, close, end));
+        bytes32 messageHash = keccak256(abi.encodePacked(nonce, propositionId, marketId, wager, odds, close, end));
         // bytes32 ethSignedMessageHash = getEthSignedMessageHash(messageHash);
 
         // require(recoverSigner(ethSignedMessageHash, signature) == owner(), "Invalid signature");
-        address underlying = IVault(_vault).getUnderlying();
+        address underlying = IVault(_vault).asset();
 
         // add underlying to the market
         int256 trueOdds = getOdds(int256(wager), int256(odds), propositionId);

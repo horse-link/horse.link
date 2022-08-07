@@ -96,10 +96,6 @@ contract Vault is Ownable { // todo is IERC20
         return 0;
     }
 
-    function getUnderlying() external view returns (address) {
-        return _underlying;
-    }
-
     function getInPlay() external view returns (uint256) {
         return _getInPlay();
     }

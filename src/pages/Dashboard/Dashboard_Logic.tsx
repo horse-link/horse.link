@@ -16,8 +16,7 @@ export type Meet = {
 };
 
 const Dashboard: React.FC<Props> = () => {
-  const meets: Meet[] = [
-  ];
+  const meets: Meet[] = [];
 
   const [{ data: accountData }] = useAccount({
     fetchEns: true

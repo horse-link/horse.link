@@ -4,10 +4,10 @@ const Market = artifacts.require("Market");
 const Vault = artifacts.require("Vault");
 
 module.exports = async (deployer) => {
-  await deployer.deploy(MockToken, "USDT", "Mock USDT");
+  await deployer.deploy(MockToken, "Mock USDT", "USDT");
   const usdt = await MockToken.deployed();
 
-  await deployer.deploy(MockToken, "DIA", "Mock DIA");
+  await deployer.deploy(MockToken, "Mock DIA", "DIA");
   const dia = await MockToken.deployed();
 
   await deployer.deploy(LPToken, "hlUSDT", "Horse Link USDT");
