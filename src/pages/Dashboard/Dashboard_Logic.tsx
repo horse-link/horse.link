@@ -10,13 +10,14 @@ import useMarket from "../../hooks/useMarket";
 type Props = {};
 
 export type SignedResponse = {
+  owner: string;
   data: Meet[];
   signature: string;
   hash: string;
 }
 
 export type Meet = {
-  id: string;
+  nonce: string;
   name: string;
   location: string;
 };

@@ -67,12 +67,12 @@ const DashboardView: React.FC<Props> = (props: Props) => {
             </div>
           ))}
         </dl>
-        {!connected &&
+        {/* {!connected &&
           (
             <h2 className="px-4 py-5 text-lg bg-white shadow rounded-lg text-center overflow-hidden sm:p-6">
               Connect your wallet to begin!
             </h2>
-          )}
+          )} */}
       </div>
       <div className="grid grid-cols-2 gap-4 items-start lg:gap-8">
         <Table asLocaltime={asLocaltime} meets={meets} />
