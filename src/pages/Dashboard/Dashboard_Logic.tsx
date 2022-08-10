@@ -11,20 +11,29 @@ type Props = {};
 
 export type SignedResponse = {
   owner: string;
-  data: Meet[];
+  data: MeetResponse;
   signature: string;
   hash: string;
 }
 
+export type MeetResponse = {
+  nonce: string,
+  created: number,
+  expires: number,
+  meetings: Meet[]
+}
+
 export type Meet = {
-  nonce: string;
+  id: string;
   name: string;
   location: string;
 };
 
 const Dashboard: React.FC<Props> = () => {
   // const response: SignedResponse;
-  const meets: Meet[] = [];
+  
+  // default
+  const _meets: Meet[] = [];
 
   const [{ data: accountData }] = useAccount({
     fetchEns: true
@@ -34,12 +43,13 @@ const Dashboard: React.FC<Props> = () => {
 
   const { inPlay, numberOfBets } = useMarket();
   const api = useApi();
-  const [data, setData] = useState<Meet[]>(meets);
-  // const [data, setData] = useState<SignedResponse>(meets);
+  const [meetings, setMeetings] = useState<Meet[]>(_meets);
 
   const load = async () => {
-    const results: SignedResponse = await api.getMeetings();
-    setData(results.data);
+    const response: SignedResponse = await api.getMeetings();
+    console.log("results");
+    console.log(response.data.meetings);
+    setMeetings(response.data.meetings);
   };
 
   useEffect(() => {
@@ -55,7 +65,7 @@ const Dashboard: React.FC<Props> = () => {
     return `${_time.toString()} hr`;
   }
 
-  return <DashboardView asLocaltime={asLocaltime} meets={data} inPlay={inPlay} numberOfBets={numberOfBets} connected={connected} />;
+  return <DashboardView asLocaltime={asLocaltime} meets={meetings} inPlay={inPlay} numberOfBets={numberOfBets} connected={connected} />;
 };
 
 export default Dashboard;
