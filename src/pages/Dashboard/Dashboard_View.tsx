@@ -17,7 +17,7 @@ type TableProps = {
 
 const DashboardView: React.FC<Props> = (props: Props) => {
   const { asLocaltime, meets, inPlay, connected, numberOfBets } = props;
-  
+
   const stats = [
     { name: "Total Liquidity", stat: `$ ${numberOfBets}` },
     // Todo: Fix loader so it spins
@@ -53,26 +53,26 @@ const DashboardView: React.FC<Props> = (props: Props) => {
         </div>
         <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
           {connected &&
-          stats.map((item) => (
-            <div
-              key={item.name}
-              className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6"
-            >
-              <dt className="text-sm font-medium text-gray-500 truncate">
-                {item.name}
-              </dt>
-              <dd className="mt-1 text-3xl font-semibold text-gray-900">
-                {item.stat}
-              </dd>
-            </div>
-          ))}
+            stats.map((item) => (
+              <div
+                key={item.name}
+                className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6"
+              >
+                <dt className="text-sm font-medium text-gray-500 truncate">
+                  {item.name}
+                </dt>
+                <dd className="mt-1 text-3xl font-semibold text-gray-900">
+                  {item.stat}
+                </dd>
+              </div>
+            ))}
         </dl>
-        {/* {!connected &&
+        {!connected &&
           (
             <h2 className="px-4 py-5 text-lg bg-white shadow rounded-lg text-center overflow-hidden sm:p-6">
-              Connect your wallet to begin!
+              Loading markets...
             </h2>
-          )} */}
+          )}
       </div>
       <div className="grid grid-cols-2 gap-4 items-start lg:gap-8">
         <Table asLocaltime={asLocaltime} meets={meets} />
@@ -83,7 +83,7 @@ const DashboardView: React.FC<Props> = (props: Props) => {
 
 const Table: React.FC<TableProps> = (props: TableProps) => {
   const { asLocaltime, meets, } = props;
-  
+
   return (
     <div className="col-span-2">
       <h3 className="text-lg mb-3 font-medium text-gray-900">Todays Meets</h3>
@@ -168,7 +168,7 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
                       <td className="px-3 py-4 whitespace-nowrap">
                         {meet.name} ({meet.location})
                       </td>
-                      {/* {meet.races.map((race) => (
+                      {meet.races.map((race) => (
                         <td className="px-3 py-4 whitespace-nowrap text-sm hover:bg-gray-200">
                           <Link
                             to={{
@@ -182,7 +182,7 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
                             {moment.utc(race.time).local().format("H:mm")}
                           </Link>
                         </td>
-                      ))} */}
+                      ))}
                     </tr>
                   ))}
                 </tbody>
