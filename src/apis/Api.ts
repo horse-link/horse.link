@@ -5,7 +5,7 @@ export default class Api {
 
   public getMeetings = async (): Promise<SignedResponse> => {
     const { data, status } = await axios.get<SignedResponse>(
-      "https://api.horse.link/meetings",
+      "http://localhost:3000/meetings",
       {
         headers: {
           Accept: "application/json"

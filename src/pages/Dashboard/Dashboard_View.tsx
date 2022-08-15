@@ -170,7 +170,7 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
                       </td>
                       {meet.races.map((race) => (
                         <td className="px-3 py-4 whitespace-nowrap text-sm hover:bg-gray-200">
-                          <Link
+                          {/* <Link
                             to={{
                               pathname: `/horses/${meet.name}/${race.index}`,
                             }}
@@ -180,7 +180,7 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
                             {asLocaltime(race.time)}
                             <br></br>
                             {moment.utc(race.time).local().format("H:mm")}
-                          </Link>
+                          </Link> */}
                         </td>
                       ))}
                     </tr>

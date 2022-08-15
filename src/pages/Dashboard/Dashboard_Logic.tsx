@@ -48,12 +48,11 @@ const Dashboard: React.FC<Props> = () => {
   const load = async () => {
     const response: SignedResponse = await api.getMeetings();
     console.log("results");
-    console.log(response.data.meetings);
     setMeetings(response.data.meetings);
   };
 
   useEffect(() => {
-      load();
+    load();
   });
 
   const asLocaltime = (raceTime: number) => {
