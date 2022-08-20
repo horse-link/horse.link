@@ -1,5 +1,5 @@
 import { PageLayout } from "../../components";
-import { Meet } from "./Dashboard_Logic";
+import { Meet } from "../../types/index";
 import Loader from "../../components/Loader/Loader_View";
 
 type Props = {
@@ -170,6 +170,7 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
                       </td>
                       {meet.races.map((race) => (
                         <td className="px-3 py-4 whitespace-nowrap text-sm hover:bg-gray-200">
+                          <p>{race.name}</p>
                           {/* <Link
                             to={{
                               pathname: `/horses/${meet.name}/${race.index}`,

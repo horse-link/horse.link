@@ -1,5 +1,5 @@
 import axios from "axios";
-import { SignedResponse } from "../pages/Dashboard/Dashboard_Logic";
+import { SignedResponse } from "../types/index";
 
 export default class Api {
 
