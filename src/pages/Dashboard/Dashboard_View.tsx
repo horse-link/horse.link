@@ -170,7 +170,7 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
                       </td>
                       {meet.races.map((race) => (
                         <td className="px-3 py-4 whitespace-nowrap text-sm hover:bg-gray-200">
-                          <p>{race.name}</p>
+                          <p>R{race.number}</p>
                           {/* <Link
                             to={{
                               pathname: `/horses/${meet.name}/${race.index}`,

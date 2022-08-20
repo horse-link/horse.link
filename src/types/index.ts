@@ -22,4 +22,5 @@ export type Meet = {
 export type Race = {
   number: number;
   name: string;
+  start: Date;
 }
