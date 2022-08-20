@@ -1,6 +1,8 @@
 import { PageLayout } from "../../components";
 import { Meet } from "../../types/index";
 import Loader from "../../components/Loader/Loader_View";
+import { Link } from "react-router-dom";
+import moment from "moment";
 
 type Props = {
   asLocaltime: (raceTime: number) => string;
@@ -171,17 +173,14 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
                       {meet.races.map((race) => (
                         <td className="px-3 py-4 whitespace-nowrap text-sm hover:bg-gray-200">
                           <p>R{race.number}</p>
-                          {/* <Link
+                          <Link
                             to={{
-                              pathname: `/horses/${meet.name}/${race.index}`,
+                              pathname: `/horses/${meet.id}/${race.number}`,
                             }}
                           >
-                            R{race.index}
                             <br></br>
-                            {asLocaltime(race.time)}
-                            <br></br>
-                            {moment.utc(race.time).local().format("H:mm")}
-                          </Link> */}
+                            {moment.utc(race.start).local().format("H:mm")}
+                          </Link>
                         </td>
                       ))}
                     </tr>
