@@ -2,7 +2,7 @@ export type SignedResponse = {
   owner: string;
   data: MeetResponse;
   signature: string;
-  hash: string;
+  // hash: string;
 };
 
 export type MeetResponse = {

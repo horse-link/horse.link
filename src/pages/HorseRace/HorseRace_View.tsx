@@ -9,73 +9,73 @@ type Props = {};
 
 const horses = [
   {
-    id: "1",
+    number: 1,
     name: "Horse 1",
     Rider: "Rider 1",
-    barrier: "8",
+    barrier: 8,
     weight: 58,
     win: 4,
     place: 2,
   },
   {
-    id: "2",
+    number: 2,
     name: "Horse 2",
     Rider: "Rider 2",
-    barrier: "2",
+    barrier: 2,
     weight: 51,
     win: 4.6,
     place: 2,
   },
   {
-    id: "3",
+    number: 3,
     name: "Horse 3",
     Rider: "Rider 3",
-    barrier: "1",
+    barrier: 1,
     weight: 48,
     win: 8.6,
     place: 4.3,
   },
   {
-    id: "4",
+    number: 4,
     name: "Horse 4",
     Rider: "Rider 4",
-    barrier: "3",
+    barrier: 3,
     weight: 53,
     win: 3,
     place: 2,
   },
   {
-    id: "5",
+    number: 5,
     name: "Horse 5",
     Rider: "Rider 5",
-    barrier: "5",
+    barrier: 5,
     weight: 50,
     win: 8,
     place: 5,
   },
   {
-    id: "6",
+    number: 6,
     name: "Horse 6",
     Rider: "Rider 6",
-    barrier: "4",
+    barrier: 4,
     weight: 52,
     win: 3.6,
     place: 2.5,
   },
   {
-    id: "7",
+    number: 7,
     name: "Horse 7",
     Rider: "Rider 7",
-    barrier: "6",
+    barrier: 6,
     weight: 58,
     win: 4,
     place: 2.5,
   },
   {
-    id: "8",
+    number: 8,
     name: "Horse 8",
     Rider: "Rider 8",
-    barrier: "7",
+    barrier: 7,
     weight: 45,
     win: 3.5,
     place: 1.75,
@@ -84,9 +84,11 @@ const horses = [
 
 const HorseRaceView: React.FC<Props> = () => {
   const { name, id } = useParams();
+
   // TODO: Add check to see if race is complete
   // If race is complete show race results data instead
   //const { data, error } = useSWR(`/horseracing/${name}/${id}`);
+  
   return (
     <PageLayout requiresAuth={false}>
       <div className="flex mb-6 p-2 shadow overflow-hidden border-b bg-white border-gray-200 sm:rounded-lg justify-around">
@@ -94,7 +96,7 @@ const HorseRaceView: React.FC<Props> = () => {
           Track: {name}
         </h1>
         <h1>
-          Race id: {id}
+          Race #: {id}
         </h1>
         <h1>
           Date: {moment().format("DD-MM-YY")}
@@ -141,8 +143,8 @@ const HorseRaceView: React.FC<Props> = () => {
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   { horses.map(horse => (
-                    <tr key={horse.id}>
-                      <td className="px-1 py-4 whitespace-nowrap bg-gray-200">{horse.id}</td>
+                    <tr key={horse.number}>
+                      <td className="px-1 py-4 whitespace-nowrap bg-gray-200">{horse.number}</td>
                       <td className="px-2 py-4 whitespace-nowrap">
                         {horse.name} ({horse.barrier})
                         <br />

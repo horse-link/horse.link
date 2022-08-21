@@ -10,6 +10,9 @@ type Props = {
   inPlay: string | undefined;
   numberOfBets: number;
   connected: boolean;
+  // hash: string;
+  signature: string;
+  owner: string;
 };
 
 type TableProps = {
@@ -18,7 +21,7 @@ type TableProps = {
 };
 
 const DashboardView: React.FC<Props> = (props: Props) => {
-  const { asLocaltime, meets, inPlay, connected, numberOfBets } = props;
+  const { asLocaltime, meets, inPlay, connected, numberOfBets, owner, signature } = props;
 
   const stats = [
     { name: "Total Liquidity", stat: `$ ${numberOfBets}` },
@@ -79,12 +82,17 @@ const DashboardView: React.FC<Props> = (props: Props) => {
       <div className="grid grid-cols-2 gap-4 items-start lg:gap-8">
         <Table asLocaltime={asLocaltime} meets={meets} />
       </div>
+      <div className="grid grid-cols-2 gap-4 items-start lg:gap-8">
+        <p>Proofs</p>
+        <p>Signature: </p>
+        <p>Owner: {owner}</p>
+      </div>
     </PageLayout>
   );
 };
 
 const Table: React.FC<TableProps> = (props: TableProps) => {
-  const { asLocaltime, meets, } = props;
+  const { asLocaltime, meets } = props;
 
   return (
     <div className="col-span-2">

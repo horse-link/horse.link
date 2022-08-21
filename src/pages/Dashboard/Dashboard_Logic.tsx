@@ -4,35 +4,14 @@ import useApi from "../../hooks/useApi";
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import useMarket from "../../hooks/useMarket";
-import { Meet, MeetResponse, SignedResponse } from "../../types/index";
+import { Meet, SignedResponse } from "../../types/index";
 
 // import useSWR from "swr";
 
 type Props = {};
 
-// export type SignedResponse = {
-//   owner: string;
-//   data: MeetResponse;
-//   signature: string;
-//   hash: string;
-// }
-
-// export type MeetResponse = {
-//   nonce: string,
-//   created: number,
-//   expires: number,
-//   meetings: Meet[]
-// }
-
-// export type Meet = {
-//   id: string;
-//   name: string;
-//   location: string;
-// };
-
 const Dashboard: React.FC<Props> = () => {
-  // const response: SignedResponse;
-  
+
   // default
   const _meets: Meet[] = [];
 
@@ -45,11 +24,12 @@ const Dashboard: React.FC<Props> = () => {
   const { inPlay, numberOfBets } = useMarket();
   const api = useApi();
   const [meetings, setMeetings] = useState<Meet[]>(_meets);
+  const [response, setResponse] = useState<SignedResponse>();
 
   const load = async () => {
     const response: SignedResponse = await api.getMeetings();
-    console.log("results");
     setMeetings(response.data.meetings);
+    setResponse(response);
   };
 
   useEffect(() => {
@@ -63,9 +43,20 @@ const Dashboard: React.FC<Props> = () => {
     }
 
     return `${_time.toString()} hr`;
-  }
+  };
 
-  return <DashboardView asLocaltime={asLocaltime} meets={meetings} inPlay={inPlay} numberOfBets={numberOfBets} connected={connected} />;
+  return (
+    <DashboardView
+      asLocaltime={asLocaltime}
+      meets={meetings}
+      inPlay={inPlay}
+      numberOfBets={numberOfBets}
+      connected={connected}
+      // hash={response?.hash || ""}
+      signature={response?.signature || ""}
+      owner={response?.owner || ""}
+    />
+  );
 };
 
 export default Dashboard;
