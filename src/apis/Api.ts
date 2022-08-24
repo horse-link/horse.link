@@ -5,7 +5,7 @@ export default class Api {
 
   public getMeetings = async (): Promise<SignedResponse> => {
     const { data, status } = await axios.get<SignedResponse>(
-      "http://localhost:3000/meetings",
+      "http://localhost:3002/meetings",
       {
         headers: {
           Accept: "application/json"

@@ -53,7 +53,7 @@ const Dashboard: React.FC<Props> = () => {
       numberOfBets={numberOfBets}
       connected={connected}
       // hash={response?.hash || ""}
-      signature={response?.signature || ""}
+      signature={response?.signature || "0x00"}
       owner={response?.owner || ""}
     />
   );

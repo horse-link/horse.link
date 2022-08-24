@@ -75,17 +75,18 @@ const DashboardView: React.FC<Props> = (props: Props) => {
         {!connected &&
           (
             <h2 className="px-4 py-5 text-lg bg-white shadow rounded-lg text-center overflow-hidden sm:p-6">
-              Loading markets...
+              {/* Loading markets... */}
+              Signature: {signature}
             </h2>
           )}
+
+          <h2>Proofs</h2>
+          {/* <p>Signature: {signature}</p> */}
+          <p>Owner: {owner}</p>
+        
       </div>
       <div className="grid grid-cols-2 gap-4 items-start lg:gap-8">
         <Table asLocaltime={asLocaltime} meets={meets} />
-      </div>
-      <div className="grid grid-cols-2 gap-4 items-start lg:gap-8">
-        <p>Proofs</p>
-        <p>Signature: </p>
-        <p>Owner: {owner}</p>
       </div>
     </PageLayout>
   );
@@ -180,7 +181,13 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
                       </td>
                       {meet.races.map((race) => (
                         <td className="px-3 py-4 whitespace-nowrap text-sm hover:bg-gray-200">
-                          <p>R{race.number}</p>
+                          <Link
+                            to={{
+                              pathname: `/horses/${meet.id}/${race.number}`,
+                            }}
+                          >
+                            <p>R{race.number}</p>
+                          </Link>
                           <Link
                             to={{
                               pathname: `/horses/${meet.id}/${race.number}`,
