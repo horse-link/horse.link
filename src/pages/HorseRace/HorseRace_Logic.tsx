@@ -4,7 +4,6 @@ import HorseRaceView from "./HorseRace_View";
 import useApi from "../../hooks/useApi";
 import { useParams } from "react-router-dom";
 
-
 type Props = {};
 
 const HorseRace: React.FC<Props> = () => {
