@@ -6,8 +6,6 @@ import { useAccount } from "wagmi";
 import useMarket from "../../hooks/useMarket";
 import { Meet, SignedMeetingsResponse } from "../../types/index";
 
-// import useSWR from "swr";
-
 type Props = {};
 
 const Dashboard: React.FC<Props> = () => {
@@ -23,12 +21,10 @@ const Dashboard: React.FC<Props> = () => {
 
   const { inPlay, numberOfBets } = useMarket();
   const api = useApi();
-  // const [meetings, setMeetings] = useState<Meet[]>(_meets);
   const [response, setResponse] = useState<SignedMeetingsResponse>();
 
   const load = async () => {
     const response: SignedMeetingsResponse = await api.getMeetings();
-    // setMeetings(response.data.meetings);
     setResponse(response);
   };
 
