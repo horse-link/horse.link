@@ -8,6 +8,7 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import { IBet } from "./IBet.sol";
 import "./IVault.sol";
 import "./IMarket.sol";
+import "./IERC4626.sol";
 
 // Put these in the ERC721 contract
 struct Bet {
@@ -52,11 +53,11 @@ contract Market is Ownable, IMarket {
     uint256 public immutable timeout;
     uint256 public immutable min;
 
-    function getTarget() public view returns (uint8) {
+    function getTarget() external view returns (uint8) {
         return _fee;
     }
 
-    function getTotalInplay() public view returns (uint256) {
+    function getTotalInplay() external view returns (uint256) {
         return _totalInPlay;
     }
 
@@ -115,7 +116,7 @@ contract Market is Ownable, IMarket {
 
     function getOdds(int wager, int256 odds, bytes32 propositionId) public returns (int256) {
         require(odds > 0, "Cannot have negative odds");
-        int256 p = int256(IVault(_vault).totalAssets());
+        int256 p = int256(IERC4626(_vault).totalAssets());
 
         // f(wager) = odds - odds*(wager/pool) 
 
@@ -133,18 +134,7 @@ contract Market is Ownable, IMarket {
         return uint256(trueOdds) * wager;
     }
 
-    // function _getMaxWager(uint256 odds) private returns (uint256) {
-    //     uint256 totalAssets = IVault(_vault).totalAssets();
-    //     return totalAssets * 1_000 / odds * 1000;
-    // }
-
-    // function _getMaxWager(uint256 odds, bytes32 propositionId) private returns (uint256) {
-    //     uint256 totalAssets = IVault(_vault).totalAssets();
-    //     return totalAssets * 1_000 / odds * 1000;
-    // }
-
-
-    function punt(bytes32 nonce, bytes32 propositionId, bytes32 marketId, uint256 wager, uint256 odds, uint256 close, uint256 end, bytes calldata signature) external returns (uint256) {
+    function back(bytes32 nonce, bytes32 propositionId, bytes32 marketId, uint256 wager, uint256 odds, uint256 close, uint256 end, bytes calldata signature) external returns (uint256) {
         require(_vault != address(0), "Vault address not set");
         require(end > block.timestamp && block.timestamp > close, "Invalid date");
         
