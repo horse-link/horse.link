@@ -2,7 +2,7 @@ import { PageLayout } from "../../components";
 
 type Props = {};
 
-const pools = [
+const vaults = [
   {
     id: "USDC",
     underlying: {
@@ -38,7 +38,7 @@ const pools = [
   }
 ];
 
-const PoolsView: React.FC<Props> = () => {
+const VaultsView: React.FC<Props> = () => {
   // TODO: Do we want to make this table responsive?
   return (
     <PageLayout requiresAuth={false}>
@@ -83,16 +83,16 @@ const PoolsView: React.FC<Props> = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {pools.map(pool => (
-                    <tr key={pool.id}>
-                      <td className="px-2 py-4 whitespace-nowrap"> {pool.id} </td>
+                  {vaults.map(vault => (
+                    <tr key={vault.id}>
+                      <td className="px-2 py-4 whitespace-nowrap"> {vault.id} </td>
                       <td className="flex px-2 py-4 items-center">
-                        <img src={pool.underlying.image} alt={pool.underlying.name} className="h-4" />
-                        <span> {pool.underlying.symbol} </span>
+                        <img src={vault.underlying.image} alt={vault.underlying.name} className="h-4" />
+                        <span> {vault.underlying.symbol} </span>
                       </td>
-                      <td className="px-2 py-4 whitespace-nowrap">{pool.supplied}</td>
-                      <td className="px-2 py-4 whitespace-nowrap">{pool.inPlay}</td>
-                      <td className="px-2 py-4 whitespace-nowrap">{pool.ownerAddress}</td>
+                      <td className="px-2 py-4 whitespace-nowrap">{vault.supplied}</td>
+                      <td className="px-2 py-4 whitespace-nowrap">{vault.inPlay}</td>
+                      <td className="px-2 py-4 whitespace-nowrap">{vault.ownerAddress}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -105,4 +105,4 @@ const PoolsView: React.FC<Props> = () => {
   );
 };
 
-export default PoolsView;
+export default VaultsView;

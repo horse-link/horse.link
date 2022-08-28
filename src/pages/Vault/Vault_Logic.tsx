@@ -1,4 +1,4 @@
-import PoolView from "./Pool_View";
+import PoolView from "./Vault_View";
 
 type Props = {};
 
