@@ -5,10 +5,12 @@ import { GlobalErrorProvider } from "./providers/GlobalError";
 import { WagmiProvider } from "./providers/Wagmi";
 
 const App = () => {
+  
   const swrConfig = {
     fetcher: (url: string) => url,
     shouldRetryOnError: false
   };
+
   return (
     <SWRConfig value={swrConfig}>
       <GlobalErrorProvider>

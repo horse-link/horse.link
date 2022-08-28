@@ -1,9 +1,16 @@
 export type SignedResponse = {
   owner: string;
-  data: MeetResponse;
   signature: string;
   // hash: string;
 };
+
+export type SignedRunnersResponse = {
+  data: Runners[];
+} & SignedResponse;
+
+export type SignedMeetingsResponse = {
+  data: MeetResponse;
+} & SignedResponse;
 
 export type MeetResponse = {
   nonce: string;
@@ -24,3 +31,16 @@ export type Race = {
   name: string;
   start: Date;
 }
+
+export type Runners = {
+  number: number;
+  name: string;
+  nonce: string;
+  market_id: string;
+  close: number;
+  end: number;
+  odds: number;
+  propostion_id: number;
+  barrier: number;
+  signature: string;
+};

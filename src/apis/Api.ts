@@ -1,10 +1,10 @@
 import axios from "axios";
-import { SignedResponse } from "../types/index";
+import { SignedMeetingsResponse, SignedRunnersResponse } from "../types/index";
 
 export default class Api {
 
-  public getMeetings = async (): Promise<SignedResponse> => {
-    const { data, status } = await axios.get<SignedResponse>(
+  public getMeetings = async (): Promise<SignedMeetingsResponse> => {
+    const { data, status } = await axios.get<SignedMeetingsResponse>(
       "http://localhost:3002/meetings",
       {
         headers: {
@@ -15,6 +15,19 @@ export default class Api {
 
     return data;
   };
+
   // this.get<SignedResponse>(`https://api.horse.link/meetings`);
-  // // this.get<SignedResponse>(`http://localhost:3000/meetings`);
+
+  public getRunners = async (track: string, number: number): Promise<SignedRunnersResponse> => {
+    const { data, status } = await axios.get<SignedRunnersResponse>(
+      `http://localhost:3002/runners/${track}/${number}/win`,
+      {
+        headers: {
+          Accept: "application/json"
+        }
+      }
+    );
+
+    return data;
+  };
 }

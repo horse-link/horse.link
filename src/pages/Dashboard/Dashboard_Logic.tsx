@@ -4,7 +4,7 @@ import useApi from "../../hooks/useApi";
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import useMarket from "../../hooks/useMarket";
-import { Meet, SignedResponse } from "../../types/index";
+import { Meet, SignedMeetingsResponse } from "../../types/index";
 
 // import useSWR from "swr";
 
@@ -23,12 +23,12 @@ const Dashboard: React.FC<Props> = () => {
 
   const { inPlay, numberOfBets } = useMarket();
   const api = useApi();
-  const [meetings, setMeetings] = useState<Meet[]>(_meets);
-  const [response, setResponse] = useState<SignedResponse>();
+  // const [meetings, setMeetings] = useState<Meet[]>(_meets);
+  const [response, setResponse] = useState<SignedMeetingsResponse>();
 
   const load = async () => {
-    const response: SignedResponse = await api.getMeetings();
-    setMeetings(response.data.meetings);
+    const response: SignedMeetingsResponse = await api.getMeetings();
+    // setMeetings(response.data.meetings);
     setResponse(response);
   };
 
@@ -48,7 +48,7 @@ const Dashboard: React.FC<Props> = () => {
   return (
     <DashboardView
       asLocaltime={asLocaltime}
-      meets={meetings}
+      meets={response?.data.meetings || _meets}
       inPlay={inPlay}
       numberOfBets={numberOfBets}
       connected={connected}
