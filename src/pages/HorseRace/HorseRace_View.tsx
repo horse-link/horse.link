@@ -78,7 +78,7 @@ const HorseRaceView: React.FC<Props> = (props: Props) => {
                     <tr key={runner.number}>
                       <td className="px-1 py-4 whitespace-nowrap bg-gray-200">{runner.number}</td>
                       <td className="px-2 py-4 whitespace-nowrap">
-                        {runner.name} ({runner.number})
+                        {runner.name} ({runner.barrier})
                         <br />
                         {/* {horse.Rider} */}
                       </td>
