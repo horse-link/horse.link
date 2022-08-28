@@ -114,7 +114,11 @@ contract Market is Ownable, IMarket {
     //     return 0;
     // }
 
-    function getOdds(int wager, int256 odds, bytes32 propositionId) public returns (int256) {
+    function getOdds(int wager, int256 odds, bytes32 propositionId) external returns (int256) {
+        return _getOdds(wager, odds, propositionId);
+    }
+    
+    function _getOdds(int wager, int256 odds, bytes32 propositionId) private returns (int256) {
         require(odds > 0, "Cannot have negative odds");
         int256 p = int256(IERC4626(_vault).totalAssets());
 
@@ -128,7 +132,7 @@ contract Market is Ownable, IMarket {
 
     function _getPayout(bytes32 propositionId, uint256 wager, uint256 odds) private returns (uint256) {
         // add underlying to the market
-        int256 trueOdds = getOdds(int256(wager), int256(odds), propositionId);
+        int256 trueOdds = _getOdds(int256(wager), int256(odds), propositionId);
         // assert(trueOdds > 0);
 
         return uint256(trueOdds) * wager;
@@ -145,7 +149,7 @@ contract Market is Ownable, IMarket {
         address underlying = IVault(_vault).asset();
 
         // add underlying to the market
-        int256 trueOdds = getOdds(int256(wager), int256(odds), propositionId);
+        int256 trueOdds = _getOdds(int256(wager), int256(odds), propositionId);
         assert(trueOdds > 0);
 
         uint256 payout = _getPayout(propositionId, wager, odds);
@@ -173,6 +177,14 @@ contract Market is Ownable, IMarket {
         emit Placed(propositionId, wager, wager * odds, msg.sender);
 
         return _count; // token ID
+    }
+
+    function claim(uint256 id, bytes calldata signature) external {
+        bytes32 message = keccak256(abi.encodePacked(id));
+        address marketOwner = recoverSigner(message, signature);
+        require(marketOwner == owner(), "Invalid signature");
+
+        _settle(id);
     }
 
     function settleMarket(bytes32 nonce, bytes32 marketId, bytes32 propositionId, bytes calldata signature) public {
@@ -208,14 +220,6 @@ contract Market is Ownable, IMarket {
 
     //     emit Claimed(id, _bets[id].payout, _bets[id].owner);
     // }
-
-    function claim(uint256 id, bytes calldata signature) external {
-        bytes32 message = keccak256(abi.encodePacked(id));
-        address marketOwner = recoverSigner(message, signature);
-        require(marketOwner == owner(), "Invalid signature");
-
-        _settle(id);
-    }
 
     function _settle(uint256 id) private {
         require(_bets[id].settled == false, "Bet has already been settled");
