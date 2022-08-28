@@ -19,8 +19,7 @@ struct Bet {
     address owner;
 }
 
-// IMarket
-contract Market is Ownable {
+contract Market is Ownable, IMarket {
 
     uint256 private constant MAX = 32;
     uint256 private constant PRECESSION = 1_000;
@@ -39,7 +38,6 @@ contract Market is Ownable {
 
     // MarketID => Bets Indexes
     mapping(bytes32 => uint256[]) private _marketBets;
-
 
     // MarketID => PropositionID => amount bet
     mapping(bytes32 => mapping(uint16 => uint256)) private _marketBetAmount;
