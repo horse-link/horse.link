@@ -20,7 +20,7 @@ struct Bet {
     address owner;
 }
 
-contract Market is Ownable, IMarket {
+contract Market is Ownable { // , IMarket
 
     uint256 private constant MAX = 32;
     uint256 private constant PRECESSION = 1_000;
