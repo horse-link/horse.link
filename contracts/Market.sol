@@ -20,7 +20,7 @@ struct Bet {
     address owner;
 }
 
-contract Market is Ownable { // , IMarket
+contract Market is Ownable, IMarket { // , IMarket
 
     uint256 private constant MAX = 32;
     uint256 private constant PRECESSION = 1_000;
@@ -61,9 +61,6 @@ contract Market is Ownable { // , IMarket
         return _totalInPlay;
     }
 
-    // function getInplayCount() public view returns (uint256) {
-    //     return _betsIndexes.length;
-    // }
 
     function getVaultAddress() external view returns (address) {
         return _vault;
@@ -114,23 +111,23 @@ contract Market is Ownable { // , IMarket
     //     return 0;
     // }
 
-    function getOdds(int wager, int256 odds, bytes32 propositionId) external returns (int256) {
+    function getOdds(int wager, int256 odds, bytes32 propositionId) external view returns (int256) {
         return _getOdds(wager, odds, propositionId);
     }
     
-    function _getOdds(int wager, int256 odds, bytes32 propositionId) private returns (int256) {
+    function _getOdds(int wager, int256 odds, bytes32 propositionId) private view returns (int256) {
         require(odds > 0, "Cannot have negative odds");
         int256 p = int256(IERC4626(_vault).totalAssets());
 
         // f(wager) = odds - odds*(wager/pool) 
 
-        // need to not include this guy
+        // do not include this guy in the return
         p -= int256(_potentialPayout[propositionId]);
 
         return odds - (odds * (wager * 1_000 / p) / 1_000);
     }
 
-    function _getPayout(bytes32 propositionId, uint256 wager, uint256 odds) private returns (uint256) {
+    function _getPayout(bytes32 propositionId, uint256 wager, uint256 odds) private view returns (uint256) {
         // add underlying to the market
         int256 trueOdds = _getOdds(int256(wager), int256(odds), propositionId);
         // assert(trueOdds > 0);
