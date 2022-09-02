@@ -12,11 +12,15 @@ contract Registry {
         return vaults.length;
     }
 
-    function add(address vault) external {
+    function addVault(address vault) external {
         address _underlying = IERC4626(vault).asset();
         require(underlying[_underlying] == address(0), "Vault already added");
 
         vaults.push(vault);
         underlying[_underlying] = vault; // underlying to vault
+    }
+
+    function addMarket(address market) external {
+        
     }
 }

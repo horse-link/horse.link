@@ -60,7 +60,6 @@ contract Market is Ownable, IMarket {
         return _totalInPlay;
     }
 
-
     function getVaultAddress() external view returns (address) {
         return _vault;
     }
@@ -175,7 +174,7 @@ contract Market is Ownable, IMarket {
         return _count; // token ID
     }
 
-    function claim(uint256 id, bytes calldata signature) external {
+    function settle(uint256 id, bytes calldata signature) external {
         bytes32 message = keccak256(abi.encodePacked(id));
         address marketOwner = recoverSigner(message, signature);
         require(marketOwner == owner(), "Invalid signature");
@@ -227,10 +226,6 @@ contract Market is Ownable, IMarket {
         IERC20(_vault).transferFrom(_self, _bets[id].owner, _bets[id].payout);
 
         emit Settled(id, _bets[id].payout, _bets[id].owner);
-    }
-
-    function settle(uint64 id) external {
-        _settle(id);
     }
 
     function getEthSignedMessageHash(bytes32 messageHash)

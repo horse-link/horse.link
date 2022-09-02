@@ -248,9 +248,4 @@ contract Vault is Ownable, IERC20, IVault {
         require(msg.sender == _market, "Only the market can call this function");
         _;
     }
-
-    // event Approval(address indexed owner, address indexed spender, uint256 value);
-    // event Deposit(address indexed who, uint256 value);
-    // // event Transfer(address indexed from, address indexed to, uint256 value);
-    // event Withdraw(address indexed who, uint256 value);
 }
