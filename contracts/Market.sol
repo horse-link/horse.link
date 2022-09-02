@@ -20,7 +20,7 @@ struct Bet {
     address owner;
 }
 
-contract Market is Ownable, IMarket { // , IMarket
+contract Market is Ownable, IMarket {
 
     uint256 private constant MAX = 32;
     uint256 private constant PRECESSION = 1_000;
@@ -143,7 +143,7 @@ contract Market is Ownable, IMarket { // , IMarket
         // bytes32 ethSignedMessageHash = getEthSignedMessageHash(messageHash);
 
         // require(recoverSigner(ethSignedMessageHash, signature) == owner(), "Invalid signature");
-        address underlying = IVault(_vault).asset();
+        address underlying = IERC4626(_vault).asset();
 
         // add underlying to the market
         int256 trueOdds = _getOdds(int256(wager), int256(odds), propositionId);

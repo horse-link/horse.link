@@ -7,14 +7,14 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./IBurnable.sol";
 import "./IMarket.sol";
 import "./IMintable.sol";
-// import "./IERC4246.sol";
+import "./IVault.sol";
 
 struct Reward {
     uint256 balance;
     uint256 start;
 }
 
-contract Vault is Ownable { // todo is IERC20
+contract Vault is Ownable, IVault {
     // ERC20
     mapping(address => uint256) private _balances;
     mapping(address => mapping(address => uint256)) private _allowances;
@@ -74,14 +74,6 @@ contract Vault is Ownable { // todo is IERC20
         // could do some checks here
         // require(IMarket(_market).getTarget() < 200, "Market target is too high");
         _market = market;
-    }
-
-    function asset() external view returns (address assetTokenAddress) {
-        return _underlying;
-    }
-
-    function totalAssets() public view returns (uint256) {
-        return IERC20(_underlying).balanceOf(_self);
     }
 
     function getPerformance() external view returns (uint256) {
@@ -161,27 +153,32 @@ contract Vault is Ownable { // todo is IERC20
         return true;
     }
 
-    function previewDeposit(uint256 assets) external pure returns (uint256 shares) {
-        return assets;
+    // IERC4626
+    function asset() external view returns (address assetTokenAddress) {
+        return _underlying;
+    }
+
+    function totalAssets() external view returns (uint256) {
+        return IERC20(_underlying).balanceOf(_self);
     }
 
     // Add underlying tokens to the pool
-    function deposit(uint256 assets) external returns (uint256 shares) {
+    function deposit(uint256 assets, address receiver) external returns (uint256 shares) {
         require(assets > 0, "Value must be greater than 0");
         require(_market != address(0), "Deposits not allowed until market is set"); // make this a modifier
 
         IERC20(_underlying).transferFrom(msg.sender, _self, assets);
 
-        _balances[msg.sender] += assets;
+        _balances[receiver] += assets;
         _totalSupply += assets;
 
         IERC20(_underlying).approve(_market, _totalSupply);
 
         // todo: mint LP token
-        _shares[msg.sender] += assets;
+        _shares[receiver] += assets;
 
-        emit Supplied(msg.sender, assets);
-        shares = _balances[msg.sender];
+        emit Deposit(receiver, assets);
+        shares = _balances[receiver];
     }
 
     function maxWithdraw(address owner) external view returns (uint256 maxAssets) {
@@ -211,7 +208,7 @@ contract Vault is Ownable { // todo is IERC20
         IERC20(_underlying).transfer(msg.sender, amount);
         decreaseAllowance(_market, amount);
 
-        emit Exited(msg.sender, balance);
+        emit Withdraw(msg.sender, balance);
     }
 
     function _transfer(address from, address to,uint256 amount) internal {
@@ -253,7 +250,7 @@ contract Vault is Ownable { // todo is IERC20
     }
 
     event Approval(address indexed owner, address indexed spender, uint256 value);
-    event Exited(address indexed who, uint256 value);
-    event Supplied(address indexed owner, uint256 value);
+    event Deposit(address indexed who, uint256 value);
     event Transfer(address indexed from, address indexed to, uint256 value);
+    event Withdraw(address indexed who, uint256 value);
 }

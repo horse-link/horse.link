@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity =0.8.10;
 
-import "./IVault.sol";
+import "./IERC4626.sol";
 
 contract Registry {
 
@@ -13,7 +13,7 @@ contract Registry {
     }
 
     function add(address vault) external {
-        address _underlying = IVault(vault).asset();
+        address _underlying = IERC4626(vault).asset();
         require(underlying[_underlying] == address(0), "Vault already added");
 
         vaults.push(vault);

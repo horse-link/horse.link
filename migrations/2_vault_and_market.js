@@ -1,6 +1,7 @@
 const LPToken = artifacts.require("LPToken");
 const MockToken = artifacts.require("MockToken");
 const Market = artifacts.require("Market");
+const Registry = artifacts.require("Registry");
 const Vault = artifacts.require("Vault");
 
 module.exports = async (deployer) => {
@@ -20,4 +21,7 @@ module.exports = async (deployer) => {
   const vault = await Vault.deployed();
 
   await deployer.deploy(Market, vault.address, 1);
+
+  await deployer.deploy(Registry);
+  const registry = await Registry.deployed();
 };
