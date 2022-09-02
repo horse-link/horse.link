@@ -8,7 +8,6 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import { IBet } from "./IBet.sol";
 import "./IVault.sol";
 import "./IMarket.sol";
-import "./IERC4626.sol";
 
 // Put these in the ERC721 contract
 struct Bet {
@@ -117,7 +116,7 @@ contract Market is Ownable, IMarket {
     
     function _getOdds(int wager, int256 odds, bytes32 propositionId) private view returns (int256) {
         require(odds > 0, "Cannot have negative odds");
-        int256 p = int256(IERC4626(_vault).totalAssets());
+        int256 p = int256(IVault(_vault).totalAssets());
 
         // f(wager) = odds - odds*(wager/pool) 
 
@@ -143,7 +142,7 @@ contract Market is Ownable, IMarket {
         // bytes32 ethSignedMessageHash = getEthSignedMessageHash(messageHash);
 
         // require(recoverSigner(ethSignedMessageHash, signature) == owner(), "Invalid signature");
-        address underlying = IERC4626(_vault).asset();
+        address underlying = IVault(_vault).asset();
 
         // add underlying to the market
         int256 trueOdds = _getOdds(int256(wager), int256(odds), propositionId);

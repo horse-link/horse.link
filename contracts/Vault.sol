@@ -14,7 +14,7 @@ struct Reward {
     uint256 start;
 }
 
-contract Vault is Ownable, IVault {
+contract Vault is Ownable, IERC20, IVault {
     // ERC20
     mapping(address => uint256) private _balances;
     mapping(address => mapping(address => uint256)) private _allowances;
@@ -249,8 +249,8 @@ contract Vault is Ownable, IVault {
         _;
     }
 
-    event Approval(address indexed owner, address indexed spender, uint256 value);
-    event Deposit(address indexed who, uint256 value);
-    event Transfer(address indexed from, address indexed to, uint256 value);
-    event Withdraw(address indexed who, uint256 value);
+    // event Approval(address indexed owner, address indexed spender, uint256 value);
+    // event Deposit(address indexed who, uint256 value);
+    // // event Transfer(address indexed from, address indexed to, uint256 value);
+    // event Withdraw(address indexed who, uint256 value);
 }

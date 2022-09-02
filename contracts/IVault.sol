@@ -9,4 +9,7 @@ interface IVault {
     function getPerformance() external view returns (uint256);
     function totalAssets() external view returns (uint256);
     function withdraw() external;
+
+    event Deposit(address indexed who, uint256 value);
+    event Withdraw(address indexed who, uint256 value);
 }
