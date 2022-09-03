@@ -100,7 +100,7 @@ contract("Market", accounts => {
       const totalAssets = await vault.totalAssets();
       assert.equal(totalAssets, 1000000000, "Should have $1,000 USDT");
 
-      await underlying.approve(market.address, ethers.utils.parseUnits("50", DECIMALS), { from: bob });
+      await underlying.approve(market.address, ethers.utils.parseUnits("100", DECIMALS), { from: bob });
 
       // Runner 1 for a Win
       const propositionId = ethers.utils.formatBytes32String("1");

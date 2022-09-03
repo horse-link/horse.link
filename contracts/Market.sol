@@ -161,7 +161,7 @@ contract Market is Ownable, IMarket {
         IERC20(underlying).transferFrom(msg.sender, _self, wager);
         IERC20(underlying).transferFrom(_vault, _self, (payout - wager));
 
-        assert(IERC20(underlying).balanceOf(_self) >= payout);
+        // assert(IERC20(underlying).balanceOf(_self) >= payout);
 
         // add to the market
         _marketTotal[marketId] += wager;
