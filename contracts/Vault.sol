@@ -26,17 +26,6 @@ contract Vault is Ownable, IERC20, IVault {
     string private _symbol;
     uint8 private _decimals;
 
-    // Rewards
-    // mapping(address => Reward) private _rewards;
-    // uint256 private constant REWARDS_PER_BLOCK;
-
-    // LP
-    // Deposits of LPs
-    // mapping(address => uint256) private _lps;
-    // uint256 private _supplied; // total added to the contract from LPs
-
-
-    // address private immutable _rewardsToken;
     address private immutable _underlying;
     address private immutable _self;
 
@@ -89,17 +78,19 @@ contract Vault is Ownable, IERC20, IVault {
         return 0;
     }
 
-    function getInPlay() external view returns (uint256) {
-        return _getInPlay();
-    }
+    // function getInPlay() external view returns (uint256) {
+    //     return _getInPlay();
+    // }
 
-    function _getInPlay() private view returns (uint256) {        
-        return IERC20(_underlying).balanceOf(_market);
-    }
+    // function _getInPlay() private view returns (uint256) {        
+    //     return IERC20(_underlying).balanceOf(_market);
+    // }
 
     function _totalAssets() private view returns (uint256) {
-        uint256 underlyingBalance = IERC20(_underlying).balanceOf(address(this));
-        return underlyingBalance - _getInPlay();
+        uint256 underlyingBalance = IERC20(_underlying).balanceOf(_self);
+        uint256 inPlay = IERC20(_underlying).balanceOf(_market);
+
+        return underlyingBalance - inPlay;
     }
 
     constructor(address underlying) {
@@ -191,7 +182,7 @@ contract Vault is Ownable, IERC20, IVault {
 
     function _previewWithdraw(uint256 assets) private view returns (uint256) {
         uint256 underlyingBalance = IERC20(_underlying).balanceOf(address(this));
-        uint256 inPlay = _getInPlay();
+        uint256 inPlay = IERC20(_underlying).balanceOf(_market);
 
         return assets * underlyingBalance / (underlyingBalance + inPlay);
     }
