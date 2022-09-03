@@ -60,6 +60,10 @@ contract Market is Ownable, IMarket {
         return _totalInPlay;
     }
 
+    function getTotalLiablity() external view returns (uint256) {
+        return _totalLiability;
+    }
+
     function getVaultAddress() external view returns (address) {
         return _vault;
     }

@@ -1,11 +1,9 @@
 /* eslint-disable no-undef */
-const Bet = artifacts.require("Bet");
-const Vault = artifacts.require("Vault");
 const Token = artifacts.require("MockToken");
 const Market = artifacts.require("Market");
+const Vault = artifacts.require("Vault");
 
 contract("Vault", accounts => {
-  let bet;
   let underlying;
   let vault;
   let market;
@@ -14,8 +12,6 @@ contract("Vault", accounts => {
   let alice = accounts[1];
 
   beforeEach(async () => {
-    bet = await Bet.new();
-
     underlying = await Token.new("Mock USDT", "USDT");
     await underlying.transfer(alice, 2000);
 
@@ -37,7 +33,7 @@ contract("Vault", accounts => {
       const vaultPerformance = await vault.getPerformance();
       assert.equal(vaultPerformance, 0, "Should have no values");
 
-      const _underlying = await vault.getUnderlying();
+      const _underlying = await vault.asset();
       assert.equal(
         _underlying,
         underlying.address,
@@ -54,13 +50,13 @@ contract("Vault", accounts => {
       assert.equal(symbol, "HLUSDT", "Should have name as HLUSDT");
     });
 
-    it("should deposit $100 USDT underlying from alice", async () => {
+    it("should deposit $100 USDT from alice", async () => {
       // check alice balance
       let balance = await underlying.balanceOf(alice);
       assert.equal(balance, 2000, "Should have $2,000 USDT");
 
       await underlying.approve(vault.address, 100, { from: alice });
-      await vault.deposit(100, { from: alice });
+      await vault.deposit(100, alice, { from: alice });
 
       // check alice balance
       balance = await underlying.balanceOf(alice);
