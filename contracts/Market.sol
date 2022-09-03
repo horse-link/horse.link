@@ -129,6 +129,10 @@ contract Market is Ownable, IMarket {
         return odds - (odds * (wager * 1_000 / p) / 1_000);
     }
 
+    function getPotentailPayout(bytes32 propositionId, uint256 wager, uint256 odds) external view returns (uint256) {
+        return _getPayout(propositionId, wager, odds);
+    }
+
     function _getPayout(bytes32 propositionId, uint256 wager, uint256 odds) private view returns (uint256) {
         // add underlying to the market
         int256 trueOdds = _getOdds(int256(wager), int256(odds), propositionId);
@@ -169,7 +173,6 @@ contract Market is Ownable, IMarket {
         // Mint the 721
         // uint256 tokenId = IBet(_bet).mint(msg.sender);
 
-        // TODO: REMOVE TOTAL IN PLAY
         _totalInPlay += (wager + payout);
         _totalLiability += payout;
 
