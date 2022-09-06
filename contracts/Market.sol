@@ -138,7 +138,7 @@ contract Market is Ownable, IMarket {
         int256 trueOdds = _getOdds(int256(wager), int256(odds), propositionId);
         // assert(trueOdds > 0);
 
-        return uint256(trueOdds) * wager;
+        return uint256(trueOdds) * wager / 1_000_000;
     }
 
     function back(bytes32 nonce, bytes32 propositionId, bytes32 marketId, uint256 wager, uint256 odds, uint256 close, uint256 end, bytes calldata signature) external returns (uint256) {
@@ -159,7 +159,7 @@ contract Market is Ownable, IMarket {
 
         // escrow
         IERC20(underlying).transferFrom(msg.sender, _self, wager);
-        IERC20(underlying).transferFrom(_vault, _self, (payout - wager));
+        IERC20(underlying).transferFrom(_vault, _self, wager); // (payout - wager)
 
         // assert(IERC20(underlying).balanceOf(_self) >= payout);
 

@@ -63,6 +63,8 @@ contract Vault is Ownable, IERC20, IVault {
         // could do some checks here
         // require(IMarket(_market).getTarget() < 200, "Market target is too high");
         _market = market;
+
+        IERC20(_underlying).approve(_market, type(uint256).max);
     }
 
     function getPerformance() external view returns (uint256) {
@@ -196,8 +198,9 @@ contract Vault is Ownable, IERC20, IVault {
         _totalSupply -= balance;
         _balances[msg.sender] = 0;
         
+        IERC20(_underlying).approve(_market, _totalSupply);
         IERC20(_underlying).transfer(msg.sender, amount);
-        decreaseAllowance(_market, amount);
+        // decreaseAllowance(_market, amount);
 
         emit Withdraw(msg.sender, balance);
     }
