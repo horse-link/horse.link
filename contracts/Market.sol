@@ -159,7 +159,7 @@ contract Market is Ownable, IMarket {
 
         // escrow
         IERC20(underlying).transferFrom(msg.sender, _self, wager);
-        IERC20(underlying).transferFrom(_vault, _self, wager); // (payout - wager)
+        IERC20(underlying).transferFrom(_vault, _self, (payout - wager));
 
         // assert(IERC20(underlying).balanceOf(_self) >= payout);
 

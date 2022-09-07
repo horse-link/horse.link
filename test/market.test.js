@@ -154,10 +154,10 @@ contract("Market", accounts => {
       assert.equal(Number(balance), ethers.utils.parseUnits("900", DECIMALS), "Should have $900 USDT after $100 bet");
 
       const inPlay = await market.getTotalInplay();
-      assert.equal(Number(inPlay), ethers.utils.parseUnits("600", DECIMALS), "Should be $600 USDT in play after $100 bet @ 5:1");
+      assert.equal(Number(inPlay), ethers.utils.parseUnits("550", DECIMALS), "Should be $550 USDT in play after $100 bet @ 5:1");
 
-      // vaultBalance = await underlying.balanceOf(vault.address);
-      // assert.equal(vaultBalance, ethers.utils.parseUnits("600", DECIMALS), "Should have $600 USDT");
+      vaultBalance = await underlying.balanceOf(vault.address);
+      assert.equal(Number(vaultBalance), ethers.utils.parseUnits("650", DECIMALS), "Should have $650 USDT");
     });
 
     it.skip("should allow Carol a $200 punt at 2:1", async () => {
