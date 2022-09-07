@@ -85,12 +85,11 @@ contract("Market", accounts => {
       assert.equal(trueOdds, 4750000, "Should have true odds of 1:4.75 on $100 in a $1,000 pool");
 
       const potentailPayout = await market.getPotentailPayout.call(propositionId, ethers.utils.parseUnits("50", DECIMALS), targetOdds);
-      // 237500000000
-      // 237500000
-      assert.equal(potentailPayout, 23750000, "Should have true odds of 1:4.75 on $100 in a $1,000 pool");
+      // should equal 237500000
+      assert.equal(potentailPayout, 237500000, "Should have true odds of 1:4.75 on $100 in a $1,000 pool");
     });
 
-    it("should allow Bob a $100 punt at 5:1", async () => {
+    it.only("should allow Bob a $100 punt at 5:1", async () => {
       let balance = await underlying.balanceOf(bob);
       assert.equal(balance, 1000000000, "Should have $1,000 USDT");
 
@@ -111,12 +110,15 @@ contract("Market", accounts => {
       await underlying.approve(market.address, ethers.utils.parseUnits("100", DECIMALS), { from: bob });
 
 
+
       // const allowance = await underlying.allowance(vault.address, market.address);
       
       // console.log("********");
       // console.log(Number(allowance));
 
       // await underlying.approve(market.address, ethers.utils.parseUnits("100", DECIMALS), { from: bob });
+
+
 
       // Runner 1 for a Win
       const propositionId = ethers.utils.formatBytes32String("1");
