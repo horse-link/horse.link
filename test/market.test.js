@@ -102,7 +102,6 @@ contract("Market", accounts => {
       // check vault balance
       let vaultBalance = await underlying.balanceOf(vault.address);
       assert.equal(vaultBalance, 1000000000, "Should have $1,000 USDT");
-      // expect(vaultBalance).to.eql(ethers.utils.parseUnits(1000, DECIMALS));
 
       const totalAssets = await vault.totalAssets();
       assert.equal(totalAssets, 1000000000, "Should have $1,000 USDT");
@@ -151,8 +150,8 @@ contract("Market", accounts => {
         signature, { from: bob }
       );
 
-      // balance = await underlying.balanceOf(bob);
-      // assert.equal(balance, ethers.utils.parseUnits("900", DECIMALS), "Should have $900 USDT after $100 bet");
+      balance = await underlying.balanceOf(bob);
+      assert.equal(Number(balance), ethers.utils.parseUnits("900", DECIMALS), "Should have $900 USDT after $100 bet");
 
       // const inPlay = await market.getTotalInplay();
       // assert.equal(inPlay, ethers.utils.parseUnits("600", DECIMALS), "Should be $600 USDT in play after $100 bet @ 5:1");
