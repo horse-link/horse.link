@@ -1,4 +1,3 @@
-//import { Fragment, useState } from "react";
 import { PageLayout } from "../../components";
 import { useParams } from "react-router-dom";
 import moment from "moment";
@@ -6,14 +5,6 @@ import { Runners } from "../../types";
 
 type Props = {
   runners: Runners[]
-  // asLocaltime: (raceTime: number) => string;
-  // meets: Meet[];
-  // inPlay: string | undefined;
-  // numberOfBets: number;
-  // connected: boolean;
-  // // hash: string;
-  // signature: string;
-  // owner: string;
 };
 
 const HorseRaceView: React.FC<Props> = (props: Props) => {
