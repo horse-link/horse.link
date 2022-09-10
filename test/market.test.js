@@ -18,12 +18,12 @@ contract("Market", accounts => {
   const DECIMALS = 6;
 
   const getMarketMakerSigner = () => {
-      // owner private key
-      const private_key = "29d6dec1a1698e7190a24c42d1a104d1d773eadf680d5d353cf15c3129aab729";
-      const signer = new ethers.Wallet(private_key);
+    // owner private key
+    const private_key = "29d6dec1a1698e7190a24c42d1a104d1d773eadf680d5d353cf15c3129aab729";
+    const signer = new ethers.Wallet(private_key);
 
-      return signer;
-  }
+    return signer;
+  };
 
   beforeEach(async () => {
     underlying = await Token.new("Mock USDT", "USDT");
@@ -63,7 +63,7 @@ contract("Market", accounts => {
       // assert.equal(maxPayout, 500, "Should be $500");
     });
 
-    it.only("should get correct odds of 5:1", async () => {
+    it.only("should get correct odds on a 5:1 punt", async () => {
       let balance = await underlying.balanceOf(bob);
       assert.equal(balance, 1000000000, "Should have $1,000 USDT");
 
@@ -82,11 +82,11 @@ contract("Market", accounts => {
       const propositionId = ethers.utils.formatBytes32String("1");
 
       const trueOdds = await market.getOdds.call(ethers.utils.parseUnits("50", DECIMALS), targetOdds, propositionId);
-      assert.equal(trueOdds, 4750000, "Should have true odds of 1:4.75 on $100 in a $1,000 pool");
+      assert.equal(trueOdds, 4750000, "Should have true odds of 1:4.75 on $50 in a $1,000 pool");
 
-      const potentailPayout = await market.getPotentailPayout.call(propositionId, ethers.utils.parseUnits("50", DECIMALS), targetOdds);
+      const potentialPayout = await market.getPotentialPayout.call(propositionId, ethers.utils.parseUnits("50", DECIMALS), targetOdds);
       // should equal 237500000
-      assert.equal(potentailPayout, 237500000, "Should have true odds of 1:4.75 on $100 in a $1,000 pool");
+      assert.equal(potentialPayout, 237500000, "Should have true odds of 1:4.75 on $100 in a $1,000 pool");
     });
 
     it.only("should allow Bob a $100 punt at 5:1", async () => {
@@ -103,28 +103,13 @@ contract("Market", accounts => {
       let vaultBalance = await underlying.balanceOf(vault.address);
       assert.equal(vaultBalance, 1000000000, "Should have $1,000 USDT");
 
-      const totalAssets = await vault.totalAssets();
+      let totalAssets = await vault.totalAssets();
       assert.equal(totalAssets, 1000000000, "Should have $1,000 USDT");
 
       await underlying.approve(market.address, ethers.utils.parseUnits("100", DECIMALS), { from: bob });
 
-
-
-      // const allowance = await underlying.allowance(vault.address, market.address);
-      
-      // console.log("********");
-      // console.log(Number(allowance));
-
-      // await underlying.approve(market.address, ethers.utils.parseUnits("100", DECIMALS), { from: bob });
-
-
-
       // Runner 1 for a Win
       const propositionId = ethers.utils.formatBytes32String("1");
-
-      // const trueodds = await market.getOdds.call(ethers.utils.parseUnits("50", DECIMALS), odds, propositionId);
-      // assert.equal(trueodds, 4750000, "Should have true odds of 1:4.75 on $100 in a $1,000 pool");
-
       const nonce = ethers.utils.formatBytes32String("1");
 
       // Arbitary market ID set by the opperator
@@ -139,25 +124,19 @@ contract("Market", accounts => {
       console.log(signature);
 
       // function back(bytes32 nonce, bytes32 propositionId, bytes32 marketId, uint256 wager, uint256 odds, uint256 close, uint256 end, bytes calldata signature) external returns (uint256) {
-      await market.back(
-        nonce,
-        propositionId,
-        marketId,
-        wager,
-        odds,
-        close,
-        end,
-        signature, { from: bob }
-      );
+      await market.back(nonce, propositionId, marketId, wager, odds, close, end, signature, { from: bob });
 
       balance = await underlying.balanceOf(bob);
       assert.equal(Number(balance), ethers.utils.parseUnits("900", DECIMALS), "Should have $900 USDT after $100 bet");
 
       const inPlay = await market.getTotalInplay();
-      assert.equal(Number(inPlay), ethers.utils.parseUnits("550", DECIMALS), "Should be $550 USDT in play after $100 bet @ 5:1");
+      assert.equal(Number(inPlay), ethers.utils.parseUnits("450", DECIMALS), "Should be $450 USDT in play after $100 bet @ 1:4.5");
 
       vaultBalance = await underlying.balanceOf(vault.address);
-      assert.equal(Number(vaultBalance), ethers.utils.parseUnits("650", DECIMALS), "Should have $650 USDT");
+      assert.equal(Number(vaultBalance), ethers.utils.parseUnits("650", DECIMALS), "Should have $650 USDT left in the vault");
+
+      // totalAssets = await vault.totalAssets();
+      // assert.equal(totalAssets, 1000000000, "Should have $1,000 USDT");
     });
 
     it.skip("should allow Carol a $200 punt at 2:1", async () => {
@@ -205,7 +184,6 @@ contract("Market", accounts => {
       //   end,
       //   signature, { from: bob }
       // );
-
 
       // balance = await underlying.balanceOf(bob);
       // assert.equal(balance, 900, "Should have $900 USDT after $100 bet");
