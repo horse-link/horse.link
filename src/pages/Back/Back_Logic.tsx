@@ -17,7 +17,7 @@ const Back: React.FC<Props> = () => {
     close: 0,
     end: 0,
     odds: 0,
-    propostion_id: proposition_id || "",
+    proposition_id: proposition_id || "",
     barrier: 0,
     signature: signature || ""
   };

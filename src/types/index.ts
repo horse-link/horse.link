@@ -46,7 +46,7 @@ export type Runner = {
   close: number;
   end: number;
   odds: number;
-  propostion_id: string;
+  proposition_id: string;
   barrier: number;
   signature: string;
 };

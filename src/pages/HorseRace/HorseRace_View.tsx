@@ -1,5 +1,5 @@
 import { PageLayout } from "../../components";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import moment from "moment";
 import { Runner } from "../../types";
 
@@ -74,8 +74,14 @@ const HorseRaceView: React.FC<Props> = (props: Props) => {
                         {/* {horse.Rider} */}
                       </td>
                       <td className="px-2 py-4 whitespace-nowrap">NA</td>
-                      <td className="px-2 py-4 whitespace-nowrap">{runner.odds / 1000}</td>
-                      <td className="px-2 py-4 whitespace-nowrap">0</td>
+                      <Link
+                        to={{
+                          pathname: `/back?proposition_id=${runner.proposition_id}&signature=${runner.signature}`,
+                        }}
+                      >
+                        <td className="px-2 py-4 whitespace-nowrap">{runner.odds / 1000}</td>
+                      </Link>
+                      <td className="px-2 py-4 whitespace-nowrap">NA</td>
                     </tr>
                   ))}
                 </tbody>
