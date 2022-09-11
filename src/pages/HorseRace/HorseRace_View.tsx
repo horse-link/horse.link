@@ -10,7 +10,7 @@ type Props = {
 const HorseRaceView: React.FC<Props> = (props: Props) => {
 
   const { runners } = props;
-  const { track, number } = useParams();
+  const { track, number } = useParams(); // should this guy be in the logic?
 
   return (
     <PageLayout requiresAuth={false}>
@@ -76,7 +76,7 @@ const HorseRaceView: React.FC<Props> = (props: Props) => {
                       <td className="px-2 py-4 whitespace-nowrap">NA</td>
                       <Link
                         to={{
-                          pathname: `/back?proposition_id=${runner.proposition_id}&signature=${runner.signature}`,
+                          pathname: `/back?proposition_id=${runner.proposition_id}&signature=${runner.signature.signature}`,
                         }}
                       >
                         <td className="px-2 py-4 whitespace-nowrap">{runner.odds / 1000}</td>

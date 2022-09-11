@@ -1,26 +1,26 @@
 import { PageLayout } from "../../components";
-// import { useParams } from "react-router-dom";
-import moment from "moment";
-import { Runner } from "../../types";
+import { Back } from "../../types";
 
 type Props = {
-  runner: Runner
+  back: Back
 };
 
-const HorseRaceView: React.FC<Props> = (props: Props) => {
+const BackView: React.FC<Props> = (props: Props) => {
 
-  const { runner } = props;
+  const { back } = props;
   // const { track, number } = useParams();
 
   return (
     <PageLayout requiresAuth={false}>
       <div className="flex mb-6 p-2 shadow overflow-hidden border-b bg-white border-gray-200 sm:rounded-lg justify-around">
-        <h1>Something {runner.odds}</h1>
+        <h1>Something {back.odds}</h1>
+        <p>Signature {back.signature}</p>
         <form>
+
         </form>
       </div>
     </PageLayout>
   );
 };
 
-export default HorseRaceView;
+export default BackView;

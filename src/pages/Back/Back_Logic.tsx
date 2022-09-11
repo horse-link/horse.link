@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
-import { Runner, SignedRunnersResponse } from "../../types";
+import { Back } from "../../types";
 import BackView from "./Back_View";
 import { useParams } from "react-router-dom";
 
 type Props = {};
 
-const Back: React.FC<Props> = () => {
+const BackLogic: React.FC<Props> = () => {
 
   const { proposition_id, signature } = useParams();
 
-  const runner: Runner = {
+  const back: Back = {
     number: 0,
     name: "",
     nonce: "",
@@ -18,11 +18,10 @@ const Back: React.FC<Props> = () => {
     end: 0,
     odds: 0,
     proposition_id: proposition_id || "",
-    barrier: 0,
     signature: signature || ""
   };
 
-  return <BackView runner={runner} />;
+  return <BackView back={back} />;
 };
 
-export default Back;
+export default BackLogic;

@@ -1,8 +1,14 @@
-// export type Back = {
-//   odds: number;
-//   signature: string;
-//   proposition_id: string;
-// }
+export type Back = {
+  number: number;
+  name: string;
+  nonce: string;
+  market_id: string;
+  close: number;
+  end: number;
+  odds: number;
+  proposition_id: string;
+  signature: string;
+};
 
 export type SignedResponse = {
   owner: string;
@@ -48,5 +54,11 @@ export type Runner = {
   odds: number;
   proposition_id: string;
   barrier: number;
-  signature: string;
+  signature: Signature;
 };
+
+export type Signature = {
+  message: string;
+  messageHash: string;
+  signature: string;
+}
