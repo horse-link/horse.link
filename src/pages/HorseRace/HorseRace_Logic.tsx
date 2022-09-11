@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Runners, SignedRunnersResponse } from "../../types";
+import { Runner, SignedRunnersResponse } from "../../types";
 import HorseRaceView from "./HorseRace_View";
 import useApi from "../../hooks/useApi";
 import { useParams } from "react-router-dom";
@@ -8,7 +8,7 @@ type Props = {};
 
 const HorseRace: React.FC<Props> = () => {
 
-  const _runners: Runners[] = [];
+  const _runners: Runner[] = [];
 
   const api = useApi();
   const [response, setResponse] = useState<SignedRunnersResponse>();
