@@ -76,7 +76,7 @@ const HorseRaceView: React.FC<Props> = (props: Props) => {
                       <td className="px-2 py-4 whitespace-nowrap">NA</td>
                       <Link
                         to={{
-                          pathname: `/back?proposition_id=${runner.proposition_id}&signature=${runner.signature.signature}`,
+                          pathname: `/back/${runner.signature.signature}`,
                         }}
                       >
                         <td className="px-2 py-4 whitespace-nowrap">{runner.odds / 1000}</td>
