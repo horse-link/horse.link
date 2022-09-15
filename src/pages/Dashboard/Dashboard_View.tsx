@@ -54,15 +54,13 @@ const DashboardView: React.FC<Props> = (props: Props) => {
             ))}
         </dl>
         {!connected && (
-          <div className="px-4 py-5 bg-white shadow rounded-lg sm:p-6">
-            <div className="flex justify-center">
-              <div className="flex flex-col items-center w-4/5 max-w-2xl">
+          <div className="flex justify-center px-4 py-5 bg-white shadow rounded-lg sm:p-6">
+            <div className="w-4/5 max-w-2xl">
+              <div className="flex flex-col items-center">
                 <h2 className="text-lg">Signature :</h2>
                 <h2 className="break-all"> {signature}</h2>
               </div>
-            </div>
-            <div className="mt-3 flex justify-center">
-              <div className="flex flex-col items-center w-4/5 max-w-2xl">
+              <div className="mt-3 flex flex-col items-center">
                 <h2 className="text-lg">Owner Address :</h2>
                 <h2 className="break-all"> {owner}</h2>
               </div>
