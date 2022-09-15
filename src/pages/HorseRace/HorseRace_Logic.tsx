@@ -7,24 +7,26 @@ import { useParams } from "react-router-dom";
 type Props = {};
 
 const HorseRace: React.FC<Props> = () => {
-
   const _runners: Runner[] = [];
 
   const api = useApi();
   const [response, setResponse] = useState<SignedRunnersResponse>();
 
-  const { track, number } = useParams();
+  const params = useParams();
+
+  const track = params.track || "";
+  const raceNumber = Number(params.number) || 0;
 
   const load = async () => {
-    const runners: SignedRunnersResponse = await api.getRunners(track || "", Number(number) || 0);
+    const runners: SignedRunnersResponse = await api.getRunners(track, raceNumber);
     setResponse(runners);
   };
 
   useEffect(() => {
     load();
-  });
+  }, []);
 
-  return <HorseRaceView runners={response?.data || _runners} />;
+  return <HorseRaceView track={track} raceNumber={raceNumber} runners={response?.data || _runners} />;
 };
 
 export default HorseRace;

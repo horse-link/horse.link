@@ -1,29 +1,23 @@
 import { PageLayout } from "../../components";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import moment from "moment";
 import { Runner } from "../../types";
 
 type Props = {
-  runners: Runner[]
+  track: string;
+  raceNumber: number;
+  runners: Runner[];
 };
 
 const HorseRaceView: React.FC<Props> = (props: Props) => {
-
-  const { runners } = props;
-  const { track, number } = useParams(); // should this guy be in the logic?
+  const { track, raceNumber, runners } = props;
 
   return (
     <PageLayout requiresAuth={false}>
       <div className="flex mb-6 p-2 shadow overflow-hidden border-b bg-white border-gray-200 sm:rounded-lg justify-around">
-        <h1>
-          Track: {track}
-        </h1>
-        <h1>
-          Race #: {number}
-        </h1>
-        <h1>
-          Date: {moment().format("DD-MM-YY")}
-        </h1>
+        <h1>Track: {track}</h1>
+        <h1>Race #: {raceNumber}</h1>
+        <h1>Date: {moment().format("DD-MM-YY")}</h1>
       </div>
       <div className="flex flex-col">
         <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -32,34 +26,19 @@ const HorseRaceView: React.FC<Props> = (props: Props) => {
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th
-                      scope="col"
-                      className="px-1 py-3 text-left text-xs font-medium text-gray-500 bg-gray-200 uppercase"
-                    >
+                    <th scope="col" className="px-1 py-3 text-left text-xs font-medium text-gray-500 bg-gray-200 uppercase">
                       #
                     </th>
-                    <th
-                      scope="col"
-                      className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
-                    >
+                    <th scope="col" className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                       Runner (Barrier)
                     </th>
-                    <th
-                      scope="col"
-                      className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
-                    >
+                    <th scope="col" className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                       Weight
                     </th>
-                    <th
-                      scope="col"
-                      className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
-                    >
+                    <th scope="col" className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                       Win
                     </th>
-                    <th
-                      scope="col"
-                      className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
-                    >
+                    <th scope="col" className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                       Place
                     </th>
                   </tr>
@@ -76,7 +55,7 @@ const HorseRaceView: React.FC<Props> = (props: Props) => {
                       <td className="px-2 py-4 whitespace-nowrap">NA</td>
                       <Link
                         to={{
-                          pathname: `/back/${runner.signature.signature}`,
+                          pathname: `/back/${runner.signature.signature}`
                         }}
                       >
                         <td className="px-2 py-4 whitespace-nowrap">{runner.odds / 1000}</td>
