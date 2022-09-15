@@ -1,4 +1,4 @@
-import { Route, Routes, BrowserRouter, Navigate } from "react-router-dom";
+import { Route, Routes, Navigate, HashRouter } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import Dashboard from "./pages/Dashboard/Dashboard_Logic";
 import HorseRace from "./pages/HorseRace/HorseRace_Logic";
@@ -9,7 +9,7 @@ export const history = createBrowserHistory();
 
 const Navigation = () => {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route path="/dashboard" element={<Dashboard />} />
         {/* <Route path="/results" element={<Results />} /> */}
@@ -17,7 +17,7 @@ const Navigation = () => {
         <Route path="/horses/:track/:number" element={<HorseRace />} />
         <Route path="*" element={<Navigate to="/dashboard" />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 };
 
