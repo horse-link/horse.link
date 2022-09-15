@@ -9,7 +9,6 @@ import { Meet, SignedMeetingsResponse } from "../../types/index";
 type Props = {};
 
 const Dashboard: React.FC<Props> = () => {
-
   // default
   const _meets: Meet[] = [];
 
@@ -30,7 +29,7 @@ const Dashboard: React.FC<Props> = () => {
 
   useEffect(() => {
     load();
-  });
+  }, []);
 
   const asLocaltime = (raceTime: number) => {
     const _time = moment.utc(raceTime).diff(moment(), "h");
