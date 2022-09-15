@@ -1,9 +1,15 @@
-import axios from "axios";
+import axios, { AxiosInstance } from "axios";
 import { SignedMeetingsResponse, SignedRunnersResponse } from "../types/index";
 
 export default class Api {
+  private client: AxiosInstance;
+  constructor() {
+    this.client = axios.create({
+      baseURL: process.env.REACT_APP_API_URL || "http://localhost:3002"
+    });
+  }
   public getMeetings = async (): Promise<SignedMeetingsResponse> => {
-    const { data, status } = await axios.get<SignedMeetingsResponse>("http://localhost:3002/meetings", {
+    const { data, status } = await this.client.get<SignedMeetingsResponse>("/meetings", {
       headers: {
         Accept: "application/json"
       }
@@ -13,7 +19,7 @@ export default class Api {
   };
 
   public getRunners = async (track: string, number: number): Promise<SignedRunnersResponse> => {
-    const { data, status } = await axios.get<SignedRunnersResponse>(`http://localhost:3002/runners/${track}/${number}/win`, {
+    const { data, status } = await this.client.get<SignedRunnersResponse>(`/runners/${track}/${number}/win`, {
       headers: {
         Accept: "application/json"
       }

@@ -1,4 +1,4 @@
-import { Route, Routes, BrowserRouter, Navigate } from "react-router-dom";
+import { Route, Routes, Navigate, HashRouter } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import Back from "./pages/Back/Back_Logic";
 import Dashboard from "./pages/Dashboard/Dashboard_Logic";
@@ -10,7 +10,7 @@ export const history = createBrowserHistory();
 
 const Navigation = () => {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route path="/dashboard" element={<Dashboard />} />
         {/* <Route path="/results" element={<Results />} /> */}
@@ -19,7 +19,7 @@ const Navigation = () => {
         <Route path="*" element={<Navigate to="/dashboard" />} />
         <Route path="/back/:signature" element={<Back />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 };
 
