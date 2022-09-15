@@ -54,15 +54,21 @@ const DashboardView: React.FC<Props> = (props: Props) => {
             ))}
         </dl>
         {!connected && (
-          <h2 className="px-4 py-5 text-lg bg-white shadow rounded-lg text-center overflow-hidden sm:p-6">
-            {/* Loading markets... */}
-            Signature: {signature}
-          </h2>
+          <div className="px-4 py-5 bg-white shadow rounded-lg sm:p-6">
+            <div className="flex justify-center">
+              <div className="flex flex-col items-center w-4/5 max-w-2xl">
+                <h2 className="text-lg">Signature :</h2>
+                <h2 className="break-all"> {signature}</h2>
+              </div>
+            </div>
+            <div className="mt-3 flex justify-center">
+              <div className="flex flex-col items-center w-4/5 max-w-2xl">
+                <h2 className="text-lg">Owner Address :</h2>
+                <h2 className="break-all"> {owner}</h2>
+              </div>
+            </div>
+          </div>
         )}
-
-        <h2>Proofs</h2>
-        {/* <p>Signature: {signature}</p> */}
-        <p>Owner: {owner}</p>
       </div>
       <div className="grid grid-cols-2 gap-4 items-start lg:gap-8">
         <Table asLocaltime={asLocaltime} meets={meets} />
