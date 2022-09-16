@@ -1,13 +1,22 @@
-import { useEffect, useState } from "react";
 import { Back } from "../../types";
 import BackView from "./Back_View";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
+import { useMemo } from "react";
 
 type Props = {};
 
-const BackLogic: React.FC<Props> = () => {
+function useQuery() {
+  const { search } = useLocation();
 
-  const { proposition_id, signature } = useParams();
+  return useMemo(() => new URLSearchParams(search), [search]);
+}
+
+const BackLogic: React.FC<Props> = () => {
+  const { propositionId } = useParams();
+  const query = useQuery();
+
+  const odds = query.get("odds");
+  const signature = query.get("signature");
 
   const back: Back = {
     number: 0,
@@ -16,8 +25,8 @@ const BackLogic: React.FC<Props> = () => {
     market_id: "bne",
     close: 0,
     end: 0,
-    odds: 0,
-    proposition_id: proposition_id || "",
+    odds: odds ? parseFloat(odds) : 0,
+    proposition_id: propositionId || "",
     signature: signature || ""
   };
 

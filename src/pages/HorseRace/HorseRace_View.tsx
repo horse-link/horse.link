@@ -44,25 +44,29 @@ const HorseRaceView: React.FC<Props> = (props: Props) => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {runners.map(runner => (
-                    <tr key={runner.number}>
-                      <td className="px-1 py-4 whitespace-nowrap bg-gray-200">{runner.number}</td>
-                      <td className="px-2 py-4 whitespace-nowrap">
-                        {runner.name} ({runner.barrier})
-                        <br />
-                        {/* {horse.Rider} */}
-                      </td>
-                      <td className="px-2 py-4 whitespace-nowrap">NA</td>
-                      <Link
-                        to={{
-                          pathname: `/back/${runner.signature.signature}`
-                        }}
-                      >
-                        <td className="px-2 py-4 whitespace-nowrap">{runner.odds / 1000}</td>
-                      </Link>
-                      <td className="px-2 py-4 whitespace-nowrap">NA</td>
-                    </tr>
-                  ))}
+                  {runners.map(runner => {
+                    const { proposition_id, signature, odds } = runner;
+                    const backPath = `/back/${proposition_id}?odds=${odds}&signature=${signature.signature}`;
+                    return (
+                      <tr key={runner.number}>
+                        <td className="px-1 py-4 whitespace-nowrap bg-gray-200">{runner.number}</td>
+                        <td className="px-2 py-4 whitespace-nowrap">
+                          {runner.name} ({runner.barrier})
+                          <br />
+                          {/* {horse.Rider} */}
+                        </td>
+                        <td className="px-2 py-4 whitespace-nowrap">NA</td>
+                        <Link
+                          to={{
+                            pathname: backPath
+                          }}
+                        >
+                          <td className="px-2 py-4 whitespace-nowrap">{runner.odds / 1000}</td>
+                        </Link>
+                        <td className="px-2 py-4 whitespace-nowrap">NA</td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

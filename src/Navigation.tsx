@@ -17,7 +17,7 @@ const Navigation = () => {
         <Route path="/vaults" element={<Vaults />} />
         <Route path="/horses/:track/:number" element={<HorseRace />} />
         <Route path="*" element={<Navigate to="/dashboard" />} />
-        <Route path="/back/:signature" element={<Back />} />
+        <Route path="/back/:propositionId" element={<Back />} />
       </Routes>
     </HashRouter>
   );
