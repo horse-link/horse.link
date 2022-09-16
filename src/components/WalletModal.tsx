@@ -1,5 +1,5 @@
-import React from "react";
-import { useConnect } from "wagmi";
+import React, { useEffect } from "react";
+import { useAccount, useConnect } from "wagmi";
 import Modal from "./Modal";
 import ModalBody from "./ModalBody";
 
@@ -11,12 +11,22 @@ type Props = {
 const WalletModal: React.FC<Props> = (props: Props) => {
   const { isModalOpen, closeWalletModal } = props;
 
+  const [{ data: accountData }] = useAccount({
+    fetchEns: true
+  });
+
   const [
     {
       data: { connectors }
     },
     connect
   ] = useConnect();
+
+  useEffect(() => {
+    if (accountData) {
+      closeWalletModal();
+    }
+  }, [accountData, closeWalletModal]);
 
   return (
     <>
