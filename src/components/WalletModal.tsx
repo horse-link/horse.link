@@ -11,22 +11,15 @@ type Props = {
 const WalletModal: React.FC<Props> = (props: Props) => {
   const { isModalOpen, closeWalletModal } = props;
 
-  const [{ data: accountData }] = useAccount({
-    fetchEns: true
-  });
+  const { isConnected } = useAccount();
 
-  const [
-    {
-      data: { connectors }
-    },
-    connect
-  ] = useConnect();
+  const { connect } = useConnect();
 
   useEffect(() => {
-    if (accountData) {
+    if (isConnected) {
       closeWalletModal();
     }
-  }, [accountData, closeWalletModal]);
+  }, [isConnected, closeWalletModal]);
 
   return (
     <>
@@ -36,9 +29,16 @@ const WalletModal: React.FC<Props> = (props: Props) => {
             <div className="">
               <div className="text-center w-full">
                 <div className="">
-                  <label className="flex justify-center cursor-pointer" onClick={() => connect(connectors[0])}>
+                  <label
+                    className="flex justify-center cursor-pointer"
+                    onClick={() => connect()}
+                  >
                     <div className="w-40 m-10">
-                      <img loading="lazy" alt="MetaMaskLogo" src="/images/metamask.png" />
+                      <img
+                        loading="lazy"
+                        alt="MetaMaskLogo"
+                        src="/images/metamask.png"
+                      />
                     </div>
                   </label>
                   <div className="font-bold">METAMASK</div>

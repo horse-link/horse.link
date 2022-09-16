@@ -13,21 +13,20 @@ type Props = {
 const BackView: React.FC<Props> = ({ back }) => {
   const { openWalletModal } = useContext(WalletModalContext);
 
-  const [{ data: accountData }] = useAccount({
-    fetchEns: true
-  });
+  const { address } = useAccount();
 
   const [wagerAmount, setWagerAmount] = useState<number>(0);
   const [potentialPayout, setPotentialPayout] = useState<number>(0);
 
-  // const [{ data, error, loading }, getSigner] = useSigner();
-  // const contract = useContract({
-  //   addressOrName: "0xb6E79dcD176a6E56f328F2B1f086edfF06C54Afc",
-  //   contractInterface: marketContractJson.abi,
-  //   signerOrProvider: data
-  // });
+  const { data: signer, isError, isLoading } = useSigner();
+  const contract = useContract({
+    addressOrName: "0x9745295850097f3E2a82E493B296dA2aE0d0AdC5",
+    contractInterface: marketContractJson.abi,
+    signerOrProvider: signer
+  });
 
   const { odds, proposition_id } = back;
+  console.log({ odds });
   const targetOdds = odds / 1000;
 
   const backTheRace = () => {
@@ -44,23 +43,25 @@ const BackView: React.FC<Props> = ({ back }) => {
     setWagerAmount(amount || 0); // handle NaN
   };
 
-  // useEffect(() => {
-  //   if (contract?.address) {
-  //     const loadPayout = async () => {
-  //       const bnWager = ethers.utils.parseUnits(wagerAmount.toString(), 3);
+  useEffect(() => {
+    if (contract?.address) {
+      const loadPayout = async () => {
+        const bnWager = ethers.utils.parseUnits(wagerAmount.toString(), 3);
 
-  //       console.log({ wagerAmount, targetOdds, proposition_id, contract });
-  //       const bnOdds = ethers.utils.parseUnits(targetOdds.toString(), 3);
-  //       const hash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(proposition_id));
-  //       console.log({ bnOdds, hash });
-  //       const payout = await contract.getPotentialPayout(hash, bnWager, bnOdds);
-  //       console.log("after await");
-  //       setPotentialPayout(payout);
-  //     };
-  //     loadPayout();
-  //   }
-  // }, [wagerAmount, targetOdds, contract, proposition_id]);
-  const isWalletConnected = accountData?.address ? true : false;
+        console.log({ wagerAmount, targetOdds, proposition_id, contract });
+        const bnOdds = ethers.utils.parseUnits(targetOdds.toString(), 3);
+        const hash = ethers.utils.keccak256(
+          ethers.utils.toUtf8Bytes(proposition_id)
+        );
+        console.log({ bnOdds, hash });
+        const payout = await contract.getPotentialPayout(hash, bnWager, bnOdds);
+        console.log("after await");
+        setPotentialPayout(payout);
+      };
+      loadPayout();
+    }
+  }, [wagerAmount, targetOdds, contract, proposition_id]);
+  const isWalletConnected = address ? true : false;
 
   return (
     <PageLayout requiresAuth={false}>
@@ -95,7 +96,10 @@ const BackView: React.FC<Props> = ({ back }) => {
             </div>
             <div className="flex justify-end mt-3">
               {isWalletConnected ? (
-                <button className="rounded-md border shadow-md border-gray-500  px-5 py-1" onClick={backTheRace}>
+                <button
+                  className="rounded-md border shadow-md border-gray-500  px-5 py-1"
+                  onClick={backTheRace}
+                >
                   Back
                 </button>
               ) : (

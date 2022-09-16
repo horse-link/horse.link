@@ -18,6 +18,8 @@ const BackLogic: React.FC<Props> = () => {
   const odds = query.get("odds");
   const signature = query.get("signature");
 
+  console.log({ propositionId, odds, signature });
+
   const back: Back = {
     number: 0,
     name: "",
