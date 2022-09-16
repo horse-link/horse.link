@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import classnames from "classnames";
 import { Link } from "react-router-dom";
 import { Loader } from "..";
@@ -7,26 +7,28 @@ import WalletConnectButton from "../ConnectWalletButton/ConnectWalletButton_View
 import WalletModal from "../WalletModal";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import { useAccount } from "wagmi";
+import { WalletModalContext } from "../../providers/WalletModal";
 
 const navigation = [
-  { name: "Dashboard", path: "/dashboard" }, 
-  { name: "Vaults", path: "/vaults" }, 
-  { name: "White Paper", path: "https://github.com/horse-link/whitepaper" }];
+  { name: "Dashboard", path: "/dashboard" },
+  { name: "Vaults", path: "/vaults" },
+  { name: "White Paper", path: "https://github.com/horse-link/whitepaper" }
+];
 
 type Props = {
   loading: boolean;
   currentPath: string;
 };
 
-const PageLayoutView: React.FC<Props> = (props) => {
-  const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
+const PageLayoutView: React.FC<Props> = props => {
+  const { openWalletModal, closeWalletModal, isWalletModalOpen } = useContext(WalletModalContext);
   const [{ data: accountData, loading }] = useAccount({
-    fetchEns: true,
+    fetchEns: true
   });
 
   useEffect(() => {
     if (accountData) {
-      setIsWalletModalOpen(false);
+      closeWalletModal();
     }
   }, [accountData]);
   if (props.loading) {
@@ -48,7 +50,7 @@ const PageLayoutView: React.FC<Props> = (props) => {
               <div className="flex justify-between h-16">
                 <div className="flex">
                   <div className="hidden sm:-my-px sm:flex sm:space-x-8">
-                    {navigation.map((item) => {
+                    {navigation.map(item => {
                       const active = item.path === props.currentPath;
                       return (
                         <Link
@@ -57,8 +59,7 @@ const PageLayoutView: React.FC<Props> = (props) => {
                           className={classnames(
                             {
                               "border-indigo-500 text-gray-900": active,
-                              "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700":
-                                !active,
+                              "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700": !active
                             },
 
                             "inline-flex items-center px-1 pt-1 border-b-4 text-sm font-medium"
@@ -75,25 +76,18 @@ const PageLayoutView: React.FC<Props> = (props) => {
                   {/* Mobile menu button */}
                   <Disclosure.Button className="bg-white inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     <span className="sr-only">Open main menu</span>
-                    {open ? (
-                      <XIcon className="block h-6 w-6" aria-hidden="true" />
-                    ) : (
-                      <MenuIcon className="block h-6 w-6" aria-hidden="true" />
-                    )}
+                    {open ? <XIcon className="block h-6 w-6" aria-hidden="true" /> : <MenuIcon className="block h-6 w-6" aria-hidden="true" />}
                   </Disclosure.Button>
                 </div>
                 <div className="hidden sm:flex">
-                  <WalletConnectButton
-                    loading={loading}
-                    setIsWalletModalOpen={setIsWalletModalOpen}
-                  />
+                  <WalletConnectButton openWalletModal={openWalletModal} />
                 </div>
               </div>
             </div>
 
             <Disclosure.Panel className="sm:hidden">
               <div className="pt-2 pb-3 space-y-1">
-                {navigation.map((item) => {
+                {navigation.map(item => {
                   const active = item.path === props.currentPath;
 
                   return (
@@ -102,10 +96,8 @@ const PageLayoutView: React.FC<Props> = (props) => {
                       to={item.path}
                       className={classnames(
                         {
-                          "bg-indigo-50 border-indigo-500 text-indigo-700":
-                            active,
-                          "border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800":
-                            !active,
+                          "bg-indigo-50 border-indigo-500 text-indigo-700": active,
+                          "border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800": !active
                         },
                         "block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
                       )}
@@ -115,10 +107,7 @@ const PageLayoutView: React.FC<Props> = (props) => {
                     </Link>
                   );
                 })}
-                <WalletConnectButton
-                  loading={loading}
-                  setIsWalletModalOpen={setIsWalletModalOpen}
-                />
+                <WalletConnectButton openWalletModal={openWalletModal} />
               </div>
             </Disclosure.Panel>
           </>
@@ -127,13 +116,8 @@ const PageLayoutView: React.FC<Props> = (props) => {
 
       <div className="py-10">
         <main>
-          <WalletModal
-            isModalOpen={isWalletModalOpen}
-            setIsModalOpen={setIsWalletModalOpen}
-          />
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {props.children}
-          </div>
+          <WalletModal isModalOpen={isWalletModalOpen} closeWalletModal={closeWalletModal} />
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">{props.children}</div>
         </main>
       </div>
     </div>

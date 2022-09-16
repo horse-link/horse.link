@@ -5,14 +5,11 @@ import ModalBody from "./ModalBody";
 
 type Props = {
   isModalOpen: boolean;
-  setIsModalOpen: (open: boolean) => void;
+  closeWalletModal: () => void;
 };
 
 const WalletModal: React.FC<Props> = (props: Props) => {
-  const { isModalOpen, setIsModalOpen } = props;
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
+  const { isModalOpen, closeWalletModal } = props;
 
   const [
     {
@@ -23,16 +20,13 @@ const WalletModal: React.FC<Props> = (props: Props) => {
 
   return (
     <>
-      <Modal isOpen={isModalOpen} onClose={closeModal}>
+      <Modal isOpen={isModalOpen} onClose={closeWalletModal}>
         <ModalBody>
           <div className="w-full">
             <div className="">
               <div className="text-center w-full">
                 <div className="">
-                  <label
-                    className="flex justify-center cursor-pointer"
-                    onClick={() => connect(connectors[0])}
-                  >
+                  <label className="flex justify-center cursor-pointer" onClick={() => connect(connectors[0])}>
                     <div className="w-40 m-10">
                       <img loading="lazy" alt="MetaMaskLogo" src="/images/metamask.png" />
                     </div>
