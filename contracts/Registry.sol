@@ -24,9 +24,15 @@ contract Registry {
 
         vaults.push(vault);
         underlying[_underlying] = vault; // underlying to vault
+
+        emit VaultAdded(vault);
     }
 
     function addMarket(address market) external {
         markets.push(market);
+        emit MarketAdded(market);
     }
+
+    event MarketAdded(address indexed market);
+    event VaultAdded(address indexed vault);
 }
