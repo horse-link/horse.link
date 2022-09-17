@@ -15,6 +15,10 @@ DIA Vault: `0x25b49a6b3649D3Cbd3617B553Bedb98939967Fc9`
 Market: `0xb6E79dcD176a6E56f328F2B1f086edfF06C54Afc`  
 Registry: `0xA8Fc4232581deC73e65C6095d410b480c6EaB56E`  
 
+### Notes
+
+`npx truffle run verify Registry@0xA8Fc4232581deC73e65C6095d410b480c6EaB56E --network goerli`
+
 ## Poly Mumbia
 
 Owner: `0xfDBe64ec50cA548c7A304959D0f385A01D315a71`   
