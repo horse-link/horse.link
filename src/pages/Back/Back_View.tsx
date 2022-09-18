@@ -26,7 +26,6 @@ const BackView: React.FC<Props> = ({ back }) => {
   });
 
   const { odds, proposition_id } = back;
-  console.log({ odds });
   const targetOdds = odds / 1000;
 
   const backTheRace = () => {
@@ -34,7 +33,6 @@ const BackView: React.FC<Props> = ({ back }) => {
     // setLoading
     // const receipt = await contract.back()
     // setFinished
-    console.log("metamask perform");
     // const transaction = await receipt.wait(1)
     // setConfirm
   };

@@ -26,19 +26,34 @@ const HorseRaceView: React.FC<Props> = (props: Props) => {
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th scope="col" className="px-1 py-3 text-left text-xs font-medium text-gray-500 bg-gray-200 uppercase">
+                    <th
+                      scope="col"
+                      className="px-1 py-3 text-left text-xs font-medium text-gray-500 bg-gray-200 uppercase"
+                    >
                       #
                     </th>
-                    <th scope="col" className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    <th
+                      scope="col"
+                      className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
+                    >
                       Runner (Barrier)
                     </th>
-                    <th scope="col" className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    <th
+                      scope="col"
+                      className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
+                    >
                       Weight
                     </th>
-                    <th scope="col" className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    <th
+                      scope="col"
+                      className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
+                    >
                       Win
                     </th>
-                    <th scope="col" className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    <th
+                      scope="col"
+                      className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
+                    >
                       Place
                     </th>
                   </tr>
@@ -49,19 +64,19 @@ const HorseRaceView: React.FC<Props> = (props: Props) => {
                     const backPath = `/back/${proposition_id}?odds=${odds}&signature=${signature.signature}`;
                     return (
                       <tr key={runner.number}>
-                        <td className="px-1 py-4 whitespace-nowrap bg-gray-200">{runner.number}</td>
+                        <td className="px-1 py-4 whitespace-nowrap bg-gray-200">
+                          {runner.number}
+                        </td>
                         <td className="px-2 py-4 whitespace-nowrap">
                           {runner.name} ({runner.barrier})
                           <br />
                           {/* {horse.Rider} */}
                         </td>
                         <td className="px-2 py-4 whitespace-nowrap">NA</td>
-                        <Link
-                          to={{
-                            pathname: backPath
-                          }}
-                        >
-                          <td className="px-2 py-4 whitespace-nowrap">{runner.odds / 1000}</td>
+                        <Link to={backPath}>
+                          <td className="px-2 py-4 whitespace-nowrap">
+                            {runner.odds / 1000}
+                          </td>
                         </Link>
                         <td className="px-2 py-4 whitespace-nowrap">NA</td>
                       </tr>
