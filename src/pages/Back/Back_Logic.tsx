@@ -1,22 +1,15 @@
 import { Back } from "../../types";
 import BackView from "./Back_View";
-import { useLocation, useParams } from "react-router-dom";
-import { useMemo } from "react";
+import { useParams, useSearchParams } from "react-router-dom";
 
 type Props = {};
 
-function useQuery() {
-  const { search } = useLocation();
-
-  return useMemo(() => new URLSearchParams(search), [search]);
-}
-
 const BackLogic: React.FC<Props> = () => {
   const { propositionId } = useParams();
-  const query = useQuery();
+  const [searchParams] = useSearchParams();
 
-  const odds = query.get("odds");
-  const signature = query.get("signature");
+  const odds = searchParams.get("odds");
+  const signature = searchParams.get("signature");
 
   const back: Back = {
     number: 0,

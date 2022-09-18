@@ -9,7 +9,6 @@ type Props = {
 const PageLayout: React.FC<Props> = props => {
   const location = useLocation();
 
-
   return (
     <PageLayoutView loading={false} currentPath={location.pathname}>
       {props.children}

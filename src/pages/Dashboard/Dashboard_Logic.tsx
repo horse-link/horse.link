@@ -12,11 +12,7 @@ const Dashboard: React.FC<Props> = () => {
   // default
   const _meets: Meet[] = [];
 
-  const [{ data: accountData }] = useAccount({
-    fetchEns: true
-  });
-
-  const connected = accountData !== undefined;
+  const { isConnected } = useAccount();
 
   const { inPlay, numberOfBets } = useMarket();
   const api = useApi();
@@ -46,7 +42,7 @@ const Dashboard: React.FC<Props> = () => {
       meets={response?.data.meetings || _meets}
       inPlay={inPlay}
       numberOfBets={numberOfBets}
-      connected={connected}
+      connected={isConnected}
       // hash={response?.hash || ""}
       signature={response?.signature || "0x00"}
       owner={response?.owner || ""}
