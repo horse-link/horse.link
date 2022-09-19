@@ -17,16 +17,25 @@ const HorseRace: React.FC<Props> = () => {
   const track = params.track || "";
   const raceNumber = Number(params.number) || 0;
 
-  const load = async () => {
-    const runners: SignedRunnersResponse = await api.getRunners(track, raceNumber);
-    setResponse(runners);
-  };
-
   useEffect(() => {
+    if (!track || !raceNumber) return;
+    const load = async () => {
+      const runners: SignedRunnersResponse = await api.getRunners(
+        track,
+        raceNumber
+      );
+      setResponse(runners);
+    };
     load();
-  }, []);
+  }, [api, track, raceNumber]);
 
-  return <HorseRaceView track={track} raceNumber={raceNumber} runners={response?.data || _runners} />;
+  return (
+    <HorseRaceView
+      track={track}
+      raceNumber={raceNumber}
+      runners={response?.data || _runners}
+    />
+  );
 };
 
 export default HorseRace;

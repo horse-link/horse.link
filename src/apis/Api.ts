@@ -9,21 +9,30 @@ export default class Api {
     });
   }
   public getMeetings = async (): Promise<SignedMeetingsResponse> => {
-    const { data, status } = await this.client.get<SignedMeetingsResponse>("/meetings", {
-      headers: {
-        Accept: "application/json"
+    const { data } = await this.client.get<SignedMeetingsResponse>(
+      "/meetings",
+      {
+        headers: {
+          Accept: "application/json"
+        }
       }
-    });
+    );
 
     return data;
   };
 
-  public getRunners = async (track: string, number: number): Promise<SignedRunnersResponse> => {
-    const { data, status } = await this.client.get<SignedRunnersResponse>(`/runners/${track}/${number}/win`, {
-      headers: {
-        Accept: "application/json"
+  public getRunners = async (
+    track: string,
+    number: number
+  ): Promise<SignedRunnersResponse> => {
+    const { data } = await this.client.get<SignedRunnersResponse>(
+      `/runners/${track}/${number}/win`,
+      {
+        headers: {
+          Accept: "application/json"
+        }
       }
-    });
+    );
 
     return data;
   };

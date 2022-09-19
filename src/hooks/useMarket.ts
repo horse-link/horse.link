@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Contract } from "@ethersproject/contracts";
 import { ethers } from "ethers";
 import { useProvider, useAccount } from "wagmi";
@@ -7,10 +7,14 @@ import { market } from "../constants/market";
 // TODO: fix any type here
 const useMarket = (): any => {
   const provider = useProvider();
-  const marketContract = new Contract(
-    market.kovan.address as string,
-    market.ABI,
-    provider as ethers.providers.Web3Provider
+  const marketContract = useMemo(
+    () =>
+      new Contract(
+        market.kovan.address as string,
+        market.ABI,
+        provider as ethers.providers.Web3Provider
+      ),
+    [provider]
   );
 
   const { isConnected } = useAccount();

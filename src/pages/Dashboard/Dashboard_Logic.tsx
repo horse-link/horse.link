@@ -18,14 +18,13 @@ const Dashboard: React.FC<Props> = () => {
   const api = useApi();
   const [response, setResponse] = useState<SignedMeetingsResponse>();
 
-  const load = async () => {
-    const response: SignedMeetingsResponse = await api.getMeetings();
-    setResponse(response);
-  };
-
   useEffect(() => {
+    const load = async () => {
+      const response: SignedMeetingsResponse = await api.getMeetings();
+      setResponse(response);
+    };
     load();
-  }, []);
+  }, [api]);
 
   const asLocaltime = (raceTime: number) => {
     const _time = moment.utc(raceTime).diff(moment(), "h");
