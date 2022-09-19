@@ -12,24 +12,19 @@ const Dashboard: React.FC<Props> = () => {
   // default
   const _meets: Meet[] = [];
 
-  const [{ data: accountData }] = useAccount({
-    fetchEns: true
-  });
-
-  const connected = accountData !== undefined;
+  const { isConnected } = useAccount();
 
   const { inPlay, numberOfBets } = useMarket();
   const api = useApi();
   const [response, setResponse] = useState<SignedMeetingsResponse>();
 
-  const load = async () => {
-    const response: SignedMeetingsResponse = await api.getMeetings();
-    setResponse(response);
-  };
-
   useEffect(() => {
+    const load = async () => {
+      const response: SignedMeetingsResponse = await api.getMeetings();
+      setResponse(response);
+    };
     load();
-  }, []);
+  }, [api]);
 
   const asLocaltime = (raceTime: number) => {
     const _time = moment.utc(raceTime).diff(moment(), "h");
@@ -46,7 +41,7 @@ const Dashboard: React.FC<Props> = () => {
       meets={response?.data.meetings || _meets}
       inPlay={inPlay}
       numberOfBets={numberOfBets}
-      connected={connected}
+      connected={isConnected}
       // hash={response?.hash || ""}
       signature={response?.signature || "0x00"}
       owner={response?.owner || ""}

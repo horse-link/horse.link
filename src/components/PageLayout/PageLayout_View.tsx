@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext } from "react";
 import classnames from "classnames";
 import { Link } from "react-router-dom";
 import { Loader } from "..";
@@ -6,29 +6,24 @@ import { Disclosure } from "@headlessui/react";
 import WalletConnectButton from "../ConnectWalletButton/ConnectWalletButton_View";
 import WalletModal from "../WalletModal";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
-import { useAccount } from "wagmi";
+import { WalletModalContext } from "../../providers/WalletModal";
 
 const navigation = [
-  { name: "Dashboard", path: "/dashboard" }, 
-  { name: "Vaults", path: "/vaults" }, 
-  { name: "White Paper", path: "https://github.com/horse-link/whitepaper" }];
+  { name: "Dashboard", path: "/dashboard" },
+  { name: "Vaults", path: "/vaults" },
+  { name: "White Paper", path: "https://github.com/horse-link/whitepaper" }
+];
 
 type Props = {
   loading: boolean;
   currentPath: string;
+  children?: React.ReactNode;
 };
 
-const PageLayoutView: React.FC<Props> = (props) => {
-  const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
-  const [{ data: accountData, loading }] = useAccount({
-    fetchEns: true,
-  });
+const PageLayoutView: React.FC<Props> = props => {
+  const { openWalletModal, closeWalletModal, isWalletModalOpen } =
+    useContext(WalletModalContext);
 
-  useEffect(() => {
-    if (accountData) {
-      setIsWalletModalOpen(false);
-    }
-  }, [accountData]);
   if (props.loading) {
     return (
       <div className="min-h-screen flex bg-white">
@@ -48,7 +43,7 @@ const PageLayoutView: React.FC<Props> = (props) => {
               <div className="flex justify-between h-16">
                 <div className="flex">
                   <div className="hidden sm:-my-px sm:flex sm:space-x-8">
-                    {navigation.map((item) => {
+                    {navigation.map(item => {
                       const active = item.path === props.currentPath;
                       return (
                         <Link
@@ -58,7 +53,7 @@ const PageLayoutView: React.FC<Props> = (props) => {
                             {
                               "border-indigo-500 text-gray-900": active,
                               "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700":
-                                !active,
+                                !active
                             },
 
                             "inline-flex items-center px-1 pt-1 border-b-4 text-sm font-medium"
@@ -83,17 +78,14 @@ const PageLayoutView: React.FC<Props> = (props) => {
                   </Disclosure.Button>
                 </div>
                 <div className="hidden sm:flex">
-                  <WalletConnectButton
-                    loading={loading}
-                    setIsWalletModalOpen={setIsWalletModalOpen}
-                  />
+                  <WalletConnectButton openWalletModal={openWalletModal} />
                 </div>
               </div>
             </div>
 
             <Disclosure.Panel className="sm:hidden">
               <div className="pt-2 pb-3 space-y-1">
-                {navigation.map((item) => {
+                {navigation.map(item => {
                   const active = item.path === props.currentPath;
 
                   return (
@@ -105,7 +97,7 @@ const PageLayoutView: React.FC<Props> = (props) => {
                           "bg-indigo-50 border-indigo-500 text-indigo-700":
                             active,
                           "border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800":
-                            !active,
+                            !active
                         },
                         "block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
                       )}
@@ -115,10 +107,7 @@ const PageLayoutView: React.FC<Props> = (props) => {
                     </Link>
                   );
                 })}
-                <WalletConnectButton
-                  loading={loading}
-                  setIsWalletModalOpen={setIsWalletModalOpen}
-                />
+                <WalletConnectButton openWalletModal={openWalletModal} />
               </div>
             </Disclosure.Panel>
           </>
@@ -129,7 +118,7 @@ const PageLayoutView: React.FC<Props> = (props) => {
         <main>
           <WalletModal
             isModalOpen={isWalletModalOpen}
-            setIsModalOpen={setIsWalletModalOpen}
+            closeWalletModal={closeWalletModal}
           />
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {props.children}

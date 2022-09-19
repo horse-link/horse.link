@@ -1,29 +1,30 @@
-import React from "react";
-import { useConnect } from "wagmi";
+import React, { useEffect } from "react";
+import { useAccount } from "wagmi";
 import Modal from "./Modal";
 import ModalBody from "./ModalBody";
+import { useConnectWallet } from "../providers/Wagmi";
 
 type Props = {
   isModalOpen: boolean;
-  setIsModalOpen: (open: boolean) => void;
+  closeWalletModal: () => void;
 };
 
 const WalletModal: React.FC<Props> = (props: Props) => {
-  const { isModalOpen, setIsModalOpen } = props;
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
+  const { isModalOpen, closeWalletModal } = props;
 
-  const [
-    {
-      data: { connectors }
-    },
-    connect
-  ] = useConnect();
+  const { isConnected } = useAccount();
+
+  const { connectWallet } = useConnectWallet();
+
+  useEffect(() => {
+    if (isConnected) {
+      closeWalletModal();
+    }
+  }, [isConnected, closeWalletModal]);
 
   return (
     <>
-      <Modal isOpen={isModalOpen} onClose={closeModal}>
+      <Modal isOpen={isModalOpen} onClose={closeWalletModal}>
         <ModalBody>
           <div className="w-full">
             <div className="">
@@ -31,10 +32,14 @@ const WalletModal: React.FC<Props> = (props: Props) => {
                 <div className="">
                   <label
                     className="flex justify-center cursor-pointer"
-                    onClick={() => connect(connectors[0])}
+                    onClick={() => connectWallet()}
                   >
                     <div className="w-40 m-10">
-                      <img loading="lazy" alt="MetaMaskLogo" src="/images/metamask.png" />
+                      <img
+                        loading="lazy"
+                        alt="MetaMaskLogo"
+                        src="/images/metamask.png"
+                      />
                     </div>
                   </label>
                   <div className="font-bold">METAMASK</div>
