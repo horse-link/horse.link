@@ -22,36 +22,35 @@ const BackView: React.FC<Props> = ({ back }) => {
   const [debouncedWagerAmount] = useDebounce(wagerAmount, 500);
   const [potentialPayout, setPotentialPayout] = useState<number>(0);
 
-  // const { data: signer, isError, isLoading } = useSigner();
-
   const { proposition_id, odds } = back;
-  // const proposition_id = "1"
-  // const odds = 5000;
-  const targetOdds = 5;
+  const targetOdds = odds / 1000;
 
-  const b32PropositionId = useMemo(
-    () => ethers.utils.formatBytes32String(proposition_id),
-    [proposition_id]
-  );
-  const bnOdds = useMemo(() => ethers.utils.parseUnits("5", DECIMALS), []);
-  const bnWager = useMemo(
-    () => ethers.utils.parseUnits(debouncedWagerAmount.toString(), DECIMALS),
-    [debouncedWagerAmount]
-  );
-  console.log({
-    b32PropositionId,
-    bnWager: bnWager.toNumber(),
-    bnOdds: bnWager.toNumber()
-  });
+  // const b32PropositionId = useMemo(
+  //   () => ethers.utils.formatBytes32String(proposition_id),
+  //   [proposition_id]
+  // );
+  // const bnOdds = useMemo(
+  //   () => ethers.utils.parseUnits(targetOdds.toString(), DECIMALS),
+  //   [targetOdds]
+  // );
+  // const bnWager = useMemo(
+  //   () => ethers.utils.parseUnits(debouncedWagerAmount.toString(), DECIMALS),
+  //   [debouncedWagerAmount]
+  // );
+  // console.log({
+  //   b32PropositionId,
+  //   bnWager: bnWager.toNumber(),
+  //   bnOdds: bnWager.toNumber()
+  // });
 
-  const { data, isError, isLoading } = useContractRead({
-    addressOrName: "0x9745295850097f3E2a82E493B296dA2aE0d0AdC5",
-    contractInterface: marketContractJson.abi,
-    functionName: "getPotentialPayout",
-    args: [b32PropositionId, bnWager, bnOdds]
-  });
+  // const { data, isError, isLoading } = useContractRead({
+  //   addressOrName: "0x9745295850097f3E2a82E493B296dA2aE0d0AdC5",
+  //   contractInterface: marketContractJson.abi,
+  //   functionName: "getPotentialPayout",
+  //   args: [b32PropositionId, bnWager, bnOdds]
+  // });
 
-  console.log({ data, isError, isLoading });
+  // console.log({ data, isError, isLoading });
 
   const backTheRace = () => {
     alert("TODO: call API");
@@ -92,7 +91,9 @@ const BackView: React.FC<Props> = ({ back }) => {
                 <span>Potential Payout</span>
                 <input
                   type="number"
-                  value={potentialPayout || ""}
+                  value={
+                    potentialPayout || debouncedWagerAmount * targetOdds || ""
+                  }
                   readOnly
                   placeholder="0.0"
                   className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
