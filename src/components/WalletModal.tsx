@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
-import { useAccount, useConnect } from "wagmi";
+import { useAccount } from "wagmi";
 import Modal from "./Modal";
 import ModalBody from "./ModalBody";
+import { useConnectWallet } from "../providers/Wagmi";
 
 type Props = {
   isModalOpen: boolean;
@@ -13,7 +14,7 @@ const WalletModal: React.FC<Props> = (props: Props) => {
 
   const { isConnected } = useAccount();
 
-  const { connect } = useConnect();
+  const { connectWallet } = useConnectWallet();
 
   useEffect(() => {
     if (isConnected) {
@@ -31,7 +32,7 @@ const WalletModal: React.FC<Props> = (props: Props) => {
                 <div className="">
                   <label
                     className="flex justify-center cursor-pointer"
-                    onClick={() => connect()}
+                    onClick={() => connectWallet()}
                   >
                     <div className="w-40 m-10">
                       <img

@@ -1,4 +1,10 @@
-import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
+import {
+  chain,
+  configureChains,
+  createClient,
+  useConnect,
+  WagmiConfig
+} from "wagmi";
 
 import { publicProvider } from "wagmi/providers/public";
 import { InjectedConnector } from "wagmi/connectors/injected";
@@ -10,10 +16,17 @@ const { chains, provider, webSocketProvider } = configureChains(
 
 const client = createClient({
   autoConnect: true,
-  connectors: [new InjectedConnector({ chains })],
   provider,
   webSocketProvider
 });
+
+export const useConnectWallet = () => {
+  const { connect } = useConnect({
+    connector: new InjectedConnector({ chains })
+  });
+
+  return { connectWallet: connect };
+};
 
 export const WagmiProvider: React.FC<{ children: React.ReactNode }> = ({
   children
