@@ -3,6 +3,7 @@ import * as React from "react";
 type Props = {
   label: string;
   htmlFor: string;
+  children?: React.ReactNode;
 };
 
 const InputView: React.FC<Props> = props => {

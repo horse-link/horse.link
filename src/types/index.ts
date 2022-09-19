@@ -1,3 +1,15 @@
+export type Back = {
+  number: number;
+  name: string;
+  nonce: string;
+  market_id: string;
+  close: number;
+  end: number;
+  odds: number;
+  proposition_id: string;
+  signature: string;
+};
+
 export type SignedResponse = {
   owner: string;
   signature: string;
@@ -5,7 +17,7 @@ export type SignedResponse = {
 };
 
 export type SignedRunnersResponse = {
-  data: Runners[];
+  data: Runner[];
 } & SignedResponse;
 
 export type SignedMeetingsResponse = {
@@ -30,9 +42,9 @@ export type Race = {
   number: number;
   name: string;
   start: Date;
-}
+};
 
-export type Runners = {
+export type Runner = {
   number: number;
   name: string;
   nonce: string;
@@ -40,7 +52,13 @@ export type Runners = {
   close: number;
   end: number;
   odds: number;
-  propostion_id: number;
+  proposition_id: string;
   barrier: number;
+  signature: Signature;
+};
+
+export type Signature = {
+  message: string;
+  messageHash: string;
   signature: string;
 };

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Runners, SignedRunnersResponse } from "../../types";
+import { Runner, SignedRunnersResponse } from "../../types";
 import ResultsView from "./Results_View";
 import useApi from "../../hooks/useApi";
 import { useParams } from "react-router-dom";
@@ -7,8 +7,7 @@ import { useParams } from "react-router-dom";
 type Props = {};
 
 const Results: React.FC<Props> = () => {
-
-  const _runners: Runners[] = [];
+  const _runners: Runner[] = [];
 
   const api = useApi();
   const [response, setResponse] = useState<SignedRunnersResponse>();
@@ -16,7 +15,10 @@ const Results: React.FC<Props> = () => {
   const { track, number } = useParams();
 
   const load = async () => {
-    const runners: SignedRunnersResponse = await api.getRunners(track || "", Number(number) || 0);
+    const runners: SignedRunnersResponse = await api.getRunners(
+      track || "",
+      Number(number) || 0
+    );
     setResponse(runners);
   };
 
