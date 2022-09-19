@@ -121,7 +121,15 @@ contract Market is Ownable, IMarket {
         require(odds > 0, "Cannot have negative odds");
         int256 p = int256(IVault(_vault).totalAssets());
 
+        if (p == 0) {
+            return 0;
+        }
+
         // f(wager) = odds - odds*(wager/pool) 
+
+        if (_potentialPayout[propositionId] > uint256(p)) {
+            return 0;
+        }
 
         // do not include this guy in the return
         p -= int256(_potentialPayout[propositionId]);
