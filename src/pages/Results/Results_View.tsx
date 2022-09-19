@@ -1,10 +1,10 @@
 import { PageLayout } from "../../components";
 import { useParams } from "react-router-dom";
 import moment from "moment";
-import { Runners } from "../../types";
+import { Runner } from "../../types";
 
 type Props = {
-  runners: Runners[]
+  runners: Runner[]
 };
 
 const Results: React.FC<Props> = () => {

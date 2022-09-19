@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Contract } from "@ethersproject/contracts";
 import { ethers } from "ethers";
 import { useProvider, useAccount } from "wagmi";
@@ -7,21 +7,23 @@ import { market } from "../constants/market";
 // TODO: fix any type here
 const useMarket = (): any => {
   const provider = useProvider();
-  const marketContract = new Contract(
-    market.kovan.address as string,
-    market.ABI,
-    provider as ethers.providers.Web3Provider
+  const marketContract = useMemo(
+    () =>
+      new Contract(
+        market.kovan.address as string,
+        market.ABI,
+        provider as ethers.providers.Web3Provider
+      ),
+    [provider]
   );
 
-  const [{ data: accountData }] = useAccount({
-    fetchEns: true,
-  });
+  const { isConnected } = useAccount();
 
   const [inPlay, setInPlay] = useState<string>("");
   const [numberOfBets, setNumberOfBets] = useState<number>(0);
 
   useEffect(() => {
-    if (!accountData) {
+    if (!isConnected) {
       return;
     }
     // Get inPlay
@@ -32,10 +34,10 @@ const useMarket = (): any => {
         parseFloat(ethers.utils.formatUnits(totalInPlay, 1)).toFixed(2)
       );
     });
-  }, [marketContract, accountData]);
+  }, [marketContract, isConnected]);
 
   useEffect(() => {
-    if (!accountData) {
+    if (!isConnected) {
       return;
     }
     // Get numberOfBets
@@ -43,11 +45,11 @@ const useMarket = (): any => {
       // Note: we will probably need to change the formatUnits part once we get the real value.
       setNumberOfBets(Number(totalInPlay));
     });
-  }, [marketContract, accountData]);
+  }, [marketContract, isConnected]);
 
   return {
     inPlay,
-    numberOfBets,
+    numberOfBets
   };
 };
 

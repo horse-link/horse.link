@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "composite": true,
     "strict": true,
     "target": "es6",
     "module": "esnext",
@@ -17,10 +16,7 @@
     "rootDir": "./src",
     "outDir": "./build",
     "sourceMap": true,
-    "lib": [
-      "dom",
-      "es2015"
-    ],
+    "lib": ["dom", "es2015"],
     "jsx": "react-jsx",
     "allowSyntheticDefaultImports": true,
     "noEmit": true,
@@ -29,14 +25,6 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": [
-    "src",
-    "./src/**/*.d.ts",
-    "./src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "*/dist/*",
-    "*/build/*"
-  ]
+  "include": ["src", "src/**/*.d.ts", "src/**/*"],
+  "exclude": ["node_modules", "*/dist/*", "*/build/*"]
 }

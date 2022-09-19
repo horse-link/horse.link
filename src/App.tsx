@@ -3,9 +3,9 @@ import { ApiProvider } from "./providers/Api";
 import Navigation from "./Navigation";
 import { GlobalErrorProvider } from "./providers/GlobalError";
 import { WagmiProvider } from "./providers/Wagmi";
+import { WalletModalProvider } from "./providers/WalletModal";
 
 const App = () => {
-  
   const swrConfig = {
     fetcher: (url: string) => url,
     shouldRetryOnError: false
@@ -16,12 +16,14 @@ const App = () => {
       <GlobalErrorProvider>
         <ApiProvider>
           <WagmiProvider>
-            <Navigation />
+            <WalletModalProvider>
+              <Navigation />
+            </WalletModalProvider>
           </WagmiProvider>
         </ApiProvider>
       </GlobalErrorProvider>
     </SWRConfig>
   );
-}
+};
 
 export default App;
