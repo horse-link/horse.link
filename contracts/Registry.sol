@@ -7,11 +7,15 @@ import "./IVault.sol";
 contract Registry {
 
     mapping(address => address) public underlying;
-    address[] public vaults;
     address[] public markets;
+    address[] public vaults;
 
-    function count() external view returns (uint256) {
-        return vaults.length;
+    function marketCount() external view returns (uint256) {
+        return markets.length + 1;
+    }
+
+    function vaultCount() external view returns (uint256) {
+        return vaults.length + 1;
     }
 
     function addVault(address vault) external {
@@ -20,9 +24,15 @@ contract Registry {
 
         vaults.push(vault);
         underlying[_underlying] = vault; // underlying to vault
+
+        emit VaultAdded(vault);
     }
 
     function addMarket(address market) external {
         markets.push(market);
+        emit MarketAdded(market);
     }
+
+    event MarketAdded(address indexed market);
+    event VaultAdded(address indexed vault);
 }

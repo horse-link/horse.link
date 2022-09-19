@@ -64,6 +64,7 @@
     "compile:contracts": "truffle compile",
     "deploy": "truffle deploy",
     "deploy:goerli": "truffle deploy --network goerli",
+    "deploy:testnet": "truffle deploy --network goerli",
     "test": "craco test",
     "test:contracts": "truffle test",
     "test:sc": "truffle test"

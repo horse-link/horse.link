@@ -29,4 +29,5 @@ module.exports = async (deployer) => {
   const registry = await Registry.deployed();
 
   await registry.addVault(usd_vault.address);
+  await registry.addVault(dia_vault.address);
 };
