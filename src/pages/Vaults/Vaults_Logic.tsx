@@ -1,8 +1,4 @@
-import {
-  paginatedIndexesConfig,
-  useContractInfiniteReads,
-  useContractRead
-} from "wagmi";
+import { useContractInfiniteReads, useContractRead } from "wagmi";
 import VaultsView from "./Vaults_View";
 import registryContractJson from "../../abi/Registry.json";
 import { ethers } from "ethers";
@@ -21,11 +17,7 @@ const Vaults: React.FC = () => {
   const vaultCountStr =
     vaultCountData && ethers.utils.formatUnits(vaultCountData, 0);
 
-  const {
-    data: vaultDataList,
-    fetchNextPage,
-    isIdle
-  } = useContractInfiniteReads({
+  const { data: vaultDataList, fetchNextPage } = useContractInfiniteReads({
     cacheKey: "vaultDataList",
     contracts: (param = 0) => [
       {
@@ -48,11 +40,7 @@ const Vaults: React.FC = () => {
   const vaultAddressList =
     vaultDataList?.pages.map(arr => arr[0]).filter(v => v) ?? [];
 
-  return (
-    <div>
-      <VaultsView vaultAddressList={vaultAddressList} />;
-    </div>
-  );
+  return <VaultsView vaultAddressList={vaultAddressList} />;
 };
 
 export default Vaults;
