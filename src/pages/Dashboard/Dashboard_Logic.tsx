@@ -6,9 +6,7 @@ import { useAccount } from "wagmi";
 import useMarket from "../../hooks/useMarket";
 import { Meet, SignedMeetingsResponse } from "../../types/index";
 
-type Props = {};
-
-const Dashboard: React.FC<Props> = () => {
+const Dashboard: React.FC = () => {
   // default
   const _meets: Meet[] = [];
 

@@ -2,9 +2,7 @@ import { Back } from "../../types";
 import BackView from "./Back_View";
 import { useParams, useSearchParams } from "react-router-dom";
 
-type Props = {};
-
-const BackLogic: React.FC<Props> = () => {
+const BackLogic: React.FC = () => {
   const { propositionId } = useParams();
   const [searchParams] = useSearchParams();
 

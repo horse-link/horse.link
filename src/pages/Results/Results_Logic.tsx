@@ -4,10 +4,7 @@ import ResultsView from "./Results_View";
 import useApi from "../../hooks/useApi";
 import { useParams } from "react-router-dom";
 
-type Props = {};
-
-const Results: React.FC<Props> = () => {
-
+const Results: React.FC = () => {
   const _runners: Runner[] = [];
 
   const api = useApi();

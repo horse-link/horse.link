@@ -1,44 +1,13 @@
+import { useContractReads } from "wagmi";
 import { PageLayout } from "../../components";
+import vaultContractJson from "../../abi/Vault.json";
+import { ethers } from "ethers";
 
-type Props = {};
+type Props = {
+  vaultAddressList: string[];
+};
 
-const vaults = [
-  {
-    id: "USDC",
-    underlying: {
-        image: "/images/usdc.png",
-        name: "USD Coin",
-        symbol: "USDC",
-    },
-    supplied: 25000000,
-    inPlay: 2000000,
-    ownerAddress: "0x18a5ff44dcc65e8bFD01F48496f8f4Be6980CaA9",
-  },
-  {
-    id: "USDT",
-    underlying: {
-        image: "/images/tether.png",
-        name: "Tether",
-        symbol: "USDT",
-    },
-    supplied: 37000000,
-    inPlay: 2690000,
-    ownerAddress: "0x14a09AFAaD55649571B59006060B7D1A6a9c2bA5",
-  },
-  {
-    id: "DAI",
-    underlying: {
-        image: "/images/dai.png",
-        name: "Dai",
-        symbol: "DAI",
-    },
-    supplied: 1000000,
-    inPlay: 10000,
-    ownerAddress: "0x14a09AFAaD55649571B59006060B7D1A6a9c2bA5",
-  }
-];
-
-const VaultsView: React.FC<Props> = () => {
+const VaultsView: React.FC<Props> = ({ vaultAddressList }) => {
   // TODO: Do we want to make this table responsive?
   return (
     <PageLayout requiresAuth={false}>
@@ -72,28 +41,13 @@ const VaultsView: React.FC<Props> = () => {
                       scope="col"
                       className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
                     >
-                      In Play
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
-                    >
                       Owner Address
                     </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {vaults.map(vault => (
-                    <tr key={vault.id}>
-                      <td className="px-2 py-4 whitespace-nowrap"> {vault.id} </td>
-                      <td className="flex px-2 py-4 items-center">
-                        <img src={vault.underlying.image} alt={vault.underlying.name} className="h-4" />
-                        <span> {vault.underlying.symbol} </span>
-                      </td>
-                      <td className="px-2 py-4 whitespace-nowrap">{vault.supplied}</td>
-                      <td className="px-2 py-4 whitespace-nowrap">{vault.inPlay}</td>
-                      <td className="px-2 py-4 whitespace-nowrap">{vault.ownerAddress}</td>
-                    </tr>
+                  {vaultAddressList.map(v => (
+                    <Row vaultAddress={v} key={v} />
                   ))}
                 </tbody>
               </table>
@@ -106,3 +60,46 @@ const VaultsView: React.FC<Props> = () => {
 };
 
 export default VaultsView;
+
+const Row: React.FC<{ vaultAddress: string }> = ({ vaultAddress }) => {
+  const vaultContract = {
+    addressOrName: vaultAddress,
+    contractInterface: vaultContractJson.abi
+  };
+
+  const { data, isError, isLoading } = useContractReads({
+    contracts: [
+      {
+        ...vaultContract,
+        functionName: "name"
+      },
+      {
+        ...vaultContract,
+        functionName: "symbol"
+      },
+      {
+        ...vaultContract,
+        functionName: "totalSupply"
+      },
+      {
+        ...vaultContract,
+        functionName: "owner"
+      }
+    ]
+  });
+  if (!data) return null;
+  const [name, symbol, bNTotalSupply, ownerAddress] = data;
+  const id = name as unknown as number;
+  const supplied = ethers.utils.formatUnits(bNTotalSupply, 3);
+
+  return (
+    <tr key={id}>
+      <td className="px-2 py-4 whitespace-nowrap"> {id} </td>
+      <td className="flex px-2 py-4 items-center">
+        <span> {symbol} </span>
+      </td>
+      <td className="px-2 py-4 whitespace-nowrap">{supplied}</td>
+      <td className="px-2 py-4 whitespace-nowrap">{ownerAddress}</td>
+    </tr>
+  );
+};
