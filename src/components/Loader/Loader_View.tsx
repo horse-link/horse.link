@@ -1,13 +1,11 @@
-import { SpinnerCircular } from 'spinners-react';
+import { SpinnerCircular } from "spinners-react";
 
 type Props = {
   className?: string;
 };
 
 const Loader: React.FC<Props> = props => {
-  return (
-    <SpinnerCircular />
-  );
+  return <SpinnerCircular />;
 };
 
 export default Loader;

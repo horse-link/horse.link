@@ -1,14 +1,20 @@
 import { createContext, useState } from "react";
 
 const defaultValue = {
-  openWalletModal: () => {},
-  closeWalletModal: () => {},
+  openWalletModal: () => {
+    // do nothing.
+  },
+  closeWalletModal: () => {
+    // do nothing.
+  },
   isWalletModalOpen: false
 };
 
 export const WalletModalContext = createContext(defaultValue);
 
-export const WalletModalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const WalletModalProvider: React.FC<{ children: React.ReactNode }> = ({
+  children
+}) => {
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
 
   return (

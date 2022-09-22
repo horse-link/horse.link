@@ -5,4 +5,3 @@ export const getApiError = (error: any): any | undefined => {
 
   return error as any;
 };
-

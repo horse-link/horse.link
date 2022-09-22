@@ -93,8 +93,8 @@ const Modal = React.forwardRef<HTMLDivElement, ModalProps>(function Modal(
                   {children}
                 </FocusLock>
               </div>
-              </Transition>
-            </Backdrop>
+            </Transition>
+          </Backdrop>
         </Transition>
       </>
     </Transition>
