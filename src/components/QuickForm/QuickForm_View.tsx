@@ -34,7 +34,6 @@ const QuickForm = <T extends Record<string, unknown>>(props: Props<T>) => {
             {props.children}
             {props.error && (
               <div className="flex rounded-xl bg-yellow-50 p-2 mb-6">
-
                 <div className="ml-3">
                   <h4 className="text-sm font-medium text-yellow-800">
                     {props.error}

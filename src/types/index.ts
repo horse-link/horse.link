@@ -61,4 +61,4 @@ export type Signature = {
   message: string;
   messageHash: string;
   signature: string;
-}
+};

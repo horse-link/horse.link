@@ -13,7 +13,10 @@ const Results: React.FC = () => {
   const { track, number } = useParams();
 
   const load = async () => {
-    const runners: SignedRunnersResponse = await api.getRunners(track || "", Number(number) || 0);
+    const runners: SignedRunnersResponse = await api.getRunners(
+      track || "",
+      Number(number) || 0
+    );
     setResponse(runners);
   };
 
