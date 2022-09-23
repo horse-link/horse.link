@@ -95,8 +95,8 @@ const Row: React.FC<{ vaultAddress: string }> = ({ vaultAddress }) => {
     supplied: "loading...",
     ownerAddress: "loading..."
   };
-  if (!isLoading) {
-    const [name, symbol, bNTotalSupply, ownerAddress] = data!;
+  if (!isLoading && data) {
+    const [name, symbol, bNTotalSupply, ownerAddress] = data;
     rowData = {
       id: name as unknown as string,
       symbol: symbol as unknown as string,

@@ -190,7 +190,7 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {meets.map(meet => (
-                    <tr key={meet.location}>
+                    <tr key={meet.id}>
                       <td className="px-3 py-4 whitespace-nowrap">
                         {meet.name} ({meet.location})
                       </td>
