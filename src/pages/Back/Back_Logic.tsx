@@ -7,8 +7,6 @@ import { WalletModalContext } from "../../providers/WalletModal";
 
 import { Back } from "../../types";
 
-const DECIMALS = 6;
-
 const BackLogic: React.FC = () => {
   const { propositionId } = useParams();
   const [searchParams] = useSearchParams();
@@ -27,20 +25,16 @@ const BackLogic: React.FC = () => {
     market_id: "bne",
     close: 0,
     end: 0,
-    odds: odds ? parseFloat(odds) : 0,
+    odds: odds ? parseFloat(odds) / 1000 : 0,
     proposition_id: propositionId || "",
     signature: signature || ""
   };
-
-  const targetOdds = back.odds / 1000;
 
   return (
     <BackView
       back={back}
       openWalletModal={openWalletModal}
       isWalletConnected={isWalletConnected}
-      DECIMALS={DECIMALS}
-      targetOdds={targetOdds}
     />
   );
 };

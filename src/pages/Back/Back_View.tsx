@@ -8,31 +8,30 @@ import { Back } from "../../types";
 
 import marketContractJson from "../../abi/Market.json";
 
+const DECIMALS = 6;
+
 type Props = {
   back: Back;
   openWalletModal: () => void;
   isWalletConnected: boolean;
-  DECIMALS: number;
-  targetOdds: number;
 };
 
 const BackView: React.FC<Props> = ({
   back,
   openWalletModal,
-  isWalletConnected,
-  DECIMALS,
-  targetOdds
+  isWalletConnected
 }) => {
+  const { odds, proposition_id } = back;
   const [wagerAmount, setWagerAmount] = useState<number>(0);
   const [debouncedWagerAmount] = useDebounce(wagerAmount, 500);
 
   const b32PropositionId = useMemo(
-    () => ethers.utils.formatBytes32String(back.proposition_id),
+    () => ethers.utils.formatBytes32String(proposition_id),
     [back.proposition_id]
   );
   const bnOdds = useMemo(
-    () => ethers.utils.parseUnits(targetOdds.toString(), DECIMALS),
-    [targetOdds]
+    () => ethers.utils.parseUnits(odds.toString(), DECIMALS),
+    [odds]
   );
   const bnWager = useMemo(
     () => ethers.utils.parseUnits(debouncedWagerAmount.toString(), DECIMALS),
@@ -67,7 +66,7 @@ const BackView: React.FC<Props> = ({
     <PageLayout requiresAuth={false}>
       <div className="flex justify-center">
         <div className="w-96 px-10 pt-5 pb-3 rounded-md shadow border-b bg-white border-gray-200 sm:rounded-lg justify-around">
-          <div className="text-3xl">Target odds {targetOdds}</div>
+          <div className="text-3xl">Target odds {odds}</div>
           <form>
             <div className="flex flex-col">
               <label>
