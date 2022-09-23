@@ -4,7 +4,7 @@ type Props = {
   className?: string;
 };
 
-const Loader: React.FC<Props> = props => {
+const Loader: React.FC<Props> = () => {
   return <SpinnerCircular />;
 };
 
