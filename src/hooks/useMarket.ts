@@ -27,13 +27,16 @@ const useMarket = (): any => {
       return;
     }
     // Get inPlay
-    marketContract.getTotalInplay().then((totalInPlay: ethers.BigNumberish) => {
-      // Note: we will probably need to change the formatUnits part once we get the real value.
-      // This is just a hardcoded value for testing
-      setInPlay(
-        parseFloat(ethers.utils.formatUnits(totalInPlay, 1)).toFixed(2)
-      );
-    });
+    marketContract
+      .getTotalInplay()
+      .then((totalInPlay: ethers.BigNumberish) => {
+        // Note: we will probably need to change the formatUnits part once we get the real value.
+        // This is just a hardcoded value for testing
+        setInPlay(
+          parseFloat(ethers.utils.formatUnits(totalInPlay, 1)).toFixed(2)
+        );
+      })
+      .catch((err: any) => console.error(err));
   }, [marketContract, isConnected]);
 
   useEffect(() => {
@@ -41,10 +44,13 @@ const useMarket = (): any => {
       return;
     }
     // Get numberOfBets
-    marketContract.getInplayCount().then((totalInPlay: ethers.BigNumberish) => {
-      // Note: we will probably need to change the formatUnits part once we get the real value.
-      setNumberOfBets(Number(totalInPlay));
-    });
+    marketContract
+      .getInplayCount()
+      .then((totalInPlay: ethers.BigNumberish) => {
+        // Note: we will probably need to change the formatUnits part once we get the real value.
+        setNumberOfBets(Number(totalInPlay));
+      })
+      .catch((err: any) => console.error(err));
   }, [marketContract, isConnected]);
 
   return {

@@ -6,7 +6,7 @@ const ModalBody = React.forwardRef<HTMLDivElement, Props>(function ModalBody(
   props,
   ref
 ) {
-  const { children, className, ...other } = props;
+  const { children, ...other } = props;
 
   return (
     <div
