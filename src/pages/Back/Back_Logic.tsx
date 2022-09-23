@@ -1,6 +1,13 @@
-import { Back } from "../../types";
-import BackView from "./Back_View";
+import { useContext } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
+import { useAccount } from "wagmi";
+
+import BackView from "./Back_View";
+import { WalletModalContext } from "../../providers/WalletModal";
+
+import { Back } from "../../types";
+
+const DECIMALS = 6;
 
 const BackLogic: React.FC = () => {
   const { propositionId } = useParams();
@@ -8,6 +15,10 @@ const BackLogic: React.FC = () => {
 
   const odds = searchParams.get("odds");
   const signature = searchParams.get("signature");
+
+  const { openWalletModal } = useContext(WalletModalContext);
+  const { address } = useAccount();
+  const isWalletConnected = address ? true : false;
 
   const back: Back = {
     number: 0,
@@ -21,7 +32,17 @@ const BackLogic: React.FC = () => {
     signature: signature || ""
   };
 
-  return <BackView back={back} />;
+  const targetOdds = back.odds / 1000;
+
+  return (
+    <BackView
+      back={back}
+      openWalletModal={openWalletModal}
+      isWalletConnected={isWalletConnected}
+      DECIMALS={DECIMALS}
+      targetOdds={targetOdds}
+    />
+  );
 };
 
 export default BackLogic;

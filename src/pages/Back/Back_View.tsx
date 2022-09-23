@@ -1,56 +1,54 @@
-import { useContext, useMemo, useState } from "react";
-import { useAccount, useContractRead } from "wagmi";
-import { PageLayout } from "../../components";
-import { WalletModalContext } from "../../providers/WalletModal";
-import { Back } from "../../types";
-import marketContractJson from "../../abi/Market.json";
-import { ethers } from "ethers";
+import { useMemo, useState } from "react";
 import { useDebounce } from "use-debounce";
+import { ethers } from "ethers";
+import { useContractRead } from "wagmi";
 
-const DECIMALS = 6;
+import { PageLayout } from "../../components";
+import { Back } from "../../types";
+
+import marketContractJson from "../../abi/Market.json";
 
 type Props = {
   back: Back;
+  openWalletModal: () => void;
+  isWalletConnected: boolean;
+  DECIMALS: number;
+  targetOdds: number;
 };
 
-const BackView: React.FC<Props> = ({ back }) => {
-  const { openWalletModal } = useContext(WalletModalContext);
-
-  const { address } = useAccount();
-
+const BackView: React.FC<Props> = ({
+  back,
+  openWalletModal,
+  isWalletConnected,
+  DECIMALS,
+  targetOdds
+}) => {
   const [wagerAmount, setWagerAmount] = useState<number>(0);
   const [debouncedWagerAmount] = useDebounce(wagerAmount, 500);
-  const [potentialPayout, setPotentialPayout] = useState<number>(0);
 
-  const { proposition_id, odds } = back;
-  const targetOdds = odds / 1000;
+  const b32PropositionId = useMemo(
+    () => ethers.utils.formatBytes32String(back.proposition_id),
+    [back.proposition_id]
+  );
+  const bnOdds = useMemo(
+    () => ethers.utils.parseUnits(targetOdds.toString(), DECIMALS),
+    [targetOdds]
+  );
+  const bnWager = useMemo(
+    () => ethers.utils.parseUnits(debouncedWagerAmount.toString(), DECIMALS),
+    [debouncedWagerAmount]
+  );
+  const { data: bnPotentialPayout } = useContractRead({
+    addressOrName: "0xe9BC1f42bF75C59b245d39483E97C3A70c450c9b",
+    contractInterface: marketContractJson.abi,
+    functionName: "getPotentialPayout",
+    args: [b32PropositionId, bnWager, bnOdds]
+  });
 
-  // const b32PropositionId = useMemo(
-  //   () => ethers.utils.formatBytes32String(proposition_id),
-  //   [proposition_id]
-  // );
-  // const bnOdds = useMemo(
-  //   () => ethers.utils.parseUnits(targetOdds.toString(), DECIMALS),
-  //   [targetOdds]
-  // );
-  // const bnWager = useMemo(
-  //   () => ethers.utils.parseUnits(debouncedWagerAmount.toString(), DECIMALS),
-  //   [debouncedWagerAmount]
-  // );
-  // console.log({
-  //   b32PropositionId,
-  //   bnWager: bnWager.toNumber(),
-  //   bnOdds: bnWager.toNumber()
-  // });
-
-  // const { data, isError, isLoading } = useContractRead({
-  //   addressOrName: "0x9745295850097f3E2a82E493B296dA2aE0d0AdC5",
-  //   contractInterface: marketContractJson.abi,
-  //   functionName: "getPotentialPayout",
-  //   args: [b32PropositionId, bnWager, bnOdds]
-  // });
-
-  // console.log({ data, isError, isLoading });
+  const potentialPayout = useMemo(() => {
+    if (!bnPotentialPayout) return 0;
+    return ethers.utils.formatUnits(bnPotentialPayout, DECIMALS);
+  }, [bnPotentialPayout]);
 
   const backTheRace = () => {
     alert("TODO: call API");
@@ -64,8 +62,6 @@ const BackView: React.FC<Props> = ({ back }) => {
   const updateWagerAmount = (amount: number) => {
     setWagerAmount(amount || 0); // handle NaN
   };
-
-  const isWalletConnected = address ? true : false;
 
   return (
     <PageLayout requiresAuth={false}>
@@ -91,9 +87,7 @@ const BackView: React.FC<Props> = ({ back }) => {
                 <span>Potential Payout</span>
                 <input
                   type="number"
-                  value={
-                    potentialPayout || debouncedWagerAmount * targetOdds || ""
-                  }
+                  value={potentialPayout || ""}
                   readOnly
                   placeholder="0.0"
                   className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
