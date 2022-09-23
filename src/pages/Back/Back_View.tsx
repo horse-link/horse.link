@@ -77,9 +77,11 @@ const BackView: React.FC<Props> = ({
             </div>
           </form>
         </div>
-        <div className="mt-5 w-96 px-10 pt-5 pb-3 rounded-md shadow border-b bg-white border-gray-200 sm:rounded-lg justify-around">
-          {JSON.stringify(backingResult)}
-        </div>
+        {backingResult && (
+          <div className="mt-5 w-96 px-10 pt-5 pb-3 rounded-md shadow border-b bg-white border-gray-200 sm:rounded-lg justify-around">
+            {JSON.stringify(backingResult)}
+          </div>
+        )}
       </div>
     </PageLayout>
   );
