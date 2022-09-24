@@ -60,7 +60,7 @@ contract Market is Ownable, IMarket {
         return _totalInPlay;
     }
 
-    function getTotalLiablity() external view returns (uint256) {
+    function getTotalLiability() external view returns (uint256) {
         return _totalLiability;
     }
 

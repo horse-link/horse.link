@@ -53,17 +53,20 @@ contract("Market", accounts => {
       const inPlay = await market.getTotalInplay();
       assert.equal(inPlay, 0, "Should have $0 play");
 
-      // const inPlayCount = await market.getInplayCount();
-      // assert.equal(inPlayCount, 0, "Should have 0 bets in play");
+      const totalLiability = await market.getTotalLiability();
+      assert.equal(totalLiability, 0, "Should have 0 liability");
 
       const target = await market.getTarget();
       assert.equal(target, 100, "Should have fee of 1%");
+
+      const vault = await market.getVaultAddress();
+      assert.equal(vault, vault, "Should have vault address");
 
       // const maxPayout = await market.getPotentailPayout.call(100, 5);
       // assert.equal(maxPayout, 500, "Should be $500");
     });
 
-    it.only("should get correct odds on a 5:1 punt", async () => {
+    it("should get correct odds on a 5:1 punt", async () => {
       let balance = await underlying.balanceOf(bob);
       assert.equal(balance, 1000000000, "Should have $1,000 USDT");
 
@@ -89,7 +92,7 @@ contract("Market", accounts => {
       assert.equal(potentialPayout, 237500000, "Should have true odds of 1:4.75 on $100 in a $1,000 pool");
     });
 
-    it.only("should allow Bob a $100 punt at 5:1", async () => {
+    it("should allow Bob a $100 punt at 5:1", async () => {
       let balance = await underlying.balanceOf(bob);
       assert.equal(balance, 1000000000, "Should have $1,000 USDT");
 
