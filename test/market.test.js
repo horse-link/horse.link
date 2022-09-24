@@ -39,7 +39,7 @@ contract("Market", accounts => {
 
     // function allowance(address owner, address spender)
     const allowance = await underlying.allowance(vault.address, market.address);
-    console.log("allowance " + Number(allowance));
+    console.log(`allowance ${Number(allowance)}`);
 
     await underlying.approve(vault.address, ethers.utils.parseUnits("1000", DECIMALS), { from: alice });
     await vault.deposit(ethers.utils.parseUnits("1000", DECIMALS), alice, { from: alice });
