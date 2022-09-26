@@ -1,9 +1,8 @@
 import { ethers } from "ethers";
-import { useContext, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { useDebounce } from "use-debounce";
 import {
-  useAccount,
   useContractRead,
   useContractWrite,
   usePrepareContractWrite,
@@ -11,7 +10,6 @@ import {
 } from "wagmi";
 
 import marketContractJson from "../../abi/Market.json";
-import { WalletModalContext } from "../../providers/WalletModal";
 import { Back } from "../../types";
 import BackView from "./Back_View";
 
@@ -121,9 +119,6 @@ const BackLogic: React.FC = () => {
   const nonce = Date.now().toString();
   const signature = searchParams.get("signature");
 
-  const { openWalletModal } = useContext(WalletModalContext);
-  const { address } = useAccount();
-
   const back: Back = {
     nonce: nonce || "",
     market_id: marketId || "",
@@ -140,8 +135,6 @@ const BackLogic: React.FC = () => {
   return (
     <BackView
       back={back}
-      openWalletModal={openWalletModal}
-      isWalletConnected={address ? true : false}
       wagerAmount={wagerAmount}
       updateWagerAmount={amount => setWagerAmount(amount || 0)}
       potentialPayout={potentialPayout}

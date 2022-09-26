@@ -1,10 +1,10 @@
 import { PageLayout } from "../../components";
+import ContractWriteResultCard from "../../components/ContractWriteResultCard/ContractWriteResultCard_View";
+import RequireWalletButton from "../../components/RequireWalletButton/RequireWalletButton_View";
 import { Back } from "../../types";
 
 type Props = {
   back: Back;
-  openWalletModal: () => void;
-  isWalletConnected: boolean;
   wagerAmount: number;
   updateWagerAmount: (amount: number) => void;
   potentialPayout: string;
@@ -22,8 +22,6 @@ type Props = {
 
 const BackView: React.FC<Props> = ({
   back,
-  openWalletModal,
-  isWalletConnected,
   wagerAmount,
   updateWagerAmount,
   potentialPayout,
@@ -62,37 +60,26 @@ const BackView: React.FC<Props> = ({
               </label>
             </div>
             <div className="flex justify-end mt-3">
-              {isWalletConnected ? (
-                <button
-                  className="rounded-md border shadow-md border-gray-500 px-5 py-1"
-                  onClick={contract.write}
-                  disabled={!contract.write || txStatus.isLoading}
-                >
-                  {txStatus.isLoading ? "Backing..." : "Back"}
-                </button>
-              ) : (
-                <button
-                  className="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  onClick={openWalletModal}
-                >
-                  Connect Wallet
-                </button>
-              )}
+              <RequireWalletButton
+                actionButton={
+                  <button
+                    className="rounded-md border shadow-md border-gray-500 px-5 py-1"
+                    onClick={contract.write}
+                    disabled={!contract.write || txStatus.isLoading}
+                  >
+                    {txStatus.isLoading ? "Backing..." : "Back"}
+                  </button>
+                }
+              />
             </div>
           </form>
         </div>
-        {txStatus.isSuccess && (
-          <div className="mt-5 w-96 px-10 py-5 rounded-md shadow  bg-green-300 text-green-800  break-all">
-            Success <br />
-            Transaction Hash : {txStatus.hash}
-          </div>
-        )}
-        {contract.isError && (
-          <div className="mt-5 w-96 px-10 py-5 rounded-md shadow  bg-red-300  text-red-800 break-words">
-            Error <br />
-            {contract.errorMsg}
-          </div>
-        )}
+        <ContractWriteResultCard
+          hash={txStatus.hash}
+          isSuccess={txStatus.isSuccess}
+          isError={contract.isError}
+          errorMsg={contract.errorMsg}
+        />
       </div>
     </PageLayout>
   );
