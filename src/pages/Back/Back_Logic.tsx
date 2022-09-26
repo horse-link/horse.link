@@ -116,7 +116,7 @@ const BackLogic: React.FC = () => {
   const end = searchParams.get("end");
   // wait API fix
   // const nonce = searchParams.get("nonce");
-  const nonce = Date.now().toString();
+  const nonce = useMemo(() => Date.now().toString(), []);
   const signature = searchParams.get("signature");
 
   const back: Back = {
