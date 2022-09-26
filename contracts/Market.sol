@@ -22,7 +22,7 @@ struct Bet {
 contract Market is Ownable, IMarket {
 
     uint256 private constant MAX = 32;
-    uint256 private constant PRECESSION = 1_000;
+    int256 private constant PRECESSION = 1_000;
 
     IERC721 private _bet;
     uint8 private immutable _fee;
@@ -60,7 +60,7 @@ contract Market is Ownable, IMarket {
         return _totalInPlay;
     }
 
-    function getTotalLiablity() external view returns (uint256) {
+    function getTotalLiability() external view returns (uint256) {
         return _totalLiability;
     }
 
@@ -134,7 +134,7 @@ contract Market is Ownable, IMarket {
         // do not include this guy in the return
         p -= int256(_potentialPayout[propositionId]);
 
-        return odds - (odds * (wager * 1_000 / p) / 1_000);
+        return odds - (odds * (wager * PRECESSION / p) / PRECESSION);
     }
 
     function getPotentialPayout(bytes32 propositionId, uint256 wager, uint256 odds) external view returns (uint256) {
