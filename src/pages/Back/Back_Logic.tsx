@@ -101,7 +101,7 @@ const useBacking = (back: Back) => {
       errorMsg: (prepareError || error)?.message
     },
     txStatus: {
-      isLoading: true || isTxLoading,
+      isLoading: isTxLoading,
       isSuccess: isTxSuccess,
       hash: txHash
     }
