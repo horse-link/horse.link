@@ -11,11 +11,11 @@ contract Registry {
     address[] public vaults;
 
     function marketCount() external view returns (uint256) {
-        return markets.length + 1;
+        return markets.length;
     }
 
     function vaultCount() external view returns (uint256) {
-        return vaults.length + 1;
+        return vaults.length;
     }
 
     function addVault(address vault) external {
