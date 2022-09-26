@@ -82,9 +82,8 @@ const BackView: React.FC<Props> = ({
           </form>
         </div>
         {txStatus.isSuccess && (
-          <div className="mt-5 w-96 px-10 py-5 rounded-md shadow border-b bg-white border-gray-200">
-            Successfully backed!
-            <br />
+          <div className="mt-5 w-96 px-10 py-5 rounded-md shadow border-b bg-white border-gray-200 break-all">
+            Success <br />
             Transaction Hash : {txStatus.hash}
           </div>
         )}
