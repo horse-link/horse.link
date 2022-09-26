@@ -5,9 +5,10 @@ import { ethers } from "ethers";
 
 type Props = {
   vaultAddressList: string[];
+  onClickVault: (vaultAddress: string) => void;
 };
 
-const VaultsView: React.FC<Props> = ({ vaultAddressList }) => {
+const VaultsView: React.FC<Props> = ({ vaultAddressList, onClickVault }) => {
   // TODO: Do we want to make this table responsive?
   return (
     <PageLayout requiresAuth={false}>
@@ -49,7 +50,11 @@ const VaultsView: React.FC<Props> = ({ vaultAddressList }) => {
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {vaultAddressList.map(v => (
-                    <Row vaultAddress={v} key={v} />
+                    <Row
+                      vaultAddress={v}
+                      key={v}
+                      onClick={() => onClickVault(v)}
+                    />
                   ))}
                 </tbody>
               </table>
@@ -63,7 +68,12 @@ const VaultsView: React.FC<Props> = ({ vaultAddressList }) => {
 
 export default VaultsView;
 
-const Row: React.FC<{ vaultAddress: string }> = ({ vaultAddress }) => {
+type rowProp = {
+  vaultAddress: string;
+  onClick: () => void;
+};
+
+const Row: React.FC<rowProp> = ({ vaultAddress, onClick }) => {
   const vaultContract = {
     addressOrName: vaultAddress,
     contractInterface: vaultContractJson.abi
@@ -106,7 +116,7 @@ const Row: React.FC<{ vaultAddress: string }> = ({ vaultAddress }) => {
   }
 
   return (
-    <tr key={rowData.id}>
+    <tr key={rowData.id} onClick={onClick} className="cursor-pointer">
       <td className="px-2 py-4 whitespace-nowrap"> {rowData.id} </td>
       <td className="flex px-2 py-4 items-center">
         <span> {rowData.symbol} </span>
