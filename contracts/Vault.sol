@@ -160,7 +160,10 @@ contract Vault is Ownable, IERC20, IVault {
         require(assets > 0, "Value must be greater than 0");
         require(_market != address(0), "Deposits not allowed until market is set"); // make this a modifier
 
-        IERC20(_underlying).transferFrom(msg.sender, _self, assets);
+        if (receiver == address(0))
+            receiver = _msgSender();
+
+        IERC20(_underlying).transferFrom(receiver, _self, assets);
 
         _balances[receiver] += assets;
         _totalSupply += assets;
