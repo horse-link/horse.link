@@ -25,7 +25,7 @@ const VaultsView: React.FC<Props> = ({ vaultAddressList }) => {
                       scope="col"
                       className="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase"
                     >
-                      #
+                      Name
                     </th>
                     <th
                       scope="col"
