@@ -6,6 +6,7 @@ type Props = {
   symbol: string;
   depositAmount: number;
   updateDepositAmount: (amount: number) => void;
+  shouldButtonDisabled: boolean;
   contract: {
     write?: () => void;
     isError: boolean;
@@ -19,8 +20,9 @@ type Props = {
 };
 const DepositView = ({
   symbol,
-  updateDepositAmount,
   depositAmount,
+  updateDepositAmount,
+  shouldButtonDisabled,
   contract,
   txStatus
 }: Props) => {
@@ -48,7 +50,7 @@ const DepositView = ({
                   <button
                     className="rounded-md border shadow-md border-gray-500 px-5 py-1"
                     onClick={contract.write}
-                    disabled={!contract.write || txStatus.isLoading}
+                    disabled={shouldButtonDisabled}
                   >
                     {txStatus.isLoading ? "Backing..." : "Deposit"}
                   </button>

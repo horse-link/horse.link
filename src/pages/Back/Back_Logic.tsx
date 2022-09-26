@@ -95,7 +95,7 @@ const useBacking = (back: Back) => {
     potentialPayout,
     contract: {
       write: contractWrite,
-      isError: isPrepareError || isError,
+      isError: debouncedWagerAmount > 0 && (isPrepareError || isError),
       errorMsg: (prepareError || error)?.message
     },
     txStatus: {
@@ -132,12 +132,15 @@ const BackLogic: React.FC = () => {
   const { wagerAmount, setWagerAmount, potentialPayout, contract, txStatus } =
     useBacking(back);
 
+  const shouldButtonDisabled = !contract.write || txStatus.isLoading;
+
   return (
     <BackView
       back={back}
       wagerAmount={wagerAmount}
       updateWagerAmount={amount => setWagerAmount(amount || 0)}
       potentialPayout={potentialPayout}
+      shouldButtonDisabled={shouldButtonDisabled}
       contract={contract}
       txStatus={txStatus}
     />

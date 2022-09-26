@@ -51,7 +51,7 @@ const DepositLogic = () => {
 
   const contract = {
     write: contractWrite,
-    isError: isPrepareError || isError,
+    isError: depositAmount > 0 && (isPrepareError || isError),
     errorMsg: (prepareError || error)?.message
   };
   const txStatus = {
@@ -63,11 +63,14 @@ const DepositLogic = () => {
   const updateDepositAmount = (amount: number) => {
     setDepositAmount(amount);
   };
+  const shouldButtonDisabled =
+    depositAmount == 0 || !contract.write || txStatus.isLoading;
   return (
     <DepositView
       symbol={symbol}
       depositAmount={depositAmount}
       updateDepositAmount={updateDepositAmount}
+      shouldButtonDisabled={shouldButtonDisabled}
       contract={contract}
       txStatus={txStatus}
     />

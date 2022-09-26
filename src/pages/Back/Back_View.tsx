@@ -8,6 +8,7 @@ type Props = {
   wagerAmount: number;
   updateWagerAmount: (amount: number) => void;
   potentialPayout: string;
+  shouldButtonDisabled: boolean;
   contract: {
     write?: () => void;
     isError: boolean;
@@ -25,6 +26,7 @@ const BackView: React.FC<Props> = ({
   wagerAmount,
   updateWagerAmount,
   potentialPayout,
+  shouldButtonDisabled,
   contract,
   txStatus
 }) => {
@@ -65,7 +67,7 @@ const BackView: React.FC<Props> = ({
                   <button
                     className="rounded-md border shadow-md border-gray-500 px-5 py-1"
                     onClick={contract.write}
-                    disabled={!contract.write || txStatus.isLoading}
+                    disabled={shouldButtonDisabled}
                   >
                     {txStatus.isLoading ? "Backing..." : "Back"}
                   </button>
