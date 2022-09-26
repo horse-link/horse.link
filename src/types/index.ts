@@ -1,6 +1,4 @@
 export type Back = {
-  number: number;
-  name: string;
   nonce: string;
   market_id: string;
   close: number;

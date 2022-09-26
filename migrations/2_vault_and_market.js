@@ -4,7 +4,7 @@ const Market = artifacts.require("Market");
 const Registry = artifacts.require("Registry");
 const Vault = artifacts.require("Vault");
 
-module.exports = async (deployer) => {
+module.exports = async deployer => {
   await deployer.deploy(MockToken, "Mock USDT", "Horse Link USDT");
   const hlusdt = await MockToken.deployed();
 

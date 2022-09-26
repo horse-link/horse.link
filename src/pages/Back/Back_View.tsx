@@ -1,77 +1,40 @@
-import { useContext, useMemo, useState } from "react";
-import { useAccount, useContractRead } from "wagmi";
 import { PageLayout } from "../../components";
-import { WalletModalContext } from "../../providers/WalletModal";
 import { Back } from "../../types";
-import marketContractJson from "../../abi/Market.json";
-import { ethers } from "ethers";
-import { useDebounce } from "use-debounce";
-
-const DECIMALS = 6;
 
 type Props = {
   back: Back;
+  openWalletModal: () => void;
+  isWalletConnected: boolean;
+  wagerAmount: number;
+  updateWagerAmount: (amount: number) => void;
+  potentialPayout: string;
+  contract: {
+    write?: () => void;
+    isError: boolean;
+    errorMsg?: string;
+  };
+  txStatus: {
+    isLoading: boolean;
+    isSuccess: boolean;
+    hash?: string;
+  };
 };
 
-const BackView: React.FC<Props> = ({ back }) => {
-  const { openWalletModal } = useContext(WalletModalContext);
-
-  const { address } = useAccount();
-
-  const [wagerAmount, setWagerAmount] = useState<number>(0);
-  const [debouncedWagerAmount] = useDebounce(wagerAmount, 500);
-  const [potentialPayout, setPotentialPayout] = useState<number>(0);
-
-  const { proposition_id, odds } = back;
-  const targetOdds = odds / 1000;
-
-  // const b32PropositionId = useMemo(
-  //   () => ethers.utils.formatBytes32String(proposition_id),
-  //   [proposition_id]
-  // );
-  // const bnOdds = useMemo(
-  //   () => ethers.utils.parseUnits(targetOdds.toString(), DECIMALS),
-  //   [targetOdds]
-  // );
-  // const bnWager = useMemo(
-  //   () => ethers.utils.parseUnits(debouncedWagerAmount.toString(), DECIMALS),
-  //   [debouncedWagerAmount]
-  // );
-  // console.log({
-  //   b32PropositionId,
-  //   bnWager: bnWager.toNumber(),
-  //   bnOdds: bnWager.toNumber()
-  // });
-
-  // const { data, isError, isLoading } = useContractRead({
-  //   addressOrName: "0x9745295850097f3E2a82E493B296dA2aE0d0AdC5",
-  //   contractInterface: marketContractJson.abi,
-  //   functionName: "getPotentialPayout",
-  //   args: [b32PropositionId, bnWager, bnOdds]
-  // });
-
-  // console.log({ data, isError, isLoading });
-
-  const backTheRace = () => {
-    alert("TODO: call API");
-    // setLoading
-    // const receipt = await contract.back()
-    // setFinished
-    // const transaction = await receipt.wait(1)
-    // setConfirm
-  };
-
-  const updateWagerAmount = (amount: number) => {
-    setWagerAmount(amount || 0); // handle NaN
-  };
-
-  const isWalletConnected = address ? true : false;
-
+const BackView: React.FC<Props> = ({
+  back,
+  openWalletModal,
+  isWalletConnected,
+  wagerAmount,
+  updateWagerAmount,
+  potentialPayout,
+  contract,
+  txStatus
+}) => {
   return (
     <PageLayout requiresAuth={false}>
-      <div className="flex justify-center">
-        <div className="w-96 px-10 pt-5 pb-3 rounded-md shadow border-b bg-white border-gray-200 sm:rounded-lg justify-around">
-          <div className="text-3xl">Target odds {targetOdds}</div>
+      <div className="grid place-content-center">
+        <div className="w-96 px-10 pt-5 pb-3 rounded-md shadow border-b bg-white border-gray-200 sm:rounded-lg">
+          <div className="text-3xl">Target odds {back.odds}</div>
           <form>
             <div className="flex flex-col">
               <label>
@@ -91,9 +54,7 @@ const BackView: React.FC<Props> = ({ back }) => {
                 <span>Potential Payout</span>
                 <input
                   type="number"
-                  value={
-                    potentialPayout || debouncedWagerAmount * targetOdds || ""
-                  }
+                  value={potentialPayout}
                   readOnly
                   placeholder="0.0"
                   className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
@@ -103,10 +64,11 @@ const BackView: React.FC<Props> = ({ back }) => {
             <div className="flex justify-end mt-3">
               {isWalletConnected ? (
                 <button
-                  className="rounded-md border shadow-md border-gray-500  px-5 py-1"
-                  onClick={backTheRace}
+                  className="rounded-md border shadow-md border-gray-500 px-5 py-1"
+                  onClick={contract.write}
+                  disabled={!contract.write || txStatus.isLoading}
                 >
-                  Back
+                  {txStatus.isLoading ? "Backing..." : "Back"}
                 </button>
               ) : (
                 <button
@@ -119,6 +81,18 @@ const BackView: React.FC<Props> = ({ back }) => {
             </div>
           </form>
         </div>
+        {txStatus.isSuccess && (
+          <div className="mt-5 w-96 px-10 py-5 rounded-md shadow  bg-green-300 text-green-800  break-all">
+            Success <br />
+            Transaction Hash : {txStatus.hash}
+          </div>
+        )}
+        {contract.isError && (
+          <div className="mt-5 w-96 px-10 py-5 rounded-md shadow  bg-red-300  text-red-800 break-words">
+            Error <br />
+            {contract.errorMsg}
+          </div>
+        )}
       </div>
     </PageLayout>
   );
