@@ -13,7 +13,7 @@ const Navigation = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         {/* <Route path="/results" element={<Results />} /> */}
         <Route path="/vaults" element={<Vaults />} />
-        <Route path="vault/:vaultId" element={<Deposit />} />
+        <Route path="vault/:vaultAddress" element={<Deposit />} />
         <Route path="/horses/:track/:number" element={<HorseRace />} />
         <Route path="*" element={<Navigate to="/dashboard" />} />
         <Route path="/back/:propositionId" element={<Back />} />

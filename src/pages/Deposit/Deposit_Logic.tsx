@@ -1,31 +1,71 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import DepositView from "./Deposit_View";
+import vaultContractJson from "../../abi/Vault.json";
+import {
+  useAccount,
+  useContractRead,
+  useContractWrite,
+  usePrepareContractWrite,
+  useWaitForTransaction
+} from "wagmi";
 
 const DepositLogic = () => {
-  const { vaultId } = useParams();
-
+  const { vaultAddress } = useParams();
   const [depositAmount, setDepositAmount] = useState(0);
+  const { address } = useAccount();
+  const vaultContract = {
+    addressOrName: vaultAddress || "",
+    contractInterface: vaultContractJson.abi
+  };
+  const { data: vaultSymbol } = useContractRead({
+    ...vaultContract,
+    functionName: "symbol"
+  });
+
+  const assets = depositAmount;
+  const receiver = address;
+  const {
+    config,
+    error: prepareError,
+    isError: isPrepareError
+  } = usePrepareContractWrite({
+    ...vaultContract,
+    functionName: "deposit",
+    args: [assets, receiver]
+  });
+
+  const {
+    data: contractData,
+    error,
+    isError,
+    write: contractWrite
+  } = useContractWrite(config);
+
+  const txHash = contractData?.hash;
+
+  const { isLoading: isTxLoading, isSuccess: isTxSuccess } =
+    useWaitForTransaction({
+      hash: txHash
+    });
+
+  const contract = {
+    write: contractWrite,
+    isError: isPrepareError || isError,
+    errorMsg: (prepareError || error)?.message
+  };
+  const txStatus = {
+    isLoading: isTxLoading,
+    isSuccess: isTxSuccess,
+    hash: txHash
+  };
+  const symbol = vaultSymbol?.toString() ?? "";
   const updateDepositAmount = (amount: number) => {
     setDepositAmount(amount);
   };
-  const symbol = "USDT";
-  const contract = {
-    write: () => {
-      //TODO
-    },
-    isError: false,
-    errorMsg: ""
-  };
-  const txStatus = {
-    isLoading: false,
-    isSuccess: false,
-    hash: ""
-  };
-
   return (
     <DepositView
-      symbol={symbol || ""}
+      symbol={symbol}
       depositAmount={depositAmount}
       updateDepositAmount={updateDepositAmount}
       contract={contract}
