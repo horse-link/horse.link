@@ -88,7 +88,7 @@ const BackView: React.FC<Props> = ({
           </div>
         )}
         {contract.isError && (
-          <div className="mt-5 w-96 px-10 py-5 rounded-md shadow border-b bg-white border-gray-200 text-red-700">
+          <div className="mt-5 w-96 px-10 py-5 rounded-md shadow border-b bg-white border-gray-200 text-red-700 break-words">
             {contract.errorMsg}
           </div>
         )}
