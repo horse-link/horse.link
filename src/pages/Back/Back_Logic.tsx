@@ -6,7 +6,8 @@ import {
   useAccount,
   useContractRead,
   useContractWrite,
-  usePrepareContractWrite
+  usePrepareContractWrite,
+  useWaitForTransaction
 } from "wagmi";
 
 import marketContractJson from "../../abi/Market.json";
@@ -56,7 +57,11 @@ const useBacking = (back: Back) => {
     [market_id]
   );
 
-  const { config } = usePrepareContractWrite({
+  const {
+    config,
+    error: prepareError,
+    isError: isPrepareError
+  } = usePrepareContractWrite({
     addressOrName: "0xe9BC1f42bF75C59b245d39483E97C3A70c450c9b",
     contractInterface: marketContractJson.abi,
     functionName: "back",
@@ -73,26 +78,33 @@ const useBacking = (back: Back) => {
   });
 
   const {
-    data: backingResult,
-    isLoading: isBacking,
-    isSuccess: isBackingSuccess,
-    write
+    data: contractData,
+    error,
+    isError,
+    write: contractWrite
   } = useContractWrite(config);
-  const backTheRace = () => {
-    // mock
-    alert("call API");
-    // if (!write) return;
-    // write();
-  };
+
+  const txHash = contractData?.hash;
+
+  const { isLoading: isTxLoading, isSuccess: isTxSuccess } =
+    useWaitForTransaction({
+      hash: txHash
+    });
 
   return {
     wagerAmount,
     setWagerAmount,
     potentialPayout,
-    backTheRace,
-    isBacking,
-    isBackingSuccess,
-    backingResult
+    contract: {
+      write: contractWrite,
+      isError: isPrepareError || isError,
+      errorMsg: (prepareError || error)?.message
+    },
+    txStatus: {
+      isLoading: true || isTxLoading,
+      isSuccess: isTxSuccess,
+      hash: txHash
+    }
   };
 };
 
@@ -104,14 +116,16 @@ const BackLogic: React.FC = () => {
   const odds = searchParams.get("odds");
   const close = searchParams.get("close");
   const end = searchParams.get("end");
-  const nonce = searchParams.get("nonce");
+  // wait API fix
+  // const nonce = searchParams.get("nonce");
+  const nonce = Date.now().toString();
   const signature = searchParams.get("signature");
 
   const { openWalletModal } = useContext(WalletModalContext);
   const { address } = useAccount();
 
   const back: Back = {
-    nonce: Date.now().toString() || "",
+    nonce: nonce || "",
     market_id: marketId || "",
     close: parseInt(close || "0"),
     end: parseInt(end || "0"),
@@ -120,15 +134,8 @@ const BackLogic: React.FC = () => {
     signature: signature || ""
   };
 
-  const {
-    wagerAmount,
-    setWagerAmount,
-    potentialPayout,
-    backTheRace,
-    isBacking,
-    isBackingSuccess,
-    backingResult
-  } = useBacking(back);
+  const { wagerAmount, setWagerAmount, potentialPayout, contract, txStatus } =
+    useBacking(back);
 
   return (
     <BackView
@@ -138,10 +145,8 @@ const BackLogic: React.FC = () => {
       wagerAmount={wagerAmount}
       updateWagerAmount={amount => setWagerAmount(amount || 0)}
       potentialPayout={potentialPayout}
-      backTheRace={backTheRace}
-      isBacking={isBacking}
-      isBackingSuccess={isBackingSuccess}
-      backingResult={backingResult}
+      contract={contract}
+      txStatus={txStatus}
     />
   );
 };

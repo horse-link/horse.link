@@ -8,10 +8,16 @@ type Props = {
   wagerAmount: number;
   updateWagerAmount: (amount: number) => void;
   potentialPayout: string;
-  backTheRace: () => void;
-  isBacking: boolean;
-  isBackingSuccess: boolean;
-  backingResult: any;
+  contract: {
+    write?: () => void;
+    isError: boolean;
+    errorMsg?: string;
+  };
+  txStatus: {
+    isLoading: boolean;
+    isSuccess: boolean;
+    hash?: string;
+  };
 };
 
 const BackView: React.FC<Props> = ({
@@ -21,15 +27,13 @@ const BackView: React.FC<Props> = ({
   wagerAmount,
   updateWagerAmount,
   potentialPayout,
-  backTheRace,
-  isBacking,
-  isBackingSuccess,
-  backingResult
+  contract,
+  txStatus
 }) => {
   return (
     <PageLayout requiresAuth={false}>
-      <div className="flex flex-col items-center">
-        <div className="w-96 px-10 pt-5 pb-3 rounded-md shadow border-b bg-white border-gray-200 sm:rounded-lg justify-around">
+      <div className="grid place-content-center">
+        <div className="w-96 px-10 pt-5 pb-3 rounded-md shadow border-b bg-white border-gray-200 sm:rounded-lg">
           <div className="text-3xl">Target odds {back.odds}</div>
           <form>
             <div className="flex flex-col">
@@ -60,11 +64,11 @@ const BackView: React.FC<Props> = ({
             <div className="flex justify-end mt-3">
               {isWalletConnected ? (
                 <button
-                  className="rounded-md border shadow-md border-gray-500  px-5 py-1"
-                  onClick={backTheRace}
-                  disabled={isBacking || isBackingSuccess}
+                  className="rounded-md border shadow-md border-gray-500 px-5 py-1"
+                  onClick={contract.write}
+                  disabled={!contract.write || txStatus.isLoading}
                 >
-                  Back
+                  {txStatus.isLoading ? "Backing..." : "Back"}
                 </button>
               ) : (
                 <button
@@ -77,9 +81,16 @@ const BackView: React.FC<Props> = ({
             </div>
           </form>
         </div>
-        {backingResult && (
-          <div className="mt-5 w-96 px-10 pt-5 pb-3 rounded-md shadow border-b bg-white border-gray-200 sm:rounded-lg justify-around">
-            {JSON.stringify(backingResult)}
+        {txStatus.isSuccess && (
+          <div className="mt-5 w-96 px-10 py-5 rounded-md shadow border-b bg-white border-gray-200">
+            Successfully backed!
+            <br />
+            Transaction Hash : {txStatus.hash}
+          </div>
+        )}
+        {contract.isError && (
+          <div className="mt-5 w-96 px-10 py-5 rounded-md shadow border-b bg-white border-gray-200 text-red-700">
+            {contract.errorMsg}
           </div>
         )}
       </div>
