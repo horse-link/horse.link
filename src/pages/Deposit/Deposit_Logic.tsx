@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import DepositView from "./Deposit_View";
 import vaultContractJson from "../../abi/Vault.json";
+import mockTokenContractJson from "../../abi/MockToken.json";
 import {
   useAccount,
   useContractRead,
@@ -18,8 +19,13 @@ const DepositLogic = () => {
     addressOrName: vaultAddress || "",
     contractInterface: vaultContractJson.abi
   };
-  const { data: vaultSymbol } = useContractRead({
+  const { data: tokenAddress } = useContractRead({
     ...vaultContract,
+    functionName: "asset"
+  });
+  const { data: tokenSymbol } = useContractRead({
+    addressOrName: tokenAddress?.toString() || "",
+    contractInterface: mockTokenContractJson.abi,
     functionName: "symbol"
   });
 
@@ -59,7 +65,7 @@ const DepositLogic = () => {
     isSuccess: isTxSuccess,
     hash: txHash
   };
-  const symbol = vaultSymbol?.toString() ?? "";
+  const symbol = tokenSymbol?.toString() ?? "";
   const updateDepositAmount = (amount: number) => {
     setDepositAmount(amount);
   };
