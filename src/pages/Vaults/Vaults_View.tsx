@@ -110,6 +110,10 @@ const Row: React.FC<rowProp> = ({ vaultAddress, onClick }) => {
       {
         ...tokenContract,
         functionName: "symbol"
+      },
+      {
+        ...tokenContract,
+        functionName: "decimals"
       }
     ]
   });
@@ -121,11 +125,11 @@ const Row: React.FC<rowProp> = ({ vaultAddress, onClick }) => {
   };
   if (vaultData && tokenData) {
     const [bNTotalSupply, ownerAddress] = vaultData;
-    const [name, symbol] = tokenData;
+    const [name, symbol, decimals] = tokenData;
     rowData = {
       id: name as unknown as string,
       symbol: symbol as unknown as string,
-      supplied: ethers.utils.formatUnits(bNTotalSupply, 3),
+      supplied: ethers.utils.formatUnits(bNTotalSupply, decimals),
       ownerAddress: ownerAddress as unknown as string
     };
   }
