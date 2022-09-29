@@ -89,7 +89,6 @@ const DepositLogic = () => {
     spender: vaultAddress,
     decimals: tokenDecimal
   });
-
   const isEnoughAllowance = allowance > 0 && allowance >= depositAmount;
 
   const assets = ethers.utils.parseUnits(
@@ -97,21 +96,18 @@ const DepositLogic = () => {
     tokenDecimal
   );
   const receiver = ownerAddress;
-  const {
-    config: depositConfig,
-    error: prepareDepositError,
-    isError: isPrepareDepositError
-  } = usePrepareContractWrite({
-    addressOrName: vaultAddress,
-    contractInterface: vaultContractJson.abi,
-    functionName: "deposit",
-    args: [assets, receiver]
-  });
+  const { config: depositConfig, error: prepareDepositError } =
+    usePrepareContractWrite({
+      addressOrName: vaultAddress,
+      contractInterface: vaultContractJson.abi,
+      functionName: "deposit",
+      args: [assets, receiver],
+      enabled: isEnoughAllowance && depositAmount > 0
+    });
 
   const {
     data: depositData,
     error: depositError,
-    isError: isDepositError,
     write: depositContractWrite
   } = useContractWrite(depositConfig);
 
@@ -122,21 +118,17 @@ const DepositLogic = () => {
       hash: depositTxHash
     });
 
-  const {
-    config: approveConfig,
-    isError: isPrepareApproveError,
-    error: prepareApproveError
-  } = usePrepareContractWrite({
-    addressOrName: tokenAddress,
-    contractInterface: erc20ABI,
-    functionName: "approve",
-    args: [vaultAddress, ethers.constants.MaxUint256]
-  });
+  const { config: approveConfig, error: prepareApproveError } =
+    usePrepareContractWrite({
+      addressOrName: tokenAddress,
+      contractInterface: erc20ABI,
+      functionName: "approve",
+      args: [vaultAddress, ethers.constants.MaxUint256]
+    });
 
   const {
     data: approveData,
     write: approveContractWrite,
-    isError: isApproveError,
     error: approveError
   } = useContractWrite(approveConfig);
 
@@ -144,16 +136,9 @@ const DepositLogic = () => {
     hash: approveData?.hash,
     onSuccess: () => refetchAllowance()
   });
-  const shouldShowError = isEnoughAllowance && depositAmount > 0;
   const contract = {
     depositContractWrite,
     approveContractWrite,
-    isError:
-      shouldShowError &&
-      (isPrepareDepositError ||
-        isDepositError ||
-        isPrepareApproveError ||
-        isApproveError),
     errorMsg: (
       prepareDepositError ||
       depositError ||

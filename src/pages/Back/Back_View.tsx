@@ -11,7 +11,6 @@ type Props = {
   shouldButtonDisabled: boolean;
   contract: {
     write?: () => void;
-    isError: boolean;
     errorMsg?: string;
   };
   txStatus: {
@@ -79,7 +78,6 @@ const BackView: React.FC<Props> = ({
         <ContractWriteResultCard
           hash={txStatus.hash}
           isSuccess={txStatus.isSuccess}
-          isError={contract.isError}
           errorMsg={contract.errorMsg}
         />
       </div>

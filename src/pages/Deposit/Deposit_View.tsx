@@ -16,7 +16,6 @@ type Props = {
   contract: {
     depositContractWrite?: () => void;
     approveContractWrite?: () => void;
-    isError: boolean;
     errorMsg?: string;
   };
   txStatus: {
@@ -46,7 +45,7 @@ const DepositView = ({
               <input
                 type="number"
                 onChange={e => {
-                  updateDepositAmount(e.target.valueAsNumber);
+                  updateDepositAmount(e.target.valueAsNumber || 0);
                 }}
                 value={depositAmount || ""}
                 placeholder="0.0"
@@ -80,7 +79,6 @@ const DepositView = ({
         <ContractWriteResultCard
           hash={txStatus.hash}
           isSuccess={txStatus.isSuccess}
-          isError={contract.isError}
           errorMsg={contract.errorMsg}
         />
       </div>

@@ -55,11 +55,7 @@ const useBacking = (back: Back) => {
     [market_id]
   );
 
-  const {
-    config,
-    error: prepareError,
-    isError: isPrepareError
-  } = usePrepareContractWrite({
+  const { config, error: prepareError } = usePrepareContractWrite({
     addressOrName: "0xe9BC1f42bF75C59b245d39483E97C3A70c450c9b",
     contractInterface: marketContractJson.abi,
     functionName: "back",
@@ -72,13 +68,13 @@ const useBacking = (back: Back) => {
       close,
       end,
       signature
-    ]
+    ],
+    enabled: debouncedWagerAmount > 0
   });
 
   const {
     data: contractData,
     error,
-    isError,
     write: contractWrite
   } = useContractWrite(config);
 
@@ -95,7 +91,6 @@ const useBacking = (back: Back) => {
     potentialPayout,
     contract: {
       write: contractWrite,
-      isError: debouncedWagerAmount > 0 && (isPrepareError || isError),
       errorMsg: (prepareError || error)?.message
     },
     txStatus: {
