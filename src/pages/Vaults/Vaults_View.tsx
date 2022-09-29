@@ -27,7 +27,7 @@ const VaultsView: React.FC<Props> = ({ vaultAddressList, onClickVault }) => {
                       scope="col"
                       className="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase"
                     >
-                      #
+                      Name
                     </th>
                     <th
                       scope="col"
@@ -39,7 +39,7 @@ const VaultsView: React.FC<Props> = ({ vaultAddressList, onClickVault }) => {
                       scope="col"
                       className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
                     >
-                      Supplied
+                      Total Assets
                     </th>
                     <th
                       scope="col"
@@ -84,7 +84,7 @@ const Row: React.FC<rowProp> = ({ vaultAddress, onClick }) => {
     contracts: [
       {
         ...vaultContract,
-        functionName: "totalSupply"
+        functionName: "totalAssets"
       },
       {
         ...vaultContract,
@@ -120,16 +120,16 @@ const Row: React.FC<rowProp> = ({ vaultAddress, onClick }) => {
   let rowData = {
     id: "loading...",
     symbol: "loading...",
-    supplied: "loading...",
+    totalAssets: "loading...",
     ownerAddress: "loading..."
   };
   if (vaultData && tokenData) {
-    const [bNTotalSupply, ownerAddress] = vaultData;
+    const [bNTotalAssets, ownerAddress] = vaultData;
     const [name, symbol, decimals] = tokenData;
     rowData = {
       id: name as unknown as string,
       symbol: symbol as unknown as string,
-      supplied: ethers.utils.formatUnits(bNTotalSupply, decimals),
+      totalAssets: ethers.utils.formatUnits(bNTotalAssets, decimals),
       ownerAddress: ownerAddress as unknown as string
     };
   }
@@ -140,7 +140,7 @@ const Row: React.FC<rowProp> = ({ vaultAddress, onClick }) => {
       <td className="flex px-2 py-4 items-center">
         <span> {rowData.symbol} </span>
       </td>
-      <td className="px-2 py-4 whitespace-nowrap">{rowData.supplied}</td>
+      <td className="px-2 py-4 whitespace-nowrap">{rowData.totalAssets}</td>
       <td className="px-2 py-4 whitespace-nowrap">{rowData.ownerAddress}</td>
     </tr>
   );
