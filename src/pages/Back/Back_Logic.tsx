@@ -1,9 +1,8 @@
 import { ethers } from "ethers";
-import { useContext, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { useDebounce } from "use-debounce";
 import {
-  useAccount,
   useContractRead,
   useContractWrite,
   usePrepareContractWrite,
@@ -11,7 +10,6 @@ import {
 } from "wagmi";
 
 import marketContractJson from "../../abi/Market.json";
-import { WalletModalContext } from "../../providers/WalletModal";
 import { Back } from "../../types";
 import BackView from "./Back_View";
 
@@ -57,11 +55,7 @@ const useBacking = (back: Back) => {
     [market_id]
   );
 
-  const {
-    config,
-    error: prepareError,
-    isError: isPrepareError
-  } = usePrepareContractWrite({
+  const { config, error: prepareError } = usePrepareContractWrite({
     addressOrName: "0xe9BC1f42bF75C59b245d39483E97C3A70c450c9b",
     contractInterface: marketContractJson.abi,
     functionName: "back",
@@ -74,13 +68,13 @@ const useBacking = (back: Back) => {
       close,
       end,
       signature
-    ]
+    ],
+    enabled: debouncedWagerAmount > 0
   });
 
   const {
     data: contractData,
     error,
-    isError,
     write: contractWrite
   } = useContractWrite(config);
 
@@ -97,7 +91,6 @@ const useBacking = (back: Back) => {
     potentialPayout,
     contract: {
       write: contractWrite,
-      isError: isPrepareError || isError,
       errorMsg: (prepareError || error)?.message
     },
     txStatus: {
@@ -118,11 +111,8 @@ const BackLogic: React.FC = () => {
   const end = searchParams.get("end");
   // wait API fix
   // const nonce = searchParams.get("nonce");
-  const nonce = Date.now().toString();
+  const nonce = useMemo(() => Date.now().toString(), []);
   const signature = searchParams.get("signature");
-
-  const { openWalletModal } = useContext(WalletModalContext);
-  const { address } = useAccount();
 
   const back: Back = {
     nonce: nonce || "",
@@ -137,14 +127,15 @@ const BackLogic: React.FC = () => {
   const { wagerAmount, setWagerAmount, potentialPayout, contract, txStatus } =
     useBacking(back);
 
+  const shouldButtonDisabled = !contract.write || txStatus.isLoading;
+
   return (
     <BackView
       back={back}
-      openWalletModal={openWalletModal}
-      isWalletConnected={address ? true : false}
       wagerAmount={wagerAmount}
       updateWagerAmount={amount => setWagerAmount(amount || 0)}
       potentialPayout={potentialPayout}
+      shouldButtonDisabled={shouldButtonDisabled}
       contract={contract}
       txStatus={txStatus}
     />

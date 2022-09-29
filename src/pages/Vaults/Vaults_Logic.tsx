@@ -3,6 +3,7 @@ import VaultsView from "./Vaults_View";
 import registryContractJson from "../../abi/Registry.json";
 import { ethers } from "ethers";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const registryContract = {
   addressOrName: "0x5Df377d600A40fB6723e4Bf10FD5ee70e93578da",
@@ -40,7 +41,17 @@ const Vaults: React.FC = () => {
   const vaultAddressList =
     vaultDataList?.pages.map(arr => arr[0]).filter(v => v) ?? [];
 
-  return <VaultsView vaultAddressList={vaultAddressList} />;
+  const navigate = useNavigate();
+  const onClickVault = (vaultAddress: string) => {
+    navigate(`/vault/${vaultAddress}`);
+  };
+
+  return (
+    <VaultsView
+      vaultAddressList={vaultAddressList}
+      onClickVault={onClickVault}
+    />
+  );
 };
 
 export default Vaults;
