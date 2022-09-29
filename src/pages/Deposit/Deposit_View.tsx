@@ -17,6 +17,7 @@ type Props = {
     isSuccess: boolean;
     hash?: string;
   };
+  isEnoughAllowance: boolean;
 };
 const DepositView = ({
   symbol,
@@ -24,7 +25,8 @@ const DepositView = ({
   updateDepositAmount,
   shouldButtonDisabled,
   contract,
-  txStatus
+  txStatus,
+  isEnoughAllowance
 }: Props) => {
   return (
     <PageLayout requiresAuth={false}>
@@ -47,13 +49,17 @@ const DepositView = ({
             <div className="flex justify-end mt-12">
               <RequireWalletButton
                 actionButton={
-                  <button
-                    className="rounded-md border shadow-md border-gray-500 px-5 py-1"
-                    onClick={contract.write}
-                    disabled={shouldButtonDisabled}
-                  >
-                    {txStatus.isLoading ? "Backing..." : "Deposit"}
-                  </button>
+                  isEnoughAllowance ? (
+                    <button
+                      className="rounded-md border shadow-md border-gray-500 px-5 py-1"
+                      onClick={contract.write}
+                      disabled={shouldButtonDisabled}
+                    >
+                      {txStatus.isLoading ? "Backing..." : "Deposit"}
+                    </button>
+                  ) : (
+                    <button>Approve</button>
+                  )
                 }
               />
             </div>
