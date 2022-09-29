@@ -2,7 +2,6 @@ import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import DepositView from "./Deposit_View";
 import vaultContractJson from "../../abi/Vault.json";
-import mockTokenContractJson from "../../abi/MockToken.json";
 import {
   erc20ABI,
   useAccount,
@@ -58,7 +57,7 @@ const useAllowance = ({
   spender,
   decimals
 }: useAllowanceArgs) => {
-  const { data: bnAllowance } = useContractRead({
+  const { data: bnAllowance, refetch } = useContractRead({
     addressOrName: address,
     contractInterface: erc20ABI,
     functionName: "allowance",
@@ -66,9 +65,9 @@ const useAllowance = ({
   });
   const allowance = useMemo(() => {
     if (!bnAllowance) return "0";
-    return ethers.utils.formatUnits(bnAllowance, decimals);
+    return Number(ethers.utils.formatUnits(bnAllowance, decimals));
   }, [bnAllowance]);
-  return { allowance };
+  return { allowance, refetch };
 };
 
 const DepositLogic = () => {
@@ -80,18 +79,18 @@ const DepositLogic = () => {
   const {
     symbol,
     address: tokenAddress,
-    decimals: tokenDecimal //16
+    decimals: tokenDecimal
   } = useTokenData(vaultAddress);
   const [depositAmount, setDepositAmount] = useState(0);
 
-  const { allowance } = useAllowance({
+  const { allowance, refetch: refetchAllowance } = useAllowance({
     address: tokenAddress,
     owner: ownerAddress,
     spender: vaultAddress,
     decimals: tokenDecimal
   });
 
-  const isEnoughAllowance = Number(allowance) >= depositAmount;
+  const isEnoughAllowance = allowance > 0 && allowance >= depositAmount;
 
   const assets = ethers.utils.parseUnits(
     depositAmount.toString(),
@@ -99,9 +98,9 @@ const DepositLogic = () => {
   );
   const receiver = ownerAddress;
   const {
-    config,
-    error: prepareError,
-    isError: isPrepareError
+    config: depositConfig,
+    error: prepareDepositError,
+    isError: isPrepareDepositError
   } = usePrepareContractWrite({
     addressOrName: vaultAddress,
     contractInterface: vaultContractJson.abi,
@@ -110,34 +109,68 @@ const DepositLogic = () => {
   });
 
   const {
-    data: contractData,
-    error,
-    isError,
-    write: contractWrite
-  } = useContractWrite(config);
+    data: depositData,
+    error: depositError,
+    isError: isDepositError,
+    write: depositContractWrite
+  } = useContractWrite(depositConfig);
 
-  const txHash = contractData?.hash;
+  const depositTxHash = depositData?.hash;
 
-  const { isLoading: isTxLoading, isSuccess: isTxSuccess } =
+  const { isLoading: isDepositTxLoading, isSuccess: isDepositTxSuccess } =
     useWaitForTransaction({
-      hash: txHash
+      hash: depositTxHash
     });
 
+  const {
+    config: approveConfig,
+    isError: isPrepareApproveError,
+    error: prepareApproveError
+  } = usePrepareContractWrite({
+    addressOrName: tokenAddress,
+    contractInterface: erc20ABI,
+    functionName: "approve",
+    args: [vaultAddress, ethers.constants.MaxUint256]
+  });
+
+  const {
+    data: approveData,
+    write: approveContractWrite,
+    isError: isApproveError,
+    error: approveError
+  } = useContractWrite(approveConfig);
+
+  const { isLoading: isApproveTxLoading } = useWaitForTransaction({
+    hash: approveData?.hash,
+    onSuccess: () => refetchAllowance()
+  });
+  const shouldShowError = isEnoughAllowance && depositAmount > 0;
   const contract = {
-    write: contractWrite,
-    isError: depositAmount > 0 && (isPrepareError || isError),
-    errorMsg: (prepareError || error)?.message
+    depositContractWrite,
+    approveContractWrite,
+    isError:
+      shouldShowError &&
+      (isPrepareDepositError ||
+        isDepositError ||
+        isPrepareApproveError ||
+        isApproveError),
+    errorMsg: (
+      prepareDepositError ||
+      depositError ||
+      prepareApproveError ||
+      approveError
+    )?.message
   };
   const txStatus = {
-    isLoading: isTxLoading,
-    isSuccess: isTxSuccess,
-    hash: txHash
+    isLoading: isDepositTxLoading || isApproveTxLoading,
+    isSuccess: isDepositTxSuccess,
+    hash: depositTxHash
   };
   const updateDepositAmount = (amount: number) => {
     setDepositAmount(amount);
   };
   const shouldButtonDisabled =
-    depositAmount == 0 || !contract.write || txStatus.isLoading;
+    depositAmount == 0 || !contract?.depositContractWrite || txStatus.isLoading;
   return (
     <DepositView
       symbol={symbol}

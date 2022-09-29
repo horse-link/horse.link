@@ -1,6 +1,12 @@
 import { PageLayout } from "../../components";
 import ContractWriteResultCard from "../../components/ContractWriteResultCard/ContractWriteResultCard_View";
 import RequireWalletButton from "../../components/RequireWalletButton/RequireWalletButton_View";
+import {
+  erc20ABI,
+  useContractWrite,
+  usePrepareContractWrite,
+  useWaitForTransaction
+} from "wagmi";
 
 type Props = {
   symbol: string;
@@ -8,7 +14,8 @@ type Props = {
   updateDepositAmount: (amount: number) => void;
   shouldButtonDisabled: boolean;
   contract: {
-    write?: () => void;
+    depositContractWrite?: () => void;
+    approveContractWrite?: () => void;
     isError: boolean;
     errorMsg?: string;
   };
@@ -52,13 +59,18 @@ const DepositView = ({
                   isEnoughAllowance ? (
                     <button
                       className="rounded-md border shadow-md border-gray-500 px-5 py-1"
-                      onClick={contract.write}
+                      onClick={contract.depositContractWrite}
                       disabled={shouldButtonDisabled}
                     >
                       {txStatus.isLoading ? "Backing..." : "Deposit"}
                     </button>
                   ) : (
-                    <button>Approve</button>
+                    <button
+                      className="rounded-md border shadow-md border-gray-500 px-5 py-1"
+                      onClick={contract.approveContractWrite}
+                    >
+                      {txStatus.isLoading ? "Approving funds..." : "Approve"}
+                    </button>
                   )
                 }
               />
