@@ -1,6 +1,7 @@
 import { useContractReads } from "wagmi";
 import { PageLayout } from "../../components";
 import vaultContractJson from "../../abi/Vault.json";
+import mockTokenContractJson from "../../abi/MockToken.json";
 import { ethers } from "ethers";
 
 type Props = {
@@ -79,16 +80,8 @@ const Row: React.FC<rowProp> = ({ vaultAddress, onClick }) => {
     contractInterface: vaultContractJson.abi
   };
 
-  const { data, isLoading } = useContractReads({
+  const { data: vaultData } = useContractReads({
     contracts: [
-      {
-        ...vaultContract,
-        functionName: "name"
-      },
-      {
-        ...vaultContract,
-        functionName: "symbol"
-      },
       {
         ...vaultContract,
         functionName: "totalSupply"
@@ -96,6 +89,27 @@ const Row: React.FC<rowProp> = ({ vaultAddress, onClick }) => {
       {
         ...vaultContract,
         functionName: "owner"
+      },
+      {
+        ...vaultContract,
+        functionName: "asset"
+      }
+    ]
+  });
+  const tokenAddress = vaultData?.[2].toString();
+  const tokenContract = {
+    addressOrName: tokenAddress || "",
+    contractInterface: mockTokenContractJson.abi
+  };
+  const { data: tokenData } = useContractReads({
+    contracts: [
+      {
+        ...tokenContract,
+        functionName: "name"
+      },
+      {
+        ...tokenContract,
+        functionName: "symbol"
       }
     ]
   });
@@ -105,8 +119,9 @@ const Row: React.FC<rowProp> = ({ vaultAddress, onClick }) => {
     supplied: "loading...",
     ownerAddress: "loading..."
   };
-  if (!isLoading && data) {
-    const [name, symbol, bNTotalSupply, ownerAddress] = data;
+  if (vaultData && tokenData) {
+    const [bNTotalSupply, ownerAddress] = vaultData;
+    const [name, symbol] = tokenData;
     rowData = {
       id: name as unknown as string,
       symbol: symbol as unknown as string,
