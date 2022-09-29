@@ -70,6 +70,87 @@ const useAllowance = ({
   return { allowance, refetch };
 };
 
+type useDepositContractWriteArgs = {
+  depositAmount: number;
+  tokenDecimal: string;
+  ownerAddress: string;
+  vaultAddress: string;
+  enabled: boolean;
+};
+const useDepositContractWrite = ({
+  depositAmount,
+  tokenDecimal,
+  ownerAddress,
+  vaultAddress,
+  enabled
+}: useDepositContractWriteArgs) => {
+  const assets = ethers.utils.parseUnits(
+    depositAmount.toString(),
+    tokenDecimal
+  );
+  const receiver = ownerAddress;
+  const { config, error: prepareError } = usePrepareContractWrite({
+    addressOrName: vaultAddress,
+    contractInterface: vaultContractJson.abi,
+    functionName: "deposit",
+    args: [assets, receiver],
+    enabled
+  });
+
+  const {
+    data: depositData,
+    error: writeError,
+    write
+  } = useContractWrite(config);
+
+  const depositTxHash = depositData?.hash;
+
+  const { isLoading: isTxLoading, isSuccess: isTxSuccess } =
+    useWaitForTransaction({
+      hash: depositTxHash
+    });
+
+  return {
+    write,
+    error: prepareError || writeError,
+    isTxLoading,
+    isTxSuccess,
+    depositTxHash
+  };
+};
+
+type useApproveContractWriteArgs = {
+  tokenAddress: string;
+  vaultAddress: string;
+  onTxSuccess: () => void;
+};
+
+const useApproveContractWrite = ({
+  tokenAddress,
+  vaultAddress,
+  onTxSuccess
+}: useApproveContractWriteArgs) => {
+  const { config, error: prepareError } = usePrepareContractWrite({
+    addressOrName: tokenAddress,
+    contractInterface: erc20ABI,
+    functionName: "approve",
+    args: [vaultAddress, ethers.constants.MaxUint256]
+  });
+
+  const {
+    data: approveData,
+    write,
+    error: writeError
+  } = useContractWrite(config);
+
+  const { isLoading: isTxLoading } = useWaitForTransaction({
+    hash: approveData?.hash,
+    onSuccess: onTxSuccess
+  });
+
+  return { write, error: prepareError || writeError, isTxLoading };
+};
+
 const DepositLogic = () => {
   const { vaultAddress: vaultAddressParam } = useParams();
   const { address } = useAccount();
@@ -91,60 +172,34 @@ const DepositLogic = () => {
   });
   const isEnoughAllowance = allowance > 0 && allowance >= depositAmount;
 
-  const assets = ethers.utils.parseUnits(
-    depositAmount.toString(),
-    tokenDecimal
-  );
-  const receiver = ownerAddress;
-  const { config: depositConfig, error: prepareDepositError } =
-    usePrepareContractWrite({
-      addressOrName: vaultAddress,
-      contractInterface: vaultContractJson.abi,
-      functionName: "deposit",
-      args: [assets, receiver],
-      enabled: isEnoughAllowance && depositAmount > 0
-    });
-
   const {
-    data: depositData,
+    write: depositContractWrite,
     error: depositError,
-    write: depositContractWrite
-  } = useContractWrite(depositConfig);
-
-  const depositTxHash = depositData?.hash;
-
-  const { isLoading: isDepositTxLoading, isSuccess: isDepositTxSuccess } =
-    useWaitForTransaction({
-      hash: depositTxHash
-    });
-
-  const { config: approveConfig, error: prepareApproveError } =
-    usePrepareContractWrite({
-      addressOrName: tokenAddress,
-      contractInterface: erc20ABI,
-      functionName: "approve",
-      args: [vaultAddress, ethers.constants.MaxUint256]
-    });
+    isTxLoading: isDepositTxLoading,
+    isTxSuccess: isDepositTxSuccess,
+    depositTxHash
+  } = useDepositContractWrite({
+    depositAmount,
+    tokenDecimal,
+    ownerAddress,
+    vaultAddress,
+    enabled: depositAmount > 0 && isEnoughAllowance
+  });
 
   const {
-    data: approveData,
     write: approveContractWrite,
-    error: approveError
-  } = useContractWrite(approveConfig);
-
-  const { isLoading: isApproveTxLoading } = useWaitForTransaction({
-    hash: approveData?.hash,
-    onSuccess: () => refetchAllowance()
+    error: approveError,
+    isTxLoading: isApproveTxLoading
+  } = useApproveContractWrite({
+    tokenAddress,
+    vaultAddress,
+    onTxSuccess: () => refetchAllowance()
   });
+
   const contract = {
     depositContractWrite,
     approveContractWrite,
-    errorMsg: (
-      prepareDepositError ||
-      depositError ||
-      prepareApproveError ||
-      approveError
-    )?.message
+    errorMsg: (depositError || approveError)?.message
   };
   const txStatus = {
     isLoading: isDepositTxLoading || isApproveTxLoading,
@@ -154,14 +209,14 @@ const DepositLogic = () => {
   const updateDepositAmount = (amount: number) => {
     setDepositAmount(amount);
   };
-  const shouldButtonDisabled =
+  const shouldDepositButtonDisabled =
     depositAmount == 0 || !contract?.depositContractWrite || txStatus.isLoading;
   return (
     <DepositView
       symbol={symbol}
       depositAmount={depositAmount}
       updateDepositAmount={updateDepositAmount}
-      shouldButtonDisabled={shouldButtonDisabled}
+      shouldDepositButtonDisabled={shouldDepositButtonDisabled}
       contract={contract}
       txStatus={txStatus}
       isEnoughAllowance={isEnoughAllowance}
