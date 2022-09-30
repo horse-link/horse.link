@@ -51,7 +51,7 @@ const DepositView = ({
                 actionButton={
                   isEnoughAllowance ? (
                     <button
-                      className="rounded-md border shadow-md border-gray-500 px-5 py-1"
+                      className="px-5 py-1 hover:bg-gray-100 rounded-md border border-gray-500 shadow-md"
                       onClick={contract.depositContractWrite}
                       disabled={shouldDepositButtonDisabled}
                     >
@@ -59,7 +59,7 @@ const DepositView = ({
                     </button>
                   ) : (
                     <button
-                      className="rounded-md border shadow-md border-gray-500 px-5 py-1"
+                      className="px-5 py-1 hover:bg-gray-100 rounded-md border border-gray-500 shadow-md "
                       onClick={contract.approveContractWrite}
                     >
                       {txStatus.isLoading ? "Approving funds..." : "Approve"}
