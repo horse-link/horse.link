@@ -43,7 +43,7 @@ const Vaults: React.FC = () => {
 
   const navigate = useNavigate();
   const onClickVault = (vaultAddress: string) => {
-    navigate(`/vault/${vaultAddress}`);
+    navigate(`/vaults/${vaultAddress}`);
   };
 
   return (
