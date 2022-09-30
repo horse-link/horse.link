@@ -38,7 +38,7 @@ const useVaultData = (vaultAddress: string, userAddress: string) => {
   const userBalance =
     bnUserBalance && ethers.utils.formatUnits(bnUserBalance, decimals);
   const performance =
-    bnPerformance && ethers.utils.formatUnits(bnPerformance, 0);
+    bnPerformance && ethers.utils.formatUnits(bnPerformance, 4);
   return {
     vaultBalance,
     userBalance,
