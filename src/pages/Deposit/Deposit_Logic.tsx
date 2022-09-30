@@ -6,44 +6,12 @@ import {
   erc20ABI,
   useAccount,
   useContractRead,
-  useContractReads,
   useContractWrite,
   usePrepareContractWrite,
   useWaitForTransaction
 } from "wagmi";
 import { ethers } from "ethers";
-
-const useTokenData = (vaultAddress: string) => {
-  const { data: vaultData } = useContractRead({
-    addressOrName: vaultAddress,
-    contractInterface: vaultContractJson.abi,
-    functionName: "asset"
-  });
-  const tokenAddress = vaultData?.toString() ?? "";
-  const { data: tokenData } = useContractReads({
-    contracts: [
-      {
-        addressOrName: tokenAddress,
-        contractInterface: erc20ABI,
-        functionName: "symbol"
-      },
-
-      {
-        addressOrName: tokenAddress,
-        contractInterface: erc20ABI,
-        functionName: "decimals"
-      }
-    ]
-  });
-
-  const [tokenSymbol, decimals] = tokenData || [];
-
-  return {
-    symbol: tokenSymbol?.toString() ?? "",
-    address: tokenAddress,
-    decimals: decimals?.toString() ?? 0
-  };
-};
+import useTokenData from "../../hooks/useTokenData";
 
 type useAllowanceArgs = {
   address: string;

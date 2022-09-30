@@ -17,49 +17,47 @@ const VaultsView: React.FC<Props> = ({ vaultAddressList, onClickVault }) => {
         <h3 className="text-lg mb-3 font-medium text-gray-900">
           Vaults / Liquidity Pools
         </h3>
-        <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-          <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-            <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th
-                      scope="col"
-                      className="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase"
-                    >
-                      Name
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
-                    >
-                      Token
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
-                    >
-                      Total Assets
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
-                    >
-                      Owner Address
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {vaultAddressList.map(v => (
-                    <Row
-                      vaultAddress={v}
-                      key={v}
-                      onClick={() => onClickVault(v)}
-                    />
-                  ))}
-                </tbody>
-              </table>
-            </div>
+        <div className="bg-gray-50 rounded-xl overflow-auto">
+          <div className="shadow-sm overflow-hidden mt-2 mb-5">
+            <table className="border-collapse table-auto w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th
+                    scope="col"
+                    className="pl-5 pr-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
+                  >
+                    Name
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
+                  >
+                    Token
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
+                  >
+                    Total Assets
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
+                  >
+                    Owner Address
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {vaultAddressList.map(v => (
+                  <Row
+                    vaultAddress={v}
+                    key={v}
+                    onClick={() => onClickVault(v)}
+                  />
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -135,8 +133,12 @@ const Row: React.FC<rowProp> = ({ vaultAddress, onClick }) => {
   }
 
   return (
-    <tr key={rowData.id} onClick={onClick} className="cursor-pointer">
-      <td className="px-2 py-4 whitespace-nowrap"> {rowData.id} </td>
+    <tr
+      key={rowData.id}
+      onClick={onClick}
+      className="cursor-pointer hover:bg-gray-100"
+    >
+      <td className="pl-5 pr-2 py-4 whitespace-nowrap"> {rowData.id} </td>
       <td className="flex px-2 py-4 items-center">
         <span> {rowData.symbol} </span>
       </td>

@@ -64,7 +64,7 @@ const BackView: React.FC<Props> = ({
               <RequireWalletButton
                 actionButton={
                   <button
-                    className="rounded-md border shadow-md border-gray-500 px-5 py-1"
+                    className="px-5 py-1 hover:bg-gray-100 rounded-md border border-gray-500 shadow-md"
                     onClick={contract.write}
                     disabled={shouldButtonDisabled}
                   >
