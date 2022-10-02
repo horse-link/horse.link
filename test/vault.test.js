@@ -8,12 +8,14 @@ contract("Vault", accounts => {
   let vault;
   let market;
 
-  let owner = accounts[0];
-  let alice = accounts[1];
+  const owner = accounts[0];
+  const alice = accounts[1];
+  const bob = accounts[2];
 
   beforeEach(async () => {
     underlying = await Token.new("Mock USDT", "USDT");
-    await underlying.transfer(alice, 2000);
+    await underlying.transfer(alice, 2000, { from: owner });
+    await underlying.transfer(bob, 2000, { from: owner });
 
     vault = await Vault.new(underlying.address);
 
@@ -68,6 +70,32 @@ contract("Vault", accounts => {
 
       const totalAssets = await vault.totalAssets();
       assert.equal(totalAssets, 100, "Should have $100 USDT");
+
+      // check the vault's performance
+      const vaultPerformance = await vault.getPerformance();
+      // assert.equal(
+      //   vaultPerformance,
+      //   100,
+      //   "Vault performance should be 100 with no bets"
+      // );
+
+      const shareBalance = await vault.balanceOf(alice);
+      assert.equal(shareBalance, 100, "Should have 100 shares");
+    });
+
+    it.skip("should deposit $100 USDT from alice and bob and have correct amount of shares", async () => {
+      await underlying.approve(vault.address, 100, { from: alice });
+      await vault.deposit(100, alice, { from: alice });
+
+      await underlying.approve(vault.address, 100, { from: bob });
+      await vault.deposit(100, bob, { from: bob });
+
+      // check vault balance
+      const vaultBalance = await underlying.balanceOf(vault.address);
+      assert.equal(vaultBalance, 200, "Should have $200 USDT");
+
+      const totalAssets = await vault.totalAssets();
+      assert.equal(totalAssets, 200, "Should have $200 USDT");
 
       // check the vault's performance
       const vaultPerformance = await vault.getPerformance();
