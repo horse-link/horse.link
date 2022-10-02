@@ -163,15 +163,17 @@ contract Vault is Ownable, IERC20, IVault {
         if (receiver == address(0))
             receiver = _msgSender();
 
+
+        uint256 shares;
+        if (_totalSupply == 0) {
+            shares = assets;
+        } else {
+            shares = (assets * _totalSupply) / _totalAssets();
+        }
+
+        _mint(receiver, shares);
         IERC20(_underlying).transferFrom(receiver, _self, assets);
-
-        _balances[receiver] += assets;
-        _totalSupply += assets;
-
         IERC20(_underlying).approve(_market, _totalSupply);
-
-        // todo: mint LP token
-        _shares[receiver] += assets;
 
         emit Deposit(receiver, assets);
         shares = _balances[receiver];
@@ -193,11 +195,11 @@ contract Vault is Ownable, IERC20, IVault {
     }
 
     // Exit your position
-    function withdraw() external {
+    function withdraw(uint256 shares) external {
         uint256 balance = _balances[msg.sender];
-        require(balance > 0, "You have no position to exit");
+        require(balance >= shares, "withdraw: You do not have enough shares");
 
-        uint256 amount = _previewWithdraw(balance);
+        uint256 amount = _previewWithdraw(shares);
         _totalSupply -= balance;
         _balances[msg.sender] = 0;
         
@@ -206,6 +208,26 @@ contract Vault is Ownable, IERC20, IVault {
         // decreaseAllowance(_market, amount);
 
         emit Withdraw(msg.sender, balance);
+    }
+
+    function _mint(address account, uint256 amount) private {
+        require(account != address(0), "_mint: mint to the zero address");
+
+        _totalSupply += amount;
+        _balances[account] += amount;
+        emit Transfer(address(0), account, amount);
+    }
+
+    function _burn(address account, uint256 amount) private {
+        require(account != address(0), "_burn: burn from the zero address");
+
+        uint256 accountBalance = _balances[account];
+        require(accountBalance >= amount, "_burn: burn amount exceeds balance");
+
+        _balances[account] -= amount;
+        _totalSupply -= amount;
+
+        emit Transfer(account, address(0), amount);
     }
 
     function _transfer(address from, address to,uint256 amount) internal {

@@ -5,7 +5,7 @@ const MockToken = artifacts.require("MockToken");
 
 contract("Registry", () => {
   describe("Registry", () => {
-    it.only("should have market and vault counts", async () => {
+    it("should have market and vault counts", async () => {
       const underlying = await MockToken.new("Mock USDT", "USDT");
       const registry = await Registry.new();
 
