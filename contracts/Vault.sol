@@ -88,11 +88,41 @@ contract Vault is Ownable, IERC20, IVault {
     //     return IERC20(_underlying).balanceOf(_market);
     // }
 
-    function _totalAssets() private view returns (uint256) {
-        uint256 underlyingBalance = IERC20(_underlying).balanceOf(_self);
+    function convertToAssets(uint256 shares) external view returns (uint256 assets) {
+        return _convertToAssets(shares);
+    }
+
+    function _convertToAssets(uint256 shares) private view returns (uint256 assets) {
+        // return _convertToAssets(amount);
+        uint256 underlyingBalance = _totalAssets();
         uint256 inPlay = IERC20(_underlying).balanceOf(_market);
 
-        return underlyingBalance - inPlay;
+        assets = shares / (underlyingBalance - inPlay);
+    }
+
+    function convertToShares(uint256 assets) external view returns (uint256 shares) {
+        return _convertToShares(assets);
+    }
+
+    function _convertToShares(uint256 assets) private view returns (uint256 shares) {
+        if (_totalAssets() == 0) {
+            shares = assets;
+        } else {
+            shares = (assets * _totalSupply) / _totalAssets();
+        }
+    }
+
+    // IERC4626
+    function asset() external view returns (address assetTokenAddress) {
+        return _underlying;
+    }
+
+    function totalAssets() external view returns (uint256) {
+        return _totalAssets();
+    }
+
+    function _totalAssets() private view returns (uint256) {
+        return IERC20(_underlying).balanceOf(_self);
     }
 
     constructor(address underlying) {
@@ -146,15 +176,6 @@ contract Vault is Ownable, IERC20, IVault {
         return true;
     }
 
-    // IERC4626
-    function asset() external view returns (address assetTokenAddress) {
-        return _underlying;
-    }
-
-    function totalAssets() external view returns (uint256) {
-        return IERC20(_underlying).balanceOf(_self);
-    }
-
     // Add underlying tokens to the pool
     function deposit(uint256 assets, address receiver) external returns (uint256 shares) {
         require(assets > 0, "Value must be greater than 0");
@@ -163,20 +184,13 @@ contract Vault is Ownable, IERC20, IVault {
         if (receiver == address(0))
             receiver = _msgSender();
 
-
-        uint256 shares;
-        if (_totalSupply == 0) {
-            shares = assets;
-        } else {
-            shares = (assets * _totalSupply) / _totalAssets();
-        }
-
+        shares = _convertToShares(assets);
         _mint(receiver, shares);
+
         IERC20(_underlying).transferFrom(receiver, _self, assets);
         IERC20(_underlying).approve(_market, _totalSupply);
 
         emit Deposit(receiver, assets);
-        shares = _balances[receiver];
     }
 
     function maxWithdraw(address owner) external view returns (uint256 maxAssets) {
