@@ -83,7 +83,7 @@ contract("Vault", accounts => {
       assert.equal(shareBalance, 100, "Should have 100 shares");
     });
 
-    it.skip("should deposit $100 USDT from alice and bob and have correct amount of shares", async () => {
+    it("should deposit $100 USDT from alice and bob and have correct amount of shares", async () => {
       await underlying.approve(vault.address, 100, { from: alice });
       await vault.deposit(100, alice, { from: alice });
 
@@ -104,9 +104,9 @@ contract("Vault", accounts => {
       //   100,
       //   "Vault performance should be 100 with no bets"
       // );
-
-      const shareBalance = await vault.balanceOf(alice);
-      assert.equal(shareBalance, 100, "Should have 100 shares");
+      
+      assert.equal(await vault.balanceOf(alice), 100, "Should have 100 shares");
+      assert.equal(await vault.balanceOf(bob), 100, "Should have 100 shares");
     });
 
     it.skip("should exit from vault", async () => {
