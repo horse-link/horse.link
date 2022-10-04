@@ -23,7 +23,7 @@ const VaultView = ({
         <div className="max-w-xl p-5 bg-white rounded-md">
           <h1 className="text-3xl">{tokenSymbol} Vault</h1>
           <div className="mt-2 break-all">Vault Address: {vaultAddress}</div>
-          <div>Vault Balance: {vaultBalance}</div>
+          <div>TLV: {vaultBalance}</div>
           <div>
             My Balance: {userBalance ?? "connect wallet to see your balance"}
           </div>
