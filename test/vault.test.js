@@ -112,19 +112,19 @@ contract("Vault", accounts => {
     it.skip("should exit from vault", async () => {
       // check alice balance
       let balance = await underlying.balanceOf(alice);
-      assert.equal(balance, 100, "Should have 100 tokens");
+      assert.equal(balance, 100, "Should have 100 USDT");
 
       await underlying.approve(vault.address, 10, { from: alice });
       await vault.deposit(10, { from: alice });
 
       // check alice balance
       balance = await underlying.balanceOf(alice);
-      assert.equal(balance, 90, "Should have 90 tokens");
+      assert.equal(balance, 90, "Should have 90 USDT");
 
       await vault.exit({ from: alice });
 
       balance = await underlying.balanceOf(alice);
-      assert.equal(balance, 100, "Should have 100 tokens");
+      assert.equal(balance, 100, "Should have 100 USDT");
     });
   });
 });

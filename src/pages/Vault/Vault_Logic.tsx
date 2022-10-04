@@ -28,10 +28,14 @@ const useVaultData = (vaultAddress: string, userAddress: string) => {
       {
         ...vaultContract,
         functionName: "decimals"
+      },
+      {
+        ...vaultContract,
+        functionName: "asset"
       }
     ]
   });
-  const [bnVaultBalance, bnUserBalance, bnPerformance, decimals] =
+  const [bnVaultBalance, bnUserBalance, bnPerformance, decimals, asset] =
     vaultData ?? [];
   const vaultBalance =
     bnVaultBalance && ethers.utils.formatUnits(bnVaultBalance, decimals);
@@ -39,10 +43,12 @@ const useVaultData = (vaultAddress: string, userAddress: string) => {
     bnUserBalance && ethers.utils.formatUnits(bnUserBalance, decimals);
   const performance =
     bnPerformance && ethers.utils.formatUnits(bnPerformance, 4);
+  const _asset = asset && String(asset);
   return {
     vaultBalance,
     userBalance,
-    performance
+    performance,
+    _asset
   };
 };
 
@@ -56,7 +62,7 @@ const Vault: React.FC = () => {
 
   const { symbol: tokenSymbol } = useTokenData(vaultAddress);
 
-  const { vaultBalance, userBalance, performance } = useVaultData(
+  const { vaultBalance, userBalance, performance, _asset } = useVaultData(
     vaultAddress,
     userAddress
   );
@@ -72,6 +78,7 @@ const Vault: React.FC = () => {
       vaultBalance={vaultBalance}
       userBalance={userBalance}
       performance={performance}
+      asset={_asset}
       onClickDeposit={onClickDeposit}
     />
   );
