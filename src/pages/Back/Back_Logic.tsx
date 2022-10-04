@@ -26,14 +26,17 @@ const useBacking = (back: Back) => {
     () => ethers.utils.formatBytes32String(proposition_id),
     [proposition_id]
   );
+
   const bnOdds = useMemo(
     () => ethers.utils.parseUnits(odds.toString(), DECIMALS),
     [odds]
   );
+
   const bnWager = useMemo(
     () => ethers.utils.parseUnits(debouncedWagerAmount.toString(), DECIMALS),
     [debouncedWagerAmount]
   );
+
   const { data: bnPotentialPayout } = useContractRead({
     addressOrName: "0xe9BC1f42bF75C59b245d39483E97C3A70c450c9b",
     contractInterface: marketContractJson.abi,
@@ -50,6 +53,7 @@ const useBacking = (back: Back) => {
     () => ethers.utils.formatBytes32String(nonce),
     [nonce]
   );
+
   const b32MarketId = useMemo(
     () => ethers.utils.formatBytes32String(market_id),
     [market_id]
