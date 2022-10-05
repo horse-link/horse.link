@@ -5,7 +5,7 @@ export default class Api {
   private client: AxiosInstance;
   constructor() {
     this.client = axios.create({
-      baseURL: process.env.REACT_APP_API_URL || "http://localhost:3002"
+      baseURL: process.env.REACT_APP_API_URL || "https://api.horse.link"
     });
   }
   public getMeetings = async (): Promise<SignedMeetingsResponse> => {

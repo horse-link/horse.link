@@ -6,6 +6,9 @@ Offical Dapp for https://horse.link
 
 Market makers can run the the dapp and set their own odds
 
+# The API
+Our own odds can be found at https://api.horse.link/.  These requests are signed by the owner.
+
 ## Goerli
 
 Owner: `0x1Ab4C6d9e25Fc65C917aFBEfB4E963C400Fb9814`  

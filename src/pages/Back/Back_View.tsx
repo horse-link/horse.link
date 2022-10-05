@@ -35,20 +35,23 @@ const BackView: React.FC<Props> = ({
         <div className="w-96 px-10 pt-5 pb-3 rounded-md shadow border-b bg-white border-gray-200 sm:rounded-lg">
           <div className="text-3xl">Target odds {back.odds}</div>
           <form>
-            <select name="markets" id="markets">
-              <option value="0xe9BC1f42bF75C59b245d39483E97C3A70c450c9b">
-                USDT
-              </option>
-              <option value="0xe9BC1f42bF75C59b245d39483E97C3A70c450c9b1">
-                DIA
-              </option>
-              <option value="0xe9BC1f42bF75C59b245d39483E97C3A70c450c9b2">
-                wBTC
-              </option>
-              <option value="0xe9BC1f42bF75C59b245d39483E97C3A70c450c9b3">
-                wETH
-              </option>
-            </select>
+            <div className="flex flex-col">
+              <label>Market</label>
+              <select name="markets" id="markets">
+                <option value="0xe9BC1f42bF75C59b245d39483E97C3A70c450c9b">
+                  USDT
+                </option>
+                <option value="0xe9BC1f42bF75C59b245d39483E97C3A70c450c9b1">
+                  DIA
+                </option>
+                <option value="0xe9BC1f42bF75C59b245d39483E97C3A70c450c9b2">
+                  wBTC
+                </option>
+                <option value="0xe9BC1f42bF75C59b245d39483E97C3A70c450c9b3">
+                  wETH
+                </option>
+              </select>
+            </div>
             <div className="flex flex-col">
               <label>
                 <span>Wager amount</span>
