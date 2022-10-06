@@ -10,6 +10,7 @@ import {
 } from "wagmi";
 
 import marketContractJson from "../../abi/Market.json";
+import useMarkets from "../../hooks/useMarkets";
 import { Back } from "../../types";
 import BackView from "./Back_View";
 
@@ -131,11 +132,14 @@ const BackLogic: React.FC = () => {
   const { wagerAmount, setWagerAmount, potentialPayout, contract, txStatus } =
     useBacking(back);
 
+  const { marketAddresses } = useMarkets();
+
   const shouldButtonDisabled = !contract.write || txStatus.isLoading;
 
   return (
     <BackView
       back={back}
+      marketAddresses={marketAddresses}
       wagerAmount={wagerAmount}
       updateWagerAmount={amount => setWagerAmount(amount || 0)}
       potentialPayout={potentialPayout}

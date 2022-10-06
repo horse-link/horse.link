@@ -5,6 +5,7 @@ import { Back } from "../../types";
 
 type Props = {
   back: Back;
+  marketAddresses: string[];
   wagerAmount: number;
   updateWagerAmount: (amount: number) => void;
   potentialPayout: string;
@@ -22,6 +23,7 @@ type Props = {
 
 const BackView: React.FC<Props> = ({
   back,
+  marketAddresses,
   wagerAmount,
   updateWagerAmount,
   potentialPayout,
@@ -38,18 +40,9 @@ const BackView: React.FC<Props> = ({
             <div className="flex flex-col">
               <label>Market</label>
               <select name="markets" id="markets">
-                <option value="0xe9BC1f42bF75C59b245d39483E97C3A70c450c9b">
-                  USDT
-                </option>
-                <option value="0xe9BC1f42bF75C59b245d39483E97C3A70c450c9b1">
-                  DIA
-                </option>
-                <option value="0xe9BC1f42bF75C59b245d39483E97C3A70c450c9b2">
-                  wBTC
-                </option>
-                <option value="0xe9BC1f42bF75C59b245d39483E97C3A70c450c9b3">
-                  wETH
-                </option>
+                {marketAddresses.map(address => (
+                  <MarketOption contractAddress={address} />
+                ))}
               </select>
             </div>
             <div className="flex flex-col">
@@ -103,3 +96,15 @@ const BackView: React.FC<Props> = ({
 };
 
 export default BackView;
+
+type marketOptionProps = {
+  contractAddress: string;
+};
+
+const MarketOption = ({ contractAddress }: marketOptionProps) => {
+  return (
+    <option key={contractAddress} value={contractAddress}>
+      {contractAddress}
+    </option>
+  );
+};
