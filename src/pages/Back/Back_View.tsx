@@ -1,11 +1,16 @@
+import { useContractRead } from "wagmi";
 import { PageLayout } from "../../components";
 import ContractWriteResultCard from "../../components/ContractWriteResultCard/ContractWriteResultCard_View";
 import RequireWalletButton from "../../components/RequireWalletButton/RequireWalletButton_View";
 import { Back } from "../../types";
+import marketContract from "../../abi/Market.json";
+import vaultContractJson from "../../abi/Vault.json";
 
 type Props = {
   back: Back;
-  marketAddresses: string[];
+  markets: string[];
+  selectedMarket: string;
+  setSelectedMarket: (address: string) => void;
   wagerAmount: number;
   updateWagerAmount: (amount: number) => void;
   potentialPayout: string;
@@ -23,7 +28,9 @@ type Props = {
 
 const BackView: React.FC<Props> = ({
   back,
-  marketAddresses,
+  markets,
+  selectedMarket,
+  setSelectedMarket,
   wagerAmount,
   updateWagerAmount,
   potentialPayout,
@@ -39,9 +46,14 @@ const BackView: React.FC<Props> = ({
           <form>
             <div className="flex flex-col">
               <label>Market</label>
-              <select name="markets" id="markets">
-                {marketAddresses.map(address => (
-                  <MarketOption contractAddress={address} />
+              <select
+                value={selectedMarket}
+                onChange={e => setSelectedMarket(e.target.value)}
+                name="markets"
+                id="markets"
+              >
+                {markets.map(address => (
+                  <MarketOption key={address} contractAddress={address} />
                 ))}
               </select>
             </div>
@@ -102,9 +114,16 @@ type marketOptionProps = {
 };
 
 const MarketOption = ({ contractAddress }: marketOptionProps) => {
-  return (
-    <option key={contractAddress} value={contractAddress}>
-      {contractAddress}
-    </option>
-  );
+  const { data: vaultAddressData } = useContractRead({
+    addressOrName: contractAddress,
+    contractInterface: marketContract.abi,
+    functionName: "getVaultAddress"
+  });
+  const { data: vaultNameData } = useContractRead({
+    addressOrName: vaultAddressData?.toString() ?? "",
+    contractInterface: vaultContractJson.abi,
+    functionName: "name",
+    enabled: !!vaultAddressData
+  });
+  return <option value={contractAddress}>{vaultNameData}</option>;
 };

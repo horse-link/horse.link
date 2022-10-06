@@ -16,11 +16,14 @@ import BackView from "./Back_View";
 
 const DECIMALS = 6;
 
-const useBacking = (back: Back) => {
+const useBackingContract = (
+  back: Back,
+  wagerAmount: number,
+  marketAddress: string
+) => {
   const { nonce, odds, proposition_id, market_id, close, end, signature } =
     back;
 
-  const [wagerAmount, setWagerAmount] = useState<number>(0);
   const [debouncedWagerAmount] = useDebounce(wagerAmount, 500);
 
   const b32PropositionId = useMemo(
@@ -39,7 +42,7 @@ const useBacking = (back: Back) => {
   );
 
   const { data: bnPotentialPayout } = useContractRead({
-    addressOrName: "0xe9BC1f42bF75C59b245d39483E97C3A70c450c9b",
+    addressOrName: marketAddress,
     contractInterface: marketContractJson.abi,
     functionName: "getPotentialPayout",
     args: [b32PropositionId, bnWager, bnOdds]
@@ -61,7 +64,7 @@ const useBacking = (back: Back) => {
   );
 
   const { config, error: prepareError } = usePrepareContractWrite({
-    addressOrName: "0xe9BC1f42bF75C59b245d39483E97C3A70c450c9b",
+    addressOrName: marketAddress,
     contractInterface: marketContractJson.abi,
     functionName: "back",
     args: [
@@ -91,8 +94,6 @@ const useBacking = (back: Back) => {
     });
 
   return {
-    wagerAmount,
-    setWagerAmount,
     potentialPayout,
     contract: {
       write: contractWrite,
@@ -106,7 +107,7 @@ const useBacking = (back: Back) => {
   };
 };
 
-const BackLogic: React.FC = () => {
+const usePageParams = () => {
   const { propositionId } = useParams();
   const [searchParams] = useSearchParams();
 
@@ -128,18 +129,30 @@ const BackLogic: React.FC = () => {
     proposition_id: propositionId || "",
     signature: signature || ""
   };
+  return { back };
+};
 
-  const { wagerAmount, setWagerAmount, potentialPayout, contract, txStatus } =
-    useBacking(back);
-
+const BackLogic: React.FC = () => {
+  const { back } = usePageParams();
   const { marketAddresses } = useMarkets();
+  const [selectedMarketAddress, setSelectedMarketAddress] = useState<string>(
+    marketAddresses[0]
+  );
+  const [wagerAmount, setWagerAmount] = useState<number>(0);
+  const { potentialPayout, contract, txStatus } = useBackingContract(
+    back,
+    wagerAmount,
+    selectedMarketAddress
+  );
 
   const shouldButtonDisabled = !contract.write || txStatus.isLoading;
 
   return (
     <BackView
       back={back}
-      marketAddresses={marketAddresses}
+      markets={marketAddresses}
+      selectedMarket={selectedMarketAddress}
+      setSelectedMarket={setSelectedMarketAddress}
       wagerAmount={wagerAmount}
       updateWagerAmount={amount => setWagerAmount(amount || 0)}
       potentialPayout={potentialPayout}

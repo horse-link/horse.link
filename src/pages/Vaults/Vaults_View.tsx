@@ -94,9 +94,9 @@ const Row: React.FC<rowProp> = ({ vaultAddress, onClick }) => {
       }
     ]
   });
-  const tokenAddress = vaultData?.[2].toString();
+  const tokenAddress = vaultData?.[2];
   const tokenContract = {
-    addressOrName: tokenAddress || "",
+    addressOrName: tokenAddress?.toString() || "",
     contractInterface: mockTokenContractJson.abi
   };
   const { data: tokenData } = useContractReads({
@@ -113,7 +113,8 @@ const Row: React.FC<rowProp> = ({ vaultAddress, onClick }) => {
         ...tokenContract,
         functionName: "decimals"
       }
-    ]
+    ],
+    enabled: !!tokenAddress
   });
   let rowData = {
     id: "loading...",
