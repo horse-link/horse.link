@@ -44,7 +44,7 @@ const VaultsView: React.FC<Props> = ({ vaultAddressList, onClickVault }) => {
                     scope="col"
                     className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
                   >
-                    Owner Address
+                    Vault Address
                   </th>
                 </tr>
               </thead>
@@ -86,15 +86,11 @@ const Row: React.FC<rowProp> = ({ vaultAddress, onClick }) => {
       },
       {
         ...vaultContract,
-        functionName: "owner"
-      },
-      {
-        ...vaultContract,
         functionName: "asset"
       }
     ]
   });
-  const tokenAddress = vaultData?.[2].toString();
+  const tokenAddress = vaultData?.[1].toString();
   const tokenContract = {
     addressOrName: tokenAddress || "",
     contractInterface: mockTokenContractJson.abi
@@ -119,16 +115,16 @@ const Row: React.FC<rowProp> = ({ vaultAddress, onClick }) => {
     id: "loading...",
     symbol: "loading...",
     totalAssets: "loading...",
-    ownerAddress: "loading..."
+    vaultAddress: "loading..."
   };
   if (vaultData && tokenData) {
-    const [bNTotalAssets, ownerAddress] = vaultData;
+    const [bNTotalAssets] = vaultData;
     const [name, symbol, decimals] = tokenData;
     rowData = {
       id: name as unknown as string,
       symbol: symbol as unknown as string,
       totalAssets: ethers.utils.formatUnits(bNTotalAssets, decimals),
-      ownerAddress: ownerAddress as unknown as string
+      vaultAddress
     };
   }
 
@@ -143,7 +139,7 @@ const Row: React.FC<rowProp> = ({ vaultAddress, onClick }) => {
         <span> {rowData.symbol} </span>
       </td>
       <td className="px-2 py-4 whitespace-nowrap">{rowData.totalAssets}</td>
-      <td className="px-2 py-4 whitespace-nowrap">{rowData.ownerAddress}</td>
+      <td className="px-2 py-4 whitespace-nowrap">{rowData.vaultAddress}</td>
     </tr>
   );
 };
