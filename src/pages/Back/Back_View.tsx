@@ -16,7 +16,8 @@ type Props = {
   potentialPayout: string;
   shouldButtonDisabled: boolean;
   contract: {
-    write?: () => void;
+    backContractwrite?: () => void;
+    approveContractWrite?: () => void;
     errorMsg?: string;
   };
   txStatus: {
@@ -24,6 +25,7 @@ type Props = {
     isSuccess: boolean;
     hash?: string;
   };
+  isEnoughAllowance: boolean;
 };
 
 const BackView: React.FC<Props> = ({
@@ -36,7 +38,8 @@ const BackView: React.FC<Props> = ({
   potentialPayout,
   shouldButtonDisabled,
   contract,
-  txStatus
+  txStatus,
+  isEnoughAllowance
 }) => {
   return (
     <PageLayout requiresAuth={false}>
@@ -51,6 +54,7 @@ const BackView: React.FC<Props> = ({
                 onChange={e => setSelectedMarket(e.target.value)}
                 name="markets"
                 id="markets"
+                className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
               >
                 {markets.map(address => (
                   <MarketOption key={address} contractAddress={address} />
@@ -85,13 +89,22 @@ const BackView: React.FC<Props> = ({
             <div className="flex justify-end mt-3">
               <RequireWalletButton
                 actionButton={
-                  <button
-                    className="px-5 py-1 hover:bg-gray-100 rounded-md border border-gray-500 shadow-md"
-                    onClick={contract.write}
-                    disabled={shouldButtonDisabled}
-                  >
-                    {txStatus.isLoading ? "Backing..." : "Back"}
-                  </button>
+                  isEnoughAllowance ? (
+                    <button
+                      className="px-5 py-1 hover:bg-gray-100 rounded-md border border-gray-500 shadow-md"
+                      onClick={contract.backContractwrite}
+                      disabled={shouldButtonDisabled}
+                    >
+                      {txStatus.isLoading ? "Backing..." : "Back"}
+                    </button>
+                  ) : (
+                    <button
+                      className="px-5 py-1 hover:bg-gray-100 rounded-md border border-gray-500 shadow-md "
+                      onClick={contract.approveContractWrite}
+                    >
+                      {txStatus.isLoading ? "..." : "Approve"}
+                    </button>
+                  )
                 }
               />
             </div>
