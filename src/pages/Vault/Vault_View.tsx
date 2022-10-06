@@ -1,5 +1,3 @@
-import { PageLayout } from "../../components";
-
 type Props = {
   tokenSymbol: string;
   vaultAddress: string;
@@ -7,7 +5,6 @@ type Props = {
   userBalance: string;
   performance: string;
   asset: string;
-  onClickDeposit: () => void;
 };
 
 const VaultView = ({
@@ -16,30 +13,26 @@ const VaultView = ({
   vaultBalance,
   userBalance,
   performance,
-  asset,
-  onClickDeposit
+  asset
 }: Props) => {
   return (
-    <PageLayout requiresAuth={false}>
-      <div className="grid place-content-center ">
-        <div className="max-w-xl p-5 bg-white rounded-md">
-          <h1 className="text-3xl">{tokenSymbol} Vault</h1>
-          <div className="mt-2 break-all">Vault Address: {vaultAddress}</div>
-          <div>Underlying {asset}</div>
-          <div>TLV: {vaultBalance}</div>
-          <div>
-            My Balance: {userBalance ?? "connect wallet to see your balance"}
-          </div>
-          <div>APY: {performance}%</div>
-          <button
-            className="mt-5 py-2 px-4 rounded font-bold bg-gray-500 hover:bg-gray-700 text-white"
-            onClick={onClickDeposit}
-          >
-            Deposit
-          </button>
-        </div>
+    <div className="p-5 w-64">
+      <h1 className="text-3xl">{tokenSymbol} Vault</h1>
+      <div className="mt-2 break-all">
+        Vault Address: <br />
+        {vaultAddress}
       </div>
-    </PageLayout>
+      <div className="break-all">
+        Underlying <br />
+        {asset}
+      </div>
+      <div>TLV: {vaultBalance}</div>
+      <div>
+        My Balance: <br />
+        {userBalance ?? "connect wallet to see your balance"}
+      </div>
+      <div>APY: {performance}%</div>
+    </div>
   );
 };
 

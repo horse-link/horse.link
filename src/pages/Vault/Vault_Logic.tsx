@@ -55,7 +55,6 @@ const useVaultData = (vaultAddress: string, userAddress: string) => {
 const Vault: React.FC = () => {
   const { vaultAddress: vaultAddressParam } = useParams();
   const { address } = useAccount();
-  const navigate = useNavigate();
 
   const vaultAddress = vaultAddressParam || "";
   const userAddress = address || "";
@@ -67,10 +66,6 @@ const Vault: React.FC = () => {
     userAddress
   );
 
-  const onClickDeposit = () => {
-    navigate(`/vaults/${vaultAddress}/deposit`);
-  };
-
   return (
     <VaultView
       tokenSymbol={tokenSymbol}
@@ -79,7 +74,6 @@ const Vault: React.FC = () => {
       userBalance={userBalance}
       performance={performance}
       asset={_asset}
-      onClickDeposit={onClickDeposit}
     />
   );
 };
