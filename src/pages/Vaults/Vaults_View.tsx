@@ -90,7 +90,7 @@ const Row: React.FC<rowProp> = ({ vaultAddress, onClick }) => {
       }
     ]
   });
-  const tokenAddress = vaultData?.[2];
+  const [bNTotalAssets, tokenAddress] = vaultData ?? [];
   const tokenContract = {
     addressOrName: tokenAddress?.toString() || "",
     contractInterface: mockTokenContractJson.abi
@@ -118,8 +118,7 @@ const Row: React.FC<rowProp> = ({ vaultAddress, onClick }) => {
     totalAssets: "loading...",
     vaultAddress: "loading..."
   };
-  if (vaultData && tokenData) {
-    const [bNTotalAssets] = vaultData;
+  if (bNTotalAssets && tokenData) {
     const [name, symbol, decimals] = tokenData;
     rowData = {
       id: name as unknown as string,
