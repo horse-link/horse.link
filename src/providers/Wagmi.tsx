@@ -9,19 +9,17 @@ const { chains, provider, webSocketProvider } = configureChains(
   [publicProvider()]
 );
 
-const connectors = [
-  new MetaMaskConnector({ chains }),
-  new WalletConnectConnector({
-    chains,
-    options: {
-      qrcode: true
-    }
-  })
-];
-
 const client = createClient({
   autoConnect: true,
-  connectors,
+  connectors: [
+    new MetaMaskConnector({ chains }),
+    new WalletConnectConnector({
+      chains,
+      options: {
+        qrcode: true
+      }
+    })
+  ],
   provider,
   webSocketProvider
 });
