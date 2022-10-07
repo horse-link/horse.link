@@ -15,10 +15,12 @@ import useVaultData from "../../hooks/useVaultData";
 type useWithdrawContractWriteArgs = {
   vaultAddress: string;
   enabled: boolean;
+  onTxSuccess: () => void;
 };
 const useWithdrawContractWrite = ({
   vaultAddress,
-  enabled
+  enabled,
+  onTxSuccess
 }: useWithdrawContractWriteArgs) => {
   const { config, error: prepareError } = usePrepareContractWrite({
     addressOrName: vaultAddress,
@@ -32,7 +34,8 @@ const useWithdrawContractWrite = ({
 
   const { isLoading: isTxLoading, isSuccess: isTxSuccess } =
     useWaitForTransaction({
-      hash: txHash
+      hash: txHash,
+      onSuccess: onTxSuccess
     });
 
   return {
@@ -50,13 +53,15 @@ type useDepositContractWriteArgs = {
   ownerAddress: string;
   vaultAddress: string;
   enabled: boolean;
+  onTxSuccess: () => void;
 };
 const useDepositContractWrite = ({
   depositAmount,
   tokenDecimal,
   ownerAddress,
   vaultAddress,
-  enabled
+  enabled,
+  onTxSuccess
 }: useDepositContractWriteArgs) => {
   const assets = ethers.utils.parseUnits(
     depositAmount.toString(),
@@ -74,10 +79,10 @@ const useDepositContractWrite = ({
   const { data, error: writeError, write } = useContractWrite(config);
 
   const txHash = data?.hash;
-
   const { isLoading: isTxLoading, isSuccess: isTxSuccess } =
     useWaitForTransaction({
-      hash: txHash
+      hash: txHash,
+      onSuccess: onTxSuccess
     });
 
   return {
@@ -96,14 +101,17 @@ const VaultLogic = () => {
   const userAddress = address ?? "";
 
   const {
-    symbol,
+    symbol: tokenSymbol,
     address: tokenAddress,
     decimals: tokenDecimal
   } = useTokenData(vaultAddress);
-  const { userBalance: userBalanceStr } = useVaultData(
-    vaultAddress,
-    userAddress
-  );
+  const {
+    vaultBalance,
+    userBalance: userBalanceStr,
+    performance,
+    _asset,
+    refetch: refetchVaultData
+  } = useVaultData(vaultAddress, userAddress);
   const userBalance = Number(userBalanceStr);
   const [depositAmount, setDepositAmount] = useState(0);
 
@@ -127,7 +135,8 @@ const VaultLogic = () => {
     tokenDecimal,
     ownerAddress: userAddress,
     vaultAddress,
-    enabled: depositAmount > 0 && isEnoughAllowance
+    enabled: depositAmount > 0 && isEnoughAllowance,
+    onTxSuccess: () => refetchVaultData()
   });
 
   const {
@@ -136,7 +145,11 @@ const VaultLogic = () => {
     isTxLoading: isWithdrawTxLoading,
     isTxSuccess: isWithdrawTxSuccess,
     txHash: withdrawTxHash
-  } = useWithdrawContractWrite({ vaultAddress, enabled: userBalance > 0 });
+  } = useWithdrawContractWrite({
+    vaultAddress,
+    enabled: userBalance > 0,
+    onTxSuccess: () => refetchVaultData()
+  });
 
   const contract = {
     depositContractWrite,
@@ -158,9 +171,18 @@ const VaultLogic = () => {
     Number(userBalance) == 0 ||
     !contract?.withdrawContractWrite ||
     txStatus.isLoading;
+
+  const vaultDetailData = {
+    tokenSymbol: tokenSymbol,
+    vaultAddress: vaultAddress,
+    vaultBalance: vaultBalance,
+    userBalance: userBalanceStr,
+    performance: performance,
+    asset: _asset
+  };
   return (
     <VaultView
-      symbol={symbol}
+      vaultDetailData={vaultDetailData}
       userBalance={userBalance}
       depositAmount={depositAmount}
       updateDepositAmount={updateDepositAmount}

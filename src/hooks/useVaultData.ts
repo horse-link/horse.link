@@ -1,6 +1,5 @@
 import { ethers } from "ethers";
 import { useContractReads } from "wagmi";
-
 import vaultContractJson from "../abi/Vault.json";
 
 const useVaultData = (vaultAddress: string, userAddress: string) => {
@@ -8,7 +7,7 @@ const useVaultData = (vaultAddress: string, userAddress: string) => {
     addressOrName: vaultAddress,
     contractInterface: vaultContractJson.abi
   };
-  const { data: vaultData } = useContractReads({
+  const { data: vaultData, refetch } = useContractReads({
     contracts: [
       {
         ...vaultContract,
@@ -46,7 +45,8 @@ const useVaultData = (vaultAddress: string, userAddress: string) => {
     vaultBalance,
     userBalance,
     performance,
-    _asset
+    _asset,
+    refetch
   };
 };
 

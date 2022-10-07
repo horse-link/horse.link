@@ -1,10 +1,10 @@
 import { PageLayout } from "../../components";
 import ContractWriteResultCard from "../../components/ContractWriteResultCard/ContractWriteResultCard_View";
 import RequireWalletButton from "../../components/RequireWalletButton/RequireWalletButton_View";
-import VaultDetail from "./VaultDetail/VaultDetail_Logic";
+import { VaultDetail, VaultDetailProps } from "./Component/VaultDetail";
 
 type Props = {
-  symbol: string;
+  vaultDetailData: VaultDetailProps;
   userBalance: number;
   depositAmount: number;
   updateDepositAmount: (amount: number) => void;
@@ -24,7 +24,7 @@ type Props = {
   isEnoughAllowance: boolean;
 };
 const VaultView = ({
-  symbol,
+  vaultDetailData,
   userBalance,
   depositAmount,
   updateDepositAmount,
@@ -40,7 +40,7 @@ const VaultView = ({
         <div className="max-w-sm sm:max-w-xl">
           <div className="flex flex-col sm:flex-row justify-between px-3 py-3 rounded-md shadow border-b bg-white border-gray-200">
             <div>
-              <VaultDetail />
+              <VaultDetail {...vaultDetailData} />
             </div>
             <div>
               <div className="p-3 mt-5 rounded-md shadow border border-gray-200">

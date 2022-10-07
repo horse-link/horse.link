@@ -1,4 +1,4 @@
-type Props = {
+export type VaultDetailProps = {
   tokenSymbol: string;
   vaultAddress: string;
   vaultBalance: string;
@@ -7,14 +7,14 @@ type Props = {
   asset: string;
 };
 
-const VaultDetailView = ({
+export const VaultDetail = ({
   tokenSymbol,
   vaultAddress,
   vaultBalance,
   userBalance,
   performance,
   asset
-}: Props) => {
+}: VaultDetailProps) => {
   return (
     <div className="p-5 w-64">
       <h1 className="text-3xl mb-2">{tokenSymbol} Vault</h1>
@@ -33,5 +33,3 @@ const VaultDetailView = ({
     </div>
   );
 };
-
-export default VaultDetailView;
