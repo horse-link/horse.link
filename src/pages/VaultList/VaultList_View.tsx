@@ -9,7 +9,7 @@ type Props = {
   onClickVault: (vaultAddress: string) => void;
 };
 
-const VaultsView: React.FC<Props> = ({ vaultAddressList, onClickVault }) => {
+const VaultListView: React.FC<Props> = ({ vaultAddressList, onClickVault }) => {
   // TODO: Do we want to make this table responsive?
   return (
     <PageLayout requiresAuth={false}>
@@ -65,7 +65,7 @@ const VaultsView: React.FC<Props> = ({ vaultAddressList, onClickVault }) => {
   );
 };
 
-export default VaultsView;
+export default VaultListView;
 
 type rowProp = {
   vaultAddress: string;

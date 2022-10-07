@@ -110,11 +110,13 @@ const BackView: React.FC<Props> = ({
             </div>
           </form>
         </div>
-        <ContractWriteResultCard
-          hash={txStatus.hash}
-          isSuccess={txStatus.isSuccess}
-          errorMsg={contract.errorMsg}
-        />
+        <div className="mt-5 w-96">
+          <ContractWriteResultCard
+            hash={txStatus.hash}
+            isSuccess={txStatus.isSuccess}
+            errorMsg={contract.errorMsg}
+          />
+        </div>
       </div>
     </PageLayout>
   );
