@@ -1,13 +1,8 @@
-import {
-  chain,
-  configureChains,
-  createClient,
-  useConnect,
-  WagmiConfig
-} from "wagmi";
+import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
 
 import { publicProvider } from "wagmi/providers/public";
-import { InjectedConnector } from "wagmi/connectors/injected";
+import { MetaMaskConnector } from "wagmi/connectors/metaMask";
+import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
 
 const { chains, provider, webSocketProvider } = configureChains(
   [chain.goerli],
@@ -16,17 +11,18 @@ const { chains, provider, webSocketProvider } = configureChains(
 
 const client = createClient({
   autoConnect: true,
+  connectors: [
+    new MetaMaskConnector({ chains }),
+    new WalletConnectConnector({
+      chains,
+      options: {
+        qrcode: true
+      }
+    })
+  ],
   provider,
   webSocketProvider
 });
-
-export const useConnectWallet = () => {
-  const { connect } = useConnect({
-    connector: new InjectedConnector({ chains })
-  });
-
-  return { connectWallet: connect };
-};
 
 export const WagmiProvider: React.FC<{ children: React.ReactNode }> = ({
   children

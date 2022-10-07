@@ -62,7 +62,7 @@ const Modal = React.forwardRef<HTMLDivElement, ModalProps>(function Modal(
               leaveTo="opacity-0  transform translate-y-1/2"
             >
               <div
-                className="w-full px-6 py-4 overflow-hidden bg-white rounded-t-lg dark:bg-gray-800 sm:rounded-lg sm:m-4 sm:max-w-xl"
+                className="w-96 px-6 py-4 overflow-hidden bg-white rounded-t-lg dark:bg-gray-800 sm:rounded-lg sm:m-4 sm:max-w-xl"
                 role="dialog"
                 onClick={e => e.stopPropagation()}
                 ref={ref}
