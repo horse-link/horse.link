@@ -10,7 +10,7 @@ const ModalBody = React.forwardRef<HTMLDivElement, Props>(function ModalBody(
 
   return (
     <div
-      className="mb-6 text-sm text-gray-700 dark:text-gray-400"
+      className="mb-3 text-sm text-gray-700 dark:text-gray-400"
       ref={ref}
       {...other}
     >

@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
-import { useAccount } from "wagmi";
+import { useAccount, useConnect } from "wagmi";
+import { MetaMaskIcon, WalletConnectIcon } from "../icons";
 import Modal from "./Modal";
 import ModalBody from "./ModalBody";
-import { useConnectWallet } from "../providers/Wagmi";
 
 type Props = {
   isModalOpen: boolean;
@@ -14,7 +14,7 @@ const WalletModal: React.FC<Props> = (props: Props) => {
 
   const { isConnected } = useAccount();
 
-  const { connectWallet } = useConnectWallet();
+  const { connect, connectors } = useConnect();
 
   useEffect(() => {
     if (isConnected) {
@@ -26,27 +26,28 @@ const WalletModal: React.FC<Props> = (props: Props) => {
     <>
       <Modal isOpen={isModalOpen} onClose={closeWalletModal}>
         <ModalBody>
-          <div className="w-full">
-            <div className="">
-              <div className="text-center w-full">
-                <div className="">
-                  <label
-                    className="flex justify-center cursor-pointer"
-                    onClick={() => connectWallet()}
-                  >
-                    <div className="w-40 m-10">
-                      <img
-                        loading="lazy"
-                        alt="MetaMaskLogo"
-                        src="/images/metamask.png"
-                      />
-                    </div>
-                  </label>
-                  <div className="font-bold">METAMASK</div>
-                  <div>Connect using your browser.</div>
-                  <div className="my-2 py-4 border-0 border-b border-solid"></div>
-                </div>
-              </div>
+          <div className="text-center">
+            <div>
+              <label
+                className="flex justify-center cursor-pointer"
+                onClick={() => connect({ connector: connectors[0] })}
+              >
+                <MetaMaskIcon className="w-20 h-20 transition-opacity duration-500 ease-out opacity-100 hover:opacity-40" />
+              </label>
+              <div className="font-bold">METAMASK</div>
+              <div>Connect using your browser.</div>
+            </div>
+
+            <div className="py-4 mb-3 border-0 border-b border-solid"></div>
+            <div>
+              <label
+                className="flex justify-center cursor-pointer"
+                onClick={() => connect({ connector: connectors[1] })}
+              >
+                <WalletConnectIcon className="w-20 h-20 transition-opacity duration-500 ease-out opacity-100 hover:opacity-40" />
+              </label>
+              <div className="font-bold">WALLET CONNECT</div>
+              <div>Connect using your mobile device.</div>
             </div>
           </div>
         </ModalBody>
