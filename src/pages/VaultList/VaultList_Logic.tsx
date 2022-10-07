@@ -1,8 +1,8 @@
-import VaultsView from "./Vaults_View";
+import VaultListView from "./VaultList_View";
 import { useNavigate } from "react-router-dom";
 import useVaults from "../../hooks/useVaults";
 
-const Vaults: React.FC = () => {
+const VaultList: React.FC = () => {
   const { vaultAddresses } = useVaults();
 
   const navigate = useNavigate();
@@ -11,8 +11,11 @@ const Vaults: React.FC = () => {
   };
 
   return (
-    <VaultsView vaultAddressList={vaultAddresses} onClickVault={onClickVault} />
+    <VaultListView
+      vaultAddressList={vaultAddresses}
+      onClickVault={onClickVault}
+    />
   );
 };
 
-export default Vaults;
+export default VaultList;
