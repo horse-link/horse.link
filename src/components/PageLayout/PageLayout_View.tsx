@@ -10,7 +10,8 @@ import { WalletModalContext } from "../../providers/WalletModal";
 
 const navigation = [
   { name: "Dashboard", path: "/dashboard" },
-  { name: "Vaults", path: "/vaults" }
+  { name: "Vaults", path: "/vaults" },
+  { name: "Markets", path: "/markets" }
 ];
 const whitePaperNavigation = {
   name: "White Paper",
