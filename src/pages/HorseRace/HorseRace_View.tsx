@@ -62,6 +62,7 @@ const HorseRaceView: React.FC<Props> = (props: Props) => {
                   {runners.map(runner => {
                     const {
                       proposition_id,
+                      proposition_id_hash,
                       market_id,
                       odds,
                       close,
@@ -69,7 +70,7 @@ const HorseRaceView: React.FC<Props> = (props: Props) => {
                       nonce,
                       signature
                     } = runner;
-                    const backPath = `/back/${proposition_id}?market_id=${market_id}&odds=${odds}&close=${close}&end=${end}&nonce=${nonce}&signature=${signature.signature}`;
+                    const backPath = `/back/${proposition_id}?market_id=${market_id}&odds=${odds}&close=${close}&end=${end}&nonce=${nonce}&signature=${signature.signature}&proposition_id_hash=${proposition_id_hash}`;
                     return (
                       <tr key={runner.number}>
                         <td className="px-1 py-4 whitespace-nowrap bg-gray-200">

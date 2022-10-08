@@ -4,7 +4,8 @@ export type Back = {
   close: number;
   end: number;
   odds: number;
-  proposition_id: string;
+  // proposition_id: string;
+  proposition_id_hash: string;
   signature: string;
 };
 
@@ -51,6 +52,7 @@ export type Runner = {
   end: number;
   odds: number;
   proposition_id: string;
+  proposition_id_hash: string;
   barrier: number;
   signature: Signature;
 };

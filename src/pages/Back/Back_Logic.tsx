@@ -41,7 +41,8 @@ const usePotentialPayout = (
 };
 
 const usePrepareBackingData = (
-  proposition_id: string,
+  //proposition_id: string,
+  proposition_id_hash: string,
   odds: number,
   tokenDecimal: string,
   debouncedWagerAmount: number,
@@ -49,8 +50,8 @@ const usePrepareBackingData = (
   market_id: string
 ) => {
   const b32PropositionId = useMemo(
-    () => ethers.utils.formatBytes32String(proposition_id),
-    [proposition_id]
+    () => ethers.utils.formatBytes32String(proposition_id_hash),
+    [proposition_id_hash]
   );
 
   const bnOdds = useMemo(
@@ -145,7 +146,7 @@ const useBackingContract = (
   marketAddress: string,
   ownerAddress: string
 ) => {
-  const { nonce, odds, proposition_id, market_id, close, end, signature } =
+  const { nonce, odds, proposition_id_hash, market_id, close, end, signature } =
     back;
 
   const [debouncedWagerAmount] = useDebounce(wagerAmount, 500);
@@ -172,7 +173,7 @@ const useBackingContract = (
 
   const { b32PropositionId, bnWager, bnOdds, b32Nonce, b32MarketId } =
     usePrepareBackingData(
-      proposition_id,
+      proposition_id_hash,
       odds,
       tokenDecimal,
       debouncedWagerAmount,
@@ -182,7 +183,7 @@ const useBackingContract = (
 
   const { potentialPayout } = usePotentialPayout(
     marketAddress,
-    b32PropositionId,
+    proposition_id_hash,
     bnWager,
     bnOdds
   );
@@ -223,7 +224,7 @@ const useBackingContract = (
 };
 
 const usePageParams = () => {
-  const { propositionId } = useParams();
+  const { proposition_id_hash } = useParams();
   const [searchParams] = useSearchParams();
 
   const marketId = searchParams.get("market_id");
@@ -232,7 +233,7 @@ const usePageParams = () => {
   const end = searchParams.get("end");
   // wait API fix
   // const nonce = searchParams.get("nonce");
-  const nonce = useMemo(() => Date.now().toString(), []);
+  const nonce = useMemo(() => Date.now().toString(), []); // todo: get from api
   const signature = searchParams.get("signature");
 
   const back: Back = {
@@ -241,7 +242,7 @@ const usePageParams = () => {
     close: parseInt(close || "0"),
     end: parseInt(end || "0"),
     odds: parseFloat(odds || "0") / 1000,
-    proposition_id: propositionId || "",
+    proposition_id_hash: proposition_id_hash || "",
     signature: signature || ""
   };
   return { back };

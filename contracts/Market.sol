@@ -113,12 +113,16 @@ contract Market is Ownable, IMarket {
     //     return 0;
     // }
 
-    function getOdds(int wager, int256 odds, bytes32 propositionId) external view returns (int256) {
+    function getOdds(int256 wager, int256 odds, bytes32 propositionId) external view returns (int256) {
+        require(odds > 0, "getOdds: Invalid odds");
+        require(wager > 0, "getOdds: Invalid wager");
+        
         return _getOdds(wager, odds, propositionId);
     }
     
-    function _getOdds(int wager, int256 odds, bytes32 propositionId) private view returns (int256) {
-        require(odds > 0, "Cannot have negative odds");
+    function _getOdds(int256 wager, int256 odds, bytes32 propositionId) private view returns (int256) {
+        assert(odds > 0);
+        assert(wager > 0);
         int256 p = int256(IVault(_vault).totalAssets());
 
         if (p == 0) {
@@ -142,6 +146,9 @@ contract Market is Ownable, IMarket {
     }
 
     function _getPayout(bytes32 propositionId, uint256 wager, uint256 odds) private view returns (uint256) {
+        assert(odds > 0);
+        assert(wager > 0);
+        
         // add underlying to the market
         int256 trueOdds = _getOdds(int256(wager), int256(odds), propositionId);
         // assert(trueOdds > 0);
@@ -170,7 +177,7 @@ contract Market is Ownable, IMarket {
         IERC20(underlying).transferFrom(_vault, _self, (payout - wager));
 
         // assert(IERC20(underlying).balanceOf(_self) >= payout);
-`
+
         // add to the market
         _marketTotal[marketId] += wager;
 
