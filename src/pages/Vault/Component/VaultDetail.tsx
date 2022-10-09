@@ -19,12 +19,12 @@ export const VaultDetail = ({
     <div className="p-5 w-64">
       <h1 className="text-3xl mb-2">{tokenSymbol} Vault</h1>
       <div>Share: {userBalance ?? "connect wallet to see your balance"}</div>
-      <div className="break-all">
-        Vault Address: <br />
+      <div>
+        Vault Address:
         {vaultAddress}
       </div>
-      <div className="break-all">
-        Underlying <br />
+      <div>
+        Underlying:
         {asset}
       </div>
       <div>TLV: {vaultBalance}</div>

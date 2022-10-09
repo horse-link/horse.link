@@ -11,12 +11,17 @@ import { WalletModalContext } from "../../providers/WalletModal";
 const navigation = [
   { name: "Dashboard", path: "/dashboard" },
   { name: "Vaults", path: "/vaults" },
-  { name: "Markets", path: "/markets" }
+  { name: "Markets", path: "/markets" },
+  { name: "History", path: "/history" },
+  { name: "HL Token", path: "/tokens" },
+  { name: "DOA / Governance", path: "/doa" }
 ];
+
 const whitePaperNavigation = {
   name: "White Paper",
   path: "https://github.com/horse-link/whitepaper"
 };
+
 type Props = {
   loading: boolean;
   currentPath: string;

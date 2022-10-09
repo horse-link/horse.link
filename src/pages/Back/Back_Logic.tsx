@@ -2,6 +2,7 @@ import { ethers } from "ethers";
 import { useMemo, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { useDebounce } from "use-debounce";
+
 import {
   useAccount,
   useContractRead,
@@ -25,8 +26,10 @@ const usePotentialPayout = (
   bnWager: ethers.BigNumber,
   bnOdds: ethers.BigNumber
 ) => {
+  console.log(b32PropositionId);
+
   const { data: bnPotentialPayout } = useContractRead({
-    addressOrName: marketAddress,
+    addressOrName: "0xe9BC1f42bF75C59b245d39483E97C3A70c450c9b", // marketAddress,
     contractInterface: marketContractJson.abi,
     functionName: "getPotentialPayout",
     args: [b32PropositionId, bnWager, bnOdds]
@@ -223,7 +226,7 @@ const useBackingContract = (
 };
 
 const usePageParams = () => {
-  const { propositionId } = useParams();
+  const { proposition_id } = useParams();
   const [searchParams] = useSearchParams();
 
   const marketId = searchParams.get("market_id");
@@ -232,7 +235,7 @@ const usePageParams = () => {
   const end = searchParams.get("end");
   // wait API fix
   // const nonce = searchParams.get("nonce");
-  const nonce = useMemo(() => Date.now().toString(), []);
+  const nonce = useMemo(() => Date.now().toString(), []); // todo: get from api
   const signature = searchParams.get("signature");
 
   const back: Back = {
@@ -241,7 +244,7 @@ const usePageParams = () => {
     close: parseInt(close || "0"),
     end: parseInt(end || "0"),
     odds: parseFloat(odds || "0") / 1000,
-    proposition_id: propositionId || "",
+    proposition_id: proposition_id || "",
     signature: signature || ""
   };
   return { back };
