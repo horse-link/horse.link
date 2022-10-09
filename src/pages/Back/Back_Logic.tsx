@@ -2,6 +2,7 @@ import { ethers } from "ethers";
 import { useMemo, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { useDebounce } from "use-debounce";
+
 import {
   useAccount,
   useContractRead,
@@ -25,8 +26,10 @@ const usePotentialPayout = (
   bnWager: ethers.BigNumber,
   bnOdds: ethers.BigNumber
 ) => {
+  console.log(b32PropositionId);
+
   const { data: bnPotentialPayout } = useContractRead({
-    addressOrName: marketAddress,
+    addressOrName: "0xe9BC1f42bF75C59b245d39483E97C3A70c450c9b", // marketAddress,
     contractInterface: marketContractJson.abi,
     functionName: "getPotentialPayout",
     args: [b32PropositionId, bnWager, bnOdds]
@@ -41,8 +44,7 @@ const usePotentialPayout = (
 };
 
 const usePrepareBackingData = (
-  //proposition_id: string,
-  proposition_id_hash: string,
+  proposition_id: string,
   odds: number,
   tokenDecimal: string,
   debouncedWagerAmount: number,
@@ -50,8 +52,8 @@ const usePrepareBackingData = (
   market_id: string
 ) => {
   const b32PropositionId = useMemo(
-    () => ethers.utils.formatBytes32String(proposition_id_hash),
-    [proposition_id_hash]
+    () => ethers.utils.formatBytes32String(proposition_id),
+    [proposition_id]
   );
 
   const bnOdds = useMemo(
@@ -146,7 +148,7 @@ const useBackingContract = (
   marketAddress: string,
   ownerAddress: string
 ) => {
-  const { nonce, odds, proposition_id_hash, market_id, close, end, signature } =
+  const { nonce, odds, proposition_id, market_id, close, end, signature } =
     back;
 
   const [debouncedWagerAmount] = useDebounce(wagerAmount, 500);
@@ -173,7 +175,7 @@ const useBackingContract = (
 
   const { b32PropositionId, bnWager, bnOdds, b32Nonce, b32MarketId } =
     usePrepareBackingData(
-      proposition_id_hash,
+      proposition_id,
       odds,
       tokenDecimal,
       debouncedWagerAmount,
@@ -183,7 +185,7 @@ const useBackingContract = (
 
   const { potentialPayout } = usePotentialPayout(
     marketAddress,
-    proposition_id_hash,
+    b32PropositionId,
     bnWager,
     bnOdds
   );
@@ -224,7 +226,7 @@ const useBackingContract = (
 };
 
 const usePageParams = () => {
-  const { proposition_id_hash } = useParams();
+  const { proposition_id } = useParams();
   const [searchParams] = useSearchParams();
 
   const marketId = searchParams.get("market_id");
@@ -242,7 +244,7 @@ const usePageParams = () => {
     close: parseInt(close || "0"),
     end: parseInt(end || "0"),
     odds: parseFloat(odds || "0") / 1000,
-    proposition_id_hash: proposition_id_hash || "",
+    proposition_id: proposition_id || "",
     signature: signature || ""
   };
   return { back };

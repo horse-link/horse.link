@@ -4,8 +4,7 @@ export type Back = {
   close: number;
   end: number;
   odds: number;
-  // proposition_id: string;
-  proposition_id_hash: string;
+  proposition_id: string;
   signature: string;
 };
 
