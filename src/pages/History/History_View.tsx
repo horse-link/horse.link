@@ -8,7 +8,6 @@ type Props = {
 };
 
 const HistoryView: React.FC<Props> = () => {
-
   const { track, number } = useParams();
   return (
     <PageLayout requiresAuth={false}>
