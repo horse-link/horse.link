@@ -44,7 +44,7 @@ const BackView: React.FC<Props> = ({
   return (
     <PageLayout requiresAuth={false}>
       <div className="grid place-content-center">
-        <div className="w-152 px-10 pt-5 pb-3 rounded-md shadow border-b bg-white border-gray-200 sm:rounded-lg">
+        <div className="w-152 px-10 pt-5 pb-5 rounded-md shadow border-b bg-white border-gray-200 sm:rounded-lg">
           <div className="text-3xl">Target odds {back.odds}</div>
           <form>
             <div className="flex flex-col">
