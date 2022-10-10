@@ -48,7 +48,8 @@ const useApproveContractWrite = ({
     addressOrName: tokenAddress,
     contractInterface: erc20ABI,
     functionName: "approve",
-    args: [vaultAddress, ethers.constants.MaxUint256]
+    args: [vaultAddress, ethers.constants.MaxUint256],
+    enabled: !!tokenAddress && !!vaultAddress
   });
 
   const {
