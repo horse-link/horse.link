@@ -37,13 +37,13 @@ const VaultView = ({
   return (
     <PageLayout requiresAuth={false}>
       <div className="grid place-content-center justify-items-center">
-        <div className="max-w-lx">
+        <div className="w-152">
           <div className="flex flex-col flex-row justify-between px-3 py-3 rounded-md shadow border-b bg-white border-gray-200">
             <div>
               <VaultDetail {...vaultDetailData} />
             </div>
             <div>
-              <div className="p-3 mt-5 rounded-md shadow border border-gray-200">
+              <div className="w-7/12 mx-auto p-3 mt-5 rounded-md shadow border border-gray-200">
                 <h1 className="text-3xl mb-2">Deposit / Withdraw</h1>
                 <span>Shares : {userBalance}</span>
                 <form>
@@ -59,11 +59,11 @@ const VaultView = ({
                       className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                     />
                   </label>
-                  <div className="flex mt-5">
+                  <div className="mt-5">
                     <RequireWalletButton
                       actionButton={
                         isEnoughAllowance ? (
-                          <div className="grid grid-flow-row auto-rows-max">
+                          <div className="flex flex-col">
                             <button
                               className={
                                 "px-5 py-1 hover:bg-gray-100 rounded-md border border-gray-500 shadow-md" +
