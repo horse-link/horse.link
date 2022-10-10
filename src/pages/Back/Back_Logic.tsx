@@ -26,10 +26,8 @@ const usePotentialPayout = (
   bnWager: ethers.BigNumber,
   bnOdds: ethers.BigNumber
 ) => {
-  console.log(b32PropositionId);
-
   const { data: bnPotentialPayout } = useContractRead({
-    addressOrName: "0xe9BC1f42bF75C59b245d39483E97C3A70c450c9b", // marketAddress,
+    addressOrName: marketAddress,
     contractInterface: marketContractJson.abi,
     functionName: "getPotentialPayout",
     args: [b32PropositionId, bnWager, bnOdds]
@@ -117,7 +115,7 @@ const useBackContractWrite = ({
       end,
       signature
     ],
-    enabled
+    enabled: enabled && !!marketAddress
   });
 
   const {
