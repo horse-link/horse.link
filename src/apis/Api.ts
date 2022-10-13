@@ -1,5 +1,9 @@
 import axios, { AxiosInstance } from "axios";
-import { SignedMeetingsResponse, SignedRunnersResponse } from "../types/index";
+import {
+  BetHistoryResponse,
+  SignedMeetingsResponse,
+  SignedRunnersResponse
+} from "../types/index";
 
 export default class Api {
   private client: AxiosInstance;
@@ -33,6 +37,16 @@ export default class Api {
         }
       }
     );
+
+    return data;
+  };
+
+  public getBetHistory = async (): Promise<BetHistoryResponse> => {
+    const { data } = await this.client.get("/history", {
+      headers: {
+        Accept: "application/json"
+      }
+    });
 
     return data;
   };

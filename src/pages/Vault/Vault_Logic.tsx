@@ -190,7 +190,7 @@ const VaultLogic = () => {
       shouldWithdrawButtonDisabled={shouldWithdrawButtonDisabled}
       contract={contract}
       txStatus={txStatus}
-      isEnoughAllowance={isEnoughAllowance}
+      isEnoughAllowance={true}
     />
   );
 };

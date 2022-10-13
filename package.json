@@ -4,7 +4,6 @@
   "private": true,
   "license": "MIT",
   "dependencies": {
-    "@apollo/client": "^3.7.0",
     "@chainlink/contracts": "^0.4.0",
     "@craco/craco": "^6.1.2",
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
@@ -26,7 +25,6 @@
     "eth-gas-reporter": "^0.2.25",
     "ethers": "^5.7.1",
     "formik": "^2.2.7",
-    "graphql": "^16.6.0",
     "moment": "^2.29.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

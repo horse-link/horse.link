@@ -1,18 +1,11 @@
 import { PageLayout } from "../../components";
-
-type BetData = {
-  id: string;
-  amount: number;
-  owner: string;
-  payout: number;
-  propositionId: string;
-};
+import { BetHistory } from "../../types";
 
 type Props = {
-  myBetsData: BetData[];
-  onClickBet: (bet: BetData) => void;
+  betsData: BetHistory[];
+  onClickBet: (bet: BetHistory) => void;
 };
-const MyBetsView = ({ myBetsData, onClickBet }: Props) => {
+const BetsView = ({ betsData, onClickBet }: Props) => {
   return (
     <PageLayout requiresAuth={false}>
       <div className="flex flex-col">
@@ -26,7 +19,7 @@ const MyBetsView = ({ myBetsData, onClickBet }: Props) => {
                     scope="col"
                     className="pl-5 pr-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
                   >
-                    transactionId amount
+                    propositionId
                   </th>
                   <th
                     scope="col"
@@ -38,26 +31,42 @@ const MyBetsView = ({ myBetsData, onClickBet }: Props) => {
                     scope="col"
                     className="pl-5 pr-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
                   >
-                    owner
+                    market_id
                   </th>
                   <th
                     scope="col"
                     className="pl-5 pr-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
                   >
-                    payout
+                    odds
                   </th>
 
                   <th
                     scope="col"
                     className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
                   >
-                    propositionId
+                    punter
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
+                  >
+                    result
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
+                  >
+                    tx
                   </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {myBetsData.map(v => (
-                  <Row betData={v} key={v.id} onClick={() => onClickBet(v)} />
+                {betsData.map(v => (
+                  <Row
+                    betData={v}
+                    key={v.proposition_id}
+                    onClick={() => onClickBet(v)}
+                  />
                 ))}
               </tbody>
             </table>
@@ -68,24 +77,28 @@ const MyBetsView = ({ myBetsData, onClickBet }: Props) => {
   );
 };
 
-export default MyBetsView;
+export default BetsView;
 
 type RowProps = {
-  betData: BetData;
+  betData: BetHistory;
   onClick?: () => void;
 };
 const Row = ({ betData, onClick }: RowProps) => {
   return (
     <tr
-      key={betData.id}
+      key={betData.proposition_id}
       onClick={onClick}
       className="cursor-pointer hover:bg-gray-100"
     >
-      <td className="pl-5 pr-2 py-4 whitespace-nowrap"> {betData.id} </td>
+      <td className="pl-5 pr-2 py-4 whitespace-nowrap">
+        {betData.proposition_id}
+      </td>
       <td className="px-2 py-4 whitespace-nowrap">{betData.amount}</td>
-      <td className="px-2 py-4 whitespace-nowrap">{betData.owner}</td>
-      <td className="px-2 py-4 whitespace-nowrap">{betData.payout}</td>
-      <td className="px-2 py-4 whitespace-nowrap">{betData.propositionId}</td>
+      <td className="px-2 py-4 whitespace-nowrap">{betData.market_id}</td>
+      <td className="px-2 py-4 whitespace-nowrap">{betData.odds}</td>
+      <td className="px-2 py-4 whitespace-nowrap">{betData.punter}</td>
+      <td className="px-2 py-4 whitespace-nowrap">{betData.result}</td>
+      <td className="px-2 py-4 whitespace-nowrap">{betData.tx}</td>
     </tr>
   );
 };
