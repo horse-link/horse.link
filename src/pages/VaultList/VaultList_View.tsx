@@ -23,69 +23,67 @@ const VaultListView: React.FC<Props> = ({
   // TODO: Do we want to make this table responsive?
   return (
     <PageLayout requiresAuth={false}>
-      <>
-        <div className="flex flex-col">
-          <h3 className="text-lg mb-3 font-medium text-gray-900">
-            Vaults / Liquidity Pools
-          </h3>
-          <div className="bg-gray-50 rounded-xl overflow-auto">
-            <div className="shadow-sm overflow-hidden mt-2 mb-5">
-              <table className="border-collapse table-auto w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th
-                      scope="col"
-                      className="pl-5 pr-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
-                    >
-                      Name
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
-                    >
-                      Token
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
-                    >
-                      Total Assets
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
-                    >
-                      Vault Address
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {vaultAddressList.map(v => (
-                    <Row
-                      vaultAddress={v}
-                      key={v}
-                      onClick={() => onClickVault(v)}
-                    />
-                  ))}
-                </tbody>
-              </table>
-            </div>
+      <div className="flex flex-col">
+        <h3 className="text-lg mb-3 font-medium text-gray-900">
+          Vaults / Liquidity Pools
+        </h3>
+        <div className="bg-gray-50 rounded-xl overflow-auto">
+          <div className="shadow-sm overflow-hidden mt-2 mb-5">
+            <table className="border-collapse table-auto w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th
+                    scope="col"
+                    className="pl-5 pr-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
+                  >
+                    Name
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
+                  >
+                    Token
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
+                  >
+                    Total Assets
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
+                  >
+                    Vault Address
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {vaultAddressList.map(v => (
+                  <Row
+                    vaultAddress={v}
+                    key={v}
+                    onClick={() => onClickVault(v)}
+                  />
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
-        <MyModal isOpen={isDialogOpen} onClose={onCloseDialog} />
-      </>
+      </div>
+      <VaultModal isOpen={isDialogOpen} onClose={onCloseDialog} />
     </PageLayout>
   );
 };
 
 export default VaultListView;
 
-type MyModalProps = {
+type VaultModalProps = {
   isOpen: boolean;
   onClose: () => void;
 };
 
-const MyModal = ({ isOpen, onClose }: MyModalProps) => {
+const VaultModal = ({ isOpen, onClose }: VaultModalProps) => {
   return (
     <>
       <Transition appear show={isOpen} as={Fragment}>
