@@ -3,69 +3,127 @@ import { PageLayout } from "../../components";
 import vaultContractJson from "../../abi/Vault.json";
 import mockTokenContractJson from "../../abi/MockToken.json";
 import { ethers } from "ethers";
+import { Dialog, Transition } from "@headlessui/react";
+import { Fragment } from "react";
+import VaultLogic from "../Vault/Vault_Logic";
 
 type Props = {
   vaultAddressList: string[];
   onClickVault: (vaultAddress: string) => void;
+  isDialogOpen: boolean;
+  onCloseDialog: () => void;
 };
 
-const VaultListView: React.FC<Props> = ({ vaultAddressList, onClickVault }) => {
+const VaultListView: React.FC<Props> = ({
+  vaultAddressList,
+  onClickVault,
+  isDialogOpen,
+  onCloseDialog
+}) => {
   // TODO: Do we want to make this table responsive?
   return (
     <PageLayout requiresAuth={false}>
-      <div className="flex flex-col">
-        <h3 className="text-lg mb-3 font-medium text-gray-900">
-          Vaults / Liquidity Pools
-        </h3>
-        <div className="bg-gray-50 rounded-xl overflow-auto">
-          <div className="shadow-sm overflow-hidden mt-2 mb-5">
-            <table className="border-collapse table-auto w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th
-                    scope="col"
-                    className="pl-5 pr-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
-                  >
-                    Name
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
-                  >
-                    Token
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
-                  >
-                    Total Assets
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
-                  >
-                    Vault Address
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {vaultAddressList.map(v => (
-                  <Row
-                    vaultAddress={v}
-                    key={v}
-                    onClick={() => onClickVault(v)}
-                  />
-                ))}
-              </tbody>
-            </table>
+      <>
+        <div className="flex flex-col">
+          <h3 className="text-lg mb-3 font-medium text-gray-900">
+            Vaults / Liquidity Pools
+          </h3>
+          <div className="bg-gray-50 rounded-xl overflow-auto">
+            <div className="shadow-sm overflow-hidden mt-2 mb-5">
+              <table className="border-collapse table-auto w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th
+                      scope="col"
+                      className="pl-5 pr-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
+                    >
+                      Name
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
+                    >
+                      Token
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
+                    >
+                      Total Assets
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
+                    >
+                      Vault Address
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {vaultAddressList.map(v => (
+                    <Row
+                      vaultAddress={v}
+                      key={v}
+                      onClick={() => onClickVault(v)}
+                    />
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
-      </div>
+        <MyModal isOpen={isDialogOpen} onClose={onCloseDialog} />
+      </>
     </PageLayout>
   );
 };
 
 export default VaultListView;
+
+type MyModalProps = {
+  isOpen: boolean;
+  onClose: () => void;
+};
+
+const MyModal = ({ isOpen, onClose }: MyModalProps) => {
+  return (
+    <>
+      <Transition appear show={isOpen} as={Fragment}>
+        <Dialog as="div" className="relative z-10" onClose={onClose}>
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black bg-opacity-25" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4 text-center">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className="w-152 transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <VaultLogic />
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
+    </>
+  );
+};
 
 type rowProp = {
   vaultAddress: string;
