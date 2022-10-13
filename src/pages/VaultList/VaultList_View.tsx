@@ -9,7 +9,7 @@ type Props = {
   onClickVault: (vaultAddress: string) => void;
 };
 
-const VaultsView: React.FC<Props> = ({ vaultAddressList, onClickVault }) => {
+const VaultListView: React.FC<Props> = ({ vaultAddressList, onClickVault }) => {
   // TODO: Do we want to make this table responsive?
   return (
     <PageLayout requiresAuth={false}>
@@ -38,7 +38,7 @@ const VaultsView: React.FC<Props> = ({ vaultAddressList, onClickVault }) => {
                     scope="col"
                     className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
                   >
-                    Total Assets
+                    TLV
                   </th>
                   <th
                     scope="col"
@@ -65,7 +65,7 @@ const VaultsView: React.FC<Props> = ({ vaultAddressList, onClickVault }) => {
   );
 };
 
-export default VaultsView;
+export default VaultListView;
 
 type rowProp = {
   vaultAddress: string;
@@ -90,7 +90,7 @@ const Row: React.FC<rowProp> = ({ vaultAddress, onClick }) => {
       }
     ]
   });
-  const tokenAddress = vaultData?.[2];
+  const [bNTotalAssets, tokenAddress] = vaultData ?? [];
   const tokenContract = {
     addressOrName: tokenAddress?.toString() || "",
     contractInterface: mockTokenContractJson.abi
@@ -118,8 +118,7 @@ const Row: React.FC<rowProp> = ({ vaultAddress, onClick }) => {
     totalAssets: "loading...",
     vaultAddress: "loading..."
   };
-  if (vaultData && tokenData) {
-    const [bNTotalAssets] = vaultData;
+  if (bNTotalAssets && tokenData) {
     const [name, symbol, decimals] = tokenData;
     rowData = {
       id: name as unknown as string,

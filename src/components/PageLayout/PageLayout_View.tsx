@@ -11,8 +11,16 @@ import { WalletModalContext } from "../../providers/WalletModal";
 const navigation = [
   { name: "Dashboard", path: "/dashboard" },
   { name: "Vaults", path: "/vaults" },
-  { name: "White Paper", path: "https://github.com/horse-link/whitepaper" }
+  { name: "Markets", path: "/markets" },
+  { name: "History", path: "/history" },
+  { name: "HL Token", path: "/tokens" },
+  { name: "DOA / Governance", path: "/doa" }
 ];
+
+const whitePaperNavigation = {
+  name: "White Paper",
+  path: "https://github.com/horse-link/whitepaper"
+};
 
 type Props = {
   loading: boolean;
@@ -64,6 +72,13 @@ const PageLayoutView: React.FC<Props> = props => {
                         </Link>
                       );
                     })}
+                    <a
+                      href={whitePaperNavigation.path}
+                      target="_blank"
+                      className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-4 text-sm font-medium"
+                    >
+                      {whitePaperNavigation.name}
+                    </a>
                   </div>
                 </div>
                 <div className="-mr-2 flex items-center sm:hidden">
@@ -107,6 +122,13 @@ const PageLayoutView: React.FC<Props> = props => {
                     </Link>
                   );
                 })}
+                <a
+                  href={whitePaperNavigation.path}
+                  target="_blank"
+                  className="border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+                >
+                  {whitePaperNavigation.name}
+                </a>
                 <WalletConnectButton openWalletModal={openWalletModal} />
               </div>
             </Disclosure.Panel>

@@ -8,6 +8,20 @@ export type Back = {
   signature: string;
 };
 
+export type BetHistory = {
+  amount: number;
+  market_id: string;
+  odds: number;
+  proposition_id: string;
+  punter: string;
+  result: string;
+  tx: string;
+};
+
+export type BetHistoryResponse = {
+  results: BetHistory[];
+};
+
 export type SignedResponse = {
   owner: string;
   signature: string;
@@ -51,6 +65,7 @@ export type Runner = {
   end: number;
   odds: number;
   proposition_id: string;
+  proposition_id_hash: string;
   barrier: number;
   signature: Signature;
 };

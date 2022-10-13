@@ -1,3 +1,11 @@
 {
-    "solidity.compileUsingRemoteVersion": "v0.8.10+commit.fc410830"
+  "solidity.compileUsingRemoteVersion": "v0.8.10+commit.fc410830",
+  "workbench.colorCustomizations": {
+    "commandCenter.border": "#e7e7e799",
+    "titleBar.activeBackground": "#0a7351",
+    "titleBar.activeForeground": "#e7e7e7",
+    "titleBar.inactiveBackground": "#0a735199",
+    "titleBar.inactiveForeground": "#e7e7e799"
+  },
+  "peacock.color": "#0a7351"
 }
