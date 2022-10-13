@@ -16,7 +16,7 @@ export const VaultDetail = ({
   asset
 }: VaultDetailProps) => {
   return (
-    <div className="p-5 w-64">
+    <div className="p-5">
       <h1 className="text-3xl mb-2">{tokenSymbol} Vault</h1>
       <div>Share: {userBalance ?? "connect wallet to see your balance"}</div>
       <div>
