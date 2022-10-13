@@ -197,7 +197,27 @@ contract Market is Ownable, IMarket {
         _settle(id);
     }
 
-    function settleMarket(bytes32 nonce, bytes32 marketId, bytes32 propositionId, bytes calldata signature) public {
+    // function settleRange(uint256 id, bytes calldata signature) external {
+    //     bytes32 message = keccak256(abi.encodePacked(id));
+    //     address marketOwner = recoverSigner(message, signature);
+    //     require(marketOwner == owner(), "Invalid signature");
+
+    //     _settle(id);
+    // }
+
+    function settleMarket(bytes32 nonce, bytes32 marketId, uint256[] ids, bytes[] calldata signatures) public {
+        uint256 count = _marketBets[marketId].length;
+        assert(count < MAX);
+        for (uint256 i = 0; i < count; i++) {
+            uint256 index = _marketBets[marketId][i];
+
+            if (!_bets[index].settled && _bets[index].propositionId == propositionId) {
+                _settle(i);
+            }
+        }
+    }
+
+    function settleByIds(bytes32 nonce, bytes32 marketId, uint256[] ids, bytes[] calldata signatures) public {
         require(marketId != 0 && propositionId != 0, "Invalid ID");
 
         bytes32 message = keccak256(abi.encodePacked(nonce, propositionId, marketId));
@@ -215,6 +235,36 @@ contract Market is Ownable, IMarket {
         }
     }
 
+    function settleByIndexes(bytes32 nonce, bytes32 marketId, uint256[] indexes, bytes[] calldata signatures) public {
+        require(marketId != 0 && propositionId != 0, "Invalid ID");
+
+        bytes32 message = keccak256(abi.encodePacked(nonce, propositionId, marketId));
+        address marketOwner = recoverSigner(message, signature);
+        require(marketOwner == owner(), "Invalid signature");
+        
+        uint256 count = indexes.length;
+        for (uint256 i = 0; i < count; i++) {
+            uint256 index = _marketBets[marketId][indexes[i]];
+
+            if (!_bets[index].settled && _bets[index].propositionId == propositionId) {
+                _settle(i);
+            }
+        }
+    }
+
+    function _settle(uint256 id) private {
+        require(_bets[id].settled == false, "Bet has already been settled");
+        require(_bets[id].payoutDate < block.timestamp + _bets[id].payoutDate, "Market not closed");
+
+        _bets[id].settled = true;
+        _totalInPlay -= _bets[id].payout;
+
+        // todo: add fee
+        IERC20(_vault).transferFrom(_self, _bets[id].owner, _bets[id].payout);
+
+        emit Settled(id, _bets[id].payout, _bets[id].owner);
+    }
+
     // function claim(bytes32 id, bytes calldata signature) external {
     //     bytes32 message = keccak256(abi.encodePacked(id));
     //     address marketOwner = recoverSigner(message, signature);
@@ -230,18 +280,6 @@ contract Market is Ownable, IMarket {
 
     //     emit Claimed(id, _bets[id].payout, _bets[id].owner);
     // }
-
-    function _settle(uint256 id) private {
-        require(_bets[id].settled == false, "Bet has already been settled");
-        require(_bets[id].payoutDate < block.timestamp + _bets[id].payoutDate, "Market not closed");
-
-        _bets[id].settled = true;
-        _totalInPlay -= _bets[id].payout;
-
-        IERC20(_vault).transferFrom(_self, _bets[id].owner, _bets[id].payout);
-
-        emit Settled(id, _bets[id].payout, _bets[id].owner);
-    }
 
     function getEthSignedMessageHash(bytes32 messageHash)
         internal
