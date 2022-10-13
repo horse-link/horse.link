@@ -1,5 +1,4 @@
 import VaultListView from "./VaultList_View";
-import { useNavigate } from "react-router-dom";
 import useVaults from "../../hooks/useVaults";
 import { useState } from "react";
 

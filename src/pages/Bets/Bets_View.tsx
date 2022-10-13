@@ -1,13 +1,22 @@
 import { PageLayout } from "../../components";
+import Modal from "../../components/Modal";
 import { BetHistory } from "../../types";
 
 type Props = {
   betsData: BetHistory[];
   onClickBet: (bet: BetHistory) => void;
+  isModalOpen: boolean;
+  onCloseModal: () => void;
 };
-const BetsView = ({ betsData, onClickBet }: Props) => {
+const BetsView = ({
+  betsData,
+  onClickBet,
+  isModalOpen,
+  onCloseModal
+}: Props) => {
   return (
     <PageLayout requiresAuth={false}>
+      <BetModal isOpen={isModalOpen} onClose={onCloseModal} />
       <div className="flex flex-col">
         <h3 className="text-lg mb-3 font-medium text-gray-900">Markets </h3>
         <div className="bg-gray-50 rounded-xl overflow-auto">
@@ -78,6 +87,18 @@ const BetsView = ({ betsData, onClickBet }: Props) => {
 };
 
 export default BetsView;
+
+type BetModalProps = {
+  isOpen: boolean;
+  onClose: () => void;
+};
+const BetModal = ({ isOpen, onClose }: BetModalProps) => {
+  return (
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <div className="w-152 flex flex-col">Bet Settle Modal</div>
+    </Modal>
+  );
+};
 
 type RowProps = {
   betData: BetHistory;

@@ -21,10 +21,23 @@ const useBets = () => {
 
 const BetsLogics = () => {
   const betsData = useBets();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const onClickBet = (betData: any) => {
-    console.log("Clicked bet", betData);
+    setIsModalOpen(true);
   };
-  return <BetsView betsData={betsData} onClickBet={onClickBet} />;
+
+  const onCloseModal = () => {
+    setIsModalOpen(false);
+  };
+  return (
+    <BetsView
+      betsData={betsData}
+      onClickBet={onClickBet}
+      isModalOpen={isModalOpen}
+      onCloseModal={onCloseModal}
+    />
+  );
 };
 
 export default BetsLogics;
