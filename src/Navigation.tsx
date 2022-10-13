@@ -6,6 +6,7 @@ import Vault from "./pages/Vault/Vault_Logic";
 import Market from "./pages/Market/Market_Logic";
 // import Results from "./pages/Results/Results_Logic";
 import VaultList from "./pages/VaultList/VaultList_Logic";
+import Bets from "./pages/Bets/Bets_Logic";
 
 const Navigation = () => {
   return (
@@ -16,6 +17,7 @@ const Navigation = () => {
         <Route path="/vaults" element={<VaultList />} />
         <Route path="/vaults/:vaultAddress" element={<Vault />} />
         <Route path="/markets" element={<Market />} />
+        <Route path="/history" element={<Bets />} />
         <Route path="/horses/:track/:number" element={<HorseRace />} />
         <Route path="*" element={<Navigate to="/dashboard" />} />
         <Route path="/back/:propositionId" element={<Back />} />
