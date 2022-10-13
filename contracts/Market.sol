@@ -101,7 +101,6 @@ contract Market is Ownable, IMarket {
     }
 
     function _getBet(uint256 index) private view returns (uint256, uint256, uint256, bool, address) {
-        // bytes32 index = _betsIndexes[id];
         Bet memory bet = _bets[index];
         return (bet.amount, bet.payout, bet.payoutDate, bet.settled, bet.owner);
     }
@@ -212,52 +211,52 @@ contract Market is Ownable, IMarket {
     //     _settle(id);
     // }
 
-    function settleMarket(bytes32 nonce, bytes32 marketId, uint256[] ids, bytes[] calldata signatures) public {
-        uint256 count = _marketBets[marketId].length;
-        assert(count < MAX);
-        for (uint256 i = 0; i < count; i++) {
-            uint256 index = _marketBets[marketId][i];
+    // function settleMarket(bytes32 nonce, bytes32 marketId, uint256[] ids, bytes[] calldata signatures) public {
+    //     uint256 count = _marketBets[marketId].length;
+    //     assert(count < MAX);
+    //     for (uint256 i = 0; i < count; i++) {
+    //         uint256 index = _marketBets[marketId][i];
 
-            if (!_bets[index].settled && _bets[index].propositionId == propositionId) {
-                _settle(i);
-            }
-        }
-    }
+    //         if (!_bets[index].settled && _bets[index].propositionId == propositionId) {
+    //             _settle(i);
+    //         }
+    //     }
+    // }
 
-    function settleByIds(bytes32 nonce, bytes32 marketId, uint256[] ids, bytes[] calldata signatures) public {
-        require(marketId != 0 && propositionId != 0, "Invalid ID");
+    // function settleByIds(bytes32 nonce, bytes32 marketId, uint256[] ids, bytes[] calldata signatures) public {
+    //     //require(marketId != 0 && propositionId != 0, "Invalid ID");
 
-        bytes32 message = keccak256(abi.encodePacked(nonce, propositionId, marketId));
-        address marketOwner = recoverSigner(message, signature);
-        require(marketOwner == owner(), "Invalid signature");
+    //     bytes32 message = keccak256(abi.encodePacked(nonce, propositionId, marketId));
+    //     address marketOwner = recoverSigner(message, signature);
+    //     require(marketOwner == owner(), "Invalid signature");
         
-        uint256 count = _marketBets[marketId].length;
-        assert(count < MAX);
-        for (uint256 i = 0; i < count; i++) {
-            uint256 index = _marketBets[marketId][i];
+    //     uint256 count = _marketBets[marketId].length;
+    //     assert(count < MAX);
+    //     for (uint256 i = 0; i < count; i++) {
+    //         uint256 index = _marketBets[marketId][i];
 
-            if (!_bets[index].settled && _bets[index].propositionId == propositionId) {
-                _settle(i);
-            }
-        }
-    }
+    //         if (!_bets[index].settled && _bets[index].propositionId == propositionId) {
+    //             _settle(i);
+    //         }
+    //     }
+    // }
 
-    function settleByIndexes(bytes32 nonce, bytes32 marketId, uint256[] indexes, bytes[] calldata signatures) public {
-        require(marketId != 0 && propositionId != 0, "Invalid ID");
+    // function settleByIndexes(bytes32 nonce, bytes32 marketId, uint256[] indexes, bytes[] calldata signatures) public {
+    //     require(marketId != 0 && propositionId != 0, "Invalid ID");
 
-        bytes32 message = keccak256(abi.encodePacked(nonce, propositionId, marketId));
-        address marketOwner = recoverSigner(message, signature);
-        require(marketOwner == owner(), "Invalid signature");
+    //     bytes32 message = keccak256(abi.encodePacked(nonce, propositionId, marketId));
+    //     address marketOwner = recoverSigner(message, signature);
+    //     require(marketOwner == owner(), "Invalid signature");
         
-        uint256 count = indexes.length;
-        for (uint256 i = 0; i < count; i++) {
-            uint256 index = _marketBets[marketId][indexes[i]];
+    //     uint256 count = indexes.length;
+    //     for (uint256 i = 0; i < count; i++) {
+    //         uint256 index = _marketBets[marketId][indexes[i]];
 
-            if (!_bets[index].settled && _bets[index].propositionId == propositionId) {
-                _settle(i);
-            }
-        }
-    }
+    //         if (!_bets[index].settled && _bets[index].propositionId == propositionId) {
+    //             _settle(i);
+    //         }
+    //     }
+    // }
 
     function _settle(uint256 id) private {
         require(_bets[id].settled == false, "Bet has already been settled");
