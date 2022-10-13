@@ -16,7 +16,6 @@ const Navigation = () => {
         <Route path="/markets" element={<Market />} />
         <Route path="/horses/:track/:number" element={<HorseRace />} />
         <Route path="*" element={<Navigate to="/dashboard" />} />
-        <Route path="/back/:propositionId" element={<Back />} />
       </Routes>
     </HashRouter>
   );

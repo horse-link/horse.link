@@ -12,6 +12,7 @@ type Props = {
   onClickRunner: (runner: Runner) => void;
   isDialogOpen: boolean;
   onCloseDialog: () => void;
+  selectedRunner?: Runner;
 };
 
 const HorseRaceView: React.FC<Props> = ({
@@ -20,10 +21,16 @@ const HorseRaceView: React.FC<Props> = ({
   runners,
   onClickRunner,
   isDialogOpen,
-  onCloseDialog
+  onCloseDialog,
+  selectedRunner
 }: Props) => {
   return (
     <PageLayout requiresAuth={false}>
+      <BackModal
+        isOpen={isDialogOpen}
+        onClose={onCloseDialog}
+        runner={selectedRunner}
+      />
       <div className="flex mb-6 p-2 shadow overflow-hidden border-b bg-white border-gray-200 sm:rounded-lg justify-around">
         <h1>Track: {track}</h1>
         <h1>Race #: {raceNumber}</h1>
@@ -82,7 +89,6 @@ const HorseRaceView: React.FC<Props> = ({
                         <td className="px-2 py-4 whitespace-nowrap">
                           {runner.name} ({runner.barrier})
                           <br />
-                          {/* {horse.Rider} */}
                         </td>
                         <td className="px-2 py-4 whitespace-nowrap">NA</td>
 
@@ -99,7 +105,6 @@ const HorseRaceView: React.FC<Props> = ({
           </div>
         </div>
       </div>
-      <BackModal isOpen={isDialogOpen} onClose={onCloseDialog} />
     </PageLayout>
   );
 };
@@ -109,9 +114,10 @@ export default HorseRaceView;
 type BackModalProps = {
   isOpen: boolean;
   onClose: () => void;
+  runner?: Runner;
 };
 
-const BackModal = ({ isOpen, onClose }: BackModalProps) => {
+const BackModal = ({ isOpen, onClose, runner }: BackModalProps) => {
   return (
     <>
       <Transition appear show={isOpen} as={Fragment}>
@@ -140,7 +146,7 @@ const BackModal = ({ isOpen, onClose }: BackModalProps) => {
                 leaveTo="opacity-0 scale-95"
               >
                 <Dialog.Panel className="w-152 transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <BackLogic />
+                  <BackLogic runner={runner} />
                 </Dialog.Panel>
               </Transition.Child>
             </div>

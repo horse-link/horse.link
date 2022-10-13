@@ -15,7 +15,7 @@ import marketContractJson from "../../abi/Market.json";
 import useMarkets from "../../hooks/useMarkets";
 import useTokenApproval from "../../hooks/useTokenApproval";
 import useTokenData from "../../hooks/useTokenData";
-import { Back } from "../../types";
+import { Back, Runner } from "../../types";
 import BackView from "./Back_View";
 
 const DECIMAL = 6;
@@ -223,33 +223,36 @@ const useBackingContract = (
   };
 };
 
-const usePageParams = () => {
-  const { proposition_id } = useParams();
-  const [searchParams] = useSearchParams();
+const usePageParams = (runner?: Runner) => {
+  const {
+    proposition_id = "",
+    market_id = "",
+    odds = 0,
+    close = 0,
+    end = 0,
+    signature
+  } = runner ?? {};
 
-  const marketId = searchParams.get("market_id");
-  const odds = searchParams.get("odds");
-  const close = searchParams.get("close");
-  const end = searchParams.get("end");
-  // wait API fix
-  // const nonce = searchParams.get("nonce");
-  const nonce = useMemo(() => Date.now().toString(), []); // todo: get from api
-  const signature = searchParams.get("signature");
+  // todo: get nonce from runner once api is updated
+  const nonce = useMemo(() => Date.now().toString(), []);
 
   const back: Back = {
-    nonce: nonce || "",
-    market_id: marketId || "",
-    close: parseInt(close || "0"),
-    end: parseInt(end || "0"),
-    odds: parseFloat(odds || "0") / 1000,
-    proposition_id: proposition_id || "",
-    signature: signature || ""
+    nonce,
+    market_id,
+    close,
+    end,
+    odds: odds / 1000,
+    proposition_id,
+    signature: signature?.signature ?? ""
   };
   return { back };
 };
 
-const BackLogic: React.FC = () => {
-  const { back } = usePageParams();
+type Props = {
+  runner?: Runner;
+};
+const BackLogic = ({ runner }: Props) => {
+  const { back } = usePageParams(runner);
   const { marketAddresses } = useMarkets();
   const { address } = useAccount();
   const ownerAddress = address ?? "";

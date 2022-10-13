@@ -5,8 +5,6 @@ import useApi from "../../hooks/useApi";
 import { useParams } from "react-router-dom";
 
 const HorseRace: React.FC = () => {
-  const _runners: Runner[] = [];
-
   const params = useParams();
   const track = params.track || "";
   const raceNumber = Number(params.number) || 0;
@@ -14,6 +12,7 @@ const HorseRace: React.FC = () => {
   const api = useApi();
   const [runners, setRunners] = useState<Runner[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedRunner, setSelectedRunner] = useState<Runner>();
 
   useEffect(() => {
     if (!track || !raceNumber) return;
@@ -29,6 +28,7 @@ const HorseRace: React.FC = () => {
   };
 
   const onClickRunner = (runner: Runner) => {
+    setSelectedRunner(runner);
     openDialog();
   };
 
@@ -40,6 +40,7 @@ const HorseRace: React.FC = () => {
       onClickRunner={onClickRunner}
       isDialogOpen={isDialogOpen}
       onCloseDialog={() => setIsDialogOpen(false)}
+      selectedRunner={selectedRunner}
     />
   );
 };
