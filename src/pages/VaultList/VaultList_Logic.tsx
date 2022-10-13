@@ -6,15 +6,15 @@ import { useState } from "react";
 const VaultList: React.FC = () => {
   const { vaultAddresses } = useVaults();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const navigate = useNavigate();
+  const [selectedVaultAddress, setselectedVaultAddress] = useState("");
 
   const openDialog = () => {
     setIsDialogOpen(true);
   };
 
   const onClickVault = (vaultAddress: string) => {
+    setselectedVaultAddress(vaultAddress);
     openDialog();
-    // navigate(`/vaults/${vaultAddress}`);
   };
 
   return (
@@ -23,6 +23,7 @@ const VaultList: React.FC = () => {
       onClickVault={onClickVault}
       isDialogOpen={isDialogOpen}
       onCloseDialog={() => setIsDialogOpen(false)}
+      selectedVaultAddress={selectedVaultAddress}
     />
   );
 };

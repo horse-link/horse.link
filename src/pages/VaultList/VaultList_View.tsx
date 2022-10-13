@@ -12,13 +12,15 @@ type Props = {
   onClickVault: (vaultAddress: string) => void;
   isDialogOpen: boolean;
   onCloseDialog: () => void;
+  selectedVaultAddress: string;
 };
 
 const VaultListView: React.FC<Props> = ({
   vaultAddressList,
   onClickVault,
   isDialogOpen,
-  onCloseDialog
+  onCloseDialog,
+  selectedVaultAddress
 }) => {
   // TODO: Do we want to make this table responsive?
   return (
@@ -71,7 +73,11 @@ const VaultListView: React.FC<Props> = ({
           </div>
         </div>
       </div>
-      <VaultModal isOpen={isDialogOpen} onClose={onCloseDialog} />
+      <VaultModal
+        isOpen={isDialogOpen}
+        onClose={onCloseDialog}
+        vaultAddress={selectedVaultAddress}
+      />
     </PageLayout>
   );
 };
@@ -81,9 +87,10 @@ export default VaultListView;
 type VaultModalProps = {
   isOpen: boolean;
   onClose: () => void;
+  vaultAddress: string;
 };
 
-const VaultModal = ({ isOpen, onClose }: VaultModalProps) => {
+const VaultModal = ({ isOpen, onClose, vaultAddress }: VaultModalProps) => {
   return (
     <>
       <Transition appear show={isOpen} as={Fragment}>
@@ -112,7 +119,7 @@ const VaultModal = ({ isOpen, onClose }: VaultModalProps) => {
                 leaveTo="opacity-0 scale-95"
               >
                 <Dialog.Panel className="w-152 transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <VaultLogic />
+                  <VaultLogic vaultAddress={vaultAddress} />
                 </Dialog.Panel>
               </Transition.Child>
             </div>

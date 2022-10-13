@@ -94,10 +94,11 @@ const useDepositContractWrite = ({
   };
 };
 
-const VaultLogic = () => {
-  const { vaultAddress: vaultAddressParam } = useParams();
+type Props = {
+  vaultAddress: string;
+};
+const VaultLogic = ({ vaultAddress }: Props) => {
   const { address } = useAccount();
-  const vaultAddress = vaultAddressParam ?? "";
   const userAddress = address ?? "";
 
   const {
