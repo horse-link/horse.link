@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Runner, SignedRunnersResponse } from "../../types";
+import { Runner } from "../../types";
 import HorseRaceView from "./HorseRace_View";
 import useApi from "../../hooks/useApi";
 import { useParams } from "react-router-dom";

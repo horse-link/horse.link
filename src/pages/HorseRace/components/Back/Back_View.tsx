@@ -1,9 +1,9 @@
 import { useContractRead } from "wagmi";
-import ContractWriteResultCard from "../../components/ContractWriteResultCard/ContractWriteResultCard_View";
-import RequireWalletButton from "../../components/RequireWalletButton/RequireWalletButton_View";
-import { Back } from "../../types";
-import marketContract from "../../abi/Market.json";
-import vaultContractJson from "../../abi/Vault.json";
+import ContractWriteResultCard from "../../../../components/ContractWriteResultCard/ContractWriteResultCard_View";
+import RequireWalletButton from "../../../../components/RequireWalletButton/RequireWalletButton_View";
+import { Back } from "../../../../types";
+import marketContract from "../../../../abi/Market.json";
+import vaultContractJson from "../../../../abi/Vault.json";
 
 type Props = {
   back: Back;

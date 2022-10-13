@@ -1,6 +1,5 @@
 import { ethers } from "ethers";
 import { useMemo, useState } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
 import { useDebounce } from "use-debounce";
 
 import {
@@ -11,11 +10,11 @@ import {
   useWaitForTransaction
 } from "wagmi";
 
-import marketContractJson from "../../abi/Market.json";
-import useMarkets from "../../hooks/useMarkets";
-import useTokenApproval from "../../hooks/useTokenApproval";
-import useTokenData from "../../hooks/useTokenData";
-import { Back, Runner } from "../../types";
+import marketContractJson from "../../../../abi/Market.json";
+import useMarkets from "../../../../hooks/useMarkets";
+import useTokenApproval from "../../../../hooks/useTokenApproval";
+import useTokenData from "../../../../hooks/useTokenData";
+import { Back, Runner } from "../../../../types";
 import BackView from "./Back_View";
 
 const DECIMAL = 6;

@@ -5,7 +5,7 @@ import mockTokenContractJson from "../../abi/MockToken.json";
 import { ethers } from "ethers";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
-import VaultLogic from "../Vault/Vault_Logic";
+import VaultLogic from "./components/Vault/Vault_Logic";
 
 type Props = {
   vaultAddressList: string[];

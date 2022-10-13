@@ -3,7 +3,7 @@ import moment from "moment";
 import { Runner } from "../../types";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
-import BackLogic from "../Back/Back_Logic";
+import BackLogic from "./components/Back/Back_Logic";
 
 type Props = {
   track: string;

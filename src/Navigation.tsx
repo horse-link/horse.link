@@ -1,5 +1,4 @@
 import { Route, Routes, Navigate, HashRouter } from "react-router-dom";
-import Back from "./pages/Back/Back_Logic";
 import Dashboard from "./pages/Dashboard/Dashboard_Logic";
 import HorseRace from "./pages/HorseRace/HorseRace_Logic";
 import Market from "./pages/Market/Market_Logic";

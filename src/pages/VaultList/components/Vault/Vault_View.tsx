@@ -1,6 +1,6 @@
-import ContractWriteResultCard from "../../components/ContractWriteResultCard/ContractWriteResultCard_View";
-import RequireWalletButton from "../../components/RequireWalletButton/RequireWalletButton_View";
-import { VaultDetail, VaultDetailProps } from "./Component/VaultDetail";
+import ContractWriteResultCard from "../../../../components/ContractWriteResultCard/ContractWriteResultCard_View";
+import RequireWalletButton from "../../../../components/RequireWalletButton/RequireWalletButton_View";
+import { VaultDetail, VaultDetailProps } from "../VaultDetail";
 
 type Props = {
   vaultDetailData: VaultDetailProps;
