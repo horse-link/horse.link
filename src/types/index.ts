@@ -11,6 +11,7 @@ export type Back = {
 export type BetHistory = {
   market_id: string;
   proposition_id: string;
+  index: number;
   punter: string;
   amount: number;
   odds: number;

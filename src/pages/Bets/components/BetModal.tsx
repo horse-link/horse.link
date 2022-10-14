@@ -4,6 +4,7 @@ import Modal from "../../../components/Modal";
 import RequireWalletButton from "../../../components/RequireWalletButton/RequireWalletButton_View";
 import marketContractJson from "../../../abi/Market.json";
 import { BetHistory } from "../../../types";
+import { ethers } from "ethers";
 
 type Props = {
   isOpen: boolean;
@@ -22,21 +23,21 @@ export default BetModal;
 
 type useSettleContractWriteArgs = {
   marketAddress?: string;
-  id?: string;
+  index?: number;
   signature?: string;
 };
 const useSettleContractWrite = ({
   marketAddress,
-  id,
-  signature
+  index = 0,
+  signature = ""
 }: useSettleContractWriteArgs) => {
   const { data, error, write } = useContractWrite({
     mode: "recklesslyUnprepared",
     addressOrName: marketAddress || "",
     contractInterface: marketContractJson.abi,
     functionName: "settle",
-    args: [id, signature],
-    enabled: !!marketAddress && !!id && !!signature
+    args: [index, signature],
+    enabled: !!marketAddress && !!index && !!signature
   });
 
   const txHash = data?.hash;
@@ -61,7 +62,7 @@ const useSettleBet = (bet?: BetHistory) => {
     txHash
   } = useSettleContractWrite({
     marketAddress: bet?.market,
-    id: bet?.proposition_id,
+    index: bet?.index,
     signature: bet?.signature
   });
   const contract = {
@@ -94,10 +95,10 @@ const SettleBet = ({ data }: SettlebetProps) => {
         <form>
           <div className="flex flex-col">
             <label>
-              <span>id</span>
+              <span>index</span>
               <input
                 type="text"
-                value={data?.proposition_id}
+                value={data?.index}
                 readOnly
                 className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
               />
@@ -107,7 +108,7 @@ const SettleBet = ({ data }: SettlebetProps) => {
               <span>signature</span>
               <input
                 type="text"
-                value="{{signature}}"
+                value={data?.signature}
                 readOnly
                 className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
               />
@@ -124,6 +125,7 @@ const SettleBet = ({ data }: SettlebetProps) => {
                       ? " opacity-50 cursor-not-allowed"
                       : "")
                   }
+                  onClick={() => contract.settleContractWrite()}
                   disabled={shouldSettleButtonDisabled}
                 >
                   {txStatus.isLoading ? "..." : "Settle"}

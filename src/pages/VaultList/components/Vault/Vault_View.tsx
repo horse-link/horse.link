@@ -10,10 +10,10 @@ type Props = {
   shouldDepositButtonDisabled: boolean;
   shouldWithdrawButtonDisabled: boolean;
   contract: {
-    depositContractWrite?: () => void;
-    approveContractWrite?: () => void;
-    withdrawContractWrite?: () => void;
-    errorMsg?: string;
+    depositContractWrite: () => void | undefined;
+    approveContractWrite: () => void | undefined;
+    withdrawContractWrite: () => void | undefined;
+    errorMsg: string | undefined;
   };
   txStatus: {
     isLoading: boolean;

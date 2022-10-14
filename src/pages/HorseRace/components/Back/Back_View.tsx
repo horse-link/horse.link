@@ -15,9 +15,9 @@ type Props = {
   potentialPayout: string;
   shouldButtonDisabled: boolean;
   contract: {
-    backContractWrite?: () => void;
-    approveContractWrite?: () => void;
-    errorMsg?: string;
+    backContractWrite: () => void | undefined;
+    approveContractWrite: () => void | undefined;
+    errorMsg: string | undefined;
   };
   txStatus: {
     isLoading: boolean;
