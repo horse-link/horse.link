@@ -34,7 +34,7 @@ const VaultView = ({
   isEnoughAllowance
 }: Props) => {
   return (
-    <div className="w-152">
+    <div className="w-96 md:w-152 break-all md:break-normal">
       <div className="flex flex-col flex-row justify-between bg-white border-gray-200">
         <div>
           <VaultDetail {...vaultDetailData} />

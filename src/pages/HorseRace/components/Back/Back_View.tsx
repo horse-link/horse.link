@@ -41,8 +41,8 @@ const BackView: React.FC<Props> = ({
   isEnoughAllowance
 }) => {
   return (
-    <div>
-      <div className="w-152 px-10 pt-5 pb-5 rounded-md bg-white border-gray-200 sm:rounded-lg">
+    <div className="w-96 md:w-152">
+      <div className="px-10 pt-5 pb-5 rounded-md bg-white border-gray-200 sm:rounded-lg">
         <div className="text-3xl">Target odds {back.odds}</div>
         <form>
           <div className="flex flex-col">
