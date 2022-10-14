@@ -190,7 +190,7 @@ contract Market is Ownable, IMarket {
         _totalInPlay += payout;
         _totalLiability += (payout - wager);
 
-        emit Placed(propositionId, wager, payout, msg.sender);
+        emit Placed(_count, propositionId, marketId, wager, payout, msg.sender);
 
         return _count; // token ID
     }
@@ -336,6 +336,6 @@ contract Market is Ownable, IMarket {
         return (v, r, s);
     }
 
-    event Placed(bytes32 propositionId, uint256 amount, uint256 payout, address indexed owner);
+    event Placed(uint256 index, bytes32 propositionId, bytes32 marketId, uint256 amount, uint256 payout, address indexed owner);
     event Settled(uint256 id, uint256 payout, address indexed owner);
 }
