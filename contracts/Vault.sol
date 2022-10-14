@@ -64,7 +64,7 @@ contract Vault is Ownable, IERC20, IVault {
         // require(IMarket(_market).getTarget() < 200, "Market target is too high");
         _market = market;
 
-        IERC20(_underlying).approve(_market, type(uint256).max);
+        ERC20(_underlying).approve(_market, type(uint256).max);
     }
 
     function getPerformance() external view returns (uint256) {
