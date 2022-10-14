@@ -1,8 +1,4 @@
-import {
-  useContractWrite,
-  usePrepareContractWrite,
-  useWaitForTransaction
-} from "wagmi";
+import { useContractWrite, useWaitForTransaction } from "wagmi";
 import ContractWriteResultCard from "../../../components/ContractWriteResultCard/ContractWriteResultCard_View";
 import Modal from "../../../components/Modal";
 import RequireWalletButton from "../../../components/RequireWalletButton/RequireWalletButton_View";
@@ -34,14 +30,14 @@ const useSettleContractWrite = ({
   id,
   signature
 }: useSettleContractWriteArgs) => {
-  const { config, error: prepareError } = usePrepareContractWrite({
-    addressOrName: marketAddress,
+  const { data, error, write } = useContractWrite({
+    mode: "recklesslyUnprepared",
+    addressOrName: marketAddress || "",
     contractInterface: marketContractJson.abi,
     functionName: "settle",
     args: [id, signature],
-    enabled: !!id && !!signature
+    enabled: !!marketAddress && !!id && !!signature
   });
-  const { data, error: writeError, write } = useContractWrite(config);
 
   const txHash = data?.hash;
   const { isLoading: isTxLoading, isSuccess: isTxSuccess } =
@@ -50,7 +46,7 @@ const useSettleContractWrite = ({
     });
   return {
     write,
-    error: prepareError || writeError,
+    error,
     isTxLoading,
     isTxSuccess,
     txHash
