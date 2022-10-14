@@ -4,7 +4,6 @@ import {
   erc20ABI,
   useContractRead,
   useContractWrite,
-  usePrepareContractWrite,
   useWaitForTransaction
 } from "wagmi";
 
@@ -44,7 +43,12 @@ const useApproveContractWrite = ({
   vaultAddress,
   onTxSuccess
 }: useApproveContractWriteArgs) => {
-  const { config, error: prepareError } = usePrepareContractWrite({
+  const {
+    data: approveData,
+    write,
+    error
+  } = useContractWrite({
+    mode: "recklesslyUnprepared",
     addressOrName: tokenAddress,
     contractInterface: erc20ABI,
     functionName: "approve",
@@ -52,18 +56,12 @@ const useApproveContractWrite = ({
     enabled: !!tokenAddress && !!vaultAddress
   });
 
-  const {
-    data: approveData,
-    write,
-    error: writeError
-  } = useContractWrite(config);
-
   const { isLoading: isTxLoading } = useWaitForTransaction({
     hash: approveData?.hash,
     onSuccess: onTxSuccess
   });
 
-  return { write, error: prepareError || writeError, isTxLoading };
+  return { write, error, isTxLoading };
 };
 
 const useTokenApproval = (

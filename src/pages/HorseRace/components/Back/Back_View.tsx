@@ -15,7 +15,7 @@ type Props = {
   potentialPayout: string;
   shouldButtonDisabled: boolean;
   contract: {
-    backContractwrite?: () => void;
+    backContractWrite?: () => void;
     approveContractWrite?: () => void;
     errorMsg?: string;
   };
@@ -91,7 +91,7 @@ const BackView: React.FC<Props> = ({
                 isEnoughAllowance ? (
                   <button
                     className="px-5 py-1 hover:bg-gray-100 rounded-md border border-gray-500 shadow-md"
-                    onClick={contract.backContractwrite}
+                    onClick={contract.backContractWrite}
                     disabled={shouldButtonDisabled}
                   >
                     {txStatus.isLoading ? "Backing..." : "Back"}

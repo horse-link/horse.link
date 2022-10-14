@@ -1,12 +1,7 @@
 import { useState } from "react";
 import VaultView from "./Vault_View";
 import vaultContractJson from "../../../../abi/Vault.json";
-import {
-  useAccount,
-  useContractWrite,
-  usePrepareContractWrite,
-  useWaitForTransaction
-} from "wagmi";
+import { useAccount, useContractWrite, useWaitForTransaction } from "wagmi";
 import { ethers } from "ethers";
 import useTokenData from "../../../../hooks/useTokenData";
 import useTokenApproval from "../../../../hooks/useTokenApproval";
@@ -21,13 +16,13 @@ const useWithdrawContractWrite = ({
   enabled,
   onTxSuccess
 }: useWithdrawContractWriteArgs) => {
-  const { config, error: prepareError } = usePrepareContractWrite({
+  const { data, error, write } = useContractWrite({
+    mode: "recklesslyUnprepared",
     addressOrName: vaultAddress,
     contractInterface: vaultContractJson.abi,
     functionName: "withdraw",
     enabled
   });
-  const { data, error: writeError, write } = useContractWrite(config);
 
   const txHash = data?.hash;
 
@@ -39,7 +34,7 @@ const useWithdrawContractWrite = ({
 
   return {
     write,
-    error: prepareError || writeError,
+    error,
     isTxLoading,
     isTxSuccess,
     txHash
@@ -67,15 +62,15 @@ const useDepositContractWrite = ({
     tokenDecimal
   );
   const receiver = ownerAddress;
-  const { config, error: prepareError } = usePrepareContractWrite({
+
+  const { data, error, write } = useContractWrite({
+    mode: "recklesslyUnprepared",
     addressOrName: vaultAddress,
     contractInterface: vaultContractJson.abi,
     functionName: "deposit",
     args: [assets, receiver],
     enabled
   });
-
-  const { data, error: writeError, write } = useContractWrite(config);
 
   const txHash = data?.hash;
   const { isLoading: isTxLoading, isSuccess: isTxSuccess } =
@@ -86,7 +81,7 @@ const useDepositContractWrite = ({
 
   return {
     write,
-    error: prepareError || writeError,
+    error,
     isTxLoading,
     isTxSuccess,
     txHash
