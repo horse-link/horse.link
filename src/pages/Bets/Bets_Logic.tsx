@@ -33,11 +33,12 @@ const useBets = () => {
 
 const BetsLogics = () => {
   const { bets, myBets } = useBets();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   const [myBetsEnabled, setMyBetsEnabled] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedBet, setSelectedBet] = useState<BetHistory>();
 
-  const onClickBet = (betData: any) => {
+  const onClickBet = (betData: BetHistory) => {
+    setSelectedBet(betData);
     setIsModalOpen(true);
   };
 
@@ -48,11 +49,12 @@ const BetsLogics = () => {
   return (
     <BetsView
       betsData={myBetsEnabled ? myBets : bets}
+      myBetsEnabled={myBetsEnabled}
+      onMyBetToggle={onMyBetToggle}
       onClickBet={onClickBet}
       isModalOpen={isModalOpen}
       onCloseModal={() => setIsModalOpen(false)}
-      myBetsEnabled={myBetsEnabled}
-      onMyBetToggle={onMyBetToggle}
+      selectedBet={selectedBet}
     />
   );
 };

@@ -6,11 +6,12 @@ import MyBetsToggle from "./components/MyBetsToggle";
 
 type Props = {
   betsData: BetHistory[];
+  myBetsEnabled: boolean;
+  onMyBetToggle: (isEnable: boolean) => void;
   onClickBet: (bet: BetHistory) => void;
   isModalOpen: boolean;
   onCloseModal: () => void;
-  myBetsEnabled: boolean;
-  onMyBetToggle: (isEnable: boolean) => void;
+  selectedBet?: BetHistory;
 };
 const BetsView = ({
   betsData,
@@ -18,11 +19,16 @@ const BetsView = ({
   isModalOpen,
   onCloseModal,
   myBetsEnabled,
-  onMyBetToggle
+  onMyBetToggle,
+  selectedBet
 }: Props) => {
   return (
     <PageLayout requiresAuth={false}>
-      <BetModal isOpen={isModalOpen} onClose={onCloseModal} />
+      <BetModal
+        isOpen={isModalOpen}
+        onClose={onCloseModal}
+        betData={selectedBet}
+      />
       <div className="grid grid-cols-2 gap-2">
         <h3 className="text-lg font-medium text-gray-900">History</h3>
         <MyBetsToggle enabled={myBetsEnabled} onChange={onMyBetToggle} />

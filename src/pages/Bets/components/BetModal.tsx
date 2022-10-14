@@ -7,15 +7,17 @@ import ContractWriteResultCard from "../../../components/ContractWriteResultCard
 import Modal from "../../../components/Modal";
 import RequireWalletButton from "../../../components/RequireWalletButton/RequireWalletButton_View";
 import marketContractJson from "../../../abi/Market.json";
+import { BetHistory } from "../../../types";
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
+  betData?: BetHistory;
 };
-const BetModal = ({ isOpen, onClose }: Props) => {
+const BetModal = ({ isOpen, onClose, betData }: Props) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <SettleBet />
+      <SettleBet data={betData} />
     </Modal>
   );
 };
@@ -23,9 +25,9 @@ const BetModal = ({ isOpen, onClose }: Props) => {
 export default BetModal;
 
 type useSettleContractWriteArgs = {
-  marketAddress: string;
-  id: string;
-  signature: string;
+  marketAddress?: string;
+  id?: string;
+  signature?: string;
 };
 const useSettleContractWrite = ({
   marketAddress,
@@ -54,12 +56,7 @@ const useSettleContractWrite = ({
     txHash
   };
 };
-
-const useSettleBet = () => {
-  // TODO: get args from props
-  const marketAddress = "0xe9BC1f42bF75C59b245d39483E97C3A70c450c9b";
-  const propositionId = "";
-  const signature = "";
+const useSettleBet = (bet?: BetHistory) => {
   const {
     write: settleContractWrite,
     error: settleError,
@@ -67,9 +64,9 @@ const useSettleBet = () => {
     isTxSuccess,
     txHash
   } = useSettleContractWrite({
-    marketAddress,
-    id: propositionId,
-    signature
+    marketAddress: bet?.market,
+    id: bet?.proposition_id,
+    signature: bet?.signature
   });
   const contract = {
     settleContractWrite,
@@ -88,19 +85,23 @@ const useSettleBet = () => {
     shouldSettleButtonDisabled
   };
 };
-const SettleBet = () => {
-  const { contract, txStatus, shouldSettleButtonDisabled } = useSettleBet();
+
+type SettlebetProps = {
+  data?: BetHistory;
+};
+const SettleBet = ({ data }: SettlebetProps) => {
+  const { contract, txStatus, shouldSettleButtonDisabled } = useSettleBet(data);
   return (
     <div className="w-96 md:w-152">
       <div className="px-10 pt-5 pb-5 rounded-md bg-white border-gray-200 sm:rounded-lg">
-        <div className="text-3xl">Target odds</div>
+        <div className="text-3xl">Settle Bet</div>
         <form>
           <div className="flex flex-col">
             <label>
               <span>id</span>
               <input
                 type="text"
-                value="{{propositionId}}"
+                value={data?.proposition_id}
                 readOnly
                 className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
               />
