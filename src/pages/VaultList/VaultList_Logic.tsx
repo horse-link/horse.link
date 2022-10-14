@@ -5,15 +5,11 @@ import { useState } from "react";
 const VaultList: React.FC = () => {
   const { vaultAddresses } = useVaults();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedVaultAddress, setselectedVaultAddress] = useState("");
-
-  const openDialog = () => {
-    setIsDialogOpen(true);
-  };
+  const [selectedVaultAddress, setSelectedVaultAddress] = useState("");
 
   const onClickVault = (vaultAddress: string) => {
-    setselectedVaultAddress(vaultAddress);
-    openDialog();
+    setSelectedVaultAddress(vaultAddress);
+    setIsDialogOpen(true);
   };
 
   return (
