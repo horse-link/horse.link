@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import VaultView from "./Vault_View";
-import vaultContractJson from "../../abi/Vault.json";
+import vaultContractJson from "../../../../abi/Vault.json";
 import {
   useAccount,
   useContractWrite,
@@ -9,9 +9,9 @@ import {
   useWaitForTransaction
 } from "wagmi";
 import { ethers } from "ethers";
-import useTokenData from "../../hooks/useTokenData";
-import useTokenApproval from "../../hooks/useTokenApproval";
-import useVaultData from "../../hooks/useVaultData";
+import useTokenData from "../../../../hooks/useTokenData";
+import useTokenApproval from "../../../../hooks/useTokenApproval";
+import useVaultData from "../../../../hooks/useVaultData";
 type useWithdrawContractWriteArgs = {
   vaultAddress: string;
   enabled: boolean;
@@ -94,10 +94,11 @@ const useDepositContractWrite = ({
   };
 };
 
-const VaultLogic = () => {
-  const { vaultAddress: vaultAddressParam } = useParams();
+type Props = {
+  vaultAddress: string;
+};
+const VaultLogic = ({ vaultAddress }: Props) => {
   const { address } = useAccount();
-  const vaultAddress = vaultAddressParam ?? "";
   const userAddress = address ?? "";
 
   const {
