@@ -6,7 +6,6 @@ import {
   useAccount,
   useContractRead,
   useContractWrite,
-  usePrepareContractWrite,
   useWaitForTransaction
 } from "wagmi";
 
@@ -100,7 +99,12 @@ const useBackContractWrite = ({
   signature,
   enabled
 }: useBackContractWriteArgs) => {
-  const { config, error: prepareError } = usePrepareContractWrite({
+  const {
+    data: contractData,
+    error,
+    write
+  } = useContractWrite({
+    mode: "recklesslyUnprepared",
     addressOrName: marketAddress,
     contractInterface: marketContractJson.abi,
     functionName: "back",
@@ -117,12 +121,6 @@ const useBackContractWrite = ({
     enabled: enabled && !!marketAddress
   });
 
-  const {
-    data: contractData,
-    error: writeError,
-    write
-  } = useContractWrite(config);
-
   const backTxHash = contractData?.hash;
 
   const { isLoading: isTxLoading, isSuccess: isTxSuccess } =
@@ -132,7 +130,7 @@ const useBackContractWrite = ({
 
   return {
     write,
-    error: prepareError || writeError,
+    error,
     isTxLoading,
     isTxSuccess,
     backTxHash
