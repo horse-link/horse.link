@@ -7,12 +7,16 @@ type Props = {
   onClickBet: (bet: BetHistory) => void;
   isModalOpen: boolean;
   onCloseModal: () => void;
+  myBetsEnabled: boolean;
+  onMyBetToggle: (isEnable: boolean) => void;
 };
 const BetsView = ({
   betsData,
   onClickBet,
   isModalOpen,
-  onCloseModal
+  onCloseModal,
+  myBetsEnabled,
+  onMyBetToggle
 }: Props) => {
   return (
     <PageLayout requiresAuth={false}>
