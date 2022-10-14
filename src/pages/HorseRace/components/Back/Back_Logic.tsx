@@ -16,13 +16,14 @@ import useTokenData from "../../../../hooks/useTokenData";
 import { Back, Runner } from "../../../../types";
 import BackView from "./Back_View";
 
-const DECIMAL = 6;
+const DECIAML = 6;
 
 const usePotentialPayout = (
   marketAddress: string,
   b32PropositionId: string,
   bnWager: ethers.BigNumber,
-  bnOdds: ethers.BigNumber
+  bnOdds: ethers.BigNumber,
+  tokenDecimal: string
 ) => {
   const { data: bnPotentialPayout } = useContractRead({
     addressOrName: marketAddress,
@@ -33,7 +34,7 @@ const usePotentialPayout = (
 
   const potentialPayout = useMemo(() => {
     if (!bnPotentialPayout) return "0";
-    return ethers.utils.formatUnits(bnPotentialPayout, DECIMAL);
+    return ethers.utils.formatUnits(bnPotentialPayout, tokenDecimal);
   }, [bnPotentialPayout]);
 
   return { potentialPayout };
@@ -53,12 +54,13 @@ const usePrepareBackingData = (
   );
 
   const bnOdds = useMemo(
-    () => ethers.utils.parseUnits(odds.toString(), DECIMAL),
+    () => ethers.utils.parseUnits(odds.toString(), DECIAML),
     [odds]
   );
 
   const bnWager = useMemo(
-    () => ethers.utils.parseUnits(debouncedWagerAmount.toString(), DECIMAL),
+    () =>
+      ethers.utils.parseUnits(debouncedWagerAmount.toString(), tokenDecimal),
     [debouncedWagerAmount]
   );
 
@@ -164,7 +166,7 @@ const useBackingContract = (
     write: approveContractWrite,
     error: approveError,
     isTxLoading: isApproveTxLoading
-  } = useTokenApproval(tokenAddress, ownerAddress, vaultAddress, tokenDecimal);
+  } = useTokenApproval(tokenAddress, ownerAddress, marketAddress, tokenDecimal);
 
   const isEnoughAllowance = allowance > 0 && allowance >= wagerAmount;
 
@@ -182,7 +184,8 @@ const useBackingContract = (
     marketAddress,
     b32PropositionId,
     bnWager,
-    bnOdds
+    bnOdds,
+    tokenDecimal
   );
 
   const {

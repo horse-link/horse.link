@@ -34,13 +34,13 @@ const useAllowance = ({
 
 type useApproveContractWriteArgs = {
   tokenAddress: string;
-  vaultAddress: string;
+  spenderAddress: string;
   onTxSuccess: () => void;
 };
 
 const useApproveContractWrite = ({
   tokenAddress,
-  vaultAddress,
+  spenderAddress,
   onTxSuccess
 }: useApproveContractWriteArgs) => {
   const {
@@ -52,8 +52,8 @@ const useApproveContractWrite = ({
     addressOrName: tokenAddress,
     contractInterface: erc20ABI,
     functionName: "approve",
-    args: [vaultAddress, ethers.constants.MaxUint256],
-    enabled: !!tokenAddress && !!vaultAddress
+    args: [spenderAddress, ethers.constants.MaxUint256],
+    enabled: !!tokenAddress && !!spenderAddress
   });
 
   const { isLoading: isTxLoading } = useWaitForTransaction({
@@ -67,19 +67,19 @@ const useApproveContractWrite = ({
 const useTokenApproval = (
   tokenAddress: string,
   ownerAddress: string,
-  vaultAddress: string,
+  spenderAddress: string,
   tokenDecimal: string
 ) => {
   const { allowance, refetch: refetchAllowance } = useAllowance({
     address: tokenAddress,
     owner: ownerAddress,
-    spender: vaultAddress,
+    spender: spenderAddress,
     decimals: tokenDecimal
   });
 
   const { write, error, isTxLoading } = useApproveContractWrite({
     tokenAddress,
-    vaultAddress,
+    spenderAddress,
     onTxSuccess: () => refetchAllowance()
   });
 

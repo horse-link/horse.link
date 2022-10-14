@@ -10,10 +10,10 @@ type Props = {
   shouldDepositButtonDisabled: boolean;
   shouldWithdrawButtonDisabled: boolean;
   contract: {
-    depositContractWrite?: () => void;
-    approveContractWrite?: () => void;
-    withdrawContractWrite?: () => void;
-    errorMsg?: string;
+    depositContractWrite: () => void | undefined;
+    approveContractWrite: () => void | undefined;
+    withdrawContractWrite: () => void | undefined;
+    errorMsg: string | undefined;
   };
   txStatus: {
     isLoading: boolean;
@@ -34,7 +34,7 @@ const VaultView = ({
   isEnoughAllowance
 }: Props) => {
   return (
-    <div>
+    <div className="w-96 md:w-152 break-all md:break-normal">
       <div className="flex flex-col flex-row justify-between bg-white border-gray-200">
         <div>
           <VaultDetail {...vaultDetailData} />

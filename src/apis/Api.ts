@@ -50,4 +50,16 @@ export default class Api {
 
     return data;
   };
+
+  public getUserBetHistory = async (
+    account: string
+  ): Promise<BetHistoryResponse> => {
+    const { data } = await this.client.get(`/history/${account}`, {
+      headers: {
+        Accept: "application/json"
+      }
+    });
+
+    return data;
+  };
 }
