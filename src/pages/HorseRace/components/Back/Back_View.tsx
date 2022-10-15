@@ -94,7 +94,7 @@ const BackView: React.FC<Props> = ({
                     onClick={contract.backContractWrite}
                     disabled={shouldButtonDisabled}
                   >
-                    {txStatus.isLoading ? "Backing..." : "Back"}
+                    {txStatus.isLoading ? "Betting..." : "Bet"}
                   </button>
                 ) : (
                   <button

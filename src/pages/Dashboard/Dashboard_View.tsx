@@ -10,7 +10,6 @@ type Props = {
   inPlay: string | undefined;
   numberOfBets: number;
   connected: boolean;
-  // hash: string;
   signature: string;
   owner: string;
 };

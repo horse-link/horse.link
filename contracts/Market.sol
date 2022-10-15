@@ -156,8 +156,8 @@ contract Market is Ownable, IMarket {
     }
 
     function back(bytes32 nonce, bytes32 propositionId, bytes32 marketId, uint256 wager, uint256 odds, uint256 close, uint256 end, bytes calldata signature) external returns (uint256) {
-        require(_vault != address(0), "Vault address not set");
-        require(end > block.timestamp && block.timestamp > close, "Invalid date");
+        require(_vault != address(0), "back: Vault address not set");
+        require(end > block.timestamp && block.timestamp > close, "back: Invalid date");
         
         bytes32 messageHash = keccak256(abi.encodePacked(nonce, propositionId, marketId, wager, odds, close, end));
         // bytes32 ethSignedMessageHash = getEthSignedMessageHash(messageHash);
@@ -198,7 +198,7 @@ contract Market is Ownable, IMarket {
     function settle(uint256 id, bytes calldata signature) external {
         bytes32 message = keccak256(abi.encodePacked(id));
         address marketOwner = recoverSigner(message, signature);
-        require(marketOwner == owner(), "Invalid signature");
+        require(marketOwner == owner(), "settle: Invalid signature");
 
         _settle(id);
     }
