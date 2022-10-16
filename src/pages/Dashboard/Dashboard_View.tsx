@@ -84,23 +84,23 @@ const DashboardView: React.FC<Props> = (props: Props) => {
               </div>
             ))}
         </dl>
-        {!connected && (
-          <div className="flex justify-center px-4 py-5 bg-white shadow rounded-lg sm:p-6">
-            <div className="w-4/5 max-w-2xl">
-              <div className="flex flex-col items-center">
-                <h2 className="text-lg">Signature :</h2>
-                <h2 className="break-all"> {signature}</h2>
-              </div>
-              <div className="mt-3 flex flex-col items-center">
-                <h2 className="text-lg">Owner Address :</h2>
-                <h2 className="break-all"> {owner}</h2>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
       <div className="grid grid-cols-2 gap-4 items-start lg:gap-8">
         <Table asLocaltime={asLocaltime} meets={meets} />
+      </div>
+      <div>
+        <div className="flex justify-center px-4 py-5 bg-white shadow rounded-lg sm:p-6">
+          <div className="w-4/5 max-w-2xl">
+            <div className="flex flex-col items-center">
+              <h2 className="text-lg">Signature :</h2>
+              <h2 className="break-all"> {signature}</h2>
+            </div>
+            <div className="mt-3 flex flex-col items-center">
+              <h2 className="text-lg">Owner Address :</h2>
+              <h2 className="break-all"> {owner}</h2>
+            </div>
+          </div>
+        </div>
       </div>
     </PageLayout>
   );
