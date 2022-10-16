@@ -35,7 +35,8 @@ const DashboardView: React.FC<Props> = (props: Props) => {
     // Todo: Fix loader so it spins
     {
       name: "In Play",
-      stat: inPlay === "" ? <Loader className="text-lg" /> : `$ ${inPlay}`
+      //stat: inPlay === "" ? <Loader className="text-lg" /> : `$ ${inPlay}`
+      stat: inPlay === "" ? "0": `$ ${inPlay}`
     },
     { name: "Performance", stat: "0.0%" }
   ];
@@ -69,26 +70,25 @@ const DashboardView: React.FC<Props> = (props: Props) => {
           </p>
         </div>
         <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
-          {connected &&
-            stats.map(item => (
-              <div
-                key={item.name}
-                className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6"
-              >
-                <dt className="text-sm font-medium text-gray-500 truncate">
-                  {item.name}
-                </dt>
-                <dd className="mt-1 text-3xl font-semibold text-gray-900">
-                  {item.stat}
-                </dd>
-              </div>
-            ))}
+          {stats.map(item => (
+            <div
+              key={item.name}
+              className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6"
+            >
+              <dt className="text-sm font-medium text-gray-500 truncate">
+                {item.name}
+              </dt>
+              <dd className="mt-1 text-3xl font-semibold text-gray-900">
+                {item.stat}
+              </dd>
+            </div>
+          ))}
         </dl>
       </div>
       <div className="grid grid-cols-2 gap-4 items-start lg:gap-8">
         <Table asLocaltime={asLocaltime} meets={meets} />
       </div>
-      <div>
+      <div className="mb-6">
         <div className="flex justify-center px-4 py-5 bg-white shadow rounded-lg sm:p-6">
           <div className="w-4/5 max-w-2xl">
             <div className="flex flex-col items-center">
