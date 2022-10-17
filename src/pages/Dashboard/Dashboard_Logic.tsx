@@ -46,8 +46,8 @@ const Dashboard: React.FC = () => {
       meets={response?.data.meetings || getMockMeets()}
       inPlay={inPlay}
       numberOfBets={numberOfBets}
-      signature={response?.signature || "0x00"}
-      owner={response?.owner || ""}
+      signature={response?.signature}
+      owner={response?.owner}
     />
   );
 };

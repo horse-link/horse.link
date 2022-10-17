@@ -4,12 +4,15 @@ import useApi from "../../hooks/useApi";
 import { BetHistory } from "../../types";
 import BetsView from "./Bets_View";
 
+const getMockBets = () => {
+  return Array.from({ length: 5 }, () => ({}));
+};
 const useBets = () => {
   const api = useApi();
   const { address } = useAccount();
 
-  const [bets, setBets] = useState<BetHistory[]>([]);
-  const [myBets, setMyBets] = useState<BetHistory[]>([]);
+  const [bets, setBets] = useState<BetHistory[]>();
+  const [myBets, setMyBets] = useState<BetHistory[]>();
 
   useEffect(() => {
     const load = async () => {
@@ -37,7 +40,8 @@ const BetsLogics = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBet, setSelectedBet] = useState<BetHistory>();
 
-  const onClickBet = (betData: BetHistory) => {
+  const onClickBet = (betData?: BetHistory) => {
+    if (!betData) return;
     setSelectedBet(betData);
     setIsModalOpen(true);
   };
@@ -48,7 +52,7 @@ const BetsLogics = () => {
 
   return (
     <BetsView
-      betsData={myBetsEnabled ? myBets : bets}
+      betsData={(myBetsEnabled ? myBets : bets) || getMockBets()}
       myBetsEnabled={myBetsEnabled}
       onMyBetToggle={onMyBetToggle}
       onClickBet={onClickBet}

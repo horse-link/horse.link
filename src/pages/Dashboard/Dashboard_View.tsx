@@ -9,8 +9,8 @@ type Props = {
   meets: Meet[];
   inPlay: string | undefined;
   numberOfBets: number;
-  signature: string;
-  owner: string;
+  signature: string | undefined;
+  owner: string | undefined;
 };
 
 type TableProps = {

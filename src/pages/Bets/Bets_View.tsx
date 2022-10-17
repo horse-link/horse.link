@@ -5,7 +5,7 @@ import BetTable from "./components/BetTable";
 import MyBetsToggle from "./components/MyBetsToggle";
 
 type Props = {
-  betsData: BetHistory[];
+  betsData: BetHistory[] | any[];
   myBetsEnabled: boolean;
   onMyBetToggle: (isEnable: boolean) => void;
   onClickBet: (bet: BetHistory) => void;

@@ -1,4 +1,6 @@
+import Skeleton from "react-loading-skeleton";
 export type VaultDetailProps = {
+  userAddress: string;
   tokenSymbol: string;
   vaultAddress: string;
   vaultBalance: string;
@@ -8,6 +10,7 @@ export type VaultDetailProps = {
 };
 
 export const VaultDetail = ({
+  userAddress,
   tokenSymbol,
   vaultAddress,
   vaultBalance,
@@ -17,19 +20,19 @@ export const VaultDetail = ({
 }: VaultDetailProps) => {
   return (
     <div className="p-5">
-      <h1 className="text-3xl mb-2">{tokenSymbol} Vault</h1>
-      <div>Share: {userBalance ?? "connect wallet to see your balance"}</div>
+      <h1 className="text-3xl mb-2">
+        {tokenSymbol ?? <Skeleton width="1em" />} Vault
+      </h1>
       <div>
-        Vault Address:
-        {vaultAddress}
+        Share:
+        {(userAddress && userBalance) ?? <Skeleton width="1em" />}
+        {!userAddress && "connect wallet to see your balance"}
       </div>
-      <div>
-        Underlying:
-        {asset}
-      </div>
-      <div>TLV: {vaultBalance}</div>
+      <div>Vault Address: {vaultAddress ?? <Skeleton width="10em" />}</div>
+      <div>Underlying: {asset ?? <Skeleton width="10em" />}</div>
+      <div>TLV: {vaultBalance ?? <Skeleton width="2em" />}</div>
 
-      <div>APY: {performance}%</div>
+      <div>APY: {performance ?? <Skeleton width="1em" />}%</div>
     </div>
   );
 };

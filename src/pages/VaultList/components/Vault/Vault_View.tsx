@@ -1,3 +1,4 @@
+import Skeleton from "react-loading-skeleton";
 import ContractWriteResultCard from "../../../../components/ContractWriteResultCard/ContractWriteResultCard_View";
 import RequireWalletButton from "../../../../components/RequireWalletButton/RequireWalletButton_View";
 import { VaultDetail, VaultDetailProps } from "../VaultDetail";
@@ -42,7 +43,7 @@ const VaultView = ({
         <div>
           <div className="w-7/12 mx-auto p-3 mt-5 rounded-md shadow border border-gray-200">
             <h1 className="text-3xl mb-2">Deposit / Withdraw</h1>
-            <span>Shares : {userBalance}</span>
+            <span>Shares : {userBalance ?? <Skeleton />}</span>
             <form>
               <label>
                 <span>Amount</span>
@@ -88,7 +89,7 @@ const VaultView = ({
                       </div>
                     ) : (
                       <button
-                        className="px-5 py-1 hover:bg-gray-100 rounded-md border border-gray-500 shadow-md "
+                        className="w-full px-5 py-1 hover:bg-gray-100 rounded-md border border-gray-500 shadow-md "
                         onClick={contract.approveContractWrite}
                       >
                         {txStatus.isLoading ? "..." : "Approve"}
