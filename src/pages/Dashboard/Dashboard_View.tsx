@@ -36,7 +36,7 @@ const DashboardView: React.FC<Props> = (props: Props) => {
     {
       name: "In Play",
       //stat: inPlay === "" ? <Loader className="text-lg" /> : `$ ${inPlay}`
-      stat: inPlay === "" ? "0": `$ ${inPlay}`
+      stat: inPlay === "" ? "0" : `$ ${inPlay}`
     },
     { name: "Performance", stat: "0.0%" }
   ];
