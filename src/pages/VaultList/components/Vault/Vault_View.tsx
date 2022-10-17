@@ -36,7 +36,7 @@ const VaultView = ({
 }: Props) => {
   return (
     <div className="w-96 md:w-152 break-all md:break-normal">
-      <div className="flex flex-col flex-row justify-between bg-white border-gray-200">
+      <div className="flex flex-col justify-between bg-white border-gray-200">
         <div>
           <VaultDetail {...vaultDetailData} />
         </div>

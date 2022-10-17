@@ -32,7 +32,9 @@ export const VaultDetail = ({
       <div>Underlying: {asset ?? <Skeleton width="10em" />}</div>
       <div>TLV: {vaultBalance ?? <Skeleton width="2em" />}</div>
 
-      <div>APY: {performance ?? <Skeleton width="1em" />}%</div>
+      <div>
+        APY: {performance ? `${performance}%` : <Skeleton width="3em" />}
+      </div>
     </div>
   );
 };
