@@ -2,6 +2,7 @@ import { Loader, PageLayout } from "../../components";
 import { Meet } from "../../types/index";
 import { Link } from "react-router-dom";
 import moment from "moment";
+import Skeleton from "react-loading-skeleton";
 
 type Props = {
   asLocaltime: (raceTime: number) => string;
@@ -79,11 +80,15 @@ const DashboardView: React.FC<Props> = (props: Props) => {
           <div className="w-4/5 max-w-2xl">
             <div className="flex flex-col items-center">
               <h2 className="text-lg">Signature :</h2>
-              <h2 className="break-all"> {signature}</h2>
+              <h2 className="break-all">
+                {signature || <Skeleton width={"25em"} count={2} />}
+              </h2>
             </div>
             <div className="mt-3 flex flex-col items-center">
               <h2 className="text-lg">Owner Address :</h2>
-              <h2 className="break-all"> {owner}</h2>
+              <h2 className="break-all">
+                {owner || <Skeleton width={"25em"} />}
+              </h2>
             </div>
           </div>
         </div>
@@ -178,17 +183,30 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
                     {meets.map(meet => (
                       <tr key={meet.id}>
                         <td className="px-3 py-4 whitespace-nowrap">
-                          {meet.name} ({meet.location})
+                          {meet.name ? (
+                            `${meet.name} (${meet.location})`
+                          ) : (
+                            <Skeleton />
+                          )}
                         </td>
                         {meet.races.map(race => (
                           <td className="px-3 py-4 whitespace-nowrap text-sm hover:bg-gray-200">
-                            <Link to={`/horses/${meet.id}/${race.number}`}>
-                              <p>R{race.number}</p>
-                            </Link>
-                            <Link to={`/horses/${meet.id}/${race.number}`}>
-                              <br></br>
-                              {moment.utc(race.start).local().format("H:mm")}
-                            </Link>
+                            {race.name ? (
+                              <>
+                                <Link to={`/horses/${meet.id}/${race.number}`}>
+                                  <p>R{race.number}</p>
+                                </Link>
+                                <Link to={`/horses/${meet.id}/${race.number}`}>
+                                  <br></br>
+                                  {moment
+                                    .utc(race.start)
+                                    .local()
+                                    .format("H:mm")}
+                                </Link>
+                              </>
+                            ) : (
+                              <Skeleton count={2} />
+                            )}
                           </td>
                         ))}
                       </tr>
