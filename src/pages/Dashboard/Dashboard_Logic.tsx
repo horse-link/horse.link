@@ -2,16 +2,23 @@ import DashboardView from "./Dashboard_View";
 import moment from "moment";
 import useApi from "../../hooks/useApi";
 import { useEffect, useState } from "react";
-import { useAccount } from "wagmi";
 import useMarket from "../../hooks/useMarket";
-import { Meet, SignedMeetingsResponse } from "../../types/index";
+import { Meet, Race, SignedMeetingsResponse } from "../../types/index";
+
+const getMockMeets = (): Meet[] => {
+  const mockRace: Race[] = Array.from({ length: 10 }, (_, i) => ({
+    number: i,
+    name: ""
+  }));
+  return Array.from({ length: 5 }, (_, i) => ({
+    id: `mock${i}`,
+    name: "",
+    location: "",
+    races: mockRace
+  }));
+};
 
 const Dashboard: React.FC = () => {
-  // default
-  const _meets: Meet[] = [];
-
-  const { isConnected } = useAccount();
-
   const { inPlay, numberOfBets } = useMarket();
   const api = useApi();
   const [response, setResponse] = useState<SignedMeetingsResponse>();
@@ -36,13 +43,11 @@ const Dashboard: React.FC = () => {
   return (
     <DashboardView
       asLocaltime={asLocaltime}
-      meets={response?.data.meetings || _meets}
+      meets={response?.data.meetings || getMockMeets()}
       inPlay={inPlay}
       numberOfBets={numberOfBets}
-      connected={isConnected}
-      // hash={response?.hash || ""}
-      signature={response?.signature || "0x00"}
-      owner={response?.owner || ""}
+      signature={response?.signature}
+      owner={response?.owner}
     />
   );
 };

@@ -3,6 +3,7 @@ import { PageLayout } from "../../components";
 import vaultContractJson from "../../abi/Vault.json";
 import mockTokenContractJson from "../../abi/MockToken.json";
 import { ethers } from "ethers";
+import Skeleton from "react-loading-skeleton";
 import VaultLogic from "./components/Vault/Vault_Logic";
 import Modal from "../../components/Modal";
 
@@ -143,10 +144,10 @@ const Row: React.FC<rowProp> = ({ vaultAddress, onClick }) => {
     enabled: !!tokenAddress
   });
   let rowData = {
-    id: "loading...",
-    symbol: "loading...",
-    totalAssets: "loading...",
-    vaultAddress: "loading..."
+    id: "",
+    symbol: "",
+    totalAssets: "",
+    vaultAddress: ""
   };
   if (bNTotalAssets && tokenData) {
     const [name, symbol, decimals] = tokenData;
@@ -164,12 +165,16 @@ const Row: React.FC<rowProp> = ({ vaultAddress, onClick }) => {
       onClick={onClick}
       className="cursor-pointer hover:bg-gray-100"
     >
-      <td className="pl-5 pr-2 py-4 whitespace-nowrap"> {rowData.id} </td>
-      <td className="flex px-2 py-4 items-center">
-        <span> {rowData.symbol} </span>
+      <td className="pl-5 pr-2 py-4 whitespace-nowrap">
+        {rowData.id || <Skeleton />}
       </td>
-      <td className="px-2 py-4 whitespace-nowrap">{rowData.totalAssets}</td>
-      <td className="px-2 py-4 whitespace-nowrap">{rowData.vaultAddress}</td>
+      <td className="px-2 py-4">{rowData.symbol || <Skeleton />}</td>
+      <td className="px-2 py-4 whitespace-nowrap">
+        {rowData.totalAssets || <Skeleton />}
+      </td>
+      <td className="px-2 py-4 whitespace-nowrap">
+        {rowData.vaultAddress || <Skeleton />}
+      </td>
     </tr>
   );
 };

@@ -1,16 +1,15 @@
 import { PageLayout } from "../../components";
 import moment from "moment";
+import Skeleton from "react-loading-skeleton";
 import { Runner } from "../../types";
-import { Dialog, Transition } from "@headlessui/react";
-import { Fragment } from "react";
 import BackLogic from "./components/Back/Back_Logic";
 import Modal from "../../components/Modal";
 
 type Props = {
   track: string;
   raceNumber: number;
-  runners: Runner[];
-  onClickRunner: (runner: Runner) => void;
+  runners: Runner[] | undefined[];
+  onClickRunner: (runner?: Runner) => void;
   isDialogOpen: boolean;
   onCloseDialog: () => void;
   selectedRunner?: Runner;
@@ -78,25 +77,33 @@ const HorseRaceView: React.FC<Props> = ({
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {runners.map(runner => {
+                    const { number, name, barrier, odds } = runner || {};
                     return (
                       <tr
                         className="cursor-pointer hover:bg-gray-100"
-                        key={runner.number}
+                        key={runner?.number}
                         onClick={() => onClickRunner(runner)}
                       >
                         <td className="px-1 py-4 whitespace-nowrap bg-gray-200">
-                          {runner.number}
+                          {number ?? <Skeleton />}
                         </td>
                         <td className="px-2 py-4 whitespace-nowrap">
-                          {runner.name} ({runner.barrier})
-                          <br />
+                          {name ? (
+                            `${name} (${barrier})`
+                          ) : (
+                            <Skeleton width="10em" />
+                          )}
                         </td>
-                        <td className="px-2 py-4 whitespace-nowrap">NA</td>
+                        <td className="px-2 py-4 whitespace-nowrap">
+                          {name ? "NA" : <Skeleton width="2em" />}
+                        </td>
 
                         <td className="px-2 py-4 whitespace-nowrap">
-                          {runner.odds / 1000}
+                          {odds ? odds / 1000 : <Skeleton width="2em" />}
                         </td>
-                        <td className="px-2 py-4 whitespace-nowrap">NA</td>
+                        <td className="px-2 py-4 whitespace-nowrap">
+                          {name ? "NA" : <Skeleton width="2em" />}
+                        </td>
                       </tr>
                     );
                   })}

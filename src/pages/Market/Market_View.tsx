@@ -1,3 +1,4 @@
+import Skeleton from "react-loading-skeleton";
 import { useContractReads } from "wagmi";
 import { PageLayout } from "../../components";
 import marketContractJson from "../../abi/Market.json";
@@ -95,7 +96,7 @@ const Row = ({ marketAddress, onClick }: RowProps) => {
   });
   const [target, totalInPlay, vaultAddress] = marketData ?? [];
   const rowData = {
-    id: "??",
+    id: "",
     target: Number(target),
     totalInPlay: Number(totalInPlay),
     marketAddress,
@@ -107,12 +108,21 @@ const Row = ({ marketAddress, onClick }: RowProps) => {
       onClick={onClick}
       className="cursor-pointer hover:bg-gray-100"
     >
-      <td className="pl-5 pr-2 py-4 whitespace-nowrap"> {rowData.id} </td>
-      <td className="px-2 py-4 whitespace-nowrap">{rowData.target}</td>
-      <td className="px-2 py-4 whitespace-nowrap">{rowData.totalInPlay}</td>
-      <td className="px-2 py-4 whitespace-nowrap">{rowData.marketAddress}</td>
-
-      <td className="px-2 py-4 whitespace-nowrap">{rowData.vaultAddress}</td>
+      <td className="pl-5 pr-2 py-4 whitespace-nowrap">
+        {rowData.id || <Skeleton />}
+      </td>
+      <td className="px-2 py-4 whitespace-nowrap">
+        {rowData.target || <Skeleton />}
+      </td>
+      <td className="px-2 py-4 whitespace-nowrap">
+        {rowData.totalInPlay || <Skeleton />}
+      </td>
+      <td className="px-2 py-4 whitespace-nowrap">
+        {rowData.marketAddress || <Skeleton />}
+      </td>
+      <td className="px-2 py-4 whitespace-nowrap">
+        {rowData.vaultAddress || <Skeleton />}
+      </td>
     </tr>
   );
 };

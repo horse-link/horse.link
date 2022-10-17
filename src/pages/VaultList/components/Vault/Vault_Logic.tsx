@@ -168,6 +168,7 @@ const VaultLogic = ({ vaultAddress }: Props) => {
     txStatus.isLoading;
 
   const vaultDetailData = {
+    userAddress: userAddress,
     tokenSymbol: tokenSymbol,
     vaultAddress: vaultAddress,
     vaultBalance: vaultBalance,
