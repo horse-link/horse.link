@@ -5,7 +5,7 @@ import { BetHistory } from "../../types";
 import BetsView from "./Bets_View";
 
 const getMockBets = () => {
-  return Array.from({ length: 5 }, () => ({}));
+  return Array.from({ length: 5 }, () => undefined);
 };
 const useBets = () => {
   const api = useApi();

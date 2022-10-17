@@ -2,8 +2,8 @@ import Skeleton from "react-loading-skeleton";
 import { BetHistory } from "../../../types";
 
 type Props = {
-  betsData: BetHistory[] | any[];
-  onClickBet: (bet: BetHistory) => void;
+  betsData: BetHistory[] | undefined[];
+  onClickBet: (bet?: BetHistory) => void;
 };
 const BetTable = ({ betsData, onClickBet }: Props) => {
   return (
@@ -61,7 +61,7 @@ const BetTable = ({ betsData, onClickBet }: Props) => {
             {betsData.map(v => (
               <Row
                 betData={v}
-                key={v.proposition_id}
+                key={v?.proposition_id}
                 onClick={() => onClickBet(v)}
               />
             ))}
@@ -75,28 +75,28 @@ const BetTable = ({ betsData, onClickBet }: Props) => {
 export default BetTable;
 
 type RowProps = {
-  betData: BetHistory | any;
+  betData?: BetHistory;
   onClick?: () => void;
 };
 const Row = ({ betData, onClick }: RowProps) => {
   return (
     <tr
-      key={betData.proposition_id}
+      key={betData?.proposition_id}
       onClick={onClick}
       className="cursor-pointer hover:bg-gray-100"
     >
       <td className="pl-5 pr-2 py-4 max-w-xs truncate">
-        {betData.proposition_id || <Skeleton />}
+        {betData?.proposition_id ?? <Skeleton />}
       </td>
-      <td className="px-2 py-4">{betData.amount || <Skeleton />}</td>
-      <td className="px-2 py-4">{betData.market_id || <Skeleton />}</td>
-      <td className="px-2 py-4">{betData.odds || <Skeleton />}</td>
+      <td className="px-2 py-4">{betData?.amount ?? <Skeleton />}</td>
+      <td className="px-2 py-4">{betData?.market_id ?? <Skeleton />}</td>
+      <td className="px-2 py-4">{betData?.odds ?? <Skeleton />}</td>
       <td className="px-2 py-4 max-w-xs truncate">
-        {betData.punter || <Skeleton />}
+        {betData?.punter ?? <Skeleton />}
       </td>
-      <td className="px-2 py-4">{betData.result || <Skeleton />}</td>
+      <td className="px-2 py-4">{betData?.result ?? <Skeleton />}</td>
       <td className="pl-2 pr-5 py-4 max-w-xs truncate">
-        {betData.tx || <Skeleton />}
+        {betData?.tx ?? <Skeleton />}
       </td>
     </tr>
   );

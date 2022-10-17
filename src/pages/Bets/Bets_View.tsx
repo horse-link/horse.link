@@ -5,10 +5,10 @@ import BetTable from "./components/BetTable";
 import MyBetsToggle from "./components/MyBetsToggle";
 
 type Props = {
-  betsData: BetHistory[] | any[];
+  betsData: BetHistory[] | undefined[];
   myBetsEnabled: boolean;
   onMyBetToggle: (isEnable: boolean) => void;
-  onClickBet: (bet: BetHistory) => void;
+  onClickBet: (bet?: BetHistory) => void;
   isModalOpen: boolean;
   onCloseModal: () => void;
   selectedBet?: BetHistory;
