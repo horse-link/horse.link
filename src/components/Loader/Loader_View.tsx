@@ -1,11 +1,11 @@
-import { SpinnerCircular } from "spinners-react";
+import ClipLoader from "react-spinners/ClipLoader";
 
 type Props = {
   className?: string;
 };
 
 const Loader: React.FC<Props> = () => {
-  return <SpinnerCircular />;
+  return <ClipLoader aria-label="Loading Spinner" />;
 };
 
 export default Loader;

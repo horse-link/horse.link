@@ -1,6 +1,5 @@
-import { PageLayout } from "../../components";
+import { Loader, PageLayout } from "../../components";
 import { Meet } from "../../types/index";
-import Loader from "../../components/Loader/Loader_View";
 import { Link } from "react-router-dom";
 import moment from "moment";
 
@@ -23,11 +22,9 @@ const DashboardView: React.FC<Props> = (props: Props) => {
 
   const stats = [
     { name: "Total Liquidity", stat: `$ ${numberOfBets}` },
-    // Todo: Fix loader so it spins
     {
       name: "In Play",
-      //stat: inPlay === "" ? <Loader className="text-lg" /> : `$ ${inPlay}`
-      stat: inPlay === "" ? "0" : `$ ${inPlay}`
+      stat: inPlay === "" ? <Loader /> : `$ ${inPlay}`
     },
     { name: "Performance", stat: "0.0%" }
   ];
