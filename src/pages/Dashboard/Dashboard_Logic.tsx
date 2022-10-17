@@ -2,15 +2,12 @@ import DashboardView from "./Dashboard_View";
 import moment from "moment";
 import useApi from "../../hooks/useApi";
 import { useEffect, useState } from "react";
-import { useAccount } from "wagmi";
 import useMarket from "../../hooks/useMarket";
 import { Meet, SignedMeetingsResponse } from "../../types/index";
 
 const Dashboard: React.FC = () => {
   // default
   const _meets: Meet[] = [];
-
-  const { isConnected } = useAccount();
 
   const { inPlay, numberOfBets } = useMarket();
   const api = useApi();
@@ -39,8 +36,6 @@ const Dashboard: React.FC = () => {
       meets={response?.data.meetings || _meets}
       inPlay={inPlay}
       numberOfBets={numberOfBets}
-      connected={isConnected}
-      // hash={response?.hash || ""}
       signature={response?.signature || "0x00"}
       owner={response?.owner || ""}
     />

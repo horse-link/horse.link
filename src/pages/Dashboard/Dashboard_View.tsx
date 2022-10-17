@@ -9,7 +9,6 @@ type Props = {
   meets: Meet[];
   inPlay: string | undefined;
   numberOfBets: number;
-  connected: boolean;
   signature: string;
   owner: string;
 };
@@ -20,15 +19,7 @@ type TableProps = {
 };
 
 const DashboardView: React.FC<Props> = (props: Props) => {
-  const {
-    asLocaltime,
-    meets,
-    inPlay,
-    connected,
-    numberOfBets,
-    owner,
-    signature
-  } = props;
+  const { asLocaltime, meets, inPlay, numberOfBets, owner, signature } = props;
 
   const stats = [
     { name: "Total Liquidity", stat: `$ ${numberOfBets}` },
