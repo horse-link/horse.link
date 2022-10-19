@@ -21,10 +21,12 @@ contract Vault is Ownable, IERC20, IVault {
 
     mapping(address => uint256) private _shares;
 
-    uint256 private _totalSupply;
+    uint256 private _totalSupply; // total shares
     string private _name;
     string private _symbol;
     uint8 private _decimals;
+
+    uint256 private _totalAssets; // total assets in underlying
 
     address private immutable _underlying;
     address private immutable _self;
@@ -75,7 +77,7 @@ contract Vault is Ownable, IERC20, IVault {
         uint256 underlyingBalance = IERC20(_underlying).balanceOf(_self);
 
         if (underlyingBalance > 0)
-            return (_totalAssets() / underlyingBalance) * 100;
+            return (_totalSupply / underlyingBalance) * 100;
 
         return 0;
     }
@@ -93,11 +95,9 @@ contract Vault is Ownable, IERC20, IVault {
     }
 
     function _convertToAssets(uint256 shares) private view returns (uint256 assets) {
-        // return _convertToAssets(amount);
-        uint256 underlyingBalance = _totalAssets();
         uint256 inPlay = IERC20(_underlying).balanceOf(_market);
 
-        assets = shares / (underlyingBalance - inPlay);
+        assets = shares / (_totalAssets - inPlay);
     }
 
     function convertToShares(uint256 assets) external view returns (uint256 shares) {
@@ -105,10 +105,10 @@ contract Vault is Ownable, IERC20, IVault {
     }
 
     function _convertToShares(uint256 assets) private view returns (uint256 shares) {
-        if (_totalAssets() == 0) {
+        if (_totalAssets == 0) {
             shares = assets;
         } else {
-            shares = (assets * _totalSupply) / _totalAssets();
+            shares = (assets * _totalSupply) / _totalAssets;
         }
     }
 
@@ -118,11 +118,7 @@ contract Vault is Ownable, IERC20, IVault {
     }
 
     function totalAssets() external view returns (uint256) {
-        return _totalAssets();
-    }
-
-    function _totalAssets() private view returns (uint256) {
-        return IERC20(_underlying).balanceOf(_self);
+        return _totalAssets;
     }
 
     constructor(address underlying) {

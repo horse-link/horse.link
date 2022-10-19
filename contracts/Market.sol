@@ -28,6 +28,7 @@ contract Market is Ownable, IMarket {
     uint8 private immutable _fee;
     address private immutable _vault;
     address private immutable _self;
+    address private immutable _oracle;
 
     uint256 private _count; // running count of bets
 
@@ -80,7 +81,7 @@ contract Market is Ownable, IMarket {
         return _bets[id].payoutDate + timeout;
     }
 
-    constructor(address vault, uint8 fee) {
+    constructor(address vault, uint8 fee, address oracle) {
         require(vault != address(0), "Invalid address");
         _self = address(this);
         _vault = vault;

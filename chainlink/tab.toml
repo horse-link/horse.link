@@ -1,0 +1,29 @@
+type                = "directrequest"
+schemaVersion       = 1
+evmChainID          = 1
+name                = "update racing result"
+contractAddress     = "0x613a38AC1659769640aaE063C651F48E0250454C"
+
+# Optional fields:
+# requesters        = [
+#   "0xaaaa1F8ee20f5565510B84f9353F1E333E753B7a",
+#   "0xbbbb70F0e81C6F3430dfdC9fa02fB22BdD818C4e"
+# ]
+# minContractPaymentLinkJuels = "100000000000000"
+# externalJobID = "0EEC7E1D-D0D2-476C-A1A8-72DFB6633F02"
+# minIncomingConfirmations = 10
+
+observationSource   = """
+    ds          [type="http" method=GET url="https://api.beta.tab.com.au/v1/tab-info-service/racing/dates/2021-11-07/meetings?jurisdiction=QLD&returnOffers=true&returnPromo=false"]
+    ds_parse    [type="jsonparse" path="USD"]
+    ds_multiply [type="multiply" times=100]
+
+    ds -> ds_parse -> ds_multiply
+"""
+
+my_http_task [type="http"
+              method=GET
+              url="https://chain.link"
+              requestData="{\\"foo\\": $(foo), \\"bar\\": $(bar), \\"jobID\\": 123}"
+              allowUnrestrictedNetworkAccess=true
+              ]
