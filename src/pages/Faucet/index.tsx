@@ -10,7 +10,7 @@ const faucetTokens = [
     address: "0x0000000000000000000000000000000000000000"
   },
   {
-    name: "Mock DAI",
+    name: "Mock DIA",
     address: "0x70b481B732822Af9beBc895779A6e261DC3D6C8B"
   },
   {
