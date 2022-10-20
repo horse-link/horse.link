@@ -1,6 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 import {
   BetHistoryResponse,
+  RequestTokenFromFaucetResponse,
   SignedMeetingsResponse,
   SignedRunnersResponse
 } from "../types/index";
@@ -58,6 +59,19 @@ export default class Api {
       headers: {
         Accept: "application/json"
       }
+    });
+
+    return data;
+  };
+
+  public requestTokenFromFaucet = async (
+    userAddress: string,
+    tokenAddress: string
+  ): Promise<RequestTokenFromFaucetResponse> => {
+    const { data } = await this.client.post(`/faucet`, {
+      to: userAddress,
+      amount: 100 * 10 ** 18,
+      address: tokenAddress
     });
 
     return data;
