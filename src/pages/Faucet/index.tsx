@@ -35,7 +35,6 @@ export const FaucetPage = () => {
         setTxHash(res.tx);
         setIsModalOpen(true);
       } catch (error: any) {
-        console.log({ error });
         alert(error?.message ?? "Something went wrong");
       }
       setIsLoading(false);
