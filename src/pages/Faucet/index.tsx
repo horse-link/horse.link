@@ -71,7 +71,7 @@ export const FaucetPage = () => {
             app.
           </h2>
           <br />
-          <h2>Please make sure you are connected top Goerli network</h2>
+          <h2>Please make sure you are connected to Goerli network</h2>
           <br />
           <p>
             To connect to Goerli, within Metamask dropdown the Network tab at
