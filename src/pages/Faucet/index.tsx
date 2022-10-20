@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { useAccount } from "wagmi";
-import { PageLayout } from "../../components";
+import { Loader, PageLayout } from "../../components";
 import useApi from "../../hooks/useApi";
 import { FaucetModal } from "./FaucetModal";
 
@@ -23,20 +23,28 @@ export const FaucetPage = () => {
   const { address } = useAccount();
   const api = useApi();
 
+  const [isLoading, setIsLoading] = useState(false);
   const [txHash, setTxHash] = useState<string>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const onClickClaim = useCallback(
     async (tokenAddress: string) => {
-      if (!address) return;
-      const res = await api.requestTokenFromFaucet(address, tokenAddress);
-      setTxHash(res.tx);
-      setIsModalOpen(true);
+      if (!address || isLoading) return;
+      setIsLoading(true);
+      try {
+        const res = await api.requestTokenFromFaucet(address, tokenAddress);
+        setTxHash(res.tx);
+        setIsModalOpen(true);
+      } catch (error: any) {
+        console.log({ error });
+        alert(error?.message ?? "Something went wrong");
+      }
+      setIsLoading(false);
     },
     [address, api]
   );
   const onModalClose = () => {
     setIsModalOpen(false);
-    setTxHash(undefined);
+    setTxHash("");
   };
   return (
     <PageLayout requiresAuth={false}>
@@ -51,6 +59,7 @@ export const FaucetPage = () => {
             <ClaimButton
               tokenName={name}
               onClick={() => onClickClaim(address)}
+              isLoading={isLoading}
             />
           ))}
         </div>
@@ -85,14 +94,15 @@ export const FaucetPage = () => {
 type ClaimButtonProps = {
   tokenName: string;
   onClick: () => void;
+  isLoading: boolean;
 };
-const ClaimButton = ({ tokenName, onClick }: ClaimButtonProps) => {
+const ClaimButton = ({ tokenName, onClick, isLoading }: ClaimButtonProps) => {
   return (
     <button
       onClick={onClick}
-      className="px-5 py-5 bg-gray-100 hover:bg-gray-200 rounded-md border border-gray-500 shadow-md "
+      className="px-5 h-16 bg-gray-100 hover:bg-gray-200 rounded-md border border-gray-500 shadow-md "
     >
-      Claim {tokenName}
+      {isLoading ? <Loader /> : `Claim ${tokenName}`}
     </button>
   );
 };
