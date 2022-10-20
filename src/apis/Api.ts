@@ -65,11 +65,13 @@ export default class Api {
   };
 
   public requestTokenFromFaucet = async (
-    address: string
+    userAddress: string,
+    tokenAddress: string
   ): Promise<RequestTokenFromFaucetResponse> => {
     const { data } = await this.client.post(`/faucet`, {
-      to: address,
-      amount: "0000000001000"
+      to: userAddress,
+      amount: 100 * 10 ** 18,
+      address: tokenAddress
     });
 
     return data;

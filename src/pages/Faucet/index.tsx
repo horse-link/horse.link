@@ -1,64 +1,98 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { useAccount } from "wagmi";
 import { PageLayout } from "../../components";
-import ContractWriteResultCard from "../../components/ContractWriteResultCard/ContractWriteResultCard_View";
-import RequireWalletButton from "../../components/RequireWalletButton/RequireWalletButton_View";
+import useApi from "../../hooks/useApi";
+import { FaucetModal } from "./FaucetModal";
 
-export const Faucet = () => {
-  const [address, setAddress] = useState("");
-  const onAddressChanged = (newValue: string) => {
-    setAddress(newValue);
-  };
-  const onSubmit = () => {
-    alert("Not implemented yet");
+const faucetTokens = [
+  {
+    name: "Goerli ETH",
+    address: "0x0000000000000000000000000000000000000000"
+  },
+  {
+    name: "Mock DAI",
+    address: "0x70b481B732822Af9beBc895779A6e261DC3D6C8B"
+  },
+  {
+    name: "Mock USDT",
+    address: "0xaF2929Ed6758B0bD9575e1F287b85953B08E50BC"
+  }
+];
+
+export const FaucetPage = () => {
+  const { address } = useAccount();
+  const api = useApi();
+
+  const [txHash, setTxHash] = useState<string>();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const onClickClaim = useCallback(
+    async (tokenAddress: string) => {
+      if (!address) return;
+      const res = await api.requestTokenFromFaucet(address, tokenAddress);
+      setTxHash(res.tx);
+      setIsModalOpen(true);
+    },
+    [address, api]
+  );
+  const onModalClose = () => {
+    setIsModalOpen(false);
+    setTxHash(undefined);
   };
   return (
     <PageLayout requiresAuth={false}>
-      <div className="grid place-items-center">
-        <div className="w-96 md:w-152">
-          <div className="px-10 pt-5 pb-5 rounded-md bg-white border-gray-200 sm:rounded-lg">
-            <div className="text-3xl">Faucet</div>
-            <form
-              className="mt-3 grid gap-5"
-              onSubmit={e => {
-                e.preventDefault();
-                onSubmit();
-              }}
-            >
-              <div className="flex flex-col">
-                <label>
-                  <span>Address</span>
-                  <input
-                    type="text"
-                    value={address}
-                    onChange={e => onAddressChanged(e.target.value)}
-                    placeholder="Your ETH Address"
-                    className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                  />
-                </label>
-              </div>
-              <div className="flex flex-col">
-                <RequireWalletButton
-                  actionButton={
-                    <button
-                      className="px-5 py-1 hover:bg-gray-100 rounded-md border border-gray-500 shadow-md "
-                      type="submit"
-                    >
-                      Get Mock USDT
-                    </button>
-                  }
-                />
-              </div>
-            </form>
-          </div>
-          <div className="mt-5">
-            {/* <ContractWriteResultCard
-            hash={txStatus.hash}
-            isSuccess={txStatus.isSuccess}
-            errorMsg={contract.errorMsg}
-          /> */}
-          </div>
+      <FaucetModal
+        isOpen={isModalOpen}
+        onClose={onModalClose}
+        txHash={txHash}
+      />
+      <div className="flex flex-wrap gap-20 sm:justify-center">
+        <div className="flex flex-col gap-5 w-full sm:w-56">
+          {faucetTokens.map(({ name, address }) => (
+            <ClaimButton
+              tokenName={name}
+              onClick={() => onClickClaim(address)}
+            />
+          ))}
+        </div>
+        <div className="w-full sm:w-64 bg-gray-100 rounded-md p-5 ">
+          <h2>
+            Welcome to the Faucet
+            <br />
+            These tokens are to be used to test the beta functionality of the
+            app.
+          </h2>
+          <br />
+          <h2>Please make sure you are connected top Goerli network</h2>
+          <br />
+          <p>
+            To connect to Goerli, within Metamask dropdown the Network tab at
+            the top and scroll and select Goerli test network (this will be
+            there by default)
+          </p>
+        </div>
+        <div className="w-96 mx-auto sm:mx-0">
+          <img
+            loading="lazy"
+            src="/images/goerli-test-network.png"
+            alt="Goerli network option in Metamask Networks tab"
+          />
         </div>
       </div>
     </PageLayout>
+  );
+};
+
+type ClaimButtonProps = {
+  tokenName: string;
+  onClick: () => void;
+};
+const ClaimButton = ({ tokenName, onClick }: ClaimButtonProps) => {
+  return (
+    <button
+      onClick={onClick}
+      className="px-5 py-5 bg-gray-100 hover:bg-gray-200 rounded-md border border-gray-500 shadow-md "
+    >
+      Claim {tokenName}
+    </button>
   );
 };
