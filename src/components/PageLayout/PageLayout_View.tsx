@@ -13,8 +13,7 @@ const navigation = [
   { name: "Vaults", path: "/vaults" },
   { name: "Markets", path: "/markets" },
   { name: "History", path: "/history" },
-  { name: "HL Token", path: "/tokens" },
-  { name: "DOA / Governance", path: "/doa" }
+  { name: "HL Token", path: "/tokens" }
 ];
 
 const whitePaperNavigation = {
