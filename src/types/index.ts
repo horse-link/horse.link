@@ -1,7 +1,3 @@
-export type RequestTokenFromFaucetResponse = {
-  tx: string;
-};
-
 export type Back = {
   nonce: string;
   market_id: string;

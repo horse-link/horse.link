@@ -1,7 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 import {
   BetHistoryResponse,
-  RequestTokenFromFaucetResponse,
   SignedMeetingsResponse,
   SignedRunnersResponse
 } from "../types/index";
@@ -10,18 +9,14 @@ export default class Api {
   private client: AxiosInstance;
   constructor() {
     this.client = axios.create({
-      baseURL: process.env.REACT_APP_API_URL || "https://api.horse.link"
+      baseURL: process.env.REACT_APP_API_URL || "https://api.horse.link",
+      headers: {
+        Accept: "application/json"
+      }
     });
   }
   public getMeetings = async (): Promise<SignedMeetingsResponse> => {
-    const { data } = await this.client.get<SignedMeetingsResponse>(
-      "/meetings",
-      {
-        headers: {
-          Accept: "application/json"
-        }
-      }
-    );
+    const { data } = await this.client.get<SignedMeetingsResponse>("/meetings");
 
     return data;
   };
@@ -31,23 +26,14 @@ export default class Api {
     number: number
   ): Promise<SignedRunnersResponse> => {
     const { data } = await this.client.get<SignedRunnersResponse>(
-      `/runners/${track}/${number}/win`,
-      {
-        headers: {
-          Accept: "application/json"
-        }
-      }
+      `/runners/${track}/${number}/win`
     );
 
     return data;
   };
 
   public getBetHistory = async (): Promise<BetHistoryResponse> => {
-    const { data } = await this.client.get("/history", {
-      headers: {
-        Accept: "application/json"
-      }
-    });
+    const { data } = await this.client.get("/history");
 
     return data;
   };
@@ -55,11 +41,7 @@ export default class Api {
   public getUserBetHistory = async (
     account: string
   ): Promise<BetHistoryResponse> => {
-    const { data } = await this.client.get(`/history/${account}`, {
-      headers: {
-        Accept: "application/json"
-      }
-    });
+    const { data } = await this.client.get(`/history/${account}`);
 
     return data;
   };
@@ -67,13 +49,28 @@ export default class Api {
   public requestTokenFromFaucet = async (
     userAddress: string,
     tokenAddress: string
-  ): Promise<RequestTokenFromFaucetResponse> => {
+  ): Promise<{ tx: string }> => {
     const { data } = await this.client.post(`/faucet`, {
       to: userAddress,
-      amount: 100 * 10 ** 18,
+      amount: (100 * 10 ** 18).toString(),
       address: tokenAddress
     });
 
+    return data;
+  };
+
+  public getTotalLiquidity = async (): Promise<{ assets: number }> => {
+    const { data } = await this.client.get("/vaults/liquidity");
+    return data;
+  };
+
+  public getTotalInPlay = async (): Promise<{ total: number }> => {
+    const { data } = await this.client.get("/inplay");
+    return data;
+  };
+
+  public getTotalPerformance = async (): Promise<{ performance: number }> => {
+    const { data } = await this.client.get("/vaults/performance");
     return data;
   };
 }
