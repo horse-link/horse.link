@@ -70,7 +70,7 @@ export default class Api {
   ): Promise<RequestTokenFromFaucetResponse> => {
     const { data } = await this.client.post(`/faucet`, {
       to: userAddress,
-      amount: 100 * 10 ** 18,
+      amount: (100 * 10 ** 18).toString(),
       address: tokenAddress
     });
 
