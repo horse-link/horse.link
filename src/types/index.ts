@@ -9,15 +9,13 @@ export type Back = {
 };
 
 export type BetHistory = {
+  index: number;
   market_id: string;
   proposition_id: string;
-  index: number;
   punter: string;
-  amount: number;
-  odds: number;
-  result: string;
+  amount: string;
   tx: string;
-  market: string;
+  blockNumber: number;
   signature: string;
 };
 

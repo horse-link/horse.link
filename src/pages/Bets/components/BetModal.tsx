@@ -4,7 +4,6 @@ import Modal from "../../../components/Modal";
 import RequireWalletButton from "../../../components/RequireWalletButton/RequireWalletButton_View";
 import marketContractJson from "../../../abi/Market.json";
 import { BetHistory } from "../../../types";
-import { ethers } from "ethers";
 
 type Props = {
   isOpen: boolean;
@@ -61,7 +60,7 @@ const useSettleBet = (bet?: BetHistory) => {
     isTxSuccess,
     txHash
   } = useSettleContractWrite({
-    marketAddress: bet?.market,
+    marketAddress: bet?.market_id,
     index: bet?.index,
     signature: bet?.signature
   });
