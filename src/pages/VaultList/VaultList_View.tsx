@@ -31,7 +31,7 @@ const VaultListView: React.FC<Props> = ({
         </h3>
         <div className="bg-gray-50 rounded-xl overflow-auto">
           <div className="shadow-sm overflow-hidden mt-2 mb-5">
-            <table className="border-collapse table-auto w-full divide-y divide-gray-200">
+            <table className="border-collapse table-fixed w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
                   <th
@@ -57,6 +57,12 @@ const VaultListView: React.FC<Props> = ({
                     className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
                   >
                     Vault Address
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
+                  >
+                    Action
                   </th>
                 </tr>
               </thead>
@@ -162,18 +168,23 @@ const Row: React.FC<rowProp> = ({ vaultAddress, onClick }) => {
   return (
     <tr
       key={rowData.id}
-      onClick={onClick}
+      onClick={() => alert("im click too")}
       className="cursor-pointer hover:bg-gray-100"
     >
-      <td className="pl-5 pr-2 py-4 whitespace-nowrap">
-        {rowData.id || <Skeleton />}
-      </td>
-      <td className="px-2 py-4">{rowData.symbol || <Skeleton />}</td>
-      <td className="px-2 py-4 whitespace-nowrap">
-        {rowData.totalAssets || <Skeleton />}
-      </td>
-      <td className="px-2 py-4 whitespace-nowrap">
-        {rowData.vaultAddress || <Skeleton />}
+      <td className="pl-5 pr-2 py-4">{rowData.id || <Skeleton />}</td>
+      <td className="px-2">{rowData.symbol || <Skeleton />}</td>
+      <td className="px-2 ">{rowData.totalAssets || <Skeleton />}</td>
+      <td className="px-2 truncate">{rowData.vaultAddress || <Skeleton />}</td>
+      <td className="px-2">
+        <button
+          onClick={e => {
+            e.stopPropagation();
+            onClick();
+          }}
+          className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        >
+          Deposit / Withdraw
+        </button>
       </td>
     </tr>
   );

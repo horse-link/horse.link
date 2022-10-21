@@ -32,13 +32,13 @@ const BetTable = ({ betsData, onClickBet }: Props) => {
               </th>
               <th
                 scope="col"
-                className="px-2 py-3  text-left text-xs font-medium text-gray-500 uppercase"
+                className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
               >
                 Market ID
               </th>
               <th
                 scope="col"
-                className="pl-2 pr-5 py-3  text-left text-xs font-medium text-gray-500 uppercase"
+                className="pl-2 pr-5 py-3 text-left text-xs font-medium text-gray-500 uppercase"
               >
                 Proposition ID
               </th>
