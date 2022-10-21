@@ -166,26 +166,58 @@ const Row: React.FC<rowProp> = ({ vaultAddress, onClick }) => {
   }
 
   return (
-    <tr
-      key={rowData.id}
-      onClick={() => alert("im click too")}
-      className="cursor-pointer hover:bg-gray-100"
-    >
-      <td className="pl-5 pr-2 py-4">{rowData.id || <Skeleton />}</td>
-      <td className="px-2">{rowData.symbol || <Skeleton />}</td>
-      <td className="px-2 ">{rowData.totalAssets || <Skeleton />}</td>
-      <td className="px-2 truncate">{rowData.vaultAddress || <Skeleton />}</td>
-      <td className="px-2">
-        <button
-          onClick={e => {
-            e.stopPropagation();
-            onClick();
-          }}
-          className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        >
-          Deposit / Withdraw
-        </button>
-      </td>
-    </tr>
+    <>
+      <tr
+        key={rowData.id}
+        onClick={() => alert("im click too")}
+        className="cursor-pointer hover:bg-gray-100"
+      >
+        <td className="pl-5 pr-2 py-4">{rowData.id || <Skeleton />}</td>
+        <td className="px-2">{rowData.symbol || <Skeleton />}</td>
+        <td className="px-2 ">{rowData.totalAssets || <Skeleton />}</td>
+        <td className="px-2 truncate">
+          {rowData.vaultAddress || <Skeleton />}
+        </td>
+        <td className="px-2">
+          <button
+            onClick={e => {
+              e.stopPropagation();
+              onClick();
+            }}
+            className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            Deposit / Withdraw
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td colSpan={5} className="px-2 py-2">
+          <table className="table-fixed w-1/2">
+            <thead>
+              <tr>
+                <th>Amount</th>
+                <th>Type</th>
+                <th>Time</th>
+                <th>User</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>100</td>
+                <td>Deposit</td>
+                <td>20/10/2022</td>
+                <td>0x671212348923429384627384290348203789</td>
+              </tr>
+              <tr>
+                <td>100</td>
+                <td>Withdraw</td>
+                <td>21/10/2022</td>
+                <td>0x671212348923429384627384290348203789</td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </>
   );
 };
