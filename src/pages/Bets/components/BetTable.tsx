@@ -16,44 +16,31 @@ const BetTable = ({ betsData, onClickBet }: Props) => {
                 scope="col"
                 className="pl-5 pr-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
               >
-                propositionId
+                Punter
               </th>
               <th
                 scope="col"
                 className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
               >
-                amount
+                Amount
               </th>
               <th
                 scope="col"
                 className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
               >
-                market_id
+                Block
               </th>
               <th
                 scope="col"
                 className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
               >
-                odds
-              </th>
-
-              <th
-                scope="col"
-                className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
-              >
-                punter
-              </th>
-              <th
-                scope="col"
-                className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
-              >
-                result
+                Market ID
               </th>
               <th
                 scope="col"
                 className="pl-2 pr-5 py-3 text-left text-xs font-medium text-gray-500 uppercase"
               >
-                tx
+                Proposition ID
               </th>
             </tr>
           </thead>
@@ -86,17 +73,15 @@ const Row = ({ betData, onClick }: RowProps) => {
       className="cursor-pointer hover:bg-gray-100"
     >
       <td className="pl-5 pr-2 py-4 max-w-xs truncate">
-        {betData?.proposition_id ?? <Skeleton />}
-      </td>
-      <td className="px-2 py-4">{betData?.amount ?? <Skeleton />}</td>
-      <td className="px-2 py-4">{betData?.market_id ?? <Skeleton />}</td>
-      <td className="px-2 py-4">{betData?.odds ?? <Skeleton />}</td>
-      <td className="px-2 py-4 max-w-xs truncate">
         {betData?.punter ?? <Skeleton />}
       </td>
-      <td className="px-2 py-4">{betData?.result ?? <Skeleton />}</td>
-      <td className="pl-2 pr-5 py-4 max-w-xs truncate">
-        {betData?.tx ?? <Skeleton />}
+      <td className="px-2 py-4">{betData?.amount ?? <Skeleton />}</td>
+      <td className="px-2 py-4">{betData?.blockNumber ?? <Skeleton />}</td>
+      <td className="px-2 py-4 max-w-xs truncate">
+        {betData?.market_id ?? <Skeleton />}
+      </td>
+      <td className="px-2 py-4 max-w-xs truncate">
+        {betData?.proposition_id ?? <Skeleton />}
       </td>
     </tr>
   );
