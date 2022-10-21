@@ -2,6 +2,7 @@ const MockToken = artifacts.require("MockToken");
 const Market = artifacts.require("Market");
 const Registry = artifacts.require("Registry");
 const Vault = artifacts.require("Vault");
+const ethers = require("ethers");
 
 module.exports = async deployer => {
   let hlusdtAddress = "0xaF2929Ed6758B0bD9575e1F287b85953B08E50BC";
@@ -27,9 +28,11 @@ module.exports = async deployer => {
   const dai_vault = await Vault.deployed();
 
   if (fund_vaults) {
+    await usd_vault.deposit(ethers.utils.formatEther("10000"));
+    await dai_vault.deposit(ethers.utils.formatEther("10000"));
   }
 
-  await deployer.deploy(Market, dai_vault.address, 1, "0x0000000000000000000000000000000000000000");
+  await deployer.deploy(Market, dai_vault.address, 1, ethers.constants.AddressZero);
   const dia_market = await Market.deployed();
 
   await deployer.deploy(Registry);
