@@ -9,11 +9,6 @@ import "./IMarket.sol";
 import "./IMintable.sol";
 import "./IVault.sol";
 
-struct Reward {
-    uint256 balance;
-    uint256 start;
-}
-
 contract Vault is Ownable, IERC20, IVault {
     // ERC20
     mapping(address => uint256) private _balances;
@@ -81,14 +76,6 @@ contract Vault is Ownable, IERC20, IVault {
 
         return 0;
     }
-
-    // function getInPlay() external view returns (uint256) {
-    //     return _getInPlay();
-    // }
-
-    // function _getInPlay() private view returns (uint256) {        
-    //     return IERC20(_underlying).balanceOf(_market);
-    // }
 
     function convertToAssets(uint256 shares) external view returns (uint256 assets) {
         return _convertToAssets(shares);

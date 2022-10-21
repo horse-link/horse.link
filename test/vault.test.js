@@ -19,7 +19,6 @@ contract("Vault", accounts => {
 
     vault = await Vault.new(underlying.address);
 
-    // // address vault, address erc721, uint256 fee
     market = await Market.new(vault.address, 100); // todo: roll back bet.address
     await vault.setMarket(market.address);
   });
@@ -104,7 +103,7 @@ contract("Vault", accounts => {
       //   100,
       //   "Vault performance should be 100 with no bets"
       // );
-      
+
       assert.equal(await vault.balanceOf(alice), 100, "Should have 100 shares");
       assert.equal(await vault.balanceOf(bob), 100, "Should have 100 shares");
     });

@@ -16,7 +16,11 @@ contract("Registry", () => {
       assert.equal(vault_count, 0, "Should have no vaults");
 
       const vault = await Vault.new(underlying.address);
-      const market = await Market.new(vault.address, 1);
+      const market = await Market.new(
+        vault.address,
+        1,
+        "0x0000000000000000000000000000000000000000"
+      );
 
       await registry.addMarket(market.address);
       const market_count2 = await registry.marketCount();

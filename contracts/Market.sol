@@ -2,8 +2,6 @@
 pragma solidity =0.8.10;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
 import { IBet } from "./IBet.sol";
 import "./IVault.sol";
@@ -23,8 +21,6 @@ contract Market is Ownable, IMarket {
 
     uint256 private constant MAX = 32;
     int256 private constant PRECESSION = 1_000;
-
-    IERC721 private _bet;
     uint8 private immutable _fee;
     address private immutable _vault;
     address private immutable _self;
@@ -93,7 +89,6 @@ contract Market is Ownable, IMarket {
         require(vault != address(0), "Invalid address");
         _self = address(this);
         _vault = vault;
-        // _bet = IERC721(erc721);
         _fee = fee;
         _oracle = oracle;
         
