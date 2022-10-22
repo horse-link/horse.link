@@ -72,11 +72,9 @@ contract("Market", accounts => {
       // assert.equal(maxPayout, 500, "Should be $500");
     });
 
-    it("should get correct odds on a 5:1 punt", async () => {
+    it.only("should get correct odds on a 5:1 punt", async () => {
       let balance = await underlying.balanceOf(bob);
       assert.equal(balance, 1000000000, "Bob should have $1,000 USDT");
-
-      const targetOdds = utils.parseUnits("5", DECIMALS);
 
       // check vault balance
       let vaultBalance = await underlying.balanceOf(vault.address);
@@ -87,18 +85,21 @@ contract("Market", accounts => {
       );
 
       // unsure what this should be
-      // const totalAssets = await vault.totalAssets();
-      // assert.equal(
-      //   totalAssets,
-      //   1000000000,
-      //   "Total assets should have $1,000 USDT"
-      // );
+      const totalAssets = await vault.totalAssets();
+      assert.equal(
+        totalAssets,
+        1000000000,
+        "Total assets should have $1,000 USDT"
+      );
 
       await underlying.approve(
         market.address,
         utils.parseUnits("50", DECIMALS),
         { from: bob }
       );
+
+      // const targetOdds = 500;
+      const targetOdds = utils.parseUnits("5", DECIMALS);
 
       // Runner 1 for a Win
       const propositionId = utils.formatBytes32String("1");
@@ -108,8 +109,9 @@ contract("Market", accounts => {
         targetOdds,
         propositionId
       );
+
       assert.equal(
-        trueOdds,
+        trueOdds.toNumber(),
         4750000,
         "Should have true odds of 1:4.75 on $50 in a $1,000 pool"
       );

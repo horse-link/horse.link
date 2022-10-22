@@ -122,15 +122,12 @@ contract Market is Ownable, IMarket {
     // }
 
     function getOdds(int256 wager, int256 odds, bytes32 propositionId) external view returns (int256) {
-        require(odds > 0, "getOdds: Invalid odds");
-        require(wager > 0, "getOdds: Invalid wager");
+        if (wager == 0 || odds == 0) return 0;
         
         return _getOdds(wager, odds, propositionId);
     }
     
     function _getOdds(int256 wager, int256 odds, bytes32 propositionId) private view returns (int256) {
-        assert(odds > 0);
-        assert(wager > 0);
         int256 p = int256(IVault(_vault).totalAssets());
 
         if (p == 0) {
@@ -159,7 +156,9 @@ contract Market is Ownable, IMarket {
         
         // add underlying to the market
         int256 trueOdds = _getOdds(int256(wager), int256(odds), propositionId);
-        // assert(trueOdds > 0);
+        if (trueOdds == 0) {
+            return 0;
+        }
 
         return uint256(trueOdds) * wager / 1_000_000;
     }
@@ -192,9 +191,6 @@ contract Market is Ownable, IMarket {
         _bets.push(Bet(propositionId, wager, payout, end, false, msg.sender));
         _marketBets[marketId].push(_count);
         _count++;
-
-        // Mint the 721
-        // uint256 tokenId = IBet(_bet).mint(msg.sender);
 
         _totalInPlay += payout;
         _totalExposure += (payout - wager);
