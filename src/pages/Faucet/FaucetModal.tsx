@@ -16,7 +16,7 @@ export const FaucetModal = ({ isOpen, onClose, txHash }: Props) => {
           It may take a few minutes to show up in your wallet.
         </h2>
         <br />
-        <p>hash: {txHash}</p>
+        <p>Tx ID: {txHash}</p>
       </div>
     </Modal>
   );
