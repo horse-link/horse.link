@@ -28,7 +28,7 @@ contract Registry {
 
     function addVault(address vault) external {
         address underlying = IVault(vault).asset();
-        require(_underlying[underlying] == address(0), "Vault already added");
+        require(_underlying[underlying] == address(0), "addVault: Vault already added");
 
         vaults.push(vault);
         _underlying[underlying] = vault; // underlying to vault
@@ -38,7 +38,7 @@ contract Registry {
 
     function addMarket(address market) external {
         address vault = IMarket(market).getVaultAddress();
-        require(_markets[vault] == address(0), "Market already added");
+        require(_markets[vault] == address(0), "addMarket: Market already added");
 
         _markets[vault] = market; // vault to market
         markets.push(market);

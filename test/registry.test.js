@@ -4,10 +4,10 @@ const Market = artifacts.require("Market");
 const MockToken = artifacts.require("MockToken");
 
 contract("Registry", () => {
-  describe("Registry", () => {
+  describe.only("Registry", () => {
     it("should have market and vault counts", async () => {
       const underlying = await MockToken.new("Mock USDT", "USDT");
-      const registry = await Registry.new();
+      const registry = await Registry.new("0x0000000000000000000000000000000000000000");
 
       const market_count = await registry.marketCount();
       assert.equal(market_count, 0, "Should have no markets");
