@@ -11,7 +11,7 @@ export const FaucetModal = ({ isOpen, onClose, txHash }: Props) => {
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="w-152">
         <h2>
-          Token has been transferred.
+          Tokens have been transferred.
           <br />
           It may take a few minutes to show up in your wallet.
         </h2>

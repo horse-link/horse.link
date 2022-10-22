@@ -22,6 +22,7 @@ contract Market is Ownable, IMarket {
     uint256 private constant MAX = 32;
     int256 private constant PRECESSION = 1_000;
     uint8 private immutable _fee;
+    uint8 private immutable _workerfee;
     address private immutable _vault;
     address private immutable _self;
     address private immutable _oracle;
@@ -48,6 +49,8 @@ contract Market is Ownable, IMarket {
     // Can claim after this period regardless
     uint256 public immutable timeout;
     uint256 public immutable min;
+
+    mapping(address => uint256) private _workerfees;
 
     function getFee() external view returns (uint8) {
         return _fee;
@@ -90,6 +93,7 @@ contract Market is Ownable, IMarket {
         _self = address(this);
         _vault = vault;
         _fee = fee;
+        _workerfee = 10;
         _oracle = oracle;
         
         timeout = 30 days;
@@ -200,6 +204,17 @@ contract Market is Ownable, IMarket {
         return _count; // token ID
     }
 
+    function claim() external {
+        uint256 workerfee = _workerfees[msg.sender];
+        require(workerfee > 0, "claim: No fees to claim");
+
+        _workerfees[msg.sender] = 0;
+        address underlying = IVault(_vault).asset();
+        IERC20(underlying).transfer(msg.sender, workerfee); 
+
+        emit Claimed(msg.sender, workerfee);
+    }
+
     function settle(uint256 index, bool result, bytes calldata signature) external {
         bytes32 message = keccak256(abi.encodePacked(index, result));
         address marketOwner = recoverSigner(message, signature);
@@ -252,22 +267,6 @@ contract Market is Ownable, IMarket {
         emit Settled(id, _bets[id].payout, result, _bets[id].owner);
     }
 
-    // function claim(bytes32 id, bytes calldata signature) external {
-    //     bytes32 message = keccak256(abi.encodePacked(id));
-    //     address marketOwner = recoverSigner(message, signature);
-    //     require(marketOwner == owner(), "Invalid signature");
-
-    //     require(_bets[id].claimed == false, "Bet has already been claimed");
-    //     require(_bets[id].payoutDate < block.timestamp + _bets[id].payoutDate, "Market not closed");
-
-    //     _bets[id].claimed = true;
-    //     _totalInPlay -= _bets[id].amount;
-
-    //     IERC20(_vault).transferFrom(_self, _bets[id].owner, _bets[id].payout);
-
-    //     emit Claimed(id, _bets[id].payout, _bets[id].owner);
-    // }
-
     function getEthSignedMessageHash(bytes32 messageHash)
         internal
         pure
@@ -317,6 +316,7 @@ contract Market is Ownable, IMarket {
         return (v, r, s);
     }
 
+    event Claimed(address indexed worker, uint256 amount);
     event Placed(uint256 index, bytes32 propositionId, bytes32 marketId, uint256 amount, uint256 payout, address indexed owner);
     event Settled(uint256 id, uint256 payout, bool result, address indexed owner);
 }

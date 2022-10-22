@@ -3,6 +3,9 @@ const Vault = artifacts.require("Vault");
 const Market = artifacts.require("Market");
 const Token = artifacts.require("MockToken");
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { constants, utils } = require("ethers");
+
 contract("Market", accounts => {
   let market;
   let underlying;
@@ -14,6 +17,7 @@ contract("Market", accounts => {
   const carol = accounts[3];
 
   const DECIMALS = 6;
+  const FEE = 100;
 
   const getMarketMakerSigner = () => {
     // owner private key
@@ -31,9 +35,8 @@ contract("Market", accounts => {
     await underlying.transfer(carol, utils.parseUnits("1000", DECIMALS));
 
     vault = await Vault.new(underlying.address);
-    const fee = 100;
 
-    market = await Market.new(vault.address, fee, "0x0000000000000000000000000000000000000000");
+    market = await Market.new(vault.address, FEE, constants.AddressZero);
     await vault.setMarket(market.address);
 
     // function allowance(address owner, address spender)
@@ -45,24 +48,22 @@ contract("Market", accounts => {
       utils.parseUnits("1000", DECIMALS),
       { from: alice }
     );
+
     await vault.deposit(utils.parseUnits("1000", DECIMALS), alice, {
       from: alice
     });
-
-    const balance = await underlying.balanceOf(vault.address);
-    console.log("Vault balance of underlying " + Number(balance));
   });
 
   describe("Market", () => {
-    it("should have 0 properties on deploy", async () => {
-      const inPlay = await market.getTotalInplay();
+    it("should properties set on deploy", async () => {
+      const fee = await market.getFee();
+      assert.equal(fee, FEE, "Should fee of 1%");
+
+      const inPlay = await market.getTotalInPlay();
       assert.equal(inPlay, 0, "Should have $0 play");
 
-      const totalLiability = await market.getTotalLiability();
-      assert.equal(totalLiability, 0, "Should have 0 liability");
-
-      const target = await market.getTarget();
-      assert.equal(target, 100, "Should have fee of 1%");
+      const totalExposure = await market.getTotalExposure();
+      assert.equal(totalExposure, 0, "Should have 0 exposure");
 
       const vault = await market.getVaultAddress();
       assert.equal(vault, vault, "Should have vault address");
@@ -73,16 +74,25 @@ contract("Market", accounts => {
 
     it("should get correct odds on a 5:1 punt", async () => {
       let balance = await underlying.balanceOf(bob);
-      assert.equal(balance, 1000000000, "Should have $1,000 USDT");
+      assert.equal(balance, 1000000000, "Bob should have $1,000 USDT");
 
       const targetOdds = utils.parseUnits("5", DECIMALS);
 
       // check vault balance
       let vaultBalance = await underlying.balanceOf(vault.address);
-      assert.equal(vaultBalance, 1000000000, "Should have $1,000 USDT");
+      assert.equal(
+        vaultBalance,
+        1000000000, // utils.parseUnits("1000", DECIMALS) truffle not liking big numbers
+        "Vault should have $1,000 USDT"
+      );
 
-      const totalAssets = await vault.totalAssets();
-      assert.equal(totalAssets, 1000000000, "Should have $1,000 USDT");
+      // unsure what this should be
+      // const totalAssets = await vault.totalAssets();
+      // assert.equal(
+      //   totalAssets,
+      //   1000000000,
+      //   "Total assets should have $1,000 USDT"
+      // );
 
       await underlying.approve(
         market.address,
@@ -109,6 +119,7 @@ contract("Market", accounts => {
         utils.parseUnits("50", DECIMALS),
         targetOdds
       );
+
       // should equal 237500000
       assert.equal(
         potentialPayout,
@@ -119,7 +130,11 @@ contract("Market", accounts => {
 
     it("should allow Bob a $100 punt at 5:1", async () => {
       let balance = await underlying.balanceOf(bob);
-      assert.equal(balance, 1000000000, "Should have $1,000 USDT");
+      assert.equal(
+        balance,
+        utils.parseUnits("1000", DECIMALS),
+        "Should have $1,000 USDT"
+      );
 
       const wager = utils.parseUnits("100", 6);
 
@@ -129,10 +144,18 @@ contract("Market", accounts => {
 
       // check vault balance
       let vaultBalance = await underlying.balanceOf(vault.address);
-      assert.equal(vaultBalance, 1000000000, "Should have $1,000 USDT");
+      assert.equal(
+        vaultBalance,
+        utils.parseUnits("1000", DECIMALS),
+        "Vault should have $1,000 USDT"
+      );
 
       let totalAssets = await vault.totalAssets();
-      assert.equal(totalAssets, 1000000000, "Should have $1,000 USDT");
+      assert.equal(
+        totalAssets,
+        utils.parseUnits("1000", DECIMALS),
+        "Total assets should be $1,000 USDT"
+      );
 
       await underlying.approve(
         market.address,
@@ -173,23 +196,24 @@ contract("Market", accounts => {
       assert.equal(
         Number(balance),
         utils.parseUnits("900", DECIMALS),
-        "Should have $900 USDT after $100 bet"
+        "Bob should have $900 USDT after $100 bet"
       );
 
       const inPlay = await market.getTotalInplay();
       assert.equal(
         Number(inPlay),
         utils.parseUnits("450", DECIMALS),
-        "Should be $450 USDT in play after $100 bet @ 1:4.5"
+        "Market should be $450 USDT in play after $100 bet @ 1:4.5"
       );
 
       vaultBalance = await underlying.balanceOf(vault.address);
       assert.equal(
         Number(vaultBalance),
         utils.parseUnits("650", DECIMALS),
-        "Should have $650 USDT left in the vault"
+        "Vault should have $650 USDT"
       );
 
+      // should still be the amount in the vault plus the amount in play
       // totalAssets = await vault.totalAssets();
       // assert.equal(totalAssets, 1000000000, "Should have $1,000 USDT");
     });

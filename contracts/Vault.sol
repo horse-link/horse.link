@@ -105,7 +105,7 @@ contract Vault is Ownable, IERC20, IVault {
     }
 
     function totalAssets() external view returns (uint256) {
-        return _totalAssets;
+        return _totalAssets + IERC20(_underlying).balanceOf(_market);
     }
 
     constructor(address underlying) {

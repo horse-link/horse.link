@@ -64,18 +64,18 @@ export const FaucetPage = () => {
         </div>
         <div className="w-full sm:w-64 bg-gray-100 rounded-md p-5 ">
           <h2>
-            Welcome to the Faucet
+            Welcome to the Horse Link Faucet.
             <br />
             These tokens are to be used to test the beta functionality of the
             app.
           </h2>
           <br />
-          <h2>Please make sure you are connected to Goerli network</h2>
+          <h2>Please make sure you are connected to Goerli network.</h2>
           <br />
           <p>
             To connect to Goerli, within Metamask dropdown the Network tab at
             the top and scroll and select Goerli test network (this will be
-            there by default)
+            there by default).
           </p>
         </div>
         <div className="w-96 mx-auto sm:mx-0">
