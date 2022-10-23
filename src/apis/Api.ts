@@ -73,4 +73,14 @@ export default class Api {
     const { data } = await this.client.get("/vaults/performance");
     return data;
   };
+
+  public getMarkets = async (): Promise<{ assets: number }> => {
+    const { data } = await this.client.get("/markets/");
+    return data;
+  };
+
+  public getVaults = async (): Promise<{ assets: number }> => {
+    const { data } = await this.client.get("/vaults/");
+    return data;
+  };
 }
