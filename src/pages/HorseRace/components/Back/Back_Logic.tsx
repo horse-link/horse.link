@@ -54,7 +54,7 @@ const usePrepareBackingData = (
   );
 
   const bnOdds = useMemo(
-    () => ethers.utils.parseUnits(odds.toString(), DECIAML),
+    () => ethers.utils.parseUnits(odds.toString(), DECIMAL),
     [odds]
   );
 
