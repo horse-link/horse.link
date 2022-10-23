@@ -74,6 +74,11 @@ export default class Api {
     return data;
   };
 
+  public getMarketAddresses = async (): Promise<string[]> => {
+    const { data } = await this.client.get("/markets/");
+    return data;
+  };
+
   public getMarkets = async (): Promise<{ assets: number }> => {
     const { data } = await this.client.get("/markets/");
     return data;

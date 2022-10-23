@@ -16,7 +16,7 @@ import useTokenData from "../../../../hooks/useTokenData";
 import { Back, Runner } from "../../../../types";
 import BackView from "./Back_View";
 
-const DECIAML = 6;
+const DECIMAL = 6;
 
 const usePotentialPayout = (
   marketAddress: string,
