@@ -94,7 +94,7 @@ const SettleBet = ({ data }: SettlebetProps) => {
         <form>
           <div className="flex flex-col">
             <label>
-              <span>index</span>
+              <span>Index</span>
               <input
                 type="text"
                 value={data?.index}
@@ -104,7 +104,7 @@ const SettleBet = ({ data }: SettlebetProps) => {
             </label>
 
             <label>
-              <span>signature</span>
+              <span>Signature</span>
               <input
                 type="text"
                 value={data?.signature}
