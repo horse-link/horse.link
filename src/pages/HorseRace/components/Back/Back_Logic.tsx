@@ -251,6 +251,7 @@ const usePageParams = (runner?: Runner) => {
 type Props = {
   runner?: Runner;
 };
+
 const BackLogic = ({ runner }: Props) => {
   const { back } = usePageParams(runner);
   const { marketAddresses } = useMarkets();

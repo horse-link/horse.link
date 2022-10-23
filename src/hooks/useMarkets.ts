@@ -1,6 +1,7 @@
 import { useContractRead, useContractReads } from "wagmi";
 import registryContractJson from "../abi/Registry.json";
 import { ethers } from "ethers";
+import useApi from "./useApi";
 
 const registryContract = {
   addressOrName: "0x5Df377d600A40fB6723e4Bf10FD5ee70e93578da",
@@ -28,6 +29,13 @@ const useMarketAddresses = () => {
   });
 
   const marketAddresses = marketsData?.filter(v => v) ?? [];
+
+  return { marketAddresses: marketAddresses as unknown as string[] };
+};
+
+const useMarketAddressesFromAPI = async () => {
+  const api = useApi();
+  const marketAddresses = await api.getMarketAddresses();
 
   return { marketAddresses: marketAddresses as unknown as string[] };
 };
