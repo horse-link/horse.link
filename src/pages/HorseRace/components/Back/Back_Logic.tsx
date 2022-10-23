@@ -16,7 +16,7 @@ import useTokenData from "../../../../hooks/useTokenData";
 import { Back, Runner } from "../../../../types";
 import BackView from "./Back_View";
 
-const DECIAML = 6;
+const DECIMAL = 6;
 
 const usePotentialPayout = (
   marketAddress: string,
@@ -54,7 +54,7 @@ const usePrepareBackingData = (
   );
 
   const bnOdds = useMemo(
-    () => ethers.utils.parseUnits(odds.toString(), DECIAML),
+    () => ethers.utils.parseUnits(odds.toString(), DECIMAL),
     [odds]
   );
 
