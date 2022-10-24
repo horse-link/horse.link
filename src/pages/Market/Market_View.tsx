@@ -1,7 +1,6 @@
 import Skeleton from "react-loading-skeleton";
-import { useContractReads } from "wagmi";
 import { PageLayout } from "../../components";
-import marketContractJson from "../../abi/Market.json";
+import useMarketDetail from "../../hooks/useMarketDetail";
 
 type Props = {
   marketAddressList: string[];
@@ -51,10 +50,10 @@ const MarketView = ({ marketAddressList, onClickMarket }: Props) => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {marketAddressList.map(v => (
+                {marketAddressList.map((v, i) => (
                   <Row
                     marketAddress={v}
-                    key={v}
+                    key={v || i}
                     onClick={() => onClickMarket(v)}
                   />
                 ))}
@@ -73,55 +72,26 @@ type RowProps = {
   onClick?: () => void;
 };
 const Row = ({ marketAddress, onClick }: RowProps) => {
-  const marketContract = {
-    addressOrName: marketAddress?.toString() || "",
-    contractInterface: marketContractJson.abi
-  };
-  const { data: marketData } = useContractReads({
-    contracts: [
-      {
-        ...marketContract,
-        functionName: "getTarget"
-      },
-      {
-        ...marketContract,
-        functionName: "getTotalInPlay"
-      },
-      {
-        ...marketContract,
-        functionName: "getVaultAddress"
-      }
-    ],
-    enabled: !!marketAddress
-  });
-  const [target, totalInPlay, vaultAddress] = marketData ?? [];
-  const rowData = {
-    id: "",
-    target: Number(target),
-    totalInPlay: Number(totalInPlay),
-    marketAddress,
-    vaultAddress
-  };
+  const marketDetail = useMarketDetail(marketAddress);
+  const { name, target, totalInPlay, vaultAddress } = marketDetail || {};
   return (
     <tr
-      key={rowData.id}
+      key={marketAddress}
       onClick={onClick}
       className="cursor-pointer hover:bg-gray-100"
     >
       <td className="pl-5 pr-2 py-4 whitespace-nowrap">
-        {rowData.id || <Skeleton />}
+        {name || <Skeleton />}
+      </td>
+      <td className="px-2 py-4 whitespace-nowrap">{target || <Skeleton />}</td>
+      <td className="px-2 py-4 whitespace-nowrap">
+        {totalInPlay || <Skeleton />}
       </td>
       <td className="px-2 py-4 whitespace-nowrap">
-        {rowData.target || <Skeleton />}
+        {marketAddress || <Skeleton />}
       </td>
       <td className="px-2 py-4 whitespace-nowrap">
-        {rowData.totalInPlay || <Skeleton />}
-      </td>
-      <td className="px-2 py-4 whitespace-nowrap">
-        {rowData.marketAddress || <Skeleton />}
-      </td>
-      <td className="px-2 py-4 whitespace-nowrap">
-        {rowData.vaultAddress || <Skeleton />}
+        {vaultAddress || <Skeleton />}
       </td>
     </tr>
   );

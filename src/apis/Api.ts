@@ -1,6 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 import {
   BetHistoryResponse,
+  Market,
   SignedMeetingsResponse,
   SignedRunnersResponse
 } from "../types/index";
@@ -76,6 +77,11 @@ export default class Api {
 
   public getMarketAddresses = async (): Promise<string[]> => {
     const { data } = await this.client.get("/markets/");
+    return data;
+  };
+
+  public getMarketDetail = async (marketAddress: string): Promise<Market> => {
+    const { data } = await this.client.get(`/markets/${marketAddress}`);
     return data;
   };
 
