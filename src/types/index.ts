@@ -1,3 +1,10 @@
+export type Vault = {
+  name: string;
+  symbol: string;
+  totalAssets: string;
+  address: string;
+};
+
 export type Market = {
   address: string;
   vaultAddress: string;

@@ -1,0 +1,92 @@
+import { ethers } from "ethers";
+import { useContractReads } from "wagmi";
+import vaultContractJson from "../abi/Vault.json";
+import mockTokenContractJson from "../abi/MockToken.json";
+import { useEffect, useState } from "react";
+import { Vault } from "../types";
+import useApi from "./useApi";
+
+const useVaultDetailFromContract = (vaultAddress: string) => {
+  const vaultContract = {
+    addressOrName: vaultAddress,
+    contractInterface: vaultContractJson.abi
+  };
+
+  const { data: vaultData } = useContractReads({
+    contracts: [
+      {
+        ...vaultContract,
+        functionName: "totalAssets"
+      },
+      {
+        ...vaultContract,
+        functionName: "asset"
+      }
+    ]
+  });
+  const [bNTotalAssets, tokenAddress] = vaultData ?? [];
+  const tokenContract = {
+    addressOrName: tokenAddress?.toString() || "",
+    contractInterface: mockTokenContractJson.abi
+  };
+  const { data: tokenData } = useContractReads({
+    contracts: [
+      {
+        ...tokenContract,
+        functionName: "name"
+      },
+      {
+        ...tokenContract,
+        functionName: "symbol"
+      },
+      {
+        ...tokenContract,
+        functionName: "decimals"
+      }
+    ],
+    enabled: !!tokenAddress
+  });
+  let vault = {
+    name: "",
+    symbol: "",
+    totalAssets: "",
+    address: ""
+  };
+  if (bNTotalAssets && tokenData) {
+    const [name, symbol, decimals] = tokenData;
+    vault = {
+      name: name as unknown as string,
+      symbol: symbol as unknown as string,
+      totalAssets: ethers.utils.formatUnits(bNTotalAssets, decimals),
+      address: vaultAddress
+    };
+  }
+  return vault;
+};
+
+const useVaultDetailFromAPI = (vaultAddress: string | undefined) => {
+  const [vault, setVault] = useState<Vault>();
+  const api = useApi();
+  useEffect(() => {
+    if (!vaultAddress) return;
+    const load = async () => {
+      const result = await api.getVaultDetail(vaultAddress);
+      setVault(result);
+    };
+    load();
+  }, [api, vaultAddress]);
+
+  return vault;
+};
+
+const shouldUseAPI = process.env.REACT_APP_REST_FOR_MARKETS;
+const useVaultDetail = (vaultAddress: string): Vault | undefined => {
+  if (shouldUseAPI) {
+    const vault = useVaultDetailFromAPI(vaultAddress);
+    return vault;
+  }
+  const vaultDetail = useVaultDetailFromContract(vaultAddress);
+  return vaultDetail;
+};
+
+export default useVaultDetail;
