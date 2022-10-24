@@ -10,7 +10,7 @@ const useMarket = (): any => {
   const marketContract = useMemo(
     () =>
       new Contract(
-        market.kovan.address as string,
+        market.kovan.address as string, // shouldnt be kovan
         market.ABI,
         provider as ethers.providers.Web3Provider
       ),

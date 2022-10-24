@@ -1,3 +1,11 @@
+export type Market = {
+  address: string;
+  vaultAddress: string;
+  name: string;
+  target: number;
+  totalInPlay: string;
+};
+
 export type Back = {
   nonce: string;
   market_id: string;
