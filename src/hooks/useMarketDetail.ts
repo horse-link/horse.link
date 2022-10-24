@@ -52,7 +52,7 @@ const useMarketDetailFromAPI = (marketAddress: string | undefined) => {
   return market;
 };
 
-const shouldUseAPI = process.env.REST_FOR_MARKETS;
+const shouldUseAPI = process.env.REACT_APP_REST_FOR_MARKETS;
 const useMarketDetail = (
   marketAddress: string | undefined
 ): Market | undefined => {

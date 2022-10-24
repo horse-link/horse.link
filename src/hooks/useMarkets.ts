@@ -48,7 +48,7 @@ const useMarketAddressesFromAPI = () => {
   return { marketAddresses: marketAddresses as unknown as string[] };
 };
 
-const shouldUseAPI = process.env.REST_FOR_MARKETS;
+const shouldUseAPI = process.env.REACT_APP_REST_FOR_MARKETS;
 
 const useMarkets = () => {
   if (shouldUseAPI) {
