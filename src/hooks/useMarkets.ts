@@ -35,7 +35,7 @@ const useMarketAddressesFromContract = () => {
 };
 
 const useMarketAddressesFromAPI = () => {
-  const [marketAddresses, setMarketAddresses] = useState<string[]>();
+  const [marketAddresses, setMarketAddresses] = useState<string[]>([]);
   const api = useApi();
   useEffect(() => {
     const load = async () => {
