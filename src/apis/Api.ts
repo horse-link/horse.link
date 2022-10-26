@@ -3,7 +3,8 @@ import {
   BetHistoryResponse,
   Market,
   SignedMeetingsResponse,
-  SignedRunnersResponse
+  SignedRunnersResponse,
+  Vault
 } from "../types/index";
 
 export default class Api {
@@ -85,13 +86,13 @@ export default class Api {
     return data;
   };
 
-  public getMarkets = async (): Promise<{ assets: number }> => {
-    const { data } = await this.client.get("/markets/");
+  public getVaultAddresses = async (): Promise<string[]> => {
+    const { data } = await this.client.get("/vaults/");
     return data;
   };
 
-  public getVaults = async (): Promise<{ assets: number }> => {
-    const { data } = await this.client.get("/vaults/");
+  public getVaultDetail = async (vaultAddress: string): Promise<Vault> => {
+    const { data } = await this.client.get(`/vaults/${vaultAddress}`);
     return data;
   };
 }

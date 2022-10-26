@@ -19,7 +19,9 @@ const VaultList: React.FC = () => {
 
   return (
     <VaultListView
-      vaultAddressList={vaultAddresses || getMockAddresses()}
+      vaultAddressList={
+        vaultAddresses.length > 0 ? vaultAddresses : getMockAddresses()
+      }
       onClickVault={onClickVault}
       isDialogOpen={isDialogOpen}
       onCloseDialog={() => setIsDialogOpen(false)}
