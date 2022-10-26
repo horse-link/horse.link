@@ -9,11 +9,6 @@ import "./IMarket.sol";
 import "./IMintable.sol";
 import "./IVault.sol";
 
-struct Reward {
-    uint256 balance;
-    uint256 start;
-}
-
 contract Vault is Ownable, IERC20, IVault {
     // ERC20
     mapping(address => uint256) private _balances;
@@ -25,8 +20,6 @@ contract Vault is Ownable, IERC20, IVault {
     string private _name;
     string private _symbol;
     uint8 private _decimals;
-
-    uint256 private _totalAssets; // total assets in underlying
 
     address private immutable _underlying;
     address private immutable _self;
@@ -82,14 +75,6 @@ contract Vault is Ownable, IERC20, IVault {
         return 0;
     }
 
-    // function getInPlay() external view returns (uint256) {
-    //     return _getInPlay();
-    // }
-
-    // function _getInPlay() private view returns (uint256) {        
-    //     return IERC20(_underlying).balanceOf(_market);
-    // }
-
     function convertToAssets(uint256 shares) external view returns (uint256 assets) {
         return _convertToAssets(shares);
     }
@@ -97,7 +82,7 @@ contract Vault is Ownable, IERC20, IVault {
     function _convertToAssets(uint256 shares) private view returns (uint256 assets) {
         uint256 inPlay = IERC20(_underlying).balanceOf(_market);
 
-        assets = shares / (_totalAssets - inPlay);
+        assets = shares / (_totalAssets() - inPlay);
     }
 
     function convertToShares(uint256 assets) external view returns (uint256 shares) {
@@ -105,10 +90,10 @@ contract Vault is Ownable, IERC20, IVault {
     }
 
     function _convertToShares(uint256 assets) private view returns (uint256 shares) {
-        if (_totalAssets == 0) {
+        if (_totalAssets() == 0) {
             shares = assets;
         } else {
-            shares = (assets * _totalSupply) / _totalAssets;
+            shares = (assets * _totalSupply) / _totalAssets();
         }
     }
 
@@ -119,7 +104,14 @@ contract Vault is Ownable, IERC20, IVault {
 
     // Total amounts of assets deposited in the vault
     function totalAssets() external view returns (uint256) {
-        return _totalAssets;
+        // return _totalAssets + IERC20(_underlying).balanceOf(_market);
+        return _totalAssets();
+    }
+
+    function _totalAssets() private view returns (uint256) {
+        // return _totalAssets + IERC20(_underlying).balanceOf(_market);
+        // return _totalAssets;
+        return IERC20(_underlying).balanceOf(_self);
     }
 
     constructor(address underlying) {

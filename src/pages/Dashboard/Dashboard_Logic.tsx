@@ -2,7 +2,6 @@ import DashboardView from "./Dashboard_View";
 import moment from "moment";
 import useApi from "../../hooks/useApi";
 import { useEffect, useState } from "react";
-import useMarket from "../../hooks/useMarket";
 import { Meet, Race, SignedMeetingsResponse } from "../../types/index";
 
 const getMockMeets = (): Meet[] => {
@@ -19,16 +18,35 @@ const getMockMeets = (): Meet[] => {
 };
 
 const Dashboard: React.FC = () => {
-  const { inPlay, numberOfBets } = useMarket();
   const api = useApi();
   const [response, setResponse] = useState<SignedMeetingsResponse>();
+  const [totalLiquidity, setTotalLiquidity] = useState<number>();
+  const [inPlay, setInplay] = useState<number>();
+  const [performance, setPerformance] = useState<number>();
 
   useEffect(() => {
-    const load = async () => {
-      const response: SignedMeetingsResponse = await api.getMeetings();
+    const loadMeetings = async () => {
+      const response = await api.getMeetings();
       setResponse(response);
     };
-    load();
+    const loadLiquidity = async () => {
+      const { assets } = await api.getTotalLiquidity();
+      setTotalLiquidity(assets);
+    };
+    const loadInPlay = async () => {
+      const { total } = await api.getTotalInPlay();
+      setInplay(total);
+    };
+    const loadPerformance = async () => {
+      const { performance } = await api.getTotalPerformance();
+      console.log({ performance });
+      setPerformance(performance);
+    };
+
+    loadMeetings();
+    loadLiquidity();
+    loadInPlay();
+    loadPerformance();
   }, [api]);
 
   const asLocaltime = (raceTime: number) => {
@@ -44,8 +62,9 @@ const Dashboard: React.FC = () => {
     <DashboardView
       asLocaltime={asLocaltime}
       meets={response?.data.meetings || getMockMeets()}
+      liquidity={totalLiquidity}
       inPlay={inPlay}
-      numberOfBets={numberOfBets}
+      performance={performance}
       signature={response?.signature}
       owner={response?.owner}
     />

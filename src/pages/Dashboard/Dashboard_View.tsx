@@ -7,8 +7,9 @@ import Skeleton from "react-loading-skeleton";
 type Props = {
   asLocaltime: (raceTime: number) => string;
   meets: Meet[];
-  inPlay: string | undefined;
-  numberOfBets: number;
+  liquidity: number | undefined;
+  inPlay: number | undefined;
+  performance: number | undefined;
   signature: string | undefined;
   owner: string | undefined;
 };
@@ -19,15 +20,26 @@ type TableProps = {
 };
 
 const DashboardView: React.FC<Props> = (props: Props) => {
-  const { asLocaltime, meets, inPlay, numberOfBets, owner, signature } = props;
+  const {
+    asLocaltime,
+    meets,
+    inPlay,
+    performance,
+    liquidity,
+    owner,
+    signature
+  } = props;
 
   const stats = [
-    { name: "Total Liquidity", stat: `$ ${numberOfBets}` },
+    {
+      name: "Total Liquidity",
+      stat: liquidity ? `$ ${liquidity}` : <Loader />
+    },
     {
       name: "In Play",
-      stat: inPlay === "" ? <Loader /> : `$ ${inPlay}`
+      stat: inPlay ? `$ ${inPlay}` : <Loader />
     },
-    { name: "Performance", stat: "0.0%" }
+    { name: "Performance", stat: performance ? `${performance}%` : <Loader /> }
   ];
 
   return (

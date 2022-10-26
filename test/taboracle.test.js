@@ -1,15 +1,15 @@
-const HorseLink = artifacts.require("HorseLink");
+const TabOracle = artifacts.require("TabOracle");
 
-contract("HorseLink", accounts => {
-  let horse;
+contract("TabOracle", accounts => {
+  let TabOracle;
 
   beforeEach(async () => {
-    horse = await HorseLink.new();
+    tabOracle = await TabOracle.new();
   });
 
-  describe("results", () => {
+  describe("TabOracle", () => {
     // it("should have 0 count", async () => {
-    //   const count = await horse.count();
+    //   const count = await horselink.count();
     //   assert.equal(count, 0, "Should have no values");
     // });
     

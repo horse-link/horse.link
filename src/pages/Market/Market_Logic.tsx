@@ -9,7 +9,9 @@ const MarketLogic = () => {
   const { marketAddresses } = useMarkets();
   return (
     <MarketView
-      marketAddressList={marketAddresses || getMockAddresses()}
+      marketAddressList={
+        marketAddresses.length > 0 ? marketAddresses : getMockAddresses()
+      }
       onClickMarket={() => ({})}
     />
   );

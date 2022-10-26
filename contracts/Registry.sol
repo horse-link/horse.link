@@ -3,6 +3,7 @@ pragma solidity =0.8.10;
 
 import "./IMarket.sol";
 import "./IVault.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract Registry {
 
@@ -12,12 +13,19 @@ contract Registry {
     mapping(address => address) private _underlying;
     mapping(address => address) private _markets;
 
+    address immutable private _token;
+    uint256 private _threshold;
+
     function marketCount() external view returns (uint256) {
         return markets.length;
     }
 
     function vaultCount() external view returns (uint256) {
         return vaults.length;
+    }
+
+    constructor(address token) {
+        _token = token;
     }
 
     function addVault(address vault) external {
@@ -31,9 +39,18 @@ contract Registry {
     }
 
     function addMarket(address market) external {
-        address _vault = IMarket(market).getVaultAddress();
+        // address _vault = IMarket(market).getVaultAddress();
         markets.push(market);
         emit MarketAdded(market);
+    }
+
+    function setThreshold(uint256 threshold) external {
+        _threshold = threshold;
+    }
+
+    modifier onlyTokenHolders() {
+        require(IERC20(_token).balanceOf(msg.sender) >= _threshold, "onlyTokenHolders: Does not hold enough tokens");
+        _;
     }
 
     event MarketAdded(address indexed market);
