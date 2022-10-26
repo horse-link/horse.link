@@ -27,15 +27,14 @@ contract Market is Ownable, IMarket {
     address private immutable _self;
     address private immutable _oracle;
 
-    uint256 private _count; // running count of bets
+    uint256 private _inplayCount; // running count of bets
 
     Bet[] private _bets;
+    // MarketID => Bets Indexes
+    mapping(bytes32 => uint256[]) private _marketBets;
 
     // MarketID => amount bet
     mapping(bytes32 => uint256) private _marketTotal;
-
-    // MarketID => Bets Indexes
-    mapping(bytes32 => uint256[]) private _marketBets;
 
     // MarketID => PropositionID => amount bet
     mapping(bytes32 => mapping(uint16 => uint256)) private _marketBetAmount;
@@ -61,7 +60,11 @@ contract Market is Ownable, IMarket {
     }
 
     function getInPlayCount() external view returns (uint256) {
-        return _count;
+        return _inplayCount; // this is incorrect
+    }
+
+    function _getCount() external view returns (uint256) {
+        return _bets.length;
     }
 
     function getTotalExposure() external view returns (uint256) {
@@ -164,40 +167,31 @@ contract Market is Ownable, IMarket {
     }
 
     function back(bytes32 nonce, bytes32 propositionId, bytes32 marketId, uint256 wager, uint256 odds, uint256 close, uint256 end, bytes calldata signature) external returns (uint256) {
-        require(_vault != address(0), "back: Vault address not set");
         require(end > block.timestamp && block.timestamp > close, "back: Invalid date");
         
-        bytes32 messageHash = keccak256(abi.encodePacked(nonce, propositionId, marketId, wager, odds, close, end));
-        // bytes32 ethSignedMessageHash = getEthSignedMessageHash(messageHash);
-
-        // require(recoverSigner(ethSignedMessageHash, signature) == owner(), "Invalid signature");
         address underlying = IVault(_vault).asset();
 
         // add underlying to the market
-        int256 trueOdds = _getOdds(int256(wager), int256(odds), propositionId);
-        assert(trueOdds > 0);
-
         uint256 payout = _getPayout(propositionId, wager, odds);
 
         // escrow
         IERC20(underlying).transferFrom(msg.sender, _self, wager);
         IERC20(underlying).transferFrom(_vault, _self, (payout - wager));
 
-        // assert(IERC20(underlying).balanceOf(_self) >= payout);
-
         // add to the market
         _marketTotal[marketId] += wager;
 
         _bets.push(Bet(propositionId, wager, payout, end, false, msg.sender));
-        _marketBets[marketId].push(_count);
-        _count++;
+        uint256 count = _bets.length;
+        _marketBets[marketId].push(count);
 
-        _totalInPlay += payout;
+        // _totalInPlay += payout;
         _totalExposure += (payout - wager);
+        _inplayCount += 1;
 
-        emit Placed(_count, propositionId, marketId, wager, payout, msg.sender);
+        emit Placed(count, propositionId, marketId, wager, payout, msg.sender);
 
-        return _count; // token ID
+        return count; // token ID
     }
 
     function claim() external {
@@ -261,6 +255,12 @@ contract Market is Ownable, IMarket {
         }
 
         emit Settled(id, _bets[id].payout, result, _bets[id].owner);
+    }
+
+    modifier onlyMarketOwner(bytes32 messageHash, bytes memory signature) {
+        bytes32 ethSignedMessageHash = getEthSignedMessageHash(messageHash);
+        require(recoverSigner(ethSignedMessageHash, signature) == owner(), "Invalid signature");
+        _;
     }
 
     function getEthSignedMessageHash(bytes32 messageHash)

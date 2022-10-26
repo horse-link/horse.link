@@ -67,12 +67,9 @@ contract("Market", accounts => {
 
       const vault = await market.getVaultAddress();
       assert.equal(vault, vault, "Should have vault address");
-
-      // const maxPayout = await market.getPotentailPayout.call(100, 5);
-      // assert.equal(maxPayout, 500, "Should be $500");
     });
 
-    it.only("should get correct odds on a 5:1 punt", async () => {
+    it("should get correct odds on a 5:1 punt", async () => {
       let balance = await underlying.balanceOf(bob);
       assert.equal(balance, 1000000000, "Bob should have $1,000 USDT");
 

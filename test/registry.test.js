@@ -7,7 +7,7 @@ const { constants } = require("ethers");
 
 contract("Registry", () => {
   describe("Registry", () => {
-    it("should have market and vault counts", async () => {
+    it("should be able to add makerts and vaults", async () => {
       const underlying = await MockToken.new("Mock USDT", "USDT");
       const registry = await Registry.new(constants.AddressZero);
 
