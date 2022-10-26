@@ -117,6 +117,7 @@ contract Vault is Ownable, IERC20, IVault {
         return _underlying;
     }
 
+    // Total amounts of assets deposited in the vault
     function totalAssets() external view returns (uint256) {
         return _totalAssets;
     }

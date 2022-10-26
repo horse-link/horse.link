@@ -6,9 +6,11 @@ import "./IVault.sol";
 
 contract Registry {
 
-    mapping(address => address) public underlying;
     address[] public markets;
     address[] public vaults;
+
+    mapping(address => address) private _underlying;
+    mapping(address => address) private _markets;
 
     function marketCount() external view returns (uint256) {
         return markets.length;
@@ -19,16 +21,17 @@ contract Registry {
     }
 
     function addVault(address vault) external {
-        address _underlying = IVault(vault).asset();
-        require(underlying[_underlying] == address(0), "Vault already added");
+        address underlying = IVault(vault).asset();
+        require(_underlying[underlying] == address(0), "Vault with this underlying token already added");
 
         vaults.push(vault);
-        underlying[_underlying] = vault; // underlying to vault
+        _underlying[underlying] = vault; // underlying to vault
 
         emit VaultAdded(vault);
     }
 
     function addMarket(address market) external {
+        address _vault = IMarket(market).getVaultAddress();
         markets.push(market);
         emit MarketAdded(market);
     }
