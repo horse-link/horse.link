@@ -1,8 +1,8 @@
 # About
 
-Horse Link https://horse.link is an Ethereum based DeFi protocol that allows particpants to wager on sports markets using ERC20 tokens.
+Horse Link https://horse.link is an Ethereum AMM protocol that allows particpants to wager on sports markets using ERC20 tokens.
 
-Traditionaly, sports betting is a multi-billion dollar industry that is dominated by a few large companies. Horse Link aims to disrupt this industry by providing a decentralized alternative that is more transparent, fair, and secure.
+Traditionally, sports betting is a multi-billion dollar industry that is dominated by a few large companies. Horse Link aims to disrupt this industry by providing a decentralized alternative that is more transparent, fair, and secure.
 
 The "House" or "Book makers" set the odds on the events and take a percentage of the winnings. Horse Link is a decentralized protocol that allows anyone to become a book maker by creating their own market or adding liquidty to a Vault that the market draws from.
 
