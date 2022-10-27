@@ -16,19 +16,22 @@ Horse Link’s smart contract guaranteed bets are always placed within the slipp
 
 The total (potential) return on a stake is determined by the constant product function. The constant product function is a linear function that is defined by the following equation:
 
-Tp = S \* D
+Tp = D - D \* (S \ p)
+
+f(wager) = odds - odds\*(wager/pool)
 
 Where
 
 - Tp is the total profit
 - S is Stake
 - D is the decimal odd
+- p is the total locked value in the vault
 
 The liquidity is locked in the market contract until after the participant claims their payout.
 
 # Vaults
 
-ERC4626 Vaults are created to allow users to deposit ERC20 tokens into a smart contract and earn dividends on their deposits. Vault opperators then allow set markets to draw down liqidity from their Vaults to fund bets. The Vault operator can also set the percentage of the bet that is distributed to the Vault share holders.
+ERC4626 Vaults are created to allow users to deposit ERC20 tokens "underlying" into a smart contract and earn dividends on their deposits. Vault opperators then allow markets to draw down liqidity from their reserves to fund bets. The Vault operator can also set the percentage of the bet that is distributed to the Vault share holders.
 
 # Market makers
 
@@ -36,7 +39,9 @@ Market makers can run the the dapp and set their own odds ...
 
 # The API
 
-Our own odds can be found at https://api.horse.link/. These requests are signed by the owner.
+Our own market odds can be found at https://api.horse.link/. These requests are signed by the owner.
+
+# Contract Addresses
 
 ## Goerli
 
@@ -50,15 +55,9 @@ DIA Vault: `0x6F47f0864ab7a02f9E7866d2bc8aC0BCf3C4924E`
 DIA Market: `0xc8b8c94694cB8f7Aa5A2e7218D841ef492586A03`  
 Registry: `0x885386d140e4321102dc218060Bbd55a8B020F4C`
 
-### Notes
+## Notes
 
 `npx truffle run verify Registry@0x885386d140e4321102dc218060Bbd55a8B020F4C --network goerli`
 `npx truffle run verify Vault@0x21D068720BDBc7EdC49Ce8D1b1E1fb2d6c3526eb --network goerli`
 `npx truffle run verify Vault@0x6F47f0864ab7a02f9E7866d2bc8aC0BCf3C4924E --network goerli`
 `npx truffle run verify Registry --forceConstructorArgs string: --network goerli`
-
-## Poly Mumbia
-
-Owner: `0xfDBe64ec50cA548c7A304959D0f385A01D315a71`  
-Horse Link: `0xEedD810CDf9FE1B107Ae2350be71985764f552fF`  
-Horse ERC20 Token: `0x8254Ad903D06d3F2B9524D2Bc7bEc584d9548EF9`
