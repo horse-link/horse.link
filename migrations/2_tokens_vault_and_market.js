@@ -49,6 +49,7 @@ module.exports = async deployer => {
     1,
     "0x0000000000000000000000000000000000000000"
   );
+
   const dia_market = await Market.deployed();
 
   if (deploy_registry) {
