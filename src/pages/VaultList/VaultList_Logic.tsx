@@ -1,5 +1,5 @@
 import VaultListView from "./VaultList_View";
-import useVaults from "../../hooks/useVaults";
+import useVaults from "../../hooks/vault/useVaults";
 import { useState } from "react";
 
 const getMockAddresses = () => {

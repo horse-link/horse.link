@@ -1,8 +1,8 @@
-import { Market } from "../types";
-import marketContractJson from "../abi/Market.json";
-import vaultContractJson from "../abi/Vault.json";
+import { Market } from "../../types";
+import marketContractJson from "../../abi/Market.json";
+import vaultContractJson from "../../abi/Vault.json";
 import { useContractRead, useContractReads } from "wagmi";
-import useApi from "./useApi";
+import useApi from "../useApi";
 import { useEffect, useState } from "react";
 
 const useMarketDetailFromContract = (marketAddress?: string) => {

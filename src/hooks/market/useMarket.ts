@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Contract } from "@ethersproject/contracts";
 import { ethers } from "ethers";
 import { useProvider, useAccount } from "wagmi";
-import { market } from "../constants/market";
+import { market } from "../../constants/market";
 
 // TODO: fix any type here
 const useMarket = (): any => {

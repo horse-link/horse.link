@@ -1,7 +1,7 @@
 import ContractWriteResultCard from "../../../../components/ContractWriteResultCard/ContractWriteResultCard_View";
 import RequireWalletButton from "../../../../components/RequireWalletButton/RequireWalletButton_View";
 import { Back } from "../../../../types";
-import useMarketDetail from "../../../../hooks/useMarketDetail";
+import useMarketDetail from "../../../../hooks/market/useMarketDetail";
 
 type Props = {
   back: Back;

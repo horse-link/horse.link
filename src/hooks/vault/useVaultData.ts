@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import { useContractReads } from "wagmi";
-import vaultContractJson from "../abi/Vault.json";
+import vaultContractJson from "../../abi/Vault.json";
 
 const useVaultData = (vaultAddress: string, userAddress: string) => {
   const vaultContract = {

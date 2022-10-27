@@ -4,6 +4,7 @@ import {
   Market,
   SignedMeetingsResponse,
   SignedRunnersResponse,
+  Token,
   Vault
 } from "../types/index";
 
@@ -93,6 +94,51 @@ export default class Api {
 
   public getVaultDetail = async (vaultAddress: string): Promise<Vault> => {
     const { data } = await this.client.get(`/vaults/${vaultAddress}`);
+    return data;
+  };
+
+  public getVaultToken = async (vaultAddress: string): Promise<Token> => {
+    const { data } = await this.client.get(`/vaults/${vaultAddress}/token`);
+    return data;
+  };
+
+  public getAllowance = async (
+    address: string,
+    owner: string,
+    spender: string,
+    decimals: string
+  ): Promise<{
+    allowance: string;
+  }> => {
+    const { data } = await this.client.get("/allowance/", {
+      params: {
+        address,
+        owner,
+        spender,
+        decimals
+      }
+    });
+    return data;
+  };
+
+  public getPotentialPayout = async (
+    marketAddress: string,
+    propositionId: string,
+    wager: number,
+    odds: number,
+    tokenDecimal: string
+  ): Promise<{
+    potentialPayout: string;
+  }> => {
+    const { data } = await this.client.get("/payout/", {
+      params: {
+        marketAddress,
+        propositionId,
+        wager,
+        odds,
+        tokenDecimal
+      }
+    });
     return data;
   };
 }

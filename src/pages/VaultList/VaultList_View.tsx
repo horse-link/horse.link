@@ -2,7 +2,7 @@ import { PageLayout } from "../../components";
 import Skeleton from "react-loading-skeleton";
 import VaultLogic from "./components/Vault/Vault_Logic";
 import Modal from "../../components/Modal";
-import useVaultDetail from "../../hooks/useVaultDetail";
+import useVaultDetail from "../../hooks/vault/useVaultDetail";
 
 type Props = {
   vaultAddressList: string[];

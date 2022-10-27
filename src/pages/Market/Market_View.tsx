@@ -1,6 +1,6 @@
 import Skeleton from "react-loading-skeleton";
 import { PageLayout } from "../../components";
-import useMarketDetail from "../../hooks/useMarketDetail";
+import useMarketDetail from "../../hooks/market/useMarketDetail";
 
 type Props = {
   marketAddressList: string[];
