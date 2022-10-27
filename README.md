@@ -16,7 +16,7 @@ Horse Link’s smart contract guaranteed bets are always placed within the slipp
 
 The total (potential) return on a stake is determined by the constant product function. The constant product function is a linear function that is defined by the following equation:
 
-Tp = D - D \* (S \ p)
+Tp = S \* (D - D \* (S \ p))
 
 f(wager) = odds - odds\*(wager/pool)
 
@@ -39,7 +39,7 @@ Market makers can run the the dapp and set their own odds ...
 
 # The API
 
-Our own market odds can be found at https://api.horse.link/. These requests are signed by the owner.
+Our own market odds can be found at https://api.horse.link/. These requests are signed by the owner with a UUID as a nonce.
 
 # Contract Addresses
 
