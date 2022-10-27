@@ -6,10 +6,6 @@ import { FaucetModal } from "./FaucetModal";
 
 const faucetTokens = [
   {
-    name: "Goerli ETH",
-    address: "0x0000000000000000000000000000000000000000"
-  },
-  {
     name: "Mock DIA",
     address: "0x70b481B732822Af9beBc895779A6e261DC3D6C8B"
   },
@@ -53,7 +49,7 @@ export const FaucetPage = () => {
         txHash={txHash}
       />
       <div className="flex flex-wrap gap-20 sm:justify-center">
-        <div className="flex flex-col gap-5 w-full sm:w-56">
+        <div className="flex flex-col gap-5 w-full md:w-56">
           {faucetTokens.map(({ name, address }) => (
             <ClaimButton
               tokenName={name}
@@ -62,7 +58,7 @@ export const FaucetPage = () => {
             />
           ))}
         </div>
-        <div className="w-full sm:w-64 bg-gray-100 rounded-md p-5 ">
+        <div className="w-full md:w-64 bg-gray-100 rounded-md p-5 ">
           <h2>
             Welcome to the Horse Link Faucet.
             <br />
@@ -78,13 +74,22 @@ export const FaucetPage = () => {
             there by default).
           </p>
         </div>
-        <div className="w-96 mx-auto sm:mx-0">
+        <div className="w-96 mx-auto md:mx-0">
           <img
             loading="lazy"
             src="/images/goerli-test-network.png"
             alt="Goerli network option in Metamask Networks tab"
           />
         </div>
+      </div>
+      <div className="flex flex-col gap-5 mt-6 md:w-5/6 mx-auto">
+        {faucetTokens.map(token => {
+          return (
+            <div className="bg-gray-100 rounded-md p-5 sm:w-152">
+              {token.name} Address - {token.address}
+            </div>
+          );
+        })}
       </div>
     </PageLayout>
   );
