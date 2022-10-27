@@ -26,7 +26,7 @@ Where
 
 The liquidity is locked in the market contract until after the participant claims their payout.
 
-## Vaults
+# Vaults
 
 ERC4626 Vaults are created to allow users to deposit ERC20 tokens into a smart contract and earn dividends on their deposits. Vault opperators then allow set markets to draw down liqidity from their Vaults to fund bets. The Vault operator can also set the percentage of the bet that is distributed to the Vault share holders.
 

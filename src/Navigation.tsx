@@ -2,7 +2,6 @@ import { Route, Routes, Navigate, HashRouter } from "react-router-dom";
 import Dashboard from "./pages/Dashboard/Dashboard_Logic";
 import HorseRace from "./pages/HorseRace/HorseRace_Logic";
 import Market from "./pages/Market/Market_Logic";
-// import Results from "./pages/Results/Results_Logic";
 import VaultList from "./pages/VaultList/VaultList_Logic";
 import Bets from "./pages/Bets/Bets_Logic";
 import { FaucetPage } from "./pages/Faucet";

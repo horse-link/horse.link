@@ -17,7 +17,7 @@ const navigation = [
   { name: "DOA / Governance", path: "/doa" },
   {
     name: "White Paper",
-    path: "https://github.com/horse-link/whitepaper",
+    path: "https://github.com/horse-link/horse.link/blob/main/README.md",
     absolutePath: true
   },
   { name: "Faucet", path: "/faucet" }
