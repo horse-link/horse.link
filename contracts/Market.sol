@@ -138,7 +138,6 @@ contract Market is Ownable, IMarket {
         }
 
         // f(wager) = odds - odds*(wager/pool) 
-
         if (_potentialPayout[propositionId] > uint256(p)) {
             return 0;
         }
@@ -187,7 +186,7 @@ contract Market is Ownable, IMarket {
 
         // _totalInPlay += payout;
         _totalExposure += (payout - wager);
-        _inplayCount += 1;
+        _inplayCount++;
 
         emit Placed(count, propositionId, marketId, wager, payout, msg.sender);
 
@@ -213,14 +212,12 @@ contract Market is Ownable, IMarket {
         _settle(index, result);
     }
 
-    function settleMarket(bytes32 propositionId, bytes32 marketId, bytes calldata signature) external {
+    function settleMarket(bytes32 propositionId, uint256 from, uint256 to, bytes32 marketId, bytes calldata signature) external {
         bytes32 message = keccak256(abi.encodePacked(propositionId, marketId));
         address marketOwner = recoverSigner(message, signature);
         require(marketOwner == owner(), "settleMarket: Invalid signature");
 
-        uint256 count = _marketBets[marketId].length;
-        assert(count < MAX);
-        for (uint256 i = 0; i < count; i++) {
+        for (uint256 i = from; i < to; i++) {
             uint256 index = _marketBets[marketId][i];
 
             if (!_bets[index].settled) {
@@ -259,7 +256,7 @@ contract Market is Ownable, IMarket {
 
     modifier onlyMarketOwner(bytes32 messageHash, bytes memory signature) {
         bytes32 ethSignedMessageHash = getEthSignedMessageHash(messageHash);
-        require(recoverSigner(ethSignedMessageHash, signature) == owner(), "Invalid signature");
+        require(recoverSigner(ethSignedMessageHash, signature) == owner(), "onlyMarketOwner: Invalid signature");
         _;
     }
 

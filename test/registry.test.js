@@ -7,9 +7,10 @@ const { constants } = require("ethers");
 
 contract("Registry", () => {
   describe("Registry", () => {
-    it("should be able to add makerts and vaults", async () => {
+    it("should be able to add markets and vaults", async () => {
+      const token = await MockToken.new("HL", "HL");
       const underlying = await MockToken.new("Mock USDT", "USDT");
-      const registry = await Registry.new(constants.AddressZero);
+      const registry = await Registry.new(token.address);
 
       const market_count = await registry.marketCount();
       assert.equal(market_count, 0, "Should have no markets");

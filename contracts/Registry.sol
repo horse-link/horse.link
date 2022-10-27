@@ -13,6 +13,7 @@ contract Registry {
     mapping(address => address) private _underlying;
     mapping(address => address) private _markets;
 
+    address immutable private _owner;
     address immutable private _token;
     uint256 private _threshold;
 
@@ -25,12 +26,13 @@ contract Registry {
     }
 
     constructor(address token) {
+        _owner = msg.sender;
         _token = token;
     }
 
     function addVault(address vault) external {
         address underlying = IVault(vault).asset();
-        require(_underlying[underlying] == address(0), "Vault with this underlying token already added");
+        require(_underlying[underlying] == address(0), "addVault: Vault with this underlying token already added");
 
         vaults.push(vault);
         _underlying[underlying] = vault; // underlying to vault
@@ -39,7 +41,7 @@ contract Registry {
     }
 
     function addMarket(address market) external {
-        // address _vault = IMarket(market).getVaultAddress();
+        require(_markets[market] == address(0), "addMarket: Market already added");
         markets.push(market);
         emit MarketAdded(market);
     }
@@ -50,6 +52,11 @@ contract Registry {
 
     modifier onlyTokenHolders() {
         require(IERC20(_token).balanceOf(msg.sender) >= _threshold, "onlyTokenHolders: Does not hold enough tokens");
+        _;
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == _owner, "onlyOwner: Not contract owner");
         _;
     }
 
