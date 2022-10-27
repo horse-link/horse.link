@@ -1,4 +1,4 @@
-import useMarkets from "../../hooks/useMarkets";
+import useMarkets from "../../hooks/market/useMarkets";
 import MarketView from "./Market_View";
 
 const getMockAddresses = () => {

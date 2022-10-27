@@ -1,10 +1,10 @@
 import { ethers } from "ethers";
 import { useContractReads } from "wagmi";
-import vaultContractJson from "../abi/Vault.json";
-import mockTokenContractJson from "../abi/MockToken.json";
+import vaultContractJson from "../../abi/Vault.json";
+import mockTokenContractJson from "../../abi/MockToken.json";
 import { useEffect, useState } from "react";
-import { Vault } from "../types";
-import useApi from "./useApi";
+import { Vault } from "../../types";
+import useApi from "../useApi";
 
 const useVaultDetailFromContract = (vaultAddress: string) => {
   const vaultContract = {

@@ -3,9 +3,9 @@ import VaultView from "./Vault_View";
 import vaultContractJson from "../../../../abi/Vault.json";
 import { useAccount, useContractWrite, useWaitForTransaction } from "wagmi";
 import { ethers } from "ethers";
-import useTokenData from "../../../../hooks/useTokenData";
-import useTokenApproval from "../../../../hooks/useTokenApproval";
-import useVaultData from "../../../../hooks/useVaultData";
+import useTokenData from "../../../../hooks/token/useTokenData";
+import useTokenApproval from "../../../../hooks/token/useTokenApproval";
+import useVaultData from "../../../../hooks/vault/useVaultData";
 type useWithdrawContractWriteArgs = {
   vaultAddress: string;
   enabled: boolean;
@@ -99,7 +99,7 @@ const VaultLogic = ({ vaultAddress }: Props) => {
     symbol: tokenSymbol,
     address: tokenAddress,
     decimals: tokenDecimal
-  } = useTokenData(vaultAddress);
+  } = useTokenData({ vaultAddress });
   const {
     vaultBalance,
     userBalance: userBalanceStr,

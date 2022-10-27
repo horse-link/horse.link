@@ -1,3 +1,9 @@
+export type Token = {
+  address: string;
+  symbol: string;
+  decimals: string;
+};
+
 export type Vault = {
   name: string;
   symbol: string;

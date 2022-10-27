@@ -1,36 +1,6 @@
 import { ethers } from "ethers";
-import { useMemo } from "react";
-import {
-  erc20ABI,
-  useContractRead,
-  useContractWrite,
-  useWaitForTransaction
-} from "wagmi";
-
-type useAllowanceArgs = {
-  address: string;
-  owner: string;
-  spender: string;
-  decimals: string;
-};
-const useAllowance = ({
-  address,
-  owner,
-  spender,
-  decimals
-}: useAllowanceArgs) => {
-  const { data: bnAllowance, refetch } = useContractRead({
-    addressOrName: address,
-    contractInterface: erc20ABI,
-    functionName: "allowance",
-    args: [owner, spender]
-  });
-  const allowance = useMemo(() => {
-    if (!bnAllowance) return "0";
-    return Number(ethers.utils.formatUnits(bnAllowance, decimals));
-  }, [bnAllowance]);
-  return { allowance, refetch };
-};
+import { erc20ABI, useContractWrite, useWaitForTransaction } from "wagmi";
+import useAllowance from "./useAllowance";
 
 type useApproveContractWriteArgs = {
   tokenAddress: string;
