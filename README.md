@@ -1,6 +1,34 @@
-# Dapp
+# About
 
-Offical Dapp for https://horse.link
+Horse Link https://horse.link is an Ethereum based DeFi protocol that allows particpants to wager on sports markets using ERC20 tokens.
+
+Traditionaly, sports betting is a multi-billion dollar industry that is dominated by a few large companies. Horse Link aims to disrupt this industry by providing a decentralized alternative that is more transparent, fair, and secure.
+
+The "House" or "Book makers" set the odds on the events and take a percentage of the winnings. Horse Link is a decentralized protocol that allows anyone to become a book maker by creating their own market or adding liquidty to a Vault that the market draws from. 
+
+The protocol is designed to be as fair as possible by using a bonding curve to set the odds. The protocol also uses a bonding curve to set the fees that is distributed to Vault share holders. The potentail payout assimptopes to 0 as the size of the bet increases with respect to amount of liqudity in the Vault.
+
+The market will find an equlibrium between the depth of the Vault and the size of the bet.
+
+# How it works
+
+Horse Link’s smart contract guaranteed bets are always placed within the slippage band of the constant product function.  Like other AMM protocols based on curve functions, bets based within the range of slippage based on the potential payout will be placed.  
+
+The total (potential) return on a stake is determined by the constant product function.  The constant product function is a linear function that is defined by the following equation:
+
+Tp = S * D
+
+Where 
+
+* Tp is the total profit
+* S is Stake
+* D is the decimal odd
+
+The liquidity is locked in the market contract until after the participant claims their payout.
+
+## Vaults
+
+ERC4626 Vaults are created to allow users to deposit ERC20 tokens into a smart contract and earn dividends on their deposits.
 
 # Market makers
 
