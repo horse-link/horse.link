@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDebounce } from "use-debounce";
 
 import { useAccount, useContractWrite, useWaitForTransaction } from "wagmi";
@@ -232,6 +232,12 @@ const BackLogic = ({ runner }: Props) => {
   const [selectedMarketAddress, setSelectedMarketAddress] = useState<string>(
     marketAddresses[0]
   );
+  useEffect(() => {
+    if (marketAddresses.length > 0) {
+      setSelectedMarketAddress(marketAddresses[0]);
+    }
+  }, [marketAddresses]);
+
   const [wagerAmount, setWagerAmount] = useState<number>(0);
   const { potentialPayout, contract, txStatus, isEnoughAllowance } =
     useBackingContract(back, wagerAmount, selectedMarketAddress, ownerAddress);
