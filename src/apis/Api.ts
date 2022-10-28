@@ -5,7 +5,8 @@ import {
   SignedMeetingsResponse,
   SignedRunnersResponse,
   Token,
-  Vault
+  Vault,
+  VaultUserData
 } from "../types/index";
 
 export default class Api {
@@ -99,6 +100,16 @@ export default class Api {
 
   public getVaultToken = async (vaultAddress: string): Promise<Token> => {
     const { data } = await this.client.get(`/vaults/${vaultAddress}/token`);
+    return data;
+  };
+
+  public getVaultUserData = async (
+    vaultAddress: string,
+    userAddress: string
+  ): Promise<VaultUserData> => {
+    const { data } = await this.client.get(
+      `/vaults/${vaultAddress}/user/${userAddress}`
+    );
     return data;
   };
 

@@ -35,10 +35,10 @@ const useAllowanceFromAPI = ({
   decimals
 }: useAllowanceArgs) => {
   const [allowance, setAllowance] = useState("0");
-  const [shouldFetch, setShouldFetch] = useState(true);
+  const [fetchIndex, setFetchIndex] = useState(0);
   const api = useApi();
   useEffect(() => {
-    if (!address || !owner || !spender || !decimals || !shouldFetch) return;
+    if (!address || !owner || !spender || !decimals) return;
     const load = async () => {
       const { allowance } = await api.getAllowance(
         address,
@@ -49,8 +49,8 @@ const useAllowanceFromAPI = ({
       setAllowance(allowance);
     };
     load();
-  }, [api, address, owner, spender, shouldFetch]);
-  const refetch = () => setShouldFetch(true);
+  }, [api, address, owner, spender, fetchIndex]);
+  const refetch = () => setFetchIndex(i => i + 1);
   return { allowance, refetch };
 };
 

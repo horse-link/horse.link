@@ -5,7 +5,7 @@ import { useAccount, useContractWrite, useWaitForTransaction } from "wagmi";
 import { ethers } from "ethers";
 import useTokenData from "../../../../hooks/token/useTokenData";
 import useTokenApproval from "../../../../hooks/token/useTokenApproval";
-import useVaultData from "../../../../hooks/vault/useVaultData";
+import useVaultUserData from "../../../../hooks/vault/useVaultUserData";
 type useWithdrawContractWriteArgs = {
   vaultAddress: string;
   enabled: boolean;
@@ -104,9 +104,9 @@ const VaultLogic = ({ vaultAddress }: Props) => {
     vaultBalance,
     userBalance: userBalanceStr,
     performance,
-    _asset,
-    refetch: refetchVaultData
-  } = useVaultData(vaultAddress, userAddress);
+    asset,
+    refetch: refetchVaultUserData
+  } = useVaultUserData({ vaultAddress, userAddress });
   const userBalance = Number(userBalanceStr);
   const [depositAmount, setDepositAmount] = useState(0);
 
@@ -131,7 +131,7 @@ const VaultLogic = ({ vaultAddress }: Props) => {
     ownerAddress: userAddress,
     vaultAddress,
     enabled: depositAmount > 0 && isEnoughAllowance,
-    onTxSuccess: () => refetchVaultData()
+    onTxSuccess: () => refetchVaultUserData()
   });
 
   const {
@@ -143,7 +143,7 @@ const VaultLogic = ({ vaultAddress }: Props) => {
   } = useWithdrawContractWrite({
     vaultAddress,
     enabled: userBalance > 0,
-    onTxSuccess: () => refetchVaultData()
+    onTxSuccess: () => refetchVaultUserData()
   });
 
   const contract = {
@@ -168,13 +168,13 @@ const VaultLogic = ({ vaultAddress }: Props) => {
     txStatus.isLoading;
 
   const vaultDetailData = {
-    userAddress: userAddress,
-    tokenSymbol: tokenSymbol,
-    vaultAddress: vaultAddress,
-    vaultBalance: vaultBalance,
+    userAddress,
+    tokenSymbol,
+    vaultAddress,
+    vaultBalance,
     userBalance: userBalanceStr,
-    performance: performance,
-    asset: _asset
+    performance,
+    asset
   };
   return (
     <VaultView

@@ -1,3 +1,10 @@
+export type VaultUserData = {
+  vaultBalance: string;
+  userBalance: string;
+  performance: string;
+  asset: string;
+};
+
 export type Token = {
   address: string;
   symbol: string;
