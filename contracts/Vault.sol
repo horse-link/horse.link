@@ -4,9 +4,7 @@ pragma solidity =0.8.10;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "./IBurnable.sol";
 import "./IMarket.sol";
-import "./IMintable.sol";
 import "./IVault.sol";
 
 contract Vault is Ownable, IERC20, IVault {
@@ -50,14 +48,12 @@ contract Vault is Ownable, IERC20, IVault {
         return _market;
     }
 
-    function setMarket(address market) public onlyOwner() {
+    function setMarket(address market, uint256 max) public onlyOwner() {
         require(_market == address(0), "setMarket: Market already set");
 
-        // could do some checks here
-        // require(IMarket(_market).getTarget() < 200, "Market target is too high");
         _market = market;
 
-        ERC20(_underlying).approve(_market, type(uint256).max);
+        ERC20(_underlying).approve(_market, max);
     }
 
     function getPerformance() external view returns (uint256) {

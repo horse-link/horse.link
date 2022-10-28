@@ -35,7 +35,7 @@ contract Registry {
         require(_underlying[underlying] == address(0), "addVault: Vault with this underlying token already added");
 
         vaults.push(vault);
-        _underlying[underlying] = vault; // underlying to vault
+        _underlying[underlying] = vault; // underlying => vault
 
         emit VaultAdded(vault);
     }
@@ -57,7 +57,7 @@ contract Registry {
     }
 
     modifier onlyOwner() {
-        require(msg.sender == _owner, "onlyOwner: Not contract owner");
+        require(msg.sender == _owner, "onlyOwner: Caller is not the contract owner");
         _;
     }
 
