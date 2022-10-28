@@ -55,6 +55,10 @@ DIA Vault: `0x6F47f0864ab7a02f9E7866d2bc8aC0BCf3C4924E`
 DIA Market: `0xc8b8c94694cB8f7Aa5A2e7218D841ef492586A03`  
 Registry: `0x885386d140e4321102dc218060Bbd55a8B020F4C`
 
+## Mainnet
+
+Horse Link Token `0xfdc066DF7d7A188786A1580a9DDFbfbE716c31d5`
+
 ## Notes
 
 `npx truffle run verify Registry@0x885386d140e4321102dc218060Bbd55a8B020F4C --network goerli`
