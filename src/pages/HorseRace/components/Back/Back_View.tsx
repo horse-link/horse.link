@@ -96,8 +96,12 @@ const BackView: React.FC<Props> = ({
                   </button>
                 ) : (
                   <button
-                    className="px-5 py-1 hover:bg-gray-100 rounded-md border border-gray-500 shadow-md "
+                    className={
+                      "px-5 py-1 hover:bg-gray-100 rounded-md border border-gray-500 shadow-md" +
+                      (!selectedMarket ? " opacity-50 cursor-not-allowed" : "")
+                    }
                     onClick={contract.approveContractWrite}
+                    disabled={!selectedMarket}
                   >
                     {txStatus.isLoading ? "..." : "Approve"}
                   </button>
