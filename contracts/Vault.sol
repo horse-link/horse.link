@@ -20,8 +20,6 @@ contract Vault is Ownable, IERC20, IVault {
 
     address private immutable _underlying;
     address private immutable _self;
-
-    uint256 private constant PRECISSION = 1_000;
     address private _market;
 
     function name() public view returns (string memory) {

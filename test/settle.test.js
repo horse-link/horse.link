@@ -4,7 +4,7 @@ const Market = artifacts.require("Market");
 const Token = artifacts.require("MockToken");
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { constants, utils } = require("ethers");
+const { constants, utils, Wallet } = require("ethers");
 
 contract("Market", accounts => {
   let market;
@@ -40,7 +40,7 @@ contract("Market", accounts => {
     vault = await Vault.new(underlying.address);
 
     market = await Market.new(vault.address, FEE, constants.AddressZero);
-    await vault.setMarket(market.address);
+    await vault.setMarket(market.address, 10000);
 
     await underlying.approve(
       vault.address,

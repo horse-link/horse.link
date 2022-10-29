@@ -2,6 +2,7 @@
 pragma solidity =0.8.10;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import { IBet } from "./IBet.sol";
 import "./IVault.sol";
@@ -20,7 +21,7 @@ struct Bet {
 contract Market is Ownable, IMarket {
 
     uint256 private constant MAX = 32;
-    int256 private constant PRECESSION = 1_000;
+    int256 private constant PRECESION = 1_000;
     uint8 private immutable _fee;
     uint8 private immutable _workerfee;
     address private immutable _vault;
@@ -63,7 +64,7 @@ contract Market is Ownable, IMarket {
         return _inplayCount; // this is incorrect
     }
 
-    function _getCount() external view returns (uint256) {
+    function getCount() external view returns (uint256) {
         return _bets.length;
     }
 
@@ -145,7 +146,7 @@ contract Market is Ownable, IMarket {
         // do not include this guy in the return
         p -= int256(_potentialPayout[propositionId]);
 
-        return odds - (odds * (wager * PRECESSION / p) / PRECESSION);
+        return odds - (odds * (wager * PRECESION / p) / PRECESION);
     }
 
     function getPotentialPayout(bytes32 propositionId, uint256 wager, uint256 odds) external view returns (uint256) {
