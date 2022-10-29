@@ -1,11 +1,8 @@
-import { useContractReads } from "wagmi";
 import { PageLayout } from "../../components";
-import vaultContractJson from "../../abi/Vault.json";
-import mockTokenContractJson from "../../abi/MockToken.json";
-import { ethers } from "ethers";
 import Skeleton from "react-loading-skeleton";
 import VaultLogic from "./components/Vault/Vault_Logic";
 import Modal from "../../components/Modal";
+import useVaultDetail from "../../hooks/vault/useVaultDetail";
 
 type Props = {
   vaultAddressList: string[];
@@ -61,10 +58,10 @@ const VaultListView: React.FC<Props> = ({
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {vaultAddressList.map(v => (
+                {vaultAddressList.map((v, i) => (
                   <Row
                     vaultAddress={v}
-                    key={v}
+                    key={v || i}
                     onClick={() => onClickVault(v)}
                   />
                 ))}
@@ -104,77 +101,22 @@ type rowProp = {
 };
 
 const Row: React.FC<rowProp> = ({ vaultAddress, onClick }) => {
-  const vaultContract = {
-    addressOrName: vaultAddress,
-    contractInterface: vaultContractJson.abi
-  };
-
-  const { data: vaultData } = useContractReads({
-    contracts: [
-      {
-        ...vaultContract,
-        functionName: "totalAssets"
-      },
-      {
-        ...vaultContract,
-        functionName: "asset"
-      }
-    ]
-  });
-  const [bNTotalAssets, tokenAddress] = vaultData ?? [];
-  const tokenContract = {
-    addressOrName: tokenAddress?.toString() || "",
-    contractInterface: mockTokenContractJson.abi
-  };
-  const { data: tokenData } = useContractReads({
-    contracts: [
-      {
-        ...tokenContract,
-        functionName: "name"
-      },
-      {
-        ...tokenContract,
-        functionName: "symbol"
-      },
-      {
-        ...tokenContract,
-        functionName: "decimals"
-      }
-    ],
-    enabled: !!tokenAddress
-  });
-  let rowData = {
-    id: "",
-    symbol: "",
-    totalAssets: "",
-    vaultAddress: ""
-  };
-  if (bNTotalAssets && tokenData) {
-    const [name, symbol, decimals] = tokenData;
-    rowData = {
-      id: name as unknown as string,
-      symbol: symbol as unknown as string,
-      totalAssets: ethers.utils.formatUnits(bNTotalAssets, decimals),
-      vaultAddress
-    };
-  }
-
+  const vaultDetail = useVaultDetail(vaultAddress);
+  const { name, symbol, totalAssets, address } = vaultDetail || {};
   return (
     <tr
-      key={rowData.id}
+      key={name}
       onClick={onClick}
       className="cursor-pointer hover:bg-gray-100"
     >
       <td className="pl-5 pr-2 py-4 whitespace-nowrap">
-        {rowData.id || <Skeleton />}
+        {name || <Skeleton />}
       </td>
-      <td className="px-2 py-4">{rowData.symbol || <Skeleton />}</td>
+      <td className="px-2 py-4">{symbol || <Skeleton />}</td>
       <td className="px-2 py-4 whitespace-nowrap">
-        {rowData.totalAssets || <Skeleton />}
+        {totalAssets || <Skeleton />}
       </td>
-      <td className="px-2 py-4 whitespace-nowrap">
-        {rowData.vaultAddress || <Skeleton />}
-      </td>
+      <td className="px-2 py-4 whitespace-nowrap">{address || <Skeleton />}</td>
     </tr>
   );
 };

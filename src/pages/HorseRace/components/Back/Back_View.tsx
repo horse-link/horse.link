@@ -1,9 +1,7 @@
-import { useContractRead } from "wagmi";
 import ContractWriteResultCard from "../../../../components/ContractWriteResultCard/ContractWriteResultCard_View";
 import RequireWalletButton from "../../../../components/RequireWalletButton/RequireWalletButton_View";
 import { Back } from "../../../../types";
-import marketContract from "../../../../abi/Market.json";
-import vaultContractJson from "../../../../abi/Vault.json";
+import useMarketDetail from "../../../../hooks/market/useMarketDetail";
 
 type Props = {
   back: Back;
@@ -98,8 +96,12 @@ const BackView: React.FC<Props> = ({
                   </button>
                 ) : (
                   <button
-                    className="px-5 py-1 hover:bg-gray-100 rounded-md border border-gray-500 shadow-md "
+                    className={
+                      "px-5 py-1 hover:bg-gray-100 rounded-md border border-gray-500 shadow-md" +
+                      (!selectedMarket ? " opacity-50 cursor-not-allowed" : "")
+                    }
                     onClick={contract.approveContractWrite}
+                    disabled={!selectedMarket}
                   >
                     {txStatus.isLoading ? "..." : "Approve"}
                   </button>
@@ -127,16 +129,7 @@ type marketOptionProps = {
 };
 
 const MarketOption = ({ contractAddress }: marketOptionProps) => {
-  const { data: vaultAddressData } = useContractRead({
-    addressOrName: contractAddress,
-    contractInterface: marketContract.abi,
-    functionName: "getVaultAddress"
-  });
-  const { data: vaultNameData } = useContractRead({
-    addressOrName: vaultAddressData?.toString() ?? "",
-    contractInterface: vaultContractJson.abi,
-    functionName: "name",
-    enabled: !!vaultAddressData
-  });
-  return <option value={contractAddress}>{vaultNameData}</option>;
+  const marketDetail = useMarketDetail(contractAddress);
+  const { name } = marketDetail || {};
+  return <option value={contractAddress}>{name}</option>;
 };

@@ -1,13 +1,15 @@
 import { useContractRead, useContractReads } from "wagmi";
-import registryContractJson from "../abi/Registry.json";
+import registryContractJson from "../../abi/Registry.json";
 import { ethers } from "ethers";
+import useApi from "../useApi";
+import { useEffect, useState } from "react";
 
 const registryContract = {
-  addressOrName: "0x5Df377d600A40fB6723e4Bf10FD5ee70e93578da",
+  addressOrName: "0x885386d140e4321102dc218060Bbd55a8B020F4C",
   contractInterface: registryContractJson.abi
 };
 
-const useMarketAddresses = () => {
+const useMarketAddressesFromContract = () => {
   const { data: marketCountData } = useContractRead({
     ...registryContract,
     functionName: "marketCount"
@@ -32,8 +34,28 @@ const useMarketAddresses = () => {
   return { marketAddresses: marketAddresses as unknown as string[] };
 };
 
+const useMarketAddressesFromAPI = () => {
+  const [marketAddresses, setMarketAddresses] = useState<string[]>([]);
+  const api = useApi();
+  useEffect(() => {
+    const load = async () => {
+      const marketAddresses = await api.getMarketAddresses();
+      setMarketAddresses(marketAddresses);
+    };
+    load();
+  }, [api]);
+
+  return { marketAddresses: marketAddresses as unknown as string[] };
+};
+
+const shouldUseAPI = process.env.REACT_APP_REST_FOR_MARKETS;
+
 const useMarkets = () => {
-  const { marketAddresses } = useMarketAddresses();
+  if (shouldUseAPI) {
+    const { marketAddresses } = useMarketAddressesFromAPI();
+    return { marketAddresses };
+  }
+  const { marketAddresses } = useMarketAddressesFromContract();
   return { marketAddresses };
 };
 

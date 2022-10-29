@@ -1,5 +1,5 @@
 import VaultListView from "./VaultList_View";
-import useVaults from "../../hooks/useVaults";
+import useVaults from "../../hooks/vault/useVaults";
 import { useState } from "react";
 
 const getMockAddresses = () => {
@@ -19,7 +19,9 @@ const VaultList: React.FC = () => {
 
   return (
     <VaultListView
-      vaultAddressList={vaultAddresses || getMockAddresses()}
+      vaultAddressList={
+        vaultAddresses.length > 0 ? vaultAddresses : getMockAddresses()
+      }
       onClickVault={onClickVault}
       isDialogOpen={isDialogOpen}
       onCloseDialog={() => setIsDialogOpen(false)}

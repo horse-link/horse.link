@@ -1,3 +1,31 @@
+export type VaultUserData = {
+  vaultBalance: string;
+  userBalance: string;
+  performance: string;
+  asset: string;
+};
+
+export type Token = {
+  address: string;
+  symbol: string;
+  decimals: string;
+};
+
+export type Vault = {
+  name: string;
+  symbol: string;
+  totalAssets: string;
+  address: string;
+};
+
+export type Market = {
+  address: string;
+  vaultAddress: string;
+  name: string;
+  target: number;
+  totalInPlay: string;
+};
+
 export type Back = {
   nonce: string;
   market_id: string;
@@ -9,15 +37,13 @@ export type Back = {
 };
 
 export type BetHistory = {
+  index: number;
   market_id: string;
   proposition_id: string;
-  index: number;
   punter: string;
-  amount: number;
-  odds: number;
-  result: string;
+  amount: string;
   tx: string;
-  market: string;
+  blockNumber: number;
   signature: string;
 };
 

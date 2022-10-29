@@ -7,8 +7,9 @@ import Skeleton from "react-loading-skeleton";
 type Props = {
   asLocaltime: (raceTime: number) => string;
   meets: Meet[];
-  inPlay: string | undefined;
-  numberOfBets: number;
+  liquidity: number | undefined;
+  inPlay: number | undefined;
+  performance: number | undefined;
   signature: string | undefined;
   owner: string | undefined;
 };
@@ -19,15 +20,26 @@ type TableProps = {
 };
 
 const DashboardView: React.FC<Props> = (props: Props) => {
-  const { asLocaltime, meets, inPlay, numberOfBets, owner, signature } = props;
+  const {
+    asLocaltime,
+    meets,
+    inPlay,
+    performance,
+    liquidity,
+    owner,
+    signature
+  } = props;
 
   const stats = [
-    { name: "Total Liquidity", stat: `$ ${numberOfBets}` },
+    {
+      name: "Total Liquidity",
+      stat: liquidity ? `$ ${liquidity}` : <Loader />
+    },
     {
       name: "In Play",
-      stat: inPlay === "" ? <Loader /> : `$ ${inPlay}`
+      stat: inPlay ? `$ ${inPlay}` : <Loader />
     },
-    { name: "Performance", stat: "0.0%" }
+    { name: "Performance", stat: performance ? `${performance}%` : <Loader /> }
   ];
 
   return (
@@ -50,13 +62,15 @@ const DashboardView: React.FC<Props> = (props: Props) => {
               />
             </div>
             <h2 className="text-lg mb-3 font-medium text-gray-900">
-              Exchange on sports markets with deep liquidity
+              Horse Link is an Ethereum AMM protocol that allows particpants to
+              wager on sports markets using ERC20 tokens.
             </h2>
             <p className="text-xs my-2">
-              Aenean in dictum massa. Integer posuere erat lorem, in commodo
-              eros fringilla non. Donec ullamcorper porta tortor a dapibus.
-              Maecenas volutpat augue quis tortor commodo eleifend. Mauris
-              fermentum imperdiet diam sed sodales.
+              Horse Link’s smart contract guaranteed bets are always placed
+              within the slippage band of the constant product function. Like
+              other AMM protocols based on curve functions, bets based within
+              the range of slippage based on the potential payout will be
+              placed.
             </p>
           </div>
           <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">

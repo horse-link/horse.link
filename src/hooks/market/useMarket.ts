@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Contract } from "@ethersproject/contracts";
 import { ethers } from "ethers";
 import { useProvider, useAccount } from "wagmi";
-import { market } from "../constants/market";
+import { market } from "../../constants/market";
 
 // TODO: fix any type here
 const useMarket = (): any => {
@@ -10,7 +10,7 @@ const useMarket = (): any => {
   const marketContract = useMemo(
     () =>
       new Contract(
-        market.kovan.address as string,
+        market.kovan.address as string, // shouldnt be kovan
         market.ABI,
         provider as ethers.providers.Web3Provider
       ),

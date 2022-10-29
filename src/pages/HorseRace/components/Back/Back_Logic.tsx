@@ -1,44 +1,19 @@
 import { ethers } from "ethers";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDebounce } from "use-debounce";
 
-import {
-  useAccount,
-  useContractRead,
-  useContractWrite,
-  useWaitForTransaction
-} from "wagmi";
+import { useAccount, useContractWrite, useWaitForTransaction } from "wagmi";
 
 import marketContractJson from "../../../../abi/Market.json";
-import useMarkets from "../../../../hooks/useMarkets";
-import useTokenApproval from "../../../../hooks/useTokenApproval";
-import useTokenData from "../../../../hooks/useTokenData";
+import usePotentialPayout from "../../../../hooks/bet/usePotentialPayout";
+import useMarketDetail from "../../../../hooks/market/useMarketDetail";
+import useMarkets from "../../../../hooks/market/useMarkets";
+import useTokenApproval from "../../../../hooks/token/useTokenApproval";
+import useTokenData from "../../../../hooks/token/useTokenData";
 import { Back, Runner } from "../../../../types";
 import BackView from "./Back_View";
 
-const DECIAML = 6;
-
-const usePotentialPayout = (
-  marketAddress: string,
-  b32PropositionId: string,
-  bnWager: ethers.BigNumber,
-  bnOdds: ethers.BigNumber,
-  tokenDecimal: string
-) => {
-  const { data: bnPotentialPayout } = useContractRead({
-    addressOrName: marketAddress,
-    contractInterface: marketContractJson.abi,
-    functionName: "getPotentialPayout",
-    args: [b32PropositionId, bnWager, bnOdds]
-  });
-
-  const potentialPayout = useMemo(() => {
-    if (!bnPotentialPayout) return "0";
-    return ethers.utils.formatUnits(bnPotentialPayout, tokenDecimal);
-  }, [bnPotentialPayout]);
-
-  return { potentialPayout };
-};
+const DECIMAL = 6;
 
 const usePrepareBackingData = (
   proposition_id: string,
@@ -54,7 +29,7 @@ const usePrepareBackingData = (
   );
 
   const bnOdds = useMemo(
-    () => ethers.utils.parseUnits(odds.toString(), DECIAML),
+    () => ethers.utils.parseUnits(odds.toString(), DECIMAL),
     [odds]
   );
 
@@ -150,16 +125,13 @@ const useBackingContract = (
 
   const [debouncedWagerAmount] = useDebounce(wagerAmount, 500);
 
-  const { data: vaultAddressData } = useContractRead({
-    addressOrName: marketAddress,
-    contractInterface: marketContractJson.abi,
-    functionName: "getVaultAddress"
+  const marketData = useMarketDetail(marketAddress);
+
+  const vaultAddress = marketData?.vaultAddress.toString() ?? "";
+
+  const { address: tokenAddress, decimals: tokenDecimal } = useTokenData({
+    vaultAddress
   });
-
-  const vaultAddress = vaultAddressData?.toString() ?? "";
-
-  const { address: tokenAddress, decimals: tokenDecimal } =
-    useTokenData(vaultAddress);
 
   const {
     allowance,
@@ -170,6 +142,14 @@ const useBackingContract = (
 
   const isEnoughAllowance = allowance > 0 && allowance >= wagerAmount;
 
+  const { potentialPayout } = usePotentialPayout({
+    marketAddress,
+    propositionId: proposition_id,
+    wager: debouncedWagerAmount,
+    odds,
+    tokenDecimal
+  });
+
   const { b32PropositionId, bnWager, bnOdds, b32Nonce, b32MarketId } =
     usePrepareBackingData(
       proposition_id,
@@ -179,14 +159,6 @@ const useBackingContract = (
       nonce,
       market_id
     );
-
-  const { potentialPayout } = usePotentialPayout(
-    marketAddress,
-    b32PropositionId,
-    bnWager,
-    bnOdds,
-    tokenDecimal
-  );
 
   const {
     write: backContractWrite,
@@ -251,6 +223,7 @@ const usePageParams = (runner?: Runner) => {
 type Props = {
   runner?: Runner;
 };
+
 const BackLogic = ({ runner }: Props) => {
   const { back } = usePageParams(runner);
   const { marketAddresses } = useMarkets();
@@ -259,6 +232,12 @@ const BackLogic = ({ runner }: Props) => {
   const [selectedMarketAddress, setSelectedMarketAddress] = useState<string>(
     marketAddresses[0]
   );
+  useEffect(() => {
+    if (marketAddresses.length > 0) {
+      setSelectedMarketAddress(marketAddresses[0]);
+    }
+  }, [marketAddresses]);
+
   const [wagerAmount, setWagerAmount] = useState<number>(0);
   const { potentialPayout, contract, txStatus, isEnoughAllowance } =
     useBackingContract(back, wagerAmount, selectedMarketAddress, ownerAddress);

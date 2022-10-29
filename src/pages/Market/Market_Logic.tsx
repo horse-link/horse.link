@@ -1,4 +1,4 @@
-import useMarkets from "../../hooks/useMarkets";
+import useMarkets from "../../hooks/market/useMarkets";
 import MarketView from "./Market_View";
 
 const getMockAddresses = () => {
@@ -9,7 +9,9 @@ const MarketLogic = () => {
   const { marketAddresses } = useMarkets();
   return (
     <MarketView
-      marketAddressList={marketAddresses || getMockAddresses()}
+      marketAddressList={
+        marketAddresses.length > 0 ? marketAddresses : getMockAddresses()
+      }
       onClickMarket={() => ({})}
     />
   );

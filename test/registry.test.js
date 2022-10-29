@@ -3,11 +3,14 @@ const Vault = artifacts.require("Vault");
 const Market = artifacts.require("Market");
 const MockToken = artifacts.require("MockToken");
 
+const { constants } = require("ethers");
+
 contract("Registry", () => {
   describe("Registry", () => {
-    it("should have market and vault counts", async () => {
+    it("should be able to add markets and vaults", async () => {
+      const token = await MockToken.new("HL", "HL");
       const underlying = await MockToken.new("Mock USDT", "USDT");
-      const registry = await Registry.new();
+      const registry = await Registry.new(token.address);
 
       const market_count = await registry.marketCount();
       assert.equal(market_count, 0, "Should have no markets");
@@ -16,7 +19,7 @@ contract("Registry", () => {
       assert.equal(vault_count, 0, "Should have no vaults");
 
       const vault = await Vault.new(underlying.address);
-      const market = await Market.new(vault.address, 1);
+      const market = await Market.new(vault.address, 1, constants.AddressZero);
 
       await registry.addMarket(market.address);
       const market_count2 = await registry.marketCount();

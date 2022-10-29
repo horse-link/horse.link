@@ -4,29 +4,19 @@ pragma solidity =0.8.10;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "./IBurnable.sol";
 import "./IMarket.sol";
-import "./IMintable.sol";
 import "./IVault.sol";
-
-struct Reward {
-    uint256 balance;
-    uint256 start;
-}
 
 contract Vault is Ownable, IERC20, IVault {
     // ERC20
     mapping(address => uint256) private _balances;
     mapping(address => mapping(address => uint256)) private _allowances;
-
     mapping(address => uint256) private _shares;
 
-    uint256 private _totalSupply; // total shares
+    uint256 private _totalSupply;
     string private _name;
     string private _symbol;
     uint8 private _decimals;
-
-    uint256 private _totalAssets; // total assets in underlying
 
     address private immutable _underlying;
     address private immutable _self;
@@ -55,18 +45,15 @@ contract Vault is Ownable, IERC20, IVault {
     }
 
     function getMarket() external view returns (address) {
-        assert(_market != address(0));
         return _market;
     }
 
-    function setMarket(address market) public onlyOwner() {
-        require(_market == address(0), "Market already set");
+    function setMarket(address market, uint256 max) public onlyOwner() {
+        require(_market == address(0), "setMarket: Market already set");
 
-        // could do some checks here
-        // require(IMarket(_market).getTarget() < 200, "Market target is too high");
         _market = market;
 
-        ERC20(_underlying).approve(_market, type(uint256).max);
+        ERC20(_underlying).approve(_market, max);
     }
 
     function getPerformance() external view returns (uint256) {
@@ -77,18 +64,10 @@ contract Vault is Ownable, IERC20, IVault {
         uint256 underlyingBalance = IERC20(_underlying).balanceOf(_self);
 
         if (underlyingBalance > 0)
-            return (_totalSupply / underlyingBalance) * 100;
+            return _totalSupply * 100 / underlyingBalance;
 
         return 0;
     }
-
-    // function getInPlay() external view returns (uint256) {
-    //     return _getInPlay();
-    // }
-
-    // function _getInPlay() private view returns (uint256) {        
-    //     return IERC20(_underlying).balanceOf(_market);
-    // }
 
     function convertToAssets(uint256 shares) external view returns (uint256 assets) {
         return _convertToAssets(shares);
@@ -97,7 +76,7 @@ contract Vault is Ownable, IERC20, IVault {
     function _convertToAssets(uint256 shares) private view returns (uint256 assets) {
         uint256 inPlay = IERC20(_underlying).balanceOf(_market);
 
-        assets = shares / (_totalAssets - inPlay);
+        assets = shares / (_totalAssets() - inPlay);
     }
 
     function convertToShares(uint256 assets) external view returns (uint256 shares) {
@@ -105,10 +84,10 @@ contract Vault is Ownable, IERC20, IVault {
     }
 
     function _convertToShares(uint256 assets) private view returns (uint256 shares) {
-        if (_totalAssets == 0) {
+        if (_totalAssets() == 0) {
             shares = assets;
         } else {
-            shares = (assets * _totalSupply) / _totalAssets;
+            shares = (assets * _totalSupply) / _totalAssets();
         }
     }
 
@@ -117,8 +96,16 @@ contract Vault is Ownable, IERC20, IVault {
         return _underlying;
     }
 
+    // Total amounts of assets deposited in the vault
     function totalAssets() external view returns (uint256) {
-        return _totalAssets;
+        // return _totalAssets + IERC20(_underlying).balanceOf(_market);
+        return _totalAssets();
+    }
+
+    function _totalAssets() private view returns (uint256) {
+        // return _totalAssets + IERC20(_underlying).balanceOf(_market);
+        // return _totalAssets;
+        return IERC20(_underlying).balanceOf(_self);
     }
 
     constructor(address underlying) {
@@ -164,7 +151,7 @@ contract Vault is Ownable, IERC20, IVault {
     function decreaseAllowance(address spender, uint256 subtractedValue) public virtual returns (bool) {
         address owner = _msgSender();
         uint256 currentAllowance = _allowances[owner][spender];
-        require(currentAllowance >= subtractedValue, "ERC20: decreased allowance below zero");
+        require(currentAllowance >= subtractedValue, "decreaseAllowance: Decreased allowance below zero");
         unchecked {
             _approve(owner, spender, currentAllowance - subtractedValue);
         }
@@ -174,8 +161,8 @@ contract Vault is Ownable, IERC20, IVault {
 
     // Add underlying tokens to the pool
     function deposit(uint256 assets, address receiver) external returns (uint256 shares) {
-        require(assets > 0, "Value must be greater than 0");
-        require(_market != address(0), "Deposits not allowed until market is set"); // make this a modifier
+        require(assets > 0, "deposit: Value must be greater than 0");
+        require(_market != address(0), "deposit: Deposits not allowed until market is set"); // make this a modifier
 
         if (receiver == address(0))
             receiver = _msgSender();
@@ -215,13 +202,12 @@ contract Vault is Ownable, IERC20, IVault {
         
         IERC20(_underlying).approve(_market, _totalSupply);
         IERC20(_underlying).transfer(msg.sender, amount);
-        // decreaseAllowance(_market, amount);
 
         emit Withdraw(msg.sender, balance);
     }
 
     function _mint(address account, uint256 amount) private {
-        require(account != address(0), "_mint: mint to the zero address");
+        require(account != address(0), "_mint: Mint to the zero address");
 
         _totalSupply += amount;
         _balances[account] += amount;
@@ -229,10 +215,10 @@ contract Vault is Ownable, IERC20, IVault {
     }
 
     function _burn(address account, uint256 amount) private {
-        require(account != address(0), "_burn: burn from the zero address");
+        require(account != address(0), "_burn: Burn from the zero address");
 
         uint256 accountBalance = _balances[account];
-        require(accountBalance >= amount, "_burn: burn amount exceeds balance");
+        require(accountBalance >= amount, "_burn: Burn amount exceeds balance");
 
         _balances[account] -= amount;
         _totalSupply -= amount;
@@ -241,11 +227,11 @@ contract Vault is Ownable, IERC20, IVault {
     }
 
     function _transfer(address from, address to,uint256 amount) internal {
-        require(from != address(0), "ERC20: transfer from the zero address");
-        require(to != address(0), "ERC20: transfer to the zero address");
+        require(from != address(0), "ERC20: Transfer from the zero address");
+        require(to != address(0), "ERC20: Transfer to the zero address");
 
         uint256 fromBalance = _balances[from];
-        require(fromBalance >= amount, "ERC20: transfer amount exceeds balance");
+        require(fromBalance >= amount, "ERC20: Transfer amount exceeds balance");
         unchecked {
             _balances[from] = fromBalance - amount;
         }
@@ -255,8 +241,8 @@ contract Vault is Ownable, IERC20, IVault {
     }
 
     function _approve(address owner, address spender, uint256 amount) internal {
-        require(owner != address(0), "ERC20: approve from the zero address");
-        require(spender != address(0), "ERC20: approve to the zero address");
+        require(owner != address(0), "_approve: Approve from the zero address");
+        require(spender != address(0), "_approve: Approve to the zero address");
 
         _allowances[owner][spender] = amount;
         emit Approval(owner, spender, amount);
@@ -265,7 +251,7 @@ contract Vault is Ownable, IERC20, IVault {
     function _spendAllowance(address owner, address spender, uint256 amount) internal {
         uint256 currentAllowance = allowance(owner, spender);
         if (currentAllowance != type(uint256).max) {
-            require(currentAllowance >= amount, "ERC20: insufficient allowance");
+            require(currentAllowance >= amount, "_spendAllowance: Insufficient allowance");
             unchecked {
                 _approve(owner, spender, currentAllowance - amount);
             }
@@ -273,8 +259,8 @@ contract Vault is Ownable, IERC20, IVault {
     }
 
     modifier onlyMarket() {
-        require(_market != address(0), "Market not set");
-        require(msg.sender == _market, "Only the market can call this function");
+        require(_market != address(0), "onlyMarket: Market not set");
+        require(msg.sender == _market, "onlyMarket: Only the market can call this function");
         _;
     }
 }
