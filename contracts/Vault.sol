@@ -13,10 +13,10 @@ contract Vault is Ownable, ERC20, IVault {
     mapping(address => mapping(address => uint256)) private _allowances;
     mapping(address => uint256) private _shares;
 
-    uint256 private _totalSupply;
-    string private _name;
-    string private _symbol;
-    uint8 private _decimals;
+    // uint256 private _totalSupply;
+    // string private _name;
+    // string private _symbol;
+    // uint8 private _decimals;
 
     address private immutable _underlying;
     address private immutable _self;
@@ -86,15 +86,14 @@ contract Vault is Ownable, ERC20, IVault {
         return IERC20(_underlying).balanceOf(_self);
     }
 
-    constructor(address underlying) ERC20(_name, _symbol) {
+    constructor(address underlying, string name, string symbol) ERC20(name, symbol) {
         require(underlying != address(0), "Underlying address is invalid");
 
         _self = address(this);
         _underlying = underlying;
         
-        _symbol = string(abi.encodePacked("HL", ERC20(underlying).symbol()));
-        _name = string(abi.encodePacked("HL ", ERC20(underlying).name()));
-        _decimals = ERC20(underlying).decimals();
+        require(string(abi.encodePacked("HL", ERC20(underlying).symbol())) == symbol);
+        require(string(abi.encodePacked("HL ", ERC20(underlying).name())) == name);
     }
 
     // Add underlying tokens to the pool
@@ -109,7 +108,7 @@ contract Vault is Ownable, ERC20, IVault {
         _mint(receiver, shares);
 
         IERC20(_underlying).transferFrom(receiver, _self, assets);
-        IERC20(_underlying).approve(_market, _totalSupply);
+        IERC20(_underlying).approve(_market, shares);
 
         emit Deposit(receiver, assets);
     }
