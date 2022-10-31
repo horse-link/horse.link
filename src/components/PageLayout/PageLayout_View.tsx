@@ -14,7 +14,6 @@ const navigation = [
   { name: "Markets", path: "/markets" },
   { name: "History", path: "/history" },
   { name: "HL Token", path: "/tokens" },
-  { name: "DOA / Governance", path: "/doa" },
   {
     name: "White Paper",
     path: "https://github.com/horse-link/horse.link/blob/main/README.md",
