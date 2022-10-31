@@ -3,10 +3,14 @@ import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
 import { publicProvider } from "wagmi/providers/public";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
+import { alchemyProvider } from "wagmi/providers/alchemy";
 
 const { chains, provider, webSocketProvider } = configureChains(
   [chain.goerli],
-  [publicProvider()]
+  [
+    alchemyProvider({ apiKey: process.env.REACT_APP_ALCHEMY_API_KEY }),
+    publicProvider()
+  ]
 );
 
 const client = createClient({
