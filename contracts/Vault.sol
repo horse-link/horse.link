@@ -3,24 +3,44 @@ pragma solidity =0.8.10;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import "./IMarket.sol";
 import "./IVault.sol";
 
-contract Vault is Ownable, ERC20, IVault {
+contract Vault is Ownable, IVault, ERC20 {
+  
     // ERC20
+    uint256 private _totalSupply;
     mapping(address => uint256) private _balances;
-    mapping(address => mapping(address => uint256)) private _allowances;
+    //mapping(address => mapping(address => uint256)) private _allowances;
+
     mapping(address => uint256) private _shares;
 
-    // uint256 private _totalSupply;
-    // string private _name;
-    // string private _symbol;
-    // uint8 private _decimals;
-
-    address private immutable _underlying;
+    IERC20Metadata private immutable _underlying;
     address private immutable _self;
     address private _market;
+
+    constructor(IERC20Metadata underlying) ERC20(
+        string(abi.encodePacked("HL ", IERC20Metadata(underlying).name())),
+        string(abi.encodePacked("HL", IERC20Metadata(underlying).symbol())))
+    {
+        require(address(underlying) != address(0), "Underlying address is invalid");
+
+        _self = address(this);
+        _underlying = underlying;
+    }
+
+    function totalSupply() public view override (ERC20, IERC20) returns (uint256) {
+        return _totalSupply;
+    }
+
+    /*function symbol() public view override returns (string memory) {
+        return string(abi.encodePacked("HL ", IERC20(_underlying).symbol()));
+    }
+
+    function name() public view override returns (string memory) {
+        return string(abi.encodePacked("HL", IERC20(_underlying).name()));
+    }*/
 
     function getMarket() external view returns (address) {
         return _market;
@@ -31,7 +51,7 @@ contract Vault is Ownable, ERC20, IVault {
 
         _market = market;
 
-        ERC20(_underlying).approve(_market, max);
+        IERC20(_underlying).approve(_market, max);
     }
 
     function getPerformance() external view returns (uint256) {
@@ -70,7 +90,7 @@ contract Vault is Ownable, ERC20, IVault {
     }
 
     // IERC4626
-    function asset() external view returns (address assetTokenAddress) {
+    function asset() external view returns (IERC20Metadata assetTokenAddress) {
         return _underlying;
     }
 
@@ -84,16 +104,6 @@ contract Vault is Ownable, ERC20, IVault {
         // return _totalAssets + IERC20(_underlying).balanceOf(_market);
         // return _totalAssets;
         return IERC20(_underlying).balanceOf(_self);
-    }
-
-    constructor(address underlying, string name, string symbol) ERC20(name, symbol) {
-        require(underlying != address(0), "Underlying address is invalid");
-
-        _self = address(this);
-        _underlying = underlying;
-        
-        require(string(abi.encodePacked("HL", ERC20(underlying).symbol())) == symbol);
-        require(string(abi.encodePacked("HL ", ERC20(underlying).name())) == name);
     }
 
     // Add underlying tokens to the pool

@@ -3,18 +3,18 @@ pragma solidity =0.8.10;
 
 import "./IMarket.sol";
 import "./IVault.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 
 contract Registry {
 
     address[] public markets;
-    address[] public vaults;
+    IVault[] public vaults;
 
-    mapping(address => address) private _underlying;
+    mapping(address => IVault) private _underlying;
     mapping(address => address) private _markets;
 
     address immutable private _owner;
-    address immutable private _token;
+    IERC20Metadata immutable private _token;
     uint256 private _threshold;
 
     function marketCount() external view returns (uint256) {
@@ -25,19 +25,19 @@ contract Registry {
         return vaults.length;
     }
 
-    constructor(address token) {
+    constructor(IERC20Metadata token) {
         _owner = msg.sender;
         _token = token;
     }
 
-    function addVault(address vault) external onlyTokenHolders() {
-        address underlying = IVault(vault).asset();
-        require(_underlying[underlying] == address(0), "addVault: Vault with this underlying token already added");
+    function addVault(IVault vault) external onlyTokenHolders() {
+        IERC20Metadata underlying = vault.asset();
+        require(address(_underlying[address(underlying)]) == address(0), "addVault: Vault with this underlying token already added");
 
         vaults.push(vault);
-        _underlying[underlying] = vault; // underlying => vault
+        _underlying[address(underlying)] = vault; // underlying => vault
 
-        emit VaultAdded(vault);
+        emit VaultAdded(address(vault));
     }
 
     function addMarket(address market) external onlyTokenHolders() {
@@ -52,7 +52,7 @@ contract Registry {
     }
 
     modifier onlyTokenHolders() {
-        require(IERC20(_token).balanceOf(msg.sender) >= _threshold, "onlyTokenHolders: Caller does not hold enough tokens");
+        require(_token.balanceOf(msg.sender) >= _threshold, "onlyTokenHolders: Caller does not hold enough tokens");
         _;
     }
 

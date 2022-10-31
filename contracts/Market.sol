@@ -21,10 +21,10 @@ struct Bet {
 contract Market is Ownable, IMarket {
 
     uint256 private constant MAX = 32;
-    int256 private constant PRECESION = 1_000;
+    int256 private constant PRECISION = 1_000;
     uint8 private immutable _fee;
     uint8 private immutable _workerfee;
-    address private immutable _vault;
+    IVault private immutable _vault;
     address private immutable _self;
     address private immutable _oracle;
 
@@ -77,7 +77,7 @@ contract Market is Ownable, IMarket {
     }
 
     function getVaultAddress() external view returns (address) {
-        return _vault;
+        return address(_vault);
     }
 
     function getExpiry(uint64 id) external view returns (uint256) {
@@ -92,8 +92,8 @@ contract Market is Ownable, IMarket {
         return _bets[id].payoutDate + timeout;
     }
 
-    constructor(address vault, uint8 fee, address oracle) {
-        require(vault != address(0), "Invalid address");
+    constructor(IVault vault, uint8 fee, address oracle) {
+        require(address(vault) != address(0), "Invalid address");
         _self = address(this);
         _vault = vault;
         _fee = fee;
@@ -132,7 +132,7 @@ contract Market is Ownable, IMarket {
     }
     
     function _getOdds(int256 wager, int256 odds, bytes32 propositionId) private view returns (int256) {
-        int256 p = int256(IVault(_vault).totalAssets());
+        int256 p = int256(_vault.totalAssets()); //TODO: check that typecasting to a signed int is safe
 
         if (p == 0) {
             return 0;
@@ -146,7 +146,7 @@ contract Market is Ownable, IMarket {
         // do not include this guy in the return
         p -= int256(_potentialPayout[propositionId]);
 
-        return odds - (odds * (wager * PRECESION / p) / PRECESION);
+        return odds - (odds * (wager * PRECISION / p) / PRECISION);
     }
 
     function getPotentialPayout(bytes32 propositionId, uint256 wager, uint256 odds) external view returns (uint256) {
@@ -166,17 +166,26 @@ contract Market is Ownable, IMarket {
         return uint256(trueOdds) * wager / 1_000_000;
     }
 
-    function back(bytes32 nonce, bytes32 propositionId, bytes32 marketId, uint256 wager, uint256 odds, uint256 close, uint256 end, bytes calldata signature) external returns (uint256) {
+    function back(
+        bytes32 nonce,
+        bytes32 propositionId,
+        bytes32 marketId,
+        uint256 wager,
+        uint256 odds,
+        uint256 close,
+        uint256 end,
+        bytes calldata signature
+    ) external returns (uint256) {
         require(end > block.timestamp && block.timestamp > close, "back: Invalid date");
         
-        address underlying = IVault(_vault).asset();
+        IERC20Metadata underlying = _vault.asset();
 
         // add underlying to the market
         uint256 payout = _getPayout(propositionId, wager, odds);
 
         // escrow
-        IERC20(underlying).transferFrom(msg.sender, _self, wager);
-        IERC20(underlying).transferFrom(_vault, _self, (payout - wager));
+        underlying.transferFrom(msg.sender, _self, wager);
+        underlying.transferFrom(address(_vault), _self, (payout - wager));
 
         // add to the market
         _marketTotal[marketId] += wager;
@@ -199,8 +208,8 @@ contract Market is Ownable, IMarket {
         require(workerfee > 0, "claim: No fees to claim");
 
         _workerfees[msg.sender] = 0;
-        address underlying = IVault(_vault).asset();
-        IERC20(underlying).transfer(msg.sender, workerfee); 
+        IERC20Metadata underlying = IVault(_vault).asset();
+        underlying.transfer(msg.sender, workerfee); 
 
         emit Claimed(msg.sender, workerfee);
     }
@@ -240,16 +249,16 @@ contract Market is Ownable, IMarket {
         _totalInPlay -= 1;
         _totalExposure -= _bets[id].payout;
 
-        address underlying = IVault(_vault).asset();
+        IERC20Metadata underlying = _vault.asset();
 
         if (result == true) {
             // Transfer the win to the punter
-            IERC20(underlying).transfer(_bets[id].owner, _bets[id].payout);    
+            underlying.transfer(_bets[id].owner, _bets[id].payout);    
         }
 
         if (result == false) {
             // Transfer the proceeds to the vault
-            IERC20(underlying).transfer(_vault, _bets[id].payout);
+            underlying.transfer(address(_vault), _bets[id].payout);
         }
 
         emit Settled(id, _bets[id].payout, result, _bets[id].owner);
