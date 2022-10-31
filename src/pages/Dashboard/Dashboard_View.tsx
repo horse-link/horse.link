@@ -1,5 +1,5 @@
 import { Loader, PageLayout } from "../../components";
-import { Meet, Runner } from "../../types/index";
+import { Meet } from "../../types/index";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import Skeleton from "react-loading-skeleton";
