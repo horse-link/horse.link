@@ -2,6 +2,7 @@ import axios, { AxiosInstance } from "axios";
 import {
   BetHistoryResponse,
   Market,
+  Runner,
   SignedMeetingsResponse,
   SignedRunnersResponse,
   Token,
@@ -33,6 +34,11 @@ export default class Api {
       `/runners/${track}/${number}/win`
     );
 
+    return data;
+  };
+
+  public getMelbourneCupRunners = async () => {
+    const { data } = await this.client.get<Runner[]>("/melbournecup");
     return data;
   };
 

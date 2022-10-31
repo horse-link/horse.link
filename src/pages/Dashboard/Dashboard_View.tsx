@@ -3,6 +3,7 @@ import { Meet } from "../../types/index";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import Skeleton from "react-loading-skeleton";
+import MelbourneCup from "./MelbourneCup";
 
 type Props = {
   asLocaltime: (raceTime: number) => string;
@@ -117,6 +118,7 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
   return (
     <div className="grid grid-cols-2">
       <div className="col-span-2">
+        <MelbourneCup />
         <h3 className="text-lg mb-3 font-medium text-gray-900">Todays Meets</h3>
         <div className="flex flex-col">
           <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">

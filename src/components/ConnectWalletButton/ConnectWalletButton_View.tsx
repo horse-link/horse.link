@@ -1,6 +1,6 @@
 import React from "react";
 import Button from "../Button/Button_View";
-import { useAccount, useDisconnect, useNetwork } from "wagmi";
+import { useAccount, useDisconnect } from "wagmi";
 
 type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   openWalletModal: () => void;
