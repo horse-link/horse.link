@@ -4,11 +4,11 @@ Horse Link https://horse.link is an Ethereum AMM protocol that allows particpant
 
 Traditionally, sports betting is a multi-billion dollar industry that is dominated by a few large companies. Horse Link aims to disrupt this industry by providing a decentralized alternative that is more transparent, fair, and secure.
 
-The "House" or "Book makers" set the odds on the events and take a percentage of the winnings. Horse Link is a decentralized protocol that allows anyone to become a book maker by creating their own market or adding liquidty to a Vault that the market draws from.
+The "House" or "Book makers" set the odds on the events and take a percentage of the winnings. Horse Link is a decentralized protocol that allows anyone to become a book maker by creating their own market or adding liquidity to a Vault that the market draws from.
 
-The protocol is designed to be as fair as possible by using a bonding curve to set the odds. The protocol also uses a bonding curve to set the fees that is distributed to Vault share holders. The potentail payout assimptopes to 0 as the size of the bet increases with respect to amount of liqudity in the Vault.
+The protocol is designed to be as fair as possible by using a bonding curve to set the odds. The protocol also uses a bonding curve to set the fees that are distributed to Vault share holders. The potential payout asymptotes to 0 as the size of the bet increases with respect to amount of liquidity in the Vault.
 
-The market will find an equlibrium between the depth of the Vault and the size of the bet.
+The market will find an equilibrium between the depth of the Vault and the size of the bet.
 
 # How it works
 
@@ -31,7 +31,7 @@ The liquidity is locked in the market contract until after the participant claim
 
 # Vaults
 
-ERC4626 Vaults are created to allow users to deposit ERC20 tokens "underlying" into a smart contract and earn dividends on their deposits. Vault opperators then allow markets to draw down liqidity from their reserves to fund bets. The Vault operator can also set the percentage of the bet that is distributed to the Vault share holders.
+ERC4626 Vaults are created to allow users to deposit ERC20 tokens "underlying" into a smart contract and earn dividends on their deposits. Vault operators then allow markets to draw down liqidity from their reserves to fund bets. The Vault operator can also set the percentage of the bet that is distributed to the Vault share holders.
 
 # Market makers
 
