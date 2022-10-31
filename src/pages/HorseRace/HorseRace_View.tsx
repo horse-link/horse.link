@@ -1,6 +1,5 @@
 import { PageLayout } from "../../components";
 import moment from "moment";
-import Skeleton from "react-loading-skeleton";
 import { Runner } from "../../types";
 import BackLogic from "./components/Back/Back_Logic";
 import Modal from "../../components/Modal";

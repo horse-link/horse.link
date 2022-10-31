@@ -61,20 +61,20 @@ const RunnerTable = ({ runners, onClickRunner }: RunnerTableProps) => {
                       </td>
                       <td className="px-2 py-4 whitespace-nowrap">
                         {name ? (
-                          `${name} (${barrier})`
+                          `${name} (${barrier ?? "?"})`
                         ) : (
                           <Skeleton width="10em" />
                         )}
                       </td>
                       <td className="px-2 py-4 whitespace-nowrap">
-                        {name ? "NA" : <Skeleton width="2em" />}
+                        {name ? "?" : <Skeleton width="2em" />}
                       </td>
 
                       <td className="px-2 py-4 whitespace-nowrap">
                         {odds ? odds / 1000 : <Skeleton width="2em" />}
                       </td>
                       <td className="px-2 py-4 whitespace-nowrap">
-                        {name ? "NA" : <Skeleton width="2em" />}
+                        {name ? "?" : <Skeleton width="2em" />}
                       </td>
                     </tr>
                   );
