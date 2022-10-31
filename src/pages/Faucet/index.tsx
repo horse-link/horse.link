@@ -3,7 +3,7 @@ import { useAccount } from "wagmi";
 import { Loader, PageLayout } from "../../components";
 import useApi from "../../hooks/useApi";
 import { FaucetModal } from "./FaucetModal";
-
+import { AiOutlineCopy } from "react-icons/ai";
 const faucetTokens = [
   {
     name: "Mock DIA",
@@ -85,8 +85,14 @@ export const FaucetPage = () => {
       <div className="flex flex-col gap-5 mt-6 md:w-5/6 mx-auto">
         {faucetTokens.map(token => {
           return (
-            <div className="bg-gray-100 rounded-md p-5 sm:w-152">
+            <div className="bg-gray-100 rounded-md p-5 mr-6 sm:w-152">
               {token.name} Address - {token.address}
+              <button
+                className="ml-2 rounded hover:bg-green-400"
+                onClick={() => navigator.clipboard.writeText(token.address)}
+              >
+                <AiOutlineCopy />
+              </button>
             </div>
           );
         })}
