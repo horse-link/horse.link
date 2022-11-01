@@ -45,6 +45,7 @@ export type BetHistory = {
   tx: string;
   blockNumber: number;
   signature: string;
+  result: boolean | undefined;
 };
 
 export type BetHistoryResponse = {
