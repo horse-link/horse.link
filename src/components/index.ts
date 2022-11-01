@@ -5,11 +5,9 @@ import Input from "./Input/Input_View";
 import QuickFormInput from "./QuickFormInput/QuickFormInput_Logic";
 import InputLabelWrapper from "./InputLabelWrapper/InputLabelWrapper_View";
 import PageLayout from "./PageLayout/PageLayout_Logic";
-import tokenomics from "./images/tokenomics.png";
 
 export {
   QuickForm,
-  tokenomics,
   Loader,
   Button,
   Input,

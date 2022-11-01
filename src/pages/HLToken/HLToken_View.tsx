@@ -1,5 +1,5 @@
 import { PageLayout } from "../../components";
-import tokenomics from "./images/tokenomics.jpg";
+import tokenomics from "../../images/tokenomics.png";
 
 export const HlTokenPage = () => {
   return (
@@ -17,8 +17,8 @@ export const HlTokenPage = () => {
             value in Horse Link tokens.
           </p>
         </div>
-        <div className="w-90 mx-auto PT">
-          <img src={tokenomics} alt="Tokenomics" />
+        <div className="p-10 w-90 mx-auto PT">
+          <img src={tokenomics} alt="Tokenomics" className="rounded-md" />
         </div>
       </div>
     </PageLayout>
