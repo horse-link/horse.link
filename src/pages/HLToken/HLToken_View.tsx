@@ -1,5 +1,6 @@
 import { PageLayout } from "../../components";
 import tokenomics from "../../images/tokenomics.png";
+import { AiOutlineCopy } from "react-icons/ai";
 
 export const HlTokenPage = () => {
   return (
@@ -16,8 +17,19 @@ export const HlTokenPage = () => {
             network to the below address. You will be sent back the equivalent $
             value in Horse Link tokens.
             <br></br>
-            <br></br>
-            Address: 0xAA99c40A936A2cF11Eb1D5387897ce9A626E53c7
+            <div className="bg-gray-100 rounded-md p-5  text-center justify-center">
+              Address: 0xAA99c40A936A2cF11Eb1D5387897ce9A626E53c7
+              <button
+                className="ml-2 rounded hover:bg-green-400"
+                onClick={() =>
+                  navigator.clipboard.writeText(
+                    "0xAA99c40A936A2cF11Eb1D5387897ce9A626E53c7"
+                  )
+                }
+              >
+                <AiOutlineCopy />
+              </button>
+            </div>
           </p>
         </div>
         <div className="p-10 w-90 mx-auto PT">
