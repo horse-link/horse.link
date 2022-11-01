@@ -38,9 +38,6 @@ const useSettleContractWrite = ({
     addressOrName: marketAddress || "",
     contractInterface: marketContractJson.abi,
     functionName: "settle",
-    // TAYLOR
-    // Where are we tracking the bet results?
-    // Hardcoded for now
     args: [index, raceResult, signature],
     enabled: !!marketAddress && !!index && !!signature
   });
@@ -76,7 +73,7 @@ const useSettleBet = (bet?: BetHistory) => {
   } = useSettleContractWrite({
     // Market ID != Market Address
     // Need the market address to write to the contract
-    marketAddress: "0xc8b8c94694cB8f7Aa5A2e7218D841ef492586A03", //bet?.market_id,
+    marketAddress: "0xc8b8c94694cB8f7Aa5A2e7218D841ef492586A03",
     index: bet?.index,
     raceResult: bet?.result,
     signature: bet?.signature
@@ -90,8 +87,6 @@ const useSettleBet = (bet?: BetHistory) => {
     isSuccess: isTxSuccess,
     hash: txHash
   };
-
-  console.log("txStatus", txStatus);
 
   const shouldSettleButtonDisabled = !contract.settleContractWrite;
 
