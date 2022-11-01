@@ -71,16 +71,16 @@ const BackView: React.FC<Props> = ({
               />
             </label>
 
-            <label>
-              <span>Potential Payout</span>
+            <span className="p-1">
+              Potential Payout:
               <input
                 type="number"
                 value={potentialPayout}
                 readOnly
                 placeholder="0.0"
-                className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                className="rounded-md border-white focus:border-white focus:ring focus:ring-white focus:ring-opacity-50"
               />
-            </label>
+            </span>
           </div>
           <br></br>
           <div className="flex flex-col">
