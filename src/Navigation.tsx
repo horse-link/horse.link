@@ -5,6 +5,7 @@ import Market from "./pages/Market/Market_Logic";
 import VaultList from "./pages/VaultList/VaultList_Logic";
 import Bets from "./pages/Bets/Bets_Logic";
 import { FaucetPage } from "./pages/Faucet";
+import { HlTokenPage } from "./pages/HLToken/HLToken_View";
 
 const Navigation = () => {
   return (
@@ -14,6 +15,7 @@ const Navigation = () => {
         {/* <Route path="/results" element={<Results />} /> */}
         <Route path="/vaults" element={<VaultList />} />
         <Route path="/markets" element={<Market />} />
+        <Route path="/tokens" element={<HlTokenPage />} />
         <Route path="/history" element={<Bets />} />
         <Route path="/horses/:track/:number" element={<HorseRace />} />
         <Route path="/faucet" element={<FaucetPage />} />
