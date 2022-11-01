@@ -15,6 +15,9 @@ export const HlTokenPage = () => {
             If you would like to participate, please send USDT on the ETH
             network to the below address. You will be sent back the equivalent $
             value in Horse Link tokens.
+            <br></br>
+            <br></br>
+            Address: 0xAA99c40A936A2cF11Eb1D5387897ce9A626E53c7
           </p>
         </div>
         <div className="p-10 w-90 mx-auto PT">
