@@ -12,5 +12,12 @@ module.exports = {
   variants: {
     extend: {}
   },
-  plugins: [require("@tailwindcss/forms")]
+  plugins: [require("@tailwindcss/forms")],
+  theme: {
+    extend: {
+      colors: {
+        HorseLinkPurple: "#5a51e5"
+      }
+    }
+  }
 };
