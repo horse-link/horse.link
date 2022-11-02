@@ -5,6 +5,9 @@ import RequireWalletButton from "../../../components/RequireWalletButton/Require
 import marketContractJson from "../../../abi/Market.json";
 import { BetHistory } from "../../../types";
 import { Loader } from "../../../components";
+import useMarkets from "../../../hooks/market/useMarkets";
+import { useEffect, useState } from "react";
+import { EcSignature } from "../../../types/index";
 
 type Props = {
   isOpen: boolean;
@@ -25,13 +28,13 @@ type useSettleContractWriteArgs = {
   marketAddress?: string;
   index?: number;
   raceResult?: boolean;
-  signature?: string;
+  signature?: EcSignature;
 };
 const useSettleContractWrite = ({
   marketAddress,
   index = 0,
   raceResult,
-  signature = ""
+  signature
 }: useSettleContractWriteArgs) => {
   const { data, error, write } = useContractWrite({
     mode: "recklesslyUnprepared",
@@ -63,44 +66,56 @@ const useSettleContractWrite = ({
     txHash
   };
 };
-const useSettleBet = (bet?: BetHistory) => {
-  const {
-    write: settleContractWrite,
-    error: settleError,
-    isTxLoading,
-    isTxSuccess,
-    txHash
-  } = useSettleContractWrite({
-    // Market ID != Market Address
-    // Need the market address to write to the contract
-    marketAddress: "0xc8b8c94694cB8f7Aa5A2e7218D841ef492586A03",
-    index: bet?.index,
-    raceResult: bet?.result,
-    signature: bet?.signature
-  });
-  const contract = {
-    settleContractWrite,
-    errorMsg: settleError?.message
-  };
-  const txStatus = {
-    isLoading: isTxLoading,
-    isSuccess: isTxSuccess,
-    hash: txHash
-  };
-
-  const shouldSettleButtonDisabled = !contract.settleContractWrite;
-
-  return {
-    contract,
-    txStatus,
-    shouldSettleButtonDisabled
-  };
-};
 
 type SettlebetProps = {
   data?: BetHistory;
 };
 const SettleBet = ({ data }: SettlebetProps) => {
+  const { marketAddresses } = useMarkets();
+
+  const [selectedMarketAddress, setSelectedMarketAddress] = useState<string>(
+    "0xc8b8c94694cB8f7Aa5A2e7218D841ef492586A03"
+  );
+
+  useEffect(() => {
+    if (marketAddresses.length > 0) {
+      setSelectedMarketAddress(marketAddresses[0]);
+    }
+  }, [marketAddresses]);
+
+  const useSettleBet = (bet?: BetHistory) => {
+    const {
+      write: settleContractWrite,
+      error: settleError,
+      isTxLoading,
+      isTxSuccess,
+      txHash
+    } = useSettleContractWrite({
+      // Need the market address to write to the contract
+      marketAddress: selectedMarketAddress, //"0xc8b8c94694cB8f7Aa5A2e7218D841ef492586A03",
+      index: bet?.index,
+      raceResult: bet?.result,
+      signature: bet?.signature
+    });
+    const contract = {
+      settleContractWrite,
+      errorMsg: settleError?.message
+    };
+    const txStatus = {
+      isLoading: isTxLoading,
+      isSuccess: isTxSuccess,
+      hash: txHash
+    };
+
+    const shouldSettleButtonDisabled = !contract.settleContractWrite;
+
+    return {
+      contract,
+      txStatus,
+      shouldSettleButtonDisabled
+    };
+  };
+
   const { contract, txStatus, shouldSettleButtonDisabled } = useSettleBet(data);
   return (
     <div className="w-96 md:w-152">
@@ -116,7 +131,6 @@ const SettleBet = ({ data }: SettlebetProps) => {
               className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             />
           </label>
-
           {data?.result !== undefined && (
             <label>
               <span>Race Result</span>
@@ -132,7 +146,7 @@ const SettleBet = ({ data }: SettlebetProps) => {
             <span>Signature</span>
             <input
               type="text"
-              value={data?.signature}
+              value={JSON.stringify(data?.signature)}
               readOnly
               className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             />
@@ -157,13 +171,13 @@ const SettleBet = ({ data }: SettlebetProps) => {
             }
           />
         </div>
-      </div>
-      <div className="mt-5">
-        <ContractWriteResultCard
-          hash={txStatus.hash}
-          isSuccess={txStatus.isSuccess}
-          errorMsg={contract.errorMsg}
-        />
+        <div className="mt-5">
+          <ContractWriteResultCard
+            hash={txStatus.hash}
+            isSuccess={txStatus.isSuccess}
+            errorMsg={contract.errorMsg}
+          />
+        </div>
       </div>
     </div>
   );
