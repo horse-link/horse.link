@@ -1,8 +1,8 @@
 import { useContractRead, useContractReads } from "wagmi";
 import registryContractJson from "../../abi/Registry.json";
 import { ethers } from "ethers";
-import useApi from "../useApi";
 import { useEffect, useState } from "react";
+import api from "../../apis/Api";
 
 const registryContract = {
   addressOrName: "0x885386d140e4321102dc218060Bbd55a8B020F4C",
@@ -36,14 +36,13 @@ const useVaultAddresesFromContract = () => {
 
 const useVaultAddresesFromAPI = () => {
   const [vaultAddresses, setVaultAddresses] = useState<string[]>([]);
-  const api = useApi();
   useEffect(() => {
     const load = async () => {
       const vaultAddresses = await api.getVaultAddresses();
       setVaultAddresses(vaultAddresses);
     };
     load();
-  }, [api]);
+  }, []);
 
   return { vaultAddresses: vaultAddresses as unknown as string[] };
 };

@@ -33,11 +33,11 @@ const DashboardView: React.FC<Props> = (props: Props) => {
   const stats = [
     {
       name: "Total Liquidity",
-      stat: liquidity ? `$ ${liquidity}` : <Loader />
+      stat: liquidity ? `$${Number(liquidity).toFixed(2)}` : <Loader />
     },
     {
       name: "In Play",
-      stat: inPlay ? `$ ${inPlay}` : <Loader />
+      stat: inPlay ? `$${inPlay}` : <Loader />
     },
     { name: "Performance", stat: performance ? `${performance}%` : <Loader /> }
   ];

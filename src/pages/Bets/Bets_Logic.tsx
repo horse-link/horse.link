@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
-import useApi from "../../hooks/useApi";
 import { BetHistory } from "../../types";
 import BetsView from "./Bets_View";
+import api from "../../apis/Api";
 
 const getMockBets = () => {
   return Array.from({ length: 5 }, () => undefined);
 };
 const useBets = () => {
-  const api = useApi();
   const { address } = useAccount();
 
   const [bets, setBets] = useState<BetHistory[]>();
@@ -20,7 +19,7 @@ const useBets = () => {
       setBets(results);
     };
     load();
-  }, [api]);
+  }, []);
 
   useEffect(() => {
     if (!address) return;
@@ -29,7 +28,7 @@ const useBets = () => {
       setMyBets(results);
     };
     load();
-  }, [api, address]);
+  }, [address]);
 
   return { bets, myBets };
 };

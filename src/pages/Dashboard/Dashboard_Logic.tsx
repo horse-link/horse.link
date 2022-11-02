@@ -1,8 +1,8 @@
 import DashboardView from "./Dashboard_View";
 import moment from "moment";
-import useApi from "../../hooks/useApi";
 import { useEffect, useState } from "react";
 import { Meet, Race, SignedMeetingsResponse } from "../../types/index";
+import api from "../../apis/Api";
 
 const getMockMeets = (): Meet[] => {
   const mockRace: Race[] = Array.from({ length: 10 }, (_, i) => ({
@@ -18,7 +18,6 @@ const getMockMeets = (): Meet[] => {
 };
 
 const Dashboard: React.FC = () => {
-  const api = useApi();
   const [response, setResponse] = useState<SignedMeetingsResponse>();
   const [totalLiquidity, setTotalLiquidity] = useState<number>();
   const [inPlay, setInplay] = useState<number>();
@@ -39,7 +38,6 @@ const Dashboard: React.FC = () => {
     };
     const loadPerformance = async () => {
       const { performance } = await api.getTotalPerformance();
-      console.log({ performance });
       setPerformance(performance);
     };
 
@@ -47,7 +45,7 @@ const Dashboard: React.FC = () => {
     loadLiquidity();
     loadInPlay();
     loadPerformance();
-  }, [api]);
+  }, []);
 
   const asLocaltime = (raceTime: number) => {
     const _time = moment.utc(raceTime).diff(moment(), "h");

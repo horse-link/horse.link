@@ -4,12 +4,12 @@ import vaultContractJson from "../../abi/Vault.json";
 import mockTokenContractJson from "../../abi/MockToken.json";
 import { useEffect, useState } from "react";
 import { Vault } from "../../types";
-import useApi from "../useApi";
+import api from "../../apis/Api";
 
 const useVaultDetailFromContract = (vaultAddress: string) => {
   const vaultContract = {
     addressOrName: vaultAddress,
-    contractInterface: vaultContractJson.abi
+    contractInterface: vaultContractJson
   };
 
   const { data: vaultData } = useContractReads({
@@ -66,7 +66,6 @@ const useVaultDetailFromContract = (vaultAddress: string) => {
 
 const useVaultDetailFromAPI = (vaultAddress: string | undefined) => {
   const [vault, setVault] = useState<Vault>();
-  const api = useApi();
   useEffect(() => {
     if (!vaultAddress) return;
     const load = async () => {
@@ -74,7 +73,7 @@ const useVaultDetailFromAPI = (vaultAddress: string | undefined) => {
       setVault(result);
     };
     load();
-  }, [api, vaultAddress]);
+  }, [vaultAddress]);
 
   return vault;
 };

@@ -1,38 +1,24 @@
-import axios, { AxiosInstance } from "axios";
+import { AxiosInstance } from "axios";
 import {
   BetHistoryResponse,
   Market,
   Runner,
   SignedMeetingsResponse,
-  SignedRunnersResponse,
   Token,
   Vault,
   VaultUserData
 } from "../types/index";
+import client from "../utils/client";
 
-export default class Api {
+export class Api {
   private client: AxiosInstance;
-  constructor() {
-    this.client = axios.create({
-      baseURL: process.env.REACT_APP_API_URL || "https://api.horse.link",
-      headers: {
-        Accept: "application/json"
-      }
-    });
+
+  constructor(axiosClient: AxiosInstance) {
+    this.client = axiosClient;
   }
+
   public getMeetings = async (): Promise<SignedMeetingsResponse> => {
     const { data } = await this.client.get<SignedMeetingsResponse>("/meetings");
-
-    return data;
-  };
-
-  public getRunners = async (
-    track: string,
-    number: number
-  ): Promise<SignedRunnersResponse> => {
-    const { data } = await this.client.get<SignedRunnersResponse>(
-      `/runners/${track}/${number}/win`
-    );
 
     return data;
   };
@@ -159,3 +145,7 @@ export default class Api {
     return data;
   };
 }
+
+const api = new Api(client);
+
+export default api;
