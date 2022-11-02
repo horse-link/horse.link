@@ -1,4 +1,4 @@
-import { AxiosInstance } from "axios";
+import axios, { AxiosInstance } from "axios";
 import {
   BetHistoryResponse,
   Market,
@@ -12,9 +12,13 @@ import client from "../utils/client";
 
 export class Api {
   private client: AxiosInstance;
-
-  constructor(axiosClient: AxiosInstance) {
-    this.client = axiosClient;
+  constructor() {
+    this.client = axios.create({
+      baseURL: process.env.REACT_APP_API_URL || "https://api.horse.link",
+      headers: {
+        Accept: "application/json"
+      }
+    });
   }
 
   public getMeetings = async (): Promise<SignedMeetingsResponse> => {

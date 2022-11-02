@@ -45,14 +45,6 @@ const useSettleContractWrite = ({
     enabled: !!marketAddress && !!index && !!signature
   });
 
-  console.log(
-    "useSettleContractWrite",
-    data,
-    error,
-    "marketAddress",
-    marketAddress
-  );
-
   const txHash = data?.hash;
   const { isLoading: isTxLoading, isSuccess: isTxSuccess } =
     useWaitForTransaction({
@@ -91,8 +83,7 @@ const SettleBet = ({ data }: SettlebetProps) => {
       isTxSuccess,
       txHash
     } = useSettleContractWrite({
-      // Need the market address to write to the contract
-      marketAddress: selectedMarketAddress, //"0xc8b8c94694cB8f7Aa5A2e7218D841ef492586A03",
+      marketAddress: selectedMarketAddress,
       index: bet?.index,
       raceResult: bet?.result,
       signature: bet?.signature
