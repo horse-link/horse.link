@@ -6,21 +6,30 @@ import { ethers } from "ethers";
 import useTokenData from "../../../../hooks/token/useTokenData";
 import useTokenApproval from "../../../../hooks/token/useTokenApproval";
 import useVaultUserData from "../../../../hooks/vault/useVaultUserData";
+
 type useWithdrawContractWriteArgs = {
+  amount: number;
+  tokenDecimal: string;
   vaultAddress: string;
   enabled: boolean;
   onTxSuccess: () => void;
 };
+
 const useWithdrawContractWrite = ({
+  amount,
+  tokenDecimal,
   vaultAddress,
   enabled,
   onTxSuccess
 }: useWithdrawContractWriteArgs) => {
+  const assets = ethers.utils.parseUnits(amount.toString(), tokenDecimal);
+
   const { data, error, write } = useContractWrite({
     mode: "recklesslyUnprepared",
     addressOrName: vaultAddress,
-    contractInterface: vaultContractJson.abi,
+    contractInterface: vaultContractJson,
     functionName: "withdraw",
+    args: [assets],
     enabled
   });
 
@@ -42,31 +51,29 @@ const useWithdrawContractWrite = ({
 };
 
 type useDepositContractWriteArgs = {
-  depositAmount: number;
+  amount: number;
   tokenDecimal: string;
   ownerAddress: string;
   vaultAddress: string;
   enabled: boolean;
   onTxSuccess: () => void;
 };
+
 const useDepositContractWrite = ({
-  depositAmount,
+  amount,
   tokenDecimal,
   ownerAddress,
   vaultAddress,
   enabled,
   onTxSuccess
 }: useDepositContractWriteArgs) => {
-  const assets = ethers.utils.parseUnits(
-    depositAmount.toString(),
-    tokenDecimal
-  );
+  const assets = ethers.utils.parseUnits(amount.toString(), tokenDecimal);
   const receiver = ownerAddress;
 
   const { data, error, write } = useContractWrite({
     mode: "recklesslyUnprepared",
     addressOrName: vaultAddress,
-    contractInterface: vaultContractJson.abi,
+    contractInterface: vaultContractJson,
     functionName: "deposit",
     args: [assets, receiver],
     enabled
@@ -108,7 +115,7 @@ const VaultLogic = ({ vaultAddress }: Props) => {
     refetch: refetchVaultUserData
   } = useVaultUserData({ vaultAddress, userAddress });
   const userBalance = Number(userBalanceStr);
-  const [depositAmount, setDepositAmount] = useState(0);
+  const [amount, setAmount] = useState(0);
 
   const {
     allowance,
@@ -117,7 +124,7 @@ const VaultLogic = ({ vaultAddress }: Props) => {
     isTxLoading: isApproveTxLoading
   } = useTokenApproval(tokenAddress, userAddress, vaultAddress, tokenDecimal);
 
-  const isEnoughAllowance = allowance > 0 && allowance >= depositAmount;
+  const isEnoughAllowance = allowance > 0 && allowance >= amount;
 
   const {
     write: depositContractWrite,
@@ -126,11 +133,11 @@ const VaultLogic = ({ vaultAddress }: Props) => {
     isTxSuccess: isDepositTxSuccess,
     txHash: depositTxHash
   } = useDepositContractWrite({
-    depositAmount,
+    amount,
     tokenDecimal,
     ownerAddress: userAddress,
     vaultAddress,
-    enabled: depositAmount > 0 && isEnoughAllowance,
+    enabled: amount > 0 && isEnoughAllowance,
     onTxSuccess: () => refetchVaultUserData()
   });
 
@@ -141,6 +148,8 @@ const VaultLogic = ({ vaultAddress }: Props) => {
     isTxSuccess: isWithdrawTxSuccess,
     txHash: withdrawTxHash
   } = useWithdrawContractWrite({
+    amount,
+    tokenDecimal,
     vaultAddress,
     enabled: userBalance > 0,
     onTxSuccess: () => refetchVaultUserData()
@@ -157,11 +166,11 @@ const VaultLogic = ({ vaultAddress }: Props) => {
     isSuccess: isDepositTxSuccess || isWithdrawTxSuccess,
     hash: depositTxHash || withdrawTxHash
   };
-  const updateDepositAmount = (amount: number) => {
-    setDepositAmount(amount);
+  const updateAmount = (amount: number) => {
+    setAmount(amount);
   };
   const shouldDepositButtonDisabled =
-    depositAmount == 0 || !contract?.depositContractWrite || txStatus.isLoading;
+    amount == 0 || !contract?.depositContractWrite || txStatus.isLoading;
   const shouldWithdrawButtonDisabled =
     Number(userBalance) == 0 ||
     !contract?.withdrawContractWrite ||
@@ -180,8 +189,8 @@ const VaultLogic = ({ vaultAddress }: Props) => {
     <VaultView
       vaultDetailData={vaultDetailData}
       userBalance={userBalance}
-      depositAmount={depositAmount}
-      updateDepositAmount={updateDepositAmount}
+      depositAmount={amount}
+      updateAmount={updateAmount}
       shouldDepositButtonDisabled={shouldDepositButtonDisabled}
       shouldWithdrawButtonDisabled={shouldWithdrawButtonDisabled}
       contract={contract}

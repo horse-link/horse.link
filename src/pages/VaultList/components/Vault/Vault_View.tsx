@@ -8,7 +8,7 @@ type Props = {
   vaultDetailData: VaultDetailProps;
   userBalance: number;
   depositAmount: number;
-  updateDepositAmount: (amount: number) => void;
+  updateAmount: (amount: number) => void;
   shouldDepositButtonDisabled: boolean;
   shouldWithdrawButtonDisabled: boolean;
   contract: {
@@ -28,7 +28,7 @@ const VaultView = ({
   vaultDetailData,
   userBalance,
   depositAmount,
-  updateDepositAmount,
+  updateAmount,
   shouldDepositButtonDisabled,
   shouldWithdrawButtonDisabled,
   contract,
@@ -51,7 +51,7 @@ const VaultView = ({
                 <input
                   type="number"
                   onChange={e => {
-                    updateDepositAmount(e.target.valueAsNumber || 0);
+                    updateAmount(e.target.valueAsNumber || 0);
                   }}
                   value={depositAmount || ""}
                   placeholder="0.0"
@@ -70,7 +70,10 @@ const VaultView = ({
                               ? " opacity-50 cursor-not-allowed"
                               : "")
                           }
-                          onClick={contract.depositContractWrite}
+                          onClick={e => {
+                            e.preventDefault();
+                            contract.depositContractWrite();
+                          }}
                           disabled={shouldDepositButtonDisabled}
                         >
                           {txStatus.isLoading ? <Loader /> : "Deposit"}
@@ -82,7 +85,10 @@ const VaultView = ({
                               ? " opacity-50 cursor-not-allowed"
                               : "")
                           }
-                          onClick={contract.withdrawContractWrite}
+                          onClick={e => {
+                            e.preventDefault();
+                            contract.withdrawContractWrite();
+                          }}
                           disabled={shouldWithdrawButtonDisabled}
                         >
                           {txStatus.isLoading ? <Loader /> : "Withdraw"}
@@ -90,8 +96,11 @@ const VaultView = ({
                       </div>
                     ) : (
                       <button
-                        className="w-full px-5 py-3 hover:bg-gray-100 rounded-md border border-gray-500 shadow-md "
-                        onClick={contract.approveContractWrite}
+                        className="w-full px-5 py-1 hover:bg-gray-100 rounded-md border border-gray-500 shadow-md "
+                        onClick={e => {
+                          e.preventDefault();
+                          contract.approveContractWrite();
+                        }}
                       >
                         {txStatus.isLoading ? <Loader /> : "Approve"}
                       </button>
