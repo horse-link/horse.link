@@ -1,9 +1,7 @@
-import React from "react";
+import { useMemo } from "react";
 import Api from "../apis/Api";
-import { ApiContext } from "../providers/Api";
 
-const useApi = (): Api => {
-  return React.useContext(ApiContext);
-};
+// export memoised api so it does not reconstruct on every render
+const useApi = () => useMemo(() => Api, [Api]);
 
 export default useApi;

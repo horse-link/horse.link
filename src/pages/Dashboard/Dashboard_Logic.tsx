@@ -39,7 +39,6 @@ const Dashboard: React.FC = () => {
     };
     const loadPerformance = async () => {
       const { performance } = await api.getTotalPerformance();
-      console.log({ performance });
       setPerformance(performance);
     };
 
