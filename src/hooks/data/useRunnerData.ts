@@ -8,7 +8,9 @@ type Props = {
 };
 
 const useRunnerData = ({ track, raceNumber }: Props) => {
-  const { data, isLoading, error } = useSwr<SignedRunnersResponse>(`/runners/${track}/${raceNumber}/win`);
+  const { data, isLoading, error } = useSwr<SignedRunnersResponse>(
+    `/runners/${track}/${raceNumber}/win`
+  );
 
   const runners = useMemo(() => {
     if (!data || error) return;
