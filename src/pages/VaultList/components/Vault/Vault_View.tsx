@@ -69,7 +69,10 @@ const VaultView = ({
                               ? " opacity-50 cursor-not-allowed"
                               : "")
                           }
-                          onClick={contract.depositContractWrite}
+                          onClick={e => {
+                            e.preventDefault();
+                            contract.depositContractWrite();
+                          }}
                           disabled={shouldDepositButtonDisabled}
                         >
                           {txStatus.isLoading ? "..." : "Deposit"}
@@ -81,7 +84,10 @@ const VaultView = ({
                               ? " opacity-50 cursor-not-allowed"
                               : "")
                           }
-                          onClick={contract.withdrawContractWrite}
+                          onClick={e => {
+                            e.preventDefault();
+                            contract.withdrawContractWrite();
+                          }}
                           disabled={shouldWithdrawButtonDisabled}
                         >
                           {txStatus.isLoading ? "..." : "Withdraw"}
@@ -90,7 +96,10 @@ const VaultView = ({
                     ) : (
                       <button
                         className="w-full px-5 py-1 hover:bg-gray-100 rounded-md border border-gray-500 shadow-md "
-                        onClick={contract.approveContractWrite}
+                        onClick={e => {
+                          e.preventDefault();
+                          contract.approveContractWrite();
+                        }}
                       >
                         {txStatus.isLoading ? "..." : "Approve"}
                       </button>
