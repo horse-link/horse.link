@@ -3,9 +3,11 @@ import { Runner } from "../../types";
 import HorseRaceView from "./HorseRace_View";
 import { useParams } from "react-router-dom";
 import useRunnerData from "../../hooks/data/useRunnerData";
+
 const getMockRunners = () => {
   return Array.from({ length: 5 }, () => undefined);
 };
+
 const HorseRace: React.FC = () => {
   const params = useParams();
   const track = params.track || "";

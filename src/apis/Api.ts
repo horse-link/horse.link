@@ -4,7 +4,6 @@ import {
   Market,
   Runner,
   SignedMeetingsResponse,
-  SignedRunnersResponse,
   Token,
   Vault,
   VaultUserData
@@ -20,17 +19,6 @@ export class Api {
 
   public getMeetings = async (): Promise<SignedMeetingsResponse> => {
     const { data } = await this.client.get<SignedMeetingsResponse>("/meetings");
-
-    return data;
-  };
-
-  public getRunners = async (
-    track: string,
-    number: number
-  ): Promise<SignedRunnersResponse> => {
-    const { data } = await this.client.get<SignedRunnersResponse>(
-      `/runners/${track}/${number}/win`
-    );
 
     return data;
   };

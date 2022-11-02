@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import { useEffect, useMemo, useState } from "react";
 import { useContractRead } from "wagmi";
 import marketContractJson from "../../abi/Market.json";
-import useApi from "../useApi";
+import api from "../../apis/Api";
 
 const DECIMAL = 6;
 
@@ -56,7 +56,6 @@ const usePotentialPayoutFromAPI = ({
   tokenDecimal
 }: UsePotentialPayoutArgs) => {
   const [potentialPayout, setPotentialPayout] = useState("0");
-  const api = useApi();
   useEffect(() => {
     if (!marketAddress || !propositionId || !wager || !odds || !tokenDecimal)
       return;
@@ -71,7 +70,7 @@ const usePotentialPayoutFromAPI = ({
       setPotentialPayout(potentialPayout);
     };
     load();
-  }, [api, marketAddress, propositionId, wager, odds, tokenDecimal]);
+  }, [marketAddress, propositionId, wager, odds, tokenDecimal]);
   return { potentialPayout };
 };
 

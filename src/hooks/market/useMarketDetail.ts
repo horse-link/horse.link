@@ -2,8 +2,8 @@ import { Market } from "../../types";
 import marketContractJson from "../../abi/Market.json";
 import vaultContractJson from "../../abi/Vault.json";
 import { useContractRead, useContractReads } from "wagmi";
-import useApi from "../useApi";
 import { useEffect, useState } from "react";
+import api from "../../apis/Api";
 
 const useMarketDetailFromContract = (marketAddress?: string) => {
   const marketContract = {
@@ -39,7 +39,6 @@ const useMarketDetailFromContract = (marketAddress?: string) => {
 
 const useMarketDetailFromAPI = (marketAddress: string | undefined) => {
   const [market, setMarket] = useState<Market>();
-  const api = useApi();
   useEffect(() => {
     if (!marketAddress) return;
     const load = async () => {
@@ -47,7 +46,7 @@ const useMarketDetailFromAPI = (marketAddress: string | undefined) => {
       setMarket(result);
     };
     load();
-  }, [api, marketAddress]);
+  }, [marketAddress]);
 
   return market;
 };

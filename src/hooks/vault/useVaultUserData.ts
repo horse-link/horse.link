@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useContractReads } from "wagmi";
 import vaultContractJson from "../../abi/Vault.json";
 import { VaultUserData } from "../../types";
-import useApi from "../useApi";
+import api from "../../apis/Api";
 
 type UseVaultUserDataArgs = {
   vaultAddress: string;
@@ -74,7 +74,6 @@ const useVaultUserDataFromAPI = ({
     asset: ""
   });
   const [fetchIndex, setFetchIndex] = useState(0);
-  const api = useApi();
   useEffect(() => {
     if (!vaultAddress || !userAddress) return;
     const load = async () => {
@@ -82,7 +81,7 @@ const useVaultUserDataFromAPI = ({
       setVaultUserData(result);
     };
     load();
-  }, [api, vaultAddress, userAddress, fetchIndex]);
+  }, [vaultAddress, userAddress, fetchIndex]);
   const refetch = () => setFetchIndex(i => i + 1);
   return { ...vaultUserData, refetch };
 };

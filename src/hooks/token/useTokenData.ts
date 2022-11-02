@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { erc20ABI, useContractRead, useContractReads } from "wagmi";
 import vaultContractJson from "../../abi/Vault.json";
 import { Token } from "../../types";
-import useApi from "../useApi";
+import api from "../../apis/Api";
 
 type useTokenDataArgs = {
   vaultAddress: string;
@@ -46,7 +46,6 @@ const useTokenDataFromAPI = ({ vaultAddress }: useTokenDataArgs) => {
     address: "",
     decimals: "0"
   });
-  const api = useApi();
   useEffect(() => {
     if (!vaultAddress) return;
     const load = async () => {
@@ -54,7 +53,7 @@ const useTokenDataFromAPI = ({ vaultAddress }: useTokenDataArgs) => {
       setTokenData(result);
     };
     load();
-  }, [api, vaultAddress]);
+  }, [vaultAddress]);
 
   return tokenData;
 };
