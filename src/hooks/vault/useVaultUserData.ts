@@ -19,7 +19,7 @@ const useVaultUserDataFromContract = ({
 }: UseVaultUserDataArgs) => {
   const vaultContract = {
     addressOrName: vaultAddress,
-    contractInterface: vaultContractJson.abi
+    contractInterface: vaultContractJson
   };
   const { data: vaultData, refetch } = useContractReads({
     contracts: [

@@ -9,7 +9,7 @@ import useApi from "../useApi";
 const useVaultDetailFromContract = (vaultAddress: string) => {
   const vaultContract = {
     addressOrName: vaultAddress,
-    contractInterface: vaultContractJson.abi
+    contractInterface: vaultContractJson
   };
 
   const { data: vaultData } = useContractReads({

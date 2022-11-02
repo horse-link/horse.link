@@ -7,7 +7,7 @@ type Props = {
   vaultDetailData: VaultDetailProps;
   userBalance: number;
   depositAmount: number;
-  updateDepositAmount: (amount: number) => void;
+  updateAmount: (amount: number) => void;
   shouldDepositButtonDisabled: boolean;
   shouldWithdrawButtonDisabled: boolean;
   contract: {
@@ -27,7 +27,7 @@ const VaultView = ({
   vaultDetailData,
   userBalance,
   depositAmount,
-  updateDepositAmount,
+  updateAmount,
   shouldDepositButtonDisabled,
   shouldWithdrawButtonDisabled,
   contract,
@@ -50,7 +50,7 @@ const VaultView = ({
                 <input
                   type="number"
                   onChange={e => {
-                    updateDepositAmount(e.target.valueAsNumber || 0);
+                    updateAmount(e.target.valueAsNumber || 0);
                   }}
                   value={depositAmount || ""}
                   placeholder="0.0"
