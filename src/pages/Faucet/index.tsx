@@ -19,13 +19,18 @@ export const FaucetPage = () => {
   const { address } = useAccount();
   const api = useApi();
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isClaimUsdtLoading, setIsClaimUsdtLoading] = useState(false);
+  const [isClaimDiaLoading, setIsClaimDiaLoading] = useState(false);
   const [txHash, setTxHash] = useState<string>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const onClickClaim = useCallback(
-    async (tokenAddress: string) => {
-      if (!address || isLoading) return;
-      setIsLoading(true);
+    async (tokenAddress: string, tokenName: string) => {
+      if (!address || isClaimUsdtLoading || isClaimDiaLoading) return;
+      if (tokenName === "Mock USDT") {
+        setIsClaimUsdtLoading(true);
+      } else {
+        setIsClaimDiaLoading(true);
+      }
       try {
         const res = await api.requestTokenFromFaucet(address, tokenAddress);
         setTxHash(res.tx);
@@ -33,7 +38,8 @@ export const FaucetPage = () => {
       } catch (error: any) {
         alert(error?.message ?? "Something went wrong");
       }
-      setIsLoading(false);
+      setIsClaimUsdtLoading(false);
+      setIsClaimDiaLoading(false);
     },
     [address, api]
   );
@@ -53,8 +59,10 @@ export const FaucetPage = () => {
           {faucetTokens.map(({ name, address }) => (
             <ClaimButton
               tokenName={name}
-              onClick={() => onClickClaim(address)}
-              isLoading={isLoading}
+              onClick={() => onClickClaim(address, name)}
+              isLoading={
+                name === "Mock USDT" ? isClaimUsdtLoading : isClaimDiaLoading
+              }
             />
           ))}
         </div>
