@@ -55,7 +55,7 @@ const VaultView = ({
                   }}
                   value={depositAmount || ""}
                   placeholder="0.0"
-                  className=" flex-row mt-2 w-1/2 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  className="mt-2 w-1/2 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 />
               </label>
               <div className="mt-5">
