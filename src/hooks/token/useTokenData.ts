@@ -11,7 +11,7 @@ type useTokenDataArgs = {
 const useTokenDataFromContract = ({ vaultAddress }: useTokenDataArgs) => {
   const { data: vaultData } = useContractRead({
     addressOrName: vaultAddress,
-    contractInterface: vaultContractJson.abi,
+    contractInterface: vaultContractJson,
     functionName: "asset"
   });
   const tokenAddress = vaultData?.toString() ?? "";

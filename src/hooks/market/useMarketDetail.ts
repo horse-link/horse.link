@@ -30,7 +30,7 @@ const useMarketDetailFromContract = (marketAddress?: string) => {
   const [target, totalInPlay, vaultAddress] = marketData ?? [];
   const { data: vaultName } = useContractRead({
     addressOrName: vaultAddress?.toString() ?? "",
-    contractInterface: vaultContractJson.abi,
+    contractInterface: vaultContractJson,
     functionName: "name",
     enabled: !!vaultAddress
   });
