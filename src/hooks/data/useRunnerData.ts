@@ -1,7 +1,6 @@
 import { useMemo } from "react";
-import useSWR from "swr";
 import { SignedRunnersResponse } from "../../types";
-import fetcher from "../../utils/fetcher";
+import useSwr from "../useSwr";
 
 type Props = {
   track: string;
@@ -9,10 +8,7 @@ type Props = {
 };
 
 const useRunnerData = ({ track, raceNumber }: Props) => {
-  const { data, error } = useSWR(
-    `/runners/${track}/${raceNumber}/win`,
-    fetcher<SignedRunnersResponse>
-  );
+  const { data, isLoading, error } = useSwr<SignedRunnersResponse>(`/runners/${track}/${raceNumber}/win`);
 
   const runners = useMemo(() => {
     if (!data || error) return;
@@ -23,7 +19,7 @@ const useRunnerData = ({ track, raceNumber }: Props) => {
 
   return {
     runners,
-    isLoading: !error && !data,
+    isLoading,
     error
   };
 };
