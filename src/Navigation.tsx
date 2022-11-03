@@ -16,7 +16,7 @@ const Navigation = () => {
         <Route path="/vaults" element={<VaultList />} />
         <Route path="/markets" element={<Market />} />
         <Route path="/tokens" element={<HlTokenPage />} />
-        <Route path="/history" element={<Bets />} />
+        <Route path="/bets" element={<Bets />} />
         <Route path="/horses/:track/:number" element={<HorseRace />} />
         <Route path="/faucet" element={<FaucetPage />} />
         <Route path="*" element={<Navigate to="/dashboard" />} />
