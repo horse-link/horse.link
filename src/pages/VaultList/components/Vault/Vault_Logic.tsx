@@ -27,7 +27,7 @@ const useWithdrawContractWrite = ({
   const { data, error, write } = useContractWrite({
     mode: "recklesslyUnprepared",
     addressOrName: vaultAddress,
-    contractInterface: vaultContractJson.abi,
+    contractInterface: vaultContractJson,
     functionName: "withdraw",
     args: [assets],
     enabled
@@ -73,7 +73,7 @@ const useDepositContractWrite = ({
   const { data, error, write } = useContractWrite({
     mode: "recklesslyUnprepared",
     addressOrName: vaultAddress,
-    contractInterface: vaultContractJson.abi,
+    contractInterface: vaultContractJson,
     functionName: "deposit",
     args: [assets, receiver],
     enabled

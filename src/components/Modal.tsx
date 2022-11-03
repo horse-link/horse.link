@@ -1,5 +1,5 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment } from "react";
+import { Fragment, useRef } from "react";
 
 type ModalProps = {
   isOpen: boolean;
@@ -8,10 +8,16 @@ type ModalProps = {
 };
 
 const Modal = ({ isOpen, onClose, children }: ModalProps) => {
+  const closeButtonRef = useRef(null);
   return (
     <>
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={onClose}>
+        <Dialog
+          as="div"
+          className="relative z-10"
+          onClose={onClose}
+          initialFocus={closeButtonRef}
+        >
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
