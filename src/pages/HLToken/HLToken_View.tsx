@@ -3,7 +3,7 @@ import { AiOutlineCopy } from "react-icons/ai";
 import { TokenomicsChart } from "../../images";
 import QRCode from "react-qr-code";
 
-const ADDRESS = "0xAA99c40A936A2cF11Eb1D5387897ce9A626E53c7";
+const ADDRESS = "0xAA99c40A936A2cF11Eb1D5387897ce9A626E53c7".toLowerCase();
 
 export const HlTokenPage = () => {
   return (
