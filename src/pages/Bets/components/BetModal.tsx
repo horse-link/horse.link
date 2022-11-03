@@ -127,7 +127,7 @@ const SettleBet = ({ data }: SettlebetProps) => {
                   onClick={() => contract.settleContractWrite()}
                   disabled={shouldSettleButtonDisabled}
                 >
-                  {txStatus.isLoading ? "..." : "Settle"}
+                  {txStatus.isLoading ? <Loader /> : "Settle"}
                 </button>
               }
             />
