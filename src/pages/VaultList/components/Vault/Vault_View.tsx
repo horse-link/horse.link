@@ -47,7 +47,7 @@ const VaultView = ({
             <span className="mb-3">Shares: {userBalance ?? <Skeleton />}</span>
             <form>
               <label className="my-5">
-                <span className="mt-6 mr-3 flex-row">Amount:</span>
+                <span className="mt-6 mr-3 ">Amount:</span>
                 <input
                   type="number"
                   onChange={e => {
