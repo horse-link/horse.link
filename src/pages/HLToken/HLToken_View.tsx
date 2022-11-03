@@ -18,9 +18,9 @@ export const HlTokenPage = () => {
             If you would like to participate, please send USDT/USDC/DAI on the
             ETH network to the below address. Once HL Token is live your tokens
             will be sent back to the wallet you sent funds from, please make
-            sure you are sending from a metamask wallet or equivalent. DO NOT
-            USE EXCHANGE WALLETS ie Binance as they do not list our token
-            currently.
+            sure you are sending from a metamask wallet or equivalent.{" "}
+            <span className="font-bold">DO NOT USE EXCHANGE WALLETS</span> ie
+            Binance as they do not list our token currently.
           </p>
           <br />
           <div className="bg-gray-100 p-5 text-center justify-center text-sm lg:text-base">
@@ -34,22 +34,28 @@ export const HlTokenPage = () => {
           </div>
           <br />
           <div className="w-full flex flex-col lg:flex-row justify-evenly items-center">
-            <QRCode level="H" value={ADDRESS} className="mt-8" />
+            <div>
+              <h3 className="text-center mb-2 text-sm lg:text-base">
+                Scan for deposit Address:
+              </h3>
+              <QRCode level="H" value={ADDRESS} />
+            </div>
             <img src={TokenomicsChart} alt="Tokenomics" className="mt-14" />
           </div>
-          <h3 className="text-3xl mt-6 pb-4 font-bold text-center">ROUNDS</h3>
-          <div className="px-4 text-sm lg:text-lg flex flex-col gap-y-2 mb-3">
+          <h3 className="text-2xl mt-6 pb-2 font-bold text-center">ROUNDS</h3>
+          <div className="px-4 text-sm lg:text-base flex flex-col gap-y-2 mb-3">
             <p className="text-center line-through">
-              Seed - 10,000,000 tokens at 16.66 for $1 (0.06) / $600k
+              Seed - 10,000,000 tokens at 16.66 for $1 (0.06) / $600,000 (SOLD)
             </p>
             <p className="text-center">
-              Private - 20,000,000 tokens at 10 for $1 (0.10) / $2 mil
+              Private - 20,000,000 tokens at 10 for $1 (0.10) / $2,000,000
+              (CURRENT)
             </p>
             <p className="text-center">
-              Public 1 - 20,000,000 tokens at 5 for $1 (0.20) / $4 mil
+              Public 1 - 20,000,000 tokens at 5 for $1 (0.20) / $4,000,000
             </p>
             <p className="text-center">
-              Public 2 - 20,000,000 tokens at 2.5 for $1 (0.40) / $8 mil
+              Public 2 - 20,000,000 tokens at 2.5 for $1 (0.40) / $8,000,000
             </p>
           </div>
         </div>
