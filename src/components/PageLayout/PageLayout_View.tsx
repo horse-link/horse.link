@@ -145,7 +145,7 @@ const PageLayoutView: React.FC<Props> = props => {
         )}
       </Disclosure>
 
-      <div className="py-10">
+      <div className="py-4">
         <main>
           <WalletModal
             isModalOpen={isWalletModalOpen}

@@ -9,11 +9,11 @@ export const HlTokenPage = () => {
   return (
     <PageLayout requiresAuth={false}>
       <div className="flex justify-center flex-col items-center">
-        <h1 className="text-4xl pb-10 font-bold text-center">
+        <h1 className="text-3xl pb-4 font-bold text-center">
           HL TOKEN PRIVATE SALE
         </h1>
         <div className="bg-white rounded-md py-5">
-          <p className="text-center text-sm px-4 lg:text-base lg:px-32 lg:py-4">
+          <p className="text-center text-sm px-4 pb-4 lg:text-sm lg:px-32 lg:py-4">
             We are currently raising funds in our Private round for Horse Link.
             If you would like to participate, please send USDT/USDC/DAI on the
             ETH network to the below address. Once HL Token is live your tokens
@@ -22,8 +22,7 @@ export const HlTokenPage = () => {
             <span className="font-bold">DO NOT USE EXCHANGE WALLETS</span> ie
             Binance as they do not list our token currently.
           </p>
-          <br />
-          <div className="bg-gray-100 p-5 text-center justify-center text-sm lg:text-base">
+          <div className="bg-gray-100 p-5 mb-2 lg:mb-0 text-center justify-center text-sm lg:text-sm">
             Address: {ADDRESS}
             <button
               className="lg:ml-2 hover:bg-green-400"
@@ -32,18 +31,17 @@ export const HlTokenPage = () => {
               <AiOutlineCopy />
             </button>
           </div>
-          <br />
           <div className="w-full flex flex-col lg:flex-row justify-evenly items-center">
             <div>
-              <h3 className="text-center mb-2 text-sm lg:text-base">
+              <h3 className="text-center mb-2 mt-2 lg:mt-0 text-sm">
                 Scan for deposit Address:
               </h3>
               <QRCode level="H" value={ADDRESS} />
             </div>
-            <img src={TokenomicsChart} alt="Tokenomics" className="mt-14" />
+            <img src={TokenomicsChart} alt="Tokenomics" className="mt-4" />
           </div>
-          <h3 className="text-2xl mt-6 pb-2 font-bold text-center">ROUNDS</h3>
-          <div className="px-4 text-sm lg:text-base flex flex-col gap-y-2 mb-3">
+          <h3 className="text-xl pb-2 font-bold text-center">ROUNDS</h3>
+          <div className="px-4 text-sm flex flex-col gap-y-2 mb-3 text-center">
             <p className="text-center line-through">
               Seed - 10,000,000 tokens at 16.66 for $1 (0.06) / $600,000 (SOLD)
             </p>
