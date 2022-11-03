@@ -42,7 +42,7 @@ const VaultView = ({
           <VaultDetail {...vaultDetailData} />
         </div>
         <div>
-          <div className=" mx-auto p-3 mt-5 rounded-md border-white">
+          <div className=" mx-auto p-5 mt-5 rounded-md border-white">
             <h1 className="text-3xl mb-2">Deposit / Withdraw</h1>
             <span>Shares: {userBalance ?? <Skeleton />}</span>
             <form>
