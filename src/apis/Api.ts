@@ -43,7 +43,7 @@ export default class Api {
   };
 
   public getBetHistory = async (): Promise<BetHistoryResponse> => {
-    const { data } = await this.client.get("/Bets");
+    const { data } = await this.client.get("/bets");
 
     return data;
   };
@@ -51,7 +51,7 @@ export default class Api {
   public getUserBetHistory = async (
     account: string
   ): Promise<BetHistoryResponse> => {
-    const { data } = await this.client.get(`/Bets/${account}`);
+    const { data } = await this.client.get(`/bets/${account}`);
 
     return data;
   };

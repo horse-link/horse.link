@@ -12,7 +12,7 @@ const navigation = [
   { name: "Dashboard", path: "/dashboard" },
   { name: "Vaults", path: "/vaults" },
   { name: "Markets", path: "/markets" },
-  { name: "Bets", path: "/Bets" },
+  { name: "Bets", path: "/bets" },
   { name: "HL Token", path: "/tokens" },
   {
     name: "White Paper",
