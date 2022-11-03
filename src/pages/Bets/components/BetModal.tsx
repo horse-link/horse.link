@@ -4,6 +4,7 @@ import Modal from "../../../components/Modal";
 import RequireWalletButton from "../../../components/RequireWalletButton/RequireWalletButton_View";
 import marketContractJson from "../../../abi/Market.json";
 import { BetHistory } from "../../../types";
+import { Loader } from "../../../components";
 
 type Props = {
   isOpen: boolean;
