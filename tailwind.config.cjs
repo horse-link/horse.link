@@ -16,7 +16,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        HorseLinkPurple: "#5a51e5"
+        "hl-purple": "#5a51e5"
       }
     }
   }

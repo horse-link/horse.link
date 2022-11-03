@@ -65,7 +65,7 @@ const VaultView = ({
                       <div className="flex flex-col">
                         <button
                           className={
-                            "px-5 py-3 hover:bg-gray-100 rounded-md border border-HorseLinkPurple shadow-md" +
+                            "px-5 py-3 hover:bg-gray-100 rounded-md border border-hl-purple shadow-md" +
                             (shouldDepositButtonDisabled
                               ? " opacity-50 cursor-not-allowed"
                               : "")
@@ -80,7 +80,7 @@ const VaultView = ({
                         </button>
                         <button
                           className={
-                            "px-5 py-3 mt-2 hover:bg-gray-100 rounded-md border border-HorseLinkPurple shadow-md" +
+                            "px-5 py-3 mt-2 hover:bg-gray-100 rounded-md border border-hl-purple shadow-md" +
                             (shouldWithdrawButtonDisabled
                               ? " opacity-50 cursor-not-allowed"
                               : "")
