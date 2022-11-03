@@ -2,6 +2,7 @@ import ContractWriteResultCard from "../../../../components/ContractWriteResultC
 import RequireWalletButton from "../../../../components/RequireWalletButton/RequireWalletButton_View";
 import { Back } from "../../../../types";
 import useMarketDetail from "../../../../hooks/market/useMarketDetail";
+import { Loader } from "../../../../components";
 
 type Props = {
   back: Back;
@@ -92,7 +93,7 @@ const BackView: React.FC<Props> = ({
                     onClick={contract.backContractWrite}
                     disabled={shouldButtonDisabled}
                   >
-                    {txStatus.isLoading ? "Betting..." : "Bet"}
+                    {txStatus.isLoading ? <Loader /> : "Bet"}
                   </button>
                 ) : (
                   <button
@@ -103,7 +104,7 @@ const BackView: React.FC<Props> = ({
                     onClick={contract.approveContractWrite}
                     disabled={!selectedMarket}
                   >
-                    {txStatus.isLoading ? "..." : "Approve"}
+                    {txStatus.isLoading ? <Loader /> : "Approve"}
                   </button>
                 )
               }
