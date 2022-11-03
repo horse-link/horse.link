@@ -34,7 +34,7 @@ export const HlTokenPage = () => {
           <div className="w-full flex flex-col lg:flex-row justify-evenly items-center">
             <div>
               <h3 className="text-center mb-2 mt-2 lg:mt-0 text-sm">
-                Scan for deposit Address:
+                Scan for address:
               </h3>
               <QRCode level="H" value={ADDRESS} />
             </div>
