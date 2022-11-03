@@ -179,6 +179,19 @@ const useBackingContract = (
     enabled: debouncedWagerAmount > 0 && isEnoughAllowance
   });
 
+  console.log(
+    marketAddress,
+    b32Nonce,
+    b32PropositionId,
+    b32MarketId,
+    debouncedWagerAmount,
+    odds,
+    close,
+    end,
+    signature,
+    debouncedWagerAmount > 0 && isEnoughAllowance
+  );
+
   return {
     potentialPayout,
     contract: {
@@ -230,7 +243,7 @@ const BackLogic = ({ runner }: Props) => {
   const { address } = useAccount();
   const ownerAddress = address ?? "";
   const [selectedMarketAddress, setSelectedMarketAddress] = useState<string>(
-    marketAddresses[0]
+    "0x1514b66a40CA2D600bB4Cf35A735709a1972c2F3"
   );
   useEffect(() => {
     if (marketAddresses.length > 0) {

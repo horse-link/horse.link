@@ -66,7 +66,7 @@ const SettleBet = ({ data }: SettlebetProps) => {
   const { marketAddresses } = useMarkets();
 
   const [selectedMarketAddress, setSelectedMarketAddress] = useState<string>(
-    "0xc8b8c94694cB8f7Aa5A2e7218D841ef492586A03"
+    "0x1514b66a40CA2D600bB4Cf35A735709a1972c2F3"
   );
 
   useEffect(() => {
