@@ -8,7 +8,6 @@ import {
   Vault,
   VaultUserData
 } from "../types/index";
-import client from "../utils/client";
 
 export class Api {
   private client: AxiosInstance;
@@ -150,6 +149,6 @@ export class Api {
   };
 }
 
-const api = new Api(client);
+const api = new Api();
 
 export default api;

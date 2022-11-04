@@ -32,13 +32,13 @@ const usePrepareBackingData = (
     () => ethers.utils.parseUnits(odds.toString(), DECIMAL),
     [odds]
   );
-
+  console.log(1);
   const bnWager = useMemo(
     () =>
       ethers.utils.parseUnits(debouncedWagerAmount.toString(), tokenDecimal),
     [debouncedWagerAmount]
   );
-
+  console.log(2);
   const b32Nonce = useMemo(
     () => ethers.utils.formatBytes32String(nonce),
     [nonce]
@@ -93,7 +93,12 @@ const useBackContractWrite = ({
       bnOdds,
       close,
       end,
-      signature
+      // TODO: Remove this once the contract requires a sig to back
+      {
+        v: 28,
+        r: "0x64779ba2fcec4b635c6a96f01dde74bd466cc0602fecc95c34d8edb5c205a0d3",
+        s: "0x7044254596476e91d0f1fb41967ed45ebcc7e7b973c81a10bc008ca294e2c2d5"
+      }
     ],
     enabled: enabled && !!marketAddress
   });
@@ -159,7 +164,14 @@ const useBackingContract = (
       nonce,
       market_id
     );
-
+  console.log(
+    proposition_id,
+    odds,
+    tokenDecimal,
+    debouncedWagerAmount,
+    nonce,
+    market_id
+  );
   const {
     write: backContractWrite,
     error: backError,
@@ -180,16 +192,18 @@ const useBackingContract = (
   });
 
   console.log(
-    marketAddress,
+    //marketAddress,
     b32Nonce,
     b32PropositionId,
     b32MarketId,
-    debouncedWagerAmount,
-    odds,
+    bnWager,
+    //bnWager.toString(),
+    bnOdds,
+    //bnOdds.toString(),
     close,
     end,
-    signature,
-    debouncedWagerAmount > 0 && isEnoughAllowance
+    signature
+    //debouncedWagerAmount > 0 && isEnoughAllowance
   );
 
   return {
