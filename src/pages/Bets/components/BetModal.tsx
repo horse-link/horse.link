@@ -19,6 +19,7 @@ const BetModal = ({ isOpen, onClose, betData }: Props) => {
 };
 
 export default BetModal;
+
 type useSettleContractWriteArgs = {
   marketAddress?: string;
   index?: number;
