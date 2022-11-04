@@ -214,26 +214,24 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
                               }
                             >
                               {race.name ? (
-                                <>
-                                  <Link
-                                    to={
-                                      race.status !== "Paying"
-                                        ? `/horses/${meet.id}/${race.number}`
-                                        : ""
-                                    }
-                                  >
-                                    <p>R{race.number}</p>
-                                    {moment
-                                      .utc(race.start)
-                                      .local()
-                                      .format("H:mm")}
-                                    <p>
-                                      {race.status == "Paying"
-                                        ? race.results.join(" ")
-                                        : moment(race.close).fromNow(true)}
-                                    </p>
-                                  </Link>
-                                </>
+                                <Link
+                                  to={
+                                    race.status !== "Paying"
+                                      ? `/horses/${meet.id}/${race.number}`
+                                      : ""
+                                  }
+                                >
+                                  <p>R{race.number}</p>
+                                  {moment
+                                    .utc(race.start)
+                                    .local()
+                                    .format("H:mm")}
+                                  <p>
+                                    {race.status == "Paying"
+                                      ? race.results.join(" ")
+                                      : moment(race.close).fromNow(true)}
+                                  </p>
+                                </Link>
                               ) : (
                                 <Skeleton count={2} />
                               )}
