@@ -4,7 +4,6 @@ import Modal from "../../../components/Modal";
 import RequireWalletButton from "../../../components/RequireWalletButton/RequireWalletButton_View";
 import marketContractJson from "../../../abi/Market.json";
 import { BetHistory } from "../../../types";
-import { useRef } from "react";
 
 type Props = {
   isOpen: boolean;
@@ -13,18 +12,8 @@ type Props = {
 };
 
 const BetModal = ({ isOpen, onClose, betData }: Props) => {
-  const closeButtonRef = useRef(null);
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <div className="flex flex-row justify-end">
-        <button
-          className=" text-gray-300 cursor-pointer hover:text-gray-700 focus:outline-none"
-          onClick={onClose}
-          ref={closeButtonRef}
-        >
-          CLOSE
-        </button>
-      </div>
       <SettleBet data={betData} />
     </Modal>
   );
