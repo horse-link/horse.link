@@ -3,6 +3,7 @@ import { Runner, SignedRunnersResponse } from "../../types";
 import ResultsView from "./Results_View";
 import useApi from "../../hooks/useApi";
 import { useParams } from "react-router-dom";
+import { ParamsType } from "../HorseRace/HorseRace_Logic";
 
 const Results: React.FC = () => {
   const _runners: Runner[] = [];
@@ -10,7 +11,7 @@ const Results: React.FC = () => {
   const api = useApi();
   const [response, setResponse] = useState<SignedRunnersResponse>();
 
-  const { track, number } = useParams();
+  const { track, number } = useParams<ParamsType>();
 
   const load = async () => {
     const runners: SignedRunnersResponse = await api.getRunners(
