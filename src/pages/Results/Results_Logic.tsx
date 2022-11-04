@@ -1,13 +1,13 @@
 import { Runner } from "../../types";
 import ResultsView from "./Results_View";
 import { useParams } from "react-router-dom";
-import { ParamsType } from "../HorseRace/HorseRace_Logic";
+import { HorseRaceParams } from "../HorseRace/HorseRace_Logic";
 import useRunnerData from "../../hooks/data/useRunnerData";
 
 const Results: React.FC = () => {
   const _runners: Runner[] = [];
 
-  const params = useParams<ParamsType>();
+  const params = useParams<HorseRaceParams>();
   const track = params.track || "";
   const raceNumber = Number(params.number) || 0;
 

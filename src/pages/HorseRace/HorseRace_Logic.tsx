@@ -8,13 +8,13 @@ const getMockRunners = () => {
   return Array.from({ length: 5 }, () => undefined);
 };
 
-export type ParamsType = {
+export type HorseRaceParams = {
   track: string;
   number: string;
 };
 
 const HorseRace: React.FC = () => {
-  const params = useParams<ParamsType>();
+  const params = useParams<HorseRaceParams>();
   const track = params.track || "";
   const raceNumber = Number(params.number) || 0;
 
