@@ -1,9 +1,10 @@
 import { useCallback, useState } from "react";
 import { useAccount } from "wagmi";
 import { Loader, PageLayout } from "../../components";
-import useApi from "../../hooks/useApi";
 import { FaucetModal } from "./FaucetModal";
 import { AiOutlineCopy } from "react-icons/ai";
+import api from "../../apis/Api";
+
 const faucetTokens = [
   {
     name: "Mock DIA",
@@ -17,7 +18,6 @@ const faucetTokens = [
 
 export const FaucetPage = () => {
   const { address } = useAccount();
-  const api = useApi();
 
   const [isClaimUsdtLoading, setIsClaimUsdtLoading] = useState(false);
   const [isClaimDiaLoading, setIsClaimDiaLoading] = useState(false);
@@ -41,7 +41,7 @@ export const FaucetPage = () => {
       setIsClaimUsdtLoading(false);
       setIsClaimDiaLoading(false);
     },
-    [address, api]
+    [address]
   );
   const onModalClose = () => {
     setIsModalOpen(false);

@@ -30,7 +30,7 @@ const BetsView = ({
         betData={selectedBet}
       />
       <div className="grid grid-cols-2 gap-2">
-        <h3 className="text-lg font-medium text-gray-900">History</h3>
+        <h3 className="text-lg font-medium text-gray-900">Bets History</h3>
         <MyBetsToggle enabled={myBetsEnabled} onChange={onMyBetToggle} />
         <BetTable betsData={betsData} onClickBet={onClickBet} />
       </div>

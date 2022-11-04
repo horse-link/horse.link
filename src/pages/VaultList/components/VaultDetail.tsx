@@ -24,7 +24,7 @@ export const VaultDetail = ({
         {tokenSymbol ?? <Skeleton width="1em" />} Vault
       </h1>
       <div>
-        Share:
+        Share:&nbsp;
         {(userAddress && userBalance) ?? <Skeleton width="1em" />}
         {!userAddress && "connect wallet to see your balance"}
       </div>

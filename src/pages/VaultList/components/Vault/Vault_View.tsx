@@ -1,4 +1,5 @@
 import Skeleton from "react-loading-skeleton";
+import { Loader } from "../../../../components";
 import ContractWriteResultCard from "../../../../components/ContractWriteResultCard/ContractWriteResultCard_View";
 import RequireWalletButton from "../../../../components/RequireWalletButton/RequireWalletButton_View";
 import { VaultDetail, VaultDetailProps } from "../VaultDetail";
@@ -7,7 +8,7 @@ type Props = {
   vaultDetailData: VaultDetailProps;
   userBalance: number;
   depositAmount: number;
-  updateDepositAmount: (amount: number) => void;
+  updateAmount: (amount: number) => void;
   shouldDepositButtonDisabled: boolean;
   shouldWithdrawButtonDisabled: boolean;
   contract: {
@@ -27,7 +28,7 @@ const VaultView = ({
   vaultDetailData,
   userBalance,
   depositAmount,
-  updateDepositAmount,
+  updateAmount,
   shouldDepositButtonDisabled,
   shouldWithdrawButtonDisabled,
   contract,
@@ -41,16 +42,16 @@ const VaultView = ({
           <VaultDetail {...vaultDetailData} />
         </div>
         <div>
-          <div className="w-7/12 mx-auto p-3 mt-5 rounded-md shadow border border-gray-200">
+          <div className=" mx-auto p-5 mt-5 rounded-md border-white">
             <h1 className="text-3xl mb-2">Deposit / Withdraw</h1>
-            <span>Shares : {userBalance ?? <Skeleton />}</span>
+            <span>Shares: {userBalance ?? <Skeleton />}</span>
             <form>
               <label>
                 <span>Amount</span>
                 <input
                   type="number"
                   onChange={e => {
-                    updateDepositAmount(e.target.valueAsNumber || 0);
+                    updateAmount(e.target.valueAsNumber || 0);
                   }}
                   value={depositAmount || ""}
                   placeholder="0.0"
@@ -64,7 +65,7 @@ const VaultView = ({
                       <div className="flex flex-col">
                         <button
                           className={
-                            "px-5 py-1 hover:bg-gray-100 rounded-md border border-gray-500 shadow-md" +
+                            "px-5 py-1 hover:bg-gray-100 rounded-md border border-violet-700 shadow-md" +
                             (shouldDepositButtonDisabled
                               ? " opacity-50 cursor-not-allowed"
                               : "")
@@ -75,11 +76,11 @@ const VaultView = ({
                           }}
                           disabled={shouldDepositButtonDisabled}
                         >
-                          {txStatus.isLoading ? "..." : "Deposit"}
+                          {txStatus.isLoading ? <Loader /> : "Deposit"}
                         </button>
                         <button
                           className={
-                            "px-5 py-1 mt-2 hover:bg-gray-100 rounded-md border border-gray-500 shadow-md" +
+                            "px-5 py-1 mt-2 hover:bg-gray-100 rounded-md border border-violet-700 shadow-md" +
                             (shouldWithdrawButtonDisabled
                               ? " opacity-50 cursor-not-allowed"
                               : "")
@@ -90,7 +91,7 @@ const VaultView = ({
                           }}
                           disabled={shouldWithdrawButtonDisabled}
                         >
-                          {txStatus.isLoading ? "..." : "Withdraw"}
+                          {txStatus.isLoading ? <Loader /> : "Withdraw"}
                         </button>
                       </div>
                     ) : (
@@ -101,7 +102,7 @@ const VaultView = ({
                           contract.approveContractWrite();
                         }}
                       >
-                        {txStatus.isLoading ? "..." : "Approve"}
+                        {txStatus.isLoading ? <Loader /> : "Approve"}
                       </button>
                     )
                   }

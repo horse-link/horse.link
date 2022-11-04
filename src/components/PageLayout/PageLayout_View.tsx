@@ -12,7 +12,7 @@ const navigation = [
   { name: "Dashboard", path: "/dashboard" },
   { name: "Vaults", path: "/vaults" },
   { name: "Markets", path: "/markets" },
-  { name: "History", path: "/history" },
+  { name: "Bets", path: "/bets" },
   { name: "HL Token", path: "/tokens" },
   {
     name: "White Paper",
@@ -145,7 +145,7 @@ const PageLayoutView: React.FC<Props> = props => {
         )}
       </Disclosure>
 
-      <div className="py-10">
+      <div className="py-4">
         <main>
           <WalletModal
             isModalOpen={isWalletModalOpen}

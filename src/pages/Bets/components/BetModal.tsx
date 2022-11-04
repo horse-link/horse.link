@@ -4,6 +4,7 @@ import Modal from "../../../components/Modal";
 import RequireWalletButton from "../../../components/RequireWalletButton/RequireWalletButton_View";
 import marketContractJson from "../../../abi/Market.json";
 import { BetHistory } from "../../../types";
+import { Loader } from "../../../components";
 
 type Props = {
   isOpen: boolean;
@@ -127,7 +128,7 @@ const SettleBet = ({ data }: SettlebetProps) => {
                   onClick={() => contract.settleContractWrite()}
                   disabled={shouldSettleButtonDisabled}
                 >
-                  {txStatus.isLoading ? "..." : "Settle"}
+                  {txStatus.isLoading ? <Loader /> : "Settle"}
                 </button>
               }
             />
