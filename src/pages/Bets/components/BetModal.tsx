@@ -10,7 +10,6 @@ type Props = {
   onClose: () => void;
   betData?: BetHistory;
 };
-
 const BetModal = ({ isOpen, onClose, betData }: Props) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -20,7 +19,6 @@ const BetModal = ({ isOpen, onClose, betData }: Props) => {
 };
 
 export default BetModal;
-
 type useSettleContractWriteArgs = {
   marketAddress?: string;
   index?: number;
