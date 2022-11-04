@@ -22,6 +22,7 @@ const Navigation = () => {
         <Route path="/history" component={Bets} exact />
         <Route path="/horses/:track/:number" component={HorseRace} exact />
         <Route path="/faucet" component={FaucetPage} exact />
+        <Route path="/bets" component={Bets} exact />
         <Route path="*" component={() => <Redirect to="/Dashboard" />} exact />
       </Switch>
     </Router>
