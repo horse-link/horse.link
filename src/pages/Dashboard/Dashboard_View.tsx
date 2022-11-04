@@ -204,23 +204,40 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
                           )}
                         </td>
                         {meet.races.map(race => (
-                          <td className="px-3 py-4 whitespace-nowrap text-sm hover:bg-gray-200">
-                            {race.name ? (
-                              <>
-                                <Link to={`/horses/${meet.id}/${race.number}`}>
-                                  <p>R{race.number}</p>
-                                </Link>
-                                <Link to={`/horses/${meet.id}/${race.number}`}>
-                                  <br></br>
-                                  {moment
-                                    .utc(race.start)
-                                    .local()
-                                    .format("H:mm")}
-                                </Link>
-                              </>
-                            ) : (
-                              <Skeleton count={2} />
-                            )}
+                          <td>
+                            <div
+                              className={
+                                "px-3 py-4 whitespace-nowrap text-sm" +
+                                (race.status == "Paying"
+                                  ? " bg-gray-400 hover:bg-gray-500"
+                                  : " hover:bg-gray-200")
+                              }
+                            >
+                              {race.name ? (
+                                <>
+                                  <Link
+                                    to={
+                                      race.status !== "Paying"
+                                        ? `/horses/${meet.id}/${race.number}`
+                                        : ""
+                                    }
+                                  >
+                                    <p>R{race.number}</p>
+                                    {moment
+                                      .utc(race.start)
+                                      .local()
+                                      .format("H:mm")}
+                                    <p>
+                                      {race.status == "Paying"
+                                        ? race.results.join(" ")
+                                        : moment(race.close).fromNow(true)}
+                                    </p>
+                                  </Link>
+                                </>
+                              ) : (
+                                <Skeleton count={2} />
+                              )}
+                            </div>
                           </td>
                         ))}
                       </tr>
