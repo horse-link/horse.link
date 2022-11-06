@@ -206,12 +206,12 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
                         {meet.races.map(race => (
                           <td>
                             <div
-                              className={
-                                "px-3 py-4 whitespace-nowrap text-sm" +
-                                (race.status == "Paying"
-                                  ? " bg-gray-400 hover:bg-gray-500"
-                                  : " hover:bg-gray-200")
-                              }
+                              className={`px-3 py-4 whitespace-nowrap text-sm 
+                                ${
+                                  race.status == "Paying"
+                                    ? "bg-gray-400 hover:bg-gray-500"
+                                    : "hover:bg-gray-200"
+                                }`}
                             >
                               {race.name ? (
                                 <Link
