@@ -28,7 +28,10 @@ const WalletModal: React.FC<Props> = (props: Props) => {
           <div>
             <label
               className="flex justify-center cursor-pointer"
-              onClick={() => connect({ connector: connectors[0] })}
+              onClick={e => {
+                e.preventDefault();
+                connect({ connector: connectors[0] });
+              }}
             >
               <MetaMaskIcon className="w-20 h-20 transition-opacity duration-500 ease-out opacity-100 hover:opacity-40" />
             </label>
@@ -40,7 +43,10 @@ const WalletModal: React.FC<Props> = (props: Props) => {
           <div>
             <label
               className="flex justify-center cursor-pointer"
-              onClick={() => connect({ connector: connectors[1] })}
+              onClick={e => {
+                e.preventDefault();
+                connect({ connector: connectors[1] });
+              }}
             >
               <WalletConnectIcon className="w-20 h-20 transition-opacity duration-500 ease-out opacity-100 hover:opacity-40" />
             </label>
