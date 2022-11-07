@@ -125,7 +125,10 @@ const SettleBet = ({ data }: SettlebetProps) => {
                       ? " opacity-50 cursor-not-allowed"
                       : "")
                   }
-                  onClick={() => contract.settleContractWrite()}
+                  onClick={e => {
+                    e.preventDefault();
+                    contract.settleContractWrite();
+                  }}
                   disabled={shouldSettleButtonDisabled}
                 >
                   {txStatus.isLoading ? <Loader /> : "Settle"}

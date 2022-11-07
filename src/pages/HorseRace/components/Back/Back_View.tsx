@@ -90,7 +90,10 @@ const BackView: React.FC<Props> = ({
                 isEnoughAllowance ? (
                   <button
                     className="px-5 py-1 hover:bg-gray-100 rounded-md border border-gray-500 shadow-md"
-                    onClick={contract.backContractWrite}
+                    onClick={e => {
+                      e.preventDefault();
+                      contract.backContractWrite();
+                    }}
                     disabled={shouldButtonDisabled}
                   >
                     {txStatus.isLoading ? <Loader /> : "Bet"}
@@ -101,7 +104,10 @@ const BackView: React.FC<Props> = ({
                       "px-5 py-1 hover:bg-gray-100 rounded-md border border-gray-500 shadow-md" +
                       (!selectedMarket ? " opacity-50 cursor-not-allowed" : "")
                     }
-                    onClick={contract.approveContractWrite}
+                    onClick={e => {
+                      e.preventDefault();
+                      contract.approveContractWrite();
+                    }}
                     disabled={!selectedMarket}
                   >
                     {txStatus.isLoading ? <Loader /> : "Approve"}
