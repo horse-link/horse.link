@@ -43,17 +43,20 @@ export const HlTokenPage = () => {
           <h3 className="text-xl pb-2 font-bold text-center">ROUNDS</h3>
           <div className="px-4 text-sm flex flex-col gap-y-2 mb-3 text-center">
             <p className="text-center line-through">
-              Seed - 10,000,000 tokens at 16.66 for $1 (0.06) / $600,000 (SOLD)
+              Seed - 10,000,000 tokens at 11.76 for $1 (0.085) / $850,000 USD
+              (SOLD)
             </p>
             <p className="text-center">
-              Private - 20,000,000 tokens at 10 for $1 (0.10) / $2,000,000
+              Private - 20,000,000 tokens at 6.66 for $1 (0.15) / $3,000,000 USD
               (CURRENT)
             </p>
             <p className="text-center">
-              Public 1 - 20,000,000 tokens at 5 for $1 (0.20) / $4,000,000
+              Public 1 - 20,000,000 tokens at 3.33 for $1 (0.30) / $6,000,000
+              USD
             </p>
             <p className="text-center">
-              Public 2 - 20,000,000 tokens at 2.5 for $1 (0.40) / $8,000,000
+              Public 2 - 20,000,000 tokens at 1.66 for $1 (0.60) / $12,000,000
+              USD
             </p>
           </div>
         </div>
