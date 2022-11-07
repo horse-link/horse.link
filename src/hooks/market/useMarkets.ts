@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import api from "../../apis/Api";
 
 const registryContract = {
-  addressOrName: "0x885386d140e4321102dc218060Bbd55a8B020F4C",
+  addressOrName: "0xd90AE997C32EdE8feCe39694460543868Da0d0D1",
   contractInterface: registryContractJson.abi
 };
 
