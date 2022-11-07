@@ -83,6 +83,10 @@ export type Race = {
   number: number;
   name: string;
   start?: Date;
+  end?: Date;
+  close?: Date;
+  status: "Normal" | "Interim" | "Paying";
+  results: number[];
 };
 
 export type Runner = {
