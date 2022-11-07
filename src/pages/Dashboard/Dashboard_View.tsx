@@ -228,7 +228,7 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
                                     .format("H:mm")}
                                   <p>
                                     {race.status == "Paying"
-                                      ? race.results.join(" ")
+                                      ? race.results?.join(" ")
                                       : moment(race.close).fromNow(true)}
                                   </p>
                                 </Link>

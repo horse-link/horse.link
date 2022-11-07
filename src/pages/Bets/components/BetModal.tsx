@@ -92,51 +92,46 @@ const SettleBet = ({ data }: SettlebetProps) => {
     <div className="w-96 md:w-152">
       <div className="px-10 pt-5 pb-5 rounded-md bg-white border-gray-200 sm:rounded-lg">
         <div className="text-3xl">Settle Bet</div>
-        <form>
-          <div className="flex flex-col">
-            <label>
-              <span>Index</span>
-              <input
-                type="text"
-                value={data?.index}
-                readOnly
-                className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-              />
-            </label>
-
-            <label>
-              <span>Signature</span>
-              <input
-                type="text"
-                value={data?.signature}
-                readOnly
-                className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-              />
-            </label>
-          </div>
-          <br></br>
-          <div className="flex flex-col">
-            <RequireWalletButton
-              actionButton={
-                <button
-                  className={
-                    "px-5 py-1 hover:bg-gray-100 rounded-md border border-gray-500 shadow-md" +
-                    (shouldSettleButtonDisabled
-                      ? " opacity-50 cursor-not-allowed"
-                      : "")
-                  }
-                  onClick={e => {
-                    e.preventDefault();
-                    contract.settleContractWrite();
-                  }}
-                  disabled={shouldSettleButtonDisabled}
-                >
-                  {txStatus.isLoading ? <Loader /> : "Settle"}
-                </button>
-              }
+        <div className="flex flex-col">
+          <label>
+            <span>Index</span>
+            <input
+              type="text"
+              value={data?.index}
+              readOnly
+              className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             />
-          </div>
-        </form>
+          </label>
+
+          <label>
+            <span>Signature</span>
+            <input
+              type="text"
+              value={data?.signature}
+              readOnly
+              className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            />
+          </label>
+        </div>
+        <br></br>
+        <div className="flex flex-col">
+          <RequireWalletButton
+            actionButton={
+              <button
+                className={
+                  "px-5 py-1 hover:bg-gray-100 rounded-md border border-gray-500 shadow-md" +
+                  (shouldSettleButtonDisabled
+                    ? " opacity-50 cursor-not-allowed"
+                    : "")
+                }
+                onClick={() => contract.settleContractWrite()}
+                disabled={shouldSettleButtonDisabled}
+              >
+                {txStatus.isLoading ? <Loader /> : "Settle"}
+              </button>
+            }
+          />
+        </div>
       </div>
       <div className="mt-5">
         <ContractWriteResultCard
