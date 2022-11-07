@@ -86,7 +86,7 @@ export type Race = {
   end?: Date;
   close?: Date;
   status: "Normal" | "Interim" | "Paying";
-  results: number[];
+  results?: number[];
 };
 
 export type Runner = {

@@ -8,8 +8,7 @@ const getMockMeets = (): Meet[] => {
   const mockRace: Race[] = Array.from({ length: 10 }, (_, i) => ({
     number: i,
     name: "",
-    status: "Normal",
-    results: [0]
+    status: "Normal"
   }));
   return Array.from({ length: 5 }, (_, i) => ({
     id: `mock${i}`,
