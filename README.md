@@ -63,7 +63,7 @@ Horse Link Token `0xfdc066DF7d7A188786A1580a9DDFbfbE716c31d5`
 
 ## Notes
 
-`npx truffle run verify Registry@0xd90AE997C32EdE8feCe39694460543868Da0d0D1 --network goerli`
-`npx truffle run verify Vault@0x21D068720BDBc7EdC49Ce8D1b1E1fb2d6c3526eb --network goerli`
-`npx truffle run verify Vault@0x6F47f0864ab7a02f9E7866d2bc8aC0BCf3C4924E --network goerli`
-`npx truffle run verify Registry --forceConstructorArgs string: --network goerli`
+`npx truffle run verify Registry@0xd90AE997C32EdE8feCe39694460543868Da0d0D1 --network goerli`  
+`npx truffle run verify Vault@0x21D068720BDBc7EdC49Ce8D1b1E1fb2d6c3526eb --network goerli`  
+`npx truffle run verify Vault@0x6F47f0864ab7a02f9E7866d2bc8aC0BCf3C4924E --network goerli`  
+`npx truffle run verify Registry --forceConstructorArgs string: --network goerli`  
