@@ -1,6 +1,7 @@
-import { ethers } from "ethers";
-import { useEffect, useMemo, useState } from "react";
+import { BigNumberish, ethers } from "ethers";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDebounce } from "use-debounce";
+import api from "../../../../apis/Api";
 
 import { useAccount, useContractWrite, useWaitForTransaction } from "wagmi";
 
@@ -32,18 +33,15 @@ const usePrepareBackingData = (
     () => ethers.utils.parseUnits(odds.toString(), DECIMAL),
     [odds]
   );
-  console.log(1);
   const bnWager = useMemo(
     () =>
       ethers.utils.parseUnits(debouncedWagerAmount.toString(), tokenDecimal),
     [debouncedWagerAmount]
   );
-  console.log(2);
   const b32Nonce = useMemo(
     () => ethers.utils.formatBytes32String(nonce),
     [nonce]
   );
-
   const b32MarketId = useMemo(
     () => ethers.utils.formatBytes32String(market_id),
     [market_id]
@@ -164,14 +162,7 @@ const useBackingContract = (
       nonce,
       market_id
     );
-  console.log(
-    proposition_id,
-    odds,
-    tokenDecimal,
-    debouncedWagerAmount,
-    nonce,
-    market_id
-  );
+
   const {
     write: backContractWrite,
     error: backError,
@@ -191,21 +182,6 @@ const useBackingContract = (
     enabled: debouncedWagerAmount > 0 && isEnoughAllowance
   });
 
-  console.log(
-    //marketAddress,
-    b32Nonce,
-    b32PropositionId,
-    b32MarketId,
-    bnWager,
-    //bnWager.toString(),
-    bnOdds,
-    //bnOdds.toString(),
-    close,
-    end,
-    signature
-    //debouncedWagerAmount > 0 && isEnoughAllowance
-  );
-
   return {
     potentialPayout,
     contract: {
@@ -218,7 +194,9 @@ const useBackingContract = (
       isSuccess: isBackTxSuccess,
       hash: backTxHash
     },
-    isEnoughAllowance
+    isEnoughAllowance,
+    tokenDecimal,
+    debouncedWagerAmount
   };
 };
 
@@ -251,7 +229,7 @@ type Props = {
   runner?: Runner;
 };
 
-const BackLogic = ({ runner }: Props) => {
+const BackLogic: React.FC<Props> = ({ runner }) => {
   const { back } = usePageParams(runner);
   const { marketAddresses } = useMarkets();
   const { address } = useAccount();
@@ -266,11 +244,61 @@ const BackLogic = ({ runner }: Props) => {
   }, [marketAddresses]);
 
   const [wagerAmount, setWagerAmount] = useState<number>(0);
-  const { potentialPayout, contract, txStatus, isEnoughAllowance } =
-    useBackingContract(back, wagerAmount, selectedMarketAddress, ownerAddress);
+  const {
+    potentialPayout,
+    contract,
+    txStatus,
+    isEnoughAllowance,
+    tokenDecimal,
+    debouncedWagerAmount
+  } = useBackingContract(
+    back,
+    wagerAmount,
+    selectedMarketAddress,
+    ownerAddress
+  );
+
+  const { nonce, odds, proposition_id, market_id, close, end } = back;
+  const { b32PropositionId, bnWager, bnOdds, b32Nonce, b32MarketId } =
+    usePrepareBackingData(
+      proposition_id,
+      odds,
+      tokenDecimal,
+      debouncedWagerAmount,
+      nonce,
+      market_id
+    );
 
   const shouldButtonDisabled =
     wagerAmount == 0 || !contract?.backContractWrite || txStatus.isLoading;
+
+  // Do this like the faucet
+  const handleBackContractWrite = async () => {
+    try {
+      console.log(
+        proposition_id,
+        odds,
+        tokenDecimal,
+        debouncedWagerAmount,
+        nonce,
+        market_id
+      );
+      const res = await api.requestBackingSign(
+        b32Nonce,
+        b32PropositionId,
+        b32MarketId,
+        bnWager,
+        bnOdds,
+        close,
+        end
+      );
+
+      const { signature } = res;
+      console.log("signature", signature);
+    } catch (error: any) {
+      alert(error?.message ?? "Something went wrong");
+    }
+  };
 
   return (
     <BackView
@@ -285,6 +313,7 @@ const BackLogic = ({ runner }: Props) => {
       contract={contract}
       txStatus={txStatus}
       isEnoughAllowance={isEnoughAllowance}
+      handleBackContractWrite={handleBackContractWrite}
     />
   );
 };

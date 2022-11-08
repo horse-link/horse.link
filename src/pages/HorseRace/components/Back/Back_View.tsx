@@ -24,6 +24,7 @@ type Props = {
     hash?: string;
   };
   isEnoughAllowance: boolean;
+  handleBackContractWrite: () => Promise<void>;
 };
 
 const BackView: React.FC<Props> = ({
@@ -37,7 +38,8 @@ const BackView: React.FC<Props> = ({
   shouldButtonDisabled,
   contract,
   txStatus,
-  isEnoughAllowance
+  isEnoughAllowance,
+  handleBackContractWrite
 }) => {
   return (
     <div className="w-96 md:w-152">
@@ -85,12 +87,21 @@ const BackView: React.FC<Props> = ({
         </div>
         <br></br>
         <div className="flex flex-col">
+          {/*
+          nonce: string,
+    marketId: string,
+    propositionId: string,
+    odds: number,
+    tokenDecimal: string,
+    debouncedWagerAmount: number,
+    close: number,
+    */}
           <RequireWalletButton
             actionButton={
               isEnoughAllowance ? (
                 <button
                   className="px-5 py-1 hover:bg-gray-100 rounded-md border border-gray-500 shadow-md"
-                  onClick={() => contract.backContractWrite()}
+                  onClick={() => handleBackContractWrite()} //contract.backContractWrite()}
                   disabled={shouldButtonDisabled}
                 >
                   {txStatus.isLoading ? <Loader /> : "Bet"}
