@@ -14,7 +14,6 @@ type Props = {
   potentialPayout: string;
   shouldButtonDisabled: boolean;
   contract: {
-    //backContractWrite: () => void | undefined;
     approveContractWrite: () => void | undefined;
     errorMsg: string | undefined;
   };
@@ -87,21 +86,12 @@ const BackView: React.FC<Props> = ({
         </div>
         <br></br>
         <div className="flex flex-col">
-          {/*
-          nonce: string,
-    marketId: string,
-    propositionId: string,
-    odds: number,
-    tokenDecimal: string,
-    debouncedWagerAmount: number,
-    close: number,
-    */}
           <RequireWalletButton
             actionButton={
               isEnoughAllowance ? (
                 <button
                   className="px-5 py-1 hover:bg-gray-100 rounded-md border border-gray-500 shadow-md"
-                  onClick={() => handleBackContractWrite()} //contract.backContractWrite()}
+                  onClick={() => handleBackContractWrite()}
                   disabled={shouldButtonDisabled}
                 >
                   {txStatus.isLoading ? <Loader /> : "Bet"}

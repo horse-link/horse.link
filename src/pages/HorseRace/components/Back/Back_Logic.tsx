@@ -1,5 +1,5 @@
-import { BigNumberish, ethers } from "ethers";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { ethers } from "ethers";
+import { useEffect, useMemo, useState } from "react";
 import { useDebounce } from "use-debounce";
 import api from "../../../../apis/Api";
 
@@ -117,9 +117,8 @@ const useBackingContract = (
   wagerAmount: number,
   marketAddress: string,
   ownerAddress: string
-  //signature: EcSignature
 ) => {
-  const { nonce, odds, proposition_id, market_id, close, end } = back;
+  const { odds, proposition_id } = back;
 
   const [debouncedWagerAmount] = useDebounce(wagerAmount, 500);
 
@@ -148,28 +147,13 @@ const useBackingContract = (
     tokenDecimal
   });
 
-  const { b32PropositionId, bnWager, bnOdds, b32Nonce, b32MarketId } =
-    usePrepareBackingData(
-      proposition_id,
-      odds,
-      tokenDecimal,
-      debouncedWagerAmount,
-      nonce,
-      market_id
-    );
-
   return {
     potentialPayout,
     contract: {
-      //backContractWrite,
       approveContractWrite,
-      errorMsg: approveError?.message //(backError || approveError)?.message
+      errorMsg: approveError?.message
     },
-    txStatus: {
-      isLoading: /*isBackTxLoading ||*/ isApproveTxLoading //,
-      // isSuccess: isBackTxSuccess,
-      // hash: backTxHash
-    },
+    isApproveTxLoading,
     isEnoughAllowance,
     tokenDecimal,
     debouncedWagerAmount
@@ -229,7 +213,7 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
   const {
     potentialPayout,
     contract,
-    txStatus,
+    isApproveTxLoading,
     isEnoughAllowance,
     tokenDecimal,
     debouncedWagerAmount
@@ -271,9 +255,11 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
   });
 
   const shouldButtonDisabled =
-    wagerAmount == 0 || /*!contract?.backContractWrite ||*/ txStatus.isLoading;
+    wagerAmount == 0 ||
+    !backContractWrite ||
+    isApproveTxLoading ||
+    isBackTxLoading;
 
-  // Do this like the faucet
   const handleBackContractWrite = async () => {
     try {
       const res = await api.requestBackingSign(
@@ -288,17 +274,13 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
 
       const { signature } = res;
       setSignature(signature);
-      // Write to contract
-
-      // Contract stuff was here but it was a hook so React was mad
-      // Call contract here
     } catch (error: any) {
       alert(error?.message ?? "Something went wrong");
     }
   };
 
   const txStatuses = {
-    isLoading: isBackTxLoading || txStatus.isLoading,
+    isLoading: isBackTxLoading || isApproveTxLoading,
     isSuccess: isBackTxSuccess,
     hash: backTxHash
   };
