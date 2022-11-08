@@ -58,11 +58,11 @@ type useBackContractWriteArgs = {
   bnOdds: ethers.BigNumber;
   close: number;
   end: number;
-  signature: EcSignature;
+  signature: EcSignature | undefined;
   enabled: boolean;
 };
 
-const backContractWriteGetting = ({
+const useGetBackContractWrite = ({
   marketAddress,
   b32Nonce,
   b32PropositionId,
@@ -92,14 +92,8 @@ const backContractWriteGetting = ({
       close,
       end,
       signature
-      // TODO: Remove this once the contract requires a sig to back
-      // {
-      //   v: 28,
-      //   r: "0x64779ba2fcec4b635c6a96f01dde74bd466cc0602fecc95c34d8edb5c205a0d3",
-      //   s: "0x7044254596476e91d0f1fb41967ed45ebcc7e7b973c81a10bc008ca294e2c2d5"
-      // }
     ],
-    enabled: enabled && !!marketAddress
+    enabled: enabled && !!marketAddress && !!signature
   });
 
   const backTxHash = contractData?.hash;
@@ -164,25 +158,6 @@ const useBackingContract = (
       market_id
     );
 
-  // const {
-  //   write: backContractWrite,
-  //   error: backError,
-  //   isTxLoading: isBackTxLoading,
-  //   isTxSuccess: isBackTxSuccess,
-  //   backTxHash
-  // } = backContractWrite({
-  //   marketAddress,
-  //   b32Nonce,
-  //   b32PropositionId,
-  //   b32MarketId,
-  //   bnWager,
-  //   bnOdds,
-  //   close,
-  //   end,
-  //   //signature,
-  //   enabled: debouncedWagerAmount > 0 && isEnoughAllowance
-  // });
-
   return {
     potentialPayout,
     contract: {
@@ -207,8 +182,7 @@ const usePageParams = (runner?: Runner) => {
     market_id = "",
     odds = 0,
     close = 0,
-    end = 0,
-    signature
+    end = 0
   } = runner ?? {};
 
   // todo: get nonce from runner once api is updated
@@ -220,8 +194,7 @@ const usePageParams = (runner?: Runner) => {
     close,
     end,
     odds: odds / 1000,
-    proposition_id,
-    signature: signature?.signature ?? ""
+    proposition_id
   };
   return { back };
 };
@@ -238,17 +211,21 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
   const [selectedMarketAddress, setSelectedMarketAddress] = useState<string>(
     "0xA0f8A6eD9Df461541159Fa5f083082A6f6E0f795"
   );
+  const [wagerAmount, setWagerAmount] = useState<number>(0);
+  const [signature, setSignature] = useState<EcSignature>();
+
   useEffect(() => {
     if (marketAddresses.length > 0) {
       setSelectedMarketAddress(marketAddresses[0]);
     }
   }, [marketAddresses]);
 
-  const [wagerAmount, setWagerAmount] = useState<number>(0);
-  const [backError, setBackError] = useState<Error | null>();
-  const [isBackTxLoading, setIsBackTxLoading] = useState<boolean>(false);
-  const [isBackTxSuccess, setIsBackTxSuccess] = useState<boolean>(false);
-  const [backTxHash, seBackTxHash] = useState<string>();
+  useEffect(() => {
+    if (signature) {
+      backContractWrite();
+    }
+  }, [signature]);
+
   const {
     potentialPayout,
     contract,
@@ -274,6 +251,25 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
       market_id
     );
 
+  const {
+    write: backContractWrite,
+    error: backError,
+    isTxLoading: isBackTxLoading,
+    isTxSuccess: isBackTxSuccess,
+    backTxHash
+  } = useGetBackContractWrite({
+    marketAddress: selectedMarketAddress,
+    b32Nonce,
+    b32PropositionId,
+    b32MarketId,
+    bnWager,
+    bnOdds,
+    close,
+    end,
+    signature,
+    enabled: debouncedWagerAmount > 0 && isEnoughAllowance
+  });
+
   const shouldButtonDisabled =
     wagerAmount == 0 || /*!contract?.backContractWrite ||*/ txStatus.isLoading;
 
@@ -291,29 +287,11 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
       );
 
       const { signature } = res;
+      setSignature(signature);
       // Write to contract
-      const {
-        write: backContractWrite,
-        error: backError,
-        isTxLoading: isBackTxLoading,
-        isTxSuccess: isBackTxSuccess,
-        backTxHash
-      } = backContractWriteGetting({
-        marketAddress: selectedMarketAddress,
-        b32Nonce,
-        b32PropositionId,
-        b32MarketId,
-        bnWager,
-        bnOdds,
-        close,
-        end,
-        signature,
-        enabled: debouncedWagerAmount > 0 && isEnoughAllowance
-      });
-      setBackError(backError);
-      setIsBackTxLoading(isBackTxLoading);
-      setIsBackTxSuccess(isBackTxSuccess);
-      seBackTxHash(backTxHash);
+
+      // Contract stuff was here but it was a hook so React was mad
+      // Call contract here
     } catch (error: any) {
       alert(error?.message ?? "Something went wrong");
     }

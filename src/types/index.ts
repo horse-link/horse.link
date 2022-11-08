@@ -33,7 +33,6 @@ export type Back = {
   end: number;
   odds: number;
   proposition_id: string;
-  signature: string;
 };
 
 export type EcSignature = {
