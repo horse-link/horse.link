@@ -11,7 +11,7 @@ import useMarketDetail from "../../../../hooks/market/useMarketDetail";
 import useMarkets from "../../../../hooks/market/useMarkets";
 import useTokenApproval from "../../../../hooks/token/useTokenApproval";
 import useTokenData from "../../../../hooks/token/useTokenData";
-import { Back, Runner } from "../../../../types";
+import { Back, EcSignature, Runner } from "../../../../types";
 import BackView from "./Back_View";
 
 const DECIMAL = 6;
@@ -58,11 +58,11 @@ type useBackContractWriteArgs = {
   bnOdds: ethers.BigNumber;
   close: number;
   end: number;
-  signature: string;
+  signature: EcSignature;
   enabled: boolean;
 };
 
-const useBackContractWrite = ({
+const backContractWriteGetting = ({
   marketAddress,
   b32Nonce,
   b32PropositionId,
@@ -91,12 +91,13 @@ const useBackContractWrite = ({
       bnOdds,
       close,
       end,
+      signature
       // TODO: Remove this once the contract requires a sig to back
-      {
-        v: 28,
-        r: "0x64779ba2fcec4b635c6a96f01dde74bd466cc0602fecc95c34d8edb5c205a0d3",
-        s: "0x7044254596476e91d0f1fb41967ed45ebcc7e7b973c81a10bc008ca294e2c2d5"
-      }
+      // {
+      //   v: 28,
+      //   r: "0x64779ba2fcec4b635c6a96f01dde74bd466cc0602fecc95c34d8edb5c205a0d3",
+      //   s: "0x7044254596476e91d0f1fb41967ed45ebcc7e7b973c81a10bc008ca294e2c2d5"
+      // }
     ],
     enabled: enabled && !!marketAddress
   });
@@ -122,9 +123,9 @@ const useBackingContract = (
   wagerAmount: number,
   marketAddress: string,
   ownerAddress: string
+  //signature: EcSignature
 ) => {
-  const { nonce, odds, proposition_id, market_id, close, end, signature } =
-    back;
+  const { nonce, odds, proposition_id, market_id, close, end } = back;
 
   const [debouncedWagerAmount] = useDebounce(wagerAmount, 500);
 
@@ -163,36 +164,36 @@ const useBackingContract = (
       market_id
     );
 
-  const {
-    write: backContractWrite,
-    error: backError,
-    isTxLoading: isBackTxLoading,
-    isTxSuccess: isBackTxSuccess,
-    backTxHash
-  } = useBackContractWrite({
-    marketAddress,
-    b32Nonce,
-    b32PropositionId,
-    b32MarketId,
-    bnWager,
-    bnOdds,
-    close,
-    end,
-    signature,
-    enabled: debouncedWagerAmount > 0 && isEnoughAllowance
-  });
+  // const {
+  //   write: backContractWrite,
+  //   error: backError,
+  //   isTxLoading: isBackTxLoading,
+  //   isTxSuccess: isBackTxSuccess,
+  //   backTxHash
+  // } = backContractWrite({
+  //   marketAddress,
+  //   b32Nonce,
+  //   b32PropositionId,
+  //   b32MarketId,
+  //   bnWager,
+  //   bnOdds,
+  //   close,
+  //   end,
+  //   //signature,
+  //   enabled: debouncedWagerAmount > 0 && isEnoughAllowance
+  // });
 
   return {
     potentialPayout,
     contract: {
-      backContractWrite,
+      //backContractWrite,
       approveContractWrite,
-      errorMsg: (backError || approveError)?.message
+      errorMsg: approveError?.message //(backError || approveError)?.message
     },
     txStatus: {
-      isLoading: isBackTxLoading || isApproveTxLoading,
-      isSuccess: isBackTxSuccess,
-      hash: backTxHash
+      isLoading: /*isBackTxLoading ||*/ isApproveTxLoading //,
+      // isSuccess: isBackTxSuccess,
+      // hash: backTxHash
     },
     isEnoughAllowance,
     tokenDecimal,
@@ -235,7 +236,7 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
   const { address } = useAccount();
   const ownerAddress = address ?? "";
   const [selectedMarketAddress, setSelectedMarketAddress] = useState<string>(
-    "0x1514b66a40CA2D600bB4Cf35A735709a1972c2F3"
+    "0xA0f8A6eD9Df461541159Fa5f083082A6f6E0f795"
   );
   useEffect(() => {
     if (marketAddresses.length > 0) {
@@ -244,6 +245,10 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
   }, [marketAddresses]);
 
   const [wagerAmount, setWagerAmount] = useState<number>(0);
+  const [backError, setBackError] = useState<Error | null>();
+  const [isBackTxLoading, setIsBackTxLoading] = useState<boolean>(false);
+  const [isBackTxSuccess, setIsBackTxSuccess] = useState<boolean>(false);
+  const [backTxHash, seBackTxHash] = useState<string>();
   const {
     potentialPayout,
     contract,
@@ -270,19 +275,11 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
     );
 
   const shouldButtonDisabled =
-    wagerAmount == 0 || !contract?.backContractWrite || txStatus.isLoading;
+    wagerAmount == 0 || /*!contract?.backContractWrite ||*/ txStatus.isLoading;
 
   // Do this like the faucet
   const handleBackContractWrite = async () => {
     try {
-      console.log(
-        proposition_id,
-        odds,
-        tokenDecimal,
-        debouncedWagerAmount,
-        nonce,
-        market_id
-      );
       const res = await api.requestBackingSign(
         b32Nonce,
         b32PropositionId,
@@ -294,10 +291,38 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
       );
 
       const { signature } = res;
-      console.log("signature", signature);
+      // Write to contract
+      const {
+        write: backContractWrite,
+        error: backError,
+        isTxLoading: isBackTxLoading,
+        isTxSuccess: isBackTxSuccess,
+        backTxHash
+      } = backContractWriteGetting({
+        marketAddress: selectedMarketAddress,
+        b32Nonce,
+        b32PropositionId,
+        b32MarketId,
+        bnWager,
+        bnOdds,
+        close,
+        end,
+        signature,
+        enabled: debouncedWagerAmount > 0 && isEnoughAllowance
+      });
+      setBackError(backError);
+      setIsBackTxLoading(isBackTxLoading);
+      setIsBackTxSuccess(isBackTxSuccess);
+      seBackTxHash(backTxHash);
     } catch (error: any) {
       alert(error?.message ?? "Something went wrong");
     }
+  };
+
+  const txStatuses = {
+    isLoading: isBackTxLoading || txStatus.isLoading,
+    isSuccess: isBackTxSuccess,
+    hash: backTxHash
   };
 
   return (
@@ -311,7 +336,7 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
       potentialPayout={potentialPayout}
       shouldButtonDisabled={shouldButtonDisabled}
       contract={contract}
-      txStatus={txStatus}
+      txStatus={txStatuses}
       isEnoughAllowance={isEnoughAllowance}
       handleBackContractWrite={handleBackContractWrite}
     />
