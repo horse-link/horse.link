@@ -33,7 +33,12 @@ export type Back = {
   end: number;
   odds: number;
   proposition_id: string;
-  signature: string;
+};
+
+export type EcSignature = {
+  r: string;
+  s: string;
+  v: number;
 };
 
 export type BetHistory = {
@@ -44,7 +49,8 @@ export type BetHistory = {
   amount: string;
   tx: string;
   blockNumber: number;
-  signature: string;
+  signature: EcSignature;
+  result: boolean | undefined;
 };
 
 export type BetHistoryResponse = {

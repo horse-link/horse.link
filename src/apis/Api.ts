@@ -1,6 +1,8 @@
-import { AxiosInstance } from "axios";
+import axios, { AxiosInstance } from "axios";
+import { BigNumberish } from "ethers";
 import {
   BetHistoryResponse,
+  EcSignature,
   Market,
   Runner,
   SignedMeetingsResponse,
@@ -8,13 +10,16 @@ import {
   Vault,
   VaultUserData
 } from "../types/index";
-import client from "../utils/client";
 
 export class Api {
   private client: AxiosInstance;
-
-  constructor(axiosClient: AxiosInstance) {
-    this.client = axiosClient;
+  constructor() {
+    this.client = axios.create({
+      baseURL: process.env.REACT_APP_API_URL || "https://api.horse.link",
+      headers: {
+        Accept: "application/json"
+      }
+    });
   }
 
   public getMeetings = async (): Promise<SignedMeetingsResponse> => {
@@ -38,6 +43,28 @@ export class Api {
     account: string
   ): Promise<BetHistoryResponse> => {
     const { data } = await this.client.get(`/bets/${account}`);
+
+    return data;
+  };
+
+  public requestBackingSign = async (
+    nonce: string,
+    propositionId: string,
+    marketId: string,
+    wager: BigNumberish,
+    odds: BigNumberish,
+    close: BigNumberish,
+    end: BigNumberish
+  ): Promise<{ signature: EcSignature }> => {
+    const { data } = await this.client.post(`/backing-sign`, {
+      nonce,
+      propositionId,
+      marketId,
+      wager,
+      odds,
+      close,
+      end
+    });
 
     return data;
   };
@@ -146,6 +173,6 @@ export class Api {
   };
 }
 
-const api = new Api(client);
+const api = new Api();
 
 export default api;
