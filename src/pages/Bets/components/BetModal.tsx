@@ -32,17 +32,15 @@ type useSettleContractWriteArgs = {
 };
 const useSettleContractWrite = ({
   marketAddress,
-  index = 0,
-  raceResult,
-  signature
+  index
 }: useSettleContractWriteArgs) => {
   const { data, error, write } = useContractWrite({
     mode: "recklesslyUnprepared",
     addressOrName: marketAddress || "",
     contractInterface: marketContractJson.abi,
     functionName: "settle",
-    args: [index, raceResult, signature],
-    enabled: !!marketAddress && !!index && !!signature
+    args: [index],
+    enabled: !!marketAddress && !!index
   });
 
   const txHash = data?.hash;
@@ -84,9 +82,7 @@ const SettleBet = ({ data }: SettlebetProps) => {
       txHash
     } = useSettleContractWrite({
       marketAddress: selectedMarketAddress,
-      index: bet?.index,
-      raceResult: bet?.result,
-      signature: bet?.signature
+      index: bet?.index
     });
     const contract = {
       settleContractWrite,
