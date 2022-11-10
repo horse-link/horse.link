@@ -54,10 +54,30 @@ export const FaucetPage = () => {
         onClose={onModalClose}
         txHash={txHash}
       />
-      <div className="flex flex-wrap gap-20 sm:justify-center">
+      <div className="w-full text-center bg-green-700 rounded-md p-5 my-10">
+        <h2>Welcome to the Horse Link Faucet!</h2>
+        <h2 className="p-1">
+          These tokens are to be used to test the beta functionality of the app.
+          Please make sure you are connected to Goerli network.
+        </h2>
+        <p className="p-1">
+          To connect to Goerli, within Metamask dropdown the Network tab at the
+          top and scroll and select Goerli test network (this will be there by
+          default).
+        </p>
+      </div>
+      <div className="flex gap-3 flex-wrap">
+        <img
+          loading="lazy"
+          src="/images/goerli-test-network.png"
+          alt="Goerli network option in Metamask Networks tab"
+          width="300"
+          height="300"
+        />
         <div className="flex flex-col gap-5 w-full md:w-56">
           {faucetTokens.map(({ name, address }) => (
             <ClaimButton
+              key={address}
               tokenName={name}
               onClick={() => onClickClaim(address, name)}
               isLoading={
@@ -66,44 +86,21 @@ export const FaucetPage = () => {
             />
           ))}
         </div>
-        <div className="w-full md:w-64 bg-gray-100 rounded-md p-5 ">
-          <h2>
-            Welcome to the Horse Link Faucet.
-            <br />
-            These tokens are to be used to test the beta functionality of the
-            app.
-          </h2>
-          <br />
-          <h2>Please make sure you are connected to Goerli network.</h2>
-          <br />
-          <p>
-            To connect to Goerli, within Metamask dropdown the Network tab at
-            the top and scroll and select Goerli test network (this will be
-            there by default).
-          </p>
+        <div className="flex flex-col gap-5 md:w-65">
+          {faucetTokens.map(token => {
+            return (
+              <div className="flex bg-gray-100 rounded-md p-5 md:w-155">
+                {token.name} Address - {token.address}
+                <button
+                  className="flex rounded-xl hover:bg-green-400 p-1"
+                  onClick={() => navigator.clipboard.writeText(token.address)}
+                >
+                  <AiOutlineCopy />
+                </button>
+              </div>
+            );
+          })}
         </div>
-        <div className="w-96 mx-auto md:mx-0">
-          <img
-            loading="lazy"
-            src="/images/goerli-test-network.png"
-            alt="Goerli network option in Metamask Networks tab"
-          />
-        </div>
-      </div>
-      <div className="flex flex-col gap-5 mt-6 md:w-5/6 mx-auto">
-        {faucetTokens.map(token => {
-          return (
-            <div className="bg-gray-100 rounded-md p-5 mr-6 sm:w-152">
-              {token.name} Address - {token.address}
-              <button
-                className="ml-2 rounded hover:bg-green-400"
-                onClick={() => navigator.clipboard.writeText(token.address)}
-              >
-                <AiOutlineCopy />
-              </button>
-            </div>
-          );
-        })}
       </div>
     </PageLayout>
   );
