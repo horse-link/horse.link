@@ -70,7 +70,11 @@ const Row = ({ betData, onClick }: RowProps) => {
     <tr
       key={betData?.proposition_id}
       onClick={onClick}
-      className="cursor-pointer hover:bg-gray-100"
+      className={
+        betData?.settled
+          ? "cursor-pointer bg-gray-300 hover:bg-gray-100"
+          : "cursor-pointer hover:bg-gray-100"
+      }
     >
       <td className="pl-5 pr-2 py-4 truncate">
         {betData?.punter ?? <Skeleton />}

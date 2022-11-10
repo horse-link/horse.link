@@ -56,6 +56,42 @@ const useSettleContractWrite = ({
   };
 };
 
+type useMarketOracleResultWriteArgs = {
+  marketAddress?: string;
+  market_id?: string;
+  winningPropositionId?: string;
+  signature?: EcSignature;
+};
+const useMarketOracleResultWrite = ({
+  market_id,
+  winningPropositionId,
+  signature
+}: useMarketOracleResultWriteArgs) => {
+  const { data, error, write } = useContractWrite({
+    mode: "recklesslyUnprepared",
+    addressOrName:
+      process.env.REACT_APP_MARKET_ORACLE_CONTRACT ||
+      "0x592a44ebad029EBFff3Ee4950f1E74538a19a2ea",
+    contractInterface: marketContractJson.abi,
+    functionName: "setResult",
+    args: [market_id, winningPropositionId, signature],
+    enabled: !!market_id && !!winningPropositionId && !!signature
+  });
+
+  const txHash = data?.hash;
+  const { isLoading: isTxLoading, isSuccess: isTxSuccess } =
+    useWaitForTransaction({
+      hash: txHash
+    });
+  return {
+    write,
+    error,
+    isTxLoading,
+    isTxSuccess,
+    txHash
+  };
+};
+
 type SettlebetProps = {
   data?: BetHistory;
 };
@@ -102,14 +138,19 @@ const SettleBet = ({ data }: SettlebetProps) => {
     };
   };
 
+  //const data?.marketOracleResultSig
   const { contract, txStatus, shouldSettleButtonDisabled } = useSettleBet(data);
   return (
     <div className="w-96 md:w-152">
       <div className="px-10 pt-5 pb-5 rounded-md bg-white border-gray-200 sm:rounded-lg">
-        <div className="text-3xl">Settle Bet</div>
+        {data?.settled ? (
+          <div className="text-3xl">Settled Bet</div>
+        ) : (
+          <div className="text-3xl">Settle Bet</div>
+        )}
         <div className="flex flex-col">
           <label>
-            <span>Index</span>
+            <span>Bet Index</span>
             <input
               type="text"
               value={data?.index}
@@ -117,46 +158,67 @@ const SettleBet = ({ data }: SettlebetProps) => {
               className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             />
           </label>
-          {data?.result !== undefined && (
+          {data?.winningPropositionId !== undefined && (
             <label>
-              <span>Race Result</span>
+              <span>Winning Bet</span>
               <input
                 type="text"
-                value={data?.result.toString()}
+                value={(
+                  data?.proposition_id === data?.winningPropositionId
+                ).toString()}
                 readOnly
                 className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
               />
             </label>
           )}
-          <label>
-            <span>Signature</span>
-            <input
-              type="text"
-              value={JSON.stringify(data?.signature)}
-              readOnly
-              className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-            />
-          </label>
         </div>
         <br></br>
-        <div className="flex flex-col">
-          <RequireWalletButton
-            actionButton={
-              <button
-                className={
-                  "px-5 py-1 hover:bg-gray-100 rounded-md border border-gray-500 shadow-md" +
-                  (shouldSettleButtonDisabled
-                    ? " opacity-50 cursor-not-allowed"
-                    : "")
+
+        {!data?.settled && data?.marketResultAdded && (
+          <div className="flex flex-col">
+            <RequireWalletButton
+              actionButton={
+                <button
+                  className={
+                    "px-5 py-1 hover:bg-gray-100 rounded-md border border-gray-500 shadow-md" +
+                    (shouldSettleButtonDisabled
+                      ? " opacity-50 cursor-not-allowed"
+                      : "")
+                  }
+                  onClick={() => contract.settleContractWrite()}
+                  disabled={shouldSettleButtonDisabled}
+                >
+                  {txStatus.isLoading ? <Loader /> : "Settle"}
+                </button>
+              }
+            />
+          </div>
+        )}
+
+        {data &&
+          !data?.settled &&
+          !data?.marketResultAdded &&
+          data?.winningPropositionId && (
+            <div className="flex flex-col">
+              <RequireWalletButton
+                actionButton={
+                  <button
+                    className={
+                      "px-5 py-1 hover:bg-gray-100 rounded-md border border-gray-500 shadow-md" +
+                      (shouldSettleButtonDisabled
+                        ? " opacity-50 cursor-not-allowed"
+                        : "")
+                    }
+                    onClick={() => contract.settleContractWrite()}
+                    disabled={shouldSettleButtonDisabled}
+                  >
+                    {txStatus.isLoading ? <Loader /> : "Submit Result"}
+                  </button>
                 }
-                onClick={() => contract.settleContractWrite?.()}
-                disabled={shouldSettleButtonDisabled}
-              >
-                {txStatus.isLoading ? <Loader /> : "Settle"}
-              </button>
-            }
-          />
-        </div>
+              />
+            </div>
+          )}
+
         <div className="mt-5">
           <ContractWriteResultCard
             hash={txStatus.hash}
