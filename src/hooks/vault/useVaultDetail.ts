@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { useContractReads } from "wagmi";
 import vaultContractJson from "../../abi/Vault.json";
 import mockTokenContractJson from "../../abi/MockToken.json";
@@ -8,8 +8,8 @@ import api from "../../apis/Api";
 
 const useVaultDetailFromContract = (vaultAddress: string) => {
   const vaultContract = {
-    addressOrName: vaultAddress,
-    contractInterface: vaultContractJson
+    address: vaultAddress,
+    abi: vaultContractJson
   };
 
   const { data: vaultData } = useContractReads({
@@ -26,8 +26,8 @@ const useVaultDetailFromContract = (vaultAddress: string) => {
   });
   const [bNTotalAssets, tokenAddress] = vaultData ?? [];
   const tokenContract = {
-    addressOrName: tokenAddress?.toString() || "",
-    contractInterface: mockTokenContractJson.abi
+    address: tokenAddress?.toString() || "",
+    abi: mockTokenContractJson.abi
   };
   const { data: tokenData } = useContractReads({
     contracts: [
@@ -57,7 +57,10 @@ const useVaultDetailFromContract = (vaultAddress: string) => {
     vault = {
       name: name as unknown as string,
       symbol: symbol as unknown as string,
-      totalAssets: ethers.utils.formatUnits(bNTotalAssets, decimals),
+      totalAssets: ethers.utils.formatUnits(
+        bNTotalAssets as BigNumber,
+        decimals as BigNumber
+      ),
       address: vaultAddress
     };
   }

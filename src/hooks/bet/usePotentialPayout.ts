@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { useEffect, useMemo, useState } from "react";
 import { useContractRead } from "wagmi";
 import marketContractJson from "../../abi/Market.json";
@@ -34,15 +34,18 @@ const usePotentialPayoutFromContract = ({
     [odds]
   );
   const { data: bnPotentialPayout } = useContractRead({
-    addressOrName: marketAddress,
-    contractInterface: marketContractJson.abi,
+    address: marketAddress,
+    abi: marketContractJson.abi,
     functionName: "getPotentialPayout",
     args: [b32PropositionId, bnWager, bnOdds]
   });
 
   const potentialPayout = useMemo(() => {
     if (!bnPotentialPayout) return "0";
-    return ethers.utils.formatUnits(bnPotentialPayout, tokenDecimal);
+    return ethers.utils.formatUnits(
+      bnPotentialPayout as BigNumber,
+      tokenDecimal
+    );
   }, [bnPotentialPayout]);
 
   return { potentialPayout };

@@ -80,8 +80,8 @@ const useGetBackContractWrite = ({
     write
   } = useContractWrite({
     mode: "recklesslyUnprepared",
-    addressOrName: marketAddress,
-    contractInterface: marketContractJson.abi,
+    address: marketAddress,
+    abi: marketContractJson.abi,
     functionName: "back",
     args: [
       b32Nonce,

@@ -1,14 +1,14 @@
 import { useContractRead, useContractReads } from "wagmi";
 import registryContractJson from "../../abi/Registry.json";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { useEffect, useState } from "react";
 import api from "../../apis/Api";
 
 const registryContract = {
-  addressOrName: process.env.REACT_APP_REGISTRY_CONTRACT
+  address: process.env.REACT_APP_REGISTRY_CONTRACT
     ? process.env.REACT_APP_REGISTRY_CONTRACT
     : "0xd90AE997C32EdE8feCe39694460543868Da0d0D1",
-  contractInterface: registryContractJson.abi
+  abi: registryContractJson.abi
 };
 
 const useMarketAddressesFromContract = () => {
@@ -18,8 +18,9 @@ const useMarketAddressesFromContract = () => {
   });
 
   const marketCountStr =
-    marketCountData && ethers.utils.formatUnits(marketCountData, 0);
-  const marketCount = parseInt(marketCountStr ?? "0");
+    marketCountData &&
+    ethers.utils.formatUnits(marketCountData as BigNumber, 0);
+  const marketCount = parseInt((marketCountStr as string) ?? "0");
 
   const { data: marketsData } = useContractReads({
     contracts: Array.from({ length: marketCount }, (_, i) => {

@@ -5,8 +5,8 @@ import api from "../../apis/Api";
 
 type useAllowanceArgs = {
   address: string;
-  owner: string;
-  spender: string;
+  owner: `0x${string}`;
+  spender: `0x${string}`;
   decimals: string;
 };
 const useAllowanceFromContract = ({
@@ -16,8 +16,8 @@ const useAllowanceFromContract = ({
   decimals
 }: useAllowanceArgs) => {
   const { data: bnAllowance, refetch } = useContractRead({
-    addressOrName: address,
-    contractInterface: erc20ABI,
+    address: address,
+    abi: erc20ABI,
     functionName: "allowance",
     args: [owner, spender]
   });

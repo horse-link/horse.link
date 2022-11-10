@@ -36,8 +36,8 @@ const useSettleContractWrite = ({
 }: useSettleContractWriteArgs) => {
   const { data, error, write } = useContractWrite({
     mode: "recklesslyUnprepared",
-    addressOrName: marketAddress || "",
-    contractInterface: marketContractJson.abi,
+    address: marketAddress || "",
+    abi: marketContractJson.abi,
     functionName: "settle",
     args: [index],
     enabled: !!marketAddress && !!index
