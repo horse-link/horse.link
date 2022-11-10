@@ -6,6 +6,7 @@ import useVaultDetail from "../../hooks/vault/useVaultDetail";
 import { FormattedVaultTransaction } from "../../types/entities";
 import { ethers } from "ethers";
 import { shortenAddress } from "../../utils/shortenAddress";
+import moment from "moment";
 
 type Props = {
   vaultAddressList: string[];
@@ -139,9 +140,15 @@ const HistoryTableRow: React.FC<HistoryTableRowProps> = ({ vault }) => {
         {vault.type}
       </td>
       <td className="px-2 py-4">{ethers.utils.formatEther(vault.amount)}</td>
-      <td className="px-2 py-4 whitespace-nowrap">{vault.timestamp}</td>
       <td className="px-2 py-4 whitespace-nowrap">
-        {details ? details.name : "loading..."}
+        {moment.unix(vault.timestamp).fromNow()}
+      </td>
+      <td className="px-2 py-4 whitespace-nowrap">
+        {details ? (
+          details.name
+        ) : (
+          <span className="select-none">loading...</span>
+        )}
       </td>
       <td className="px-2 py-4 whitespace-nowrap">
         <a
@@ -187,7 +194,7 @@ const HistoryTable: React.FC<HistoryTableProps> = ({ history }) => (
                 scope="col"
                 className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
               >
-                block
+                time
               </th>
               <th
                 scope="col"
@@ -203,17 +210,15 @@ const HistoryTable: React.FC<HistoryTableProps> = ({ history }) => (
               </th>
             </tr>
           </thead>
-          {!history ? (
-            <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-white divide-y divide-gray-200">
+            {!history ? (
               <td className="p-2 select-none">loading...</td>
-            </tbody>
-          ) : (
-            <tbody className="bg-white divide-y divide-gray-200">
-              {history.map(vault => (
+            ) : (
+              history.map(vault => (
                 <HistoryTableRow vault={vault} key={vault.id} />
-              ))}
-            </tbody>
-          )}
+              ))
+            )}
+          </tbody>
         </table>
       </div>
     </div>
