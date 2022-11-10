@@ -127,6 +127,38 @@ const Row: React.FC<rowProp> = ({ vaultAddress, onClick }) => {
   );
 };
 
+type HistoryTableRowProps = {
+  vault: FormattedVaultTransaction;
+};
+
+const HistoryTableRow: React.FC<HistoryTableRowProps> = ({ vault }) => {
+  const details = useVaultDetail(vault.vaultAddress);
+  return (
+    <tr>
+      <td className="pl-5 pr-2 py-4 whitespace-nowrap uppercase">
+        {vault.type}
+      </td>
+      <td className="px-2 py-4">{ethers.utils.formatEther(vault.amount)}</td>
+      <td className="px-2 py-4 whitespace-nowrap">{vault.timestamp}</td>
+      <td className="px-2 py-4 whitespace-nowrap">
+        {details ? details.name : "loading..."}
+      </td>
+      <td className="px-2 py-4 whitespace-nowrap">
+        <a
+          href={`${
+            process.env.REACT_APP_SCANNER_URL
+          }/${vault.id.toLowerCase()}`}
+          target="_blank"
+          rel="noreferrer noopener"
+          className="text-blue-600"
+        >
+          {shortenAddress(vault.id)}
+        </a>
+      </td>
+    </tr>
+  );
+};
+
 type HistoryTableProps = {
   history: FormattedVaultTransaction[] | undefined;
 };
@@ -173,26 +205,12 @@ const HistoryTable: React.FC<HistoryTableProps> = ({ history }) => (
           </thead>
           {!history ? (
             <tbody className="bg-white divide-y divide-gray-200">
-              loading...
+              <td className="p-2 select-none">loading...</td>
             </tbody>
           ) : (
             <tbody className="bg-white divide-y divide-gray-200">
-              {history.map(v => (
-                <tr key={v.id} className="cursor-pointer hover:bg-gray-100">
-                  <td className="pl-5 pr-2 py-4 whitespace-nowrap uppercase">
-                    {v.type}
-                  </td>
-                  <td className="px-2 py-4">
-                    {ethers.utils.formatEther(v.amount)}
-                  </td>
-                  <td className="px-2 py-4 whitespace-nowrap">{v.timestamp}</td>
-                  <td className="px-2 py-4 whitespace-nowrap">
-                    {shortenAddress(v.vaultAddress)}
-                  </td>
-                  <td className="px-2 py-4 whitespace-nowrap">
-                    {shortenAddress(v.id)}
-                  </td>
-                </tr>
+              {history.map(vault => (
+                <HistoryTableRow vault={vault} key={vault.id} />
               ))}
             </tbody>
           )}

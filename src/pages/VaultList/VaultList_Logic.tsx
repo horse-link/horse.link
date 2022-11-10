@@ -13,8 +13,6 @@ const VaultList: React.FC = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedVaultAddress, setSelectedVaultAddress] = useState("");
 
-  console.log({ vaultHistory });
-
   const onClickVault = (vaultAddress: string) => {
     if (!vaultAddress) return;
     setSelectedVaultAddress(vaultAddress);
