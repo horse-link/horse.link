@@ -63,7 +63,8 @@ export const FaucetPage = () => {
         <p className="p-1">
           To connect to the Goerli network, select your Metamask extension and
           click the Network tab at the top. Select the Goerli test network (this
-          will be there by default).
+          will be there by default, otherwise please enable test networks in
+          your Metamask settings).
         </p>
       </div>
       <div className="flex gap-3 flex-wrap">
