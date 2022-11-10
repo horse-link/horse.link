@@ -7,6 +7,7 @@ import api from "../../apis/Api";
 const getMockBets = () => {
   return Array.from({ length: 5 }, () => undefined);
 };
+
 const useBets = () => {
   const { address } = useAccount();
 
@@ -35,7 +36,7 @@ const useBets = () => {
 
 const BetsLogics = () => {
   const { bets, myBets } = useBets();
-  const [myBetsEnabled, setMyBetsEnabled] = useState(false);
+  const [myBetsEnabled, setMyBetsEnabled] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBet, setSelectedBet] = useState<BetHistory>();
 
