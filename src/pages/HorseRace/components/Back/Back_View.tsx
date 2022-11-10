@@ -14,7 +14,7 @@ type Props = {
   potentialPayout: string;
   shouldButtonDisabled: boolean;
   contract: {
-    approveContractWrite: () => void | undefined;
+    approveContractWrite?: () => void;
     errorMsg: string | undefined;
   };
   txStatus: {
@@ -102,7 +102,7 @@ const BackView: React.FC<Props> = ({
                     "px-5 py-1 hover:bg-gray-100 rounded-md border border-gray-500 shadow-md" +
                     (!selectedMarket ? " opacity-50 cursor-not-allowed" : "")
                   }
-                  onClick={() => contract.approveContractWrite()}
+                  onClick={() => contract.approveContractWrite?.()}
                   disabled={!selectedMarket}
                 >
                   {txStatus.isLoading ? <Loader /> : "Approve"}

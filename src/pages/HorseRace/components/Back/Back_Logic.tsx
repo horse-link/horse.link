@@ -92,8 +92,7 @@ const useGetBackContractWrite = ({
       close,
       end,
       signature
-    ],
-    enabled: enabled && !!marketAddress && !!signature
+    ]
   });
 
   const backTxHash = contractData?.hash;
@@ -135,7 +134,12 @@ const useBackingContract = (
     write: approveContractWrite,
     error: approveError,
     isTxLoading: isApproveTxLoading
-  } = useTokenApproval(tokenAddress, ownerAddress, marketAddress, tokenDecimal);
+  } = useTokenApproval(
+    tokenAddress as `0x${string}`,
+    ownerAddress as `0x${string}`,
+    marketAddress as `0x${string}`,
+    tokenDecimal
+  );
 
   const isEnoughAllowance = allowance > 0 && allowance >= wagerAmount;
 
@@ -206,7 +210,7 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
 
   useEffect(() => {
     if (signature) {
-      backContractWrite();
+      backContractWrite?.();
     }
   }, [signature]);
 

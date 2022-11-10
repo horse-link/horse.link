@@ -6,8 +6,8 @@ import { VaultUserData } from "../../types";
 import api from "../../apis/Api";
 
 type UseVaultUserDataArgs = {
-  vaultAddress: `0x${string}`;
-  userAddress: `0x${string}`;
+  vaultAddress: string;
+  userAddress: string;
 };
 type UseVaultUserDataReturn = VaultUserData & {
   refetch: () => void;
@@ -18,7 +18,7 @@ const useVaultUserDataFromContract = ({
   userAddress
 }: UseVaultUserDataArgs) => {
   const vaultContract = {
-    address: vaultAddress,
+    address: vaultAddress as `0x${string}`,
     abi: vaultContractJson
   };
   const { data: vaultData, refetch } = useContractReads({
@@ -30,7 +30,7 @@ const useVaultUserDataFromContract = ({
       {
         ...vaultContract,
         functionName: "balanceOf",
-        args: [userAddress]
+        args: [userAddress as `0x${string}`]
       },
       {
         ...vaultContract,
@@ -60,9 +60,9 @@ const useVaultUserDataFromContract = ({
   const performance =
     bnPerformance && ethers.utils.formatUnits(bnPerformance as BigNumber, 4);
   return {
-    vaultBalance,
-    userBalance,
-    performance,
+    vaultBalance: vaultBalance as string,
+    userBalance: userBalance as string,
+    performance: performance as string,
     asset: asset?.toString() || "",
     refetch
   };

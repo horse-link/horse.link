@@ -29,8 +29,7 @@ const useWithdrawContractWrite = ({
     address: vaultAddress,
     abi: vaultContractJson,
     functionName: "withdraw",
-    args: [assets],
-    enabled
+    args: [assets]
   });
 
   const txHash = data?.hash;
@@ -75,8 +74,7 @@ const useDepositContractWrite = ({
     address: vaultAddress,
     abi: vaultContractJson,
     functionName: "deposit",
-    args: [assets, receiver],
-    enabled
+    args: [assets, receiver]
   });
 
   const txHash = data?.hash;
@@ -122,7 +120,12 @@ const VaultLogic = ({ vaultAddress }: Props) => {
     write: approveContractWrite,
     error: approveError,
     isTxLoading: isApproveTxLoading
-  } = useTokenApproval(tokenAddress, userAddress, vaultAddress, tokenDecimal);
+  } = useTokenApproval(
+    tokenAddress as `0x${string}`,
+    userAddress as `0x${string}`,
+    vaultAddress as `0x${string}`,
+    tokenDecimal
+  );
 
   const isEnoughAllowance = allowance > 0 && allowance >= amount;
 
