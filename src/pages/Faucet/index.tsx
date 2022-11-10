@@ -66,7 +66,7 @@ export const FaucetPage = () => {
           default).
         </p>
       </div>
-      <div className="flex gap-3">
+      <div className="flex gap-3 flex-wrap">
         <img
           loading="lazy"
           src="/images/goerli-test-network.png"
