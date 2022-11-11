@@ -8,9 +8,18 @@ const ContractWriteResultCard = ({ hash, isSuccess, errorMsg }: Props) => {
     <>
       {isSuccess && (
         <div className="px-10 py-5 rounded-md shadow  bg-green-300 text-green-800  break-all">
-          <p>Success</p> <br />
-          Your bet has been confirmed. <br />
-          Transaction Hash : {hash}
+          <p className="text-center p-1">
+            Success! Your bet has been confirmed.
+          </p>
+
+          <a
+            href={`${process.env.REACT_APP_SCANNER_URL}/${hash}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-center"
+          >
+            Transaction Hash : {hash}
+          </a>
         </div>
       )}
       {errorMsg && (
