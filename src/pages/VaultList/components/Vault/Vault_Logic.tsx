@@ -1,7 +1,12 @@
 import { useState } from "react";
 import VaultView from "./Vault_View";
 import vaultContractJson from "../../../../abi/Vault.json";
-import { useAccount, useContractWrite, useWaitForTransaction } from "wagmi";
+import {
+  Address,
+  useAccount,
+  useContractWrite,
+  useWaitForTransaction
+} from "wagmi";
 import { ethers } from "ethers";
 import useTokenData from "../../../../hooks/token/useTokenData";
 import useTokenApproval from "../../../../hooks/token/useTokenApproval";
@@ -26,11 +31,10 @@ const useWithdrawContractWrite = ({
 
   const { data, error, write } = useContractWrite({
     mode: "recklesslyUnprepared",
-    addressOrName: vaultAddress,
-    contractInterface: vaultContractJson,
+    address: vaultAddress,
+    abi: vaultContractJson,
     functionName: "withdraw",
-    args: [assets],
-    enabled
+    args: [assets]
   });
 
   const txHash = data?.hash;
@@ -72,11 +76,10 @@ const useDepositContractWrite = ({
 
   const { data, error, write } = useContractWrite({
     mode: "recklesslyUnprepared",
-    addressOrName: vaultAddress,
-    contractInterface: vaultContractJson,
+    address: vaultAddress,
+    abi: vaultContractJson,
     functionName: "deposit",
-    args: [assets, receiver],
-    enabled
+    args: [assets, receiver]
   });
 
   const txHash = data?.hash;
@@ -122,7 +125,12 @@ const VaultLogic = ({ vaultAddress }: Props) => {
     write: approveContractWrite,
     error: approveError,
     isTxLoading: isApproveTxLoading
-  } = useTokenApproval(tokenAddress, userAddress, vaultAddress, tokenDecimal);
+  } = useTokenApproval(
+    tokenAddress as Address,
+    userAddress as Address,
+    vaultAddress as Address,
+    tokenDecimal
+  );
 
   const isEnoughAllowance = allowance > 0 && allowance >= amount;
 

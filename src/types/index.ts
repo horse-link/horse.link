@@ -1,6 +1,3 @@
-// in the abscence of typechain this will have to do
-export type Address = `0x${string}`;
-
 export type VaultUserData = {
   vaultBalance: string;
   userBalance: string;

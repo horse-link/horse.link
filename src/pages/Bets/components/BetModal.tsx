@@ -36,11 +36,10 @@ const useSettleContractWrite = ({
 }: useSettleContractWriteArgs) => {
   const { data, error, write } = useContractWrite({
     mode: "recklesslyUnprepared",
-    addressOrName: marketAddress || "",
-    contractInterface: marketContractJson.abi,
+    address: marketAddress || "",
+    abi: marketContractJson.abi,
     functionName: "settle",
-    args: [index],
-    enabled: !!marketAddress && !!index
+    args: [index]
   });
 
   const txHash = data?.hash;
@@ -150,7 +149,7 @@ const SettleBet = ({ data }: SettlebetProps) => {
                     ? " opacity-50 cursor-not-allowed"
                     : "")
                 }
-                onClick={() => contract.settleContractWrite()}
+                onClick={() => contract.settleContractWrite?.()}
                 disabled={shouldSettleButtonDisabled}
               >
                 {txStatus.isLoading ? <Loader /> : "Settle"}

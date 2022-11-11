@@ -1,10 +1,15 @@
 import { ethers } from "ethers";
-import { erc20ABI, useContractWrite, useWaitForTransaction } from "wagmi";
+import {
+  Address,
+  erc20ABI,
+  useContractWrite,
+  useWaitForTransaction
+} from "wagmi";
 import useAllowance from "./useAllowance";
 
 type useApproveContractWriteArgs = {
-  tokenAddress: string;
-  spenderAddress: string;
+  tokenAddress: Address;
+  spenderAddress: Address;
   onTxSuccess: () => void;
 };
 
@@ -19,11 +24,10 @@ const useApproveContractWrite = ({
     error
   } = useContractWrite({
     mode: "recklesslyUnprepared",
-    addressOrName: tokenAddress,
-    contractInterface: erc20ABI,
+    address: tokenAddress,
+    abi: erc20ABI,
     functionName: "approve",
-    args: [spenderAddress, ethers.constants.MaxUint256],
-    enabled: !!tokenAddress && !!spenderAddress
+    args: [spenderAddress, ethers.constants.MaxUint256]
   });
 
   const { isLoading: isTxLoading } = useWaitForTransaction({
@@ -35,9 +39,9 @@ const useApproveContractWrite = ({
 };
 
 const useTokenApproval = (
-  tokenAddress: string,
-  ownerAddress: string,
-  spenderAddress: string,
+  tokenAddress: Address,
+  ownerAddress: Address,
+  spenderAddress: Address,
   tokenDecimal: string
 ) => {
   const { allowance, refetch: refetchAllowance } = useAllowance({

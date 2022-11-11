@@ -12,9 +12,9 @@ type Props = {
   shouldDepositButtonDisabled: boolean;
   shouldWithdrawButtonDisabled: boolean;
   contract: {
-    depositContractWrite: () => void | undefined;
-    approveContractWrite: () => void | undefined;
-    withdrawContractWrite: () => void | undefined;
+    depositContractWrite?: () => void;
+    approveContractWrite?: () => void;
+    withdrawContractWrite?: () => void;
     errorMsg: string | undefined;
   };
   txStatus: {
@@ -70,7 +70,7 @@ const VaultView = ({
                             ? " opacity-50 cursor-not-allowed"
                             : "")
                         }
-                        onClick={() => contract.depositContractWrite()}
+                        onClick={() => contract.depositContractWrite?.()}
                         disabled={shouldDepositButtonDisabled}
                       >
                         {txStatus.isLoading ? <Loader /> : "Deposit"}
@@ -82,7 +82,7 @@ const VaultView = ({
                             ? " opacity-50 cursor-not-allowed"
                             : "")
                         }
-                        onClick={() => contract.withdrawContractWrite()}
+                        onClick={() => contract.withdrawContractWrite?.()}
                         disabled={shouldWithdrawButtonDisabled}
                       >
                         {txStatus.isLoading ? <Loader /> : "Withdraw"}
@@ -91,7 +91,7 @@ const VaultView = ({
                   ) : (
                     <button
                       className="w-full px-5 py-1 hover:bg-gray-100 rounded-md border border-gray-500 shadow-md "
-                      onClick={() => contract.approveContractWrite()}
+                      onClick={() => contract.approveContractWrite?.()}
                     >
                       {txStatus.isLoading ? <Loader /> : "Approve"}
                     </button>

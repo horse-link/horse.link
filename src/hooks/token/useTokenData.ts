@@ -10,22 +10,22 @@ type useTokenDataArgs = {
 
 const useTokenDataFromContract = ({ vaultAddress }: useTokenDataArgs) => {
   const { data: vaultData } = useContractRead({
-    addressOrName: vaultAddress,
-    contractInterface: vaultContractJson,
+    address: vaultAddress,
+    abi: vaultContractJson,
     functionName: "asset"
   });
   const tokenAddress = vaultData?.toString() ?? "";
   const { data: tokenData } = useContractReads({
     contracts: [
       {
-        addressOrName: tokenAddress,
-        contractInterface: erc20ABI,
+        address: tokenAddress,
+        abi: erc20ABI,
         functionName: "symbol"
       },
 
       {
-        addressOrName: tokenAddress,
-        contractInterface: erc20ABI,
+        address: tokenAddress,
+        abi: erc20ABI,
         functionName: "decimals"
       }
     ]

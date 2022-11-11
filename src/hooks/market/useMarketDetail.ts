@@ -7,8 +7,8 @@ import api from "../../apis/Api";
 
 const useMarketDetailFromContract = (marketAddress?: string) => {
   const marketContract = {
-    addressOrName: marketAddress?.toString() || "",
-    contractInterface: marketContractJson.abi
+    address: marketAddress?.toString() || "",
+    abi: marketContractJson.abi
   };
   const { data: marketData } = useContractReads({
     contracts: [
@@ -29,8 +29,8 @@ const useMarketDetailFromContract = (marketAddress?: string) => {
   });
   const [target, totalInPlay, vaultAddress] = marketData ?? [];
   const { data: vaultName } = useContractRead({
-    addressOrName: vaultAddress?.toString() ?? "",
-    contractInterface: vaultContractJson,
+    address: vaultAddress?.toString() ?? "",
+    abi: vaultContractJson,
     functionName: "name",
     enabled: !!vaultAddress
   });

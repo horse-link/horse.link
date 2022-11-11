@@ -1,5 +1,5 @@
 import { BigNumber } from "ethers";
-import { Address } from ".";
+import { Address } from "wagmi";
 
 export type VaultTransaction = {
   id: Address;

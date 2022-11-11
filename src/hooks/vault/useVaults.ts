@@ -1,14 +1,16 @@
 import { useContractRead, useContractReads } from "wagmi";
 import registryContractJson from "../../abi/Registry.json";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { useEffect, useState } from "react";
 import api from "../../apis/Api";
 
+const registryContractAddress =
+  process.env.REACT_APP_REGISTRY_CONTRACT ||
+  "0xd90AE997C32EdE8feCe39694460543868Da0d0D1";
+
 const registryContract = {
-  addressOrName: process.env.REACT_APP_REGISTRY_CONTRACT
-    ? process.env.REACT_APP_REGISTRY_CONTRACT
-    : "0xd90AE997C32EdE8feCe39694460543868Da0d0D1",
-  contractInterface: registryContractJson.abi
+  address: registryContractAddress,
+  abi: registryContractJson.abi
 };
 
 const useVaultAddresesFromContract = () => {
@@ -18,8 +20,8 @@ const useVaultAddresesFromContract = () => {
   });
 
   const vaultCountStr =
-    vaultCountData && ethers.utils.formatUnits(vaultCountData, 0);
-  const vaultCount = parseInt(vaultCountStr ?? "0");
+    vaultCountData && ethers.utils.formatUnits(vaultCountData as BigNumber, 0);
+  const vaultCount = parseInt((vaultCountStr as string) ?? "0");
 
   const { data: vaultsData } = useContractReads({
     contracts: Array.from({ length: vaultCount }, (_, i) => {

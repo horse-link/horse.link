@@ -3,7 +3,12 @@ import { useEffect, useMemo, useState } from "react";
 import { useDebounce } from "use-debounce";
 import api from "../../../../apis/Api";
 
-import { useAccount, useContractWrite, useWaitForTransaction } from "wagmi";
+import {
+  Address,
+  useAccount,
+  useContractWrite,
+  useWaitForTransaction
+} from "wagmi";
 
 import marketContractJson from "../../../../abi/Market.json";
 import usePotentialPayout from "../../../../hooks/bet/usePotentialPayout";
@@ -80,8 +85,8 @@ const useGetBackContractWrite = ({
     write
   } = useContractWrite({
     mode: "recklesslyUnprepared",
-    addressOrName: marketAddress,
-    contractInterface: marketContractJson.abi,
+    address: marketAddress,
+    abi: marketContractJson.abi,
     functionName: "back",
     args: [
       b32Nonce,
@@ -92,8 +97,7 @@ const useGetBackContractWrite = ({
       close,
       end,
       signature
-    ],
-    enabled: enabled && !!marketAddress && !!signature
+    ]
   });
 
   const backTxHash = contractData?.hash;
@@ -135,7 +139,12 @@ const useBackingContract = (
     write: approveContractWrite,
     error: approveError,
     isTxLoading: isApproveTxLoading
-  } = useTokenApproval(tokenAddress, ownerAddress, marketAddress, tokenDecimal);
+  } = useTokenApproval(
+    tokenAddress as Address,
+    ownerAddress as Address,
+    marketAddress as Address,
+    tokenDecimal
+  );
 
   const isEnoughAllowance = allowance > 0 && allowance >= wagerAmount;
 
@@ -206,7 +215,7 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
 
   useEffect(() => {
     if (signature) {
-      backContractWrite();
+      backContractWrite?.();
     }
   }, [signature]);
 

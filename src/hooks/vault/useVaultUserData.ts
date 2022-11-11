@@ -1,6 +1,6 @@
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { useEffect, useState } from "react";
-import { useContractReads } from "wagmi";
+import { Address, useContractReads } from "wagmi";
 import vaultContractJson from "../../abi/Vault.json";
 import { VaultUserData } from "../../types";
 import api from "../../apis/Api";
@@ -18,8 +18,8 @@ const useVaultUserDataFromContract = ({
   userAddress
 }: UseVaultUserDataArgs) => {
   const vaultContract = {
-    addressOrName: vaultAddress,
-    contractInterface: vaultContractJson
+    address: vaultAddress as Address,
+    abi: vaultContractJson
   };
   const { data: vaultData, refetch } = useContractReads({
     contracts: [
@@ -30,7 +30,7 @@ const useVaultUserDataFromContract = ({
       {
         ...vaultContract,
         functionName: "balanceOf",
-        args: [userAddress]
+        args: [userAddress as Address]
       },
       {
         ...vaultContract,
@@ -47,7 +47,7 @@ const useVaultUserDataFromContract = ({
     ]
   });
   const [bnVaultBalance, bnUserBalance, bnPerformance, decimals, asset] =
-    vaultData ?? [];
+    (vaultData as [BigNumber, BigNumber, BigNumber, BigNumber, string]) ?? [];
   const vaultBalance =
     bnVaultBalance && ethers.utils.formatUnits(bnVaultBalance, decimals);
   const userBalance =
@@ -55,9 +55,9 @@ const useVaultUserDataFromContract = ({
   const performance =
     bnPerformance && ethers.utils.formatUnits(bnPerformance, 4);
   return {
-    vaultBalance,
-    userBalance,
-    performance,
+    vaultBalance: vaultBalance,
+    userBalance: userBalance,
+    performance: performance,
     asset: asset?.toString() || "",
     refetch
   };
