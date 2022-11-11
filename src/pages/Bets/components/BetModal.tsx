@@ -69,8 +69,7 @@ type useMarketOracleResultWriteArgs = {
 };
 const useMarketOracleResultWrite = ({
   market_id,
-  winningPropositionId,
-  signature
+  winningPropositionId
 }: useMarketOracleResultWriteArgs) => {
   const {
     data,
@@ -78,10 +77,10 @@ const useMarketOracleResultWrite = ({
     write: setResultMarketOracleWrite
   } = useContractWrite({
     mode: "recklesslyUnprepared",
-    addressOrName:
+    address:
       process.env.REACT_APP_MARKET_ORACLE_CONTRACT ||
       "0x592a44ebad029EBFff3Ee4950f1E74538a19a2ea",
-    contractInterface: marketOracleContractJson.abi,
+    abi: marketOracleContractJson.abi,
     functionName: "setResult",
     // TODO: Once we have switched the marketOracle contract to check EC signatures
     // We can just pass the signature as the last argument
@@ -90,8 +89,7 @@ const useMarketOracleResultWrite = ({
       market_id,
       winningPropositionId,
       "0x0000000000000000000000000000000000000000000000000000000000000000"
-    ],
-    enabled: !!market_id && !!winningPropositionId && !!signature
+    ]
   });
 
   const marketOracleTxHash = data?.hash;
@@ -247,7 +245,7 @@ const SettleBet = ({ data }: SettlebetProps) => {
                         : "")
                     }
                     onClick={() =>
-                      marketOracleContract.setResultMarketOracleWrite()
+                      marketOracleContract.setResultMarketOracleWrite?.()
                     }
                     disabled={shouldMarketOracleButtonDisabled}
                   >
@@ -275,7 +273,7 @@ const SettleBet = ({ data }: SettlebetProps) => {
                         ? " opacity-50 cursor-not-allowed"
                         : "")
                     }
-                    onClick={() => settleContract.settleBetWrite()}
+                    onClick={() => settleContract.settleBetWrite?.()}
                     disabled={shouldSettleButtonDisabled}
                   >
                     {settleTxStatus.isLoading ? <Loader /> : "Settle"}

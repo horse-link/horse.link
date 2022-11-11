@@ -76,8 +76,7 @@ const useGetBackContractWrite = ({
   bnOdds,
   close,
   end,
-  signature,
-  enabled
+  signature
 }: useBackContractWriteArgs) => {
   const {
     data: contractData,
