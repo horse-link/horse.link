@@ -139,7 +139,13 @@ const HistoryTableRow: React.FC<HistoryTableRowProps> = ({ vault }) => {
       <td className="pl-5 pr-2 py-4 whitespace-nowrap uppercase">
         {vault.type}
       </td>
-      <td className="px-2 py-4">{ethers.utils.formatEther(vault.amount)}</td>
+      <td className="px-2 py-4">
+        {vault.type === "withdraw"
+          ? `${ethers.utils.formatEther(vault.amount)} shares`
+          : `${ethers.utils.formatEther(vault.amount)} ${
+              details?.symbol || ""
+            }`}
+      </td>
       <td className="px-2 py-4 whitespace-nowrap">
         {moment.unix(vault.timestamp).fromNow()}
       </td>
