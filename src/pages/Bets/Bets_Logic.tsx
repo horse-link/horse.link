@@ -8,6 +8,15 @@ const getMockBets = () => {
   return Array.from({ length: 5 }, () => undefined);
 };
 
+const formatAmount = (amountStr: string) => {
+  const amount = parseFloat(amountStr);
+  if (amount < 0.0001) return "0.0001<";
+
+  const roundedToFourDecimal = amount.toFixed(4);
+  const removedTrailingZeros = (+roundedToFourDecimal).toString();
+  return removedTrailingZeros;
+};
+
 const useBets = () => {
   const { address } = useAccount();
 
@@ -50,9 +59,17 @@ const BetsLogics = () => {
     setMyBetsEnabled(isEnable);
   };
 
+  const betsData = myBetsEnabled ? myBets : bets;
+  const formattedBetsData = betsData?.map(bet => {
+    return {
+      ...bet,
+      amount: formatAmount(bet.amount)
+    };
+  });
+
   return (
     <BetsView
-      betsData={(myBetsEnabled ? myBets : bets) || getMockBets()}
+      betsData={formattedBetsData || getMockBets()}
       myBetsEnabled={myBetsEnabled}
       onMyBetToggle={onMyBetToggle}
       onClickBet={onClickBet}
