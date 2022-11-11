@@ -113,12 +113,11 @@ const DashboardView: React.FC<Props> = (props: Props) => {
 
 const Table: React.FC<TableProps> = (props: TableProps) => {
   const { meets } = props;
-
   return (
     <div className="grid grid-cols-2">
       <div className="col-span-2">
         <h3 className="text-lg mb-3 font-medium text-gray-900">
-          Today&apos;s Meets
+          {moment(Date.now()).format("dddd Do MMMM")}
         </h3>
         <div className="flex flex-col">
           <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
