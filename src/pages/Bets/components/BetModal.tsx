@@ -207,7 +207,7 @@ const SettleBet = ({ data }: SettlebetProps) => {
   return (
     <div className="w-96 md:w-152">
       <div className="px-10 pt-5 pb-5 rounded-md bg-white border-gray-200 sm:rounded-lg">
-        {data?.settled ? (
+        {data?.settled || settleTxStatus.isSuccess ? (
           <div className="text-3xl">Settled Bet</div>
         ) : (
           <div className="text-3xl">Settle Bet</div>

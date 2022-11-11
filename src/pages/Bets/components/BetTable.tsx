@@ -66,16 +66,14 @@ type RowProps = {
   onClick?: () => void;
 };
 const Row = ({ betData, onClick }: RowProps) => {
+  const rowStyle = () => {
+    if (betData?.settled) return "cursor-pointer bg-gray-300 hover:bg-gray-100";
+    if (betData?.winningPropositionId || betData?.marketResultAdded)
+      return "cursor-pointer bg-green-300 hover:bg-gray-100";
+    return "cursor-pointer hover:bg-gray-100";
+  };
   return (
-    <tr
-      key={betData?.proposition_id}
-      onClick={onClick}
-      className={
-        betData?.settled
-          ? "cursor-pointer bg-gray-300 hover:bg-gray-100"
-          : "cursor-pointer hover:bg-gray-100"
-      }
-    >
+    <tr key={betData?.proposition_id} onClick={onClick} className={rowStyle()}>
       <td className="pl-5 pr-2 py-4 truncate">
         {betData?.punter ?? <Skeleton />}
       </td>
