@@ -17,7 +17,7 @@ const ContractWriteResultCard = ({ hash, isSuccess, errorMsg }: Props) => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Transaction Hash : {shortenAddress(hash)}
+            Transaction Hash: {shortenAddress(hash)}
           </a>
         </div>
       )}
