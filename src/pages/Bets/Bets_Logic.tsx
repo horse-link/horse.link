@@ -3,18 +3,10 @@ import { useAccount } from "wagmi";
 import { BetHistory } from "../../types";
 import BetsView from "./Bets_View";
 import api from "../../apis/Api";
+import { formatToFourDecimals } from "../../utils/formatting";
 
 const getMockBets = () => {
   return Array.from({ length: 5 }, () => undefined);
-};
-
-const formatAmount = (amountStr: string) => {
-  const amount = parseFloat(amountStr);
-  if (amount < 0.0001) return "0.0001<";
-
-  const roundedToFourDecimal = amount.toFixed(4);
-  const removedTrailingZeros = (+roundedToFourDecimal).toString();
-  return removedTrailingZeros;
 };
 
 const useBets = () => {
@@ -63,7 +55,7 @@ const BetsLogics = () => {
   const formattedBetsData = betsData?.map(bet => {
     return {
       ...bet,
-      amount: formatAmount(bet.amount)
+      amount: formatToFourDecimals(bet.amount)
     };
   });
 
