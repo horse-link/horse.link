@@ -3,7 +3,12 @@ import { useEffect, useMemo, useState } from "react";
 import { useDebounce } from "use-debounce";
 import api from "../../../../apis/Api";
 
-import { useAccount, useContractWrite, useWaitForTransaction } from "wagmi";
+import {
+  Address,
+  useAccount,
+  useContractWrite,
+  useWaitForTransaction
+} from "wagmi";
 
 import marketContractJson from "../../../../abi/Market.json";
 import usePotentialPayout from "../../../../hooks/bet/usePotentialPayout";
@@ -135,9 +140,9 @@ const useBackingContract = (
     error: approveError,
     isTxLoading: isApproveTxLoading
   } = useTokenApproval(
-    tokenAddress as `0x${string}`,
-    ownerAddress as `0x${string}`,
-    marketAddress as `0x${string}`,
+    tokenAddress as Address,
+    ownerAddress as Address,
+    marketAddress as Address,
     tokenDecimal
   );
 

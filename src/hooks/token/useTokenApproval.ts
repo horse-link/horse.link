@@ -1,10 +1,15 @@
 import { ethers } from "ethers";
-import { erc20ABI, useContractWrite, useWaitForTransaction } from "wagmi";
+import {
+  Address,
+  erc20ABI,
+  useContractWrite,
+  useWaitForTransaction
+} from "wagmi";
 import useAllowance from "./useAllowance";
 
 type useApproveContractWriteArgs = {
-  tokenAddress: `0x${string}`;
-  spenderAddress: `0x${string}`;
+  tokenAddress: Address;
+  spenderAddress: Address;
   onTxSuccess: () => void;
 };
 
@@ -34,9 +39,9 @@ const useApproveContractWrite = ({
 };
 
 const useTokenApproval = (
-  tokenAddress: `0x${string}`,
-  ownerAddress: `0x${string}`,
-  spenderAddress: `0x${string}`,
+  tokenAddress: Address,
+  ownerAddress: Address,
+  spenderAddress: Address,
   tokenDecimal: string
 ) => {
   const { allowance, refetch: refetchAllowance } = useAllowance({

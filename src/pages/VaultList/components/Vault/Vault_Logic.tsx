@@ -1,7 +1,12 @@
 import { useState } from "react";
 import VaultView from "./Vault_View";
 import vaultContractJson from "../../../../abi/Vault.json";
-import { useAccount, useContractWrite, useWaitForTransaction } from "wagmi";
+import {
+  Address,
+  useAccount,
+  useContractWrite,
+  useWaitForTransaction
+} from "wagmi";
 import { ethers } from "ethers";
 import useTokenData from "../../../../hooks/token/useTokenData";
 import useTokenApproval from "../../../../hooks/token/useTokenApproval";
@@ -121,9 +126,9 @@ const VaultLogic = ({ vaultAddress }: Props) => {
     error: approveError,
     isTxLoading: isApproveTxLoading
   } = useTokenApproval(
-    tokenAddress as `0x${string}`,
-    userAddress as `0x${string}`,
-    vaultAddress as `0x${string}`,
+    tokenAddress as Address,
+    userAddress as Address,
+    vaultAddress as Address,
     tokenDecimal
   );
 

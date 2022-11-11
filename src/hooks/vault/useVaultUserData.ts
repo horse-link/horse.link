@@ -1,6 +1,6 @@
 import { BigNumber, ethers } from "ethers";
 import { useEffect, useState } from "react";
-import { useContractReads } from "wagmi";
+import { Address, useContractReads } from "wagmi";
 import vaultContractJson from "../../abi/Vault.json";
 import { VaultUserData } from "../../types";
 import api from "../../apis/Api";
@@ -18,7 +18,7 @@ const useVaultUserDataFromContract = ({
   userAddress
 }: UseVaultUserDataArgs) => {
   const vaultContract = {
-    address: vaultAddress as `0x${string}`,
+    address: vaultAddress as Address,
     abi: vaultContractJson
   };
   const { data: vaultData, refetch } = useContractReads({
@@ -30,7 +30,7 @@ const useVaultUserDataFromContract = ({
       {
         ...vaultContract,
         functionName: "balanceOf",
-        args: [userAddress as `0x${string}`]
+        args: [userAddress as Address]
       },
       {
         ...vaultContract,

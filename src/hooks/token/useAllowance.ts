@@ -1,12 +1,12 @@
 import { ethers } from "ethers";
 import { useEffect, useMemo, useState } from "react";
-import { erc20ABI, useContractRead } from "wagmi";
+import { Address, erc20ABI, useContractRead } from "wagmi";
 import api from "../../apis/Api";
 
 type useAllowanceArgs = {
   address: string;
-  owner: `0x${string}`;
-  spender: `0x${string}`;
+  owner: Address;
+  spender: Address;
   decimals: string;
 };
 const useAllowanceFromContract = ({
