@@ -8,7 +8,8 @@ const ContractWriteResultCard = ({ hash, isSuccess, errorMsg }: Props) => {
     <>
       {isSuccess && (
         <div className="px-10 py-5 rounded-md shadow  bg-green-300 text-green-800  break-all">
-          Success <br />
+          <p>Success</p> <br />
+          Your bet has been confirmed. <br />
           Transaction Hash : {hash}
         </div>
       )}
