@@ -24,7 +24,8 @@ const useVaultDetailFromContract = (vaultAddress: string) => {
       }
     ]
   });
-  const [bNTotalAssets, tokenAddress] = vaultData as [BigNumber, string];
+  const [bNTotalAssets, tokenAddress] =
+    (vaultData as [BigNumber, string]) ?? [];
   const tokenContract = {
     address: tokenAddress?.toString() || "",
     abi: mockTokenContractJson.abi

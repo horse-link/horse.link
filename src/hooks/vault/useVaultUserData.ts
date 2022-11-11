@@ -47,22 +47,17 @@ const useVaultUserDataFromContract = ({
     ]
   });
   const [bnVaultBalance, bnUserBalance, bnPerformance, decimals, asset] =
-    vaultData ?? [];
+    (vaultData as [BigNumber, BigNumber, BigNumber, BigNumber, string]) ?? [];
   const vaultBalance =
-    bnVaultBalance &&
-    ethers.utils.formatUnits(
-      bnVaultBalance as BigNumber,
-      decimals as BigNumber
-    );
+    bnVaultBalance && ethers.utils.formatUnits(bnVaultBalance, decimals);
   const userBalance =
-    bnUserBalance &&
-    ethers.utils.formatUnits(bnUserBalance as BigNumber, decimals as BigNumber);
+    bnUserBalance && ethers.utils.formatUnits(bnUserBalance, decimals);
   const performance =
-    bnPerformance && ethers.utils.formatUnits(bnPerformance as BigNumber, 4);
+    bnPerformance && ethers.utils.formatUnits(bnPerformance, 4);
   return {
-    vaultBalance: vaultBalance as string,
-    userBalance: userBalance as string,
-    performance: performance as string,
+    vaultBalance: vaultBalance,
+    userBalance: userBalance,
+    performance: performance,
     asset: asset?.toString() || "",
     refetch
   };
