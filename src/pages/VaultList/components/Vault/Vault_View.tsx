@@ -47,7 +47,6 @@ const VaultView = ({
             <span>Shares: {userBalance ?? <Skeleton />}</span>
 
             <label className="flex whitespace-nowrap">
-              {" "}
               <span className="text-left mr-2 mt-2">Amount:</span>
               <input
                 type="number"
