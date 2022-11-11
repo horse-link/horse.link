@@ -213,35 +213,29 @@ const SettleBet = ({ data }: SettlebetProps) => {
           <div className="text-3xl">Settle Bet</div>
         )}
         <div className="flex flex-col">
-          <label>
-            <span>Bet Index</span>
-            <input
-              type="text"
-              value={data?.index}
-              readOnly
-              className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-            />
+          <label className="mt-2">
+            <span>{`Bet Index: ${data?.index}`}</span>
           </label>
           {data?.winningPropositionId !== undefined && (
-            <label>
-              <span>Winning Bet</span>
-              <input
-                type="text"
-                value={(
-                  data?.proposition_id === data?.winningPropositionId
-                ).toString()}
-                readOnly
-                className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-              />
+            <label className="mt-2">
+              <span>{`Winning Bet: ${(
+                data?.proposition_id === data?.winningPropositionId
+              ).toString()}`}</span>
             </label>
           )}
         </div>
         <br></br>
 
+        {!data?.winningPropositionId && (
+          <div>
+            <span>This race has yet to complete. Please check back later.</span>
+          </div>
+        )}
         {data &&
           !data?.settled &&
           !data?.marketResultAdded &&
-          data?.winningPropositionId && (
+          data?.winningPropositionId &&
+          !marketOracleTxStatus.isSuccess && (
             <div className="flex flex-col">
               <RequireWalletButton
                 actionButton={
@@ -268,26 +262,28 @@ const SettleBet = ({ data }: SettlebetProps) => {
             </div>
           )}
 
-        {!data?.settled && data?.marketResultAdded && (
-          <div className="flex flex-col">
-            <RequireWalletButton
-              actionButton={
-                <button
-                  className={
-                    "px-5 py-1 hover:bg-gray-100 rounded-md border border-gray-500 shadow-md" +
-                    (shouldSettleButtonDisabled
-                      ? " opacity-50 cursor-not-allowed"
-                      : "")
-                  }
-                  onClick={() => settleContract.settleBetWrite()}
-                  disabled={shouldSettleButtonDisabled}
-                >
-                  {settleTxStatus.isLoading ? <Loader /> : "Settle"}
-                </button>
-              }
-            />
-          </div>
-        )}
+        {!data?.settled &&
+          !settleTxStatus.isSuccess &&
+          (data?.marketResultAdded || marketOracleTxStatus.isSuccess) && (
+            <div className="flex flex-col">
+              <RequireWalletButton
+                actionButton={
+                  <button
+                    className={
+                      "px-5 py-1 hover:bg-gray-100 rounded-md border border-gray-500 shadow-md" +
+                      (shouldSettleButtonDisabled
+                        ? " opacity-50 cursor-not-allowed"
+                        : "")
+                    }
+                    onClick={() => settleContract.settleBetWrite()}
+                    disabled={shouldSettleButtonDisabled}
+                  >
+                    {settleTxStatus.isLoading ? <Loader /> : "Settle"}
+                  </button>
+                }
+              />
+            </div>
+          )}
 
         <div className="mt-5">
           <ContractWriteResultCard
