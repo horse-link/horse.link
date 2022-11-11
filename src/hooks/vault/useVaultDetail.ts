@@ -24,7 +24,7 @@ const useVaultDetailFromContract = (vaultAddress: string) => {
       }
     ]
   });
-  const [bNTotalAssets, tokenAddress] = vaultData ?? [];
+  const [bNTotalAssets, tokenAddress] = vaultData as [BigNumber, string];
   const tokenContract = {
     address: tokenAddress?.toString() || "",
     abi: mockTokenContractJson.abi
@@ -53,14 +53,11 @@ const useVaultDetailFromContract = (vaultAddress: string) => {
     address: ""
   };
   if (bNTotalAssets && tokenData) {
-    const [name, symbol, decimals] = tokenData;
+    const [name, symbol, decimals] = tokenData as [string, string, BigNumber];
     vault = {
-      name: name as unknown as string,
-      symbol: symbol as unknown as string,
-      totalAssets: ethers.utils.formatUnits(
-        bNTotalAssets as BigNumber,
-        decimals as BigNumber
-      ),
+      name: name,
+      symbol: symbol,
+      totalAssets: ethers.utils.formatUnits(bNTotalAssets, decimals),
       address: vaultAddress
     };
   }

@@ -33,19 +33,17 @@ const usePotentialPayoutFromContract = ({
     () => ethers.utils.parseUnits(odds.toString(), DECIMAL),
     [odds]
   );
-  const { data: bnPotentialPayout } = useContractRead({
+  const { data } = useContractRead({
     address: marketAddress,
     abi: marketContractJson.abi,
     functionName: "getPotentialPayout",
     args: [b32PropositionId, bnWager, bnOdds]
   });
+  const bnPotentialPayout = data as BigNumber;
 
   const potentialPayout = useMemo(() => {
     if (!bnPotentialPayout) return "0";
-    return ethers.utils.formatUnits(
-      bnPotentialPayout as BigNumber,
-      tokenDecimal
-    );
+    return ethers.utils.formatUnits(bnPotentialPayout, tokenDecimal);
   }, [bnPotentialPayout]);
 
   return { potentialPayout };
