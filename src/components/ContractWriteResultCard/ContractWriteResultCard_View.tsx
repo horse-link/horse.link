@@ -1,3 +1,5 @@
+import { shortenAddress } from "../../utils/shortenAddress";
+
 type Props = {
   hash?: string;
   isSuccess: boolean;
@@ -6,10 +8,17 @@ type Props = {
 const ContractWriteResultCard = ({ hash, isSuccess, errorMsg }: Props) => {
   return (
     <>
-      {isSuccess && (
-        <div className="px-10 py-5 rounded-md shadow  bg-green-300 text-green-800  break-all">
-          Success <br />
-          Transaction Hash : {hash}
+      {isSuccess && hash && (
+        <div className="py-5 rounded-md shadow  bg-green-300 text-green-800 w-full text-center">
+          <p className="p-1">Success! Your bet has been confirmed.</p>
+
+          <a
+            href={`${process.env.REACT_APP_SCANNER_URL}/${hash}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Transaction Hash: {shortenAddress(hash)}
+          </a>
         </div>
       )}
       {errorMsg && (
