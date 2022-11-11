@@ -6,8 +6,8 @@ import {
 } from "@apollo/client";
 import React from "react";
 
-const uri =
-  "https://api.thegraph.com/subgraphs/name/horse-link/hl-protocol-goerli";
+const uri = process.env.REACT_APP_SUBGRAPH_URL;
+if (!uri) throw new Error("No subgraph url provided");
 
 const client = new ApolloClient({
   link: new HttpLink({ uri, fetch }),
