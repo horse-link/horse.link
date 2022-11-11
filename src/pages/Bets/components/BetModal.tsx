@@ -3,6 +3,7 @@ import ContractWriteResultCard from "../../../components/ContractWriteResultCard
 import Modal from "../../../components/Modal";
 import RequireWalletButton from "../../../components/RequireWalletButton/RequireWalletButton_View";
 import marketContractJson from "../../../abi/Market.json";
+import marketOracleContractJson from "../../../abi/MarketOracle.json";
 import { BetHistory } from "../../../types";
 import { Loader } from "../../../components";
 import useMarkets from "../../../hooks/market/useMarkets";
@@ -34,7 +35,11 @@ const useSettleContractWrite = ({
   marketAddress,
   index
 }: useSettleContractWriteArgs) => {
-  const { data, error, write } = useContractWrite({
+  const {
+    data,
+    error: settleBetError,
+    write: settleBetWrite
+  } = useContractWrite({
     mode: "recklesslyUnprepared",
     address: marketAddress || "",
     abi: marketContractJson.abi,
@@ -42,17 +47,17 @@ const useSettleContractWrite = ({
     args: [index]
   });
 
-  const txHash = data?.hash;
-  const { isLoading: isTxLoading, isSuccess: isTxSuccess } =
+  const settleBetTxHash = data?.hash;
+  const { isLoading: isSettleBetTxLoading, isSuccess: isSettleBetTxSuccess } =
     useWaitForTransaction({
-      hash: txHash
+      hash: settleBetTxHash
     });
   return {
-    write,
-    error,
-    isTxLoading,
-    isTxSuccess,
-    txHash
+    settleBetWrite,
+    settleBetError,
+    isSettleBetTxLoading,
+    isSettleBetTxSuccess,
+    settleBetTxHash
   };
 };
 
@@ -67,28 +72,41 @@ const useMarketOracleResultWrite = ({
   winningPropositionId,
   signature
 }: useMarketOracleResultWriteArgs) => {
-  const { data, error, write } = useContractWrite({
+  const {
+    data,
+    error: marketOracleError,
+    write: setResultMarketOracleWrite
+  } = useContractWrite({
     mode: "recklesslyUnprepared",
     addressOrName:
       process.env.REACT_APP_MARKET_ORACLE_CONTRACT ||
       "0x592a44ebad029EBFff3Ee4950f1E74538a19a2ea",
-    contractInterface: marketContractJson.abi,
+    contractInterface: marketOracleContractJson.abi,
     functionName: "setResult",
-    args: [market_id, winningPropositionId, signature],
+    // TODO: Once we have switched the marketOracle contract to check EC signatures
+    // We can just pass the signature as the last argument
+    // For the moment we can just pass this blank signature to keep the contract happy
+    args: [
+      market_id,
+      winningPropositionId,
+      "0x0000000000000000000000000000000000000000000000000000000000000000"
+    ],
     enabled: !!market_id && !!winningPropositionId && !!signature
   });
 
-  const txHash = data?.hash;
-  const { isLoading: isTxLoading, isSuccess: isTxSuccess } =
-    useWaitForTransaction({
-      hash: txHash
-    });
+  const marketOracleTxHash = data?.hash;
+  const {
+    isLoading: isMarketOracleTxHashTxLoading,
+    isSuccess: isMarketOracleTxHashTxSuccess
+  } = useWaitForTransaction({
+    hash: marketOracleTxHash
+  });
   return {
-    write,
-    error,
-    isTxLoading,
-    isTxSuccess,
-    txHash
+    setResultMarketOracleWrite,
+    marketOracleError,
+    isMarketOracleTxHashTxLoading,
+    isMarketOracleTxHashTxSuccess,
+    marketOracleTxHash
   };
 };
 
@@ -108,38 +126,84 @@ const SettleBet = ({ data }: SettlebetProps) => {
     }
   }, [marketAddresses]);
 
+  const useMarketOracle = (bet?: BetHistory) => {
+    const {
+      setResultMarketOracleWrite,
+      marketOracleError,
+      isMarketOracleTxHashTxLoading,
+      isMarketOracleTxHashTxSuccess,
+      marketOracleTxHash
+    } = useMarketOracleResultWrite({
+      market_id: bet?.market_id,
+      winningPropositionId: bet?.winningPropositionId,
+      signature: bet?.marketOracleResultSig
+    });
+    const marketOracleContract = {
+      setResultMarketOracleWrite,
+      errorMsg: marketOracleError?.message
+    };
+    const marketOracleTxStatus = {
+      isLoading: isMarketOracleTxHashTxLoading,
+      isSuccess: isMarketOracleTxHashTxSuccess,
+      hash: marketOracleTxHash
+    };
+
+    const shouldMarketOracleButtonDisabled =
+      !marketOracleContract.setResultMarketOracleWrite;
+
+    return {
+      marketOracleContract,
+      marketOracleTxStatus,
+      shouldMarketOracleButtonDisabled
+    };
+  };
+
   const useSettleBet = (bet?: BetHistory) => {
     const {
-      write: settleContractWrite,
-      error: settleError,
-      isTxLoading,
-      isTxSuccess,
-      txHash
+      settleBetWrite,
+      settleBetError,
+      isSettleBetTxLoading,
+      isSettleBetTxSuccess,
+      settleBetTxHash
     } = useSettleContractWrite({
       marketAddress: selectedMarketAddress,
       index: bet?.index
     });
-    const contract = {
-      settleContractWrite,
-      errorMsg: settleError?.message
+    const settleContract = {
+      settleBetWrite,
+      errorMsg: settleBetError?.message
     };
-    const txStatus = {
-      isLoading: isTxLoading,
-      isSuccess: isTxSuccess,
-      hash: txHash
+    const settleTxStatus = {
+      isLoading: isSettleBetTxLoading,
+      isSuccess: isSettleBetTxSuccess,
+      hash: settleBetTxHash
     };
 
-    const shouldSettleButtonDisabled = !contract.settleContractWrite;
+    const shouldSettleButtonDisabled = !settleContract.settleBetWrite;
 
     return {
-      contract,
-      txStatus,
+      settleContract,
+      settleTxStatus,
       shouldSettleButtonDisabled
     };
   };
 
   //const data?.marketOracleResultSig
-  const { contract, txStatus, shouldSettleButtonDisabled } = useSettleBet(data);
+  const { settleContract, settleTxStatus, shouldSettleButtonDisabled } =
+    useSettleBet(data);
+
+  const {
+    marketOracleContract,
+    marketOracleTxStatus,
+    shouldMarketOracleButtonDisabled
+  } = useMarketOracle(data);
+
+  const txStatuses = {
+    isLoading: settleTxStatus.isLoading || marketOracleTxStatus.isLoading,
+    isSuccess: settleTxStatus.isSuccess || marketOracleTxStatus.isSuccess,
+    hash: settleTxStatus.hash || marketOracleTxStatus.hash
+  };
+
   return (
     <div className="w-96 md:w-152">
       <div className="px-10 pt-5 pb-5 rounded-md bg-white border-gray-200 sm:rounded-lg">
@@ -174,27 +238,6 @@ const SettleBet = ({ data }: SettlebetProps) => {
         </div>
         <br></br>
 
-        {!data?.settled && data?.marketResultAdded && (
-          <div className="flex flex-col">
-            <RequireWalletButton
-              actionButton={
-                <button
-                  className={
-                    "px-5 py-1 hover:bg-gray-100 rounded-md border border-gray-500 shadow-md" +
-                    (shouldSettleButtonDisabled
-                      ? " opacity-50 cursor-not-allowed"
-                      : "")
-                  }
-                  onClick={() => contract.settleContractWrite()}
-                  disabled={shouldSettleButtonDisabled}
-                >
-                  {txStatus.isLoading ? <Loader /> : "Settle"}
-                </button>
-              }
-            />
-          </div>
-        )}
-
         {data &&
           !data?.settled &&
           !data?.marketResultAdded &&
@@ -209,21 +252,48 @@ const SettleBet = ({ data }: SettlebetProps) => {
                         ? " opacity-50 cursor-not-allowed"
                         : "")
                     }
-                    onClick={() => contract.settleContractWrite()}
-                    disabled={shouldSettleButtonDisabled}
+                    onClick={() =>
+                      marketOracleContract.setResultMarketOracleWrite()
+                    }
+                    disabled={shouldMarketOracleButtonDisabled}
                   >
-                    {txStatus.isLoading ? <Loader /> : "Submit Result"}
+                    {marketOracleTxStatus.isLoading ? (
+                      <Loader />
+                    ) : (
+                      "Submit Result"
+                    )}
                   </button>
                 }
               />
             </div>
           )}
 
+        {!data?.settled && data?.marketResultAdded && (
+          <div className="flex flex-col">
+            <RequireWalletButton
+              actionButton={
+                <button
+                  className={
+                    "px-5 py-1 hover:bg-gray-100 rounded-md border border-gray-500 shadow-md" +
+                    (shouldSettleButtonDisabled
+                      ? " opacity-50 cursor-not-allowed"
+                      : "")
+                  }
+                  onClick={() => settleContract.settleBetWrite()}
+                  disabled={shouldSettleButtonDisabled}
+                >
+                  {settleTxStatus.isLoading ? <Loader /> : "Settle"}
+                </button>
+              }
+            />
+          </div>
+        )}
+
         <div className="mt-5">
           <ContractWriteResultCard
-            hash={txStatus.hash}
-            isSuccess={txStatus.isSuccess}
-            errorMsg={contract.errorMsg}
+            hash={txStatuses.hash}
+            isSuccess={txStatuses.isSuccess}
+            errorMsg={settleContract.errorMsg}
           />
         </div>
       </div>
