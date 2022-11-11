@@ -117,7 +117,9 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
   return (
     <div className="grid grid-cols-2">
       <div className="col-span-2">
-        <h3 className="text-lg mb-3 font-medium text-gray-900">Todays Meets</h3>
+        <h3 className="text-lg mb-3 font-medium text-gray-900">
+          Today's Meets
+        </h3>
         <div className="flex flex-col">
           <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
