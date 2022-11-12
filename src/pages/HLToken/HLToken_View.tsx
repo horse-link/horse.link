@@ -10,7 +10,7 @@ export const HlTokenPage = () => {
     <PageLayout requiresAuth={false}>
       <div className="flex justify-center flex-col items-center">
         <h1 className="text-3xl pb-4 font-bold text-center">
-          HL TOKEN PRIVATE SALE
+          HL Token Private sale
         </h1>
         <div className="bg-white rounded-md py-5">
           <p className="text-center text-sm px-4 pb-4 lg:text-sm lg:px-32 lg:py-4">
@@ -34,13 +34,13 @@ export const HlTokenPage = () => {
           <div className="w-full flex flex-col lg:flex-row justify-evenly items-center">
             <div>
               <h3 className="text-center mb-2 mt-2 lg:mt-0 text-sm">
-                Scan for address:
+                Scan for ERC20 deposit address
               </h3>
               <QRCode level="H" value={ADDRESS} />
             </div>
             <img src={TokenomicsChart} alt="Tokenomics" className="mt-4" />
           </div>
-          <h3 className="text-xl pb-2 font-bold text-center">ROUNDS</h3>
+          <h3 className="text-xl pb-2 font-bold text-center">Rounds</h3>
           <div className="px-4 text-sm flex flex-col gap-y-2 mb-3 text-center">
             <p className="text-center line-through">
               Seed - 10,000,000 tokens at 11.76 for $1 (0.085) / $850,000 USD
