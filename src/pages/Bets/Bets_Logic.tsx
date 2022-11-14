@@ -3,6 +3,7 @@ import { useAccount } from "wagmi";
 import { BetHistory } from "../../types";
 import BetsView from "./Bets_View";
 import api from "../../apis/Api";
+import { formatToFourDecimals } from "../../utils/formatting";
 
 const getMockBets = () => {
   return Array.from({ length: 5 }, () => undefined);
@@ -50,9 +51,17 @@ const BetsLogics = () => {
     setMyBetsEnabled(isEnable);
   };
 
+  const betsData = myBetsEnabled ? myBets : bets;
+  const formattedBetsData = betsData?.map(bet => {
+    return {
+      ...bet,
+      amount: formatToFourDecimals(bet.amount)
+    };
+  });
+
   return (
     <BetsView
-      betsData={(myBetsEnabled ? myBets : bets) || getMockBets()}
+      betsData={formattedBetsData || getMockBets()}
       myBetsEnabled={myBetsEnabled}
       onMyBetToggle={onMyBetToggle}
       onClickBet={onClickBet}
