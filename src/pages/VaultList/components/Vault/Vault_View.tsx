@@ -73,7 +73,11 @@ const VaultView = ({
                         onClick={() => contract.depositContractWrite?.()}
                         disabled={shouldDepositButtonDisabled}
                       >
-                        {txStatus.isLoading ? <Loader /> : "Deposit"}
+                        {txStatus.isLoading ? (
+                          <Loader />
+                        ) : (
+                          `Deposit ${vaultDetailData.tokenSymbol}`
+                        )}
                       </button>
                       <button
                         className={
@@ -85,7 +89,7 @@ const VaultView = ({
                         onClick={() => contract.withdrawContractWrite?.()}
                         disabled={shouldWithdrawButtonDisabled}
                       >
-                        {txStatus.isLoading ? <Loader /> : "Withdraw"}
+                        {txStatus.isLoading ? <Loader /> : "Withdraw Shares"}
                       </button>
                     </div>
                   ) : (
