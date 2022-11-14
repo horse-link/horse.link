@@ -69,7 +69,7 @@ const DashboardView: React.FC<Props> = (props: Props) => {
               Horse Link’s smart contract guaranteed bets are always placed
               within the slippage band of the constant product function. Like
               other AMM protocols based on curve functions, bets based within
-              the range of slippage based on the potential payout will be
+              the range of slippage based on the payout will be
               placed.
             </p>
           </div>
