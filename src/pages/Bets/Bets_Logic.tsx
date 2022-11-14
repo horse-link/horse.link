@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAccount } from "wagmi";
 import { BetHistory } from "../../types";
 import BetsView from "./Bets_View";
@@ -51,7 +51,10 @@ const BetsLogics = () => {
     setMyBetsEnabled(isEnable);
   };
 
-  const betsData = myBetsEnabled ? myBets : bets;
+  const betsData = useMemo(
+    () => (myBetsEnabled ? myBets : bets),
+    [myBetsEnabled, myBets, bets]
+  );
   const formattedBetsData = betsData?.map(bet => {
     return {
       ...bet,

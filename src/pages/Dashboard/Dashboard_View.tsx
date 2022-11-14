@@ -66,11 +66,10 @@ const DashboardView: React.FC<Props> = (props: Props) => {
               wager on sports markets using ERC20 tokens.
             </h2>
             <p className="text-xs my-2">
-              Horse Link’s smart contract guaranteed bets are always placed
+              Horse Link&apos;s smart contract guaranteed bets are always placed
               within the slippage band of the constant product function. Like
               other AMM protocols based on curve functions, bets based within
-              the range of slippage based on the payout will be
-              placed.
+              the range of slippage based on the payout will be placed.
             </p>
           </div>
           <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
