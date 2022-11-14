@@ -137,7 +137,7 @@ const txTypeMap = new Map([
   ["deposit", "Deposit"]
 ]);
 const HistoryTableRow: React.FC<HistoryTableRowProps> = ({ vault }) => {
-  const formattedTxType = txTypeMap.get(vault.type);
+  const formattedTxType = txTypeMap.get(vault.type) || vault.type;
   const details = useVaultDetail(vault.vaultAddress);
   return (
     <tr>

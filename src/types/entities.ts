@@ -1,9 +1,14 @@
 import { BigNumber } from "ethers";
 import { Address } from "wagmi";
 
+enum VaultTransactionType {
+  withdraw = "withdraw",
+  deposit = "deposit"
+}
+
 export type VaultTransaction = {
   id: Address;
-  type: "withdraw" | "deposit";
+  type: VaultTransactionType;
   vaultAddress: Address;
   depositerAddress: Address;
   amount: string;
