@@ -1,4 +1,4 @@
-import { formatToFourDecimals } from "./formatting";
+import { formatToFourDecimals, formatToTwoDecimals } from "./formatting";
 
 test.concurrent.each([
   ["1", "1"],
@@ -37,4 +37,15 @@ test.concurrent.each([
 ])("less than 0.0001", async input => {
   const result = formatToFourDecimals(input);
   expect(result).toBe("<0.0001");
+});
+
+test.concurrent.each([
+  ["1", "1.00"],
+  ["12", "12.00"],
+  ["20.01", "20.01"],
+  ["100.1045", "100.10"],
+  ["1000.2895", "1000.29"]
+])("round to two decimals", async (input, expected) => {
+  const result = formatToTwoDecimals(input);
+  expect(result).toBe(expected);
 });

@@ -3,6 +3,7 @@ import RequireWalletButton from "../../../../components/RequireWalletButton/Requ
 import { Back } from "../../../../types";
 import useMarketDetail from "../../../../hooks/market/useMarketDetail";
 import { Loader } from "../../../../components";
+import { formatToTwoDecimals } from "../../../../utils/formatting";
 
 type Props = {
   back: Back;
@@ -43,7 +44,9 @@ const BackView: React.FC<Props> = ({
   return (
     <div className="w-96 md:w-152">
       <div className="px-10 pt-5 pb-5 rounded-md bg-white border-gray-200 sm:rounded-lg">
-        <div className="text-3xl">Target odds {back.odds}</div>
+        <div className="text-3xl">
+          Target odds {formatToTwoDecimals(back.odds.toString())}
+        </div>
 
         <div className="flex flex-col">
           <label>Market</label>
