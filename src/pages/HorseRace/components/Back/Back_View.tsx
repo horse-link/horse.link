@@ -44,7 +44,7 @@ const BackView: React.FC<Props> = ({
   return (
     <div className="w-96 md:w-152">
       <div className="px-10 pt-5 pb-5 rounded-md bg-white border-gray-200 sm:rounded-lg">
-        <div className="text-3xl">
+        <div className="text-3xl mb-4">
           Target odds {formatToTwoDecimals(back.odds.toString())}
         </div>
 
@@ -55,7 +55,7 @@ const BackView: React.FC<Props> = ({
             onChange={e => setSelectedMarket(e.target.value)}
             name="markets"
             id="markets"
-            className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 mb-2"
           >
             {markets.map(address => (
               <MarketOption key={address} contractAddress={address} />
@@ -72,19 +72,12 @@ const BackView: React.FC<Props> = ({
               }}
               value={wagerAmount || ""}
               placeholder="0.0"
-              className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 mb-2"
             />
           </label>
 
-          <span className="p-1">
-            Payout:
-            <input
-              type="number"
-              value={potentialPayout}
-              readOnly
-              placeholder="0.0"
-              className="rounded-md border-white focus:border-white focus:ring focus:ring-white focus:ring-opacity-50"
-            />
+          <span className="py-1">
+            Payout: <span>{potentialPayout}</span>
           </span>
         </div>
         <br></br>
