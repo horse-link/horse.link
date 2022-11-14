@@ -6,3 +6,9 @@ export const formatToFourDecimals = (amount: string) => {
   const removedTrailingZeros = (+roundedToFourDecimal).toString();
   return removedTrailingZeros;
 };
+
+export const formatToTwoDecimals = (amount: string) => {
+  const parsedAmount = parseFloat(amount);
+  const roundedToTwoDecimals = parsedAmount.toFixed(2);
+  return roundedToTwoDecimals;
+};
