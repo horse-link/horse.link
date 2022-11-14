@@ -3,7 +3,7 @@ import { Address } from "wagmi";
 
 export type VaultTransaction = {
   id: Address;
-  type: string;
+  type: "withdraw" | "deposit";
   vaultAddress: Address;
   depositerAddress: Address;
   amount: string;
@@ -12,8 +12,9 @@ export type VaultTransaction = {
 
 export type FormattedVaultTransaction = Pick<
   VaultTransaction,
-  "id" | "vaultAddress" | "depositerAddress" | "type"
+  "id" | "vaultAddress" | "depositerAddress"
 > & {
+  type: string;
   amount: BigNumber;
   timestamp: number;
 };

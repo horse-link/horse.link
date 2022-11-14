@@ -136,9 +136,7 @@ const HistoryTableRow: React.FC<HistoryTableRowProps> = ({ vault }) => {
   const details = useVaultDetail(vault.vaultAddress);
   return (
     <tr>
-      <td className="pl-5 pr-2 py-4 whitespace-nowrap uppercase">
-        {vault.type}
-      </td>
+      <td className="pl-5 pr-2 py-4 whitespace-nowrap">{vault.type}</td>
       <td className="px-2 py-4">
         {vault.type === "withdraw"
           ? `${ethers.utils.formatEther(vault.amount)} shares`

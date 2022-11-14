@@ -10,6 +10,11 @@ type Response = {
   vaultTransactions: VaultTransaction[];
 };
 
+const txTypeMap = new Map([
+  ["withdraw", "Withdrawal"],
+  ["deposit", "Deposit"]
+]);
+
 const useVaultHistory = (vaultAddress?: string) => {
   const query = `{
     vaultTransactions(
@@ -34,6 +39,7 @@ const useVaultHistory = (vaultAddress?: string) => {
 
     return data.vaultTransactions.map(tx => ({
       ...tx,
+      type: txTypeMap.get(tx.type) || tx.type,
       amount: BigNumber.from(tx.amount),
       timestamp: +tx.timestamp
     }));
