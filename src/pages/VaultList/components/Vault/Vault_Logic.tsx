@@ -24,7 +24,6 @@ const useWithdrawContractWrite = ({
   amount,
   tokenDecimal,
   vaultAddress,
-  enabled,
   onTxSuccess
 }: useWithdrawContractWriteArgs) => {
   const assets = ethers.utils.parseUnits(amount.toString(), tokenDecimal);
@@ -68,7 +67,6 @@ const useDepositContractWrite = ({
   tokenDecimal,
   ownerAddress,
   vaultAddress,
-  enabled,
   onTxSuccess
 }: useDepositContractWriteArgs) => {
   const assets = ethers.utils.parseUnits(amount.toString(), tokenDecimal);

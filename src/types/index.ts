@@ -45,12 +45,14 @@ export type BetHistory = {
   index: number;
   market_id: string;
   proposition_id: string;
+  winningPropositionId: string | undefined;
+  marketResultAdded: boolean;
+  settled: boolean;
   punter: string;
   amount: string;
   tx: string;
   blockNumber: number;
-  signature: EcSignature;
-  result: boolean | undefined;
+  marketOracleResultSig: EcSignature;
 };
 
 export type BetHistoryResponse = {

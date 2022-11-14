@@ -1,4 +1,5 @@
 import Skeleton from "react-loading-skeleton";
+import classnames from "classnames";
 import { BetHistory } from "../../../types";
 
 type Props = {
@@ -70,7 +71,17 @@ const Row = ({ betData, onClick }: RowProps) => {
     <tr
       key={betData?.proposition_id}
       onClick={onClick}
-      className="cursor-pointer hover:bg-gray-100"
+      className={classnames(
+        "cursor-pointer hover:bg-gray-100",
+        {
+          "bg-green-300":
+            (betData?.winningPropositionId || betData?.marketResultAdded) &&
+            !betData?.settled
+        },
+        {
+          "bg-gray-300": betData?.settled
+        }
+      )}
     >
       <td className="pl-5 pr-2 py-4 truncate">
         {betData?.punter ?? <Skeleton />}
