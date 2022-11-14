@@ -58,6 +58,10 @@ const usePotentialPayoutFromAPI = ({
 }: UsePotentialPayoutArgs) => {
   const [potentialPayout, setPotentialPayout] = useState("0");
   useEffect(() => {
+    if (wager === 0) {
+      setPotentialPayout("0");
+      return;
+    }
     if (!marketAddress || !propositionId || !wager || !odds || !tokenDecimal)
       return;
     const load = async () => {
