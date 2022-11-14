@@ -77,7 +77,7 @@ const BackView: React.FC<Props> = ({
           </label>
 
           <span className="p-1">
-            Potential Payout:
+            Payout:
             <input
               type="number"
               value={potentialPayout}
