@@ -1,15 +1,12 @@
 import Skeleton from "react-loading-skeleton";
 import classnames from "classnames";
 import { BetHistory } from "../../../types";
-import useBetHistory from "../../../hooks/bet/useBetHistory";
-import { formatToFourDecimals } from "../../../utils/formatting";
 
 type Props = {
-  myBetsEnabled: boolean;
+  betsData: BetHistory[] | undefined[];
   onClickBet: (bet?: BetHistory) => void;
 };
-const BetTable = ({ myBetsEnabled, onClickBet }: Props) => {
-  const { bets, myBets } = useBetHistory();
+const BetTable = ({ betsData, onClickBet }: Props) => {
   return (
     <div className="col-span-2 bg-gray-50 rounded-xl overflow-auto">
       <div className="shadow-sm overflow-hidden mt-2 mb-5">
@@ -49,21 +46,13 @@ const BetTable = ({ myBetsEnabled, onClickBet }: Props) => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {myBetsEnabled ? (
-              !myBets ? (
-                <td className="p-2 select-none">loading...</td>
-              ) : (
-                myBets.map(v => (
-                  <Row betData={v} key={v.tx} onClick={() => onClickBet(v)} />
-                ))
-              )
-            ) : !bets ? (
-              <td className="p-2 select-none">loading...</td>
-            ) : (
-              bets.map(v => (
-                <Row betData={v} key={v.tx} onClick={() => onClickBet(v)} />
-              ))
-            )}
+            {betsData.map(v => (
+              <Row
+                betData={v}
+                key={v?.proposition_id}
+                onClick={() => onClickBet(v)}
+              />
+            ))}
           </tbody>
         </table>
       </div>
@@ -74,38 +63,36 @@ const BetTable = ({ myBetsEnabled, onClickBet }: Props) => {
 export default BetTable;
 
 type RowProps = {
-  betData: BetHistory;
+  betData?: BetHistory;
   onClick?: () => void;
 };
 const Row = ({ betData, onClick }: RowProps) => {
   return (
     <tr
-      key={betData.proposition_id}
+      key={betData?.proposition_id}
       onClick={onClick}
       className={classnames(
         "cursor-pointer hover:bg-gray-100",
         {
           "bg-green-300":
-            (betData.winningPropositionId || betData.marketResultAdded) &&
-            !betData.settled
+            (betData?.winningPropositionId || betData?.marketResultAdded) &&
+            !betData?.settled
         },
         {
-          "bg-gray-300": betData.settled
+          "bg-gray-300": betData?.settled
         }
       )}
     >
       <td className="pl-5 pr-2 py-4 truncate">
-        {betData.punter ?? <Skeleton />}
+        {betData?.punter ?? <Skeleton />}
       </td>
-      <td className="px-2 py-4">
-        {formatToFourDecimals(betData.amount) ?? <Skeleton />}
-      </td>
-      <td className="px-2 py-4">{betData.blockNumber ?? <Skeleton />}</td>
+      <td className="px-2 py-4">{betData?.amount ?? <Skeleton />}</td>
+      <td className="px-2 py-4">{betData?.blockNumber ?? <Skeleton />}</td>
       <td className="px-2 py-4 truncate">
-        {betData.market_id ?? <Skeleton />}
+        {betData?.market_id ?? <Skeleton />}
       </td>
       <td className="px-2 py-4 truncate">
-        {betData.proposition_id ?? <Skeleton />}
+        {betData?.proposition_id ?? <Skeleton />}
       </td>
     </tr>
   );

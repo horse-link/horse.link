@@ -2,7 +2,7 @@ import { Switch } from "@headlessui/react";
 
 type Props = {
   enabled: boolean;
-  onChange: () => void;
+  onChange: (isEnable: boolean) => void;
 };
 const MyBetsToggle = ({ enabled, onChange }: Props) => {
   return (
