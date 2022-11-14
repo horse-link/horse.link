@@ -67,12 +67,6 @@ type RowProps = {
   onClick?: () => void;
 };
 const Row = ({ betData, onClick }: RowProps) => {
-  // const rowStyle = () => {
-  //   if (betData?.settled) return "cursor-pointer bg-gray-300 hover:bg-gray-100";
-  //   if (betData?.winningPropositionId || betData?.marketResultAdded)
-  //     return "cursor-pointer bg-green-300 hover:bg-gray-100";
-  //   return "cursor-pointer hover:bg-gray-100";
-  // };
   return (
     <tr
       key={betData?.proposition_id}
