@@ -245,7 +245,6 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
 
   const {
     write: backContractWrite,
-    error: backError,
     isTxLoading: isBackTxLoading,
     isTxSuccess: isBackTxSuccess,
     backTxHash

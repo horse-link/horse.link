@@ -132,13 +132,16 @@ type HistoryTableRowProps = {
   vault: FormattedVaultTransaction;
 };
 
+const txTypeMap = new Map([
+  ["withdraw", "Withdrawal"],
+  ["deposit", "Deposit"]
+]);
 const HistoryTableRow: React.FC<HistoryTableRowProps> = ({ vault }) => {
+  const formattedTxType = txTypeMap.get(vault.type) || vault.type;
   const details = useVaultDetail(vault.vaultAddress);
   return (
     <tr>
-      <td className="pl-5 pr-2 py-4 whitespace-nowrap uppercase">
-        {vault.type}
-      </td>
+      <td className="pl-5 pr-2 py-4 whitespace-nowrap">{formattedTxType}</td>
       <td className="px-2 py-4">
         {vault.type === "withdraw"
           ? `${ethers.utils.formatEther(vault.amount)} shares`
