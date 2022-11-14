@@ -12,9 +12,8 @@ export type VaultTransaction = {
 
 export type FormattedVaultTransaction = Pick<
   VaultTransaction,
-  "id" | "vaultAddress" | "depositerAddress"
+  "id" | "vaultAddress" | "depositerAddress" | "type"
 > & {
-  type: string;
   amount: BigNumber;
   timestamp: number;
 };
