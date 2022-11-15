@@ -7,16 +7,20 @@ type Props = {
   onClickBet: (bet?: BetHistory) => void;
 };
 
-const BetRows: React.FC<Props> = ({ bets, onClickBet }) => (
-  <React.Fragment>
-    {!bets ? (
-      <td className="p-2 select-none">loading...</td>
-    ) : (
-      bets.map(v => (
-        <Row betData={v} key={v.tx} onClick={() => onClickBet(v)} />
-      ))
-    )}
-  </React.Fragment>
-);
+const BetRows: React.FC<Props> = ({ bets, onClickBet }) => {
+  if (!bets) return <td className="p-2 select-none">loading...</td>;
+
+  return (
+    <React.Fragment>
+      {bets.length === 0 ? (
+        <td className="p-2 select-none">no bets</td>
+      ) : (
+        bets.map(bet => (
+          <Row betData={bet} key={bet.tx} onClick={() => onClickBet(bet)} />
+        ))
+      )}
+    </React.Fragment>
+  );
+};
 
 export default BetRows;
