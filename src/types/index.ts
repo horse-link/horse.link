@@ -43,8 +43,8 @@ export type EcSignature = {
 
 export type BetHistory = {
   index: number;
-  market_id: string;
-  proposition_id: string;
+  marketId: string;
+  propositionId: string;
   winningPropositionId: string | undefined;
   marketResultAdded: boolean;
   settled: boolean;
@@ -52,11 +52,17 @@ export type BetHistory = {
   amount: string;
   tx: string;
   blockNumber: number;
-  marketOracleResultSig: EcSignature;
+  marketOracleResultSig?: EcSignature;
 };
 
 export type BetHistoryResponse = {
   results: BetHistory[];
+};
+
+export type SignedBetDataResponse = {
+  marketResultAdded: boolean;
+  winningPropositionId: string | undefined;
+  marketOracleResultSig: EcSignature | undefined;
 };
 
 export type SignedResponse = {

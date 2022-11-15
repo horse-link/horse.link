@@ -14,6 +14,7 @@ const useProtocolStatistics = () => {
       inPlay
       tvl
       performance
+      lastUpdate
     }
   }`;
 
@@ -29,7 +30,8 @@ const useProtocolStatistics = () => {
       id: protocol.id,
       inPlay: BigNumber.from(protocol.inPlay),
       tvl: BigNumber.from(protocol.tvl),
-      performance: parseFloat(protocol.performance)
+      performance: parseFloat(protocol.performance),
+      lastUpdate: +protocol.lastUpdate
     };
   }, [data, loading]);
 

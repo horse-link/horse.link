@@ -4,13 +4,18 @@ import { BetHistory } from "../../../types";
 import useBetHistory from "../../../hooks/bet/useBetHistory";
 import { formatToFourDecimals } from "../../../utils/formatting";
 import BetRows from "./BetRows";
+import { useAccount } from "wagmi";
+import { ethers } from "ethers";
+import moment from "moment";
 
 type Props = {
   myBetsEnabled: boolean;
   onClickBet: (bet?: BetHistory) => void;
 };
 const BetTable = ({ myBetsEnabled, onClickBet }: Props) => {
-  const { bets, myBets } = useBetHistory();
+  const { address } = useAccount();
+  const bets = useBetHistory();
+  const myBets = useBetHistory(address);
   return (
     <div className="col-span-2 bg-gray-50 rounded-xl overflow-auto">
       <div className="shadow-sm overflow-hidden mt-2 mb-5">
@@ -31,9 +36,9 @@ const BetTable = ({ myBetsEnabled, onClickBet }: Props) => {
               </th>
               <th
                 scope="col"
-                className="px-2 py-3 w-20 text-left text-xs font-medium text-gray-500 uppercase"
+                className="px-2 py-3 w-32 text-left text-xs font-medium text-gray-500 uppercase"
               >
-                Block
+                Time
               </th>
               <th
                 scope="col"
@@ -71,7 +76,7 @@ type RowProps = {
 export const Row = ({ betData, onClick }: RowProps) => {
   return (
     <tr
-      key={betData.proposition_id}
+      key={betData.propositionId}
       onClick={onClick}
       className={classnames(
         "cursor-pointer hover:bg-gray-100",
@@ -89,14 +94,16 @@ export const Row = ({ betData, onClick }: RowProps) => {
         {betData.punter ?? <Skeleton />}
       </td>
       <td className="px-2 py-4">
-        {formatToFourDecimals(betData.amount) ?? <Skeleton />}
+        {formatToFourDecimals(ethers.utils.formatEther(betData.amount)) ?? (
+          <Skeleton />
+        )}
       </td>
-      <td className="px-2 py-4">{betData.blockNumber ?? <Skeleton />}</td>
-      <td className="px-2 py-4 truncate">
-        {betData.market_id ?? <Skeleton />}
+      <td className="px-2 py-4">
+        {moment.unix(betData.blockNumber).fromNow() ?? <Skeleton />}
       </td>
+      <td className="px-2 py-4 truncate">{betData.marketId ?? <Skeleton />}</td>
       <td className="px-2 py-4 truncate">
-        {betData.proposition_id ?? <Skeleton />}
+        {betData.propositionId ?? <Skeleton />}
       </td>
     </tr>
   );

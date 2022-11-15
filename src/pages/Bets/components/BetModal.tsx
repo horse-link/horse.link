@@ -47,7 +47,7 @@ const SettleBet = ({ data }: SettlebetProps) => {
       isMarketOracleTxHashTxSuccess,
       marketOracleTxHash
     } = useMarketOracleResultWrite({
-      market_id: bet?.market_id,
+      market_id: bet?.marketId,
       winningPropositionId: bet?.winningPropositionId,
       signature: bet?.marketOracleResultSig
     });
@@ -132,7 +132,7 @@ const SettleBet = ({ data }: SettlebetProps) => {
           {data?.winningPropositionId !== undefined && (
             <label className="mt-2">
               <span>{`Winning Bet: ${(
-                data?.proposition_id === data?.winningPropositionId
+                data?.propositionId === data?.winningPropositionId
               ).toString()}`}</span>
             </label>
           )}
