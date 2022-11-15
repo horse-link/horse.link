@@ -29,10 +29,44 @@ export type Protocol = {
   inPlay: string;
   tvl: string;
   performance: string;
+  lastUpdate: string;
 };
 
 export type FormattedProtocol = Pick<Protocol, "id"> & {
   inPlay: BigNumber;
   tvl: BigNumber;
   performance: number;
+  lastUpdate: number;
+};
+
+export type Bet = {
+  id: string;
+  propositionId: string;
+  marketId: string;
+  marketAddress: string;
+  amount: string;
+  payout: string;
+  owner: Address;
+  settled: boolean;
+  createdAt: string;
+  settledAt: string;
+  createdAtTx: string;
+  settledAtTx: string;
+};
+
+export type FormattedBet = Pick<
+  Bet,
+  | "propositionId"
+  | "marketId"
+  | "marketAddress"
+  | "settled"
+  | "createdAtTx"
+  | "settledAtTx"
+> & {
+  index: number;
+  amount: BigNumber;
+  payout: BigNumber;
+  punter: string;
+  createdAt: number;
+  settledAt: number;
 };

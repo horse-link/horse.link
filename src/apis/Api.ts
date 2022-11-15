@@ -5,6 +5,7 @@ import {
   EcSignature,
   Market,
   Runner,
+  SignedBetDataResponse,
   SignedMeetingsResponse,
   Token,
   Vault,
@@ -35,6 +36,18 @@ export class Api {
 
   public getBetHistory = async (): Promise<BetHistoryResponse> => {
     const { data } = await this.client.get("/bets");
+
+    return data;
+  };
+
+  public requestSignedBetData = async (
+    marketId: string,
+    propositionId: string
+  ): Promise<SignedBetDataResponse> => {
+    const { data } = await this.client.post("/bets/sign", {
+      marketId,
+      propositionId
+    });
 
     return data;
   };
