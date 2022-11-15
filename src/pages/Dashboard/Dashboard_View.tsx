@@ -42,7 +42,11 @@ const DashboardView: React.FC<Props> = (props: Props) => {
     },
     {
       name: "Performance",
-      stat: stats?.performance ? `${stats.performance}%` : <Loader />
+      stat: stats?.performance ? (
+        `${formatToTwoDecimals(stats.performance.toString())}%`
+      ) : (
+        <Loader />
+      )
     }
   ];
 
