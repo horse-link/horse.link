@@ -3,6 +3,7 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import { Meet, Race, SignedMeetingsResponse } from "../../types/index";
 import api from "../../apis/Api";
+import useProtocolStatistics from "../../hooks/data/useProtocolStatistics";
 
 const getMockMeets = (): Meet[] => {
   const mockRace: Race[] = Array.from({ length: 10 }, (_, i) => ({
@@ -21,32 +22,16 @@ const getMockMeets = (): Meet[] => {
 
 const Dashboard: React.FC = () => {
   const [response, setResponse] = useState<SignedMeetingsResponse>();
-  const [totalLiquidity, setTotalLiquidity] = useState<number>();
-  const [inPlay, setInplay] = useState<number>();
-  const [performance, setPerformance] = useState<number>();
+
+  const stats = useProtocolStatistics();
 
   useEffect(() => {
     const loadMeetings = async () => {
       const response = await api.getMeetings();
       setResponse(response);
     };
-    const loadLiquidity = async () => {
-      const { assets } = await api.getTotalLiquidity();
-      setTotalLiquidity(assets);
-    };
-    const loadInPlay = async () => {
-      const { total } = await api.getTotalInPlay();
-      setInplay(total);
-    };
-    const loadPerformance = async () => {
-      const { performance } = await api.getTotalPerformance();
-      setPerformance(performance);
-    };
 
     loadMeetings();
-    loadLiquidity();
-    loadInPlay();
-    loadPerformance();
   }, []);
 
   const asLocaltime = (raceTime: number) => {
@@ -62,11 +47,9 @@ const Dashboard: React.FC = () => {
     <DashboardView
       asLocaltime={asLocaltime}
       meets={response?.data.meetings || getMockMeets()}
-      liquidity={totalLiquidity}
-      inPlay={inPlay}
-      performance={performance}
       signature={response?.signature}
       owner={response?.owner}
+      stats={stats}
     />
   );
 };

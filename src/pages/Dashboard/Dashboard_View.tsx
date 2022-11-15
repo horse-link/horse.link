@@ -3,15 +3,16 @@ import { Meet } from "../../types/index";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import Skeleton from "react-loading-skeleton";
+import { FormattedProtocol } from "../../types/entities";
+import { ethers } from "ethers";
+import { formatToTwoDecimals } from "../../utils/formatting";
 
 type Props = {
   asLocaltime: (raceTime: number) => string;
   meets: Meet[];
-  liquidity: number | undefined;
-  inPlay: number | undefined;
-  performance: number | undefined;
   signature: string | undefined;
   owner: string | undefined;
+  stats: FormattedProtocol | undefined;
 };
 
 type TableProps = {
@@ -20,26 +21,29 @@ type TableProps = {
 };
 
 const DashboardView: React.FC<Props> = (props: Props) => {
-  const {
-    asLocaltime,
-    meets,
-    inPlay,
-    performance,
-    liquidity,
-    owner,
-    signature
-  } = props;
+  const { asLocaltime, meets, owner, signature, stats } = props;
 
-  const stats = [
+  const statsArray = [
     {
       name: "Total Liquidity",
-      stat: liquidity ? `$${Number(liquidity).toFixed(2)}` : <Loader />
+      stat: stats?.tvl ? (
+        `$${formatToTwoDecimals(ethers.utils.formatEther(stats.tvl))}`
+      ) : (
+        <Loader />
+      )
     },
     {
       name: "In Play",
-      stat: inPlay ? `$${inPlay}` : <Loader />
+      stat: stats?.inPlay ? (
+        `$${formatToTwoDecimals(ethers.utils.formatEther(stats.inPlay))}`
+      ) : (
+        <Loader />
+      )
     },
-    { name: "Performance", stat: performance ? `${performance}%` : <Loader /> }
+    {
+      name: "Performance",
+      stat: stats?.performance ? `${stats.performance}%` : <Loader />
+    }
   ];
 
   return (
@@ -73,16 +77,16 @@ const DashboardView: React.FC<Props> = (props: Props) => {
             </p>
           </div>
           <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
-            {stats.map(item => (
+            {statsArray.map(stat => (
               <div
-                key={item.name}
+                key={stat.name}
                 className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6"
               >
                 <dt className="text-sm font-medium text-gray-500 truncate">
-                  {item.name}
+                  {stat.name}
                 </dt>
                 <dd className="mt-1 text-3xl font-semibold text-gray-900">
-                  {item.stat}
+                  {stat.stat}
                 </dd>
               </div>
             ))}

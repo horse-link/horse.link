@@ -22,3 +22,17 @@ export type FormattedVaultTransaction = Pick<
   amount: BigNumber;
   timestamp: number;
 };
+
+export type Protocol = {
+  // protocol id will always be protocol
+  id: "protocol";
+  inPlay: string;
+  tvl: string;
+  performance: string;
+};
+
+export type FormattedProtocol = Pick<Protocol, "id"> & {
+  inPlay: BigNumber;
+  tvl: BigNumber;
+  performance: number;
+};
