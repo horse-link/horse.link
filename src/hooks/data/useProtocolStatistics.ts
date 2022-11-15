@@ -25,8 +25,6 @@ const useProtocolStatistics = () => {
     // because the id is always "protocol", there is always - and only - one entity
     const protocol = data.protocols[0];
 
-    console.log(protocol);
-
     return {
       id: protocol.id,
       inPlay: BigNumber.from(protocol.inPlay),
