@@ -3,6 +3,7 @@ import classnames from "classnames";
 import { BetHistory } from "../../../types";
 import useBetHistory from "../../../hooks/bet/useBetHistory";
 import { formatToFourDecimals } from "../../../utils/formatting";
+import BetRows from "./BetRows";
 
 type Props = {
   myBetsEnabled: boolean;
@@ -50,19 +51,9 @@ const BetTable = ({ myBetsEnabled, onClickBet }: Props) => {
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {myBetsEnabled ? (
-              !myBets ? (
-                <td className="p-2 select-none">loading...</td>
-              ) : (
-                myBets.map(v => (
-                  <Row betData={v} key={v.tx} onClick={() => onClickBet(v)} />
-                ))
-              )
-            ) : !bets ? (
-              <td className="p-2 select-none">loading...</td>
+              <BetRows bets={myBets} onClickBet={onClickBet} />
             ) : (
-              bets.map(v => (
-                <Row betData={v} key={v.tx} onClick={() => onClickBet(v)} />
-              ))
+              <BetRows bets={bets} onClickBet={onClickBet} />
             )}
           </tbody>
         </table>
@@ -77,7 +68,7 @@ type RowProps = {
   betData: BetHistory;
   onClick?: () => void;
 };
-const Row = ({ betData, onClick }: RowProps) => {
+export const Row = ({ betData, onClick }: RowProps) => {
   return (
     <tr
       key={betData.proposition_id}
