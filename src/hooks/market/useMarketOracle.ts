@@ -8,6 +8,11 @@ type useMarketOracleResultWriteArgs = {
   winningPropositionId?: string;
   signature?: EcSignature;
 };
+
+const marketOracleAddress = process.env.REACT_APP_MARKET_ORACLE_CONTRACT;
+if (!marketOracleAddress)
+  throw new Error("No REACT_APP_MARKET_ORACLE_CONTRACT provided");
+
 const useMarketOracleResultWrite = ({
   market_id,
   winningPropositionId
@@ -18,7 +23,7 @@ const useMarketOracleResultWrite = ({
     write: setResultMarketOracleWrite
   } = useContractWrite({
     mode: "recklesslyUnprepared",
-    address: process.env.REACT_APP_MARKET_ORACLE_CONTRACT,
+    address: marketOracleAddress,
     abi: marketOracleContractJson.abi,
     functionName: "setResult",
     // TODO: Once we have switched the marketOracle contract to check EC signatures

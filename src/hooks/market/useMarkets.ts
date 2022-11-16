@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import api from "../../apis/Api";
 
 const registryContractAddress = process.env.REACT_APP_REGISTRY_CONTRACT;
+if (!registryContractAddress)
+  throw new Error("No REACT_APP_REGISTRY_CONTRACT provided");
 
 const registryContract = {
   address: registryContractAddress,
