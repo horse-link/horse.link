@@ -29,6 +29,7 @@ export type Protocol = {
   inPlay: string;
   initialTvl: string;
   currentTvl: string;
+  performance: string;
   lastUpdate: string;
 };
 

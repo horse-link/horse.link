@@ -1,7 +1,6 @@
 import { BigNumber } from "ethers";
 import { useMemo } from "react";
 import { FormattedProtocol, Protocol } from "../../types/entities";
-import { getPercentDifference } from "../../utils/general";
 import useSubgraph from "../useSubgraph";
 
 type Response = {
@@ -15,6 +14,7 @@ const useProtocolStatistics = () => {
       inPlay
       initialTvl
       currentTvl
+      performance
       lastUpdate
     }
   }`;
@@ -31,10 +31,7 @@ const useProtocolStatistics = () => {
       id: protocol.id,
       inPlay: BigNumber.from(protocol.inPlay),
       tvl: BigNumber.from(protocol.currentTvl),
-      performance: getPercentDifference(
-        +protocol.currentTvl,
-        +protocol.initialTvl
-      ),
+      performance: +protocol.performance,
       lastUpdate: +protocol.lastUpdate
     };
   }, [data, loading]);
