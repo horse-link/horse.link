@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import api from "../../apis/Api";
 import { BetHistory } from "../../types";
 import { Bet } from "../../types/entities";
+import { formatBetHistory } from "../../utils/formatting";
 import useSubgraph from "../useSubgraph";
 
 type Response = {
@@ -38,28 +39,16 @@ const useBetHistory = (address?: string) => {
   useEffect(() => {
     if (loading || !data) return;
 
-    Promise.all(
-      data.bets.map<Promise<BetHistory>>(async bet => {
-        const signedData = await api.requestSignedBetData(
-          bet.marketId,
-          bet.propositionId
-        );
+    data.bets.forEach(async bet => {
+      const signedBetData = await api.requestSignedBetData(
+        bet.marketId,
+        bet.propositionId
+      );
 
-        return {
-          index: +bet.id,
-          marketId: bet.marketId.toLowerCase(),
-          propositionId: bet.propositionId.toLowerCase(),
-          winningPropositionId: signedData.winningPropositionId,
-          marketResultAdded: signedData.marketResultAdded,
-          settled: bet.settled,
-          punter: bet.owner.toLowerCase(),
-          amount: bet.amount,
-          tx: bet.createdAtTx.toLowerCase(),
-          blockNumber: +bet.createdAt,
-          marketOracleResultSig: signedData.marketOracleResultSig
-        };
-      })
-    ).then(setBetHistory);
+      const betHistory: BetHistory = formatBetHistory(bet, signedBetData);
+
+      setBetHistory(prev => (prev ? [...prev, betHistory] : [betHistory]));
+    });
   }, [data, loading]);
 
   return betHistory;
