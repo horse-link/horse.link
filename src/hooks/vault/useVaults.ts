@@ -6,7 +6,7 @@ import api from "../../apis/Api";
 
 const registryContractAddress =
   process.env.REACT_APP_REGISTRY_CONTRACT ||
-  "0xd90AE997C32EdE8feCe39694460543868Da0d0D1";
+  "0x4F9C569AfD5F3F0Bfa3bF2c7443544581330459e";
 
 const registryContract = {
   address: registryContractAddress,
