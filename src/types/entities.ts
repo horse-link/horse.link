@@ -27,7 +27,8 @@ export type Protocol = {
   // protocol id will always be protocol
   id: "protocol";
   inPlay: string;
-  tvl: string;
+  initialTvl: string;
+  currentTvl: string;
   performance: string;
   lastUpdate: string;
 };
