@@ -4,9 +4,7 @@ import { BigNumber, ethers } from "ethers";
 import { useEffect, useState } from "react";
 import api from "../../apis/Api";
 
-const registryContractAddress =
-  process.env.REACT_APP_REGISTRY_CONTRACT ||
-  "0xCFa36F3692b19FF9472aEc18f7dcf5EB0A29A633";
+const registryContractAddress = process.env.REACT_APP_REGISTRY_CONTRACT;
 
 const registryContract = {
   address: registryContractAddress,

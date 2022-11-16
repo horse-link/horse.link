@@ -18,9 +18,7 @@ const useMarketOracleResultWrite = ({
     write: setResultMarketOracleWrite
   } = useContractWrite({
     mode: "recklesslyUnprepared",
-    address:
-      process.env.REACT_APP_MARKET_ORACLE_CONTRACT ||
-      "0x5b559E0E44aeB2bccfd82CACF9d877EbDd28F116",
+    address: process.env.REACT_APP_MARKET_ORACLE_CONTRACT,
     abi: marketOracleContractJson.abi,
     functionName: "setResult",
     // TODO: Once we have switched the marketOracle contract to check EC signatures
