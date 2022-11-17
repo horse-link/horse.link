@@ -9,7 +9,7 @@ test.concurrent.each([
   [15, 30, 2],
   [12, 30, 3]
 ])(
-  "should return enough pages to show all data (5)",
+  "should return enough pages to show all data",
   async (betsArrayLength, totalBets, expected) => {
     const pages = calculateMaxPages(betsArrayLength, totalBets);
     expect(pages).toBe(expected);
