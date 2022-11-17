@@ -19,6 +19,7 @@ import useTokenApproval from "../../../../hooks/token/useTokenApproval";
 import useTokenData from "../../../../hooks/token/useTokenData";
 import { Back, EcSignature, Runner } from "../../../../types";
 import BackView from "./Back_View";
+import { useConfig } from "../../../../providers/Config";
 
 const DECIMAL = 6;
 
@@ -194,7 +195,7 @@ const usePageParams = (runner?: Runner) => {
 
 type Props = {
   runner?: Runner;
-  marketBalance?: string;
+  balanceData?: any;
 };
 
 const BackLogic: React.FC<Props> = ({ runner }) => {
@@ -207,20 +208,20 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
   );
   const [wagerAmount, setWagerAmount] = useState<number>(0);
   const [signature, setSignature] = useState<EcSignature>();
-  const [marketBalance, setMarketBalance] = useState<string>("0");
+  const config = useConfig();
 
-  const { data, isError, isLoading } = useBalance({
+  const marketData = useMarketDetail(selectedMarketAddress);
+  const { data: balanceData } = useBalance({
     address: address as Address,
-    token: process.env.REACT_APP_FAUCET_UDST_CONTRACT as Address
+    token:
+      marketData?.name && marketData.name.includes("DAI")
+        ? (config?.tokenAddresses.DAI as Address)
+        : (config?.tokenAddresses.USDT as Address)
   });
 
   useEffect(() => {
     if (marketAddresses.length > 0) {
       setSelectedMarketAddress(marketAddresses[0]);
-    }
-
-    if (data && !isError && !isLoading) {
-      setMarketBalance(data.formatted);
     }
   }, [marketAddresses]);
 
@@ -318,7 +319,7 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
       txStatus={txStatuses}
       isEnoughAllowance={isEnoughAllowance}
       handleBackContractWrite={handleBackContractWrite}
-      marketBalance={marketBalance}
+      balanceData={balanceData}
     />
   );
 };

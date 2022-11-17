@@ -25,7 +25,7 @@ type Props = {
   };
   isEnoughAllowance: boolean;
   handleBackContractWrite: () => Promise<void>;
-  marketBalance?: string | undefined;
+  balanceData?: any;
 };
 
 const BackView: React.FC<Props> = ({
@@ -41,7 +41,7 @@ const BackView: React.FC<Props> = ({
   txStatus,
   isEnoughAllowance,
   handleBackContractWrite,
-  marketBalance
+  balanceData
 }) => {
   return (
     <div className="w-96 md:w-152">
@@ -85,7 +85,8 @@ const BackView: React.FC<Props> = ({
             </div>
             <div>
               <span className="py-1">
-                Balance: <span>{marketBalance ? marketBalance : "0"}</span>
+                Balance:{" "}
+                <span>{balanceData ? balanceData.formatted : "0"}</span>
               </span>
             </div>
           </div>

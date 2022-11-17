@@ -49,18 +49,18 @@ type BackModalProps = {
   isOpen: boolean;
   onClose: () => void;
   runner?: Runner;
-  marketBalance?: string | undefined;
+  balanceData?: any;
 };
 
 const BackModal = ({
   isOpen,
   onClose,
   runner,
-  marketBalance
+  balanceData
 }: BackModalProps) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <BackLogic runner={runner} marketBalance={marketBalance} />
+      <BackLogic runner={runner} balanceData={balanceData} />
     </Modal>
   );
 };
