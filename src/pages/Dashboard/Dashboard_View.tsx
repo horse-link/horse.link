@@ -5,7 +5,10 @@ import moment from "moment";
 import Skeleton from "react-loading-skeleton";
 import { FormattedProtocol } from "../../types/entities";
 import { ethers } from "ethers";
-import { formatToTwoDecimals } from "../../utils/formatting";
+import {
+  formatNumberWithCommas,
+  formatToTwoDecimals
+} from "../../utils/formatting";
 
 type Props = {
   asLocaltime: (raceTime: number) => string;
@@ -27,7 +30,7 @@ const DashboardView: React.FC<Props> = (props: Props) => {
     {
       name: "Total Liquidity",
       stat: stats?.tvl ? (
-        `$${formatToTwoDecimals(ethers.utils.formatEther(stats.tvl))}`
+        `$${formatNumberWithCommas(ethers.utils.formatEther(stats.tvl))}`
       ) : (
         <Loader />
       )
@@ -35,7 +38,7 @@ const DashboardView: React.FC<Props> = (props: Props) => {
     {
       name: "In Play",
       stat: stats?.inPlay ? (
-        `$${formatToTwoDecimals(ethers.utils.formatEther(stats.inPlay))}`
+        `$${formatNumberWithCommas(ethers.utils.formatEther(stats.inPlay))}`
       ) : (
         <Loader />
       )
