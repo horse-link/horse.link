@@ -16,6 +16,12 @@ export const formatToTwoDecimals = (amount: string) => {
   return roundedToTwoDecimals;
 };
 
+// add a comma every 3 digits
+export const formatNumberWithCommas = (amount: string) => {
+  const parsedAmount = parseFloat(amount);
+  return parsedAmount.toLocaleString("en-US");
+};
+
 export const formatBetHistory = (
   bet: Bet,
   signedBetData: SignedBetDataResponse
