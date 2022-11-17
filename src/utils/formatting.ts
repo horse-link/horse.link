@@ -21,11 +21,14 @@ export const formatNumberWithCommas = (amount: string) => {
   const parsedAmount = parseFloat(amount);
   const formatToFourDecimal = parsedAmount.toFixed(6);
   const roundedToFourDecimal = +formatToFourDecimal;
-  const blah = roundedToFourDecimal.toLocaleString("en-US", {
-    maximumFractionDigits: 4,
-    minimumFractionDigits: 4
-  });
-  return blah;
+  const convertToFourDecimalsWithCommas = roundedToFourDecimal.toLocaleString(
+    "en-US",
+    {
+      maximumFractionDigits: 4,
+      minimumFractionDigits: 4
+    }
+  );
+  return convertToFourDecimalsWithCommas;
 };
 
 export const formatBetHistory = (
