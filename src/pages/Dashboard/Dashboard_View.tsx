@@ -5,7 +5,10 @@ import moment from "moment";
 import Skeleton from "react-loading-skeleton";
 import { FormattedProtocol } from "../../types/entities";
 import { ethers } from "ethers";
-import { formatToTwoDecimals } from "../../utils/formatting";
+import {
+  formatNumberWithCommas,
+  formatToTwoDecimals
+} from "../../utils/formatting";
 
 type Props = {
   asLocaltime: (raceTime: number) => string;
@@ -27,7 +30,7 @@ const DashboardView: React.FC<Props> = (props: Props) => {
     {
       name: "Total Liquidity",
       stat: stats?.tvl ? (
-        `$${formatToTwoDecimals(ethers.utils.formatEther(stats.tvl))}`
+        `$${formatNumberWithCommas(ethers.utils.formatEther(stats.tvl))}`
       ) : (
         <Loader />
       )
@@ -35,7 +38,7 @@ const DashboardView: React.FC<Props> = (props: Props) => {
     {
       name: "In Play",
       stat: stats?.inPlay ? (
-        `$${formatToTwoDecimals(ethers.utils.formatEther(stats.inPlay))}`
+        `$${formatNumberWithCommas(ethers.utils.formatEther(stats.inPlay))}`
       ) : (
         <Loader />
       )
@@ -127,7 +130,7 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
           {moment(Date.now()).format("dddd Do MMMM")}
         </h3>
         <div className="flex flex-col">
-          <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+          <div className="sm:-mx-1 lg:-mx-20">
             <div className="py-2 align-middle inline-block min-w-full">
               <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                 <table className="min-w-full divide-y divide-gray-200 bg-white">
@@ -135,69 +138,87 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
                     <tr>
                       <th
                         scope="col"
-                        className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        className="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
                         Venue
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        className="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
                         Race 1
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        className="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
                         Race 2
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        className="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
                         Race 3
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        className="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
                         Race 4
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        className="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
                         Race 5
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        className="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
                         Race 6
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        className="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
                         Race 7
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        className="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
                         Race 8
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        className="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
                         Race 9
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        className="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
                         Race 10
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Race 11
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Race 12
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Race 13
                       </th>
                     </tr>
                   </thead>
