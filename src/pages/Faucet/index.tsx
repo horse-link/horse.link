@@ -4,17 +4,7 @@ import { Loader, PageLayout } from "../../components";
 import { FaucetModal } from "./FaucetModal";
 import { AiOutlineCopy } from "react-icons/ai";
 import api from "../../apis/Api";
-
-export const faucetTokens = [
-  {
-    name: "Mock DIA",
-    address: "0x70b481B732822Af9beBc895779A6e261DC3D6C8B"
-  },
-  {
-    name: "Mock USDT",
-    address: "0xaF2929Ed6758B0bD9575e1F287b85953B08E50BC"
-  }
-];
+import { StaticConfig } from "../../providers/Config";
 
 export const FaucetPage = () => {
   const { address } = useAccount();
@@ -76,25 +66,29 @@ export const FaucetPage = () => {
           height="300"
         />
         <div className="flex flex-col gap-5 w-full md:w-56">
-          {faucetTokens.map(({ name, address }) => (
+          {Object.keys(StaticConfig.tokenAddresses).map(key => (
             <ClaimButton
-              key={address}
-              tokenName={name}
-              onClick={() => onClickClaim(address, name)}
-              isLoading={
-                name === "Mock USDT" ? isClaimUsdtLoading : isClaimDiaLoading
+              key={key}
+              tokenName={key}
+              onClick={() =>
+                onClickClaim(StaticConfig.tokenAddresses[key], key)
               }
+              isLoading={isClaimUsdtLoading || isClaimDiaLoading}
             />
           ))}
         </div>
         <div className="flex flex-col gap-5 md:w-65">
-          {faucetTokens.map(token => {
+          {Object.keys(StaticConfig.tokenAddresses).map(key => {
             return (
               <div className="flex bg-gray-100 rounded-md p-5 md:w-155">
-                {token.name} Address - {token.address}
+                {key} Address - {StaticConfig.tokenAddresses[key]}
                 <button
                   className="flex rounded-xl hover:bg-green-400 p-1"
-                  onClick={() => navigator.clipboard.writeText(token.address)}
+                  onClick={() =>
+                    navigator.clipboard.writeText(
+                      StaticConfig.tokenAddresses[key]
+                    )
+                  }
                 >
                   <AiOutlineCopy />
                 </button>
