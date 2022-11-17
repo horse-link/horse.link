@@ -1,8 +1,8 @@
 import { PageLayout } from "../../components";
+import { Toggle } from "../../components/Toggle";
 import { BetHistory } from "../../types";
 import BetModal from "./components/BetModal";
 import BetTable from "./components/BetTable";
-import MyBetsToggle from "./components/MyBetsToggle";
 
 type Props = {
   myBetsEnabled: boolean;
@@ -29,7 +29,10 @@ const BetsView = ({
       />
       <div className="grid grid-cols-2 gap-2">
         <h3 className="text-lg font-medium text-gray-900">Bets History</h3>
-        <MyBetsToggle enabled={myBetsEnabled} onChange={onMyBetToggle} />
+        <div className="flex gap-3 self-end justify-self-end">
+          <Toggle enabled={myBetsEnabled} onChange={onMyBetToggle} />
+          <div>My Bets</div>
+        </div>
         <BetTable myBetsEnabled={myBetsEnabled} onClickBet={onClickBet} />
       </div>
     </PageLayout>
