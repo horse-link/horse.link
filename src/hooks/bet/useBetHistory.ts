@@ -9,11 +9,12 @@ type Response = {
   bets: Bet[];
 };
 
-const useBetHistory = (pagination: number, address?: string) => {
+const useBetHistory = (pagination: number, page: number, address?: string) => {
   const [betHistory, setBetHistory] = useState<BetHistory[]>();
 
   const query = `{
     bets(
+      skip: ${(page - 1) * pagination}
       first: ${pagination}
       ${address ? `where: { owner: "${address.toLowerCase()}" }` : ""}
       orderBy: createdAt
@@ -52,10 +53,10 @@ const useBetHistory = (pagination: number, address?: string) => {
   }, [data, loading]);
 
   useEffect(() => {
-    // clearing the state when pagination changes forces
+    // clearing the state when pagination or pages changes forces
     // the loading components to render while the new data is fetched
     setBetHistory(undefined);
-  }, [pagination]);
+  }, [pagination, page]);
 
   return betHistory;
 };

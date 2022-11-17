@@ -14,6 +14,8 @@ type Props = {
   selectedBet?: BetHistory;
   pagination: number;
   setPagination: (pagination: number) => void;
+  page: number;
+  setPage: (page: number) => void;
 };
 
 const paginationOptions = [
@@ -30,7 +32,9 @@ const BetsView = ({
   onMyBetToggle,
   selectedBet,
   pagination,
-  setPagination
+  setPagination,
+  page,
+  setPage
 }: Props) => {
   return (
     <PageLayout requiresAuth={false}>
@@ -76,6 +80,8 @@ const BetsView = ({
           myBetsEnabled={myBetsEnabled}
           onClickBet={onClickBet}
           pagination={pagination}
+          page={page}
+          setPage={setPage}
         />
       </div>
     </PageLayout>
