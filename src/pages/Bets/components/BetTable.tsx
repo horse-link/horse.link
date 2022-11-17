@@ -86,9 +86,17 @@ const BetTable = ({
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {myBetsEnabled ? (
-                <BetRows bets={userBetHistory} onClickBet={onClickBet} />
+                <BetRows
+                  myBetsSelected={true}
+                  bets={userBetHistory}
+                  onClickBet={onClickBet}
+                />
               ) : (
-                <BetRows bets={totalBetHistory} onClickBet={onClickBet} />
+                <BetRows
+                  myBetsSelected={false}
+                  bets={totalBetHistory}
+                  onClickBet={onClickBet}
+                />
               )}
             </tbody>
           </table>

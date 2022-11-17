@@ -66,7 +66,7 @@ const useBets = (limit = 1000, skip = 0) => {
     return totalBetHistory.filter(
       bet => bet.punter.toLowerCase() === address.toLowerCase()
     );
-  }, [totalBetHistory]);
+  }, [totalBetHistory, address]);
 
   const totalBets = useMemo(() => {
     if (loading || !data) return;
