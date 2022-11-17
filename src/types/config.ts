@@ -2,6 +2,5 @@ export type StaticConfigType = {
   tokenAddresses: Record<string, string>;
 };
 
-export type Config = StaticConfigType & {
-  // asynchronous data types
-};
+// todo: add async data types
+export type Config = StaticConfigType;
