@@ -19,7 +19,13 @@ export const formatToTwoDecimals = (amount: string) => {
 // add a comma every 3 digits
 export const formatNumberWithCommas = (amount: string) => {
   const parsedAmount = parseFloat(amount);
-  return parsedAmount.toLocaleString("en-US");
+  const formatToFourDecimal = parsedAmount.toFixed(6);
+  const roundedToFourDecimal = +formatToFourDecimal;
+  const blah = roundedToFourDecimal.toLocaleString("en-US", {
+    maximumFractionDigits: 4,
+    minimumFractionDigits: 4
+  });
+  return blah;
 };
 
 export const formatBetHistory = (

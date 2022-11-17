@@ -30,9 +30,7 @@ const DashboardView: React.FC<Props> = (props: Props) => {
     {
       name: "Total Liquidity",
       stat: stats?.tvl ? (
-        `$${formatNumberWithCommas(
-          formatToTwoDecimals(ethers.utils.formatEther(stats.tvl))
-        )}`
+        `$${formatNumberWithCommas(ethers.utils.formatEther(stats.tvl))}`
       ) : (
         <Loader />
       )
@@ -40,9 +38,7 @@ const DashboardView: React.FC<Props> = (props: Props) => {
     {
       name: "In Play",
       stat: stats?.inPlay ? (
-        `$${formatNumberWithCommas(
-          formatToTwoDecimals(ethers.utils.formatEther(stats.inPlay))
-        )}.00`
+        `$${formatNumberWithCommas(ethers.utils.formatEther(stats.inPlay))}`
       ) : (
         <Loader />
       )
