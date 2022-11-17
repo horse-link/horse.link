@@ -25,16 +25,20 @@ const BetTable = ({
   setPage
 }: Props) => {
   const { totalBetHistory, userBetHistory, totalBets } = useBets(
+    // limit for bets returned will be current pagination
     pagination,
+    // skip calculation
     (page - 1) * pagination
   );
 
+  // max pages for "my bets" table
   const userMaxPages = useMemo(() => {
     if (!userBetHistory) return 1;
 
     return calculateMaxPages(pagination, userBetHistory.length);
   }, [userBetHistory, pagination]);
 
+  // max pages for total bet history
   const totalMaxPages = useMemo(() => {
     if (!totalBets) return 1;
 

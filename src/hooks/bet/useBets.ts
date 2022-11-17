@@ -14,6 +14,7 @@ const useBets = (limit = 1000, skip = 0) => {
   const { address } = useAccount();
   const [totalBetHistory, setTotalBetHistory] = useState<BetHistory[]>();
 
+  // get every (up to 1000) bet entities
   const query = `{
     bets(
       orderBy: createdAt
@@ -45,6 +46,7 @@ const useBets = (limit = 1000, skip = 0) => {
       (_, i) => i >= skip && i < skip + limit
     );
 
+    // only fetch api data for limited array for efficiency
     Promise.all(
       limitedArray.map<Promise<BetHistory>>(async bet => {
         const signedBetData = await api.requestSignedBetData(
@@ -57,6 +59,7 @@ const useBets = (limit = 1000, skip = 0) => {
     ).then(setTotalBetHistory);
   }, [data, loading, skip, limit]);
 
+  // filter for user bet history
   const userBetHistory = useMemo(() => {
     if (!totalBetHistory || !address) return;
 
