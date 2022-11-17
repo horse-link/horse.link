@@ -5,111 +5,92 @@ import { formatToFourDecimals } from "../../../utils/formatting";
 import BetRows from "./BetRows";
 import { ethers } from "ethers";
 import moment from "moment";
-import React, { useMemo } from "react";
+import React from "react";
 import PageSelector from "./PageSelector";
-import useBets from "../../../hooks/bet/useBets";
-import { calculateMaxPages } from "../../../utils/bets";
 
 type Props = {
   myBetsEnabled: boolean;
   onClickBet: (bet?: BetHistory) => void;
-  pagination: number;
   page: number;
   setPage: (page: number) => void;
+  totalBetHistory: BetHistory[] | undefined;
+  userBetHistory: BetHistory[] | undefined;
+  userMaxPages: number;
+  totalMaxPages: number;
 };
 const BetTable = ({
   myBetsEnabled,
   onClickBet,
-  pagination,
   page,
-  setPage
-}: Props) => {
-  const { totalBetHistory, userBetHistory, totalBets } = useBets(
-    // limit for bets returned will be current pagination
-    pagination,
-    // skip calculation
-    (page - 1) * pagination
-  );
-
-  // max pages for "my bets" table
-  const userMaxPages = useMemo(() => {
-    if (!userBetHistory) return 1;
-
-    return calculateMaxPages(pagination, userBetHistory.length);
-  }, [userBetHistory, pagination]);
-
-  // max pages for total bet history
-  const totalMaxPages = useMemo(() => {
-    if (!totalBets) return 1;
-
-    return calculateMaxPages(pagination, totalBets);
-  }, [totalBets, pagination]);
-
-  return (
-    <React.Fragment>
-      <div className="col-span-2 bg-gray-50 rounded-xl overflow-auto">
-        <div className="shadow-sm overflow-hidden mt-2 mb-5">
-          <table className="border-collapse table-fixed w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr className="text-center">
-                <th
-                  scope="col"
-                  className="pl-5 pr-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
-                >
-                  Punter
-                </th>
-                <th
-                  scope="col"
-                  className="px-2 py-3 w-20 text-left text-xs font-medium text-gray-500 uppercase"
-                >
-                  Amount
-                </th>
-                <th
-                  scope="col"
-                  className="px-2 py-3 w-32 text-left text-xs font-medium text-gray-500 uppercase"
-                >
-                  Time
-                </th>
-                <th
-                  scope="col"
-                  className="px-2 py-3  text-left text-xs font-medium text-gray-500 uppercase"
-                >
-                  Market ID
-                </th>
-                <th
-                  scope="col"
-                  className="pl-2 pr-5 py-3  text-left text-xs font-medium text-gray-500 uppercase"
-                >
-                  Proposition ID
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {myBetsEnabled ? (
-                <BetRows
-                  myBetsSelected={true}
-                  bets={userBetHistory}
-                  onClickBet={onClickBet}
-                />
-              ) : (
-                <BetRows
-                  myBetsSelected={false}
-                  bets={totalBetHistory}
-                  onClickBet={onClickBet}
-                />
-              )}
-            </tbody>
-          </table>
-        </div>
+  setPage,
+  totalBetHistory,
+  userBetHistory,
+  userMaxPages,
+  totalMaxPages
+}: Props) => (
+  <React.Fragment>
+    <div className="col-span-2 bg-gray-50 rounded-xl overflow-auto">
+      <div className="shadow-sm overflow-hidden mt-2 mb-5">
+        <table className="border-collapse table-fixed w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr className="text-center">
+              <th
+                scope="col"
+                className="pl-5 pr-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
+              >
+                Punter
+              </th>
+              <th
+                scope="col"
+                className="px-2 py-3 w-20 text-left text-xs font-medium text-gray-500 uppercase"
+              >
+                Amount
+              </th>
+              <th
+                scope="col"
+                className="px-2 py-3 w-32 text-left text-xs font-medium text-gray-500 uppercase"
+              >
+                Time
+              </th>
+              <th
+                scope="col"
+                className="px-2 py-3  text-left text-xs font-medium text-gray-500 uppercase"
+              >
+                Market ID
+              </th>
+              <th
+                scope="col"
+                className="pl-2 pr-5 py-3  text-left text-xs font-medium text-gray-500 uppercase"
+              >
+                Proposition ID
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {myBetsEnabled ? (
+              <BetRows
+                myBetsSelected={true}
+                bets={userBetHistory}
+                onClickBet={onClickBet}
+              />
+            ) : (
+              <BetRows
+                myBetsSelected={false}
+                bets={totalBetHistory}
+                onClickBet={onClickBet}
+              />
+            )}
+          </tbody>
+        </table>
       </div>
-      <PageSelector
-        page={page}
-        maxPages={myBetsEnabled ? userMaxPages : totalMaxPages}
-        setPage={setPage}
-      />
-    </React.Fragment>
-  );
-};
+    </div>
+    <PageSelector
+      page={page}
+      maxPages={myBetsEnabled ? userMaxPages : totalMaxPages}
+      setPage={setPage}
+    />
+  </React.Fragment>
+);
 
 export default BetTable;
 

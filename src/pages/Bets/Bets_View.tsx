@@ -13,10 +13,13 @@ type Props = {
   isModalOpen: boolean;
   onCloseModal: () => void;
   selectedBet?: BetHistory;
-  pagination: number;
   setPagination: (pagination: number) => void;
   page: number;
   setPage: (page: number) => void;
+  totalBetHistory: BetHistory[] | undefined;
+  userBetHistory: BetHistory[] | undefined;
+  userMaxPages: number;
+  totalMaxPages: number;
 };
 
 const BetsView = ({
@@ -26,10 +29,13 @@ const BetsView = ({
   myBetsEnabled,
   onMyBetToggle,
   selectedBet,
-  pagination,
   setPagination,
   page,
-  setPage
+  setPage,
+  totalBetHistory,
+  userBetHistory,
+  userMaxPages,
+  totalMaxPages
 }: Props) => {
   return (
     <PageLayout requiresAuth={false}>
@@ -74,9 +80,12 @@ const BetsView = ({
         <BetTable
           myBetsEnabled={myBetsEnabled}
           onClickBet={onClickBet}
-          pagination={pagination}
           page={page}
           setPage={setPage}
+          totalBetHistory={totalBetHistory}
+          userBetHistory={userBetHistory}
+          userMaxPages={userMaxPages}
+          totalMaxPages={totalMaxPages}
         />
       </div>
     </PageLayout>
