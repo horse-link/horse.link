@@ -39,16 +39,16 @@ const useBetHistory = (address?: string) => {
   useEffect(() => {
     if (loading || !data) return;
 
-    data.bets.forEach(async bet => {
-      const signedBetData = await api.requestSignedBetData(
-        bet.marketId,
-        bet.propositionId
-      );
+    Promise.all(
+      data.bets.map<Promise<BetHistory>>(async bet => {
+        const signedBetData = await api.requestSignedBetData(
+          bet.marketId,
+          bet.propositionId
+        );
 
-      const betHistory: BetHistory = formatBetHistory(bet, signedBetData);
-
-      setBetHistory(prev => (prev ? [...prev, betHistory] : [betHistory]));
-    });
+        return formatBetHistory(bet, signedBetData);
+      })
+    ).then(setBetHistory);
   }, [data, loading]);
 
   return betHistory;
