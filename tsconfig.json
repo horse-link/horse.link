@@ -25,6 +25,6 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "src/**/*.d.ts", "src/**/*"],
+  "include": ["src", "src/**/*.d.ts", "src/**/*", "setupTest.ts"],
   "exclude": ["node_modules", "*/dist/*", "*/build/*"]
 }

@@ -16,6 +16,7 @@ const getMockMeets = (): Meet[] => {
     id: `mock${i}`,
     name: "",
     location: "",
+    date: "",
     races: mockRace
   }));
 };

@@ -1,3 +1,4 @@
+import { gql } from "@apollo/client";
 import { BigNumber } from "ethers";
 import { useMemo } from "react";
 import {
@@ -11,7 +12,7 @@ type Response = {
 };
 
 const useVaultHistory = (vaultAddress?: string) => {
-  const query = `{
+  const query = gql`{
     vaultTransactions(
       first: 1000
       ${vaultAddress ? `where: { vaultAddress: "${vaultAddress}" }` : ""}

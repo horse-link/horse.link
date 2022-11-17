@@ -1,3 +1,4 @@
+import { gql } from "@apollo/client";
 import { BigNumber } from "ethers";
 import { useMemo } from "react";
 import { FormattedProtocol, Protocol } from "../../types/entities";
@@ -8,18 +9,20 @@ type Response = {
 };
 
 const useProtocolStatistics = () => {
-  const query = `{
-    protocols {
-      id
-      inPlay
-      initialTvl
-      currentTvl
-      performance
-      lastUpdate
+  const GET_PROTOCOLS = gql`
+    query GetProtocols {
+      protocols {
+        id
+        inPlay
+        initialTvl
+        currentTvl
+        performance
+        lastUpdate
+      }
     }
-  }`;
+  `;
 
-  const { data, loading } = useSubgraph<Response>(query);
+  const { data, loading } = useSubgraph<Response>(GET_PROTOCOLS);
 
   const formattedData = useMemo<FormattedProtocol | undefined>(() => {
     if (loading || !data) return;

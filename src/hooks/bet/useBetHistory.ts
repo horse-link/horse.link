@@ -1,3 +1,4 @@
+import { gql } from "@apollo/client";
 import { useEffect, useState } from "react";
 import api from "../../apis/Api";
 import { BetHistory } from "../../types";
@@ -12,7 +13,8 @@ type Response = {
 const useBetHistory = (address?: string) => {
   const [betHistory, setBetHistory] = useState<BetHistory[]>();
 
-  const query = `{
+  const query = gql` 
+  query GetBets{ 
     bets(
       first: 1000
       ${address ? `where: { owner: "${address.toLowerCase()}" }` : ""}
