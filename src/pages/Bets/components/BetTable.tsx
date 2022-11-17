@@ -11,11 +11,12 @@ import moment from "moment";
 type Props = {
   myBetsEnabled: boolean;
   onClickBet: (bet?: BetHistory) => void;
+  pagination: number;
 };
-const BetTable = ({ myBetsEnabled, onClickBet }: Props) => {
+const BetTable = ({ myBetsEnabled, onClickBet, pagination }: Props) => {
   const { address } = useAccount();
-  const bets = useBetHistory();
-  const myBets = useBetHistory(address);
+  const bets = useBetHistory(pagination);
+  const myBets = useBetHistory(pagination, address);
   return (
     <div className="col-span-2 bg-gray-50 rounded-xl overflow-auto">
       <div className="shadow-sm overflow-hidden mt-2 mb-5">

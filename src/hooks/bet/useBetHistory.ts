@@ -9,12 +9,12 @@ type Response = {
   bets: Bet[];
 };
 
-const useBetHistory = (address?: string) => {
+const useBetHistory = (pagination: number, address?: string) => {
   const [betHistory, setBetHistory] = useState<BetHistory[]>();
 
   const query = `{
     bets(
-      first: 1000
+      first: ${pagination}
       ${address ? `where: { owner: "${address.toLowerCase()}" }` : ""}
       orderBy: createdAt
       orderDirection: desc
@@ -50,6 +50,12 @@ const useBetHistory = (address?: string) => {
       })
     ).then(setBetHistory);
   }, [data, loading]);
+
+  useEffect(() => {
+    // clearing the state when pagination changes forces
+    // the loading components to render while the new data is fetched
+    setBetHistory(undefined);
+  }, [pagination]);
 
   return betHistory;
 };

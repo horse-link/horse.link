@@ -6,7 +6,7 @@ type Props = {
 };
 const MyBetsToggle = ({ enabled, onChange }: Props) => {
   return (
-    <div className="flex gap-3 self-end justify-self-end">
+    <div className="flex gap-3 self-end justify-self-end items-center pb-2">
       <Switch
         checked={enabled}
         onChange={onChange}
@@ -20,7 +20,7 @@ const MyBetsToggle = ({ enabled, onChange }: Props) => {
             inline-block h-4 w-4 transform rounded-full bg-white transition`}
         />
       </Switch>
-      <div>My Bets</div>
+      <div className="font-semibold">My Bets</div>
     </div>
   );
 };
