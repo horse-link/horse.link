@@ -5,7 +5,7 @@ import { FaucetModal } from "./FaucetModal";
 import { AiOutlineCopy } from "react-icons/ai";
 import api from "../../apis/Api";
 
-const faucetTokens = [
+export const faucetTokens = [
   {
     name: "Mock DIA",
     address: "0x70b481B732822Af9beBc895779A6e261DC3D6C8B"

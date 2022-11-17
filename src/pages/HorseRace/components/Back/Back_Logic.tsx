@@ -6,6 +6,7 @@ import api from "../../../../apis/Api";
 import {
   Address,
   useAccount,
+  useBalance,
   useContractWrite,
   useWaitForTransaction
 } from "wagmi";
@@ -193,6 +194,7 @@ const usePageParams = (runner?: Runner) => {
 
 type Props = {
   runner?: Runner;
+  marketBalance?: string;
 };
 
 const BackLogic: React.FC<Props> = ({ runner }) => {
@@ -205,10 +207,20 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
   );
   const [wagerAmount, setWagerAmount] = useState<number>(0);
   const [signature, setSignature] = useState<EcSignature>();
+  const [marketBalance, setMarketBalance] = useState<string>("0");
+
+  const { data, isError, isLoading } = useBalance({
+    address: address as Address,
+    token: process.env.REACT_APP_FAUCET_UDST_CONTRACT as Address
+  });
 
   useEffect(() => {
     if (marketAddresses.length > 0) {
       setSelectedMarketAddress(marketAddresses[0]);
+    }
+
+    if (data && !isError && !isLoading) {
+      setMarketBalance(data.formatted);
     }
   }, [marketAddresses]);
 
@@ -306,6 +318,7 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
       txStatus={txStatuses}
       isEnoughAllowance={isEnoughAllowance}
       handleBackContractWrite={handleBackContractWrite}
+      marketBalance={marketBalance}
     />
   );
 };
