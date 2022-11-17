@@ -68,6 +68,7 @@ const useBets = (limit = 1000, skip = 0) => {
     );
   }, [totalBetHistory, address]);
 
+  // calculate total bet count
   const totalBets = useMemo(() => {
     if (loading || !data) return;
 
