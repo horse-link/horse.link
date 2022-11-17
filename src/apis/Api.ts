@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import { BigNumberish } from "ethers";
+import { BigNumberish, ethers } from "ethers";
 import {
   BetHistoryResponse,
   EcSignature,
@@ -11,6 +11,7 @@ import {
   Vault,
   VaultUserData
 } from "../types/index";
+import { isUsdt } from "../utils/config";
 
 export class Api {
   private client: AxiosInstance;
@@ -88,7 +89,9 @@ export class Api {
   ): Promise<{ tx: string }> => {
     const { data } = await this.client.post(`/faucet`, {
       to: userAddress,
-      amount: (100 * 10 ** 18).toString(),
+      amount: isUsdt(tokenAddress)
+        ? ethers.utils.parseUnits("10", 6).toString()
+        : ethers.utils.formatEther(10),
       address: tokenAddress
     });
 
