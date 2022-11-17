@@ -199,6 +199,18 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
                       >
                         Race 10
                       </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Race 11
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Race 12
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
