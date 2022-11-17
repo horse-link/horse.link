@@ -1,45 +1,17 @@
-import {
-  calculateBetTableMaxPages,
-  incrementPage,
-  decrementPage
-} from "./bets";
+import { calculateMaxPages, incrementPage, decrementPage } from "./bets";
 
 // calculate pages tests
 test.concurrent.each([
-  [5, 1],
-  [10, 1],
-  [15, 2],
-  [25, 3]
+  [1, 1, 1],
+  [5, 8, 2],
+  [5, 1, 1],
+  [5, 10, 2],
+  [15, 30, 2],
+  [12, 30, 3]
 ])(
-  "should return enough pages to show all data (10)",
-  async (input, expected) => {
-    const pages = calculateBetTableMaxPages(input, 10);
-    expect(pages).toBe(expected);
-  }
-);
-
-test.concurrent.each([
-  [5, 1],
-  [10, 1],
-  [30, 2],
-  [50, 2]
-])(
-  "should return enough pages to show all data (25)",
-  async (input, expected) => {
-    const pages = calculateBetTableMaxPages(input, 25);
-    expect(pages).toBe(expected);
-  }
-);
-
-test.concurrent.each([
-  [10, 1],
-  [30, 1],
-  [55, 2],
-  [1000, 20]
-])(
-  "should return enough pages to show all data (50)",
-  async (input, expected) => {
-    const pages = calculateBetTableMaxPages(input, 50);
+  "should return enough pages to show all data (5)",
+  async (betsArrayLength, totalBets, expected) => {
+    const pages = calculateMaxPages(betsArrayLength, totalBets);
     expect(pages).toBe(expected);
   }
 );

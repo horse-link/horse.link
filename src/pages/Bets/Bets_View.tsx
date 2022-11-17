@@ -4,6 +4,7 @@ import BetModal from "./components/BetModal";
 import BetTable from "./components/BetTable";
 import MyBetsToggle from "./components/MyBetsToggle";
 import Select from "react-select";
+import { paginationOptions } from "./Bets_Logic";
 
 type Props = {
   myBetsEnabled: boolean;
@@ -17,12 +18,6 @@ type Props = {
   page: number;
   setPage: (page: number) => void;
 };
-
-const paginationOptions = [
-  { label: "10", value: 10 },
-  { label: "25", value: 25 },
-  { label: "50", value: 50 }
-];
 
 const BetsView = ({
   onClickBet,

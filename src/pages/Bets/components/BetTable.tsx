@@ -1,15 +1,14 @@
 import Skeleton from "react-loading-skeleton";
 import classnames from "classnames";
 import { BetHistory } from "../../../types";
-import useBetHistory from "../../../hooks/bet/useBetHistory";
 import { formatToFourDecimals } from "../../../utils/formatting";
 import BetRows from "./BetRows";
-import { useAccount } from "wagmi";
 import { ethers } from "ethers";
 import moment from "moment";
 import React, { useMemo } from "react";
-import { calculateBetTableMaxPages } from "../../../utils/bets";
 import PageSelector from "./PageSelector";
+import useBets from "../../../hooks/bet/useBets";
+import { calculateMaxPages } from "../../../utils/bets";
 
 type Props = {
   myBetsEnabled: boolean;
@@ -25,17 +24,22 @@ const BetTable = ({
   page,
   setPage
 }: Props) => {
-  const { address } = useAccount();
-  const bets = useBetHistory(pagination, page);
-  const myBets = useBetHistory(pagination, page, address);
+  const { totalBetHistory, userBetHistory, totalBets } = useBets(
+    pagination,
+    (page - 1) * pagination
+  );
 
-  const maxPages = useMemo<number>(() => {
-    if (!bets || !myBets) return 1;
+  const userMaxPages = useMemo(() => {
+    if (!userBetHistory) return 1;
 
-    return myBetsEnabled
-      ? calculateBetTableMaxPages(myBets.length, pagination)
-      : calculateBetTableMaxPages(bets.length, pagination);
-  }, [bets, myBets, pagination, myBetsEnabled]);
+    return calculateMaxPages(pagination, userBetHistory.length);
+  }, [userBetHistory, pagination]);
+
+  const totalMaxPages = useMemo(() => {
+    if (!totalBets) return 1;
+
+    return calculateMaxPages(pagination, totalBets);
+  }, [totalBets, pagination]);
 
   return (
     <React.Fragment>
@@ -78,15 +82,19 @@ const BetTable = ({
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {myBetsEnabled ? (
-                <BetRows bets={myBets} onClickBet={onClickBet} />
+                <BetRows bets={userBetHistory} onClickBet={onClickBet} />
               ) : (
-                <BetRows bets={bets} onClickBet={onClickBet} />
+                <BetRows bets={totalBetHistory} onClickBet={onClickBet} />
               )}
             </tbody>
           </table>
         </div>
       </div>
-      <PageSelector page={page} maxPages={maxPages} setPage={setPage} />
+      <PageSelector
+        page={page}
+        maxPages={myBetsEnabled ? userMaxPages : totalMaxPages}
+        setPage={setPage}
+      />
     </React.Fragment>
   );
 };
