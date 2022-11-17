@@ -72,7 +72,7 @@ const useBets = (limit = 1000, skip = 0) => {
     if (loading || !data) return;
 
     return data.bets.length;
-  }, [totalBetHistory]);
+  }, [data, loading]);
 
   // force loading components to render while new data is fetched
   useEffect(() => {
