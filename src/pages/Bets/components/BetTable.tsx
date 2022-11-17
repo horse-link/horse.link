@@ -7,15 +7,22 @@ import BetRows from "./BetRows";
 import { useAccount } from "wagmi";
 import { ethers } from "ethers";
 import moment from "moment";
+import { useEffect } from "react";
 
 type Props = {
   myBetsEnabled: boolean;
   onClickBet: (bet?: BetHistory) => void;
+  selectedFilter: string;
 };
-const BetTable = ({ myBetsEnabled, onClickBet }: Props) => {
+const BetTable = ({ myBetsEnabled, onClickBet, selectedFilter }: Props) => {
   const { address } = useAccount();
   const bets = useBetHistory();
   const myBets = useBetHistory(address);
+
+  useEffect(() => {
+    console.log("selectedFilter", selectedFilter);
+  }, [selectedFilter]);
+
   return (
     <div className="col-span-2 bg-gray-50 rounded-xl overflow-auto">
       <div className="shadow-sm overflow-hidden mt-2 mb-5">
@@ -56,9 +63,17 @@ const BetTable = ({ myBetsEnabled, onClickBet }: Props) => {
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {myBetsEnabled ? (
-              <BetRows bets={myBets} onClickBet={onClickBet} />
+              <BetRows
+                bets={myBets}
+                onClickBet={onClickBet}
+                selectedFilter={selectedFilter}
+              />
             ) : (
-              <BetRows bets={bets} onClickBet={onClickBet} />
+              <BetRows
+                bets={bets}
+                onClickBet={onClickBet}
+                selectedFilter={selectedFilter}
+              />
             )}
           </tbody>
         </table>

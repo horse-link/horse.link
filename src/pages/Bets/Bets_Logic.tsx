@@ -6,6 +6,7 @@ const BetsLogics = () => {
   const [myBetsEnabled, setMyBetsEnabled] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBet, setSelectedBet] = useState<BetHistory>();
+  const [selectedFilter, setSelectedFilter] = useState<string>("ALL_BETS");
 
   const onClickBet = (betData?: BetHistory) => {
     if (!betData) return;
@@ -23,6 +24,8 @@ const BetsLogics = () => {
       isModalOpen={isModalOpen}
       onCloseModal={() => setIsModalOpen(false)}
       selectedBet={selectedBet}
+      selectedFilter={selectedFilter}
+      setSelectedFilter={setSelectedFilter}
     />
   );
 };
