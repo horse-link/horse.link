@@ -16,6 +16,7 @@ const getMockMeets = (): Meet[] => {
     id: `mock${i}`,
     name: "",
     location: "",
+    date: "",
     races: mockRace
   }));
 };
@@ -23,7 +24,7 @@ const getMockMeets = (): Meet[] => {
 const Dashboard: React.FC = () => {
   const [response, setResponse] = useState<SignedMeetingsResponse>();
 
-  const stats = useProtocolStatistics();
+  const stats = undefined; //useProtocolStatistics();
 
   useEffect(() => {
     const loadMeetings = async () => {
