@@ -120,7 +120,6 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
   const { meets } = props;
   const headerArray = useMemo(() => {
     const maxLength = Math.max(...meets.map(meet => meet.races.length));
-    console.log(maxLength);
     return new Array(maxLength).fill("");
   }, [meets]);
   return (
