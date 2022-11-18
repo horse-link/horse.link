@@ -40,7 +40,6 @@ const SettleBet = ({ data }: SettlebetProps) => {
   }, [marketAddresses]);
 
   const useMarketOracle = (bet?: BetHistory) => {
-    console.log(bet);
     const {
       setResultMarketOracleWrite,
       marketOracleError,
