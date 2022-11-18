@@ -24,11 +24,11 @@ export const VaultDetail = ({
         {tokenSymbol ?? <Skeleton width="1em" />} Vault
       </h1>
       <div>
-        Share:
+        Share:&nbsp;
         {(userAddress && userBalance) ?? <Skeleton width="1em" />}
         {!userAddress && "connect wallet to see your balance"}
       </div>
-      <div>Vault Address: {vaultAddress ?? <Skeleton width="10em" />}</div>
+      <div>Vault address: {vaultAddress ?? <Skeleton width="10em" />}</div>
       <div>Underlying: {asset ?? <Skeleton width="10em" />}</div>
       <div>TLV: {vaultBalance ?? <Skeleton width="2em" />}</div>
 

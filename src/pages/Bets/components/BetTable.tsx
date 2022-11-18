@@ -1,12 +1,34 @@
 import Skeleton from "react-loading-skeleton";
+import classnames from "classnames";
 import { BetHistory } from "../../../types";
+import { formatToFourDecimals } from "../../../utils/formatting";
+import BetRows from "./BetRows";
+import { ethers } from "ethers";
+import moment from "moment";
+import React from "react";
+import PageSelector from "./PageSelector";
 
 type Props = {
-  betsData: BetHistory[] | undefined[];
+  myBetsEnabled: boolean;
   onClickBet: (bet?: BetHistory) => void;
+  page: number;
+  setPage: (page: number) => void;
+  totalBetHistory: BetHistory[] | undefined;
+  userBetHistory: BetHistory[] | undefined;
+  userMaxPages: number;
+  totalMaxPages: number;
 };
-const BetTable = ({ betsData, onClickBet }: Props) => {
-  return (
+const BetTable = ({
+  myBetsEnabled,
+  onClickBet,
+  page,
+  setPage,
+  totalBetHistory,
+  userBetHistory,
+  userMaxPages,
+  totalMaxPages
+}: Props) => (
+  <React.Fragment>
     <div className="col-span-2 bg-gray-50 rounded-xl overflow-auto">
       <div className="shadow-sm overflow-hidden mt-2 mb-5">
         <table className="border-collapse table-fixed w-full divide-y divide-gray-200">
@@ -26,9 +48,9 @@ const BetTable = ({ betsData, onClickBet }: Props) => {
               </th>
               <th
                 scope="col"
-                className="px-2 py-3 w-20 text-left text-xs font-medium text-gray-500 uppercase"
+                className="px-2 py-3 w-32 text-left text-xs font-medium text-gray-500 uppercase"
               >
-                Block
+                Time
               </th>
               <th
                 scope="col"
@@ -45,43 +67,68 @@ const BetTable = ({ betsData, onClickBet }: Props) => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {betsData.map(v => (
-              <Row
-                betData={v}
-                key={v?.proposition_id}
-                onClick={() => onClickBet(v)}
+            {myBetsEnabled ? (
+              <BetRows
+                myBetsSelected={true}
+                bets={userBetHistory}
+                onClickBet={onClickBet}
               />
-            ))}
+            ) : (
+              <BetRows
+                myBetsSelected={false}
+                bets={totalBetHistory}
+                onClickBet={onClickBet}
+              />
+            )}
           </tbody>
         </table>
       </div>
     </div>
-  );
-};
+    <PageSelector
+      page={page}
+      maxPages={myBetsEnabled ? userMaxPages : totalMaxPages}
+      setPage={setPage}
+    />
+  </React.Fragment>
+);
 
 export default BetTable;
 
 type RowProps = {
-  betData?: BetHistory;
+  betData: BetHistory;
   onClick?: () => void;
 };
-const Row = ({ betData, onClick }: RowProps) => {
+export const Row = ({ betData, onClick }: RowProps) => {
   return (
     <tr
-      key={betData?.proposition_id}
+      key={betData.propositionId}
       onClick={onClick}
-      className="cursor-pointer hover:bg-gray-100"
+      className={classnames(
+        "cursor-pointer hover:bg-gray-100",
+        {
+          "bg-green-300":
+            (betData.winningPropositionId || betData.marketResultAdded) &&
+            !betData.settled
+        },
+        {
+          "bg-gray-300": betData.settled
+        }
+      )}
     >
       <td className="pl-5 pr-2 py-4 truncate">
-        {betData?.punter ?? <Skeleton />}
+        {betData.punter ?? <Skeleton />}
       </td>
-      <td className="px-2 py-4">{betData?.amount ?? <Skeleton />}</td>
-      <td className="px-2 py-4">{betData?.blockNumber ?? <Skeleton />}</td>
-      <td className="px-2 py-4 truncate">
-        {betData?.market_id ?? <Skeleton />}
+      <td className="px-2 py-4">
+        {formatToFourDecimals(ethers.utils.formatEther(betData.amount)) ?? (
+          <Skeleton />
+        )}
       </td>
+      <td className="px-2 py-4">
+        {moment.unix(betData.blockNumber).fromNow() ?? <Skeleton />}
+      </td>
+      <td className="px-2 py-4 truncate">{betData.marketId ?? <Skeleton />}</td>
       <td className="px-2 py-4 truncate">
-        {betData?.proposition_id ?? <Skeleton />}
+        {betData.propositionId ?? <Skeleton />}
       </td>
     </tr>
   );

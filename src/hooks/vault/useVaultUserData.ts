@@ -1,9 +1,9 @@
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { useEffect, useState } from "react";
-import { useContractReads } from "wagmi";
+import { Address, useContractReads } from "wagmi";
 import vaultContractJson from "../../abi/Vault.json";
 import { VaultUserData } from "../../types";
-import useApi from "../useApi";
+import api from "../../apis/Api";
 
 type UseVaultUserDataArgs = {
   vaultAddress: string;
@@ -18,8 +18,8 @@ const useVaultUserDataFromContract = ({
   userAddress
 }: UseVaultUserDataArgs) => {
   const vaultContract = {
-    addressOrName: vaultAddress,
-    contractInterface: vaultContractJson
+    address: vaultAddress as Address,
+    abi: vaultContractJson
   };
   const { data: vaultData, refetch } = useContractReads({
     contracts: [
@@ -30,7 +30,7 @@ const useVaultUserDataFromContract = ({
       {
         ...vaultContract,
         functionName: "balanceOf",
-        args: [userAddress]
+        args: [userAddress as Address]
       },
       {
         ...vaultContract,
@@ -47,7 +47,7 @@ const useVaultUserDataFromContract = ({
     ]
   });
   const [bnVaultBalance, bnUserBalance, bnPerformance, decimals, asset] =
-    vaultData ?? [];
+    (vaultData as [BigNumber, BigNumber, BigNumber, BigNumber, string]) ?? [];
   const vaultBalance =
     bnVaultBalance && ethers.utils.formatUnits(bnVaultBalance, decimals);
   const userBalance =
@@ -55,9 +55,9 @@ const useVaultUserDataFromContract = ({
   const performance =
     bnPerformance && ethers.utils.formatUnits(bnPerformance, 4);
   return {
-    vaultBalance,
-    userBalance,
-    performance,
+    vaultBalance: vaultBalance,
+    userBalance: userBalance,
+    performance: performance,
     asset: asset?.toString() || "",
     refetch
   };
@@ -74,7 +74,6 @@ const useVaultUserDataFromAPI = ({
     asset: ""
   });
   const [fetchIndex, setFetchIndex] = useState(0);
-  const api = useApi();
   useEffect(() => {
     if (!vaultAddress || !userAddress) return;
     const load = async () => {
@@ -82,7 +81,7 @@ const useVaultUserDataFromAPI = ({
       setVaultUserData(result);
     };
     load();
-  }, [api, vaultAddress, userAddress, fetchIndex]);
+  }, [vaultAddress, userAddress, fetchIndex]);
   const refetch = () => setFetchIndex(i => i + 1);
   return { ...vaultUserData, refetch };
 };

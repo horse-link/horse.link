@@ -33,22 +33,36 @@ export type Back = {
   end: number;
   odds: number;
   proposition_id: string;
-  signature: string;
+};
+
+export type EcSignature = {
+  r: string;
+  s: string;
+  v: number;
 };
 
 export type BetHistory = {
   index: number;
-  market_id: string;
-  proposition_id: string;
+  marketId: string;
+  propositionId: string;
+  winningPropositionId: string | undefined;
+  marketResultAdded: boolean;
+  settled: boolean;
   punter: string;
   amount: string;
   tx: string;
   blockNumber: number;
-  signature: string;
+  marketOracleResultSig?: EcSignature;
 };
 
 export type BetHistoryResponse = {
   results: BetHistory[];
+};
+
+export type SignedBetDataResponse = {
+  marketResultAdded: boolean;
+  winningPropositionId: string | undefined;
+  marketOracleResultSig: EcSignature | undefined;
 };
 
 export type SignedResponse = {
@@ -83,6 +97,10 @@ export type Race = {
   number: number;
   name: string;
   start?: Date;
+  end?: Date;
+  close?: Date;
+  status: "Normal" | "Interim" | "Paying";
+  results?: number[];
 };
 
 export type Runner = {

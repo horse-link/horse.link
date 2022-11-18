@@ -1,8 +1,15 @@
 import { ethers } from "ethers";
 import { useEffect, useMemo, useState } from "react";
 import { useDebounce } from "use-debounce";
+import api from "../../../../apis/Api";
 
-import { useAccount, useContractWrite, useWaitForTransaction } from "wagmi";
+import {
+  Address,
+  useAccount,
+  useBalance,
+  useContractWrite,
+  useWaitForTransaction
+} from "wagmi";
 
 import marketContractJson from "../../../../abi/Market.json";
 import usePotentialPayout from "../../../../hooks/bet/usePotentialPayout";
@@ -10,8 +17,9 @@ import useMarketDetail from "../../../../hooks/market/useMarketDetail";
 import useMarkets from "../../../../hooks/market/useMarkets";
 import useTokenApproval from "../../../../hooks/token/useTokenApproval";
 import useTokenData from "../../../../hooks/token/useTokenData";
-import { Back, Runner } from "../../../../types";
+import { Back, EcSignature, Runner } from "../../../../types";
 import BackView from "./Back_View";
+import { StaticConfig } from "../../../../providers/Config";
 
 const DECIMAL = 6;
 
@@ -32,18 +40,15 @@ const usePrepareBackingData = (
     () => ethers.utils.parseUnits(odds.toString(), DECIMAL),
     [odds]
   );
-
   const bnWager = useMemo(
     () =>
       ethers.utils.parseUnits(debouncedWagerAmount.toString(), tokenDecimal),
     [debouncedWagerAmount]
   );
-
   const b32Nonce = useMemo(
     () => ethers.utils.formatBytes32String(nonce),
     [nonce]
   );
-
   const b32MarketId = useMemo(
     () => ethers.utils.formatBytes32String(market_id),
     [market_id]
@@ -60,11 +65,11 @@ type useBackContractWriteArgs = {
   bnOdds: ethers.BigNumber;
   close: number;
   end: number;
-  signature: string;
+  signature: EcSignature | undefined;
   enabled: boolean;
 };
 
-const useBackContractWrite = ({
+const useGetBackContractWrite = ({
   marketAddress,
   b32Nonce,
   b32PropositionId,
@@ -73,8 +78,7 @@ const useBackContractWrite = ({
   bnOdds,
   close,
   end,
-  signature,
-  enabled
+  signature
 }: useBackContractWriteArgs) => {
   const {
     data: contractData,
@@ -82,8 +86,8 @@ const useBackContractWrite = ({
     write
   } = useContractWrite({
     mode: "recklesslyUnprepared",
-    addressOrName: marketAddress,
-    contractInterface: marketContractJson.abi,
+    address: marketAddress,
+    abi: marketContractJson.abi,
     functionName: "back",
     args: [
       b32Nonce,
@@ -94,8 +98,7 @@ const useBackContractWrite = ({
       close,
       end,
       signature
-    ],
-    enabled: enabled && !!marketAddress
+    ]
   });
 
   const backTxHash = contractData?.hash;
@@ -120,8 +123,7 @@ const useBackingContract = (
   marketAddress: string,
   ownerAddress: string
 ) => {
-  const { nonce, odds, proposition_id, market_id, close, end, signature } =
-    back;
+  const { odds, proposition_id } = back;
 
   const [debouncedWagerAmount] = useDebounce(wagerAmount, 500);
 
@@ -138,7 +140,12 @@ const useBackingContract = (
     write: approveContractWrite,
     error: approveError,
     isTxLoading: isApproveTxLoading
-  } = useTokenApproval(tokenAddress, ownerAddress, marketAddress, tokenDecimal);
+  } = useTokenApproval(
+    tokenAddress as Address,
+    ownerAddress as Address,
+    marketAddress as Address,
+    tokenDecimal
+  );
 
   const isEnoughAllowance = allowance > 0 && allowance >= wagerAmount;
 
@@ -150,6 +157,94 @@ const useBackingContract = (
     tokenDecimal
   });
 
+  return {
+    potentialPayout,
+    contract: {
+      approveContractWrite,
+      errorMsg: approveError?.message
+    },
+    isApproveTxLoading,
+    isEnoughAllowance,
+    tokenDecimal,
+    debouncedWagerAmount
+  };
+};
+
+const usePageParams = (runner?: Runner) => {
+  const {
+    proposition_id = "",
+    market_id = "",
+    odds = 0,
+    close = 0,
+    end = 0
+  } = runner ?? {};
+
+  // todo: get nonce from runner once api is updated
+  const nonce = useMemo(() => Date.now().toString(), []);
+
+  const back: Back = {
+    nonce,
+    market_id,
+    close,
+    end,
+    odds: odds / 1000,
+    proposition_id
+  };
+  return { back };
+};
+
+type Props = {
+  runner?: Runner;
+  balanceData?: any;
+};
+
+const BackLogic: React.FC<Props> = ({ runner }) => {
+  const { back } = usePageParams(runner);
+  const { marketAddresses } = useMarkets();
+  const { address } = useAccount();
+  const ownerAddress = address ?? "";
+  const [selectedMarketAddress, setSelectedMarketAddress] = useState<string>(
+    "0xA0f8A6eD9Df461541159Fa5f083082A6f6E0f795"
+  );
+  const [wagerAmount, setWagerAmount] = useState<number>(0);
+  const [signature, setSignature] = useState<EcSignature>();
+
+  const marketData = useMarketDetail(selectedMarketAddress);
+  const { data: balanceData } = useBalance({
+    address: address,
+    token:
+      marketData?.name && marketData.name.includes("DAI")
+        ? (StaticConfig.tokenAddresses.DAI as Address)
+        : (StaticConfig.tokenAddresses.USDT as Address)
+  });
+
+  useEffect(() => {
+    if (marketAddresses.length > 0) {
+      setSelectedMarketAddress(marketAddresses[0]);
+    }
+  }, [marketAddresses]);
+
+  useEffect(() => {
+    if (signature) {
+      backContractWrite?.();
+    }
+  }, [signature]);
+
+  const {
+    potentialPayout,
+    contract,
+    isApproveTxLoading,
+    isEnoughAllowance,
+    tokenDecimal,
+    debouncedWagerAmount
+  } = useBackingContract(
+    back,
+    wagerAmount,
+    selectedMarketAddress,
+    ownerAddress
+  );
+
+  const { nonce, odds, proposition_id, market_id, close, end } = back;
   const { b32PropositionId, bnWager, bnOdds, b32Nonce, b32MarketId } =
     usePrepareBackingData(
       proposition_id,
@@ -162,12 +257,11 @@ const useBackingContract = (
 
   const {
     write: backContractWrite,
-    error: backError,
     isTxLoading: isBackTxLoading,
     isTxSuccess: isBackTxSuccess,
     backTxHash
-  } = useBackContractWrite({
-    marketAddress,
+  } = useGetBackContractWrite({
+    marketAddress: selectedMarketAddress,
     b32Nonce,
     b32PropositionId,
     b32MarketId,
@@ -179,71 +273,36 @@ const useBackingContract = (
     enabled: debouncedWagerAmount > 0 && isEnoughAllowance
   });
 
-  return {
-    potentialPayout,
-    contract: {
-      backContractWrite,
-      approveContractWrite,
-      errorMsg: (backError || approveError)?.message
-    },
-    txStatus: {
-      isLoading: isBackTxLoading || isApproveTxLoading,
-      isSuccess: isBackTxSuccess,
-      hash: backTxHash
-    },
-    isEnoughAllowance
-  };
-};
-
-const usePageParams = (runner?: Runner) => {
-  const {
-    proposition_id = "",
-    market_id = "",
-    odds = 0,
-    close = 0,
-    end = 0,
-    signature
-  } = runner ?? {};
-
-  // todo: get nonce from runner once api is updated
-  const nonce = useMemo(() => Date.now().toString(), []);
-
-  const back: Back = {
-    nonce,
-    market_id,
-    close,
-    end,
-    odds: odds / 1000,
-    proposition_id,
-    signature: signature?.signature ?? ""
-  };
-  return { back };
-};
-
-type Props = {
-  runner?: Runner;
-};
-
-const BackLogic = ({ runner }: Props) => {
-  const { back } = usePageParams(runner);
-  const { marketAddresses } = useMarkets();
-  const { address } = useAccount();
-  const ownerAddress = address ?? "";
-  const [selectedMarketAddress, setSelectedMarketAddress] = useState<string>(
-    marketAddresses[0]
-  );
-  useEffect(() => {
-    if (marketAddresses.length > 0) {
-      setSelectedMarketAddress(marketAddresses[0]);
-    }
-  }, [marketAddresses]);
-
-  const [wagerAmount, setWagerAmount] = useState<number>(0);
-  const { potentialPayout, contract, txStatus, isEnoughAllowance } =
-    useBackingContract(back, wagerAmount, selectedMarketAddress, ownerAddress);
-
   const shouldButtonDisabled =
-    wagerAmount == 0 || !contract?.backContractWrite || txStatus.isLoading;
+    wagerAmount == 0 ||
+    !backContractWrite ||
+    isApproveTxLoading ||
+    isBackTxLoading;
+
+  const handleBackContractWrite = async () => {
+    try {
+      const res = await api.requestBackingSign(
+        b32Nonce,
+        b32PropositionId,
+        b32MarketId,
+        bnWager,
+        bnOdds,
+        close,
+        end
+      );
+
+      const { signature } = res;
+      setSignature(signature);
+    } catch (error: any) {
+      alert(error?.message ?? "Something went wrong");
+    }
+  };
+
+  const txStatuses = {
+    isLoading: isBackTxLoading || isApproveTxLoading,
+    isSuccess: isBackTxSuccess,
+    hash: backTxHash
+  };
 
   return (
     <BackView
@@ -256,8 +315,10 @@ const BackLogic = ({ runner }: Props) => {
       potentialPayout={potentialPayout}
       shouldButtonDisabled={shouldButtonDisabled}
       contract={contract}
-      txStatus={txStatus}
+      txStatus={txStatuses}
       isEnoughAllowance={isEnoughAllowance}
+      handleBackContractWrite={handleBackContractWrite}
+      balanceData={balanceData}
     />
   );
 };

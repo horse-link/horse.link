@@ -1,20 +1,24 @@
 import { useContractRead, useContractReads } from "wagmi";
 import registryContractJson from "../../abi/Registry.json";
-import { ethers } from "ethers";
-import useApi from "../useApi";
+import { BigNumber, ethers } from "ethers";
 import { useEffect, useState } from "react";
+import api from "../../apis/Api";
+
+const registryContractAddress = process.env.REACT_APP_REGISTRY_CONTRACT;
+if (!registryContractAddress)
+  throw new Error("No REACT_APP_REGISTRY_CONTRACT provided");
 
 const registryContract = {
-  addressOrName: "0x885386d140e4321102dc218060Bbd55a8B020F4C",
-  contractInterface: registryContractJson.abi
+  address: registryContractAddress,
+  abi: registryContractJson.abi
 };
 
 const useMarketAddressesFromContract = () => {
-  const { data: marketCountData } = useContractRead({
+  const { data } = useContractRead({
     ...registryContract,
     functionName: "marketCount"
   });
-
+  const marketCountData = data as BigNumber;
   const marketCountStr =
     marketCountData && ethers.utils.formatUnits(marketCountData, 0);
   const marketCount = parseInt(marketCountStr ?? "0");
@@ -36,14 +40,13 @@ const useMarketAddressesFromContract = () => {
 
 const useMarketAddressesFromAPI = () => {
   const [marketAddresses, setMarketAddresses] = useState<string[]>([]);
-  const api = useApi();
   useEffect(() => {
     const load = async () => {
       const marketAddresses = await api.getMarketAddresses();
       setMarketAddresses(marketAddresses);
     };
     load();
-  }, [api]);
+  }, []);
 
   return { marketAddresses: marketAddresses as unknown as string[] };
 };

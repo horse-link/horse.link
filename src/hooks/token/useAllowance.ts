@@ -1,12 +1,12 @@
 import { ethers } from "ethers";
 import { useEffect, useMemo, useState } from "react";
-import { erc20ABI, useContractRead } from "wagmi";
-import useApi from "../useApi";
+import { Address, erc20ABI, useContractRead } from "wagmi";
+import api from "../../apis/Api";
 
 type useAllowanceArgs = {
   address: string;
-  owner: string;
-  spender: string;
+  owner: Address;
+  spender: Address;
   decimals: string;
 };
 const useAllowanceFromContract = ({
@@ -16,8 +16,8 @@ const useAllowanceFromContract = ({
   decimals
 }: useAllowanceArgs) => {
   const { data: bnAllowance, refetch } = useContractRead({
-    addressOrName: address,
-    contractInterface: erc20ABI,
+    address: address,
+    abi: erc20ABI,
     functionName: "allowance",
     args: [owner, spender]
   });
@@ -36,7 +36,6 @@ const useAllowanceFromAPI = ({
 }: useAllowanceArgs) => {
   const [allowance, setAllowance] = useState("0");
   const [fetchIndex, setFetchIndex] = useState(0);
-  const api = useApi();
   useEffect(() => {
     if (!address || !owner || !spender || !decimals) return;
     const load = async () => {
@@ -49,7 +48,7 @@ const useAllowanceFromAPI = ({
       setAllowance(allowance);
     };
     load();
-  }, [api, address, owner, spender, fetchIndex]);
+  }, [address, owner, spender, fetchIndex]);
   const refetch = () => setFetchIndex(i => i + 1);
   return { allowance, refetch };
 };

@@ -1,8 +1,8 @@
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { useEffect, useMemo, useState } from "react";
 import { useContractRead } from "wagmi";
 import marketContractJson from "../../abi/Market.json";
-import useApi from "../useApi";
+import api from "../../apis/Api";
 
 const DECIMAL = 6;
 
@@ -33,12 +33,13 @@ const usePotentialPayoutFromContract = ({
     () => ethers.utils.parseUnits(odds.toString(), DECIMAL),
     [odds]
   );
-  const { data: bnPotentialPayout } = useContractRead({
-    addressOrName: marketAddress,
-    contractInterface: marketContractJson.abi,
+  const { data } = useContractRead({
+    address: marketAddress,
+    abi: marketContractJson.abi,
     functionName: "getPotentialPayout",
     args: [b32PropositionId, bnWager, bnOdds]
   });
+  const bnPotentialPayout = data as BigNumber;
 
   const potentialPayout = useMemo(() => {
     if (!bnPotentialPayout) return "0";
@@ -56,8 +57,11 @@ const usePotentialPayoutFromAPI = ({
   tokenDecimal
 }: UsePotentialPayoutArgs) => {
   const [potentialPayout, setPotentialPayout] = useState("0");
-  const api = useApi();
   useEffect(() => {
+    if (wager === 0) {
+      setPotentialPayout("0");
+      return;
+    }
     if (!marketAddress || !propositionId || !wager || !odds || !tokenDecimal)
       return;
     const load = async () => {
@@ -71,7 +75,7 @@ const usePotentialPayoutFromAPI = ({
       setPotentialPayout(potentialPayout);
     };
     load();
-  }, [api, marketAddress, propositionId, wager, odds, tokenDecimal]);
+  }, [marketAddress, propositionId, wager, odds, tokenDecimal]);
   return { potentialPayout };
 };
 

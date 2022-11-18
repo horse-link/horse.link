@@ -47,15 +47,16 @@ Our own market odds can be found at https://api.horse.link/. These requests are 
 
 ## Goerli
 
-Owner: `0x1Ab4C6d9e25Fc65C917aFBEfB4E963C400Fb9814`
-Horse Link Token `0xd87E8BF1327f10685c9283859A4Eb022ADbe03F9`  
-Mock USDC : `0xaF2929Ed6758B0bD9575e1F287b85953B08E50BC`  
-Mock DIA: `0x70b481B732822Af9beBc895779A6e261DC3D6C8B`  
-LP Token: `0xB678cF41Fec0DF2D4bF69cE0297311B993deE11b`  
-USDC Vault: `0x21D068720BDBc7EdC49Ce8D1b1E1fb2d6c3526eb`  
-DIA Vault: `0x6F47f0864ab7a02f9E7866d2bc8aC0BCf3C4924E`  
-DIA Market: `0xc8b8c94694cB8f7Aa5A2e7218D841ef492586A03`  
-Registry: `0x885386d140e4321102dc218060Bbd55a8B020F4C`
+Owner: `0x1Ab4C6d9e25Fc65C917aFBEfB4E963C400Fb9814`  
+Horse Link Token `0x5e5fB4d58121dd3e50CB9c6aDAFa82b678e8b545`  
+Mock USDT : `0xcF005F728e0c1998373cDB5012eadE8ce604ceff`  
+Mock DAI: `0x6B54366642BFE522D647c77C422f1e6E11F02356`  
+USDT Vault: `0xe2de33276983F28332A755c5D2Db62380a88e912`  
+USDT Market: `0x44e4cA9f8939142971D5DF043fbdD5Fa6fA1273e`  
+DAI Vault: `0xf6A36eCd0b09C680C2E6AC3DaE3c7C397D9fBe10`  
+DAI Market: `0xCaEE99685Ff8cf80e605cb0E5C073056B2cf642d`  
+Registry: `0xCFa36F3692b19FF9472aEc18f7dcf5EB0A29A633`  
+Market Oracle: `0x5b559E0E44aeB2bccfd82CACF9d877EbDd28F116`  
 
 ## Mainnet
 
@@ -63,7 +64,7 @@ Horse Link Token `0xfdc066DF7d7A188786A1580a9DDFbfbE716c31d5`
 
 ## Notes
 
-`npx truffle run verify Registry@0x885386d140e4321102dc218060Bbd55a8B020F4C --network goerli`
-`npx truffle run verify Vault@0x21D068720BDBc7EdC49Ce8D1b1E1fb2d6c3526eb --network goerli`
-`npx truffle run verify Vault@0x6F47f0864ab7a02f9E7866d2bc8aC0BCf3C4924E --network goerli`
-`npx truffle run verify Registry --forceConstructorArgs string: --network goerli`
+`npx hardhat verify --network goerli 0xd90AE997C32EdE8feCe39694460543868Da0d0D1 0xd87E8BF1327f10685c9283859A4Eb022ADbe03F9`  
+`npx truffle run verify Vault@0x21D068720BDBc7EdC49Ce8D1b1E1fb2d6c3526eb --network goerli`  
+`npx truffle run verify Vault@0x6F47f0864ab7a02f9E7866d2bc8aC0BCf3C4924E --network goerli`  
+`npx truffle run verify Registry --forceConstructorArgs string: --network goerli`  

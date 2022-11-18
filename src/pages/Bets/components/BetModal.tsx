@@ -1,9 +1,12 @@
-import { useContractWrite, useWaitForTransaction } from "wagmi";
 import ContractWriteResultCard from "../../../components/ContractWriteResultCard/ContractWriteResultCard_View";
 import Modal from "../../../components/Modal";
 import RequireWalletButton from "../../../components/RequireWalletButton/RequireWalletButton_View";
-import marketContractJson from "../../../abi/Market.json";
 import { BetHistory } from "../../../types";
+import { Loader } from "../../../components";
+import useMarkets from "../../../hooks/market/useMarkets";
+import { useEffect, useState } from "react";
+import useSettleContractWrite from "../../../hooks/market/useMarketSettle";
+import useMarketOracleResultWrite from "../../../hooks/market/useMarketOracle";
 
 type Props = {
   isOpen: boolean;
@@ -20,126 +23,188 @@ const BetModal = ({ isOpen, onClose, betData }: Props) => {
 
 export default BetModal;
 
-type useSettleContractWriteArgs = {
-  marketAddress?: string;
-  index?: number;
-  signature?: string;
-};
-const useSettleContractWrite = ({
-  marketAddress,
-  index = 0,
-  signature = ""
-}: useSettleContractWriteArgs) => {
-  const { data, error, write } = useContractWrite({
-    mode: "recklesslyUnprepared",
-    addressOrName: marketAddress || "",
-    contractInterface: marketContractJson.abi,
-    functionName: "settle",
-    args: [index, signature],
-    enabled: !!marketAddress && !!index && !!signature
-  });
-
-  const txHash = data?.hash;
-  const { isLoading: isTxLoading, isSuccess: isTxSuccess } =
-    useWaitForTransaction({
-      hash: txHash
-    });
-  return {
-    write,
-    error,
-    isTxLoading,
-    isTxSuccess,
-    txHash
-  };
-};
-const useSettleBet = (bet?: BetHistory) => {
-  const {
-    write: settleContractWrite,
-    error: settleError,
-    isTxLoading,
-    isTxSuccess,
-    txHash
-  } = useSettleContractWrite({
-    marketAddress: bet?.market_id,
-    index: bet?.index,
-    signature: bet?.signature
-  });
-  const contract = {
-    settleContractWrite,
-    errorMsg: settleError?.message
-  };
-  const txStatus = {
-    isLoading: isTxLoading,
-    isSuccess: isTxSuccess,
-    hash: txHash
-  };
-  const shouldSettleButtonDisabled = !contract.settleContractWrite;
-
-  return {
-    contract,
-    txStatus,
-    shouldSettleButtonDisabled
-  };
-};
-
 type SettlebetProps = {
   data?: BetHistory;
 };
 const SettleBet = ({ data }: SettlebetProps) => {
-  const { contract, txStatus, shouldSettleButtonDisabled } = useSettleBet(data);
+  const { marketAddresses } = useMarkets();
+
+  const [selectedMarketAddress, setSelectedMarketAddress] = useState<string>(
+    "0x1514b66a40CA2D600bB4Cf35A735709a1972c2F3"
+  );
+
+  useEffect(() => {
+    if (marketAddresses.length > 0) {
+      setSelectedMarketAddress(marketAddresses[0]);
+    }
+  }, [marketAddresses]);
+
+  const useMarketOracle = (bet?: BetHistory) => {
+    const {
+      setResultMarketOracleWrite,
+      marketOracleError,
+      isMarketOracleTxHashTxLoading,
+      isMarketOracleTxHashTxSuccess,
+      marketOracleTxHash
+    } = useMarketOracleResultWrite({
+      market_id: bet?.marketId,
+      winningPropositionId: bet?.winningPropositionId,
+      signature: bet?.marketOracleResultSig
+    });
+    const marketOracleContract = {
+      setResultMarketOracleWrite,
+      errorMsg: marketOracleError?.message
+    };
+    const marketOracleTxStatus = {
+      isLoading: isMarketOracleTxHashTxLoading,
+      isSuccess: isMarketOracleTxHashTxSuccess,
+      hash: marketOracleTxHash
+    };
+
+    const shouldMarketOracleButtonDisabled =
+      !marketOracleContract.setResultMarketOracleWrite;
+
+    return {
+      marketOracleContract,
+      marketOracleTxStatus,
+      shouldMarketOracleButtonDisabled
+    };
+  };
+
+  const useSettleBet = (bet?: BetHistory) => {
+    const {
+      settleBetWrite,
+      settleBetError,
+      isSettleBetTxLoading,
+      isSettleBetTxSuccess,
+      settleBetTxHash
+    } = useSettleContractWrite({
+      marketAddress: selectedMarketAddress,
+      index: bet?.index
+    });
+    const settleContract = {
+      settleBetWrite,
+      errorMsg: settleBetError?.message
+    };
+    const settleTxStatus = {
+      isLoading: isSettleBetTxLoading,
+      isSuccess: isSettleBetTxSuccess,
+      hash: settleBetTxHash
+    };
+
+    const shouldSettleButtonDisabled = !settleContract.settleBetWrite;
+
+    return {
+      settleContract,
+      settleTxStatus,
+      shouldSettleButtonDisabled
+    };
+  };
+
+  //const data?.marketOracleResultSig
+  const { settleContract, settleTxStatus, shouldSettleButtonDisabled } =
+    useSettleBet(data);
+
+  const {
+    marketOracleContract,
+    marketOracleTxStatus,
+    shouldMarketOracleButtonDisabled
+  } = useMarketOracle(data);
+
+  const txStatuses = {
+    isLoading: settleTxStatus.isLoading || marketOracleTxStatus.isLoading,
+    isSuccess: settleTxStatus.isSuccess || marketOracleTxStatus.isSuccess,
+    hash: settleTxStatus.hash || marketOracleTxStatus.hash
+  };
+
   return (
     <div className="w-96 md:w-152">
       <div className="px-10 pt-5 pb-5 rounded-md bg-white border-gray-200 sm:rounded-lg">
-        <div className="text-3xl">Settle Bet</div>
-        <form>
-          <div className="flex flex-col">
-            <label>
-              <span>Index</span>
-              <input
-                type="text"
-                value={data?.index}
-                readOnly
-                className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-              />
+        {data?.settled || settleTxStatus.isSuccess ? (
+          <div className="text-3xl">Settled Bet</div>
+        ) : (
+          <div className="text-3xl">Settle Bet</div>
+        )}
+        <div className="flex flex-col">
+          <label className="mt-2">
+            <span>{`Bet Index: ${data?.index}`}</span>
+          </label>
+          {data?.winningPropositionId !== undefined && (
+            <label className="mt-2">
+              <span>{`Winning Bet: ${(
+                data?.propositionId === data?.winningPropositionId
+              ).toString()}`}</span>
             </label>
+          )}
+        </div>
+        <br></br>
 
-            <label>
-              <span>Signature</span>
-              <input
-                type="text"
-                value={data?.signature}
-                readOnly
-                className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+        {!data?.winningPropositionId && (
+          <div>
+            <span>This race has yet to complete. Please check back later.</span>
+          </div>
+        )}
+        {data &&
+          !data?.settled &&
+          !data?.marketResultAdded &&
+          data?.winningPropositionId &&
+          !marketOracleTxStatus.isSuccess && (
+            <div className="flex flex-col">
+              <RequireWalletButton
+                actionButton={
+                  <button
+                    className={
+                      "px-5 py-1 hover:bg-gray-100 rounded-md border border-gray-500 shadow-md" +
+                      (shouldSettleButtonDisabled
+                        ? " opacity-50 cursor-not-allowed"
+                        : "")
+                    }
+                    onClick={() =>
+                      marketOracleContract.setResultMarketOracleWrite?.()
+                    }
+                    disabled={shouldMarketOracleButtonDisabled}
+                  >
+                    {marketOracleTxStatus.isLoading ? (
+                      <Loader />
+                    ) : (
+                      "Submit Result"
+                    )}
+                  </button>
+                }
               />
-            </label>
-          </div>
-          <br></br>
-          <div className="flex flex-col">
-            <RequireWalletButton
-              actionButton={
-                <button
-                  className={
-                    "px-5 py-1 hover:bg-gray-100 rounded-md border border-gray-500 shadow-md" +
-                    (shouldSettleButtonDisabled
-                      ? " opacity-50 cursor-not-allowed"
-                      : "")
-                  }
-                  onClick={() => contract.settleContractWrite()}
-                  disabled={shouldSettleButtonDisabled}
-                >
-                  {txStatus.isLoading ? "..." : "Settle"}
-                </button>
-              }
-            />
-          </div>
-        </form>
-      </div>
-      <div className="mt-5">
-        <ContractWriteResultCard
-          hash={txStatus.hash}
-          isSuccess={txStatus.isSuccess}
-          errorMsg={contract.errorMsg}
-        />
+            </div>
+          )}
+
+        {!data?.settled &&
+          !settleTxStatus.isSuccess &&
+          (data?.marketResultAdded || marketOracleTxStatus.isSuccess) && (
+            <div className="flex flex-col">
+              <RequireWalletButton
+                actionButton={
+                  <button
+                    className={
+                      "px-5 py-1 hover:bg-gray-100 rounded-md border border-gray-500 shadow-md" +
+                      (shouldSettleButtonDisabled
+                        ? " opacity-50 cursor-not-allowed"
+                        : "")
+                    }
+                    onClick={() => settleContract.settleBetWrite?.()}
+                    disabled={shouldSettleButtonDisabled}
+                  >
+                    {settleTxStatus.isLoading ? <Loader /> : "Settle"}
+                  </button>
+                }
+              />
+            </div>
+          )}
+
+        <div className="mt-5">
+          <ContractWriteResultCard
+            hash={txStatuses.hash}
+            isSuccess={txStatuses.isSuccess}
+            errorMsg={settleContract.errorMsg}
+          />
+        </div>
       </div>
     </div>
   );

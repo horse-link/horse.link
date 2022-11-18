@@ -1,16 +1,19 @@
 import axios, { AxiosInstance } from "axios";
+import { BigNumberish, ethers } from "ethers";
 import {
   BetHistoryResponse,
+  EcSignature,
   Market,
   Runner,
+  SignedBetDataResponse,
   SignedMeetingsResponse,
-  SignedRunnersResponse,
   Token,
   Vault,
   VaultUserData
 } from "../types/index";
+import { isUsdt } from "../utils/config";
 
-export default class Api {
+export class Api {
   private client: AxiosInstance;
   constructor() {
     this.client = axios.create({
@@ -20,19 +23,9 @@ export default class Api {
       }
     });
   }
+
   public getMeetings = async (): Promise<SignedMeetingsResponse> => {
     const { data } = await this.client.get<SignedMeetingsResponse>("/meetings");
-
-    return data;
-  };
-
-  public getRunners = async (
-    track: string,
-    number: number
-  ): Promise<SignedRunnersResponse> => {
-    const { data } = await this.client.get<SignedRunnersResponse>(
-      `/runners/${track}/${number}/win`
-    );
 
     return data;
   };
@@ -43,7 +36,19 @@ export default class Api {
   };
 
   public getBetHistory = async (): Promise<BetHistoryResponse> => {
-    const { data } = await this.client.get("/history");
+    const { data } = await this.client.get("/bets");
+
+    return data;
+  };
+
+  public requestSignedBetData = async (
+    marketId: string,
+    propositionId: string
+  ): Promise<SignedBetDataResponse> => {
+    const { data } = await this.client.post("/bets/sign", {
+      marketId,
+      propositionId
+    });
 
     return data;
   };
@@ -51,7 +56,29 @@ export default class Api {
   public getUserBetHistory = async (
     account: string
   ): Promise<BetHistoryResponse> => {
-    const { data } = await this.client.get(`/history/${account}`);
+    const { data } = await this.client.get(`/bets/${account}`);
+
+    return data;
+  };
+
+  public requestBackingSign = async (
+    nonce: string,
+    propositionId: string,
+    marketId: string,
+    wager: BigNumberish,
+    odds: BigNumberish,
+    close: BigNumberish,
+    end: BigNumberish
+  ): Promise<{ signature: EcSignature }> => {
+    const { data } = await this.client.post(`/backing-sign`, {
+      nonce,
+      propositionId,
+      marketId,
+      wager,
+      odds,
+      close,
+      end
+    });
 
     return data;
   };
@@ -62,7 +89,9 @@ export default class Api {
   ): Promise<{ tx: string }> => {
     const { data } = await this.client.post(`/faucet`, {
       to: userAddress,
-      amount: (100 * 10 ** 18).toString(),
+      amount: isUsdt(tokenAddress)
+        ? ethers.utils.parseUnits("10", 6).toString()
+        : ethers.utils.formatEther(10),
       address: tokenAddress
     });
 
@@ -159,3 +188,7 @@ export default class Api {
     return data;
   };
 }
+
+const api = new Api();
+
+export default api;

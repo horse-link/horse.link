@@ -1,15 +1,15 @@
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { useContractReads } from "wagmi";
 import vaultContractJson from "../../abi/Vault.json";
 import mockTokenContractJson from "../../abi/MockToken.json";
 import { useEffect, useState } from "react";
 import { Vault } from "../../types";
-import useApi from "../useApi";
+import api from "../../apis/Api";
 
 const useVaultDetailFromContract = (vaultAddress: string) => {
   const vaultContract = {
-    addressOrName: vaultAddress,
-    contractInterface: vaultContractJson
+    address: vaultAddress,
+    abi: vaultContractJson
   };
 
   const { data: vaultData } = useContractReads({
@@ -24,10 +24,11 @@ const useVaultDetailFromContract = (vaultAddress: string) => {
       }
     ]
   });
-  const [bNTotalAssets, tokenAddress] = vaultData ?? [];
+  const [bNTotalAssets, tokenAddress] =
+    (vaultData as [BigNumber, string]) ?? [];
   const tokenContract = {
-    addressOrName: tokenAddress?.toString() || "",
-    contractInterface: mockTokenContractJson.abi
+    address: tokenAddress?.toString() || "",
+    abi: mockTokenContractJson.abi
   };
   const { data: tokenData } = useContractReads({
     contracts: [
@@ -53,10 +54,10 @@ const useVaultDetailFromContract = (vaultAddress: string) => {
     address: ""
   };
   if (bNTotalAssets && tokenData) {
-    const [name, symbol, decimals] = tokenData;
+    const [name, symbol, decimals] = tokenData as [string, string, BigNumber];
     vault = {
-      name: name as unknown as string,
-      symbol: symbol as unknown as string,
+      name: name,
+      symbol: symbol,
       totalAssets: ethers.utils.formatUnits(bNTotalAssets, decimals),
       address: vaultAddress
     };
@@ -66,7 +67,6 @@ const useVaultDetailFromContract = (vaultAddress: string) => {
 
 const useVaultDetailFromAPI = (vaultAddress: string | undefined) => {
   const [vault, setVault] = useState<Vault>();
-  const api = useApi();
   useEffect(() => {
     if (!vaultAddress) return;
     const load = async () => {
@@ -74,7 +74,7 @@ const useVaultDetailFromAPI = (vaultAddress: string | undefined) => {
       setVault(result);
     };
     load();
-  }, [api, vaultAddress]);
+  }, [vaultAddress]);
 
   return vault;
 };

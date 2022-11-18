@@ -1,29 +1,27 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Runner } from "../../types";
 import HorseRaceView from "./HorseRace_View";
-import useApi from "../../hooks/useApi";
 import { useParams } from "react-router-dom";
+import useRunnerData from "../../hooks/data/useRunnerData";
+
 const getMockRunners = () => {
   return Array.from({ length: 5 }, () => undefined);
 };
+
+export type HorseRaceParams = {
+  track: string;
+  number: string;
+};
+
 const HorseRace: React.FC = () => {
-  const params = useParams();
+  const params = useParams<HorseRaceParams>();
   const track = params.track || "";
   const raceNumber = Number(params.number) || 0;
 
-  const api = useApi();
-  const [runners, setRunners] = useState<Runner[]>();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedRunner, setSelectedRunner] = useState<Runner>();
 
-  useEffect(() => {
-    if (!track || !raceNumber) return;
-    const load = async () => {
-      const { data } = await api.getRunners(track, raceNumber);
-      setRunners(data);
-    };
-    load();
-  }, [api, track, raceNumber]);
+  const { runners } = useRunnerData({ track, raceNumber });
 
   const openDialog = () => {
     setIsDialogOpen(true);

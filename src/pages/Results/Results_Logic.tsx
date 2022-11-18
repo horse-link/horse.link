@@ -1,30 +1,19 @@
-import { useEffect, useState } from "react";
-import { Runner, SignedRunnersResponse } from "../../types";
+import { Runner } from "../../types";
 import ResultsView from "./Results_View";
-import useApi from "../../hooks/useApi";
 import { useParams } from "react-router-dom";
+import { HorseRaceParams } from "../HorseRace/HorseRace_Logic";
+import useRunnerData from "../../hooks/data/useRunnerData";
 
 const Results: React.FC = () => {
   const _runners: Runner[] = [];
 
-  const api = useApi();
-  const [response, setResponse] = useState<SignedRunnersResponse>();
+  const params = useParams<HorseRaceParams>();
+  const track = params.track || "";
+  const raceNumber = Number(params.number) || 0;
 
-  const { track, number } = useParams();
+  const { runners } = useRunnerData({ track, raceNumber });
 
-  const load = async () => {
-    const runners: SignedRunnersResponse = await api.getRunners(
-      track || "",
-      Number(number) || 0
-    );
-    setResponse(runners);
-  };
-
-  useEffect(() => {
-    load();
-  });
-
-  return <ResultsView runners={response?.data || _runners} />;
+  return <ResultsView runners={runners || _runners} />;
 };
 
 export default ResultsView;

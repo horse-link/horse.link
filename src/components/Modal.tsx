@@ -36,6 +36,14 @@ const Modal = ({ isOpen, onClose, children }: ModalProps) => {
                 leaveTo="opacity-0 scale-95"
               >
                 <Dialog.Panel className="transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <div className="w-full -mb-6 relative flex justify-end">
+                    <button
+                      className="text-gray-300 hover:text-gray-700 focus:outline-none"
+                      onClick={onClose}
+                    >
+                      X
+                    </button>
+                  </div>
                   {children}
                 </Dialog.Panel>
               </Transition.Child>

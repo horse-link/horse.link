@@ -1,12 +1,16 @@
 import { useContractRead, useContractReads } from "wagmi";
 import registryContractJson from "../../abi/Registry.json";
-import { ethers } from "ethers";
-import useApi from "../useApi";
+import { BigNumber, ethers } from "ethers";
 import { useEffect, useState } from "react";
+import api from "../../apis/Api";
+
+const registryContractAddress = process.env.REACT_APP_REGISTRY_CONTRACT;
+if (!registryContractAddress)
+  throw new Error("No REACT_APP_REGISTRY_CONTRACT provided");
 
 const registryContract = {
-  addressOrName: "0x885386d140e4321102dc218060Bbd55a8B020F4C",
-  contractInterface: registryContractJson.abi
+  address: registryContractAddress,
+  abi: registryContractJson.abi
 };
 
 const useVaultAddresesFromContract = () => {
@@ -16,8 +20,8 @@ const useVaultAddresesFromContract = () => {
   });
 
   const vaultCountStr =
-    vaultCountData && ethers.utils.formatUnits(vaultCountData, 0);
-  const vaultCount = parseInt(vaultCountStr ?? "0");
+    vaultCountData && ethers.utils.formatUnits(vaultCountData as BigNumber, 0);
+  const vaultCount = parseInt((vaultCountStr as string) ?? "0");
 
   const { data: vaultsData } = useContractReads({
     contracts: Array.from({ length: vaultCount }, (_, i) => {
@@ -36,14 +40,13 @@ const useVaultAddresesFromContract = () => {
 
 const useVaultAddresesFromAPI = () => {
   const [vaultAddresses, setVaultAddresses] = useState<string[]>([]);
-  const api = useApi();
   useEffect(() => {
     const load = async () => {
       const vaultAddresses = await api.getVaultAddresses();
       setVaultAddresses(vaultAddresses);
     };
     load();
-  }, [api]);
+  }, []);
 
   return { vaultAddresses: vaultAddresses as unknown as string[] };
 };

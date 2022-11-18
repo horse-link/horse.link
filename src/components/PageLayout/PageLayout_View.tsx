@@ -12,8 +12,8 @@ const navigation = [
   { name: "Dashboard", path: "/dashboard" },
   { name: "Vaults", path: "/vaults" },
   { name: "Markets", path: "/markets" },
-  { name: "History", path: "/history" },
-  { name: "HL Token", path: "/tokens" },
+  { name: "Bets", path: "/bets" },
+  //{ name: "HL Token", path: "/tokens" },
   {
     name: "White Paper",
     path: "https://github.com/horse-link/horse.link/blob/main/README.md",
@@ -145,13 +145,13 @@ const PageLayoutView: React.FC<Props> = props => {
         )}
       </Disclosure>
 
-      <div className="py-10">
+      <div className="py-4">
         <main>
           <WalletModal
             isModalOpen={isWalletModalOpen}
             closeWalletModal={closeWalletModal}
           />
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-9xl mx-auto px-4 sm:px-6 lg:px-9">
             {props.children}
           </div>
         </main>
