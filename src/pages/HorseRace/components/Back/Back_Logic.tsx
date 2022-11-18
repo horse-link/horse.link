@@ -197,6 +197,7 @@ type Props = {
 
 const BackLogic: React.FC<Props> = ({ runner }) => {
   const { back } = usePageParams(runner);
+  console.log(back, runner);
   const { marketAddresses } = useMarkets();
   const { address } = useAccount();
   const ownerAddress = address ?? "";
