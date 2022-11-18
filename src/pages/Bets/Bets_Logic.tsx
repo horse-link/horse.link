@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useAccount } from "wagmi";
 import useBets from "../../hooks/bet/useBets";
 import { BetHistory } from "../../types";
 import { calculateMaxPages } from "../../utils/bets";
@@ -17,6 +18,8 @@ const BetsLogics = () => {
 
   const [betTablePagination, setBetTablePagination] = useState(5);
   const [betTablePage, setBetTablePage] = useState(1);
+
+  const { isConnected } = useAccount();
 
   const { totalBetHistory, userBetHistory, totalBets } = useBets(
     // limit for bets returned will be current pagination
@@ -53,6 +56,10 @@ const BetsLogics = () => {
     setSelectedBet(betData);
     setIsModalOpen(true);
   };
+
+  useEffect(() => {
+    setMyBetsEnabled(isConnected);
+  }, [isConnected]);
 
   const onMyBetToggle = () => setMyBetsEnabled(!myBetsEnabled);
 

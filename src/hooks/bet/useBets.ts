@@ -15,6 +15,8 @@ type AggregatorResponse = {
   aggregators: Aggregator[];
 };
 
+const POLL_INTERVAL = 500;
+
 const useBets = (limit: number, skip: number) => {
   const { address } = useAccount();
   const [totalBetHistory, setTotalBetHistory] = useState<BetHistory[]>();
@@ -22,16 +24,17 @@ const useBets = (limit: number, skip: number) => {
 
   // total bets
   const { data: totalData, loading: totalDataLoading } = useSubgraph<Response>(
-    getBetsQuery(limit, skip)
+    getBetsQuery(limit, skip),
+    POLL_INTERVAL
   );
-  console.log(getBetsQuery(limit, skip));
   // user bets
   const { data: userData, loading: userDataLoading } = useSubgraph<Response>(
-    getBetsQuery(limit, skip, address)
+    getBetsQuery(limit, skip, address),
+    POLL_INTERVAL
   );
   // total bets count
   const { data: countData, loading: countDataLoading } =
-    useSubgraph<AggregatorResponse>(getAggregatorQuery());
+    useSubgraph<AggregatorResponse>(getAggregatorQuery(), POLL_INTERVAL);
 
   // set total bet history state
   useEffect(() => {
@@ -81,9 +84,10 @@ const useBets = (limit: number, skip: number) => {
     return +aggregate.totalBets;
   }, [countData, countDataLoading]);
 
-  // force loading components to render while new data is fetched
+  // refetch data
   useEffect(() => {
     setTotalBetHistory(undefined);
+    setUserBetHistory(undefined);
   }, [skip, limit]);
 
   return {
