@@ -81,7 +81,9 @@ const BackView: React.FC<Props> = ({
             <span className="py-1 block">
               Payout: <span>{potentialPayout}</span>
             </span>
-            <span className="py-1 block text-right text-red-600">
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <span className="py-1 block">
               Available: {balanceData ? balanceData.formatted : "0"}{" "}
               {balanceData ? balanceData.symbol : null}
             </span>
