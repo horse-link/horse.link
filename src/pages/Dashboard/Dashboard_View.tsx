@@ -9,7 +9,7 @@ import {
   formatNumberWithCommas,
   formatToTwoDecimals
 } from "../../utils/formatting";
-import { useMemo } from "react";
+
 type Props = {
   asLocaltime: (raceTime: number) => string;
   meets: Meet[];
