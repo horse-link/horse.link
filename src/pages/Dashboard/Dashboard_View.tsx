@@ -120,7 +120,7 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
   const { meets } = props;
   const headerArray = useMemo(() => {
     const maxLength = Math.max(...meets.map(meet => meet.races.length));
-    return new Array(maxLength).fill("");
+    return new Array(maxLength);
   }, [meets]);
   return (
     <div className="grid grid-cols-2">
@@ -141,7 +141,7 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
                       >
                         Venue
                       </th>
-                      {headerArray.map((_, i) => (
+                      {[...headerArray].map((_, i) => (
                         <th
                           key={i}
                           scope="col"
