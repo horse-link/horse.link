@@ -13,6 +13,7 @@ type Response = {
 const useBets = (limit = 1000, skip = 0) => {
   const { address } = useAccount();
   const [totalBetHistory, setTotalBetHistory] = useState<BetHistory[]>();
+  const [userBetHistory, setUserBetHistory] = useState<BetHistory[]>();
 
   // get every (up to 1000) bet entities
   const query = `{
@@ -59,14 +60,32 @@ const useBets = (limit = 1000, skip = 0) => {
     ).then(setTotalBetHistory);
   }, [data, loading, skip, limit]);
 
-  // filter for user bet history
-  const userBetHistory = useMemo(() => {
-    if (!totalBetHistory || !address) return;
+  // set user bet history
+  useEffect(() => {
+    if (loading || !data || !address) return;
 
-    return totalBetHistory.filter(
-      bet => bet.punter.toLowerCase() === address.toLowerCase()
+    // get all the user bets
+    const userBetsArray = data.bets.filter(
+      bet => bet.owner.toLowerCase() === address.toLowerCase()
     );
-  }, [totalBetHistory, address]);
+
+    // filter by skip and liomit
+    const limitedArray = userBetsArray.filter(
+      (_, i) => i >= skip && i < skip + limit
+    );
+
+    // fetch api info for user bets array
+    Promise.all(
+      limitedArray.map<Promise<BetHistory>>(async bet => {
+        const signedBetData = await api.requestSignedBetData(
+          bet.marketId,
+          bet.propositionId
+        );
+
+        return formatBetHistory(bet, signedBetData);
+      })
+    ).then(setUserBetHistory);
+  }, [loading, data, address, skip, limit]);
 
   // calculate total bet count
   const totalBets = useMemo(() => {

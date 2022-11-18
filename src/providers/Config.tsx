@@ -17,12 +17,7 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [config, setConfig] = useState<Config>();
 
-  useEffect(() => {
-    // todo: add async calls for data from contracts / api that is needed
-    setConfig({
-      ...StaticConfig
-    });
-  }, []);
+  // todo: add async calls for data from contracts / api that is needed
 
   return (
     <ConfigContext.Provider value={config}>{children}</ConfigContext.Provider>
