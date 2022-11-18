@@ -19,7 +19,7 @@ import useTokenApproval from "../../../../hooks/token/useTokenApproval";
 import useTokenData from "../../../../hooks/token/useTokenData";
 import { Back, EcSignature, Runner } from "../../../../types";
 import BackView from "./Back_View";
-import { useConfig } from "../../../../providers/Config";
+import { StaticConfig } from "../../../../providers/Config";
 
 const DECIMAL = 6;
 
@@ -208,15 +208,14 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
   );
   const [wagerAmount, setWagerAmount] = useState<number>(0);
   const [signature, setSignature] = useState<EcSignature>();
-  const config = useConfig();
 
   const marketData = useMarketDetail(selectedMarketAddress);
   const { data: balanceData } = useBalance({
     address: address,
     token:
       marketData?.name && marketData.name.includes("DAI")
-        ? (config?.tokenAddresses.DAI as Address)
-        : (config?.tokenAddresses.USDT as Address)
+        ? (StaticConfig.tokenAddresses.DAI as Address)
+        : (StaticConfig.tokenAddresses.USDT as Address)
   });
 
   useEffect(() => {
