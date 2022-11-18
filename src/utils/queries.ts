@@ -1,4 +1,5 @@
-const optionalAddressFilter = (address?: string) => address ? `where: { owner: "${address.toLowerCase()}" }` : "";
+const optionalAddressFilter = (address?: string) =>
+  address ? `where: { owner: "${address.toLowerCase()}" }` : "";
 
 export const getBetsQuery = (
   limit: number,

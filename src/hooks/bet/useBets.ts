@@ -24,6 +24,7 @@ const useBets = (limit: number, skip: number) => {
   const { data: totalData, loading: totalDataLoading } = useSubgraph<Response>(
     getBetsQuery(limit, skip)
   );
+  console.log(getBetsQuery(limit, skip));
   // user bets
   const { data: userData, loading: userDataLoading } = useSubgraph<Response>(
     getBetsQuery(limit, skip, address)
@@ -37,9 +38,7 @@ const useBets = (limit: number, skip: number) => {
     if (totalDataLoading || !totalData) return;
 
     // array starts from skip and ends at the limit from the skip
-    const filteredTotalData = totalData.bets.filter(
-      (_, i) => i >= skip && i < skip + limit
-    );
+    const filteredTotalData = totalData.bets.filter((_, i) => i < limit);
 
     // only fetch api data for limited array for efficiency
     Promise.all(
@@ -58,9 +57,7 @@ const useBets = (limit: number, skip: number) => {
   useEffect(() => {
     if (userDataLoading || !userData || !address) return;
 
-    const filteredUserData = userData.bets.filter(
-      (_, i) => i >= skip && i < skip + limit
-    );
+    const filteredUserData = userData.bets.filter((_, i) => i < limit);
 
     Promise.all(
       filteredUserData.map<Promise<BetHistory>>(async bet => {

@@ -12,7 +12,9 @@ type Response = {
 };
 
 const useVaultHistory = (vaultAddress?: string) => {
-  const { data, loading } = useSubgraph<Response>(getVaultHistoryQuery(vaultAddress));
+  const { data, loading } = useSubgraph<Response>(
+    getVaultHistoryQuery(vaultAddress)
+  );
 
   const formattedData = useMemo<FormattedVaultTransaction[] | undefined>(() => {
     if (loading || !data) return;
