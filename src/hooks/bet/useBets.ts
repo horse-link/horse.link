@@ -15,7 +15,7 @@ type AggregatorResponse = {
   aggregators: Aggregator[];
 };
 
-const POLL_INTERVAL = 500;
+const POLL_INTERVAL = 5000;
 
 const useBets = (limit: number, skip: number) => {
   const { address } = useAccount();
