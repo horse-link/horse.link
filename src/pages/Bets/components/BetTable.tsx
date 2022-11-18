@@ -1,22 +1,34 @@
 import Skeleton from "react-loading-skeleton";
 import classnames from "classnames";
 import { BetHistory } from "../../../types";
-import useBetHistory from "../../../hooks/bet/useBetHistory";
 import { formatToFourDecimals } from "../../../utils/formatting";
 import BetRows from "./BetRows";
-import { useAccount } from "wagmi";
 import { ethers } from "ethers";
 import moment from "moment";
+import React from "react";
+import PageSelector from "./PageSelector";
 
 type Props = {
   myBetsEnabled: boolean;
   onClickBet: (bet?: BetHistory) => void;
+  page: number;
+  setPage: (page: number) => void;
+  totalBetHistory: BetHistory[] | undefined;
+  userBetHistory: BetHistory[] | undefined;
+  userMaxPages: number;
+  totalMaxPages: number;
 };
-const BetTable = ({ myBetsEnabled, onClickBet }: Props) => {
-  const { address } = useAccount();
-  const bets = useBetHistory();
-  const myBets = useBetHistory(address);
-  return (
+const BetTable = ({
+  myBetsEnabled,
+  onClickBet,
+  page,
+  setPage,
+  totalBetHistory,
+  userBetHistory,
+  userMaxPages,
+  totalMaxPages
+}: Props) => (
+  <React.Fragment>
     <div className="col-span-2 bg-gray-50 rounded-xl overflow-auto">
       <div className="shadow-sm overflow-hidden mt-2 mb-5">
         <table className="border-collapse table-fixed w-full divide-y divide-gray-200">
@@ -56,16 +68,29 @@ const BetTable = ({ myBetsEnabled, onClickBet }: Props) => {
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {myBetsEnabled ? (
-              <BetRows bets={myBets} onClickBet={onClickBet} />
+              <BetRows
+                myBetsSelected={true}
+                bets={userBetHistory}
+                onClickBet={onClickBet}
+              />
             ) : (
-              <BetRows bets={bets} onClickBet={onClickBet} />
+              <BetRows
+                myBetsSelected={false}
+                bets={totalBetHistory}
+                onClickBet={onClickBet}
+              />
             )}
           </tbody>
         </table>
       </div>
     </div>
-  );
-};
+    <PageSelector
+      page={page}
+      maxPages={myBetsEnabled ? userMaxPages : totalMaxPages}
+      setPage={setPage}
+    />
+  </React.Fragment>
+);
 
 export default BetTable;
 

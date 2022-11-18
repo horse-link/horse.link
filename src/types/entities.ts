@@ -71,3 +71,10 @@ export type FormattedBet = Pick<
   createdAt: number;
   settledAt: number;
 };
+
+export type Aggregator = {
+  id: string;
+  totalBets: string;
+  totalMarkets: string;
+  totalVaults: string;
+};
