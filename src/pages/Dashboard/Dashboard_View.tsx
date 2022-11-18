@@ -3,19 +3,19 @@ import { Meet } from "../../types/index";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import Skeleton from "react-loading-skeleton";
-import { FormattedProtocol } from "../../types/entities";
-import { ethers } from "ethers";
-import {
-  formatNumberWithCommas,
-  formatToTwoDecimals
-} from "../../utils/formatting";
+import Toggle from "../../components/Toggle";
 
 type Props = {
   asLocaltime: (raceTime: number) => string;
   meets: Meet[];
   signature: string | undefined;
   owner: string | undefined;
-  stats: FormattedProtocol | undefined;
+  statsArray: {
+    name: string;
+    stat: string | undefined;
+  }[];
+  myPlayEnabled: boolean;
+  onMyPlayToggle: () => void;
 };
 
 type TableProps = {
@@ -24,34 +24,15 @@ type TableProps = {
 };
 
 const DashboardView: React.FC<Props> = (props: Props) => {
-  const { asLocaltime, meets, owner, signature, stats } = props;
-
-  const statsArray = [
-    {
-      name: "Total Liquidity",
-      stat: stats?.tvl ? (
-        `$${formatNumberWithCommas(ethers.utils.formatEther(stats.tvl))}`
-      ) : (
-        <Loader />
-      )
-    },
-    {
-      name: "In Play",
-      stat: stats?.inPlay ? (
-        `$${formatNumberWithCommas(ethers.utils.formatEther(stats.inPlay))}`
-      ) : (
-        <Loader />
-      )
-    },
-    {
-      name: "Performance",
-      stat: stats?.performance ? (
-        `${formatToTwoDecimals(stats.performance.toString())}%`
-      ) : (
-        <Loader />
-      )
-    }
-  ];
+  const {
+    asLocaltime,
+    meets,
+    owner,
+    signature,
+    statsArray,
+    myPlayEnabled,
+    onMyPlayToggle
+  } = props;
 
   return (
     <PageLayout requiresAuth={false}>
@@ -93,13 +74,19 @@ const DashboardView: React.FC<Props> = (props: Props) => {
                   {stat.name}
                 </dt>
                 <dd className="mt-1 text-3xl font-semibold text-gray-900">
-                  {stat.stat}
+                  {stat.stat || <Loader />}
                 </dd>
               </div>
             ))}
           </dl>
         </div>
-        <Table asLocaltime={asLocaltime} meets={meets} />
+        <div className="flex gap-3 self-end justify-self-end">
+          <Toggle enabled={myPlayEnabled} onChange={onMyPlayToggle} />
+          <div>My Play</div>
+        </div>
+        <div className="-mt-12">
+          <Table asLocaltime={asLocaltime} meets={meets} />
+        </div>
         <div className="flex justify-center px-4 py-5 bg-white shadow rounded-lg sm:p-6">
           <div className="w-4/5 max-w-2xl">
             <div className="flex flex-col items-center">
