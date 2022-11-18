@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 import { Config, StaticConfigType } from "../types/config";
 
 export const StaticConfig: StaticConfigType = {
@@ -15,14 +15,9 @@ export const useConfig = () => useContext(ConfigContext);
 export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({
   children
 }) => {
-  const [config, setConfig] = useState<Config>();
+  const [config] = useState<Config>();
 
-  useEffect(() => {
-    // todo: add async calls for data from contracts / api that is needed
-    setConfig({
-      ...StaticConfig
-    });
-  }, []);
+  // todo: add async calls for data from contracts / api that is needed in a useEffect
 
   return (
     <ConfigContext.Provider value={config}>{children}</ConfigContext.Provider>

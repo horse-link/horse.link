@@ -3,6 +3,8 @@ import { BetHistory } from "../../types";
 import BetModal from "./components/BetModal";
 import BetTable from "./components/BetTable";
 import MyBetsToggle from "./components/MyBetsToggle";
+import Select from "react-select";
+import { paginationOptions } from "./Bets_Logic";
 
 type Props = {
   myBetsEnabled: boolean;
@@ -11,14 +13,29 @@ type Props = {
   isModalOpen: boolean;
   onCloseModal: () => void;
   selectedBet?: BetHistory;
+  setPagination: (pagination: number) => void;
+  page: number;
+  setPage: (page: number) => void;
+  totalBetHistory: BetHistory[] | undefined;
+  userBetHistory: BetHistory[] | undefined;
+  userMaxPages: number;
+  totalMaxPages: number;
 };
+
 const BetsView = ({
   onClickBet,
   isModalOpen,
   onCloseModal,
   myBetsEnabled,
   onMyBetToggle,
-  selectedBet
+  selectedBet,
+  setPagination,
+  page,
+  setPage,
+  totalBetHistory,
+  userBetHistory,
+  userMaxPages,
+  totalMaxPages
 }: Props) => {
   return (
     <PageLayout requiresAuth={false}>
@@ -28,9 +45,48 @@ const BetsView = ({
         betData={selectedBet}
       />
       <div className="grid grid-cols-2 gap-2">
-        <h3 className="text-lg font-medium text-gray-900">Bets History</h3>
-        <MyBetsToggle enabled={myBetsEnabled} onChange={onMyBetToggle} />
-        <BetTable myBetsEnabled={myBetsEnabled} onClickBet={onClickBet} />
+        <div className="w-full flex justify-between col-span-2">
+          <h3 className="text-lg font-medium text-gray-900 flex items-center">
+            Bets History
+          </h3>
+          <div className="flex items-center">
+            <Select
+              onChange={selection =>
+                selection && setPagination(selection.value)
+              }
+              options={paginationOptions}
+              defaultValue={paginationOptions[0]}
+              isClearable={false}
+              isSearchable={false}
+              styles={{
+                container: base => ({
+                  ...base,
+                  marginRight: "1rem"
+                }),
+                valueContainer: base => ({
+                  ...base,
+                  paddingLeft: "1rem",
+                  paddingRight: "1rem"
+                }),
+                indicatorSeparator: base => ({
+                  ...base,
+                  display: "none"
+                })
+              }}
+            />
+            <MyBetsToggle enabled={myBetsEnabled} onChange={onMyBetToggle} />
+          </div>
+        </div>
+        <BetTable
+          myBetsEnabled={myBetsEnabled}
+          onClickBet={onClickBet}
+          page={page}
+          setPage={setPage}
+          totalBetHistory={totalBetHistory}
+          userBetHistory={userBetHistory}
+          userMaxPages={userMaxPages}
+          totalMaxPages={totalMaxPages}
+        />
       </div>
     </PageLayout>
   );

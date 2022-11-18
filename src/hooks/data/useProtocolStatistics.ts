@@ -1,6 +1,7 @@
 import { BigNumber } from "ethers";
 import { useMemo } from "react";
 import { FormattedProtocol, Protocol } from "../../types/entities";
+import { getProtocolStatsQuery } from "../../utils/queries";
 import useSubgraph from "../useSubgraph";
 
 type Response = {
@@ -8,18 +9,7 @@ type Response = {
 };
 
 const useProtocolStatistics = () => {
-  const query = `{
-    protocols {
-      id
-      inPlay
-      initialTvl
-      currentTvl
-      performance
-      lastUpdate
-    }
-  }`;
-
-  const { data, loading } = useSubgraph<Response>(query);
+  const { data, loading } = useSubgraph<Response>(getProtocolStatsQuery());
 
   const formattedData = useMemo<FormattedProtocol | undefined>(() => {
     if (loading || !data) return;
