@@ -118,10 +118,7 @@ const DashboardView: React.FC<Props> = (props: Props) => {
 };
 const Table: React.FC<TableProps> = (props: TableProps) => {
   const { meets } = props;
-  const headerArray = useMemo(() => {
-    const maxLength = Math.max(...meets.map(meet => meet.races.length));
-    return new Array(maxLength);
-  }, [meets]);
+  const maxLength = Math.max(...meets.map(meet => meet.races.length));
   return (
     <div className="grid grid-cols-2">
       <div className="col-span-2">
@@ -141,7 +138,7 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
                       >
                         Venue
                       </th>
-                      {[...headerArray].map((_, i) => (
+                      {[...new Array(maxLength)].map((_, i) => (
                         <th
                           key={i}
                           scope="col"
