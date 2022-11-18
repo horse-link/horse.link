@@ -6,6 +6,7 @@ import api from "../../../../apis/Api";
 import {
   Address,
   useAccount,
+  useBalance,
   useContractWrite,
   useWaitForTransaction
 } from "wagmi";
@@ -18,6 +19,7 @@ import useTokenApproval from "../../../../hooks/token/useTokenApproval";
 import useTokenData from "../../../../hooks/token/useTokenData";
 import { Back, EcSignature, Runner } from "../../../../types";
 import BackView from "./Back_View";
+import { StaticConfig } from "../../../../providers/Config";
 
 const DECIMAL = 6;
 
@@ -193,6 +195,7 @@ const usePageParams = (runner?: Runner) => {
 
 type Props = {
   runner?: Runner;
+  balanceData?: any;
 };
 
 const BackLogic: React.FC<Props> = ({ runner }) => {
@@ -205,6 +208,15 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
   );
   const [wagerAmount, setWagerAmount] = useState<number>(0);
   const [signature, setSignature] = useState<EcSignature>();
+
+  const marketData = useMarketDetail(selectedMarketAddress);
+  const { data: balanceData } = useBalance({
+    address: address,
+    token:
+      marketData?.name && marketData.name.includes("DAI")
+        ? (StaticConfig.tokenAddresses.DAI as Address)
+        : (StaticConfig.tokenAddresses.USDT as Address)
+  });
 
   useEffect(() => {
     if (marketAddresses.length > 0) {
@@ -306,6 +318,7 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
       txStatus={txStatuses}
       isEnoughAllowance={isEnoughAllowance}
       handleBackContractWrite={handleBackContractWrite}
+      balanceData={balanceData}
     />
   );
 };
