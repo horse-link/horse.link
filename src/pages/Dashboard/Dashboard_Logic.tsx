@@ -6,7 +6,7 @@ import api from "../../apis/Api";
 import useProtocolStatistics from "../../hooks/data/useProtocolStatistics";
 
 const getMockMeets = (): Meet[] => {
-  const mockRace: Race[] = Array.from({ length: 10 }, (_, i) => ({
+  const mockRace: Race[] = Array.from({ length: 15 }, (_, i) => ({
     number: i,
     name: "",
     status: "Normal",

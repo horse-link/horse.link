@@ -151,7 +151,7 @@ const PageLayoutView: React.FC<Props> = props => {
             isModalOpen={isWalletModalOpen}
             closeWalletModal={closeWalletModal}
           />
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-9xl mx-auto px-4 sm:px-6 lg:px-9">
             {props.children}
           </div>
         </main>
