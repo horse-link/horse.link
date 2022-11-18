@@ -2,9 +2,9 @@ import { PageLayout } from "../../components";
 import { BetHistory } from "../../types";
 import BetModal from "./components/BetModal";
 import BetTable from "./components/BetTable";
-import MyBetsToggle from "./components/MyBetsToggle";
 import Select from "react-select";
 import { paginationOptions } from "./Bets_Logic";
+import Toggle from "../../components/Toggle";
 
 type Props = {
   myBetsEnabled: boolean;
@@ -74,7 +74,10 @@ const BetsView = ({
                 })
               }}
             />
-            <MyBetsToggle enabled={myBetsEnabled} onChange={onMyBetToggle} />
+            <div className="flex gap-3 self-end justify-self-end items-center pb-2">
+              <Toggle enabled={myBetsEnabled} onChange={onMyBetToggle} />
+              <div className="font-semibold">My Bets</div>
+            </div>
           </div>
         </div>
         <BetTable

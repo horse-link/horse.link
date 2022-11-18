@@ -24,7 +24,7 @@ const getMockMeets = (): Meet[] => {
 const Dashboard: React.FC = () => {
   const [response, setResponse] = useState<SignedMeetingsResponse>();
 
-  const stats = undefined; //useProtocolStatistics();
+  const stats = useProtocolStatistics();
 
   useEffect(() => {
     const loadMeetings = async () => {
