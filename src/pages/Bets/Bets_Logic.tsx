@@ -30,14 +30,14 @@ const BetsLogics = () => {
 
   // max pages for "my bets" table
   const userMaxPages = useMemo(() => {
-    if (!userBetHistory) return 1;
+    if (!userBetHistory || userBetHistory.length === 0) return 1;
 
     return calculateMaxPages(betTablePagination, userBetHistory.length);
   }, [userBetHistory, betTablePagination]);
 
   // max pages for total bet history
   const totalMaxPages = useMemo(() => {
-    if (!totalBets) return 1;
+    if (!totalBets || totalBets === 0) return 1;
 
     return calculateMaxPages(betTablePagination, totalBets);
   }, [totalBets, betTablePagination]);
