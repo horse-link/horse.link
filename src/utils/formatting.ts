@@ -1,4 +1,3 @@
-import { ethers } from "ethers";
 import { BetHistory, SignedBetDataResponse } from "../types";
 import { Bet } from "../types/entities";
 
@@ -37,8 +36,8 @@ export const formatBetHistory = (
   signedBetData: SignedBetDataResponse
 ): BetHistory => ({
   index: +bet.id,
-  marketId: ethers.utils.parseBytes32String(bet.marketId),
-  propositionId: ethers.utils.parseBytes32String(bet.propositionId),
+  marketId: bet.marketId.toLowerCase(),
+  propositionId: bet.propositionId.toLowerCase(),
   winningPropositionId: signedBetData.winningPropositionId,
   marketResultAdded: signedBetData.marketResultAdded,
   settled: bet.settled,

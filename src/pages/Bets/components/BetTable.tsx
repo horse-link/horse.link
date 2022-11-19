@@ -126,9 +126,11 @@ export const Row = ({ betData, onClick }: RowProps) => {
       <td className="px-2 py-4">
         {moment.unix(betData.blockNumber).fromNow() ?? <Skeleton />}
       </td>
-      <td className="px-2 py-4 truncate">{betData.marketId ?? <Skeleton />}</td>
       <td className="px-2 py-4 truncate">
-        {betData.propositionId ?? <Skeleton />}
+        {ethers.utils.parseBytes32String(betData.marketId) ?? <Skeleton />}
+      </td>
+      <td className="px-2 py-4 truncate">
+        {ethers.utils.parseBytes32String(betData.propositionId) ?? <Skeleton />}
       </td>
     </tr>
   );
