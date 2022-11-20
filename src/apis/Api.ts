@@ -90,8 +90,8 @@ export class Api {
     const { data } = await this.client.post(`/faucet`, {
       to: userAddress,
       amount: isUsdt(tokenAddress)
-        ? ethers.utils.parseUnits("10", 6).toString()
-        : ethers.utils.formatEther(10),
+        ? ethers.utils.parseUnits("100", 6)
+        : ethers.utils.parseUnits("100"),
       address: tokenAddress
     });
 

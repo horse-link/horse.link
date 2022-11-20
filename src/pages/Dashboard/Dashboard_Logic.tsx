@@ -13,7 +13,7 @@ import { WalletModalContext } from "../../providers/WalletModal";
 import { useAccount } from "wagmi";
 
 const getMockMeets = (): Meet[] => {
-  const mockRace: Race[] = Array.from({ length: 10 }, (_, i) => ({
+  const mockRace: Race[] = Array.from({ length: 15 }, (_, i) => ({
     number: i,
     name: "",
     status: "Normal",

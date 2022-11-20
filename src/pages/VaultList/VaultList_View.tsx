@@ -5,7 +5,7 @@ import Modal from "../../components/Modal";
 import useVaultDetail from "../../hooks/vault/useVaultDetail";
 import { FormattedVaultTransaction } from "../../types/entities";
 import { ethers } from "ethers";
-import { shortenAddress } from "../../utils/shortenAddress";
+import { shortenAddress } from "../../utils/formatting";
 import moment from "moment";
 
 type Props = {
@@ -136,6 +136,7 @@ const txTypeMap = new Map([
   ["withdraw", "Withdrawal"],
   ["deposit", "Deposit"]
 ]);
+
 const HistoryTableRow: React.FC<HistoryTableRowProps> = ({ vault }) => {
   const formattedTxType = txTypeMap.get(vault.type) || vault.type;
   const details = useVaultDetail(vault.vaultAddress);
@@ -191,7 +192,7 @@ const HistoryTable: React.FC<HistoryTableProps> = ({ history }) => (
                 scope="col"
                 className="pl-5 pr-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
               >
-                Desposit / Withdraw
+                Type
               </th>
               <th
                 scope="col"

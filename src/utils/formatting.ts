@@ -1,9 +1,9 @@
-import { ethers } from "ethers";
 import { BetHistory, SignedBetDataResponse } from "../types";
 import { Bet } from "../types/entities";
 
 export const formatToFourDecimals = (amount: string) => {
   const parsedAmount = parseFloat(amount);
+  if (parsedAmount === 0) return "0";
   if (parsedAmount < 0.0001) return "<0.0001";
 
   const roundedToFourDecimal = parsedAmount.toFixed(4);
@@ -37,8 +37,8 @@ export const formatBetHistory = (
   signedBetData: SignedBetDataResponse
 ): BetHistory => ({
   index: +bet.id,
-  marketId: ethers.utils.parseBytes32String(bet.marketId),
-  propositionId: ethers.utils.parseBytes32String(bet.propositionId),
+  marketId: bet.marketId.toLowerCase(),
+  propositionId: bet.propositionId.toLowerCase(),
   winningPropositionId: signedBetData.winningPropositionId,
   marketResultAdded: signedBetData.marketResultAdded,
   settled: bet.settled,
@@ -48,3 +48,12 @@ export const formatBetHistory = (
   blockNumber: +bet.createdAt,
   marketOracleResultSig: signedBetData.marketOracleResultSig
 });
+
+export const shortenAddress = (address: string) =>
+  `${address.slice(0, 5)}...${address.slice(address.length - 5)}`;
+
+export const shortenHash = (hash: string) => {
+  const start = hash.substring(0, 15);
+  const end = hash.substring(hash.length - 15, hash.length);
+  return `${start}...${end}`;
+};

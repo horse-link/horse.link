@@ -21,6 +21,7 @@ export const getBetsQuery = (
     payout
     owner
     settled
+    didWin
     createdAt
     settledAt
     createdAtTx
@@ -51,7 +52,6 @@ query GetProtocols{
 
 export const getVaultHistoryQuery = (vaultAddress?: string) => `{
   vaultTransactions(
-    first: 1000
     ${optionalAddressFilter(vaultAddress)}
     orderBy: timestamp
     orderDirection: desc
@@ -59,8 +59,32 @@ export const getVaultHistoryQuery = (vaultAddress?: string) => `{
     id
     type
     vaultAddress
-    depositerAddress
+    userAddress
     amount
     timestamp
+  }
+}`;
+
+export const getMarketStatsQuery = (timestamp: number) => `{
+  bets(
+    orderBy: amount
+    orderDirection: desc
+    where: {
+      createdAt_gte: ${timestamp}
+    }
+  ) {
+    id
+    propositionId
+    marketId
+    marketAddress
+    amount
+    payout
+    owner
+    settled
+    didWin
+    createdAt
+    settledAt
+    createdAtTx
+    settledAtTx
   }
 }`;

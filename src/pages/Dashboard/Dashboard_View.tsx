@@ -17,12 +17,10 @@ type Props = {
   myPlayEnabled: boolean;
   onMyPlayToggle: () => void;
 };
-
 type TableProps = {
   asLocaltime: (raceTime: number) => string;
   meets: Meet[];
 };
-
 const DashboardView: React.FC<Props> = (props: Props) => {
   const {
     asLocaltime,
@@ -107,9 +105,9 @@ const DashboardView: React.FC<Props> = (props: Props) => {
     </PageLayout>
   );
 };
-
 const Table: React.FC<TableProps> = (props: TableProps) => {
   const { meets } = props;
+  const maxLength = Math.max(...meets.map(meet => meet.races.length));
   return (
     <div className="grid grid-cols-2">
       <div className="col-span-2">
@@ -117,7 +115,7 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
           {moment(Date.now()).format("dddd Do MMMM")}
         </h3>
         <div className="flex flex-col">
-          <div className="sm:-mx-1 lg:-mx-20">
+          <div>
             <div className="py-2 align-middle inline-block min-w-full">
               <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                 <table className="min-w-full divide-y divide-gray-200 bg-white">
@@ -125,88 +123,19 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
                     <tr>
                       <th
                         scope="col"
-                        className="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
                         Venue
                       </th>
-                      <th
-                        scope="col"
-                        className="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Race 1
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Race 2
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Race 3
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Race 4
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Race 5
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Race 6
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Race 7
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Race 8
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Race 9
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Race 10
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Race 11
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Race 12
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Race 13
-                      </th>
+                      {[...new Array(maxLength)].map((_, i) => (
+                        <th
+                          key={i}
+                          scope="col"
+                          className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                          Race {i + 1}
+                        </th>
+                      ))}
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
@@ -222,7 +151,7 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
                         {meet.races.map(race => (
                           <td>
                             <div
-                              className={`px-3 py-4 whitespace-nowrap text-sm 
+                              className={`px-3 py-4 whitespace-nowrap text-sm
                                 ${
                                   race.status == "Paying"
                                     ? "bg-gray-400 hover:bg-gray-500"
@@ -266,5 +195,4 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
     </div>
   );
 };
-
 export default DashboardView;
