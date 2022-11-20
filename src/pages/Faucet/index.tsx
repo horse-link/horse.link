@@ -18,7 +18,8 @@ export const FaucetPage = () => {
       if (!address || isClaimUsdtLoading || isClaimDiaLoading) return;
       if (tokenName === "Mock USDT") {
         setIsClaimUsdtLoading(true);
-      } else {
+      }
+      if (tokenName === "Mock DAI") {
         setIsClaimDiaLoading(true);
       }
       try {
