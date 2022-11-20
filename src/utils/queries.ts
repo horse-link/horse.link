@@ -37,7 +37,8 @@ export const getAggregatorQuery = () => `{
   }
 }`;
 
-export const getProtocolStatsQuery = () => `{
+export const getProtocolStatsQuery = () => `
+query GetProtocols{
   protocols {
     id
     inPlay
