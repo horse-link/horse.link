@@ -35,7 +35,6 @@ const Dashboard: React.FC = () => {
   const { isConnected } = useAccount();
 
   const stats = useProtocolStatistics();
-  // const myStats =
 
   useEffect(() => {
     const loadMeetings = async () => {
