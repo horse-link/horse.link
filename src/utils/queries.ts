@@ -21,6 +21,7 @@ export const getBetsQuery = (
     payout
     owner
     settled
+    didWin
     createdAt
     settledAt
     createdAtTx
@@ -58,8 +59,33 @@ export const getVaultHistoryQuery = (vaultAddress?: string) => `{
     id
     type
     vaultAddress
-    depositerAddress
+    userAddress
     amount
     timestamp
+  }
+}`;
+
+export const getMarketStatsQuery = (timestamp: number) => `{
+  bets(
+    first: 1000
+    orderBy: amount
+    orderDirection: desc
+    where: {
+      createdAt_gte: ${timestamp}
+    }
+  ) {
+    id
+    propositionId
+    marketId
+    marketAddress
+    amount
+    payout
+    owner
+    settled
+    didWin
+    createdAt
+    settledAt
+    createdAtTx
+    settledAtTx
   }
 }`;
