@@ -1,5 +1,5 @@
 import Modal from "../../components/Modal";
-import { shortenHash } from "../../utils/shortenHash";
+import { shortenHash } from "../../utils/formatting";
 type Props = {
   isOpen: boolean;
   onClose: () => void;

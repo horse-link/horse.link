@@ -5,7 +5,7 @@ import Modal from "../../components/Modal";
 import useVaultDetail from "../../hooks/vault/useVaultDetail";
 import { FormattedVaultTransaction } from "../../types/entities";
 import { ethers } from "ethers";
-import { shortenAddress } from "../../utils/shortenAddress";
+import { shortenAddress } from "../../utils/formatting";
 import moment from "moment";
 
 type Props = {
