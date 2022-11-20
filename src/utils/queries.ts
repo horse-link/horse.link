@@ -51,7 +51,6 @@ export const getProtocolStatsQuery = () => `{
 
 export const getVaultHistoryQuery = (vaultAddress?: string) => `{
   vaultTransactions(
-    first: 1000
     ${optionalAddressFilter(vaultAddress)}
     orderBy: timestamp
     orderDirection: desc
@@ -67,7 +66,6 @@ export const getVaultHistoryQuery = (vaultAddress?: string) => `{
 
 export const getMarketStatsQuery = (timestamp: number) => `{
   bets(
-    first: 1000
     orderBy: amount
     orderDirection: desc
     where: {
