@@ -1,6 +1,7 @@
 import { formatToFourDecimals, formatToTwoDecimals } from "./formatting";
 
 test.concurrent.each([
+  ["0", "0"],
   ["1", "1"],
   ["12", "12"],
   ["3456", "3456"],
@@ -16,6 +17,7 @@ test.concurrent.each([
 });
 
 test.concurrent.each([
+  ["0.0000", "0"],
   ["0.00051", "0.0005"],
   ["0.00055", "0.0006"],
   ["0.00056", "0.0006"],
