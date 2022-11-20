@@ -1,14 +1,45 @@
+import { BigNumber, ethers } from "ethers";
 import Skeleton from "react-loading-skeleton";
 import { PageLayout } from "../../components";
+import Card from "../../components/Card";
 import useMarketDetail from "../../hooks/market/useMarketDetail";
+import { Bet } from "../../types/entities";
+import { formatToFourDecimals } from "../../utils/formatting";
 
 type Props = {
   marketAddressList: string[];
   onClickMarket: (marketAddress: string) => void;
+  stats: {
+    totalBets?: number;
+    totalVolume?: BigNumber;
+    largestBet?: Bet;
+  };
 };
-const MarketView = ({ marketAddressList, onClickMarket }: Props) => {
+
+const MarketView = ({ marketAddressList, onClickMarket, stats }: Props) => {
+  const { totalBets, totalVolume, largestBet } = stats;
+
   return (
     <PageLayout requiresAuth={false}>
+      <div className="flex w-full justify-between gap-x-4 mb-4">
+        <Card
+          title="24H Volume"
+          data={
+            totalVolume &&
+            `$${formatToFourDecimals(ethers.utils.formatEther(totalVolume))}`
+          }
+        />
+        <Card title="24H Bets" data={totalBets?.toString()} />
+        <Card
+          title="24H Largest Bet"
+          data={
+            largestBet &&
+            `$${formatToFourDecimals(
+              ethers.utils.formatEther(largestBet.amount)
+            )}`
+          }
+        />
+      </div>
       <div className="flex flex-col">
         <h3 className="text-lg mb-3 font-medium text-gray-900">Markets </h3>
         <div className="bg-gray-50 rounded-xl overflow-auto">
@@ -53,7 +84,7 @@ const MarketView = ({ marketAddressList, onClickMarket }: Props) => {
                 {marketAddressList.map((v, i) => (
                   <Row
                     marketAddress={v}
-                    key={v || i}
+                    key={i}
                     onClick={() => onClickMarket(v)}
                   />
                 ))}
@@ -71,6 +102,7 @@ type RowProps = {
   marketAddress?: string;
   onClick?: () => void;
 };
+
 const Row = ({ marketAddress, onClick }: RowProps) => {
   const marketDetail = useMarketDetail(marketAddress);
   const { name, target, totalInPlay, vaultAddress } = marketDetail || {};
