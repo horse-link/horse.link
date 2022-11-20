@@ -1,5 +1,5 @@
 import Modal from "../../components/Modal";
-import { truncateAddress } from "../../utils/shortenHash";
+import { shortenHash } from "../../utils/formatting";
 type Props = {
   isOpen: boolean;
   onClose: () => void;
@@ -17,7 +17,7 @@ export const FaucetModal = ({ isOpen, onClose, txHash }: Props) => {
         </h2>
         <br />
         <div className="flex flex-row">
-          Tx ID: {truncateAddress(txHash)}
+          Tx ID: {shortenHash(txHash || "")}
           <a
             href={`${process.env.REACT_APP_SCANNER_URL}/${txHash}`}
             target="_blank"

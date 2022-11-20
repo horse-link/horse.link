@@ -1,4 +1,4 @@
-import { shortenAddress } from "../../utils/shortenAddress";
+import { shortenAddress } from "../../utils/formatting";
 
 type Props = {
   hash?: string;
