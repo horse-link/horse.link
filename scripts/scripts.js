@@ -6,18 +6,6 @@ const HDWalletProvider = require("@truffle/hdwallet-provider");
 
 const Horse = require("./build/contracts/HorseLink.json");
 
-// const getCount = async () => {
-//   // const projectID = process.env.PROJECT_ID;
-//   const web3 = new Web3(process.env.NODE); // new Web3(`https://kovan.infura.io/v3/${projectID}`);
-//   const contract = new web3.eth.Contract(
-//     Horse.abi,
-//     process.env.CONTRACT_ADDRESS
-//   );
-
-//   const count = await contract.methods.count().call();
-//   console.log(count);
-// };
-
 const addResult = result => {
   _addResult(
     result.track,
@@ -53,14 +41,6 @@ const addResultAsync = async result => {
 };
 
 const _addResultAsync = async (track, year, month, day, race, results) => {
-  // const projectID = process.env.PROJECT_ID;
-  // const privateKey = process.env.PRIVATE_KEY;
-  // const provider = new HDWalletProvider({
-  //   mnemonic: {
-  //     phrase: process.env.MNEMONIC
-  //   },
-  //   providerOrUrl: process.env.NODE //`https://kovan.infura.io/v3/${projectID}`
-  // });
 
   const web3 = new Web3(provider);
   const accounts = await web3.eth.getAccounts();
@@ -204,5 +184,4 @@ const getAndAddRaces = async (yyyy, mm, dd) => {
 //   console.log(meetings);
 // });
 
-getCount();
 getAndAddTodaysRaces();
