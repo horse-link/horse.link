@@ -37,7 +37,7 @@ export type VaultInfo = {
 };
 
 export type Config = {
-  address: ProtocolAddresses;
+  addresses: ProtocolAddresses;
   markets: MarketInfo[];
   vaults: VaultInfo[];
   tokens: TokenInfo[];
