@@ -192,7 +192,7 @@ const HistoryTable: React.FC<HistoryTableProps> = ({ history }) => (
                 scope="col"
                 className="pl-5 pr-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
               >
-                Type
+                type
               </th>
               <th
                 scope="col"
