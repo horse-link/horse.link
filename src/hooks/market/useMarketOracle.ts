@@ -22,7 +22,7 @@ const useMarketOracleResultWrite = ({
     write: setResultMarketOracleWrite
   } = useContractWrite({
     mode: "recklesslyUnprepared",
-    address: config?.marketOracle,
+    address: config?.address.marketOracle,
     abi: marketOracleContractJson.abi,
     functionName: "setResult",
     // TODO: Once we have switched the marketOracle contract to check EC signatures
