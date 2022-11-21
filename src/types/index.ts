@@ -44,6 +44,7 @@ export type EcSignature = {
 export type BetHistory = {
   index: number;
   marketId: string;
+  marketAddress: string;
   propositionId: string;
   winningPropositionId: string | undefined;
   marketResultAdded: boolean;

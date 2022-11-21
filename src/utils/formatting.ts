@@ -37,6 +37,7 @@ export const formatBetHistory = (
 ): BetHistory => ({
   index: +bet.id,
   marketId: bet.marketId.toLowerCase(),
+  marketAddress: bet.marketAddress.toLowerCase(),
   propositionId: bet.propositionId.toLowerCase(),
   winningPropositionId: signedBetData.winningPropositionId,
   marketResultAdded: signedBetData.marketResultAdded,
