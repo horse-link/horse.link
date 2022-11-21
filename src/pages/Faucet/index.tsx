@@ -1,15 +1,17 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { Loader, PageLayout } from "../../components";
 import { FaucetModal } from "./FaucetModal";
 import { AiOutlineCopy } from "react-icons/ai";
 import api from "../../apis/Api";
 import { useConfig } from "../../providers/Config";
+import { useWalletModal } from "../../providers/WalletModal";
 
 export const FaucetPage = () => {
   const config = useConfig();
   const { address } = useAccount();
-
+  const { openWalletModal } = useWalletModal();
+  const { isConnected } = useAccount();
   const [isClaimUsdtLoading, setIsClaimUsdtLoading] = useState(false);
   const [isClaimDiaLoading, setIsClaimDiaLoading] = useState(false);
   const [txHash, setTxHash] = useState<string>();
@@ -40,6 +42,11 @@ export const FaucetPage = () => {
     setIsModalOpen(false);
     setTxHash("");
   };
+  useEffect(() => {
+    if (!isConnected) {
+      openWalletModal();
+    }
+  }, [isConnected]);
   return (
     <PageLayout requiresAuth={false}>
       <FaucetModal

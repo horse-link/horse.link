@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
 
 const defaultValue = {
   openWalletModal: () => {
@@ -11,6 +11,8 @@ const defaultValue = {
 };
 
 export const WalletModalContext = createContext(defaultValue);
+
+export const useWalletModal = () => useContext(WalletModalContext);
 
 export const WalletModalProvider: React.FC<{ children: React.ReactNode }> = ({
   children
