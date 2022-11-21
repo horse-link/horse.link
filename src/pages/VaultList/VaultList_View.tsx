@@ -5,7 +5,7 @@ import Modal from "../../components/Modal";
 import useVaultDetail from "../../hooks/vault/useVaultDetail";
 import { FormattedVaultTransaction } from "../../types/entities";
 import { ethers } from "ethers";
-import { shortenAddress } from "../../utils/formatting";
+import { shortenHash } from "../../utils/formatting";
 import moment from "moment";
 
 type Props = {
@@ -53,7 +53,7 @@ const VaultListView: React.FC<Props> = ({
                     scope="col"
                     className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
                   >
-                    TLV
+                    TVL
                   </th>
                   <th
                     scope="col"
@@ -169,7 +169,7 @@ const HistoryTableRow: React.FC<HistoryTableRowProps> = ({ vault }) => {
           rel="noreferrer noopener"
           className="text-blue-600"
         >
-          {shortenAddress(vault.id)}
+          {shortenHash(vault.id)}
         </a>
       </td>
     </tr>
