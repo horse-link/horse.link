@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { Loader, PageLayout } from "../../components";
 import { FaucetModal } from "./FaucetModal";
