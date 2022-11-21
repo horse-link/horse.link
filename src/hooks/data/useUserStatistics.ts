@@ -22,7 +22,7 @@ const useUserStatistics = () => {
 
     return {
       id: user.id,
-      totalDeposited: BigNumber.from(user.totalDesposited),
+      totalDeposited: BigNumber.from(user.totalDeposited),
       inPlay: BigNumber.from(user.inPlay),
       pnl: BigNumber.from(user.pnl),
       lastUpdate: +user.lastUpdate

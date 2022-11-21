@@ -106,7 +106,7 @@ export type FormattedVaultTransaction = Pick<
 
 export type User = {
   id: Address;
-  totalDesposited: string;
+  totalDeposited: string;
   inPlay: string;
   pnl: string;
   lastUpdate: string;
