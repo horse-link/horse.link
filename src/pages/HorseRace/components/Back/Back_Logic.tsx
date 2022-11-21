@@ -20,6 +20,7 @@ import useTokenData from "../../../../hooks/token/useTokenData";
 import { Back, EcSignature, Runner } from "../../../../types";
 import BackView from "./Back_View";
 import { useConfig } from "../../../../providers/Config";
+import { getTokenBySymbol } from "../../../../utils/config";
 
 const DECIMAL = 6;
 
@@ -216,8 +217,8 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
     address: address,
     token:
       marketData?.name && marketData.name.includes("DAI")
-        ? (config?.tokenAddresses["DAI"] as Address)
-        : (config?.tokenAddresses["USDT"] as Address)
+        ? (getTokenBySymbol("DAI", config)?.address as Address)
+        : (getTokenBySymbol("USDT", config)?.address as Address)
   });
 
   useEffect(() => {

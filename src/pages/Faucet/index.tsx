@@ -5,7 +5,6 @@ import { FaucetModal } from "./FaucetModal";
 import { AiOutlineCopy } from "react-icons/ai";
 import api from "../../apis/Api";
 import { useConfig } from "../../providers/Config";
-import { ethers } from "ethers";
 
 export const FaucetPage = () => {
   const config = useConfig();
@@ -70,34 +69,23 @@ export const FaucetPage = () => {
           height="300"
         />
         <div className="flex flex-col gap-5 w-full md:w-56">
-          {Object.keys(config?.tokenAddresses || {}).map(key => (
+          {config?.tokens.map(token => (
             <ClaimButton
-              key={key}
-              tokenName={key}
-              onClick={() =>
-                onClickClaim(
-                  config?.tokenAddresses[key] || ethers.constants.AddressZero,
-                  key
-                )
-              }
+              key={token.name}
+              tokenName={token.name}
+              onClick={() => onClickClaim(token.address, token.name)}
               isLoading={isClaimUsdtLoading || isClaimDiaLoading || !config}
             />
           ))}
         </div>
         <div className="flex flex-col gap-5 md:w-65">
-          {Object.keys(config?.tokenAddresses || {}).map(key => {
+          {config?.tokens.map(token => {
             return (
               <div className="flex bg-gray-100 rounded-md p-5 md:w-155">
-                {key} Address -{" "}
-                {config?.tokenAddresses[key] || ethers.constants.AddressZero}
+                {token.name} Address - {token.address}
                 <button
                   className="flex rounded-xl hover:bg-green-400 p-1"
-                  onClick={() =>
-                    navigator.clipboard.writeText(
-                      config?.tokenAddresses[key] ||
-                        ethers.constants.AddressZero
-                    )
-                  }
+                  onClick={() => navigator.clipboard.writeText(token.name)}
                 >
                   <AiOutlineCopy />
                 </button>

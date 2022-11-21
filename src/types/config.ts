@@ -1,11 +1,19 @@
 import { BigNumber } from "ethers";
 import { Address } from "wagmi";
 
-export type AssetInfo = {
+export type ProtocolAddresses = {
+  registry: Address;
+  marketOracle: Address;
+}
+
+export type TokenInfo = {
+  name: string;
   symbol: string;
   address: Address;
   decimals: number;
-}
+  owner: Address;
+  totalSupply: BigNumber;
+};
 
 export type MarketInfo = {
   owner: Address;
@@ -15,25 +23,22 @@ export type MarketInfo = {
   totalExposure: BigNumber;
   totalInPlay: BigNumber;
   vaultAddress: Address;
-}
+};
 
 export type VaultInfo = {
   name: string;
   address: Address;
   owner: Address;
-  asset: AssetInfo;
+  asset: TokenInfo;
   marketAddress: Address;
   performance: BigNumber;
   totalAssets: BigNumber;
   totalSupply: BigNumber;
-}
+};
 
 export type Config = {
-  tokenAddresses: Record<string, string>;
-  protocol: {
-    registry: string;
-    marketOracle: string;
-    markets: MarketInfo[];
-    vaults: VaultInfo[];
-  };
+  address: ProtocolAddresses;
+  markets: MarketInfo[];
+  vaults: VaultInfo[];
+  tokens: TokenInfo[];
 };

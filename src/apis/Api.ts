@@ -97,7 +97,7 @@ export class Api {
     const config = await this.getConfig();
     const { data } = await this.client.post(`/faucet`, {
       to: userAddress,
-      amount: isUsdt(config, tokenAddress)
+      amount: isUsdt(tokenAddress, config)
         ? ethers.utils.parseUnits("100", 6)
         : ethers.utils.parseUnits("100"),
       address: tokenAddress
