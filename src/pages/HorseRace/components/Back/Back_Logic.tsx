@@ -217,8 +217,8 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
     address,
     token:
       marketData?.name && marketData.name.includes("DAI")
-        ? (getTokenBySymbol("DAI", config)?.address)
-        : (getTokenBySymbol("USDT", config)?.address)
+        ? getTokenBySymbol("DAI", config)?.address
+        : getTokenBySymbol("USDT", config)?.address
   });
 
   useEffect(() => {
