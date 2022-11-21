@@ -11,6 +11,7 @@ import {
 import { ethers } from "ethers";
 import { WalletModalContext } from "../../providers/WalletModal";
 import { useAccount } from "wagmi";
+import useUserStatistics from "../../hooks/data/useUserStatistics";
 
 const getMockMeets = (): Meet[] => {
   const mockRace: Race[] = Array.from({ length: 15 }, (_, i) => ({
@@ -35,6 +36,7 @@ const Dashboard: React.FC = () => {
   const { isConnected } = useAccount();
 
   const stats = useProtocolStatistics();
+  const userStats = useUserStatistics();
 
   useEffect(() => {
     const loadMeetings = async () => {
@@ -86,15 +88,25 @@ const Dashboard: React.FC = () => {
   const myStatsArray = [
     {
       name: "Deposits",
-      stat: undefined
+      stat: userStats?.totalDeposited
+        ? `$${formatNumberWithCommas(
+            ethers.utils.formatEther(userStats.totalDeposited)
+          )}`
+        : undefined
     },
     {
       name: "In Play",
-      stat: undefined
+      stat: userStats?.inPlay
+        ? `$${formatNumberWithCommas(
+            ethers.utils.formatEther(userStats.inPlay)
+          )}`
+        : undefined
     },
     {
       name: "Profits",
-      stat: undefined
+      stat: userStats?.pnl
+        ? `$${formatNumberWithCommas(ethers.utils.formatEther(userStats.pnl))}`
+        : undefined
     }
   ];
 

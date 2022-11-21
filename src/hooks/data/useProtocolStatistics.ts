@@ -5,7 +5,7 @@ import { getProtocolStatsQuery } from "../../utils/queries";
 import useSubgraph from "../useSubgraph";
 
 type Response = {
-  protocols: Protocol[];
+  protocol: Protocol;
 };
 
 const useProtocolStatistics = () => {
@@ -14,8 +14,7 @@ const useProtocolStatistics = () => {
   const formattedData = useMemo<FormattedProtocol | undefined>(() => {
     if (loading || !data) return;
 
-    // because the id is always "protocol", there is always - and only - one entity
-    const protocol = data.protocols[0];
+    const protocol = data.protocol;
 
     return {
       id: protocol.id,
