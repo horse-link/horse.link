@@ -85,7 +85,7 @@ export const FaucetPage = () => {
                 {token.name} Address - {token.address}
                 <button
                   className="flex rounded-xl hover:bg-green-400 p-1"
-                  onClick={() => navigator.clipboard.writeText(token.name)}
+                  onClick={() => navigator.clipboard.writeText(token.address)}
                 >
                   <AiOutlineCopy />
                 </button>
