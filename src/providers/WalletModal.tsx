@@ -11,7 +11,9 @@ const defaultValue = {
 };
 
 export const WalletModalContext = createContext(defaultValue);
+
 export const useWalletModal = () => useContext(WalletModalContext);
+
 export const WalletModalProvider: React.FC<{ children: React.ReactNode }> = ({
   children
 }) => {
