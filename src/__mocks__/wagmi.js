@@ -3,8 +3,8 @@ const wagmi = jest.fn();
 const mockUseAccount = () => {
   return {
     address: undefined,
-    isConnected: "false",
-    isConnecting: "false"
+    isConnected: false,
+    isConnecting: false
   };
 };
 

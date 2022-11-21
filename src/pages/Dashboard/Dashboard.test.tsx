@@ -5,7 +5,7 @@ import ApolloProvider from "../../providers/Apollo";
 import { MemoryRouter } from "react-router-dom";
 import { WalletModalContext } from "../../providers/WalletModal";
 
-const DashboardPageWithProviders = ({ openWalletFn }: any) => {
+const DashboardPageWithProviders = ({ openWalletFn = jest.fn() }: any) => {
   return (
     <WalletModalContext.Provider
       value={{
@@ -44,11 +44,26 @@ test("Show My stats widgets when toggle switch", async () => {
   render(<DashboardPageWithProviders />);
   const toggleElement = screen.getByRole("switch");
   expect(toggleElement).toBeInTheDocument();
-  toggleElement.click();
+  act(() => {
+    toggleElement.click();
+  });
   const myDepositsElement = await screen.findByText("Deposits");
   expect(myDepositsElement).toBeInTheDocument();
   const myInPlayElement = await screen.findByText("In Play");
   expect(myInPlayElement).toBeInTheDocument();
   const myProfitsElement = await screen.findByText("Profits");
   expect(myProfitsElement).toBeInTheDocument();
+});
+
+test("Show wallet connect modal when toggle switch without connected wallet", async () => {
+  const mockOpenWalletFn = jest.fn();
+  render(<DashboardPageWithProviders openWalletFn={mockOpenWalletFn} />);
+  const toggleElement = screen.getByRole("switch");
+  expect(toggleElement).toBeInTheDocument();
+  act(() => {
+    toggleElement.click();
+  });
+  await waitFor(() => {
+    expect(mockOpenWalletFn).toHaveBeenCalled();
+  });
 });
