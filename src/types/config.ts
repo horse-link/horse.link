@@ -4,7 +4,7 @@ import { Address } from "wagmi";
 export type ProtocolAddresses = {
   registry: Address;
   marketOracle: Address;
-}
+};
 
 export type TokenInfo = {
   name: string;
