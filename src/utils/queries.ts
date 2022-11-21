@@ -1,3 +1,5 @@
+import { ethers } from "ethers";
+
 const optionalAddressFilter = (address?: string) =>
   address ? `where: { owner: "${address.toLowerCase()}" }` : "";
 
@@ -30,7 +32,7 @@ export const getBetsQuery = (
 }`;
 
 export const getAggregatorQuery = () => `{
-  aggregators {
+  aggregator(id: "aggregator") {
     id
     totalBets
     totalMarkets
@@ -40,7 +42,7 @@ export const getAggregatorQuery = () => `{
 
 export const getProtocolStatsQuery = () => `
 query GetProtocols{
-  protocols {
+  protocol(id: "protocol") {
     id
     inPlay
     initialTvl
@@ -86,5 +88,17 @@ export const getMarketStatsQuery = (timestamp: number) => `{
     settledAt
     createdAtTx
     settledAtTx
+  }
+}`;
+
+export const getUserStatsQuery = (address?: string) => `{
+  user(id: "${
+    address ? address.toLowerCase() : ethers.constants.AddressZero
+  }") {
+    id
+    totalDeposited
+    inPlay
+    pnl
+    lastUpdate
   }
 }`;

@@ -12,7 +12,7 @@ type Response = {
 };
 
 type AggregatorResponse = {
-  aggregators: Aggregator[];
+  aggregator: Aggregator;
 };
 
 const POLL_INTERVAL = 5000;
@@ -78,10 +78,7 @@ const useBets = (limit: number, skip: number) => {
   const totalBets = useMemo(() => {
     if (countDataLoading || !countData) return 1;
 
-    // id is constant so there will always be one element in array
-    const aggregate = countData.aggregators[0];
-
-    return +aggregate.totalBets;
+    return +countData.aggregator.totalBets;
   }, [countData, countDataLoading]);
 
   // refetch data

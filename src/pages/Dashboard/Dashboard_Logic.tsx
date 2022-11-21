@@ -3,12 +3,6 @@ import moment from "moment";
 import { useContext, useEffect, useState } from "react";
 import { Meet, Race, SignedMeetingsResponse } from "../../types/index";
 import api from "../../apis/Api";
-import useProtocolStatistics from "../../hooks/data/useProtocolStatistics";
-import {
-  formatNumberWithCommas,
-  formatToTwoDecimals
-} from "../../utils/formatting";
-import { ethers } from "ethers";
 import { WalletModalContext } from "../../providers/WalletModal";
 import { useAccount } from "wagmi";
 
@@ -33,8 +27,6 @@ const Dashboard: React.FC = () => {
   const [myPlayEnabled, setMyPlayEnabled] = useState(false);
   const { openWalletModal } = useContext(WalletModalContext);
   const { isConnected } = useAccount();
-
-  const stats = useProtocolStatistics();
 
   useEffect(() => {
     const loadMeetings = async () => {
@@ -62,49 +54,12 @@ const Dashboard: React.FC = () => {
 
   const onMyPlayToggle = () => setMyPlayEnabled(prev => !prev);
 
-  const overallStatsArray = [
-    {
-      name: "Total Liquidity",
-      stat: stats?.tvl
-        ? `$${formatNumberWithCommas(ethers.utils.formatEther(stats.tvl))}`
-        : undefined
-    },
-    {
-      name: "In Play",
-      stat: stats?.inPlay
-        ? `$${formatNumberWithCommas(ethers.utils.formatEther(stats.inPlay))}`
-        : undefined
-    },
-    {
-      name: "Performance",
-      stat: stats?.performance
-        ? `${formatToTwoDecimals(stats.performance.toString())}%`
-        : undefined
-    }
-  ];
-
-  const myStatsArray = [
-    {
-      name: "Deposits",
-      stat: undefined
-    },
-    {
-      name: "In Play",
-      stat: undefined
-    },
-    {
-      name: "Profits",
-      stat: undefined
-    }
-  ];
-
   return (
     <DashboardView
       asLocaltime={asLocaltime}
       meets={response?.data.meetings || getMockMeets()}
       signature={response?.signature}
       owner={response?.owner}
-      statsArray={myPlayEnabled ? myStatsArray : overallStatsArray}
       myPlayEnabled={myPlayEnabled}
       onMyPlayToggle={onMyPlayToggle}
     />
