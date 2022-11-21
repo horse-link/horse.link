@@ -3,7 +3,6 @@ const axios = require("axios");
 const Web3 = require("web3");
 const bytes32 = require("bytes32");
 const HDWalletProvider = require("@truffle/hdwallet-provider");
-
 const Horse = require("./build/contracts/HorseLink.json");
 
 const getCount = async () => {
