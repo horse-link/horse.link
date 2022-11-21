@@ -5,12 +5,12 @@ import { FaucetModal } from "./FaucetModal";
 import { AiOutlineCopy } from "react-icons/ai";
 import api from "../../apis/Api";
 import { useConfig } from "../../providers/Config";
-import { WalletModalContext } from "../../providers/WalletModal";
+import { useWalletModal } from "../../providers/WalletModal";
 
 export const FaucetPage = () => {
   const config = useConfig();
   const { address } = useAccount();
-  const { openWalletModal } = useContext(WalletModalContext);
+  const { openWalletModal } = useWalletModal();
   const { isConnected } = useAccount();
   const [isClaimUsdtLoading, setIsClaimUsdtLoading] = useState(false);
   const [isClaimDiaLoading, setIsClaimDiaLoading] = useState(false);
