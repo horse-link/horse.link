@@ -211,7 +211,7 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
 
   const marketData = useMarketDetail(selectedMarketAddress);
   const { data: balanceData } = useBalance({
-    address: address,
+    address,
     token:
       marketData?.name && marketData.name.includes("DAI")
         ? (StaticConfig.tokenAddresses.DAI as Address)
