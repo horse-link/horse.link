@@ -61,7 +61,7 @@ const BetsLogics = () => {
     setMyBetsEnabled(isConnected);
   }, [isConnected]);
 
-  const onMyBetToggle = () => setMyBetsEnabled(!myBetsEnabled);
+  const onMyBetToggle = () => setMyBetsEnabled(prev => !prev);
 
   return (
     <BetsView

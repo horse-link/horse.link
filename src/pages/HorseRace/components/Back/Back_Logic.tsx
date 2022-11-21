@@ -19,7 +19,8 @@ import useTokenApproval from "../../../../hooks/token/useTokenApproval";
 import useTokenData from "../../../../hooks/token/useTokenData";
 import { Back, EcSignature, Runner } from "../../../../types";
 import BackView from "./Back_View";
-import { StaticConfig } from "../../../../providers/Config";
+import { useConfig } from "../../../../providers/Config";
+import { getTokenBySymbol } from "../../../../utils/config";
 
 const DECIMAL = 6;
 
@@ -199,6 +200,8 @@ type Props = {
 };
 
 const BackLogic: React.FC<Props> = ({ runner }) => {
+  const config = useConfig();
+
   const { back } = usePageParams(runner);
   const { marketAddresses } = useMarkets();
   const { address } = useAccount();
@@ -214,8 +217,8 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
     address,
     token:
       marketData?.name && marketData.name.includes("DAI")
-        ? (StaticConfig.tokenAddresses.DAI as Address)
-        : (StaticConfig.tokenAddresses.USDT as Address)
+        ? (getTokenBySymbol("DAI", config)?.address)
+        : (getTokenBySymbol("USDT", config)?.address)
   });
 
   useEffect(() => {
