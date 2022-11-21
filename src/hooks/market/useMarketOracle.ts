@@ -1,5 +1,6 @@
 import { useContractWrite, useWaitForTransaction } from "wagmi";
 import marketOracleContractJson from "../../abi/MarketOracle.json";
+import { useConfig } from "../../providers/Config";
 import { EcSignature } from "../../types";
 
 type useMarketOracleResultWriteArgs = {
@@ -9,21 +10,19 @@ type useMarketOracleResultWriteArgs = {
   signature?: EcSignature;
 };
 
-const marketOracleAddress = process.env.REACT_APP_MARKET_ORACLE_CONTRACT;
-if (!marketOracleAddress)
-  throw new Error("No REACT_APP_MARKET_ORACLE_CONTRACT provided");
-
 const useMarketOracleResultWrite = ({
   market_id,
   winningPropositionId
 }: useMarketOracleResultWriteArgs) => {
+  const config = useConfig();
+
   const {
     data,
     error: marketOracleError,
     write: setResultMarketOracleWrite
   } = useContractWrite({
     mode: "recklesslyUnprepared",
-    address: marketOracleAddress,
+    address: config?.protocol.marketOracle,
     abi: marketOracleContractJson.abi,
     functionName: "setResult",
     // TODO: Once we have switched the marketOracle contract to check EC signatures

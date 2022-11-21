@@ -1,4 +1,4 @@
-import { StaticConfig } from "../providers/Config";
+import { Config } from "../types/config";
 
-export const isUsdt = (address: string) =>
-  StaticConfig.tokenAddresses["USDT"].toLowerCase() === address.toLowerCase();
+export const isUsdt = (config: Config, address: string) =>
+  config?.tokenAddresses["USDT"].toLowerCase() === address.toLowerCase();

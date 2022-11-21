@@ -4,15 +4,18 @@ import { Loader, PageLayout } from "../../components";
 import { FaucetModal } from "./FaucetModal";
 import { AiOutlineCopy } from "react-icons/ai";
 import api from "../../apis/Api";
-import { StaticConfig } from "../../providers/Config";
+import { useConfig } from "../../providers/Config";
+import { ethers } from "ethers";
 
 export const FaucetPage = () => {
+  const config = useConfig();
   const { address } = useAccount();
 
   const [isClaimUsdtLoading, setIsClaimUsdtLoading] = useState(false);
   const [isClaimDiaLoading, setIsClaimDiaLoading] = useState(false);
   const [txHash, setTxHash] = useState<string>();
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   const onClickClaim = useCallback(
     async (tokenAddress: string, tokenName: string) => {
       if (!address || isClaimUsdtLoading || isClaimDiaLoading) return;
@@ -67,27 +70,32 @@ export const FaucetPage = () => {
           height="300"
         />
         <div className="flex flex-col gap-5 w-full md:w-56">
-          {Object.keys(StaticConfig.tokenAddresses).map(key => (
+          {Object.keys(config?.tokenAddresses || {}).map(key => (
             <ClaimButton
               key={key}
               tokenName={key}
               onClick={() =>
-                onClickClaim(StaticConfig.tokenAddresses[key], key)
+                onClickClaim(
+                  config?.tokenAddresses[key] || ethers.constants.AddressZero,
+                  key
+                )
               }
-              isLoading={isClaimUsdtLoading || isClaimDiaLoading}
+              isLoading={isClaimUsdtLoading || isClaimDiaLoading || !config}
             />
           ))}
         </div>
         <div className="flex flex-col gap-5 md:w-65">
-          {Object.keys(StaticConfig.tokenAddresses).map(key => {
+          {Object.keys(config?.tokenAddresses || {}).map(key => {
             return (
               <div className="flex bg-gray-100 rounded-md p-5 md:w-155">
-                {key} Address - {StaticConfig.tokenAddresses[key]}
+                {key} Address -{" "}
+                {config?.tokenAddresses[key] || ethers.constants.AddressZero}
                 <button
                   className="flex rounded-xl hover:bg-green-400 p-1"
                   onClick={() =>
                     navigator.clipboard.writeText(
-                      StaticConfig.tokenAddresses[key]
+                      config?.tokenAddresses[key] ||
+                        ethers.constants.AddressZero
                     )
                   }
                 >
