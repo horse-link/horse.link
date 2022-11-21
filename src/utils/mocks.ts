@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { Bet } from "../types/entities";
+import { Bet, FormattedUser } from "../types/entities";
 
 export const getMockBet = (): Bet => ({
   id: "0",
@@ -16,4 +16,12 @@ export const getMockBet = (): Bet => ({
   settledAt: "0",
   createdAtTx: ethers.constants.AddressZero,
   settledAtTx: ethers.constants.AddressZero
+});
+
+export const getMockUser = (): FormattedUser => ({
+  id: ethers.constants.AddressZero,
+  totalDeposited: ethers.constants.Zero,
+  inPlay: ethers.constants.Zero,
+  pnl: ethers.constants.Zero,
+  lastUpdate: 0
 });

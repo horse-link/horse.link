@@ -103,3 +103,18 @@ export type FormattedVaultTransaction = Pick<
   amount: BigNumber;
   timestamp: number;
 };
+
+export type User = {
+  id: Address;
+  totalDesposited: string;
+  inPlay: string;
+  pnl: string;
+  lastUpdate: string;
+};
+
+export type FormattedUser = Pick<User, "id"> & {
+  totalDeposited: BigNumber;
+  inPlay: BigNumber;
+  pnl: BigNumber;
+  lastUpdate: number;
+};

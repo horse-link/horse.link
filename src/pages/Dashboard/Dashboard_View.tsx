@@ -5,16 +5,14 @@ import moment from "moment";
 import Skeleton from "react-loading-skeleton";
 import Toggle from "../../components/Toggle";
 import Card from "../../components/Card";
+import MyStats from "./components/MyStats";
+import OverallStats from "./components/OverallStats";
 
 type Props = {
   asLocaltime: (raceTime: number) => string;
   meets: Meet[];
   signature: string | undefined;
   owner: string | undefined;
-  statsArray: {
-    name: string;
-    stat: string | undefined;
-  }[];
   myPlayEnabled: boolean;
   onMyPlayToggle: () => void;
 };
@@ -28,7 +26,6 @@ const DashboardView: React.FC<Props> = (props: Props) => {
     meets,
     owner,
     signature,
-    statsArray,
     myPlayEnabled,
     onMyPlayToggle
   } = props;
@@ -63,11 +60,7 @@ const DashboardView: React.FC<Props> = (props: Props) => {
               the range of slippage based on the payout will be placed.
             </p>
           </div>
-          <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
-            {statsArray.map(stat => (
-              <Card title={stat.name} data={stat.stat} />
-            ))}
-          </dl>
+          {myPlayEnabled ? <MyStats /> : <OverallStats />}
         </div>
         <div className="flex gap-3 self-end justify-self-end">
           <Toggle enabled={myPlayEnabled} onChange={onMyPlayToggle} />
