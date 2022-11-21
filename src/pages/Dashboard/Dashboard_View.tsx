@@ -80,7 +80,7 @@ const DashboardView: React.FC<Props> = (props: Props) => {
         </div>
         <div className="flex gap-3 self-end justify-self-end">
           <Toggle enabled={myPlayEnabled} onChange={onMyPlayToggle} />
-          <div>My Play</div>
+          <div>My Stats</div>
         </div>
         <div className="-mt-12">
           <Table asLocaltime={asLocaltime} meets={meets} />

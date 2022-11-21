@@ -85,15 +85,15 @@ const Dashboard: React.FC = () => {
 
   const myStatsArray = [
     {
-      name: "My Deposits",
+      name: "Deposits",
       stat: undefined
     },
     {
-      name: "My In Play",
+      name: "In Play",
       stat: undefined
     },
     {
-      name: "My Profits",
+      name: "Profits",
       stat: undefined
     }
   ];

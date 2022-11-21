@@ -5,7 +5,7 @@ type Props = {
 };
 
 const Loader: React.FC<Props> = () => {
-  return <ClipLoader aria-label="Loading Spinner" />;
+  return <ClipLoader aria-label="Loading Spinner" size={30} />;
 };
 
 export default Loader;
