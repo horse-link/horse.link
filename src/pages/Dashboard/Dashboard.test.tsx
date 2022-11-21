@@ -1,11 +1,11 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Dashboard from "./Dashboard_Logic";
 import ApolloProvider from "../../providers/Apollo";
 import { MemoryRouter } from "react-router-dom";
 import { WalletModalContext } from "../../providers/WalletModal";
 
-const DashboardPageWithProviders = ({ openWalletFn = jest.fn }) => {
+const DashboardPageWithProviders = ({ openWalletFn }: any) => {
   return (
     <WalletModalContext.Provider
       value={{
@@ -45,10 +45,10 @@ test("Show My stats widgets when toggle switch", async () => {
   const toggleElement = screen.getByRole("switch");
   expect(toggleElement).toBeInTheDocument();
   toggleElement.click();
-  const myDepositsElement = await screen.findByText("My Deposits");
+  const myDepositsElement = await screen.findByText("Deposits");
   expect(myDepositsElement).toBeInTheDocument();
-  const myInPlayElement = await screen.findByText("My In Play");
+  const myInPlayElement = await screen.findByText("In Play");
   expect(myInPlayElement).toBeInTheDocument();
-  const myProfitsElement = await screen.findByText("My Profits");
+  const myProfitsElement = await screen.findByText("Profits");
   expect(myProfitsElement).toBeInTheDocument();
 });
