@@ -1,9 +1,10 @@
-import { Loader, PageLayout } from "../../components";
+import { PageLayout } from "../../components";
 import { Meet } from "../../types/index";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import Skeleton from "react-loading-skeleton";
 import Toggle from "../../components/Toggle";
+import Card from "../../components/Card";
 
 type Props = {
   asLocaltime: (raceTime: number) => string;
@@ -64,17 +65,7 @@ const DashboardView: React.FC<Props> = (props: Props) => {
           </div>
           <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
             {statsArray.map(stat => (
-              <div
-                key={stat.name}
-                className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6"
-              >
-                <dt className="text-sm font-medium text-gray-500 truncate">
-                  {stat.name}
-                </dt>
-                <dd className="mt-1 text-3xl font-semibold text-gray-900">
-                  {stat.stat || <Loader />}
-                </dd>
-              </div>
+              <Card title={stat.name} data={stat.stat} />
             ))}
           </dl>
         </div>
