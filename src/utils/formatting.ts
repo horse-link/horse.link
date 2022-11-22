@@ -58,3 +58,13 @@ export const shortenHash = (hash: string) => {
   const end = hash.substring(hash.length - 15, hash.length);
   return `${start}...${end}`;
 };
+
+export const hydrateMarket = (marketId: string) => {
+  const parts: String[] = marketId.split("_");
+
+  if (parts.length !== 4) {
+    throw new Error("Invalid market id");
+  }
+
+  return `${parts[0]} ${parts[1]} Race ${parts[2]} WIN`;
+}

@@ -18,6 +18,7 @@ type Props = {
   userMaxPages: number;
   totalMaxPages: number;
 };
+
 const BetTable = ({
   myBetsEnabled,
   onClickBet,

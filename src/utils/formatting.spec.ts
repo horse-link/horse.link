@@ -1,6 +1,7 @@
 import {
   formatToFourDecimals,
   formatToTwoDecimals,
+  hydrateMarket,
   shortenAddress,
   shortenHash
 } from "./formatting";
@@ -68,5 +69,13 @@ describe("address tests", () => {
       "0x28d9cb5e5a5c4c5d27cf9d8b91ca9b34c31452d105a7201ecd327876f816a592"
     );
     expect(actual).toEqual("0x28d9cb5e5a5c4...d327876f816a592");
+  });
+});
+
+
+describe("hydrate tests", () => {
+  it("should hydrate market id", () => {
+    const actual = hydrateMarket("2022-12-29_BNE_2_W");
+    expect(actual).toEqual("2022-12-29 BNE Race 2 WIN");
   });
 });
