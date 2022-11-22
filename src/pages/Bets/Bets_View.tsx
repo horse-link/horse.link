@@ -5,7 +5,6 @@ import BetTable from "./components/BetTable";
 import Select from "react-select";
 import { paginationOptions } from "./Bets_Logic";
 import Toggle from "../../components/Toggle";
-import BetRows from "./components/BetRows";
 
 type Props = {
   myBetsEnabled: boolean;
