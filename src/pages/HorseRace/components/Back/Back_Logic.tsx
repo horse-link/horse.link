@@ -44,7 +44,7 @@ const usePrepareBackingData = (
   const bnWager = useMemo(
     () =>
       ethers.utils.parseUnits(debouncedWagerAmount.toString(), tokenDecimal),
-    [debouncedWagerAmount]
+    [debouncedWagerAmount, tokenDecimal]
   );
   const b32Nonce = useMemo(
     () => ethers.utils.formatBytes32String(nonce),
