@@ -54,4 +54,4 @@ describe("format bet ids", () => {
     const id = formatBetId(mockId);
     expect(id).toEqual(0);
   });
-})
+});
