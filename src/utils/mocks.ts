@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import { Bet, FormattedUser } from "../types/entities";
 
 export const getMockBet = (): Bet => ({
-  id: "0",
+  id: `BET_${ethers.constants.AddressZero}_0`,
   propositionId: ethers.constants.AddressZero,
   marketId: ethers.constants.AddressZero,
   marketAddress: ethers.constants.AddressZero,

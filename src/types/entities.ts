@@ -46,8 +46,11 @@ export type FormattedRegistry = Pick<Registry, "id" | "vaults" | "markets"> & {
   lastUpdate: number;
 };
 
+// bet id will be BET_<MARKET_ADDRESS>_<BET_NUMBER>
+export type BetId = `BET_${Address}_${number}`;
+
 export type Bet = {
-  id: string;
+  id: BetId;
   propositionId: string;
   marketId: string;
   marketAddress: Address;

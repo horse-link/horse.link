@@ -1,5 +1,5 @@
 import { BetHistory, SignedBetDataResponse } from "../types";
-import { Bet } from "../types/entities";
+import { Bet, BetId } from "../types/entities";
 
 export const formatToFourDecimals = (amount: string) => {
   const parsedAmount = parseFloat(amount);
@@ -32,11 +32,16 @@ export const formatNumberWithCommas = (amount: string) => {
   return convertToFourDecimalsWithCommas;
 };
 
+export const formatBetId = (betId: BetId) => {
+  const segments = betId.split("_");
+  return +segments[2];
+};
+
 export const formatBetHistory = (
   bet: Bet,
   signedBetData: SignedBetDataResponse
 ): BetHistory => ({
-  index: +bet.id,
+  index: formatBetId(bet.id),
   marketId: bet.marketId.toLowerCase(),
   marketAddress: bet.marketAddress.toLowerCase(),
   propositionId: bet.propositionId.toLowerCase(),
