@@ -40,14 +40,18 @@ const useTokenDataFromContract = ({ vaultAddress }: useTokenDataArgs) => {
   };
 };
 
+const defaultTokenData = {
+  symbol: "",
+  address: "",
+  decimals: "0"
+};
+
 const useTokenDataFromAPI = ({ vaultAddress }: useTokenDataArgs) => {
-  const [tokenData, setTokenData] = useState<Token>({
-    symbol: "",
-    address: "",
-    decimals: "0"
-  });
+  const [tokenData, setTokenData] = useState<Token>(defaultTokenData);
   useEffect(() => {
     if (!vaultAddress) return;
+    // Clear previous data on new vault detail call
+    setTokenData(defaultTokenData);
     const load = async () => {
       const result = await api.getVaultToken(vaultAddress);
       setTokenData(result);

@@ -130,7 +130,11 @@ const VaultLogic = ({ vaultAddress }: Props) => {
     tokenDecimal
   );
 
-  const isEnoughAllowance = allowance > 0 && allowance >= amount;
+  // Taylor remove this hack
+  // change this guy
+  const isEnoughAllowance = allowance
+    ? allowance > 0 && allowance >= amount
+    : false;
 
   const {
     write: depositContractWrite,
