@@ -41,13 +41,6 @@ const BetsView = ({
   userMaxPages,
   totalMaxPages
 }: Props) => {
-  const filters = [
-    { value: "ALL_BETS", name: "All Bets" },
-    { value: "RESULTED", name: "Resulted" },
-    { value: "PENDING", name: "Pending" },
-    { value: "SETTLED", name: "Settled" }
-  ];
-
   return (
     <PageLayout requiresAuth={false}>
       <BetModal
