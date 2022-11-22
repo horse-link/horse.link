@@ -1,5 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 import { BigNumberish, ethers } from "ethers";
+import { Config } from "../types/config";
 import {
   BetHistoryResponse,
   EcSignature,
@@ -23,6 +24,12 @@ export class Api {
       }
     });
   }
+
+  public getConfig = async (): Promise<Config> => {
+    const { data } = await this.client.get<Config>("/config");
+
+    return data;
+  };
 
   public getMeetings = async (): Promise<SignedMeetingsResponse> => {
     const { data } = await this.client.get<SignedMeetingsResponse>("/meetings");
@@ -87,11 +94,12 @@ export class Api {
     userAddress: string,
     tokenAddress: string
   ): Promise<{ tx: string }> => {
+    const config = await this.getConfig();
     const { data } = await this.client.post(`/faucet`, {
       to: userAddress,
-      amount: isUsdt(tokenAddress)
-        ? ethers.utils.parseUnits("10", 6).toString()
-        : ethers.utils.formatEther(10),
+      amount: isUsdt(tokenAddress, config)
+        ? ethers.utils.parseUnits("100", 6)
+        : ethers.utils.parseUnits("100"),
       address: tokenAddress
     });
 

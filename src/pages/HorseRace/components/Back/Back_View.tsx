@@ -25,6 +25,7 @@ type Props = {
   };
   isEnoughAllowance: boolean;
   handleBackContractWrite: () => Promise<void>;
+  balanceData?: any;
 };
 
 const BackView: React.FC<Props> = ({
@@ -39,7 +40,8 @@ const BackView: React.FC<Props> = ({
   contract,
   txStatus,
   isEnoughAllowance,
-  handleBackContractWrite
+  handleBackContractWrite,
+  balanceData
 }) => {
   return (
     <div className="w-96 md:w-152">
@@ -75,10 +77,17 @@ const BackView: React.FC<Props> = ({
               className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 mb-2"
             />
           </label>
-
-          <span className="py-1">
-            Payout: <span>{potentialPayout}</span>
-          </span>
+          <div className="grid grid-cols-2 gap-4">
+            <span className="py-1 block">
+              Payout: <span>{potentialPayout}</span>
+            </span>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <span className="py-1 block">
+              Available: {balanceData ? balanceData.formatted : "0"}{" "}
+              {balanceData ? balanceData.symbol : null}
+            </span>
+          </div>
         </div>
         <br></br>
         <div className="flex flex-col">

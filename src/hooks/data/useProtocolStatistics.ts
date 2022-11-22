@@ -1,31 +1,20 @@
 import { BigNumber } from "ethers";
 import { useMemo } from "react";
 import { FormattedProtocol, Protocol } from "../../types/entities";
+import { getProtocolStatsQuery } from "../../utils/queries";
 import useSubgraph from "../useSubgraph";
 
 type Response = {
-  protocols: Protocol[];
+  protocol: Protocol;
 };
 
 const useProtocolStatistics = () => {
-  const query = `{
-    protocols {
-      id
-      inPlay
-      initialTvl
-      currentTvl
-      performance
-      lastUpdate
-    }
-  }`;
-
-  const { data, loading } = useSubgraph<Response>(query);
+  const { data, loading } = useSubgraph<Response>(getProtocolStatsQuery());
 
   const formattedData = useMemo<FormattedProtocol | undefined>(() => {
     if (loading || !data) return;
 
-    // because the id is always "protocol", there is always - and only - one entity
-    const protocol = data.protocols[0];
+    const protocol = data.protocol;
 
     return {
       id: protocol.id,

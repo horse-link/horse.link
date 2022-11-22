@@ -44,6 +44,7 @@ export type EcSignature = {
 export type BetHistory = {
   index: number;
   marketId: string;
+  marketAddress: string;
   propositionId: string;
   winningPropositionId: string | undefined;
   marketResultAdded: boolean;
@@ -90,15 +91,19 @@ export type Meet = {
   id: string;
   name: string;
   location: string;
+  date: string;
   races: Race[];
 };
 
 export type Race = {
   number: number;
   name: string;
-  start?: Date;
-  end?: Date;
-  close?: Date;
+  start?: string;
+  start_unix?: number;
+  end?: string;
+  end_unix?: number;
+  close?: string;
+  close_unix?: number;
   status: "Normal" | "Interim" | "Paying";
   results?: number[];
 };

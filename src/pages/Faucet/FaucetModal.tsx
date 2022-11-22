@@ -1,6 +1,5 @@
 import Modal from "../../components/Modal";
-import { FaRegShareSquare } from "react-icons/fa";
-import { truncateAddress } from "../../utils/shortenHash";
+import { shortenHash } from "../../utils/formatting";
 type Props = {
   isOpen: boolean;
   onClose: () => void;
@@ -18,14 +17,12 @@ export const FaucetModal = ({ isOpen, onClose, txHash }: Props) => {
         </h2>
         <br />
         <div className="flex flex-row">
-          Tx ID: {truncateAddress(txHash)}
+          Tx ID: {shortenHash(txHash || "")}
           <a
-            href={`https://goerli.etherscan.io/tx/${txHash}`}
+            href={`${process.env.REACT_APP_SCANNER_URL}/${txHash}`}
             target="_blank"
-            className="pl-3 py-1"
-          >
-            <FaRegShareSquare />
-          </a>
+            rel="noopener noreferrer"
+          ></a>
         </div>
       </div>
     </Modal>

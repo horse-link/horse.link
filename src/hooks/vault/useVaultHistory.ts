@@ -4,6 +4,7 @@ import {
   FormattedVaultTransaction,
   VaultTransaction
 } from "../../types/entities";
+import { getVaultHistoryQuery } from "../../utils/queries";
 import useSubgraph from "../useSubgraph";
 
 type Response = {
@@ -11,23 +12,9 @@ type Response = {
 };
 
 const useVaultHistory = (vaultAddress?: string) => {
-  const query = `{
-    vaultTransactions(
-      first: 1000
-      ${vaultAddress ? `where: { vaultAddress: "${vaultAddress}" }` : ""}
-      orderBy: timestamp
-      orderDirection: desc
-    ) {
-      id
-      type
-      vaultAddress
-      depositerAddress
-      amount
-      timestamp
-    }
-  }`;
-
-  const { data, loading } = useSubgraph<Response>(query);
+  const { data, loading } = useSubgraph<Response>(
+    getVaultHistoryQuery(vaultAddress)
+  );
 
   const formattedData = useMemo<FormattedVaultTransaction[] | undefined>(() => {
     if (loading || !data) return;

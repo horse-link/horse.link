@@ -1,54 +1,33 @@
-import { Loader, PageLayout } from "../../components";
+import { PageLayout } from "../../components";
 import { Meet } from "../../types/index";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import Skeleton from "react-loading-skeleton";
-import { FormattedProtocol } from "../../types/entities";
-import { ethers } from "ethers";
-import { formatToTwoDecimals } from "../../utils/formatting";
+import Toggle from "../../components/Toggle";
+import MyStats from "./components/MyStats";
+import OverallStats from "./components/OverallStats";
 
 type Props = {
   asLocaltime: (raceTime: number) => string;
   meets: Meet[];
   signature: string | undefined;
   owner: string | undefined;
-  stats: FormattedProtocol | undefined;
+  myPlayEnabled: boolean;
+  onMyPlayToggle: () => void;
 };
-
 type TableProps = {
   asLocaltime: (raceTime: number) => string;
   meets: Meet[];
 };
-
 const DashboardView: React.FC<Props> = (props: Props) => {
-  const { asLocaltime, meets, owner, signature, stats } = props;
-
-  const statsArray = [
-    {
-      name: "Total Liquidity",
-      stat: stats?.tvl ? (
-        `$${formatToTwoDecimals(ethers.utils.formatEther(stats.tvl))}`
-      ) : (
-        <Loader />
-      )
-    },
-    {
-      name: "In Play",
-      stat: stats?.inPlay ? (
-        `$${formatToTwoDecimals(ethers.utils.formatEther(stats.inPlay))}`
-      ) : (
-        <Loader />
-      )
-    },
-    {
-      name: "Performance",
-      stat: stats?.performance ? (
-        `${formatToTwoDecimals(stats.performance.toString())}%`
-      ) : (
-        <Loader />
-      )
-    }
-  ];
+  const {
+    asLocaltime,
+    meets,
+    owner,
+    signature,
+    myPlayEnabled,
+    onMyPlayToggle
+  } = props;
 
   return (
     <PageLayout requiresAuth={false}>
@@ -80,23 +59,15 @@ const DashboardView: React.FC<Props> = (props: Props) => {
               the range of slippage based on the payout will be placed.
             </p>
           </div>
-          <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
-            {statsArray.map(stat => (
-              <div
-                key={stat.name}
-                className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6"
-              >
-                <dt className="text-sm font-medium text-gray-500 truncate">
-                  {stat.name}
-                </dt>
-                <dd className="mt-1 text-3xl font-semibold text-gray-900">
-                  {stat.stat}
-                </dd>
-              </div>
-            ))}
-          </dl>
+          {myPlayEnabled ? <MyStats /> : <OverallStats />}
         </div>
-        <Table asLocaltime={asLocaltime} meets={meets} />
+        <div className="flex gap-3 self-end justify-self-end">
+          <Toggle enabled={myPlayEnabled} onChange={onMyPlayToggle} />
+          <div>My Stats</div>
+        </div>
+        <div className="-mt-12">
+          <Table asLocaltime={asLocaltime} meets={meets} />
+        </div>
         <div className="flex justify-center px-4 py-5 bg-white shadow rounded-lg sm:p-6">
           <div className="w-4/5 max-w-2xl">
             <div className="flex flex-col items-center">
@@ -117,9 +88,9 @@ const DashboardView: React.FC<Props> = (props: Props) => {
     </PageLayout>
   );
 };
-
 const Table: React.FC<TableProps> = (props: TableProps) => {
   const { meets } = props;
+  const maxLength = Math.max(...meets.map(meet => meet.races.length));
   return (
     <div className="grid grid-cols-2">
       <div className="col-span-2">
@@ -127,7 +98,7 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
           {moment(Date.now()).format("dddd Do MMMM")}
         </h3>
         <div className="flex flex-col">
-          <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+          <div>
             <div className="py-2 align-middle inline-block min-w-full">
               <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                 <table className="min-w-full divide-y divide-gray-200 bg-white">
@@ -139,66 +110,15 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
                       >
                         Venue
                       </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Race 1
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Race 2
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Race 3
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Race 4
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Race 5
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Race 6
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Race 7
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Race 8
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Race 9
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Race 10
-                      </th>
+                      {[...new Array(maxLength)].map((_, i) => (
+                        <th
+                          key={i}
+                          scope="col"
+                          className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                          Race {i + 1}
+                        </th>
+                      ))}
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
@@ -214,7 +134,7 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
                         {meet.races.map(race => (
                           <td>
                             <div
-                              className={`px-3 py-4 whitespace-nowrap text-sm 
+                              className={`px-3 py-4 whitespace-nowrap text-sm
                                 ${
                                   race.status == "Paying"
                                     ? "bg-gray-400 hover:bg-gray-500"
@@ -258,5 +178,4 @@ const Table: React.FC<TableProps> = (props: TableProps) => {
     </div>
   );
 };
-
 export default DashboardView;

@@ -1,4 +1,5 @@
 import React from "react";
+import { useAccount } from "wagmi";
 import { BetHistory } from "../../../types";
 import { Row } from "./BetTable";
 
@@ -12,12 +13,21 @@ enum FilterOptions {
 }
 
 type Props = {
+  myBetsSelected: boolean;
   bets?: BetHistory[];
   onClickBet: (bet?: BetHistory) => void;
   selectedFilter: string;
 };
 
-const BetRows: React.FC<Props> = ({ bets, onClickBet, selectedFilter }) => {
+const BetRows: React.FC<Props> = ({
+  myBetsSelected,
+  bets,
+  onClickBet,
+  selectedFilter
+}) => {
+  const { isConnected } = useAccount();
+  if (!isConnected && myBetsSelected)
+    return <td className="p-2 select-none">Please connect your wallet</td>;
   if (!bets) return <td className="p-2 select-none">loading...</td>;
   return (
     <React.Fragment>

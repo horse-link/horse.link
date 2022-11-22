@@ -1,24 +1,29 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { Loader, PageLayout } from "../../components";
 import { FaucetModal } from "./FaucetModal";
 import { AiOutlineCopy } from "react-icons/ai";
 import api from "../../apis/Api";
-import { StaticConfig } from "../../providers/Config";
+import { useConfig } from "../../providers/Config";
+import { useWalletModal } from "../../providers/WalletModal";
 
 export const FaucetPage = () => {
+  const config = useConfig();
   const { address } = useAccount();
-
+  const { openWalletModal } = useWalletModal();
+  const { isConnected } = useAccount();
   const [isClaimUsdtLoading, setIsClaimUsdtLoading] = useState(false);
   const [isClaimDiaLoading, setIsClaimDiaLoading] = useState(false);
   const [txHash, setTxHash] = useState<string>();
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   const onClickClaim = useCallback(
     async (tokenAddress: string, tokenName: string) => {
       if (!address || isClaimUsdtLoading || isClaimDiaLoading) return;
       if (tokenName === "Mock USDT") {
         setIsClaimUsdtLoading(true);
-      } else {
+      }
+      if (tokenName === "Mock DAI") {
         setIsClaimDiaLoading(true);
       }
       try {
@@ -37,6 +42,11 @@ export const FaucetPage = () => {
     setIsModalOpen(false);
     setTxHash("");
   };
+  useEffect(() => {
+    if (!isConnected) {
+      openWalletModal();
+    }
+  }, [isConnected]);
   return (
     <PageLayout requiresAuth={false}>
       <FaucetModal
@@ -66,29 +76,23 @@ export const FaucetPage = () => {
           height="300"
         />
         <div className="flex flex-col gap-5 w-full md:w-56">
-          {Object.keys(StaticConfig.tokenAddresses).map(key => (
+          {config?.tokens.map(token => (
             <ClaimButton
-              key={key}
-              tokenName={key}
-              onClick={() =>
-                onClickClaim(StaticConfig.tokenAddresses[key], key)
-              }
-              isLoading={isClaimUsdtLoading || isClaimDiaLoading}
+              key={token.name}
+              tokenName={token.name}
+              onClick={() => onClickClaim(token.address, token.name)}
+              isLoading={isClaimUsdtLoading || isClaimDiaLoading || !config}
             />
           ))}
         </div>
         <div className="flex flex-col gap-5 md:w-65">
-          {Object.keys(StaticConfig.tokenAddresses).map(key => {
+          {config?.tokens.map(token => {
             return (
               <div className="flex bg-gray-100 rounded-md p-5 md:w-155">
-                {key} Address - {StaticConfig.tokenAddresses[key]}
+                {token.name} Address - {token.address}
                 <button
                   className="flex rounded-xl hover:bg-green-400 p-1"
-                  onClick={() =>
-                    navigator.clipboard.writeText(
-                      StaticConfig.tokenAddresses[key]
-                    )
-                  }
+                  onClick={() => navigator.clipboard.writeText(token.address)}
                 >
                   <AiOutlineCopy />
                 </button>

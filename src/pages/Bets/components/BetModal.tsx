@@ -29,13 +29,11 @@ type SettlebetProps = {
 const SettleBet = ({ data }: SettlebetProps) => {
   const { marketAddresses } = useMarkets();
 
-  const [selectedMarketAddress, setSelectedMarketAddress] = useState<string>(
-    "0x1514b66a40CA2D600bB4Cf35A735709a1972c2F3"
-  );
+  const [selectedMarketAddress, setSelectedMarketAddress] = useState<string>();
 
   useEffect(() => {
     if (marketAddresses.length > 0) {
-      setSelectedMarketAddress(marketAddresses[0]);
+      setSelectedMarketAddress(data?.marketAddress);
     }
   }, [marketAddresses]);
 
