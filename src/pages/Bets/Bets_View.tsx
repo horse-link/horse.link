@@ -1,4 +1,4 @@
-import { PageLayout } from "../../components";
+import { Button, PageLayout } from "../../components";
 import { BetHistory } from "../../types";
 import BetModal from "./components/BetModal";
 import BetTable from "./components/BetTable";
@@ -45,8 +45,7 @@ const BetsView = ({
     { value: "ALL_BETS", name: "All Bets" },
     { value: "RESULTED", name: "Resulted" },
     { value: "PENDING", name: "Pending" },
-    { value: "SETTLED", name: "Settled" },
-    { value: "UNSETTLED", name: "Unsettled" }
+    { value: "SETTLED", name: "Settled" }
   ];
 
   return (
@@ -56,69 +55,70 @@ const BetsView = ({
         onClose={onCloseModal}
         betData={selectedBet}
       />
-      <div className="grid grid-cols-2 gap-2">
-        <h3 className="text-lg font-medium text-gray-900">Bets History</h3>
-        <div className="flex flex-col">
-          <label>Filter</label>
-          <select
-            value={selectedFilter}
-            onChange={e => setSelectedFilter(e.target.value)}
-            name="filters"
-            id="filters"
-            className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 mb-2"
-          >
-            {filters.map(filter => (
-              <option value={filter.value}>{filter.name}</option>
-            ))}
-          </select>
-        </div>
-        <div className="w-full flex justify-between col-span-2">
-          <h3 className="text-lg font-medium text-gray-900 flex items-center">
-            Bets History
-          </h3>
-          <div className="flex items-center">
-            <Select
-              onChange={selection =>
-                selection && setPagination(selection.value)
-              }
-              options={paginationOptions}
-              defaultValue={paginationOptions[0]}
-              isClearable={false}
-              isSearchable={false}
-              styles={{
-                container: base => ({
-                  ...base,
-                  marginRight: "1rem"
-                }),
-                valueContainer: base => ({
-                  ...base,
-                  paddingLeft: "1rem",
-                  paddingRight: "1rem"
-                }),
-                indicatorSeparator: base => ({
-                  ...base,
-                  display: "none"
-                })
-              }}
-            />
-            <div className="flex gap-3 self-end justify-self-end items-center pb-2">
-              <Toggle enabled={myBetsEnabled} onChange={onMyBetToggle} />
-              <div className="font-semibold">My Bets</div>
-            </div>
+
+      <div className="w-full flex justify-between col-span-2 p-5">
+        <h3 className="text-lg font-medium text-gray-900 flex items-center">
+          Bets History
+        </h3>
+        <div className="flex flex-row space-x-3">
+          <label className="flex flex-row text-lg font-medium text-gray-900 items-center">
+            Filter
+          </label>
+          <div className="flex flex-row space-x-3">
+            <Button className="cursor-pointer  hover:bg-gray-200 hover:text-white sm:w-auto sm:mb-0">
+              All Bets
+            </Button>
+            <Button className="cursor-pointer hover:bg-gray-200 hover:text-white sm:w-auto sm:mb-0">
+              Resulted
+            </Button>
+            <Button className="cursor-pointer hover:bg-gray-200 hover:text-white sm:w-auto sm:mb-0">
+              Pending
+            </Button>
+            <Button className="cursor-pointer hover:bg-gray-200 hover:text-white sm:w-auto sm:mb-0">
+              Settled
+            </Button>
           </div>
         </div>
-        <BetTable
-          myBetsEnabled={myBetsEnabled}
-          onClickBet={onClickBet}
-          page={page}
-          setPage={setPage}
-          totalBetHistory={totalBetHistory}
-          userBetHistory={userBetHistory}
-          userMaxPages={userMaxPages}
-          totalMaxPages={totalMaxPages}
-          selectedFilter={selectedFilter}
-        />
+        <div className="flex items-center">
+          <Select
+            onChange={selection => selection && setPagination(selection.value)}
+            options={paginationOptions}
+            defaultValue={paginationOptions[0]}
+            isClearable={false}
+            isSearchable={false}
+            styles={{
+              container: base => ({
+                ...base,
+                marginRight: "1rem"
+              }),
+              valueContainer: base => ({
+                ...base,
+                paddingLeft: "1rem",
+                paddingRight: "1rem"
+              }),
+              indicatorSeparator: base => ({
+                ...base,
+                display: "none"
+              })
+            }}
+          />
+          <div className="flex gap-3 self-end justify-self-end items-center pb-2">
+            <Toggle enabled={myBetsEnabled} onChange={onMyBetToggle} />
+            <div className="font-semibold">My Bets</div>
+          </div>
+        </div>
       </div>
+      <BetTable
+        myBetsEnabled={myBetsEnabled}
+        onClickBet={onClickBet}
+        page={page}
+        setPage={setPage}
+        totalBetHistory={totalBetHistory}
+        userBetHistory={userBetHistory}
+        userMaxPages={userMaxPages}
+        totalMaxPages={totalMaxPages}
+        selectedFilter={selectedFilter}
+      />
     </PageLayout>
   );
 };
