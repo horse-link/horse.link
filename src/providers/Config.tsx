@@ -4,7 +4,7 @@ import { Config, StaticConfigType } from "../types/config";
 export const StaticConfig: StaticConfigType = {
   tokenAddresses: {
     USDT: "0x63B3caA357f1502389AB1F6b43b6FB118473016a",
-    DAI: "0x6B54366642BFE522D647c77C422f1e6E11F02356"
+    DAI: "0xD0B8162d1c0B933EA7087064EcA8544A0Fd14d76"
   }
 };
 

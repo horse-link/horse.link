@@ -323,6 +323,7 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
   };
 
   const handleSetSelectedMarketAddress = (address: string) => {
+    console.log("change market address", address, "old", selectedMarketAddress);
     setSelectedMarketAddress(address);
     setAllowance(undefined);
   };

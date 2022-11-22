@@ -51,7 +51,7 @@ const useTokenDataFromAPI = ({ vaultAddress }: useTokenDataArgs) => {
   useEffect(() => {
     if (!vaultAddress) return;
     // Clear previous data on new vault detail call
-    setTokenData(defaultTokenData);
+    //setTokenData(defaultTokenData);
     const load = async () => {
       const result = await api.getVaultToken(vaultAddress);
       setTokenData(result);
