@@ -2,6 +2,7 @@ import {
   formatToFourDecimals,
   formatToTwoDecimals,
   hydrateMarket,
+  hydrateProposition,
   shortenAddress,
   shortenHash
 } from "./formatting";
@@ -77,5 +78,10 @@ describe("hydrate tests", () => {
   it("should hydrate market id", () => {
     const actual = hydrateMarket("2022-12-29_BNE_2_W");
     expect(actual).toEqual("2022-12-29 BNE Race 2 WIN");
+  });
+
+  it("should hydrate propostion id", () => {
+    const actual = hydrateProposition("2022-12-29_BNE_2_W1");
+    expect(actual).toEqual("Runner 1");
   });
 });

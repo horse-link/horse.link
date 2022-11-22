@@ -68,3 +68,13 @@ export const hydrateMarket = (marketId: string) => {
 
   return `${parts[0]} ${parts[1]} Race ${parts[2]} WIN`;
 }
+
+export const hydrateProposition = (propositionId: string) => {
+  const parts: String[] = propositionId.split("_");
+
+  if (parts.length !== 4) {
+    throw new Error("Invalid proposition id");
+  }
+
+  return `Runner ${parts[3].substring(1)}`;
+}
