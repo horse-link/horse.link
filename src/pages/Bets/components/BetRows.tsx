@@ -56,10 +56,11 @@ const BetRows: React.FC<Props> = ({
             return (
               <Row betData={bet} key={index} onClick={() => onClickBet(bet)} />
             );
+          } else if (selectedFilter === FilterOptions.ALL_BETS) {
+            return (
+              <Row betData={bet} key={index} onClick={() => onClickBet(bet)} />
+            );
           }
-          return (
-            <Row betData={bet} key={index} onClick={() => onClickBet(bet)} />
-          );
         })
       )}
     </React.Fragment>

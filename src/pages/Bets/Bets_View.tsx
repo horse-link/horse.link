@@ -5,6 +5,7 @@ import BetTable from "./components/BetTable";
 import Select from "react-select";
 import { paginationOptions } from "./Bets_Logic";
 import Toggle from "../../components/Toggle";
+import BetRows from "./components/BetRows";
 
 type Props = {
   myBetsEnabled: boolean;
@@ -65,16 +66,28 @@ const BetsView = ({
             Filter
           </label>
           <div className="flex flex-row space-x-3">
-            <Button className="cursor-pointer  hover:bg-gray-200 hover:text-white sm:w-auto sm:mb-0">
+            <Button
+              className="cursor-pointer  hover:bg-gray-200 hover:text-white sm:w-auto sm:mb-0"
+              onClick={() => setSelectedFilter("ALL_BETS")}
+            >
               All Bets
             </Button>
-            <Button className="cursor-pointer hover:bg-gray-200 hover:text-white sm:w-auto sm:mb-0">
+            <Button
+              className="cursor-pointer hover:bg-gray-200 hover:text-white sm:w-auto sm:mb-0"
+              onClick={() => setSelectedFilter("RESULTED")}
+            >
               Resulted
             </Button>
-            <Button className="cursor-pointer hover:bg-gray-200 hover:text-white sm:w-auto sm:mb-0">
+            <Button
+              className="cursor-pointer hover:bg-gray-200 hover:text-white sm:w-auto sm:mb-0"
+              onClick={() => setSelectedFilter("PENDING")}
+            >
               Pending
             </Button>
-            <Button className="cursor-pointer hover:bg-gray-200 hover:text-white sm:w-auto sm:mb-0">
+            <Button
+              className="cursor-pointer hover:bg-gray-200 hover:text-white sm:w-auto sm:mb-0"
+              onClick={() => setSelectedFilter("SETTLED")}
+            >
               Settled
             </Button>
           </div>
