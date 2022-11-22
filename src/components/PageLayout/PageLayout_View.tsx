@@ -14,11 +14,12 @@ const navigation = [
   { name: "Markets", path: "/markets" },
   { name: "Bets", path: "/bets" },
   //{ name: "HL Token", path: "/tokens" },
-  {
+/**  {
     name: "White Paper",
     path: "https://github.com/horse-link/horse.link/blob/main/README.md",
     absolutePath: true
   },
+*/  
   { name: "Faucet", path: "/faucet" }
 ];
 
