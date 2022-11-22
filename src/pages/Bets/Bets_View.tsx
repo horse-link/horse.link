@@ -6,6 +6,7 @@ import Select from "react-select";
 import { paginationOptions } from "./Bets_Logic";
 import Toggle from "../../components/Toggle";
 import classnames from "classnames";
+import { FilterOptions } from "./components/BetRows";
 
 type Props = {
   myBetsEnabled: boolean;
@@ -14,8 +15,8 @@ type Props = {
   isModalOpen: boolean;
   onCloseModal: () => void;
   selectedBet?: BetHistory;
-  selectedFilter: string;
-  setSelectedFilter: (filter: string) => void;
+  selectedFilter: FilterOptions;
+  setSelectedFilter: (filter: FilterOptions) => void;
   setPagination: (pagination: number) => void;
   page: number;
   setPage: (page: number) => void;
@@ -60,13 +61,14 @@ const BetsView = ({
             className={classnames(
               "cursor-pointer bg-indigo-600 sm:w-auto sm:mb-0",
               {
-                "bg-indigo-800 sm:w-auto sm:mb-0": selectedFilter == "ALL_BETS"
+                "bg-indigo-800 sm:w-auto sm:mb-0":
+                  selectedFilter === FilterOptions.ALL_BETS
               },
               {
                 "bg-indigo-600 sm:w-auto sm:mb-0": !selectedFilter
               }
             )}
-            onClick={() => setSelectedFilter("ALL_BETS")}
+            onClick={() => setSelectedFilter(FilterOptions.ALL_BETS)}
           >
             All Bets
           </Button>
@@ -74,13 +76,14 @@ const BetsView = ({
             className={classnames(
               "cursor-pointer bg-indigo-600 sm:w-auto sm:mb-0",
               {
-                "bg-indigo-800 sm:w-auto sm:mb-0": selectedFilter == "RESULTED"
+                "bg-indigo-800 sm:w-auto sm:mb-0":
+                  selectedFilter === FilterOptions.RESULTED
               },
               {
                 "bbg-indigo-600 sm:w-auto sm:mb-0": !selectedFilter
               }
             )}
-            onClick={() => setSelectedFilter("RESULTED")}
+            onClick={() => setSelectedFilter(FilterOptions.RESULTED)}
           >
             Resulted
           </Button>
@@ -88,13 +91,14 @@ const BetsView = ({
             className={classnames(
               "cursor-pointer bg-indigo-600  sm:w-auto sm:mb-0",
               {
-                "bg-indigo-800 sm:w-auto sm:mb-0": selectedFilter === "PENDING"
+                "bg-indigo-800 sm:w-auto sm:mb-0":
+                  selectedFilter === FilterOptions.PENDING
               },
               {
                 "bg-indigo-600 sm:w-auto sm:mb-0": !selectedFilter
               }
             )}
-            onClick={() => setSelectedFilter("PENDING")}
+            onClick={() => setSelectedFilter(FilterOptions.PENDING)}
           >
             Pending
           </Button>
@@ -102,13 +106,14 @@ const BetsView = ({
             className={classnames(
               "cursor-pointer bg-indigo-600 sm:w-auto sm:mb-0",
               {
-                "bg-indigo-800 sm:w-auto sm:mb-0": selectedFilter === "SETTLED"
+                "bg-indigo-800 sm:w-auto sm:mb-0":
+                  selectedFilter === FilterOptions.SETTLED
               },
               {
                 "bg-indigo-600 sm:w-auto sm:mb-0": !selectedFilter
               }
             )}
-            onClick={() => setSelectedFilter("SETTLED")}
+            onClick={() => setSelectedFilter(FilterOptions.SETTLED)}
           >
             Settled
           </Button>

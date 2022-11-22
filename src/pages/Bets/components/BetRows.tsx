@@ -3,9 +3,7 @@ import { useAccount } from "wagmi";
 import { BetHistory } from "../../../types";
 import { Row } from "./BetTable";
 
-export type FilterOption = "ALL_BETS" | "RESULTED" | "PENDING" | "SETTLED";
-
-enum FilterOptions {
+export enum FilterOptions {
   ALL_BETS = "ALL_BETS",
   RESULTED = "RESULTED",
   PENDING = "PENDING",
@@ -16,7 +14,7 @@ type Props = {
   myBetsSelected: boolean;
   bets?: BetHistory[];
   onClickBet: (bet?: BetHistory) => void;
-  selectedFilter: string;
+  selectedFilter: FilterOptions;
 };
 
 const BetRows: React.FC<Props> = ({

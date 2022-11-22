@@ -2,7 +2,7 @@ import Skeleton from "react-loading-skeleton";
 import classnames from "classnames";
 import { BetHistory } from "../../../types";
 import { formatToFourDecimals } from "../../../utils/formatting";
-import BetRows from "./BetRows";
+import BetRows, { FilterOptions } from "./BetRows";
 import { ethers } from "ethers";
 import moment from "moment";
 import React from "react";
@@ -17,7 +17,7 @@ type Props = {
   userBetHistory: BetHistory[] | undefined;
   userMaxPages: number;
   totalMaxPages: number;
-  selectedFilter: string;
+  selectedFilter: FilterOptions;
 };
 const BetTable = ({
   myBetsEnabled,
