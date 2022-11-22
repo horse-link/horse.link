@@ -16,7 +16,6 @@ const BetsLogics = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBet, setSelectedBet] = useState<BetHistory>();
   const [selectedFilter, setSelectedFilter] = useState<string>("ALL_BETS");
-
   const [betTablePagination, setBetTablePagination] = useState(5);
   const [betTablePage, setBetTablePage] = useState(1);
 

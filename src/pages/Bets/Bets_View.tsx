@@ -5,6 +5,7 @@ import BetTable from "./components/BetTable";
 import Select from "react-select";
 import { paginationOptions } from "./Bets_Logic";
 import Toggle from "../../components/Toggle";
+import classnames from "classnames";
 
 type Props = {
   myBetsEnabled: boolean;
@@ -53,37 +54,66 @@ const BetsView = ({
         <h3 className="text-lg font-medium text-gray-900 flex items-center">
           Bets History
         </h3>
+
         <div className="flex flex-row space-x-3">
-          <label className="flex flex-row text-lg font-medium text-gray-900 items-center">
-            Filter
-          </label>
-          <div className="flex flex-row space-x-3">
-            <Button
-              className="cursor-pointer  hover:bg-gray-200 hover:text-white sm:w-auto sm:mb-0"
-              onClick={() => setSelectedFilter("ALL_BETS")}
-            >
-              All Bets
-            </Button>
-            <Button
-              className="cursor-pointer hover:bg-gray-200 hover:text-white sm:w-auto sm:mb-0"
-              onClick={() => setSelectedFilter("RESULTED")}
-            >
-              Resulted
-            </Button>
-            <Button
-              className="cursor-pointer hover:bg-gray-200 hover:text-white sm:w-auto sm:mb-0"
-              onClick={() => setSelectedFilter("PENDING")}
-            >
-              Pending
-            </Button>
-            <Button
-              className="cursor-pointer hover:bg-gray-200 hover:text-white sm:w-auto sm:mb-0"
-              onClick={() => setSelectedFilter("SETTLED")}
-            >
-              Settled
-            </Button>
-          </div>
+          <Button
+            className={classnames(
+              "cursor-pointer bg-indigo-600 sm:w-auto sm:mb-0",
+              {
+                "bg-indigo-800 sm:w-auto sm:mb-0": selectedFilter == "ALL_BETS"
+              },
+              {
+                "bg-indigo-600 sm:w-auto sm:mb-0": !selectedFilter
+              }
+            )}
+            onClick={() => setSelectedFilter("ALL_BETS")}
+          >
+            All Bets
+          </Button>
+          <Button
+            className={classnames(
+              "cursor-pointer bg-indigo-600 sm:w-auto sm:mb-0",
+              {
+                "bg-indigo-800 sm:w-auto sm:mb-0": selectedFilter == "RESULTED"
+              },
+              {
+                "bbg-indigo-600 sm:w-auto sm:mb-0": !selectedFilter
+              }
+            )}
+            onClick={() => setSelectedFilter("RESULTED")}
+          >
+            Resulted
+          </Button>
+          <Button
+            className={classnames(
+              "cursor-pointer bg-indigo-600  sm:w-auto sm:mb-0",
+              {
+                "bg-indigo-800 sm:w-auto sm:mb-0": selectedFilter === "PENDING"
+              },
+              {
+                "bg-indigo-600 sm:w-auto sm:mb-0": !selectedFilter
+              }
+            )}
+            onClick={() => setSelectedFilter("PENDING")}
+          >
+            Pending
+          </Button>
+          <Button
+            className={classnames(
+              "cursor-pointer bg-indigo-600 sm:w-auto sm:mb-0",
+              {
+                "bg-indigo-800 sm:w-auto sm:mb-0": selectedFilter === "SETTLED"
+              },
+              {
+                "bg-indigo-600 sm:w-auto sm:mb-0": !selectedFilter
+              }
+            )}
+            onClick={() => setSelectedFilter("SETTLED")}
+          >
+            Settled
+          </Button>
         </div>
+
         <div className="flex items-center">
           <Select
             onChange={selection => selection && setPagination(selection.value)}
