@@ -19,7 +19,7 @@ export const FaucetModal = ({ isOpen, onClose, txHash }: Props) => {
         <div className="flex flex-row">
           Tx ID: {shortenHash(txHash || "")}
           <a
-            href={`${process.env.REACT_APP_SCANNER_URL}/${txHash}`}
+            href={`${process.env.REACT_APP_SCANNER_URL}/tx/${txHash}`}
             target="_blank"
             rel="noopener noreferrer"
           ></a>
