@@ -130,8 +130,6 @@ const VaultLogic = ({ vaultAddress }: Props) => {
     tokenDecimal
   );
 
-  // Taylor remove this hack
-  // change this guy
   const isEnoughAllowance = allowance
     ? allowance > 0 && allowance >= amount
     : false;
