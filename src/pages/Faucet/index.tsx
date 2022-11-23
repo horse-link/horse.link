@@ -63,7 +63,7 @@ export const FaucetPage = () => {
         onClose={onModalClose}
         txHash={txHash}
       />
-      <div className="w-full text-center bg-green-700 rounded-md p-5 my-5">
+      <div className="w-full text-center bg-emerald-700 rounded-md p-5 my-10">
         <h2>Welcome to the Horse Link Faucet!</h2>
         <h2 className="p-1">
           These tokens are to be used to test the beta functionality of the app.
@@ -76,11 +76,11 @@ export const FaucetPage = () => {
           your Metamask settings).
         </p>
       </div>
-      <div className="w-full text-center bg-green-700 rounded-md p-5 my-5">
+      <div className="w-full text-center bg-emerald-700 rounded-md p-5 my-5">
         {" "}
         Current ETH balance for the faucet&nbsp;
         <a
-          href={`${process.env.REACT_APP_SCANNER_URL}/address/${FAUCET_ADDRESS}`}
+          href={`${process.env.VITE_SCANNER_URL}/address/${FAUCET_ADDRESS}`}
           target="_blank"
           rel="noopener noreferrer"
           className="underline"
@@ -114,7 +114,7 @@ export const FaucetPage = () => {
               <div className="flex bg-gray-100 rounded-md p-5 md:w-155">
                 {token.name} Address - {token.address}
                 <button
-                  className="flex rounded-xl hover:bg-green-400 p-1"
+                  className="flex rounded-xl hover:bg-emerald-400 p-1"
                   onClick={() => navigator.clipboard.writeText(token.address)}
                 >
                   <AiOutlineCopy />

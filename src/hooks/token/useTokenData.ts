@@ -60,7 +60,7 @@ const useTokenDataFromAPI = ({ vaultAddress }: useTokenDataArgs) => {
   return tokenData;
 };
 
-const shouldUseAPI = process.env.REACT_APP_REST_FOR_TOKEN;
+const shouldUseAPI = process.env.VITE_REST_FOR_TOKEN;
 const useTokenData = (args: useTokenDataArgs): Token => {
   if (shouldUseAPI) {
     return useTokenDataFromAPI(args);

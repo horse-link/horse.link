@@ -5,8 +5,8 @@ import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 
-const alchemyApiKey = process.env.REACT_APP_ALCHEMY_API_KEY;
-if (!alchemyApiKey) throw new Error("REACT_APP_ALCHEMY_API_KEY is not defined");
+const alchemyApiKey = process.env.VITE_ALCHEMY_API_KEY;
+if (!alchemyApiKey) throw new Error("VITE_ALCHEMY_API_KEY is not defined");
 
 const { chains, provider, webSocketProvider } = configureChains(
   [chain.goerli],

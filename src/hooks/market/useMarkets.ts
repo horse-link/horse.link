@@ -4,9 +4,9 @@ import { BigNumber, ethers } from "ethers";
 import { useEffect, useState } from "react";
 import api from "../../apis/Api";
 
-const registryContractAddress = process.env.REACT_APP_REGISTRY_CONTRACT;
+const registryContractAddress = process.env.VITE_REGISTRY_CONTRACT;
 if (!registryContractAddress)
-  throw new Error("No REACT_APP_REGISTRY_CONTRACT provided");
+  throw new Error("No VITE_REGISTRY_CONTRACT provided");
 
 const registryContract = {
   address: registryContractAddress,
@@ -51,7 +51,7 @@ const useMarketAddressesFromAPI = () => {
   return { marketAddresses: marketAddresses as unknown as string[] };
 };
 
-const shouldUseAPI = process.env.REACT_APP_REST_FOR_MARKETS;
+const shouldUseAPI = process.env.VITE_REST_FOR_MARKETS;
 
 const useMarkets = () => {
   if (shouldUseAPI) {

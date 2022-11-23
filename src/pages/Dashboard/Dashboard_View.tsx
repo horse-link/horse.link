@@ -33,7 +33,7 @@ const DashboardView: React.FC<Props> = (props: Props) => {
     <PageLayout requiresAuth={false}>
       <div className="grid gap-6">
         <div>
-          <div className="container-fluid px-4 py-5 bg-green-700 shadow rounded-lg overflow-hidden sm:p-6">
+          <div className="container-fluid px-4 py-5 bg-emerald-700 shadow rounded-lg overflow-hidden sm:p-6">
             <div className="flex flex-wrap justify-between">
               <img
                 loading="lazy"

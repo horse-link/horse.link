@@ -9,11 +9,11 @@ const ContractWriteResultCard = ({ hash, isSuccess, errorMsg }: Props) => {
   return (
     <>
       {isSuccess && hash && (
-        <div className="py-5 rounded-md shadow  bg-green-300 text-green-800 w-full text-center">
+        <div className="py-5 rounded-md shadow  bg-emerald-300 text-emerald-800 w-full text-center">
           <p className="p-1">Success! Your bet has been confirmed.</p>
 
           <a
-            href={`${process.env.REACT_APP_SCANNER_URL}/tx/${hash}`}
+            href={`${process.env.VITE_SCANNER_URL}/tx/${hash}`}
             target="_blank"
             rel="noopener noreferrer"
           >

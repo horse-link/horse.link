@@ -1,1 +1,1 @@
-process.env.REACT_APP_SUBGRAPH_URL = "mock-subgraph-url";
+process.env.VITE_SUBGRAPH_URL = "mock-subgraph-url";

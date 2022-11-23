@@ -79,7 +79,7 @@ const useVaultDetailFromAPI = (vaultAddress: string | undefined) => {
   return vault;
 };
 
-const shouldUseAPI = process.env.REACT_APP_REST_FOR_VAULTS;
+const shouldUseAPI = process.env.VITE_REST_FOR_VAULTS;
 const useVaultDetail = (vaultAddress: string): Vault | undefined => {
   if (shouldUseAPI) {
     const vault = useVaultDetailFromAPI(vaultAddress);

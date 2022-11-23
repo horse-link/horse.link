@@ -159,8 +159,8 @@ const HistoryTableRow: React.FC<HistoryTableRowProps> = ({ vault }) => {
       <td className="px-2 py-4 whitespace-nowrap">
         <a
           href={`${
-            process.env.REACT_APP_SCANNER_URL
-          }/tx/${vault.id.toLowerCase()}`}
+            process.env.VITE_SCANNER_URL
+           }/tx/${vault.id.toLowerCase()}`}
           target="_blank"
           rel="noreferrer noopener"
           className="text-blue-600"

@@ -55,7 +55,7 @@ const useAllowanceFromAPI = ({
   return { allowance, refetch };
 };
 
-const shouldUseAPI = process.env.REACT_APP_REST_FOR_TOKEN;
+const shouldUseAPI = process.env.VITE_REST_FOR_TOKEN;
 
 const useAllowance = (args: useAllowanceArgs) => {
   if (shouldUseAPI) {

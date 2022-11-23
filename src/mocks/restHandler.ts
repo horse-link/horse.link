@@ -2,7 +2,7 @@ import { rest } from "msw";
 import { SignedMeetingsResponse } from "../types";
 
 export const restHandler = [
-  rest.get("/meetings", (req, res, ctx) => {
+  rest.get("/meetings", (_, res, ctx) => {
     const meetingsDataMock: SignedMeetingsResponse = {
       owner: "0x155c21c846b68121ca59879B3CCB5194F5Ae115E",
       data: {

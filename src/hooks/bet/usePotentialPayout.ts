@@ -79,7 +79,7 @@ const usePotentialPayoutFromAPI = ({
   return { potentialPayout };
 };
 
-const shouldUseAPI = process.env.REACT_APP_REST_FOR_BET;
+const shouldUseAPI = process.env.VITE_REST_FOR_BET;
 
 const usePotentialPayout = (args: UsePotentialPayoutArgs) => {
   if (shouldUseAPI) {

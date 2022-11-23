@@ -110,7 +110,7 @@ export const Row = ({ betData, onClick }: RowProps) => {
       className={classnames(
         "cursor-pointer hover:bg-gray-100",
         {
-          "bg-green-300":
+          "bg-emerald-300":
             (betData.winningPropositionId || betData.marketResultAdded) &&
             !betData.settled
         },
