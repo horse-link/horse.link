@@ -178,13 +178,11 @@ const usePageParams = (runner?: Runner) => {
   const {
     proposition_id = "",
     market_id = "",
+    nonce = "",
     odds = 0,
     close = 0,
     end = 0
   } = runner ?? {};
-
-  // todo: get nonce from runner once api is updated
-  const nonce = useMemo(() => Date.now().toString(), []);
 
   const back: Back = {
     nonce,
