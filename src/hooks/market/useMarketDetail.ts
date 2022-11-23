@@ -41,6 +41,8 @@ const useMarketDetailFromAPI = (marketAddress: string | undefined) => {
   const [market, setMarket] = useState<Market>();
   useEffect(() => {
     if (!marketAddress) return;
+    // Clear previous data on new market detail call
+    setMarket(undefined);
     const load = async () => {
       const result = await api.getMarketDetail(marketAddress);
       setMarket(result);

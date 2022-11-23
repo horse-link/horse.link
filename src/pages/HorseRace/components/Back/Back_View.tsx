@@ -26,6 +26,7 @@ type Props = {
   isEnoughAllowance: boolean;
   handleBackContractWrite: () => Promise<void>;
   balanceData?: any;
+  allowance?: string | number;
 };
 
 const BackView: React.FC<Props> = ({
@@ -41,7 +42,8 @@ const BackView: React.FC<Props> = ({
   txStatus,
   isEnoughAllowance,
   handleBackContractWrite,
-  balanceData
+  balanceData,
+  allowance
 }) => {
   return (
     <div className="w-96 md:w-152">
@@ -110,7 +112,7 @@ const BackView: React.FC<Props> = ({
                   onClick={() => contract.approveContractWrite?.()}
                   disabled={!selectedMarket}
                 >
-                  {txStatus.isLoading ? <Loader /> : "Approve"}
+                  {txStatus.isLoading || !allowance ? <Loader /> : "Approve"}
                 </button>
               )
             }

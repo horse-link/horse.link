@@ -148,7 +148,9 @@ const useBackingContract = (
     tokenDecimal
   );
 
-  const isEnoughAllowance = allowance > 0 && allowance >= wagerAmount;
+  const isEnoughAllowance = allowance
+    ? allowance > 0 && allowance >= wagerAmount
+    : false;
 
   const { potentialPayout } = usePotentialPayout({
     marketAddress,
@@ -167,7 +169,8 @@ const useBackingContract = (
     isApproveTxLoading,
     isEnoughAllowance,
     tokenDecimal,
-    debouncedWagerAmount
+    debouncedWagerAmount,
+    latestAllowance: allowance
   };
 };
 
@@ -206,10 +209,10 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
   const { marketAddresses } = useMarkets();
   const { address } = useAccount();
   const ownerAddress = address ?? "";
-  const [selectedMarketAddress, setSelectedMarketAddress] = useState<string>(
-    "0xA0f8A6eD9Df461541159Fa5f083082A6f6E0f795"
-  );
+  const [selectedMarketAddress, setSelectedMarketAddress] =
+    useState<string>("");
   const [wagerAmount, setWagerAmount] = useState<number>(0);
+  const [allowance, setAllowance] = useState<number | string>();
   const [signature, setSignature] = useState<EcSignature>();
 
   const marketData = useMarketDetail(selectedMarketAddress);
@@ -239,13 +242,20 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
     isApproveTxLoading,
     isEnoughAllowance,
     tokenDecimal,
-    debouncedWagerAmount
+    debouncedWagerAmount,
+    latestAllowance
   } = useBackingContract(
     back,
     wagerAmount,
     selectedMarketAddress,
     ownerAddress
   );
+
+  useEffect(() => {
+    if (latestAllowance) {
+      setAllowance(latestAllowance);
+    }
+  }, [latestAllowance]);
 
   const { nonce, odds, proposition_id, market_id, close, end } = back;
   const { b32PropositionId, bnWager, bnOdds, b32Nonce, b32MarketId } =
@@ -301,6 +311,11 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
     }
   };
 
+  const handleSetSelectedMarketAddress = (address: string) => {
+    setSelectedMarketAddress(address);
+    setAllowance(undefined);
+  };
+
   const txStatuses = {
     isLoading: isBackTxLoading || isApproveTxLoading,
     isSuccess: isBackTxSuccess,
@@ -312,7 +327,7 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
       back={back}
       markets={marketAddresses}
       selectedMarket={selectedMarketAddress}
-      setSelectedMarket={setSelectedMarketAddress}
+      setSelectedMarket={handleSetSelectedMarketAddress}
       wagerAmount={wagerAmount}
       updateWagerAmount={amount => setWagerAmount(amount || 0)}
       potentialPayout={potentialPayout}
@@ -320,6 +335,7 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
       contract={contract}
       txStatus={txStatuses}
       isEnoughAllowance={isEnoughAllowance}
+      allowance={allowance}
       handleBackContractWrite={handleBackContractWrite}
       balanceData={balanceData}
     />

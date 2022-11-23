@@ -6,6 +6,9 @@ import { AiOutlineCopy } from "react-icons/ai";
 import api from "../../apis/Api";
 import { useConfig } from "../../providers/Config";
 import { useWalletModal } from "../../providers/WalletModal";
+import { useBalance } from "wagmi";
+
+const FAUCET_ADDRESS = "0xf919eaf2e37aac718aa19668b9071ee42c02c081";
 
 export const FaucetPage = () => {
   const config = useConfig();
@@ -16,7 +19,6 @@ export const FaucetPage = () => {
   const [isClaimDiaLoading, setIsClaimDiaLoading] = useState(false);
   const [txHash, setTxHash] = useState<string>();
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const onClickClaim = useCallback(
     async (tokenAddress: string, tokenName: string) => {
       if (!address || isClaimUsdtLoading || isClaimDiaLoading) return;
@@ -38,15 +40,22 @@ export const FaucetPage = () => {
     },
     [address]
   );
+
   const onModalClose = () => {
     setIsModalOpen(false);
     setTxHash("");
   };
+
+  const { data } = useBalance({
+    address: FAUCET_ADDRESS
+  });
+
   useEffect(() => {
     if (!isConnected) {
       openWalletModal();
     }
   }, [isConnected]);
+
   return (
     <PageLayout requiresAuth={false}>
       <FaucetModal
@@ -66,6 +75,20 @@ export const FaucetPage = () => {
           will be there by default, otherwise please enable test networks in
           your Metamask settings).
         </p>
+      </div>
+      <div className="w-full text-center bg-green-700 rounded-md p-5 my-5">
+        {" "}
+        Current ETH balance for the faucet&nbsp;
+        <a
+          href={`${process.env.REACT_APP_SCANNER_URL}/address/${FAUCET_ADDRESS}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline"
+        >
+          {FAUCET_ADDRESS}
+        </a>
+        &nbsp;is:&nbsp;
+        {`${data ? `${data.formatted} ${data.symbol}` : <Loader />}`}
       </div>
       <div className="flex gap-3 flex-wrap">
         <img
