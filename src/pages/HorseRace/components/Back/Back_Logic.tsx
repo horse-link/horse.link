@@ -135,8 +135,6 @@ const useBackingContract = (
     vaultAddress
   });
 
-  console.log("tokenAddress", tokenAddress);
-
   const {
     allowance,
     write: approveContractWrite,
@@ -149,17 +147,6 @@ const useBackingContract = (
     tokenDecimal
   );
 
-  console.log("allowance", allowance, marketData);
-
-  // console.log(
-  //   marketAddress,
-  //   marketData,
-  //   tokenAddress,
-  //   "usdt",
-  //   tokenAddress === "0x63B3caA357f1502389AB1F6b43b6FB118473016a"
-  // );
-
-  // change this guy
   const isEnoughAllowance = allowance
     ? allowance > 0 && allowance >= wagerAmount
     : false;
@@ -323,7 +310,6 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
   };
 
   const handleSetSelectedMarketAddress = (address: string) => {
-    console.log("change market address", address, "old", selectedMarketAddress);
     setSelectedMarketAddress(address);
     setAllowance(undefined);
   };
