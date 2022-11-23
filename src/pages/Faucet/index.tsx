@@ -8,6 +8,8 @@ import { useConfig } from "../../providers/Config";
 import { useWalletModal } from "../../providers/WalletModal";
 import { useBalance } from "wagmi";
 
+const FAUCET_ADDRESS = "0xf919eaf2e37aac718aa19668b9071ee42c02c081";
+
 export const FaucetPage = () => {
   const config = useConfig();
   const { address } = useAccount();
@@ -44,14 +46,9 @@ export const FaucetPage = () => {
     setTxHash("");
   };
 
-  const ReadEthAmount = () => {
-    const { data, isError, isLoading } = useBalance({
-      address: "0xf919eaf2e37aac718aa19668b9071ee42c02c081"
-    });
-    if (isLoading) return "Fetching balance…";
-    if (isError) return "Error fetching balance";
-    return `${data?.formatted} ${data?.symbol}`;
-  };
+  const { data } = useBalance({
+    address: FAUCET_ADDRESS
+  });
 
   useEffect(() => {
     if (!isConnected) {
@@ -83,16 +80,15 @@ export const FaucetPage = () => {
         {" "}
         Current ETH balance for the faucet&nbsp;
         <a
-          href={`${
-            process.env.REACT_APP_SCANNER_URL
-          }/address/${"0xf919eaf2e37aac718aa19668b9071ee42c02c081"}`}
+          href={`${process.env.REACT_APP_SCANNER_URL}/address/${FAUCET_ADDRESS}`}
           target="_blank"
           rel="noopener noreferrer"
           className="underline"
         >
-          0xf919eaf2e37aac718aa19668b9071ee42c02c081
+          {FAUCET_ADDRESS}
         </a>
-        &nbsp;is:&nbsp;{`${ReadEthAmount()}`}
+        &nbsp;is:&nbsp;
+        {`${data ? `${data.formatted} ${data.symbol}` : <Loader />}`}
       </div>
       <div className="flex gap-3 flex-wrap">
         <img
