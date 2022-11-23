@@ -2,7 +2,7 @@ import { PageLayout } from "../../components";
 import moment from "moment";
 import { Runner } from "../../types";
 import RunnerTable from "../../components/RunnerTable/RunnerTable";
-import WagerModal from "../../components/Modals/WagerModal";
+import PlaceBetModal from "../../components/Modals/PlaceBetModal";
 
 type Props = {
   track: string;
@@ -25,7 +25,7 @@ const HorseRaceView: React.FC<Props> = ({
 }: Props) => {
   return (
     <PageLayout requiresAuth={false}>
-      <WagerModal
+      <PlaceBetModal
         runner={selectedRunner}
         isModalOpen={isDialogOpen}
         setIsModalOpen={onCloseDialog}

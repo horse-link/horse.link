@@ -1,18 +1,15 @@
 import { Market__factory } from "../../typechain";
-import { useProvider } from "wagmi";
 import { Back } from "../../types";
-import { BigNumber } from "ethers";
+import { BigNumber, ethers, Signer } from "ethers";
 
 const useMarketContract = () => {
-  const provider = useProvider();
-
-  const placeBet = async (marketAddress: string, back: Back, wager: BigNumber) => {
-    const contract = Market__factory.connect(marketAddress, provider);
+  const placeBet = async (marketAddress: string, back: Back, wager: BigNumber, signer: Signer) => {
+    const contract = Market__factory.connect(marketAddress, signer);
     const receipt = await (
       await contract.back(
-        back.nonce, 
-        back.proposition_id, 
-        back.market_id, 
+        ethers.utils.formatBytes32String(back.nonce), 
+        ethers.utils.formatBytes32String(back.proposition_id), 
+        ethers.utils.formatBytes32String(back.market_id), 
         wager, 
         back.odds, 
         back.close, 

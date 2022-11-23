@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useConfig } from "../../providers/Config";
 import { Back, Runner } from "../../types";
 import { getVaultNameFromMarket } from "../../utils/markets";
-import { useAccount, useProvider } from "wagmi";
+import { useAccount, useSigner } from "wagmi";
 import Loader from "../Loader/Loader_View";
 import Modal from "../Modal";
 import { ERC20__factory, Vault__factory } from "../../typechain";
@@ -24,7 +24,7 @@ type Balance = {
   formatted: string;
 };
 
-const WagerModal: React.FC<Props> = ({
+const PlaceBetModal: React.FC<Props> = ({
   runner,
   isModalOpen,
   setIsModalOpen
@@ -32,8 +32,9 @@ const WagerModal: React.FC<Props> = ({
   const [selectedMarket, setSelectedMarket] = useState<MarketInfo>();
   const [wagerAmount, setWagerAmount] = useState<string>();
   const [balance, setBalance] = useState<Balance>();
+  const [txHash, setTxHash] = useState<string>();
   
-  const provider = useProvider();
+  const { data: signer } = useSigner();
   const { address } = useAccount();
 
   const config = useConfig();
@@ -62,9 +63,9 @@ const WagerModal: React.FC<Props> = ({
   }, [config]);
 
   useEffect(() => {
-    if (!selectedMarket || !address) return;
+    if (!selectedMarket || !address || !signer) return;
 
-    const contract = Vault__factory.connect(selectedMarket.vaultAddress, provider);
+    const contract = Vault__factory.connect(selectedMarket.vaultAddress, signer);
     (async () => {
       const [
         asset,
@@ -74,7 +75,7 @@ const WagerModal: React.FC<Props> = ({
         contract.decimals()
       ]);
 
-      const erc20 = ERC20__factory.connect(asset, provider);
+      const erc20 = ERC20__factory.connect(asset, signer);
       const userBalance = await erc20.balanceOf(address);
 
       return {
@@ -83,18 +84,21 @@ const WagerModal: React.FC<Props> = ({
         formatted: formatToFourDecimals(ethers.utils.formatUnits(userBalance, decimals))
       };
     })().then(setBalance);
-  }, [selectedMarket, address]);
+  }, [selectedMarket, address, signer]);
 
   const onClickMarket = (market: MarketInfo) => {
     setBalance(undefined);
     setSelectedMarket(market);
   };
 
-  const payout = (+(wagerAmount || "0") * back.odds).toString();
-
-  const onClickPlaceBet = () => {
-    placeBet(selectedMarket?.address, back, wagerAmount);
+  const onClickPlaceBet = async () => {
+    if (!selectedMarket || !wagerAmount || !balance || !signer) return;
+    const wager = ethers.utils.parseUnits(wagerAmount, balance.decimals);
+    const tx = await placeBet(selectedMarket.address, back, wager, signer);
+    setTxHash(tx);
   };
+
+  const payout = (+(wagerAmount || "0") * back.odds).toString();
 
   return (
     <Modal isOpen={isModalOpen} onClose={setIsModalOpen}>
@@ -127,7 +131,13 @@ const WagerModal: React.FC<Props> = ({
             <span className="block">Payout: {formatToFourDecimals(payout) || <Loader />}</span>
             <span className="block">Available: {balance?.formatted || <Loader />}</span>
             <br />
-            <button onClick={onClickPlaceBet}>Place bet</button>
+            <button onClick={onClickPlaceBet} disabled={!selectedMarket || !wagerAmount || !signer || !balance || +balance.formatted == 0}>Place bet</button>
+            <br />
+            {txHash && (
+              <div>
+                <p>Success! tx: {txHash}</p>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -135,4 +145,4 @@ const WagerModal: React.FC<Props> = ({
   );
 };
 
-export default WagerModal;
+export default PlaceBetModal;
