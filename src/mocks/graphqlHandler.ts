@@ -1,7 +1,7 @@
 import { graphql } from "msw";
 
 export const graphqlHandler = [
-  graphql.query("GetProtocols", (req, res, ctx) => {
+  graphql.query("GetProtocols", (_, res, ctx) => {
     return res(
       ctx.data({
         protocols: [

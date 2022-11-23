@@ -16,4 +16,4 @@ const Results: React.FC = () => {
   return <ResultsView runners={runners || _runners} />;
 };
 
-export default ResultsView;
+export default Results;

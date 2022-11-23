@@ -1,6 +1,4 @@
-import { useEffect, useState } from "react";
 import TokensView from "./Tokens_View";
-import { useParams } from "react-router-dom";
 
 const Tokens: React.FC = () => {
   // const _runners: Runner[] = [];

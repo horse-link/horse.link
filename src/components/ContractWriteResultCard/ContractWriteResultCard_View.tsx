@@ -13,7 +13,7 @@ const ContractWriteResultCard = ({ hash, isSuccess, errorMsg }: Props) => {
           <p className="p-1">Success! Your bet has been confirmed.</p>
 
           <a
-            href={`${process.env.REACT_APP_SCANNER_URL}/${hash}`}
+            href={`${process.env.VITE_SCANNER_URL}/${hash}`}
             target="_blank"
             rel="noopener noreferrer"
           >

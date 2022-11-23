@@ -18,7 +18,7 @@ export class Api {
   private client: AxiosInstance;
   constructor() {
     this.client = axios.create({
-      baseURL: process.env.REACT_APP_API_URL || "https://api.horse.link",
+      baseURL: process.env.VITE_API_URL,
       headers: {
         Accept: "application/json"
       }
