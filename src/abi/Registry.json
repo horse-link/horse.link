@@ -1,5 +1,5 @@
 {
-  "address": "0x4F9C569AfD5F3F0Bfa3bF2c7443544581330459e",
+  "address": "0x4a84e406ED2054bA24244dfE8660F055aC00b971",
   "abi": [
     {
       "inputs": [
@@ -67,7 +67,7 @@
     {
       "inputs": [
         {
-          "internalType": "contract IVault",
+          "internalType": "address",
           "name": "vault",
           "type": "address"
         }
@@ -146,7 +146,7 @@
       "name": "vaults",
       "outputs": [
         {
-          "internalType": "contract IVault",
+          "internalType": "address",
           "name": "",
           "type": "address"
         }
