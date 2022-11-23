@@ -1,4 +1,5 @@
 import { Dialog, Transition } from "@headlessui/react";
+import React from "react";
 import { Fragment } from "react";
 
 type ModalProps = {
@@ -9,7 +10,7 @@ type ModalProps = {
 
 const Modal = ({ isOpen, onClose, children }: ModalProps) => {
   return (
-    <>
+    <React.Fragment>
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={onClose}>
           <Transition.Child
@@ -51,7 +52,7 @@ const Modal = ({ isOpen, onClose, children }: ModalProps) => {
           </div>
         </Dialog>
       </Transition>
-    </>
+    </React.Fragment>
   );
 };
 

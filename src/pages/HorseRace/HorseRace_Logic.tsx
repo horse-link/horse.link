@@ -3,6 +3,8 @@ import { Runner } from "../../types";
 import HorseRaceView from "./HorseRace_View";
 import { useParams } from "react-router-dom";
 import useRunnerData from "../../hooks/data/useRunnerData";
+import { useAccount } from "wagmi";
+import { useWalletModal } from "../../providers/WalletModal";
 
 const getMockRunners = () => {
   return Array.from({ length: 5 }, () => undefined);
@@ -23,7 +25,12 @@ const HorseRace: React.FC = () => {
 
   const { runners } = useRunnerData({ track, raceNumber });
 
+  const { isConnected } = useAccount();
+  const { openWalletModal } = useWalletModal();
+
   const openDialog = () => {
+    if (!isConnected) return openWalletModal();
+
     setIsDialogOpen(true);
   };
 
