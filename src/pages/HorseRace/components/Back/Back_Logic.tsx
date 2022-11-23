@@ -233,7 +233,6 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
     }
   }, [signature]);
 
-  // this runs with the old selectedMarketAddress before that is updated
   const {
     potentialPayout,
     contract,
