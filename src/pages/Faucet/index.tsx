@@ -44,7 +44,7 @@ export const FaucetPage = () => {
     setTxHash("");
   };
 
-  const readEthAmount = () => {
+  const ReadEthAmount = () => {
     const { data, isError, isLoading } = useBalance({
       address: "0xf919eaf2e37aac718aa19668b9071ee42c02c081"
     });
@@ -52,7 +52,6 @@ export const FaucetPage = () => {
     if (isError) return "Error fetching balance";
     return `${data?.formatted} ${data?.symbol}`;
   };
-  console.log(readEthAmount());
 
   useEffect(() => {
     if (!isConnected) {
@@ -93,7 +92,7 @@ export const FaucetPage = () => {
         >
           0xf919eaf2e37aac718aa19668b9071ee42c02c081
         </a>
-        &nbsp;is:&nbsp;{`${readEthAmount()}`}
+        &nbsp;is:&nbsp;{`${ReadEthAmount()}`}
       </div>
       <div className="flex gap-3 flex-wrap">
         <img
