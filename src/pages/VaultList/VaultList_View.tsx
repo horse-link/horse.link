@@ -160,7 +160,7 @@ const HistoryTableRow: React.FC<HistoryTableRowProps> = ({ vault }) => {
         <a
           href={`${
             process.env.REACT_APP_SCANNER_URL
-          }/${vault.id.toLowerCase()}`}
+          }/tx/${vault.id.toLowerCase()}`}
           target="_blank"
           rel="noreferrer noopener"
           className="text-blue-600"

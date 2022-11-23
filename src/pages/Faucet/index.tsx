@@ -6,6 +6,7 @@ import { AiOutlineCopy } from "react-icons/ai";
 import api from "../../apis/Api";
 import { useConfig } from "../../providers/Config";
 import { useWalletModal } from "../../providers/WalletModal";
+import { useBalance } from "wagmi";
 
 export const FaucetPage = () => {
   const config = useConfig();
@@ -16,7 +17,6 @@ export const FaucetPage = () => {
   const [isClaimDiaLoading, setIsClaimDiaLoading] = useState(false);
   const [txHash, setTxHash] = useState<string>();
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const onClickClaim = useCallback(
     async (tokenAddress: string, tokenName: string) => {
       if (!address || isClaimUsdtLoading || isClaimDiaLoading) return;
@@ -38,15 +38,28 @@ export const FaucetPage = () => {
     },
     [address]
   );
+
   const onModalClose = () => {
     setIsModalOpen(false);
     setTxHash("");
   };
+
+  const readEthAmount = () => {
+    const { data, isError, isLoading } = useBalance({
+      address: "0xf919eaf2e37aac718aa19668b9071ee42c02c081"
+    });
+    if (isLoading) return "Fetching balance…";
+    if (isError) return "Error fetching balance";
+    return `${data?.formatted} ${data?.symbol}`;
+  };
+  console.log(readEthAmount());
+
   useEffect(() => {
     if (!isConnected) {
       openWalletModal();
     }
   }, [isConnected]);
+
   return (
     <PageLayout requiresAuth={false}>
       <FaucetModal
@@ -54,7 +67,7 @@ export const FaucetPage = () => {
         onClose={onModalClose}
         txHash={txHash}
       />
-      <div className="w-full text-center bg-green-700 rounded-md p-5 my-10">
+      <div className="w-full text-center bg-green-700 rounded-md p-5 my-5">
         <h2>Welcome to the Horse Link Faucet!</h2>
         <h2 className="p-1">
           These tokens are to be used to test the beta functionality of the app.
@@ -66,6 +79,21 @@ export const FaucetPage = () => {
           will be there by default, otherwise please enable test networks in
           your Metamask settings).
         </p>
+      </div>
+      <div className="w-full text-center bg-green-700 rounded-md p-5 my-5">
+        {" "}
+        Current ETH balance for the faucet&nbsp;
+        <a
+          href={`${
+            process.env.REACT_APP_SCANNER_URL
+          }/address/${"0xf919eaf2e37aac718aa19668b9071ee42c02c081"}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline"
+        >
+          0xf919eaf2e37aac718aa19668b9071ee42c02c081
+        </a>
+        &nbsp;is:&nbsp;{`${readEthAmount()}`}
       </div>
       <div className="flex gap-3 flex-wrap">
         <img
