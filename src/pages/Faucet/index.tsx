@@ -76,11 +76,11 @@ export const FaucetPage = () => {
           your Metamask settings).
         </p>
       </div>
-      <div className="w-full text-center bg-green-700 rounded-md p-5 my-5">
+      <div className="w-full text-center bg-emerald-700 rounded-md p-5 my-5">
         {" "}
         Current ETH balance for the faucet&nbsp;
         <a
-          href={`${process.env.REACT_APP_SCANNER_URL}/address/${FAUCET_ADDRESS}`}
+          href={`${process.env.VITE_SCANNER_URL}/address/${FAUCET_ADDRESS}`}
           target="_blank"
           rel="noopener noreferrer"
           className="underline"
