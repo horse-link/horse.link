@@ -6,5 +6,5 @@ export const getTokenBySymbol = (symbol: string, config?: Config) =>
   );
 
 export const isUsdt = (address: string, config?: Config) =>
-  getTokenBySymbol("USDT", config)?.symbol.toLowerCase() ===
+  getTokenBySymbol("USDT", config)?.address.toLowerCase() ===
   address.toLowerCase();
