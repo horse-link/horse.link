@@ -1,9 +1,8 @@
 import axios, { AxiosInstance } from "axios";
-import { BigNumberish, ethers } from "ethers";
+import { ethers } from "ethers";
 import { Config } from "../types/config";
 import {
   BetHistoryResponse,
-  EcSignature,
   Market,
   Runner,
   SignedBetDataResponse,
@@ -64,28 +63,6 @@ export class Api {
     account: string
   ): Promise<BetHistoryResponse> => {
     const { data } = await this.client.get(`/bets/${account}`);
-
-    return data;
-  };
-
-  public requestBackingSign = async (
-    nonce: string,
-    propositionId: string,
-    marketId: string,
-    wager: BigNumberish,
-    odds: BigNumberish,
-    close: BigNumberish,
-    end: BigNumberish
-  ): Promise<{ signature: EcSignature }> => {
-    const { data } = await this.client.post(`/backing-sign`, {
-      nonce,
-      propositionId,
-      marketId,
-      wager,
-      odds,
-      close,
-      end
-    });
 
     return data;
   };

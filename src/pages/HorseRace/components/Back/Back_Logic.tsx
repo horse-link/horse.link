@@ -1,7 +1,6 @@
 import { ethers } from "ethers";
 import { useEffect, useMemo, useState } from "react";
 import { useDebounce } from "use-debounce";
-import api from "../../../../apis/Api";
 
 import {
   Address,
@@ -178,13 +177,12 @@ const usePageParams = (runner?: Runner) => {
   const {
     proposition_id = "",
     market_id = "",
+    nonce = "",
     odds = 0,
     close = 0,
-    end = 0
+    end = 0,
+    signature = { r: "", s: "", v: 0 }
   } = runner ?? {};
-
-  // todo: get nonce from runner once api is updated
-  const nonce = useMemo(() => Date.now().toString(), []);
 
   const back: Back = {
     nonce,
@@ -192,7 +190,8 @@ const usePageParams = (runner?: Runner) => {
     close,
     end,
     odds: odds / 1000,
-    proposition_id
+    proposition_id,
+    signature
   };
   return { back };
 };
@@ -213,7 +212,6 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
     useState<string>("");
   const [wagerAmount, setWagerAmount] = useState<number>(0);
   const [allowance, setAllowance] = useState<number | string>();
-  const [signature, setSignature] = useState<EcSignature>();
 
   const marketData = useMarketDetail(selectedMarketAddress);
   const { data: balanceData } = useBalance({
@@ -229,12 +227,6 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
       setSelectedMarketAddress(marketAddresses[0]);
     }
   }, [marketAddresses]);
-
-  useEffect(() => {
-    if (signature) {
-      backContractWrite?.();
-    }
-  }, [signature]);
 
   const {
     potentialPayout,
@@ -257,7 +249,8 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
     }
   }, [latestAllowance]);
 
-  const { nonce, odds, proposition_id, market_id, close, end } = back;
+  const { nonce, odds, proposition_id, market_id, close, end, signature } =
+    back;
   const { b32PropositionId, bnWager, bnOdds, b32Nonce, b32MarketId } =
     usePrepareBackingData(
       proposition_id,
@@ -292,25 +285,6 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
     isApproveTxLoading ||
     isBackTxLoading;
 
-  const handleBackContractWrite = async () => {
-    try {
-      const res = await api.requestBackingSign(
-        b32Nonce,
-        b32PropositionId,
-        b32MarketId,
-        bnWager,
-        bnOdds,
-        close,
-        end
-      );
-
-      const { signature } = res;
-      setSignature(signature);
-    } catch (error: any) {
-      alert(error?.message ?? "Something went wrong");
-    }
-  };
-
   const handleSetSelectedMarketAddress = (address: string) => {
     setSelectedMarketAddress(address);
     setAllowance(undefined);
@@ -336,7 +310,7 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
       txStatus={txStatuses}
       isEnoughAllowance={isEnoughAllowance}
       allowance={allowance}
-      handleBackContractWrite={handleBackContractWrite}
+      backContractWrite={backContractWrite}
       balanceData={balanceData}
     />
   );
