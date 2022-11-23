@@ -41,7 +41,8 @@ const BetRows: React.FC<Props> = ({
             return (
               <Row betData={bet} key={bet.tx} onClick={() => onClickBet(bet)} />
             );
-          } else if (
+          }
+          if (
             selectedFilter === FilterOptions.PENDING &&
             !bet.winningPropositionId &&
             !bet.marketResultAdded &&
@@ -50,11 +51,13 @@ const BetRows: React.FC<Props> = ({
             return (
               <Row betData={bet} key={index} onClick={() => onClickBet(bet)} />
             );
-          } else if (selectedFilter === FilterOptions.SETTLED && bet.settled) {
+          }
+          if (selectedFilter === FilterOptions.SETTLED && bet.settled) {
             return (
               <Row betData={bet} key={index} onClick={() => onClickBet(bet)} />
             );
-          } else if (selectedFilter === FilterOptions.ALL_BETS) {
+          }
+          if (selectedFilter === FilterOptions.ALL_BETS) {
             return (
               <Row betData={bet} key={index} onClick={() => onClickBet(bet)} />
             );
