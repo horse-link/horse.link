@@ -40,12 +40,14 @@ const useTokenDataFromContract = ({ vaultAddress }: useTokenDataArgs) => {
   };
 };
 
+const defaultTokenData = {
+  symbol: "",
+  address: "",
+  decimals: "0"
+};
+
 const useTokenDataFromAPI = ({ vaultAddress }: useTokenDataArgs) => {
-  const [tokenData, setTokenData] = useState<Token>({
-    symbol: "",
-    address: "",
-    decimals: "0"
-  });
+  const [tokenData, setTokenData] = useState<Token>(defaultTokenData);
   useEffect(() => {
     if (!vaultAddress) return;
     const load = async () => {
