@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useAccount } from "wagmi";
 import { BetHistory } from "../../../types";
 import { Row } from "./BetTable";
@@ -24,45 +24,34 @@ const BetRows: React.FC<Props> = ({
   selectedFilter
 }) => {
   const { isConnected } = useAccount();
-  if (!isConnected && myBetsSelected)
-    return <td className="p-2 select-none">Please connect your wallet</td>;
-  if (!bets) return <td className="p-2 select-none">loading...</td>;
+
+  const filteredBets = useMemo(() => {
+    if (!bets) return;
+
+    switch (selectedFilter) {
+      case FilterOptions.ALL_BETS:
+        return bets;
+      case FilterOptions.PENDING:
+        return bets.filter(bet => !bet.settled);
+      case FilterOptions.RESULTED:
+        return bets.filter(bet => bet.settled && bet.marketResultAdded);
+      case FilterOptions.SETTLED:
+        return bets.filter(bet => bet.settled);
+    }
+  }, [selectedFilter, bets]);
+
   return (
     <React.Fragment>
-      {bets.length === 0 ? (
-        <td className="p-2 select-none">no bets</td>
+      {!isConnected && myBetsSelected ? (
+        <td className="p-2 select-none">Please connect your wallet</td>
+      ) : !filteredBets ? (
+        <td className="p-2 select-none">Loading...</td>
+      ) : !filteredBets.length ? (
+        <td className="p-2 select-none">No bets</td>
       ) : (
-        bets.map((bet, index) => {
-          if (
-            selectedFilter === FilterOptions.RESULTED &&
-            (bet.winningPropositionId || bet.marketResultAdded) &&
-            !bet.settled
-          ) {
-            return (
-              <Row betData={bet} key={bet.tx} onClick={() => onClickBet(bet)} />
-            );
-          }
-          if (
-            selectedFilter === FilterOptions.PENDING &&
-            !bet.winningPropositionId &&
-            !bet.marketResultAdded &&
-            !bet.settled
-          ) {
-            return (
-              <Row betData={bet} key={index} onClick={() => onClickBet(bet)} />
-            );
-          }
-          if (selectedFilter === FilterOptions.SETTLED && bet.settled) {
-            return (
-              <Row betData={bet} key={index} onClick={() => onClickBet(bet)} />
-            );
-          }
-          if (selectedFilter === FilterOptions.ALL_BETS) {
-            return (
-              <Row betData={bet} key={index} onClick={() => onClickBet(bet)} />
-            );
-          }
-        })
+        filteredBets.map(bet => (
+          <Row betData={bet} key={bet.tx} onClick={() => onClickBet(bet)} />
+        ))
       )}
     </React.Fragment>
   );
