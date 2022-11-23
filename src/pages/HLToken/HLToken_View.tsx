@@ -25,7 +25,7 @@ export const HlTokenPage = () => {
           <div className="bg-gray-100 p-5 mb-2 lg:mb-0 text-center justify-center text-sm lg:text-sm">
             Address: {ADDRESS}
             <button
-              className="lg:ml-2 hover:bg-green-400"
+              className="lg:ml-2 hover:bg-emerald-400"
               onClick={() => navigator.clipboard.writeText(ADDRESS)}
             >
               <AiOutlineCopy />
