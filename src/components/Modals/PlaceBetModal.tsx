@@ -86,6 +86,10 @@ const PlaceBetModal: React.FC<Props> = ({
     })().then(setBalance);
   }, [selectedMarket, address, signer]);
 
+  useEffect(() => {
+    if (!isModalOpen) setWagerAmount(undefined);
+  }, [isModalOpen]);
+
   const onClickMarket = (market: MarketInfo) => {
     setBalance(undefined);
     setSelectedMarket(market);
