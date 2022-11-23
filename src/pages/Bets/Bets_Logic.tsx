@@ -4,6 +4,7 @@ import useBets from "../../hooks/bet/useBets";
 import { BetHistory } from "../../types";
 import { calculateMaxPages } from "../../utils/bets";
 import BetsView from "./Bets_View";
+import { FilterOptions } from "./components/BetRows";
 
 export const paginationOptions = [
   { label: "5", value: 5 },
@@ -15,7 +16,9 @@ const BetsLogics = () => {
   const [myBetsEnabled, setMyBetsEnabled] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBet, setSelectedBet] = useState<BetHistory>();
-
+  const [selectedFilter, setSelectedFilter] = useState<FilterOptions>(
+    FilterOptions.ALL_BETS
+  );
   const [betTablePagination, setBetTablePagination] = useState(5);
   const [betTablePage, setBetTablePage] = useState(1);
 
@@ -71,6 +74,8 @@ const BetsLogics = () => {
       isModalOpen={isModalOpen}
       onCloseModal={() => setIsModalOpen(false)}
       selectedBet={selectedBet}
+      selectedFilter={selectedFilter}
+      setSelectedFilter={setSelectedFilter}
       setPagination={setBetTablePagination}
       page={betTablePage}
       setPage={setBetTablePage}

@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import moment from "moment";
 import Skeleton from "react-loading-skeleton";
 import Toggle from "../../components/Toggle";
-import Card from "../../components/Card";
 import MyStats from "./components/MyStats";
 import OverallStats from "./components/OverallStats";
 

@@ -2,7 +2,7 @@ import Skeleton from "react-loading-skeleton";
 import classnames from "classnames";
 import { BetHistory } from "../../../types";
 import { formatToFourDecimals } from "../../../utils/formatting";
-import BetRows from "./BetRows";
+import BetRows, { FilterOptions } from "./BetRows";
 import { ethers } from "ethers";
 import moment from "moment";
 import React from "react";
@@ -17,6 +17,7 @@ type Props = {
   userBetHistory: BetHistory[] | undefined;
   userMaxPages: number;
   totalMaxPages: number;
+  selectedFilter: FilterOptions;
 };
 const BetTable = ({
   myBetsEnabled,
@@ -26,6 +27,7 @@ const BetTable = ({
   totalBetHistory,
   userBetHistory,
   userMaxPages,
+  selectedFilter,
   totalMaxPages
 }: Props) => (
   <React.Fragment>
@@ -72,12 +74,14 @@ const BetTable = ({
                 myBetsSelected={true}
                 bets={userBetHistory}
                 onClickBet={onClickBet}
+                selectedFilter={selectedFilter}
               />
             ) : (
               <BetRows
                 myBetsSelected={false}
                 bets={totalBetHistory}
                 onClickBet={onClickBet}
+                selectedFilter={selectedFilter}
               />
             )}
           </tbody>
