@@ -1,6 +1,12 @@
-import { formatToFourDecimals, formatToTwoDecimals } from "./formatting";
+import {
+  formatToFourDecimals,
+  formatToTwoDecimals,
+  shortenAddress,
+  shortenHash
+} from "./formatting";
 
 test.concurrent.each([
+  ["0", "0"],
   ["1", "1"],
   ["12", "12"],
   ["3456", "3456"],
@@ -16,6 +22,7 @@ test.concurrent.each([
 });
 
 test.concurrent.each([
+  ["0.0000", "0"],
   ["0.00051", "0.0005"],
   ["0.00055", "0.0006"],
   ["0.00056", "0.0006"],
@@ -48,4 +55,18 @@ test.concurrent.each([
 ])("round to two decimals", async (input, expected) => {
   const result = formatToTwoDecimals(input);
   expect(result).toBe(expected);
+});
+
+describe("address tests", () => {
+  it("should shorten address", () => {
+    const actual = shortenAddress("0x00000000219ab540356cBB839Cbe05303d7705Fa");
+    expect(actual).toEqual("0x000...705Fa");
+  });
+
+  it("should shorten hash", () => {
+    const actual = shortenHash(
+      "0x28d9cb5e5a5c4c5d27cf9d8b91ca9b34c31452d105a7201ecd327876f816a592"
+    );
+    expect(actual).toEqual("0x28d9cb5e5a5c4...d327876f816a592");
+  });
 });

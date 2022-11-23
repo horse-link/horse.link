@@ -43,7 +43,7 @@ const VaultView = ({
         </div>
         <div>
           <div className=" mx-auto p-5 mt-5 rounded-md border-white">
-            <h1 className="text-3xl mb-2">Type</h1>
+            <h1 className="text-3xl mb-2">Deposit / Withdraw</h1>
             <span>Shares: {userBalance ?? <Skeleton />}</span>
 
             <span className="flex flex-col mr-2 mt-2">Amount</span>

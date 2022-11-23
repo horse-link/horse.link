@@ -1,54 +1,35 @@
-import { Loader, PageLayout } from "../../components";
+import { PageLayout } from "../../components";
 import { Meet } from "../../types/index";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import Skeleton from "react-loading-skeleton";
-import { FormattedProtocol } from "../../types/entities";
-import { ethers } from "ethers";
-import {
-  formatNumberWithCommas,
-  formatToTwoDecimals
-} from "../../utils/formatting";
+import Toggle from "../../components/Toggle";
+import Card from "../../components/Card";
+import MyStats from "./components/MyStats";
+import OverallStats from "./components/OverallStats";
 
 type Props = {
   asLocaltime: (raceTime: number) => string;
   meets: Meet[];
   signature: string | undefined;
   owner: string | undefined;
-  stats: FormattedProtocol | undefined;
+  myPlayEnabled: boolean;
+  onMyPlayToggle: () => void;
 };
 type TableProps = {
   asLocaltime: (raceTime: number) => string;
   meets: Meet[];
 };
 const DashboardView: React.FC<Props> = (props: Props) => {
-  const { asLocaltime, meets, owner, signature, stats } = props;
-  const statsArray = [
-    {
-      name: "Total Liquidity",
-      stat: stats?.tvl ? (
-        `$${formatNumberWithCommas(ethers.utils.formatEther(stats.tvl))}`
-      ) : (
-        <Loader />
-      )
-    },
-    {
-      name: "In Play",
-      stat: stats?.inPlay ? (
-        `$${formatNumberWithCommas(ethers.utils.formatEther(stats.inPlay))}`
-      ) : (
-        <Loader />
-      )
-    },
-    {
-      name: "Performance",
-      stat: stats?.performance ? (
-        `${formatToTwoDecimals(stats.performance.toString())}%`
-      ) : (
-        <Loader />
-      )
-    }
-  ];
+  const {
+    asLocaltime,
+    meets,
+    owner,
+    signature,
+    myPlayEnabled,
+    onMyPlayToggle
+  } = props;
+
   return (
     <PageLayout requiresAuth={false}>
       <div className="grid gap-6">
@@ -79,23 +60,15 @@ const DashboardView: React.FC<Props> = (props: Props) => {
               the range of slippage based on the payout will be placed.
             </p>
           </div>
-          <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
-            {statsArray.map(stat => (
-              <div
-                key={stat.name}
-                className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6"
-              >
-                <dt className="text-sm font-medium text-gray-500 truncate">
-                  {stat.name}
-                </dt>
-                <dd className="mt-1 text-3xl font-semibold text-gray-900">
-                  {stat.stat}
-                </dd>
-              </div>
-            ))}
-          </dl>
+          {myPlayEnabled ? <MyStats /> : <OverallStats />}
         </div>
-        <Table asLocaltime={asLocaltime} meets={meets} />
+        <div className="flex gap-3 self-end justify-self-end">
+          <Toggle enabled={myPlayEnabled} onChange={onMyPlayToggle} />
+          <div>My Stats</div>
+        </div>
+        <div className="-mt-12">
+          <Table asLocaltime={asLocaltime} meets={meets} />
+        </div>
         <div className="flex justify-center px-4 py-5 bg-white shadow rounded-lg sm:p-6">
           <div className="w-4/5 max-w-2xl">
             <div className="flex flex-col items-center">

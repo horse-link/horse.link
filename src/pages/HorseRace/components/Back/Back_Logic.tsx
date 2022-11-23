@@ -19,7 +19,8 @@ import useTokenApproval from "../../../../hooks/token/useTokenApproval";
 import useTokenData from "../../../../hooks/token/useTokenData";
 import { Back, EcSignature, Runner } from "../../../../types";
 import BackView from "./Back_View";
-import { StaticConfig } from "../../../../providers/Config";
+import { useConfig } from "../../../../providers/Config";
+import { getTokenBySymbol } from "../../../../utils/config";
 
 const DECIMAL = 6;
 
@@ -43,7 +44,7 @@ const usePrepareBackingData = (
   const bnWager = useMemo(
     () =>
       ethers.utils.parseUnits(debouncedWagerAmount.toString(), tokenDecimal),
-    [debouncedWagerAmount]
+    [debouncedWagerAmount, tokenDecimal]
   );
   const b32Nonce = useMemo(
     () => ethers.utils.formatBytes32String(nonce),
@@ -202,6 +203,8 @@ type Props = {
 };
 
 const BackLogic: React.FC<Props> = ({ runner }) => {
+  const config = useConfig();
+
   const { back } = usePageParams(runner);
   const { marketAddresses } = useMarkets();
   const { address } = useAccount();
@@ -214,11 +217,11 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
 
   const marketData = useMarketDetail(selectedMarketAddress);
   const { data: balanceData } = useBalance({
-    address: address,
+    address,
     token:
       marketData?.name && marketData.name.includes("DAI")
-        ? (StaticConfig.tokenAddresses.DAI as Address)
-        : (StaticConfig.tokenAddresses.USDT as Address)
+        ? getTokenBySymbol("DAI", config)?.address
+        : getTokenBySymbol("USDT", config)?.address
   });
 
   useEffect(() => {

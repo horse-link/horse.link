@@ -1,13 +1,4 @@
 export const market = {
-  kovan: {
-    address: "0xC620E8AA8B5f24a860c8e49f739c5F6259C7515B"
-  },
-  homestead: {
-    address: ""
-  },
-  mumbai: {
-    address: ""
-  },
   ABI: [
     {
       inputs: [

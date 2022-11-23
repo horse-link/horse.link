@@ -8,7 +8,7 @@ const Horse = require("./build/contracts/HorseLink.json");
 
 const getCount = async () => {
   // const projectID = process.env.PROJECT_ID;
-  const web3 = new Web3(process.env.NODE); // new Web3(`https://kovan.infura.io/v3/${projectID}`);
+  const web3 = new Web3(process.env.NODE);
   const contract = new web3.eth.Contract(
     Horse.abi,
     process.env.CONTRACT_ADDRESS
@@ -59,7 +59,7 @@ const _addResultAsync = async (track, year, month, day, race, results) => {
     mnemonic: {
       phrase: process.env.MNEMONIC
     },
-    providerOrUrl: process.env.NODE //`https://kovan.infura.io/v3/${projectID}`
+    providerOrUrl: process.env.NODE
   });
 
   const web3 = new Web3(provider);

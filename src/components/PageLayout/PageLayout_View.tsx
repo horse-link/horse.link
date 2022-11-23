@@ -14,11 +14,11 @@ const navigation = [
   { name: "Markets", path: "/markets" },
   { name: "Bets", path: "/bets" },
   //{ name: "HL Token", path: "/tokens" },
-  {
-    name: "White Paper",
-    path: "https://github.com/horse-link/horse.link/blob/main/README.md",
-    absolutePath: true
-  },
+  // {
+  //   name: "White Paper",
+  //   path: "https://github.com/horse-link/horse.link/blob/main/README.md",
+  //   absolutePath: true
+  // },
   { name: "Faucet", path: "/faucet" }
 ];
 
@@ -53,16 +53,17 @@ const PageLayoutView: React.FC<Props> = props => {
                   <div className="hidden sm:-my-px sm:flex sm:space-x-8">
                     {navigation.map(item => {
                       const active = item.path === props.currentPath;
-                      if (item.absolutePath)
-                        return (
-                          <a
-                            href={item.path}
-                            target="_blank"
-                            className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-4 text-sm font-medium"
-                          >
-                            {item.name}
-                          </a>
-                        );
+
+                      // if (item.absolutePath)
+                      //   return (
+                      //     <a
+                      //       href={item.path}
+                      //       target="_blank"
+                      //       className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-4 text-sm font-medium"
+                      //     >
+                      //       {item.name}
+                      //     </a>
+                      //   );
 
                       return (
                         <Link
@@ -107,16 +108,16 @@ const PageLayoutView: React.FC<Props> = props => {
                 {navigation.map(item => {
                   const active = item.path === props.currentPath;
 
-                  if (item.absolutePath)
-                    return (
-                      <a
-                        href={item.path}
-                        target="_blank"
-                        className="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
-                      >
-                        {item.name}
-                      </a>
-                    );
+                  // if (item.absolutePath)
+                  //   return (
+                  //     <a
+                  //       href={item.path}
+                  //       target="_blank"
+                  //       className="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+                  //     >
+                  //       {item.name}
+                  //     </a>
+                  //   );
 
                   return (
                     <Link

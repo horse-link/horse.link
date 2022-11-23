@@ -1,9 +1,10 @@
 import DashboardView from "./Dashboard_View";
 import moment from "moment";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Meet, Race, SignedMeetingsResponse } from "../../types/index";
 import api from "../../apis/Api";
-import useProtocolStatistics from "../../hooks/data/useProtocolStatistics";
+import { WalletModalContext } from "../../providers/WalletModal";
+import { useAccount } from "wagmi";
 
 const getMockMeets = (): Meet[] => {
   const mockRace: Race[] = Array.from({ length: 15 }, (_, i) => ({
@@ -16,14 +17,16 @@ const getMockMeets = (): Meet[] => {
     id: `mock${i}`,
     name: "",
     location: "",
+    date: "",
     races: mockRace
   }));
 };
 
 const Dashboard: React.FC = () => {
   const [response, setResponse] = useState<SignedMeetingsResponse>();
-
-  const stats = useProtocolStatistics();
+  const [myPlayEnabled, setMyPlayEnabled] = useState(false);
+  const { openWalletModal } = useContext(WalletModalContext);
+  const { isConnected } = useAccount();
 
   useEffect(() => {
     const loadMeetings = async () => {
@@ -34,6 +37,12 @@ const Dashboard: React.FC = () => {
     loadMeetings();
   }, []);
 
+  useEffect(() => {
+    if (myPlayEnabled && !isConnected) {
+      openWalletModal();
+    }
+  }, [myPlayEnabled, isConnected]);
+
   const asLocaltime = (raceTime: number) => {
     const _time = moment.utc(raceTime).diff(moment(), "h");
     if (Date.now() / 1000 > moment.utc(raceTime).unix()) {
@@ -43,13 +52,16 @@ const Dashboard: React.FC = () => {
     return `${_time.toString()} hr`;
   };
 
+  const onMyPlayToggle = () => setMyPlayEnabled(prev => !prev);
+
   return (
     <DashboardView
       asLocaltime={asLocaltime}
       meets={response?.data.meetings || getMockMeets()}
       signature={response?.signature}
       owner={response?.owner}
-      stats={stats}
+      myPlayEnabled={myPlayEnabled}
+      onMyPlayToggle={onMyPlayToggle}
     />
   );
 };

@@ -5,7 +5,7 @@ import Modal from "../../components/Modal";
 import useVaultDetail from "../../hooks/vault/useVaultDetail";
 import { FormattedVaultTransaction } from "../../types/entities";
 import { ethers } from "ethers";
-import { shortenAddress } from "../../utils/shortenAddress";
+import { shortenHash } from "../../utils/formatting";
 import moment from "moment";
 
 type Props = {
@@ -53,7 +53,7 @@ const VaultListView: React.FC<Props> = ({
                     scope="col"
                     className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
                   >
-                    TLV
+                    TVL
                   </th>
                   <th
                     scope="col"
@@ -136,6 +136,7 @@ const txTypeMap = new Map([
   ["withdraw", "Withdrawal"],
   ["deposit", "Deposit"]
 ]);
+
 const HistoryTableRow: React.FC<HistoryTableRowProps> = ({ vault }) => {
   const formattedTxType = txTypeMap.get(vault.type) || vault.type;
   const details = useVaultDetail(vault.vaultAddress);
@@ -143,11 +144,7 @@ const HistoryTableRow: React.FC<HistoryTableRowProps> = ({ vault }) => {
     <tr>
       <td className="pl-5 pr-2 py-4 whitespace-nowrap">{formattedTxType}</td>
       <td className="px-2 py-4">
-        {vault.type === "withdraw"
-          ? `${ethers.utils.formatEther(vault.amount)} shares`
-          : `${ethers.utils.formatEther(vault.amount)} ${
-              details?.symbol || ""
-            }`}
+        {`${ethers.utils.formatEther(vault.amount)}`}
       </td>
       <td className="px-2 py-4 whitespace-nowrap">
         {moment.unix(vault.timestamp).fromNow()}
@@ -168,7 +165,7 @@ const HistoryTableRow: React.FC<HistoryTableRowProps> = ({ vault }) => {
           rel="noreferrer noopener"
           className="text-blue-600"
         >
-          {shortenAddress(vault.id)}
+          {shortenHash(vault.id)}
         </a>
       </td>
     </tr>
@@ -191,31 +188,31 @@ const HistoryTable: React.FC<HistoryTableProps> = ({ history }) => (
                 scope="col"
                 className="pl-5 pr-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
               >
-                Desposit / Withdraw
+                Type
               </th>
               <th
                 scope="col"
                 className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
               >
-                amount
+                Amount
               </th>
               <th
                 scope="col"
                 className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
               >
-                time
+                Time
               </th>
               <th
                 scope="col"
                 className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
               >
-                vault name
+                Vault Name
               </th>
               <th
                 scope="col"
                 className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
               >
-                txid
+                TxID
               </th>
             </tr>
           </thead>

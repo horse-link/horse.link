@@ -1,3 +1,5 @@
+import { ethers } from "ethers";
+
 const optionalAddressFilter = (address?: string) =>
   address ? `where: { owner: "${address.toLowerCase()}" }` : "";
 
@@ -21,6 +23,7 @@ export const getBetsQuery = (
     payout
     owner
     settled
+    didWin
     createdAt
     settledAt
     createdAtTx
@@ -29,7 +32,7 @@ export const getBetsQuery = (
 }`;
 
 export const getAggregatorQuery = () => `{
-  aggregators {
+  aggregator(id: "aggregator") {
     id
     totalBets
     totalMarkets
@@ -37,8 +40,9 @@ export const getAggregatorQuery = () => `{
   }
 }`;
 
-export const getProtocolStatsQuery = () => `{
-  protocols {
+export const getProtocolStatsQuery = () => `
+query GetProtocols{
+  protocol(id: "protocol") {
     id
     inPlay
     initialTvl
@@ -50,7 +54,6 @@ export const getProtocolStatsQuery = () => `{
 
 export const getVaultHistoryQuery = (vaultAddress?: string) => `{
   vaultTransactions(
-    first: 1000
     ${optionalAddressFilter(vaultAddress)}
     orderBy: timestamp
     orderDirection: desc
@@ -58,8 +61,44 @@ export const getVaultHistoryQuery = (vaultAddress?: string) => `{
     id
     type
     vaultAddress
-    depositerAddress
+    userAddress
     amount
     timestamp
+  }
+}`;
+
+export const getMarketStatsQuery = (timestamp: number) => `{
+  bets(
+    orderBy: amount
+    orderDirection: desc
+    where: {
+      createdAt_gte: ${timestamp}
+    }
+  ) {
+    id
+    propositionId
+    marketId
+    marketAddress
+    amount
+    payout
+    owner
+    settled
+    didWin
+    createdAt
+    settledAt
+    createdAtTx
+    settledAtTx
+  }
+}`;
+
+export const getUserStatsQuery = (address?: string) => `{
+  user(id: "${
+    address ? address.toLowerCase() : ethers.constants.AddressZero
+  }") {
+    id
+    totalDeposited
+    inPlay
+    pnl
+    lastUpdate
   }
 }`;

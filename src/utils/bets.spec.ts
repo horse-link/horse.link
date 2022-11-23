@@ -1,4 +1,6 @@
 import { calculateMaxPages, incrementPage, decrementPage } from "./bets";
+import { formatBetId } from "./formatting";
+import { getMockBet } from "./mocks";
 
 // calculate pages tests
 test.concurrent.each([
@@ -44,3 +46,12 @@ test.concurrent.each([
     expect(newPage).toBe(expected);
   }
 );
+
+// format bet id tests
+describe("format bet ids", () => {
+  it("should return the bet number from the id", () => {
+    const mockId = getMockBet().id;
+    const id = formatBetId(mockId);
+    expect(id).toEqual(0);
+  });
+});
