@@ -9,7 +9,11 @@ import Modal from "../Modal";
 import { ERC20__factory, Vault__factory } from "../../typechain";
 import { Config, MarketInfo } from "../../types/config";
 import { getMockBack } from "../../utils/mocks";
-import { formatToFourDecimals, formatToTwoDecimals, shortenAddress } from "../../utils/formatting";
+import {
+  formatToFourDecimals,
+  formatToTwoDecimals,
+  shortenAddress
+} from "../../utils/formatting";
 import useMarketContract from "../../hooks/market/useMarketContract";
 import Web3ErrorHandler from "../ErrorHandlers/Web3ErrorHandler";
 
@@ -126,12 +130,11 @@ const PlaceBetModal: React.FC<Props> = ({
 
   const payout = (+(wagerAmount || "0") * back.odds).toString();
 
-  const isWagerNegative = wagerAmount
-    ? +wagerAmount < 0
-    : false;
-  const isWagerGreaterThanBalance = wagerAmount && balance
-    ? ethers.utils.parseUnits(wagerAmount, balance.decimals).gt(balance.value)
-    : false;
+  const isWagerNegative = wagerAmount ? +wagerAmount < 0 : false;
+  const isWagerGreaterThanBalance =
+    wagerAmount && balance
+      ? ethers.utils.parseUnits(wagerAmount, balance.decimals).gt(balance.value)
+      : false;
 
   return (
     <Modal isOpen={isModalOpen} onClose={setIsModalOpen}>
@@ -199,12 +202,20 @@ const PlaceBetModal: React.FC<Props> = ({
             {txHash && (
               <div className="mt-6 px-2 py-4 bg-emerald-400 rounded-md flex flex-col items-center">
                 <h4 className="font-semibold mb-1 text-lg">Success!</h4>
-                <span className="block">Hash: <a className="italic" href={`${process.env.VITE_SCANNER_URL}/tx/${txHash}`} target="_blank" rel="noreferrer noopener">{shortenAddress(txHash)}</a></span>
+                <span className="block">
+                  Hash:{" "}
+                  <a
+                    className="italic"
+                    href={`${process.env.VITE_SCANNER_URL}/tx/${txHash}`}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    {shortenAddress(txHash)}
+                  </a>
+                </span>
               </div>
             )}
-            {error && (
-              <Web3ErrorHandler error={error} />
-            )}
+            {error && <Web3ErrorHandler error={error} />}
           </div>
         </React.Fragment>
       )}
