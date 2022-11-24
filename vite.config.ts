@@ -17,6 +17,15 @@ export default ({ mode }: UserConfig) => {
     ],
     define: {
       "process.env": process.env
+    },
+    test: {
+      globals: true,
+      environment: "jsdom",
+      setupFiles: ["./src/testSetup.ts"],
+      env: {
+        VITE_SUBGRAPH_URL: "mock_url",
+        VITE_ALCHEMY_API_KEY: "mock_key"
+      }
     }
   });
 };
