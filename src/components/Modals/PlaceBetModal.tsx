@@ -169,7 +169,7 @@ const PlaceBetModal: React.FC<Props> = ({
                 !wagerAmount ||
                 !signer ||
                 !balance ||
-                +balance.formatted == 0
+                +balance.formatted === 0
               }
             >
               {txLoading ? <Loader /> : "PLACE BET"}
