@@ -11,6 +11,7 @@ import { Config, MarketInfo } from "../../types/config";
 import { getMockBack } from "../../utils/mocks";
 import { formatToFourDecimals, formatToTwoDecimals, shortenAddress } from "../../utils/formatting";
 import useMarketContract from "../../hooks/market/useMarketContract";
+import Web3ErrorHandler from "../ErrorHandlers/Web3ErrorHandler";
 
 type Props = {
   runner?: Runner;
@@ -34,7 +35,7 @@ const PlaceBetModal: React.FC<Props> = ({
   const [balance, setBalance] = useState<Balance>();
   const [txLoading, setTxLoading] = useState(false);
   const [txHash, setTxHash] = useState<string>();
-  const [error, setError] = useState<string>();
+  const [error, setError] = useState<ethers.errors>();
 
   const { data: signer } = useSigner();
 
@@ -117,7 +118,7 @@ const PlaceBetModal: React.FC<Props> = ({
       const tx = await placeBet(selectedMarket, back, wager, signer);
       setTxHash(tx);
     } catch (err: any) {
-      setError(err);
+      setError(err.code as ethers.errors);
     } finally {
       setTxLoading(false);
     }
@@ -202,10 +203,7 @@ const PlaceBetModal: React.FC<Props> = ({
               </div>
             )}
             {error && (
-              <div className="mt-6 px-2 py-4 bg-red-600 rounded-md flex flex-col items-center">
-                <h4 className="font-semibold mb-1 text-lg">Error:</h4>
-                <span className="block overflow-ellipsis max-w-[40ch] overflow-hidden">{error}</span>
-              </div>
+              <Web3ErrorHandler error={error} />
             )}
           </div>
         </React.Fragment>
