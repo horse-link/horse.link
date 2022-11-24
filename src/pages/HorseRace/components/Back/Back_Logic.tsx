@@ -196,7 +196,7 @@ const usePageParams = (runner?: Runner) => {
     market_id,
     close,
     end,
-    odds: odds / 1000,
+    odds,
     proposition_id,
     signature
   };

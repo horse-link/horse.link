@@ -19,6 +19,7 @@ export const getBetsQuery = (
     propositionId
     marketId
     marketAddress
+    assetAddress
     amount
     payout
     owner

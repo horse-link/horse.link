@@ -7,6 +7,7 @@ import { ethers } from "ethers";
 import moment from "moment";
 import React from "react";
 import PageSelector from "./PageSelector";
+import { Config } from "../../../types/config";
 
 type Props = {
   myBetsEnabled: boolean;
@@ -44,7 +45,7 @@ const BetTable = ({
               </th>
               <th
                 scope="col"
-                className="px-2 py-3 w-20 text-left text-xs font-medium text-gray-500 uppercase"
+                className="px-2 py-3 w-40 text-left text-xs font-medium text-gray-500 uppercase"
               >
                 Amount
               </th>
@@ -69,21 +70,12 @@ const BetTable = ({
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {myBetsEnabled ? (
-              <BetRows
-                myBetsSelected={true}
-                bets={userBetHistory}
-                onClickBet={onClickBet}
-                selectedFilter={selectedFilter}
-              />
-            ) : (
-              <BetRows
-                myBetsSelected={false}
-                bets={totalBetHistory}
-                onClickBet={onClickBet}
-                selectedFilter={selectedFilter}
-              />
-            )}
+            <BetRows
+              myBetsSelected={myBetsEnabled}
+              bets={myBetsEnabled ? userBetHistory : totalBetHistory}
+              onClickBet={onClickBet}
+              selectedFilter={selectedFilter}
+            />
           </tbody>
         </table>
       </div>
@@ -99,10 +91,23 @@ const BetTable = ({
 export default BetTable;
 
 type RowProps = {
+  config?: Config;
   betData: BetHistory;
   onClick?: () => void;
 };
-export const Row = ({ betData, onClick }: RowProps) => {
+export const Row = ({ config, betData, onClick }: RowProps) => {
+  const formattedAmount = () =>
+    config ? (
+      `${formatToFourDecimals(ethers.utils.formatEther(betData.amount))} ${
+        config.tokens.find(
+          token =>
+            token.address.toLowerCase() === betData.assetAddress.toLowerCase()
+        )?.symbol
+      }`
+    ) : (
+      <Skeleton />
+    );
+
   return (
     <tr
       key={betData.propositionId}
@@ -122,11 +127,7 @@ export const Row = ({ betData, onClick }: RowProps) => {
       <td className="pl-5 pr-2 py-4 truncate">
         {betData.punter ?? <Skeleton />}
       </td>
-      <td className="px-2 py-4">
-        {formatToFourDecimals(ethers.utils.formatEther(betData.amount)) ?? (
-          <Skeleton />
-        )}
-      </td>
+      <td className="px-2 py-4">{formattedAmount()}</td>
       <td className="px-2 py-4">
         {moment.unix(betData.blockNumber).fromNow() ?? <Skeleton />}
       </td>

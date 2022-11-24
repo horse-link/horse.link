@@ -1,6 +1,6 @@
-# About
+# Abstract
 
-Horse Link https://horse.link is an Ethereum AMM protocol that allows particpants to wager on sports markets using ERC20 tokens.
+Horse Link https://horse.link is a non custodial Ethereum AMM protocol that allows particpants to wager on sports markets using ERC20 tokens.
 
 Traditionally, sports betting is a multi-billion dollar industry that is dominated by a few large companies. Horse Link aims to disrupt this industry by providing a decentralized alternative that is more transparent, fair, and secure.
 
@@ -16,16 +16,18 @@ Horse Link’s smart contract guaranteed bets are always placed within the slipp
 
 The total (potential) return on a stake is determined by the constant product function. The constant product function is a linear function that is defined by the following equation:
 
-Tp = S \* (D - D \* (S \ p))
+Payout = S \* (D - D \* (S / t))
 
-f(wager) = odds - odds\*(wager/pool)
+f(odds, pool, wager) = odds - odds\*(wager/pool)
+
+f(s) = s * f(odds)
 
 Where
 
-- Tp is the total profit
+- P is the payout
 - S is Stake
 - D is the decimal odd
-- p is the total locked value in the vault
+- t is the total locked value in the vault
 
 The liquidity is locked in the market contract until after the participant claims their payout.
 

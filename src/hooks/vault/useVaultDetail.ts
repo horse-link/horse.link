@@ -1,7 +1,7 @@
 import { BigNumber, ethers } from "ethers";
 import { useContractReads } from "wagmi";
 import vaultContractJson from "../../abi/Vault.json";
-import mockTokenContractJson from "../../abi/MockToken.json";
+import ERC20Json from "../../abi/ERC20.json";
 import { useEffect, useState } from "react";
 import { Vault } from "../../types";
 import api from "../../apis/Api";
@@ -28,7 +28,7 @@ const useVaultDetailFromContract = (vaultAddress: string) => {
     (vaultData as [BigNumber, string]) ?? [];
   const tokenContract = {
     address: tokenAddress?.toString() || "",
-    abi: mockTokenContractJson.abi
+    abi: ERC20Json
   };
   const { data: tokenData } = useContractReads({
     contracts: [

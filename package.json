@@ -43,10 +43,10 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@tailwindcss/forms": "^0.3.3",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^12.1.10",
+    "@typechain/ethers-v5": "^10.1.1",
     "@types/qrcode.react": "^1.0.1",
     "@types/react": "^18.0.20",
     "@types/react-copy-to-clipboard": "^5.0.1",
@@ -69,16 +69,19 @@
     "pretty-quick": "^3.1.3",
     "react-copy-to-clipboard": "^5.0.3",
     "tailwindcss": "^3.2.4",
+    "typechain": "^8.1.1",
     "vitest": "^0.25.3"
   },
   "scripts": {
     "dev": "vite --port 3000",
-    "build": "tsc && vite build",
+    "build": "yarn lint && yarn typechain && tsc && vite build",
     "serve": "vite preview --port 3000",
     "test": "vitest",
     "prepare": "husky install",
     "format-staged": "pretty-quick",
-    "lint": "prettier -w src"
+    "lint": "prettier -w src",
+    "postinstall": "yarn typechain",
+    "typechain": "typechain --target ethers-v5 ./src/abi/*.json --out-dir ./src/typechain"
   },
   "browserslist": [
     ">0.2%",
