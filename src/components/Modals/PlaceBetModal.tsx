@@ -76,12 +76,12 @@ const PlaceBetModal: React.FC<Props> = ({
       const erc20 = ERC20__factory.connect(asset, signer);
       const userBalance = await erc20.balanceOf(address);
 
-      return {
+      setBalance({
         value: userBalance,
         decimals,
         formatted: formatToFourDecimals(ethers.utils.formatUnits(userBalance, decimals))
-      };
-    })().then(setBalance);
+      });
+    })();
   }, [selectedMarket, address, signer]);
 
   useEffect(() => {
@@ -89,6 +89,7 @@ const PlaceBetModal: React.FC<Props> = ({
   }, [isModalOpen]);
 
   const onClickMarket = (market: MarketInfo) => {
+    if (selectedMarket?.address.toLowerCase() === market.address.toLowerCase()) return;
     setBalance(undefined);
     setSelectedMarket(market);
   };
