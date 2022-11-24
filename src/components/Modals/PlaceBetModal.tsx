@@ -9,8 +9,13 @@ import Modal from "../Modal";
 import { ERC20__factory, Vault__factory } from "../../typechain";
 import { Config, MarketInfo } from "../../types/config";
 import { getMockBack } from "../../utils/mocks";
-import { formatToFourDecimals, formatToTwoDecimals, shortenAddress } from "../../utils/formatting";
+import {
+  formatToFourDecimals,
+  formatToTwoDecimals,
+  shortenAddress
+} from "../../utils/formatting";
 import useMarketContract from "../../hooks/market/useMarketContract";
+import Web3ErrorHandler from "../ErrorHandlers/Web3ErrorHandler";
 
 type Props = {
   runner?: Runner;
@@ -34,7 +39,7 @@ const PlaceBetModal: React.FC<Props> = ({
   const [balance, setBalance] = useState<Balance>();
   const [txLoading, setTxLoading] = useState(false);
   const [txHash, setTxHash] = useState<string>();
-  const [error, setError] = useState<string>();
+  const [error, setError] = useState<ethers.errors>();
 
   const { data: signer } = useSigner();
 
@@ -117,7 +122,7 @@ const PlaceBetModal: React.FC<Props> = ({
       const tx = await placeBet(selectedMarket, back, wager, signer);
       setTxHash(tx);
     } catch (err: any) {
-      setError(err);
+      setError(err.code as ethers.errors);
     } finally {
       setTxLoading(false);
     }
@@ -125,9 +130,11 @@ const PlaceBetModal: React.FC<Props> = ({
 
   const payout = (+(wagerAmount || "0") * back.odds).toString();
 
-  const isWagerNegative = wagerAmount
-    ? +wagerAmount < 0
-    : false;
+  const isWagerNegative = wagerAmount ? +wagerAmount < 0 : false;
+  const isWagerGreaterThanBalance =
+    wagerAmount && balance
+      ? ethers.utils.parseUnits(wagerAmount, balance.decimals).gt(balance.value)
+      : false;
 
   return (
     <Modal isOpen={isModalOpen} onClose={setIsModalOpen}>
@@ -185,7 +192,8 @@ const PlaceBetModal: React.FC<Props> = ({
                 !balance ||
                 +balance.formatted === 0 ||
                 txLoading ||
-                isWagerNegative
+                isWagerNegative ||
+                isWagerGreaterThanBalance
               }
             >
               {txLoading ? <Loader /> : "PLACE BET"}
@@ -194,15 +202,20 @@ const PlaceBetModal: React.FC<Props> = ({
             {txHash && (
               <div className="mt-6 px-2 py-4 bg-emerald-400 rounded-md flex flex-col items-center">
                 <h4 className="font-semibold mb-1 text-lg">Success!</h4>
-                <span className="block">Hash: <a className="italic" href={`${process.env.VITE_SCANNER_URL}/tx/${txHash}`} target="_blank" rel="noreferrer noopener">{shortenAddress(txHash)}</a></span>
+                <span className="block">
+                  Hash:{" "}
+                  <a
+                    className="italic"
+                    href={`${process.env.VITE_SCANNER_URL}/tx/${txHash}`}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    {shortenAddress(txHash)}
+                  </a>
+                </span>
               </div>
             )}
-            {error && (
-              <div className="mt-6 px-2 py-4 bg-red-600 rounded-md flex flex-col items-center">
-                <h4 className="font-semibold mb-1 text-lg">Error:</h4>
-                <span className="block overflow-ellipsis max-w-[40ch] overflow-hidden">{error}</span>
-              </div>
-            )}
+            {error && <Web3ErrorHandler error={error} />}
           </div>
         </React.Fragment>
       )}
