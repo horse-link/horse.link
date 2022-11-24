@@ -4,10 +4,15 @@ import { server } from "src/mocks/server";
 
 global.fetch = fetch;
 global.IntersectionObserver = class {
-  constructor() {}
-  observe() {}
-  unobserve() {}
-  disconnect() {}
+  observe() {
+    return;
+  }
+  unobserve() {
+    return;
+  }
+  disconnect() {
+    return;
+  }
 } as any;
 
 beforeAll(() => server.listen({ onUnhandledRequest: "error" }));

@@ -1,6 +1,4 @@
-/* eslint-disable import/export */
 import { render } from "@testing-library/react";
-import { getProvider } from "@wagmi/core";
 import ApolloClientProvider from "src/providers/Apollo";
 import { WalletModalProvider } from "src/providers/WalletModal";
 import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
