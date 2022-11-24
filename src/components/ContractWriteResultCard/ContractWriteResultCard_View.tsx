@@ -4,7 +4,7 @@ type Props = {
   hash?: string;
   isSuccess: boolean;
   errorMsg?: string;
-  txType: "bet" | "deposit" | "withdraw" | undefined;
+  txType: "bet" | "deposit" | "withdrawal" | undefined;
 };
 const ContractWriteResultCard = ({
   hash,

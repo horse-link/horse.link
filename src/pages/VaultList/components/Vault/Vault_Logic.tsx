@@ -49,7 +49,8 @@ const useWithdrawContractWrite = ({
     error,
     isTxLoading,
     isTxSuccess,
-    txHash
+    txHash,
+    txType: "withdrawal"
   };
 };
 
@@ -92,7 +93,8 @@ const useDepositContractWrite = ({
     error,
     isTxLoading,
     isTxSuccess,
-    txHash
+    txHash,
+    txType: "deposit"
   };
 };
 
@@ -102,6 +104,10 @@ type Props = {
 const VaultLogic = ({ vaultAddress }: Props) => {
   const { address } = useAccount();
   const userAddress = address ?? "";
+
+  const [transactionType, setTransactionType] = useState<
+    "deposit" | "withdrawal"
+  >();
 
   const {
     symbol: tokenSymbol,
@@ -146,7 +152,10 @@ const VaultLogic = ({ vaultAddress }: Props) => {
     ownerAddress: userAddress,
     vaultAddress,
     enabled: amount > 0 && isEnoughAllowance,
-    onTxSuccess: () => refetchVaultUserData()
+    onTxSuccess: () => {
+      setTransactionType("deposit");
+      refetchVaultUserData();
+    }
   });
 
   const {
@@ -160,7 +169,10 @@ const VaultLogic = ({ vaultAddress }: Props) => {
     tokenDecimal,
     vaultAddress,
     enabled: userBalance > 0,
-    onTxSuccess: () => refetchVaultUserData()
+    onTxSuccess: () => {
+      setTransactionType("withdrawal");
+      refetchVaultUserData();
+    }
   });
 
   const contract = {
@@ -174,6 +186,7 @@ const VaultLogic = ({ vaultAddress }: Props) => {
     isSuccess: isDepositTxSuccess || isWithdrawTxSuccess,
     hash: depositTxHash || withdrawTxHash
   };
+
   const updateAmount = (amount: number) => {
     setAmount(amount);
   };
@@ -204,6 +217,7 @@ const VaultLogic = ({ vaultAddress }: Props) => {
       contract={contract}
       txStatus={txStatus}
       isEnoughAllowance={isEnoughAllowance}
+      recentTransactionType={transactionType}
     />
   );
 };

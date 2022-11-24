@@ -24,6 +24,7 @@ type Props = {
     hash?: string;
   };
   isEnoughAllowance: boolean;
+  recentTransactionType?: "deposit" | "withdrawal";
 };
 const VaultView = ({
   vaultDetailData,
@@ -34,11 +35,9 @@ const VaultView = ({
   shouldWithdrawButtonDisabled,
   contract,
   txStatus,
-  isEnoughAllowance
+  isEnoughAllowance,
+  recentTransactionType
 }: Props) => {
-  const [transactionType, setTransactionType] = useState<
-    "bet" | "deposit" | "withdraw"
-  >();
   return (
     <div className="w-96 md:w-152 break-all md:break-normal">
       <div className="flex flex-col justify-between bg-white border-gray-200">
@@ -94,7 +93,6 @@ const VaultView = ({
                         }
                         onClick={() => {
                           contract.withdrawContractWrite?.();
-                          txStatus.isSuccess && setTransactionType("withdraw");
                         }}
                         disabled={shouldWithdrawButtonDisabled}
                       >
@@ -120,7 +118,7 @@ const VaultView = ({
           hash={txStatus.hash}
           isSuccess={txStatus.isSuccess}
           errorMsg={contract.errorMsg}
-          txType={transactionType}
+          txType={recentTransactionType}
         />
       </div>
     </div>
@@ -128,3 +126,4 @@ const VaultView = ({
 };
 
 export default VaultView;
+// eat shit kid
