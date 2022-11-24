@@ -1,6 +1,5 @@
 import { Dialog, Transition } from "@headlessui/react";
-import React from "react";
-import { Fragment } from "react";
+import React, { Fragment } from "react";
 
 type ModalProps = {
   isOpen: boolean;
