@@ -67,8 +67,16 @@ const PlaceBetModal: React.FC<Props> = ({
   }, [config]);
 
   useEffect(() => {
-    if (!selectedMarket || !signer) return;
+    if (!txLoading) return;
 
+    setError(undefined);
+    setTxHash(undefined);
+  }, [txLoading]);
+
+  useEffect(() => {
+    if (!selectedMarket || !signer || txLoading || error) return;
+
+    setBalance(undefined);
     const contract = Vault__factory.connect(
       selectedMarket.vaultAddress,
       signer
@@ -91,15 +99,17 @@ const PlaceBetModal: React.FC<Props> = ({
         )
       });
     })();
-  }, [selectedMarket, signer]);
+  }, [selectedMarket, signer, txLoading, error]);
 
   useEffect(() => {
-    if (!isModalOpen) {
+    if (isModalOpen) return;
+
+    setTimeout(() => {
       setWagerAmount(undefined);
       setTxHash(undefined);
       setTxLoading(false);
       setError(undefined);
-    }
+    }, 300);
   }, [isModalOpen]);
 
   const onSelectMarket = (
@@ -109,7 +119,6 @@ const PlaceBetModal: React.FC<Props> = ({
     const market = config.markets.find(
       m => m.address.toLowerCase() === event.currentTarget.value.toLowerCase()
     );
-    setBalance(undefined);
     setSelectedMarket(market);
   };
 
@@ -168,7 +177,8 @@ const PlaceBetModal: React.FC<Props> = ({
               type="number"
               placeholder={wagerAmount || "0"}
               onChange={e => setWagerAmount(e.currentTarget.value)}
-              className="border-b-[0.12rem] border-black pl-1 pt-1 mb-6"
+              className="border-b-[0.12rem] border-black pl-1 pt-1 mb-6 disabled:text-black/50 disabled:bg-white transition-colors duration-100"
+              disabled={txLoading}
             />
             <span className="block font-semibold">
               Payout:{" "}

@@ -46,6 +46,7 @@ export type BetHistory = {
   index: number;
   marketId: string;
   marketAddress: string;
+  assetAddress: string;
   propositionId: string;
   winningPropositionId: string | undefined;
   marketResultAdded: boolean;
