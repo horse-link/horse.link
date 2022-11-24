@@ -38,8 +38,8 @@ export type Back = {
 
 export type EcSignature = {
   v: number;
-  s: string;
   r: string;
+  s: string;
 };
 
 export type BetHistory = {
