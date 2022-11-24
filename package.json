@@ -44,9 +44,8 @@
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.3.3",
-    "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^12.1.10",
+    "@testing-library/user-event": "^14.4.3",
     "@types/qrcode.react": "^1.0.1",
     "@types/react": "^18.0.20",
     "@types/react-copy-to-clipboard": "^5.0.1",
