@@ -20,6 +20,7 @@ import { Back, EcSignature, Runner } from "../../../../types";
 import BackView from "./Back_View";
 import { useConfig } from "../../../../providers/Config";
 import { getTokenBySymbol } from "../../../../utils/config";
+import { formatBytes16String } from "src/utils/formatting";
 
 const DECIMAL = 6;
 
@@ -31,8 +32,8 @@ const usePrepareBackingData = (
   nonce: string,
   market_id: string
 ) => {
-  const b32PropositionId = useMemo(
-    () => ethers.utils.formatBytes32String(proposition_id),
+  const b16PropositionId = useMemo(
+    () => formatBytes16String(proposition_id),
     [proposition_id]
   );
 
@@ -45,22 +46,22 @@ const usePrepareBackingData = (
       ethers.utils.parseUnits(debouncedWagerAmount.toString(), tokenDecimal),
     [debouncedWagerAmount, tokenDecimal]
   );
-  const b32Nonce = useMemo(
-    () => ethers.utils.formatBytes32String(nonce),
+  const b16Nonce = useMemo(
+    () => formatBytes16String(nonce),
     [nonce]
   );
-  const b32MarketId = useMemo(
-    () => ethers.utils.formatBytes32String(market_id),
+  const b16MarketId = useMemo(
+    () => formatBytes16String(market_id),
     [market_id]
   );
-  return { b32PropositionId, bnWager, bnOdds, b32Nonce, b32MarketId };
+  return { b16PropositionId, bnWager, bnOdds, b16Nonce, b16MarketId };
 };
 
 type useBackContractWriteArgs = {
   marketAddress: string;
-  b32Nonce: string;
-  b32PropositionId: string;
-  b32MarketId: string;
+  b16Nonce: string;
+  b16PropositionId: string;
+  b16MarketId: string;
   bnWager: ethers.BigNumber;
   bnOdds: ethers.BigNumber;
   close: number;
@@ -71,9 +72,9 @@ type useBackContractWriteArgs = {
 
 const useGetBackContractWrite = ({
   marketAddress,
-  b32Nonce,
-  b32PropositionId,
-  b32MarketId,
+  b16Nonce,
+  b16PropositionId,
+  b16MarketId,
   bnWager,
   bnOdds,
   close,
@@ -90,9 +91,9 @@ const useGetBackContractWrite = ({
     abi: marketContractJson.abi,
     functionName: "back",
     args: [
-      b32Nonce,
-      b32PropositionId,
-      b32MarketId,
+      b16Nonce,
+      b16PropositionId,
+      b16MarketId,
       bnWager,
       bnOdds,
       close,
@@ -251,7 +252,7 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
 
   const { nonce, odds, proposition_id, market_id, close, end, signature } =
     back;
-  const { b32PropositionId, bnWager, bnOdds, b32Nonce, b32MarketId } =
+  const { b16PropositionId, bnWager, bnOdds, b16Nonce, b16MarketId } =
     usePrepareBackingData(
       proposition_id,
       odds,
@@ -268,9 +269,9 @@ const BackLogic: React.FC<Props> = ({ runner }) => {
     backTxHash
   } = useGetBackContractWrite({
     marketAddress: selectedMarketAddress,
-    b32Nonce,
-    b32PropositionId,
-    b32MarketId,
+    b16Nonce,
+    b16PropositionId,
+    b16MarketId,
     bnWager,
     bnOdds,
     close,

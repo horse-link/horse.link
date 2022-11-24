@@ -1,7 +1,7 @@
 import Skeleton from "react-loading-skeleton";
 import classnames from "classnames";
 import { BetHistory } from "../../../types";
-import { formatToFourDecimals } from "../../../utils/formatting";
+import { formatToFourDecimals, parseBytes16String } from "../../../utils/formatting";
 import BetRows, { FilterOptions } from "./BetRows";
 import { ethers } from "ethers";
 import moment from "moment";
@@ -131,10 +131,10 @@ export const Row = ({ betData, onClick }: RowProps) => {
         {moment.unix(betData.blockNumber).fromNow() ?? <Skeleton />}
       </td>
       <td className="px-2 py-4 truncate">
-        {ethers.utils.parseBytes32String(betData.marketId) ?? <Skeleton />}
+        {parseBytes16String(betData.marketId) ?? <Skeleton />}
       </td>
       <td className="px-2 py-4 truncate">
-        {ethers.utils.parseBytes32String(betData.propositionId) ?? <Skeleton />}
+        {parseBytes16String(betData.propositionId) ?? <Skeleton />}
       </td>
     </tr>
   );
