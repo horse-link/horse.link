@@ -20,7 +20,7 @@ import { Back, EcSignature, Runner } from "../../../../types";
 import BackView from "./Back_View";
 import { useConfig } from "../../../../providers/Config";
 import { getTokenBySymbol } from "../../../../utils/config";
-import { formatBytes16String } from "src/utils/formatting";
+import { formatBytes16String } from "../../../../utils/formatting";
 
 const DECIMAL = 6;
 
@@ -32,29 +32,35 @@ const usePrepareBackingData = (
   nonce: string,
   market_id: string
 ) => {
-  const b16PropositionId = useMemo(
-    () => formatBytes16String(proposition_id),
-    [proposition_id]
-  );
+  try {
+    const b16PropositionId = useMemo(
+      () => formatBytes16String(proposition_id),
+      [proposition_id]
+    );
 
-  const bnOdds = useMemo(
-    () => ethers.utils.parseUnits(odds.toString(), DECIMAL),
-    [odds]
-  );
-  const bnWager = useMemo(
-    () =>
-      ethers.utils.parseUnits(debouncedWagerAmount.toString(), tokenDecimal),
-    [debouncedWagerAmount, tokenDecimal]
-  );
-  const b16Nonce = useMemo(
-    () => formatBytes16String(nonce),
-    [nonce]
-  );
-  const b16MarketId = useMemo(
-    () => formatBytes16String(market_id),
-    [market_id]
-  );
-  return { b16PropositionId, bnWager, bnOdds, b16Nonce, b16MarketId };
+    const bnOdds = useMemo(
+      () => ethers.utils.parseUnits(odds.toString(), DECIMAL),
+      [odds]
+    );
+    const bnWager = useMemo(
+      () =>
+        ethers.utils.parseUnits(debouncedWagerAmount.toString(), tokenDecimal),
+      [debouncedWagerAmount, tokenDecimal]
+    );
+    const b16Nonce = useMemo(
+      () => formatBytes16String(nonce),
+      [nonce]
+    );
+    const b16MarketId = useMemo(
+      () => formatBytes16String(market_id),
+      [market_id]
+    );
+    return { b16PropositionId, bnWager, bnOdds, b16Nonce, b16MarketId };
+  }
+  catch (err) {
+    console.log(err);
+    throw err;
+  }
 };
 
 type useBackContractWriteArgs = {
