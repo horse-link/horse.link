@@ -1,9 +1,8 @@
 import { PageLayout } from "../../components";
 import moment from "moment";
 import { Runner } from "../../types";
-import BackLogic from "./components/Back/Back_Logic";
-import Modal from "../../components/Modal";
 import RunnerTable from "../../components/RunnerTable/RunnerTable";
+import PlaceBetModal from "../../components/Modals/PlaceBetModal";
 
 type Props = {
   track: string;
@@ -26,10 +25,10 @@ const HorseRaceView: React.FC<Props> = ({
 }: Props) => {
   return (
     <PageLayout requiresAuth={false}>
-      <BackModal
-        isOpen={isDialogOpen}
-        onClose={onCloseDialog}
+      <PlaceBetModal
         runner={selectedRunner}
+        isModalOpen={isDialogOpen}
+        setIsModalOpen={onCloseDialog}
       />
       <div className="flex flex-col gap-6">
         <div className="flex p-2 shadow overflow-hidden border-b bg-white border-gray-200 sm:rounded-lg justify-around">
@@ -44,23 +43,3 @@ const HorseRaceView: React.FC<Props> = ({
 };
 
 export default HorseRaceView;
-
-type BackModalProps = {
-  isOpen: boolean;
-  onClose: () => void;
-  runner?: Runner;
-  balanceData?: any;
-};
-
-const BackModal = ({
-  isOpen,
-  onClose,
-  runner,
-  balanceData
-}: BackModalProps) => {
-  return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <BackLogic runner={runner} balanceData={balanceData} />
-    </Modal>
-  );
-};
