@@ -44,6 +44,7 @@ export const formatBetHistory = (
   index: formatBetId(bet.id),
   marketId: bet.marketId.toLowerCase(),
   marketAddress: bet.marketAddress.toLowerCase(),
+  assetAddress: bet.assetAddress.toLowerCase(),
   propositionId: bet.propositionId.toLowerCase(),
   winningPropositionId: signedBetData.winningPropositionId,
   marketResultAdded: signedBetData.marketResultAdded,
