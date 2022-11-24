@@ -3,7 +3,7 @@ import { BetHistory } from "../../types";
 import BetModal from "./components/BetModal";
 import BetTable from "./components/BetTable";
 import Select from "react-select";
-import { paginationOptions } from "./Bets_Logic";
+import { paginationOptions, PaginationValues } from "./Bets_Logic";
 import Toggle from "../../components/Toggle";
 import classnames from "classnames";
 import { FilterOptions } from "./components/BetRows";
@@ -17,7 +17,7 @@ type Props = {
   selectedBet?: BetHistory;
   selectedFilter: FilterOptions;
   setSelectedFilter: (filter: FilterOptions) => void;
-  setPagination: (pagination: number) => void;
+  setPagination: (pagination: PaginationValues) => void;
   page: number;
   setPage: (page: number) => void;
   totalBetHistory: BetHistory[] | undefined;
@@ -121,7 +121,7 @@ const BetsView = ({
 
         <div className="flex items-center">
           <Select
-            onChange={selection => selection && setPagination(selection.value)}
+            onChange={selection => selection && setPagination(selection.value as PaginationValues)}
             options={paginationOptions}
             defaultValue={paginationOptions[0]}
             isClearable={false}
