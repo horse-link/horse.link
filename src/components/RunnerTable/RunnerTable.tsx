@@ -73,7 +73,7 @@ const RunnerTable = ({ runners, onClickRunner }: RunnerTableProps) => {
 
                       <td className="px-2 py-4 whitespace-nowrap">
                         {odds ? (
-                          formatToTwoDecimals((odds / 1000).toString())
+                          formatToTwoDecimals(odds.toString())
                         ) : (
                           <Skeleton width="2em" />
                         )}

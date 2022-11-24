@@ -1,4 +1,5 @@
 import { ethers } from "ethers";
+import { Back } from "../types";
 import { Bet, FormattedUser } from "../types/entities";
 
 export const getMockBet = (): Bet => ({
@@ -24,4 +25,14 @@ export const getMockUser = (): FormattedUser => ({
   inPlay: ethers.constants.Zero,
   pnl: ethers.constants.Zero,
   lastUpdate: 0
+});
+
+export const getMockBack = (): Back => ({
+  nonce: "0",
+  proposition_id: "",
+  market_id: "",
+  odds: 0,
+  close: 0,
+  end: 0,
+  signature: { r: "", s: "", v: 0 }
 });
