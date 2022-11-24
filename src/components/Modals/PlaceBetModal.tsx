@@ -128,6 +128,9 @@ const PlaceBetModal: React.FC<Props> = ({
   const isWagerNegative = wagerAmount
     ? +wagerAmount < 0
     : false;
+  const isWagerGreaterThanBalance = wagerAmount && balance
+    ? ethers.utils.parseUnits(wagerAmount, balance.decimals).gt(balance.value)
+    : false;
 
   return (
     <Modal isOpen={isModalOpen} onClose={setIsModalOpen}>
@@ -185,7 +188,8 @@ const PlaceBetModal: React.FC<Props> = ({
                 !balance ||
                 +balance.formatted === 0 ||
                 txLoading ||
-                isWagerNegative
+                isWagerNegative ||
+                isWagerGreaterThanBalance
               }
             >
               {txLoading ? <Loader /> : "PLACE BET"}
