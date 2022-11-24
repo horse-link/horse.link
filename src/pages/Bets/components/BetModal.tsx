@@ -7,6 +7,7 @@ import useMarkets from "../../../hooks/market/useMarkets";
 import { useEffect, useState } from "react";
 import useSettleContractWrite from "../../../hooks/market/useMarketSettle";
 import useMarketOracleResultWrite from "../../../hooks/market/useMarketOracle";
+import { TxType } from "../../VaultList/components/Vault/Vault_Logic";
 
 type Props = {
   isOpen: boolean;
@@ -201,7 +202,7 @@ const SettleBet = ({ data }: SettlebetProps) => {
             hash={txStatuses.hash}
             isSuccess={txStatuses.isSuccess}
             errorMsg={settleContract.errorMsg}
-            txType="bet"
+            txType={TxType.BET}
           />
         </div>
       </div>
