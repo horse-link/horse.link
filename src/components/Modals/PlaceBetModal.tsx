@@ -7,9 +7,9 @@ import { useSigner } from "wagmi";
 import Loader from "../Loader/Loader_View";
 import Modal from "../Modal";
 import { ERC20__factory, Vault__factory } from "../../typechain";
-import { MarketInfo } from "../../types/config";
+import { Config, MarketInfo } from "../../types/config";
 import { getMockBack } from "../../utils/mocks";
-import { formatToFourDecimals } from "../../utils/formatting";
+import { formatToFourDecimals, shortenAddress } from "../../utils/formatting";
 import useMarketContract from "../../hooks/market/useMarketContract";
 
 type Props = {
@@ -34,7 +34,7 @@ const PlaceBetModal: React.FC<Props> = ({
   const [balance, setBalance] = useState<Balance>();
   const [txLoading, setTxLoading] = useState(false);
   const [txHash, setTxHash] = useState<string>();
-  
+
   const { data: signer } = useSigner();
 
   const config = useConfig();
@@ -63,13 +63,13 @@ const PlaceBetModal: React.FC<Props> = ({
   useEffect(() => {
     if (!selectedMarket || !signer) return;
 
-    const contract = Vault__factory.connect(selectedMarket.vaultAddress, signer);
+    const contract = Vault__factory.connect(
+      selectedMarket.vaultAddress,
+      signer
+    );
     (async () => {
       const address = await signer.getAddress();
-      const [
-        asset,
-        decimals
-      ] = await Promise.all([
+      const [asset, decimals] = await Promise.all([
         contract.asset(),
         contract.decimals()
       ]);
@@ -80,7 +80,9 @@ const PlaceBetModal: React.FC<Props> = ({
       setBalance({
         value: userBalance,
         decimals,
-        formatted: formatToFourDecimals(ethers.utils.formatUnits(userBalance, decimals))
+        formatted: formatToFourDecimals(
+          ethers.utils.formatUnits(userBalance, decimals)
+        )
       });
     })();
   }, [selectedMarket, signer]);
@@ -89,8 +91,13 @@ const PlaceBetModal: React.FC<Props> = ({
     if (!isModalOpen) setWagerAmount(undefined);
   }, [isModalOpen]);
 
-  const onClickMarket = (market: MarketInfo) => {
-    if (selectedMarket?.address.toLowerCase() === market.address.toLowerCase()) return;
+  const onSelectMarket = (
+    event: React.ChangeEvent<HTMLSelectElement>,
+    config: Config
+  ) => {
+    const market = config.markets.find(
+      m => m.address.toLowerCase() === event.currentTarget.value.toLowerCase()
+    );
     setBalance(undefined);
     setSelectedMarket(market);
   };
@@ -112,43 +119,70 @@ const PlaceBetModal: React.FC<Props> = ({
   return (
     <Modal isOpen={isModalOpen} onClose={setIsModalOpen}>
       {!config ? (
-        <Loader />
+        <div className="p-10">
+          <Loader />
+        </div>
       ) : (
-        <div>
-          <h2>Target Odds {back.odds}</h2>
-          <div>
-            <h3>Markets</h3>
-            {config.markets.map(market => (
-              <button
-                key={market.address}
-                className="block"
-                style={{
-                  color: market.address.toLowerCase() === selectedMarket?.address.toLowerCase() ? "green": "red"
-                }}
-                onClick={() => onClickMarket(market)}
-              >
-                {getVaultNameFromMarket(config, market.address)}
-              </button>
-            ))}
-            <br />
-            <h3>Wager Amount</h3>
+        <React.Fragment>
+          <h2 className="font-bold text-2xl mr-[8vw] mb-6">
+            Target Odds {back.odds}
+          </h2>
+          <div className="flex flex-col">
+            <h3 className="font-semibold">Markets</h3>
+            <select
+              onChange={e => onSelectMarket(e, config)}
+              className="border-[0.12rem] border-black mt-1 mb-6"
+            >
+              {config.markets.map(market => (
+                <option
+                  key={market.address}
+                  className="block"
+                  value={market.address}
+                >
+                  {getVaultNameFromMarket(config, market.address)}
+                </option>
+              ))}
+            </select>
+            <h3 className="font-semibold">Wager Amount</h3>
             <input
               placeholder={wagerAmount || "0"}
               onChange={e => setWagerAmount(e.currentTarget.value)}
+              className="border-b-[0.12rem] border-black pl-1 pt-1 mb-6"
             />
-            <br />
-            <span className="block">Payout: {formatToFourDecimals(payout) || <Loader />}</span>
-            <span className="block">Available: {balance?.formatted || <Loader />}</span>
-            <br />
-            <button onClick={onClickPlaceBet} disabled={!selectedMarket || !wagerAmount || !signer || !balance || +balance.formatted == 0}>{txLoading ? <Loader /> : "Place bet"}</button>
+            <span className="block font-semibold">
+              Payout:{" "}
+              <span className="font-normal">
+                {formatToFourDecimals(payout) || <Loader />}
+              </span>
+            </span>
+            <span className="block font-semibold mb-2">
+              Available:{" "}
+              <span className="font-normal">
+                {balance?.formatted || <Loader />}
+              </span>
+            </span>
+            <button
+              className="w-full font-bold border-black border-2 py-2 rounded-md relative top-6 hover:text-white hover:bg-black transition-colors duration-100 disabled:text-black/50 disabled:border-black/50 disabled:bg-white"
+              onClick={onClickPlaceBet}
+              disabled={
+                !selectedMarket ||
+                !wagerAmount ||
+                !signer ||
+                !balance ||
+                +balance.formatted == 0
+              }
+            >
+              {txLoading ? <Loader /> : "PLACE BET"}
+            </button>
             <br />
             {txHash && (
-              <div>
-                <p>Success! tx: {txHash}</p>
+              <div className="mt-6 px-2 py-4 bg-emerald-400 rounded-md flex flex-col items-center">
+                <h4 className="font-semibold mb-1 text-lg">Success!</h4>
+                <span className="block">Hash: <a className="italic" href={`${process.env.VITE_SCANNER_URL}/tx/${txHash}`} target="_blank" rel="noreferrer noopener">{shortenAddress(txHash)}</a></span>
               </div>
             )}
           </div>
-        </div>
+        </React.Fragment>
       )}
     </Modal>
   );
