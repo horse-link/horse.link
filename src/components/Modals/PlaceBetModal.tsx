@@ -40,13 +40,11 @@ const PlaceBetModal: React.FC<Props> = ({
   const config = useConfig();
   const { placeBet } = useMarketContract();
 
-  const now = useMemo(() => Date.now().toString(), []);
-
   const back = useMemo<Back>(() => {
     if (!runner) return getMockBack();
 
     return {
-      nonce: now,
+      nonce: runner.nonce,
       market_id: runner.market_id,
       close: runner.close,
       end: runner.end,
@@ -54,7 +52,7 @@ const PlaceBetModal: React.FC<Props> = ({
       proposition_id: runner.proposition_id,
       signature: runner.signature
     };
-  }, [runner, now]);
+  }, [runner]);
 
   useEffect(() => {
     if (!config) return;
