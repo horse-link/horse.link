@@ -49,8 +49,7 @@ const useWithdrawContractWrite = ({
     error,
     isTxLoading,
     isTxSuccess,
-    txHash,
-    txType: "withdrawal"
+    txHash
   };
 };
 
@@ -93,8 +92,7 @@ const useDepositContractWrite = ({
     error,
     isTxLoading,
     isTxSuccess,
-    txHash,
-    txType: "deposit"
+    txHash
   };
 };
 
@@ -108,7 +106,6 @@ const VaultLogic = ({ vaultAddress }: Props) => {
   const [transactionType, setTransactionType] = useState<
     "deposit" | "withdrawal"
   >();
-
   const {
     symbol: tokenSymbol,
     address: tokenAddress,

@@ -126,4 +126,3 @@ const VaultView = ({
 };
 
 export default VaultView;
-// eat shit kid
