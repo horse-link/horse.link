@@ -6,10 +6,11 @@ import { calculateMaxPages } from "../../utils/bets";
 import BetsView from "./Bets_View";
 import { FilterOptions } from "./components/BetRows";
 
+export type PaginationValues = 25 | 50 | 100;
 export const paginationOptions = [
-  { label: "5", value: 5 },
-  { label: "10", value: 10 },
-  { label: "20", value: 20 }
+  { label: "25", value: 25 },
+  { label: "50", value: 50 },
+  { label: "100", value: 100 }
 ];
 
 const BetsLogics = () => {
@@ -19,7 +20,7 @@ const BetsLogics = () => {
   const [selectedFilter, setSelectedFilter] = useState<FilterOptions>(
     FilterOptions.ALL_BETS
   );
-  const [betTablePagination, setBetTablePagination] = useState(5);
+  const [betTablePagination, setBetTablePagination] = useState<PaginationValues>(25);
   const [betTablePage, setBetTablePage] = useState(1);
 
   const { isConnected } = useAccount();
