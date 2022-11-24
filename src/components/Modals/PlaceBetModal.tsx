@@ -48,7 +48,7 @@ const PlaceBetModal: React.FC<Props> = ({
       market_id: runner.market_id,
       close: runner.close,
       end: runner.end,
-      odds: runner.odds / 1000,
+      odds: runner.odds,
       proposition_id: runner.proposition_id,
       signature: runner.signature
     };
