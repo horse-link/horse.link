@@ -1,15 +1,28 @@
-import { Market__factory } from "../../typechain";
+import { ERC20__factory, Market__factory, Vault__factory } from "../../typechain";
 import { Back } from "../../types";
 import { BigNumber, ethers, Signer } from "ethers";
+import { MarketInfo } from "../../types/config";
 
 const ODDS_DECIMALS = 6;
 
 const useMarketContract = () => {
-  const placeBet = async (marketAddress: string, back: Back, wager: BigNumber, signer: Signer) => {
-    const contract = Market__factory.connect(marketAddress, signer);
+  const placeBet = async (market: MarketInfo, back: Back, wager: BigNumber, signer: Signer) => {
+    const userAddress = await signer.getAddress();
+    
+    const marketContract = Market__factory.connect(market.address, signer);
+    const vaultContract = Vault__factory.connect(market.vaultAddress, signer);
+
+    const assetAddress = await vaultContract.asset();
+    const erc20Contract = ERC20__factory.connect(assetAddress, signer);
+
+    const userAllowance = await erc20Contract.allowance(userAddress, market.address);
+    if (userAllowance.lt(wager))
+      await (
+        await erc20Contract.approve(market.address, ethers.constants.MaxUint256)
+      ).wait();
 
     const receipt = await (
-      await contract.back(
+      await marketContract.back(
         ethers.utils.formatBytes32String(back.nonce), 
         ethers.utils.formatBytes32String(back.proposition_id), 
         ethers.utils.formatBytes32String(back.market_id), 
