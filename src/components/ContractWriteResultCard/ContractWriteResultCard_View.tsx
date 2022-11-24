@@ -4,13 +4,19 @@ type Props = {
   hash?: string;
   isSuccess: boolean;
   errorMsg?: string;
+  txType: "bet" | "deposit" | "withdraw" | undefined;
 };
-const ContractWriteResultCard = ({ hash, isSuccess, errorMsg }: Props) => {
+const ContractWriteResultCard = ({
+  hash,
+  isSuccess,
+  errorMsg,
+  txType
+}: Props) => {
   return (
     <>
       {isSuccess && hash && (
         <div className="py-5 rounded-md shadow  bg-emerald-300 text-emerald-800 w-full text-center">
-          <p className="p-1">Success! Your bet has been confirmed.</p>
+          <p className="p-1">Success! Your {txType} has been confirmed.</p>
 
           <a
             href={`${process.env.VITE_SCANNER_URL}/tx/${hash}`}

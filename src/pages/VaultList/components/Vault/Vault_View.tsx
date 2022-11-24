@@ -3,6 +3,7 @@ import { Loader } from "../../../../components";
 import ContractWriteResultCard from "../../../../components/ContractWriteResultCard/ContractWriteResultCard_View";
 import RequireWalletButton from "../../../../components/RequireWalletButton/RequireWalletButton_View";
 import { VaultDetail, VaultDetailProps } from "../VaultDetail";
+import { useState } from "react";
 
 type Props = {
   vaultDetailData: VaultDetailProps;
@@ -35,6 +36,9 @@ const VaultView = ({
   txStatus,
   isEnoughAllowance
 }: Props) => {
+  const [transactionType, setTransactionType] = useState<
+    "bet" | "deposit" | "withdraw"
+  >();
   return (
     <div className="w-96 md:w-152 break-all md:break-normal">
       <div className="flex flex-col justify-between bg-white border-gray-200">
@@ -70,7 +74,9 @@ const VaultView = ({
                             ? " opacity-50 cursor-not-allowed"
                             : "")
                         }
-                        onClick={() => contract.depositContractWrite?.()}
+                        onClick={() => {
+                          contract.depositContractWrite?.();
+                        }}
                         disabled={shouldDepositButtonDisabled}
                       >
                         {txStatus.isLoading ? (
@@ -86,7 +92,10 @@ const VaultView = ({
                             ? " opacity-50 cursor-not-allowed"
                             : "")
                         }
-                        onClick={() => contract.withdrawContractWrite?.()}
+                        onClick={() => {
+                          contract.withdrawContractWrite?.();
+                          txStatus.isSuccess && setTransactionType("withdraw");
+                        }}
                         disabled={shouldWithdrawButtonDisabled}
                       >
                         {txStatus.isLoading ? <Loader /> : "Withdraw Shares"}
@@ -111,6 +120,7 @@ const VaultView = ({
           hash={txStatus.hash}
           isSuccess={txStatus.isSuccess}
           errorMsg={contract.errorMsg}
+          txType={transactionType}
         />
       </div>
     </div>
