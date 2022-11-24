@@ -9,7 +9,7 @@ import Modal from "../Modal";
 import { ERC20__factory, Vault__factory } from "../../typechain";
 import { Config, MarketInfo } from "../../types/config";
 import { getMockBack } from "../../utils/mocks";
-import { formatToFourDecimals, shortenAddress } from "../../utils/formatting";
+import { formatToFourDecimals, formatToTwoDecimals, shortenAddress } from "../../utils/formatting";
 import useMarketContract from "../../hooks/market/useMarketContract";
 
 type Props = {
@@ -34,6 +34,7 @@ const PlaceBetModal: React.FC<Props> = ({
   const [balance, setBalance] = useState<Balance>();
   const [txLoading, setTxLoading] = useState(false);
   const [txHash, setTxHash] = useState<string>();
+  const [error, setError] = useState<string>();
 
   const { data: signer } = useSigner();
 
@@ -88,7 +89,12 @@ const PlaceBetModal: React.FC<Props> = ({
   }, [selectedMarket, signer]);
 
   useEffect(() => {
-    if (!isModalOpen) setWagerAmount(undefined);
+    if (!isModalOpen) {
+      setWagerAmount(undefined);
+      setTxHash(undefined);
+      setTxLoading(false);
+      setError(undefined);
+    }
   }, [isModalOpen]);
 
   const onSelectMarket = (
@@ -104,17 +110,24 @@ const PlaceBetModal: React.FC<Props> = ({
 
   const onClickPlaceBet = async () => {
     if (!selectedMarket || !wagerAmount || !balance || !signer) return;
+
     const wager = ethers.utils.parseUnits(wagerAmount, balance.decimals);
     try {
       setTxLoading(true);
       const tx = await placeBet(selectedMarket, back, wager, signer);
       setTxHash(tx);
+    } catch (err: any) {
+      setError(err);
     } finally {
       setTxLoading(false);
     }
   };
 
   const payout = (+(wagerAmount || "0") * back.odds).toString();
+
+  const isWagerNegative = wagerAmount
+    ? +wagerAmount < 0
+    : false;
 
   return (
     <Modal isOpen={isModalOpen} onClose={setIsModalOpen}>
@@ -125,7 +138,7 @@ const PlaceBetModal: React.FC<Props> = ({
       ) : (
         <React.Fragment>
           <h2 className="font-bold text-2xl mr-[8vw] mb-6">
-            Target Odds {back.odds}
+            Target Odds {formatToTwoDecimals(back.odds.toString())}
           </h2>
           <div className="flex flex-col">
             <h3 className="font-semibold">Markets</h3>
@@ -145,6 +158,7 @@ const PlaceBetModal: React.FC<Props> = ({
             </select>
             <h3 className="font-semibold">Wager Amount</h3>
             <input
+              type="number"
               placeholder={wagerAmount || "0"}
               onChange={e => setWagerAmount(e.currentTarget.value)}
               className="border-b-[0.12rem] border-black pl-1 pt-1 mb-6"
@@ -152,13 +166,13 @@ const PlaceBetModal: React.FC<Props> = ({
             <span className="block font-semibold">
               Payout:{" "}
               <span className="font-normal">
-                {formatToFourDecimals(payout) || <Loader />}
+                {formatToFourDecimals(payout)}
               </span>
             </span>
             <span className="block font-semibold mb-2">
               Available:{" "}
               <span className="font-normal">
-                {balance?.formatted || <Loader />}
+                {balance?.formatted || <Loader size={14} />}
               </span>
             </span>
             <button
@@ -169,7 +183,9 @@ const PlaceBetModal: React.FC<Props> = ({
                 !wagerAmount ||
                 !signer ||
                 !balance ||
-                +balance.formatted === 0
+                +balance.formatted === 0 ||
+                txLoading ||
+                isWagerNegative
               }
             >
               {txLoading ? <Loader /> : "PLACE BET"}
@@ -179,6 +195,12 @@ const PlaceBetModal: React.FC<Props> = ({
               <div className="mt-6 px-2 py-4 bg-emerald-400 rounded-md flex flex-col items-center">
                 <h4 className="font-semibold mb-1 text-lg">Success!</h4>
                 <span className="block">Hash: <a className="italic" href={`${process.env.VITE_SCANNER_URL}/tx/${txHash}`} target="_blank" rel="noreferrer noopener">{shortenAddress(txHash)}</a></span>
+              </div>
+            )}
+            {error && (
+              <div className="mt-6 px-2 py-4 bg-red-600 rounded-md flex flex-col items-center">
+                <h4 className="font-semibold mb-1 text-lg">Error:</h4>
+                <span className="block overflow-ellipsis max-w-[40ch] overflow-hidden">{error}</span>
               </div>
             )}
           </div>
