@@ -2,25 +2,25 @@ import { BigNumber, ethers } from "ethers";
 import React, { useEffect, useMemo, useState } from "react";
 import { useConfig } from "../../providers/Config";
 import { Back, Runner } from "../../types";
-import { getVaultNameFromMarket } from "../../utils/markets";
+import { getVaultNameFromMarket } from "../../utils/config";
 import { useSigner } from "wagmi";
-import Loader from "../Loader/Loader_View";
+import Loader from "../Loader";
 import Modal from "../Modal";
 import { ERC20__factory, Vault__factory } from "../../typechain";
 import { Config, MarketInfo } from "../../types/config";
 import { getMockBack } from "../../utils/mocks";
 import {
   formatToFourDecimals,
-  formatToTwoDecimals,
-  shortenAddress
+  formatToTwoDecimals
 } from "../../utils/formatting";
 import useMarketContract from "../../hooks/market/useMarketContract";
-import Web3ErrorHandler from "../ErrorHandlers/Web3ErrorHandler";
+import Web3ErrorHandler from "../Web3Handlers/Web3ErrorHandler";
+import Web3SuccessHandler from "../Web3Handlers/Web3SuccessHandler";
 
 type Props = {
   runner?: Runner;
   isModalOpen: boolean;
-  setIsModalOpen: () => void;
+  setIsModalOpen: (open: boolean) => void;
 };
 
 type Balance = {
@@ -146,8 +146,8 @@ const PlaceBetModal: React.FC<Props> = ({
       : false;
 
   return (
-    <Modal isOpen={isModalOpen} onClose={setIsModalOpen}>
-      {!config ? (
+    <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+      {!config || !runner ? (
         <div className="p-10">
           <Loader />
         </div>
@@ -168,7 +168,7 @@ const PlaceBetModal: React.FC<Props> = ({
                   className="block"
                   value={market.address}
                 >
-                  {getVaultNameFromMarket(config, market.address)}
+                  {getVaultNameFromMarket(market.address, config)}
                 </option>
               ))}
             </select>
@@ -203,28 +203,14 @@ const PlaceBetModal: React.FC<Props> = ({
                 +balance.formatted === 0 ||
                 txLoading ||
                 isWagerNegative ||
-                isWagerGreaterThanBalance
+                isWagerGreaterThanBalance ||
+                !!txHash
               }
             >
               {txLoading ? <Loader /> : "PLACE BET"}
             </button>
             <br />
-            {txHash && (
-              <div className="mt-6 px-2 py-4 bg-emerald-400 rounded-md flex flex-col items-center">
-                <h4 className="font-semibold mb-1 text-lg">Success!</h4>
-                <span className="block">
-                  Hash:{" "}
-                  <a
-                    className="italic"
-                    href={`${process.env.VITE_SCANNER_URL}/tx/${txHash}`}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                  >
-                    {shortenAddress(txHash)}
-                  </a>
-                </span>
-              </div>
-            )}
+            {txHash && <Web3SuccessHandler hash={txHash} />}
             {error && <Web3ErrorHandler error={error} />}
           </div>
         </React.Fragment>

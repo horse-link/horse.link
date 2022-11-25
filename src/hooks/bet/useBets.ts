@@ -34,13 +34,16 @@ const useBets = (limit: number, skip: number) => {
   const { data: countData, refetch: refetchCount } =
     useSubgraph<AggregatorResponse>(getAggregatorQuery());
 
+  // refetch function
+  const refetch = () => {
+    refetchTotal();
+    refetchUser();
+    refetchCount();
+  };
+
   // refetch data on page load -- prevents stale data
   useEffect(() => {
-    const refetchInterval = setInterval(() => {
-      refetchTotal();
-      refetchUser();
-      refetchCount();
-    }, POLL_INTERVAL);
+    const refetchInterval = setInterval(refetch, POLL_INTERVAL);
 
     return () => clearInterval(refetchInterval);
   }, []);
@@ -99,7 +102,8 @@ const useBets = (limit: number, skip: number) => {
   return {
     totalBetHistory,
     userBetHistory,
-    totalBets
+    totalBets,
+    refetch
   };
 };
 

@@ -1,13 +1,7 @@
-import Skeleton from "react-loading-skeleton";
-import classnames from "classnames";
-import { BetHistory } from "../../../types";
-import { formatToFourDecimals } from "../../../utils/formatting";
-import BetRows, { FilterOptions } from "./BetRows";
-import { ethers } from "ethers";
-import moment from "moment";
+import { BetHistory } from "../../types";
+import { BetRows } from ".";
 import React from "react";
-import PageSelector from "./PageSelector";
-import { Config } from "../../../types/config";
+import { BetTablePageSelector } from ".";
 
 type Props = {
   myBetsEnabled: boolean;
@@ -18,9 +12,9 @@ type Props = {
   userBetHistory: BetHistory[] | undefined;
   userMaxPages: number;
   totalMaxPages: number;
-  selectedFilter: FilterOptions;
 };
-const BetTable = ({
+
+const BetTable: React.FC<Props> = ({
   myBetsEnabled,
   onClickBet,
   page,
@@ -28,9 +22,8 @@ const BetTable = ({
   totalBetHistory,
   userBetHistory,
   userMaxPages,
-  selectedFilter,
   totalMaxPages
-}: Props) => (
+}) => (
   <React.Fragment>
     <div className="col-span-2 bg-gray-50 rounded-xl overflow-auto">
       <div className="shadow-sm overflow-hidden mt-2 mb-5">
@@ -74,13 +67,12 @@ const BetTable = ({
               myBetsSelected={myBetsEnabled}
               bets={myBetsEnabled ? userBetHistory : totalBetHistory}
               onClickBet={onClickBet}
-              selectedFilter={selectedFilter}
             />
           </tbody>
         </table>
       </div>
     </div>
-    <PageSelector
+    <BetTablePageSelector
       page={page}
       maxPages={myBetsEnabled ? userMaxPages : totalMaxPages}
       setPage={setPage}
@@ -89,54 +81,3 @@ const BetTable = ({
 );
 
 export default BetTable;
-
-type RowProps = {
-  config?: Config;
-  betData: BetHistory;
-  onClick?: () => void;
-};
-export const Row = ({ config, betData, onClick }: RowProps) => {
-  const formattedAmount = () =>
-    config ? (
-      `${formatToFourDecimals(ethers.utils.formatEther(betData.amount))} ${
-        config.tokens.find(
-          token =>
-            token.address.toLowerCase() === betData.assetAddress.toLowerCase()
-        )?.symbol
-      }`
-    ) : (
-      <Skeleton />
-    );
-
-  return (
-    <tr
-      key={betData.propositionId}
-      onClick={onClick}
-      className={classnames(
-        "cursor-pointer hover:bg-gray-100",
-        {
-          "bg-emerald-300":
-            (betData.winningPropositionId || betData.marketResultAdded) &&
-            !betData.settled
-        },
-        {
-          "bg-gray-300": betData.settled
-        }
-      )}
-    >
-      <td className="pl-5 pr-2 py-4 truncate">
-        {betData.punter ?? <Skeleton />}
-      </td>
-      <td className="px-2 py-4">{formattedAmount()}</td>
-      <td className="px-2 py-4">
-        {moment.unix(betData.blockNumber).fromNow() ?? <Skeleton />}
-      </td>
-      <td className="px-2 py-4 truncate">
-        {ethers.utils.parseBytes32String(betData.marketId) ?? <Skeleton />}
-      </td>
-      <td className="px-2 py-4 truncate">
-        {ethers.utils.parseBytes32String(betData.propositionId) ?? <Skeleton />}
-      </td>
-    </tr>
-  );
-};
