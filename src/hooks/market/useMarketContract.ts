@@ -34,13 +34,7 @@ const useMarketContract = () => {
         await erc20Contract.approve(market.address, ethers.constants.MaxUint256)
       ).wait();
 
-    console.log(`Backing with:`);
-    console.log("nonce", formatBytes16String(back.nonce));
-    console.log("proposition_id", formatBytes16String(back.proposition_id));
-    console.log("market_id", formatBytes16String(back.market_id));
-
     const receipt = await (
-
       await marketContract.back(
         formatBytes16String(back.nonce),
         formatBytes16String(back.proposition_id),
