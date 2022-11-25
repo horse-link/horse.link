@@ -3,6 +3,7 @@ import ApolloClientProvider from "src/providers/Apollo";
 import { WalletModalProvider } from "src/providers/WalletModal";
 import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
+import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
 import { publicProvider } from "wagmi/providers/public";
 
 const { chains, provider } = configureChains(
@@ -11,7 +12,15 @@ const { chains, provider } = configureChains(
 );
 
 const wagmiClient = createClient({
-  connectors: [new MetaMaskConnector({ chains })],
+  connectors: [
+    new MetaMaskConnector({ chains }),
+    new WalletConnectConnector({
+      chains,
+      options: {
+        qrcode: true
+      }
+    })
+  ],
   provider
 });
 
