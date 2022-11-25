@@ -5,8 +5,6 @@ import {
   shortenHash
 } from "./formatting";
 
-import { describe, test, expect, it } from "vitest";
-
 test.concurrent.each([
   ["0", "0"],
   ["1", "1"],
