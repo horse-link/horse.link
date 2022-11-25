@@ -10,7 +10,11 @@ type Props = {
   onClickBet: (bet?: BetHistory) => void;
 };
 
-const BetRows: React.FC<Props> = ({ myBetsSelected, bets, onClickBet }) => {
+export const BetRows: React.FC<Props> = ({
+  myBetsSelected,
+  bets,
+  onClickBet
+}) => {
   const { isConnected } = useAccount();
   const config = useConfig();
 
@@ -35,5 +39,3 @@ const BetRows: React.FC<Props> = ({ myBetsSelected, bets, onClickBet }) => {
     </React.Fragment>
   );
 };
-
-export default BetRows;

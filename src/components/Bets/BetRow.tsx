@@ -12,7 +12,7 @@ type Props = {
   onClick?: () => void;
 };
 
-const BetRow: React.FC<Props> = ({ config, betData, onClick }) => {
+export const BetRow: React.FC<Props> = ({ config, betData, onClick }) => {
   const formattedAmount = () =>
     config ? (
       `${formatToFourDecimals(ethers.utils.formatEther(betData.amount))} ${
@@ -57,5 +57,3 @@ const BetRow: React.FC<Props> = ({ config, betData, onClick }) => {
     </tr>
   );
 };
-
-export default BetRow;

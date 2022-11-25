@@ -9,7 +9,10 @@ export const isUsdt = (address: string, config?: Config) =>
   getTokenFromSymbol("USDT", config)?.address.toLowerCase() ===
   address.toLowerCase();
 
-export const getVaultNameFromMarket = ( marketAddress: string, config?: Config) =>
-config?.vaults.find(
-  vault => vault.marketAddress.toLowerCase() === marketAddress.toLowerCase()
-)?.name;
+export const getVaultNameFromMarket = (
+  marketAddress: string,
+  config?: Config
+) =>
+  config?.vaults.find(
+    vault => vault.marketAddress.toLowerCase() === marketAddress.toLowerCase()
+  )?.name;

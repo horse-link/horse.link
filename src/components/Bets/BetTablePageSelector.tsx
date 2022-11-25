@@ -6,7 +6,11 @@ type Props = {
   setPage: (page: number) => void;
 };
 
-const BetTablePageSelector: React.FC<Props> = ({ page, maxPages, setPage }) => (
+export const BetTablePageSelector: React.FC<Props> = ({
+  page,
+  maxPages,
+  setPage
+}) => (
   <div className="w-full flex justify-end col-span-2 font-semibold mt-2 select-none">
     <div className="bg-white flex p-1 border-gray-300 border rounded-md">
       <div className="mr-4">
@@ -51,5 +55,3 @@ const BetTablePageSelector: React.FC<Props> = ({ page, maxPages, setPage }) => (
     </div>
   </div>
 );
-
-export default BetTablePageSelector;

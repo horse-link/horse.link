@@ -1,6 +1,7 @@
 import { BetHistory } from "../../types";
 import { BetRows, BetTablePageSelector } from ".";
 import React from "react";
+
 type Props = {
   myBetsEnabled: boolean;
   onClickBet: (bet?: BetHistory) => void;
@@ -12,7 +13,7 @@ type Props = {
   totalMaxPages: number;
 };
 
-const BetTable: React.FC<Props> = ({
+export const BetTable: React.FC<Props> = ({
   myBetsEnabled,
   onClickBet,
   page,
@@ -77,5 +78,3 @@ const BetTable: React.FC<Props> = ({
     />
   </React.Fragment>
 );
-
-export default BetTable;

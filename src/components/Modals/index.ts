@@ -1,2 +1,2 @@
-export { default as PlaceBetModal } from "./PlaceBetModal";
-export { default as SettleBetModal } from "./SettleBetModal";
+export { PlaceBetModal } from "./PlaceBetModal";
+export { SettleBetModal } from "./SettleBetModal";

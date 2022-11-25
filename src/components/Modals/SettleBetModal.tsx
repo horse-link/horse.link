@@ -17,7 +17,7 @@ type Props = {
   refetch: () => void;
 };
 
-const SettleBetModal: React.FC<Props> = ({
+export const SettleBetModal: React.FC<Props> = ({
   isModalOpen,
   setIsModalOpen,
   selectedBet,
@@ -41,15 +41,13 @@ const SettleBetModal: React.FC<Props> = ({
     }, 300);
   }, [isModalOpen]);
 
-  const market =
-    config?.markets.find(
-      m => m.address.toLowerCase() === selectedBet?.marketAddress.toLowerCase()
-    );
+  const market = config?.markets.find(
+    m => m.address.toLowerCase() === selectedBet?.marketAddress.toLowerCase()
+  );
 
-  const token =
-    config?.tokens.find(
-      t => t.address.toLowerCase() === selectedBet?.assetAddress.toLowerCase()
-    );
+  const token = config?.tokens.find(
+    t => t.address.toLowerCase() === selectedBet?.assetAddress.toLowerCase()
+  );
 
   const isWinning =
     selectedBet &&
@@ -60,7 +58,13 @@ const SettleBetModal: React.FC<Props> = ({
       : false;
 
   const onClickSettleBet = async () => {
-    if (!selectedBet || !market || !signer || !selectedBet.marketOracleResultSig) return;
+    if (
+      !selectedBet ||
+      !market ||
+      !signer ||
+      !selectedBet.marketOracleResultSig
+    )
+      return;
 
     try {
       setTxLoading(true);
@@ -95,10 +99,7 @@ const SettleBetModal: React.FC<Props> = ({
             <h3 className="font-semibold mb-2">
               Market:{" "}
               <span className="font-normal">
-                {getVaultNameFromMarket(
-                  market!.address,
-                  config
-                )}
+                {getVaultNameFromMarket(market!.address, config)}
               </span>
             </h3>
             <h3 className="font-semibold mb-2">
@@ -124,7 +125,7 @@ const SettleBetModal: React.FC<Props> = ({
                 !signer ||
                 selectedBet.settled ||
                 !selectedBet.marketOracleResultSig ||
-                txLoading || 
+                txLoading ||
                 !!txHash
               }
             >
@@ -139,5 +140,3 @@ const SettleBetModal: React.FC<Props> = ({
     </Modal>
   );
 };
-
-export default SettleBetModal;

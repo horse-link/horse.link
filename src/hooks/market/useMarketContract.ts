@@ -53,25 +53,26 @@ const useMarketContract = () => {
   const settleBet = async (
     market: MarketInfo,
     bet: BetHistory,
-    signer: Signer,
+    signer: Signer
     // sig: EcSignature -- re-add when marketOracle accepts ecdsa sigs
   ) => {
     const marketContract = Market__factory.connect(market.address, signer);
     const oracleAddress = await marketContract.getOracleAddress();
-    const marketOracleContract = MarketOracle__factory.connect(oracleAddress, signer);
+    const marketOracleContract = MarketOracle__factory.connect(
+      oracleAddress,
+      signer
+    );
 
     if (!bet.marketResultAdded)
       await (
         await marketOracleContract.setResult(
-          bet.marketId, 
-          bet.propositionId, 
+          bet.marketId,
+          bet.propositionId,
           ethers.constants.HashZero
         )
       ).wait();
 
-    const receipt = await (
-      await marketContract.settle(bet.index)
-    ).wait();
+    const receipt = await (await marketContract.settle(bet.index)).wait();
 
     return receipt.transactionHash;
   };

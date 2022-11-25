@@ -28,7 +28,7 @@ type Balance = {
   formatted: string;
 };
 
-const PlaceBetModal: React.FC<Props> = ({
+export const PlaceBetModal: React.FC<Props> = ({
   runner,
   isModalOpen,
   setIsModalOpen
@@ -217,5 +217,3 @@ const PlaceBetModal: React.FC<Props> = ({
     </Modal>
   );
 };
-
-export default PlaceBetModal;
