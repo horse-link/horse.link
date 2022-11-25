@@ -53,6 +53,7 @@ export const formatBetHistory = (
   amount: bet.amount,
   tx: bet.createdAtTx.toLowerCase(),
   blockNumber: +bet.createdAt,
+  settledAt: bet.settled ? +bet.settledAt : undefined,
   marketOracleResultSig: signedBetData.marketOracleResultSig
 });
 
