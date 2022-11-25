@@ -57,8 +57,8 @@ const useMarketContract = () => {
     // sig: EcSignature -- re-add when marketOracle accepts ecdsa sigs
   ) => {
     const marketContract = Market__factory.connect(market.address, signer);
-    const orcaleAddress = await marketContract.getOracleAddress();
-    const marketOracleContract = MarketOracle__factory.connect(orcaleAddress, signer);
+    const oracleAddress = await marketContract.getOracleAddress();
+    const marketOracleContract = MarketOracle__factory.connect(oracleAddress, signer);
 
     if (!bet.marketResultAdded)
       await (
