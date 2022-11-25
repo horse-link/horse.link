@@ -2,7 +2,7 @@ import { Form, Formik } from "formik";
 import React from "react";
 
 import Button from "../Button/Button_View";
-import Loader from "../Loader/Loader_View";
+import Loader from "../Loader";
 
 type Props<T> = {
   initialValues: T;

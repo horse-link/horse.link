@@ -14,6 +14,7 @@ import useVaultUserData from "../../../../hooks/vault/useVaultUserData";
 
 type useWithdrawContractWriteArgs = {
   amount: number;
+  ownerAddress: string;
   tokenDecimal: string;
   vaultAddress: string;
   enabled: boolean;
@@ -22,6 +23,7 @@ type useWithdrawContractWriteArgs = {
 
 const useWithdrawContractWrite = ({
   amount,
+  ownerAddress,
   tokenDecimal,
   vaultAddress,
   onTxSuccess
@@ -33,8 +35,13 @@ const useWithdrawContractWrite = ({
     address: vaultAddress,
     abi: vaultContractJson,
     functionName: "withdraw",
-    args: [assets]
+    args: [assets, ownerAddress, ownerAddress]
   });
+
+        /*
+          address receiver,
+          address owner
+        */
 
   const txHash = data?.hash;
 
@@ -157,6 +164,7 @@ const VaultLogic = ({ vaultAddress }: Props) => {
     txHash: withdrawTxHash
   } = useWithdrawContractWrite({
     amount,
+    ownerAddress: userAddress,
     tokenDecimal,
     vaultAddress,
     enabled: userBalance > 0,

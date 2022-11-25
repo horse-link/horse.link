@@ -48,13 +48,14 @@ export type BetHistory = {
   marketAddress: string;
   assetAddress: string;
   propositionId: string;
-  winningPropositionId: string | undefined;
   marketResultAdded: boolean;
   settled: boolean;
   punter: string;
   amount: string;
   tx: string;
   blockNumber: number;
+  settledAt?: number;
+  winningPropositionId?: string;
   marketOracleResultSig?: EcSignature;
 };
 
@@ -129,3 +130,12 @@ export type Signature = {
   messageHash: string;
   signature: string;
 };
+
+export enum FilterOptions {
+  ALL_BETS = "ALL_BETS",
+  RESULTED = "RESULTED",
+  PENDING = "PENDING",
+  SETTLED = "SETTLED"
+}
+
+export type PaginationValues = 25 | 50 | 100;
