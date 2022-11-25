@@ -21,12 +21,6 @@ export default ({ mode }: UserConfig) => {
     define: {
       "process.env": process.env
     },
-    build: {
-      rollupOptions: {
-        plugins: [inject({ Buffer: ["Buffer", "Buffer"] })],
-        external: ["Buffer"]
-      }
-    },
     test: {
       globals: true,
       environment: "jsdom",
@@ -38,7 +32,8 @@ export default ({ mode }: UserConfig) => {
     },
     resolve: {
       alias: {
-        src: path.resolve(__dirname, "./src")
+        src: path.resolve(__dirname, "./src"),
+        process: "process/browser"
       }
     }
   });
