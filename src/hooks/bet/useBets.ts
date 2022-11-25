@@ -23,22 +23,31 @@ const useBets = (limit: number, skip: number) => {
   const [userBetHistory, setUserBetHistory] = useState<BetHistory[]>();
 
   // total bets
-  const { data: totalData, loading: totalDataLoading } = useSubgraph<Response>(
-    getBetsQuery(limit, skip),
-    POLL_INTERVAL
+  const { data: totalData, refetch: refetchTotal } = useSubgraph<Response>(
+    getBetsQuery(limit, skip)
   );
   // user bets
-  const { data: userData, loading: userDataLoading } = useSubgraph<Response>(
-    getBetsQuery(limit, skip, address),
-    POLL_INTERVAL
+  const { data: userData, refetch: refetchUser } = useSubgraph<Response>(
+    getBetsQuery(limit, skip, address)
   );
   // total bets count
-  const { data: countData, loading: countDataLoading } =
-    useSubgraph<AggregatorResponse>(getAggregatorQuery(), POLL_INTERVAL);
+  const { data: countData, refetch: refetchCount } =
+    useSubgraph<AggregatorResponse>(getAggregatorQuery());
+
+  // refetch data on page load -- prevents stale data
+  useEffect(() => {
+    const refetchInterval = setInterval(() => {
+      refetchTotal();
+      refetchUser();
+      refetchCount();
+    }, POLL_INTERVAL);
+
+    return () => clearInterval(refetchInterval);
+  }, []);
 
   // set total bet history state
   useEffect(() => {
-    if (totalDataLoading || !totalData) return;
+    if (!totalData) return;
 
     // array starts from skip and ends at the limit from the skip
     const filteredTotalData = totalData.bets.filter((_, i) => i < limit);
@@ -54,11 +63,11 @@ const useBets = (limit: number, skip: number) => {
         return formatBetHistory(bet, signedBetData);
       })
     ).then(setTotalBetHistory);
-  }, [skip, limit, totalData, totalDataLoading]);
+  }, [skip, limit, totalData]);
 
   // set user bet history state
   useEffect(() => {
-    if (userDataLoading || !userData || !address) return;
+    if (!userData || !address) return;
 
     const filteredUserData = userData.bets.filter((_, i) => i < limit);
 
@@ -72,14 +81,14 @@ const useBets = (limit: number, skip: number) => {
         return formatBetHistory(bet, signedBetData);
       })
     ).then(setUserBetHistory);
-  }, [skip, limit, address, userData, userDataLoading]);
+  }, [skip, limit, address, userData]);
 
   // calculate total bet count
   const totalBets = useMemo(() => {
-    if (countDataLoading || !countData) return 1;
+    if (!countData) return 1;
 
     return +countData.aggregator.totalBets;
-  }, [countData, countDataLoading]);
+  }, [countData]);
 
   // refetch data
   useEffect(() => {

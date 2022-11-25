@@ -37,15 +37,16 @@ export type Back = {
 };
 
 export type EcSignature = {
+  v: number;
   r: string;
   s: string;
-  v: number;
 };
 
 export type BetHistory = {
   index: number;
   marketId: string;
   marketAddress: string;
+  assetAddress: string;
   propositionId: string;
   winningPropositionId: string | undefined;
   marketResultAdded: boolean;

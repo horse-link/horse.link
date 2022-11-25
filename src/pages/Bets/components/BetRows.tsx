@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+import { useConfig } from "../../../providers/Config";
 import { useAccount } from "wagmi";
 import { BetHistory } from "../../../types";
 import { Row } from "./BetTable";
@@ -24,6 +25,7 @@ const BetRows: React.FC<Props> = ({
   selectedFilter
 }) => {
   const { isConnected } = useAccount();
+  const config = useConfig();
 
   const filteredBets = useMemo(() => {
     if (!bets) return;
@@ -50,7 +52,12 @@ const BetRows: React.FC<Props> = ({
         <td className="p-2 select-none">No bets</td>
       ) : (
         filteredBets.map(bet => (
-          <Row betData={bet} key={bet.tx} onClick={() => onClickBet(bet)} />
+          <Row
+            config={config}
+            betData={bet}
+            key={bet.tx}
+            onClick={() => onClickBet(bet)}
+          />
         ))
       )}
     </React.Fragment>
