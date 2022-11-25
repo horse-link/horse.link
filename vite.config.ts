@@ -23,7 +23,8 @@ export default ({ mode }: UserConfig) => {
     },
     build: {
       rollupOptions: {
-        plugins: [inject({ Buffer: ["Buffer", "Buffer"] })]
+        plugins: [inject({ Buffer: ["Buffer", "Buffer"] })],
+        external: ["Buffer"]
       }
     },
     test: {
