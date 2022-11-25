@@ -32,6 +32,7 @@ const usePrepareBackingData = (
   nonce: string,
   market_id: string
 ) => {
+  console.log(`nonce for ${proposition_id}: ${nonce}`);
   try {
     const b16PropositionId = useMemo(
       () => formatBytes16String(proposition_id),

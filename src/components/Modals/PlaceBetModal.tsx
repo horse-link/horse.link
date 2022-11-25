@@ -131,6 +131,7 @@ const PlaceBetModal: React.FC<Props> = ({
       const tx = await placeBet(selectedMarket, back, wager, signer);
       setTxHash(tx);
     } catch (err: any) {
+      console.error(err);
       setError(err.code as ethers.errors);
     } finally {
       setTxLoading(false);
