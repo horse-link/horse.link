@@ -202,7 +202,7 @@ const SettleBet = ({ data }: SettlebetProps) => {
             hash={txStatuses.hash}
             isSuccess={txStatuses.isSuccess}
             errorMsg={settleContract.errorMsg}
-            txType={TxType.BET}
+            txType={TxType.DEFAULT}
           />
         </div>
       </div>

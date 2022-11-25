@@ -5,14 +5,14 @@ type Props = {
   hash?: string;
   isSuccess: boolean;
   errorMsg?: string;
-  txType?: TxType;
+  txType: TxType;
 };
-const ContractWriteResultCard = ({
+const ContractWriteResultCard: React.FC<Props> = ({
   hash,
   isSuccess,
   errorMsg,
   txType
-}: Props) => {
+}) => {
   return (
     <>
       {isSuccess && hash && (

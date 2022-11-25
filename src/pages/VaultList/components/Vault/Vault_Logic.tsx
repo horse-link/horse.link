@@ -15,7 +15,7 @@ import useVaultUserData from "../../../../hooks/vault/useVaultUserData";
 export enum TxType {
   DEPOSIT = "deposit",
   WITHDRAWAL = "withdrawal",
-  BET = "bet"
+  DEFAULT = "transaction"
 }
 type useWithdrawContractWriteArgs = {
   amount: number;
@@ -108,9 +108,9 @@ const VaultLogic = ({ vaultAddress }: Props) => {
   const { address } = useAccount();
   const userAddress = address ?? "";
 
-  const [transactionType, setTransactionType] = useState<
-    TxType.DEPOSIT | TxType.WITHDRAWAL
-  >();
+  const [transactionType, setTransactionType] = useState<TxType>(
+    TxType.DEFAULT
+  );
   const {
     symbol: tokenSymbol,
     address: tokenAddress,

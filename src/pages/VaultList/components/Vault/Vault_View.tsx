@@ -24,7 +24,7 @@ type Props = {
     hash?: string;
   };
   isEnoughAllowance: boolean;
-  recentTransactionType?: TxType.DEPOSIT | TxType.WITHDRAWAL;
+  recentTransactionType: TxType;
 };
 const VaultView = ({
   vaultDetailData,
