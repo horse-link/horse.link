@@ -5,7 +5,7 @@ type Props = {
   error: ethers.errors;
 };
 
-const Web3ErrorHandler: React.FC<Props> = ({ error }) => {
+export const Web3ErrorHandler: React.FC<Props> = ({ error }) => {
   const message = useMemo(() => {
     switch (error) {
       case ethers.errors.ACTION_REJECTED:
@@ -30,5 +30,3 @@ const Web3ErrorHandler: React.FC<Props> = ({ error }) => {
     </div>
   );
 };
-
-export default Web3ErrorHandler;
