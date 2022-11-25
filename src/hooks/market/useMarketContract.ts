@@ -1,9 +1,10 @@
 import {
   ERC20__factory,
+  MarketOracle__factory,
   Market__factory,
   Vault__factory
 } from "../../typechain";
-import { Back } from "../../types";
+import { Back, BetHistory } from "../../types";
 import { BigNumber, ethers, Signer } from "ethers";
 import { MarketInfo } from "../../types/config";
 import { formatBytes16String } from "../../utils/formatting";
@@ -50,8 +51,36 @@ const useMarketContract = () => {
     return receipt.transactionHash;
   };
 
+  const settleBet = async (
+    market: MarketInfo,
+    bet: BetHistory,
+    signer: Signer
+    // sig: EcSignature -- re-add when marketOracle accepts ecdsa sigs
+  ) => {
+    const marketContract = Market__factory.connect(market.address, signer);
+    const oracleAddress = await marketContract.getOracleAddress();
+    const marketOracleContract = MarketOracle__factory.connect(
+      oracleAddress,
+      signer
+    );
+
+    if (!bet.marketResultAdded)
+      await (
+        await marketOracleContract.setResult(
+          bet.marketId,
+          bet.propositionId,
+          ethers.constants.HashZero
+        )
+      ).wait();
+
+    const receipt = await (await marketContract.settle(bet.index)).wait();
+
+    return receipt.transactionHash;
+  };
+
   return {
-    placeBet
+    placeBet,
+    settleBet
   };
 };
 

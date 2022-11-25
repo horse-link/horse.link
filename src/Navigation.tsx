@@ -1,9 +1,9 @@
 import { Routes, Route, BrowserRouter, Navigate } from "react-router-dom";
 import Dashboard from "./pages/Dashboard/Dashboard_Logic";
-import HorseRace from "./pages/HorseRace/HorseRace_Logic";
 import Market from "./pages/Market/Market_Logic";
 import VaultList from "./pages/VaultList/VaultList_Logic";
-import Bets from "./pages/Bets/Bets_Logic";
+import Bets from "./pages/Bets";
+import Race from "./pages/Race";
 import { FaucetPage } from "./pages/Faucet";
 import { HlTokenPage } from "./pages/HLToken/HLToken_View";
 
@@ -17,7 +17,7 @@ const Navigation = () => {
         <Route path="/markets" element={<Market />} />
         <Route path="/tokens" element={<HlTokenPage />} />
         <Route path="/history" element={<Bets />} />
-        <Route path="/horses/:track/:number" element={<HorseRace />} />
+        <Route path="/horses/:track/:number" element={<Race />} />
         <Route path="/faucet" element={<FaucetPage />} />
         <Route path="/bets" element={<Bets />} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />

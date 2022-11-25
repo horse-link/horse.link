@@ -1,33 +1,17 @@
-import { expect, it, vi } from "vitest";
-import { act, render, screen, waitFor } from "../../utils/test-utils";
 import Dashboard from "./Dashboard_Logic";
-import ApolloProvider from "../../providers/Apollo";
 import { MemoryRouter } from "react-router-dom";
-import { WalletModalContext } from "../../providers/WalletModal";
-import { WagmiProvider } from "../../../src/providers/Wagmi";
+import { render, screen, userEvent } from "src/test/utils";
 
-const DashboardPageWithProviders = ({ openWalletFn = vi.fn() }: any) => {
+const DashboardPage = () => {
   return (
-    <WagmiProvider>
-      <WalletModalContext.Provider
-        value={{
-          openWalletModal: openWalletFn,
-          closeWalletModal: vi.fn(),
-          isWalletModalOpen: false
-        }}
-      >
-        <ApolloProvider>
-          <MemoryRouter initialEntries={[{ pathname: "/" }]}>
-            <Dashboard />
-          </MemoryRouter>
-        </ApolloProvider>
-      </WalletModalContext.Provider>
-    </WagmiProvider>
+    <MemoryRouter initialEntries={[{ pathname: "/dashboard" }]}>
+      <Dashboard />
+    </MemoryRouter>
   );
 };
 
 it("Dashboard page to show overall stat widgets by default", async () => {
-  render(<DashboardPageWithProviders />);
+  render(<DashboardPage />);
   const totalLiquidityElement = screen.getByText("Total Liquidity");
   expect(totalLiquidityElement).toBeDefined();
   const inPlayElement = screen.getByText("In Play");
@@ -37,19 +21,20 @@ it("Dashboard page to show overall stat widgets by default", async () => {
 });
 
 it("Dashboard contain switch", async () => {
-  render(<DashboardPageWithProviders />);
+  render(<DashboardPage />);
 
   const toggleElement = screen.getByRole("switch");
   expect(toggleElement).toBeDefined();
 });
 
 it("Show My stats widgets when toggle switch", async () => {
-  render(<DashboardPageWithProviders />);
+  const user = userEvent.setup();
+  render(<DashboardPage />);
   const toggleElement = screen.getByRole("switch");
   expect(toggleElement).toBeDefined();
-  act(() => {
-    toggleElement.click();
-  });
+
+  await user.click(toggleElement);
+
   const myDepositsElement = await screen.findByText("Deposits");
   expect(myDepositsElement).toBeDefined();
   const myInPlayElement = await screen.findByText("In Play");
@@ -59,14 +44,13 @@ it("Show My stats widgets when toggle switch", async () => {
 });
 
 it("Show wallet connect modal when toggle switch without connected wallet", async () => {
-  const mockOpenWalletFn = vi.fn();
-  render(<DashboardPageWithProviders openWalletFn={mockOpenWalletFn} />);
+  const user = userEvent.setup();
+  render(<DashboardPage />);
   const toggleElement = screen.getByRole("switch");
   expect(toggleElement).toBeDefined();
-  act(() => {
-    toggleElement.click();
-  });
-  await waitFor(() => {
-    expect(mockOpenWalletFn).toHaveBeenCalled();
-  });
+
+  await user.click(toggleElement);
+
+  const metamaskElement = await screen.findByText("METAMASK");
+  expect(metamaskElement).toBeDefined();
 });

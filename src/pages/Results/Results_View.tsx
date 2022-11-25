@@ -2,7 +2,6 @@ import { PageLayout } from "../../components";
 import { useParams } from "react-router-dom";
 import moment from "moment";
 import { Runner } from "../../types";
-import { HorseRaceParams } from "../HorseRace/HorseRace_Logic";
 
 type Props = {
   runners: Runner[];
@@ -10,7 +9,7 @@ type Props = {
 
 const Results: React.FC<Props> = () => {
   // const { runners } = props;
-  const { track, number } = useParams<HorseRaceParams>();
+  const { track, number } = useParams();
 
   return (
     <PageLayout requiresAuth={false}>

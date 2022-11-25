@@ -1,5 +1,5 @@
 import React from "react";
-import Loader from "./Loader/Loader_View";
+import Loader from "./Loader";
 
 type Props = {
   title: string;

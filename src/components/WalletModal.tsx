@@ -33,7 +33,10 @@ const WalletModal: React.FC<Props> = (props: Props) => {
                 connect({ connector: connectors[0] });
               }}
             >
-              <MetaMaskIcon className="w-20 h-20 transition-opacity duration-500 ease-out opacity-100 hover:opacity-40" />
+              <MetaMaskIcon
+                title="meta-mask-icon"
+                className="w-20 h-20 transition-opacity duration-500 ease-out opacity-100 hover:opacity-40"
+              />
             </label>
             <div className="font-bold">METAMASK</div>
             <div>Connect using your browser.</div>
@@ -48,7 +51,10 @@ const WalletModal: React.FC<Props> = (props: Props) => {
                 connect({ connector: connectors[1] });
               }}
             >
-              <WalletConnectIcon className="w-20 h-20 transition-opacity duration-500 ease-out opacity-100 hover:opacity-40" />
+              <WalletConnectIcon
+                title="wallet-connect-icon"
+                className="w-20 h-20 transition-opacity duration-500 ease-out opacity-100 hover:opacity-40"
+              />
             </label>
             <div className="font-bold">WALLET CONNECT</div>
             <div>Connect using your mobile device.</div>
