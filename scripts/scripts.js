@@ -1,7 +1,7 @@
 /*require("dotenv").config();
 const axios = require("axios");
 const Web3 = require("web3");
-const { formatBytes16String } = require("utils/formatting");
+const { bytes32 } = require("bytes32");
 const HDWalletProvider = require("@truffle/hdwallet-provider");
 
 const Horse = require("./build/contracts/HorseLink.json");
@@ -69,7 +69,7 @@ const _addResultAsync = async (track, year, month, day, race, results) => {
     Horse.abi,
     process.env.CONTRACT_ADDRESS
   );
-  const _nm = bytes16({ input: track });
+  const _nm = bytes32({ input: track });
 
   const exists = await contract.methods.results(_nm, year, month, day, race);
   console.log(exists);
@@ -111,7 +111,7 @@ const _addResult = (
     Horse.abi,
     process.env.CONTRACT_ADDRESS
   );
-  const _nm = formatBytes16String({ input: track });
+  const _nm = bytes32({ input: track });
   contract.methods
     .addResult(_nm, year, month, day, race, [first, second, third, forth])
     .send({ from: accounts[0] }); // , gas: 50000, gasPrice: 10e9
