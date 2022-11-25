@@ -1,8 +1,6 @@
 import { BetHistory } from "../../types";
-import { BetRows } from ".";
+import { BetRows, BetTablePageSelector } from ".";
 import React from "react";
-import { BetTablePageSelector } from ".";
-
 type Props = {
   myBetsEnabled: boolean;
   onClickBet: (bet?: BetHistory) => void;
