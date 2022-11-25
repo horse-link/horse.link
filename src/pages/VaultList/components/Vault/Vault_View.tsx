@@ -3,7 +3,7 @@ import { Loader } from "../../../../components";
 import ContractWriteResultCard from "../../../../components/ContractWriteResultCard/ContractWriteResultCard_View";
 import RequireWalletButton from "../../../../components/RequireWalletButton/RequireWalletButton_View";
 import { VaultDetail, VaultDetailProps } from "../VaultDetail";
-import { useState } from "react";
+import { TxType } from "./Vault_Logic";
 
 type Props = {
   vaultDetailData: VaultDetailProps;
@@ -24,7 +24,7 @@ type Props = {
     hash?: string;
   };
   isEnoughAllowance: boolean;
-  recentTransactionType?: "deposit" | "withdrawal";
+  recentTransactionType?: TxType.DEPOSIT | TxType.WITHDRAWAL;
 };
 const VaultView = ({
   vaultDetailData,

@@ -1,11 +1,11 @@
 import { shortenAddress } from "../../utils/formatting";
-import { TxType } from "../Vault/Vault_Logic";
+import { TxType } from "../../pages/VaultList/components/Vault/Vault_Logic";
 
 type Props = {
   hash?: string;
   isSuccess: boolean;
   errorMsg?: string;
-  txType: TxType.BET | TxType.DEPOSIT | TxType.WITHDRAWAL | undefined;
+  txType?: TxType;
 };
 const ContractWriteResultCard = ({
   hash,
