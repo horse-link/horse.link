@@ -17,7 +17,6 @@ export const Web3ErrorHandler: React.FC<Props> = ({ error }) => {
       case ethers.errors.UNPREDICTABLE_GAS_LIMIT:
         return "Gas limit unpredictable";
       default:
-        console.error(error);
         return `Unknown error encountered: ${error}`;
     }
   }, [error]);
