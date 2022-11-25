@@ -26,7 +26,6 @@
     "formik": "^2.2.7",
     "graphql": "^16.6.0",
     "moment": "^2.29.1",
-    "process": "^0.11.10",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.6.0",
