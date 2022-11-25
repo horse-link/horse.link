@@ -14,8 +14,7 @@ import {
   formatToTwoDecimals
 } from "../../utils/formatting";
 import useMarketContract from "../../hooks/market/useMarketContract";
-import Web3ErrorHandler from "../Web3Handlers/Web3ErrorHandler";
-import Web3SuccessHandler from "../Web3Handlers/Web3SuccessHandler";
+import { Web3ErrorHandler, Web3SuccessHandler } from "../Web3Handlers";
 
 type Props = {
   runner?: Runner;

@@ -7,8 +7,7 @@ import Loader from "../Loader";
 import Modal from "../Modal";
 import { ethers } from "ethers";
 import useMarketContract from "../../hooks/market/useMarketContract";
-import Web3ErrorHandler from "../Web3Handlers/Web3ErrorHandler";
-import Web3SuccessHandler from "../Web3Handlers/Web3SuccessHandler";
+import { Web3ErrorHandler, Web3SuccessHandler } from "../Web3Handlers";
 import { useSigner } from "wagmi";
 
 type Props = {
