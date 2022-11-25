@@ -1,5 +1,5 @@
 import moment from "moment";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getVaultNameFromMarket } from "../../utils/config";
 import { useConfig } from "../../providers/Config";
 import { BetHistory } from "../../types";
@@ -31,13 +31,6 @@ const SettleBetModal: React.FC<Props> = ({
   const config = useConfig();
   const { settleBet } = useMarketContract();
 
-  const market = useMemo(() => 
-    config?.markets.find(
-      m => m.address.toLowerCase() === selectedBet?.marketAddress.toLowerCase()
-    ), 
-    [config, selectedBet]
-  );
-
   useEffect(() => {
     if (isModalOpen) return;
 
@@ -47,6 +40,24 @@ const SettleBetModal: React.FC<Props> = ({
       setError(undefined);
     }, 300);
   }, [isModalOpen]);
+
+  const market =
+    config?.markets.find(
+      m => m.address.toLowerCase() === selectedBet?.marketAddress.toLowerCase()
+    );
+
+  const token =
+    config?.tokens.find(
+      t => t.address.toLowerCase() === selectedBet?.assetAddress.toLowerCase()
+    );
+
+  const isWinning =
+    selectedBet &&
+    selectedBet.winningPropositionId &&
+    selectedBet.marketResultAdded
+      ? selectedBet.winningPropositionId.toLowerCase() ===
+        selectedBet.propositionId.toLowerCase()
+      : false;
 
   const onClickSettleBet = async () => {
     if (!selectedBet || !market || !signer || !selectedBet.marketOracleResultSig) return;
@@ -62,19 +73,6 @@ const SettleBetModal: React.FC<Props> = ({
       refetch();
     }
   };
-
-  const token =
-    config?.tokens.find(
-      t => t.address.toLowerCase() === selectedBet?.assetAddress.toLowerCase()
-    );
-
-  const isWinning =
-    selectedBet &&
-    selectedBet.winningPropositionId &&
-    selectedBet.marketResultAdded
-      ? selectedBet.winningPropositionId.toLowerCase() ===
-        selectedBet.propositionId.toLowerCase()
-      : false;
 
   return (
     <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
