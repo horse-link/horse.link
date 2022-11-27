@@ -51,6 +51,7 @@ export const formatBetHistory = (
   settled: bet.settled,
   punter: bet.owner.toLowerCase(),
   amount: bet.amount,
+  payout: bet.payout,
   tx: bet.createdAtTx.toLowerCase(),
   blockNumber: +bet.createdAt,
   settledAt: bet.settled ? +bet.settledAt : undefined,

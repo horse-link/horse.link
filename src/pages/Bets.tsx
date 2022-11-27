@@ -8,6 +8,7 @@ import Select from "react-select";
 import Toggle from "../components/Toggle";
 import { BetTable } from "../components/Bets";
 import { SettleBetModal } from "../components/Modals";
+import { useWalletModal } from "src/providers/WalletModal";
 
 const paginationOptions = [
   { label: "25", value: 25 },
@@ -24,6 +25,7 @@ const Bets: React.FC = () => {
   const [betTablePage, setBetTablePage] = useState(1);
 
   const { isConnected } = useAccount();
+  const { openWalletModal } = useWalletModal();
 
   const { totalBetHistory, userBetHistory, totalBets, refetch } = useBets(
     // limit for bets returned will be current pagination
@@ -57,6 +59,7 @@ const Bets: React.FC = () => {
 
   const onClickBet = (betData?: BetHistory) => {
     if (!betData) return;
+    if (!isConnected) return openWalletModal();
     setSelectedBet(betData);
     setIsModalOpen(true);
   };
