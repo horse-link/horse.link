@@ -12,6 +12,11 @@ import useTokenData from "../../../../hooks/token/useTokenData";
 import useTokenApproval from "../../../../hooks/token/useTokenApproval";
 import useVaultUserData from "../../../../hooks/vault/useVaultUserData";
 
+export enum TxType {
+  DEPOSIT = "deposit",
+  WITHDRAWAL = "withdrawal",
+  DEFAULT = "transaction"
+}
 type useWithdrawContractWriteArgs = {
   amount: number;
   ownerAddress: string;
@@ -110,6 +115,9 @@ const VaultLogic = ({ vaultAddress }: Props) => {
   const { address } = useAccount();
   const userAddress = address ?? "";
 
+  const [transactionType, setTransactionType] = useState<TxType>(
+    TxType.DEFAULT
+  );
   const {
     symbol: tokenSymbol,
     address: tokenAddress,
@@ -153,7 +161,10 @@ const VaultLogic = ({ vaultAddress }: Props) => {
     ownerAddress: userAddress,
     vaultAddress,
     enabled: amount > 0 && isEnoughAllowance,
-    onTxSuccess: () => refetchVaultUserData()
+    onTxSuccess: () => {
+      setTransactionType(TxType.DEPOSIT);
+      refetchVaultUserData();
+    }
   });
 
   const {
@@ -168,7 +179,10 @@ const VaultLogic = ({ vaultAddress }: Props) => {
     tokenDecimal,
     vaultAddress,
     enabled: userBalance > 0,
-    onTxSuccess: () => refetchVaultUserData()
+    onTxSuccess: () => {
+      setTransactionType(TxType.WITHDRAWAL);
+      refetchVaultUserData();
+    }
   });
 
   const contract = {
@@ -182,6 +196,7 @@ const VaultLogic = ({ vaultAddress }: Props) => {
     isSuccess: isDepositTxSuccess || isWithdrawTxSuccess,
     hash: depositTxHash || withdrawTxHash
   };
+
   const updateAmount = (amount: number) => {
     setAmount(amount);
   };
@@ -212,6 +227,7 @@ const VaultLogic = ({ vaultAddress }: Props) => {
       contract={contract}
       txStatus={txStatus}
       isEnoughAllowance={isEnoughAllowance}
+      recentTransactionType={transactionType}
     />
   );
 };
