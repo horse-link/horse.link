@@ -51,8 +51,7 @@ export const SettleBetModal: React.FC<Props> = ({
 
   const isWinning =
     selectedBet &&
-    selectedBet.winningPropositionId &&
-    selectedBet.marketResultAdded
+    selectedBet.winningPropositionId
       ? selectedBet.winningPropositionId.toLowerCase() ===
         selectedBet.propositionId.toLowerCase()
       : false;
@@ -102,22 +101,21 @@ export const SettleBetModal: React.FC<Props> = ({
                 {getVaultNameFromMarket(market!.address, config)}
               </span>
             </h3>
-            <h3 className="font-semibold mb-2">
-              Amount:{" "}
-              <span className="font-normal">
-                {ethers.utils.formatEther(selectedBet.amount)} {token?.symbol}
-              </span>
-            </h3>
-            <h3 className="font-semibold">
-              Winning:{" "}
-              {selectedBet.marketResultAdded ? (
-                <span className="font-normal">{isWinning.toString()}</span>
-              ) : (
+            {isWinning ? (
+              <h3 className="font-semibold">
+                Win:{" "}
                 <span className="font-normal">
-                  Market results haven&apos;t been added yet
+                  {ethers.utils.formatEther(selectedBet.payout)} {token?.symbol}
                 </span>
-              )}
-            </h3>
+              </h3>
+            ) : (
+              <h3 className="font-semibold">
+                Loss:{" "}
+                <span className="font-normal">
+                  {ethers.utils.formatEther(selectedBet.amount)} {token?.symbol}
+                </span>
+              </h3>
+            )}
             <button
               className="w-full font-bold border-black border-2 py-2 rounded-md relative top-6 hover:text-white hover:bg-black transition-colors duration-100 disabled:text-black/50 disabled:border-black/50 disabled:bg-white"
               onClick={onClickSettleBet}
@@ -131,6 +129,7 @@ export const SettleBetModal: React.FC<Props> = ({
             >
               {txLoading ? <Loader /> : "SETTLE BET"}
             </button>
+            {!selectedBet.marketResultAdded && <span className="block relative top-[1.8rem] text-xs text-black/80">Note: will require two transactions to add market results first</span>}
             <br />
             {txHash && <Web3SuccessHandler hash={txHash} />}
             {error && <Web3ErrorHandler error={error} />}
