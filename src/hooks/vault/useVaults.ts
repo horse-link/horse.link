@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../../apis/Api";
 
-const useVaultAddresesFromAPI = () => {
+const useVaultAddressesFromAPI = () => {
   const [vaultAddresses, setVaultAddresses] = useState<string[]>([]);
   useEffect(() => {
     const load = async () => {
@@ -15,7 +15,7 @@ const useVaultAddresesFromAPI = () => {
 };
 
 const useVaults = () => {
-  const { vaultAddresses } = useVaultAddresesFromAPI();
+  const { vaultAddresses } = useVaultAddressesFromAPI();
   return { vaultAddresses };
 };
 
