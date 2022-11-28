@@ -9,7 +9,7 @@ const optionalFilterOptions = (filter?: FilterOptions) => {
     case "ALL_BETS":
       return "";
     case "PENDING":
-      // TODO: filter here instead of after formatBetHistory when subgraph is updated
+      // TODO: filter here instead of after formatBetHistory when subgraph is updated with market oracle as data source
       return "";
     case "RESULTED":
       return `settled: false`;

@@ -23,7 +23,7 @@ const getBetStatus = (
   throw new Error("Invalid bet status");
 };
 
-export const handleBetHistory = (
+export const getBetHistory = (
   bet: Bet,
   signedBetData: SignedBetDataResponse
 ): BetHistory => ({

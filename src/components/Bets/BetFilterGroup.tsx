@@ -7,11 +7,13 @@ const options: Map<FilterOptions, string> = new Map([
   ["RESULTED", "Resulted"],
   ["SETTLED", "Settled"]
 ]);
+
 type Props = {
   value: FilterOptions;
   onChange: (option: FilterOptions) => void;
   disabled: boolean;
 };
+
 export const BetFilterGroup = ({
   value: currentOption,
   onChange,

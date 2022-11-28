@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import { handleBetHistory } from "src/utils/bets";
+import { useEffect, useState } from "react";
+import { getBetHistory } from "src/utils/bets";
 import { useAccount } from "wagmi";
 import api from "../../apis/Api";
 import { BetHistory, FilterOptions } from "../../types";
@@ -48,7 +48,7 @@ const useBets = (myBetsEnabled: boolean, filter: FilterOptions) => {
           bet.propositionId
         );
 
-        return handleBetHistory(bet, signedBetData);
+        return getBetHistory(bet, signedBetData);
       })
     ).then(async bets => {
       const betsByFilterOptions = filterBetsByFilterOptions(bets, filter);
