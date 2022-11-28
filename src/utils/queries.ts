@@ -21,18 +21,15 @@ const optionalFilterOptions = (filter?: FilterOptions) => {
 };
 
 export const getBetsQuery = ({
-  limit,
-  skip,
   address,
-  filter
+  filter,
+  limit = 100
 }: {
-  limit: number;
-  skip: number;
   address?: string;
   filter?: FilterOptions;
+  limit?: number;
 }) => `query GetBets{
   bets(
-    skip: ${skip}
     first: ${limit}
     where:{
       ${optionalAddressFilter(address)}
