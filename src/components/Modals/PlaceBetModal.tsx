@@ -185,11 +185,15 @@ export const PlaceBetModal: React.FC<Props> = ({
                 {formatToFourDecimals(payout)}
               </span>
             </span>
-            <span className="block font-semibold mb-2">
+            <span className="block font-semibold">
               Available:{" "}
               <span className="font-normal">
                 {balance?.formatted || <Loader size={14} />}
               </span>
+            </span>
+            <span className="text-red-500 block font-semibold">
+              {isWagerNegative && "Wager amount cannot be negative"}
+              {isWagerGreaterThanBalance && "Wager amount cannot be greater than token balance"}
             </span>
             <button
               className="w-full font-bold border-black border-2 py-2 rounded-md relative top-6 hover:text-white hover:bg-black transition-colors duration-100 disabled:text-black/50 disabled:border-black/50 disabled:bg-white"
