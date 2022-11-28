@@ -1,9 +1,9 @@
 import Modal from "../../components/Modal";
-import { shortenHash } from "../../utils/formatting";
+import { shortenAddress } from "../../utils/formatting";
 type Props = {
   isOpen: boolean;
   onClose: () => void;
-  txHash?: string | undefined;
+  txHash?: string;
 };
 
 export const FaucetModal = ({ isOpen, onClose, txHash }: Props) => {
@@ -17,12 +17,15 @@ export const FaucetModal = ({ isOpen, onClose, txHash }: Props) => {
         </h2>
         <br />
         <div className="flex flex-row">
-          Tx ID: {shortenHash(txHash || "")}
+          Tx Hash: &nbsp;
           <a
+            className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
             href={`${process.env.VITE_SCANNER_URL}/tx/${txHash}`}
             target="_blank"
             rel="noopener noreferrer"
-          ></a>
+          >
+            {txHash ? shortenAddress(txHash) : ""}
+          </a>
         </div>
       </div>
     </Modal>
