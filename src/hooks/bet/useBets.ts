@@ -71,7 +71,7 @@ const useBets = (limit: number, skip: number, filter: FilterOptions) => {
   // set total bet history state
   useEffect(() => {
     if (!totalData) return;
-
+    setTotalBetHistory(undefined);
     // array starts from skip and ends at the limit from the skip
     const filteredTotalData = totalData.bets.filter((_, i) => i < limit);
 
@@ -94,7 +94,7 @@ const useBets = (limit: number, skip: number, filter: FilterOptions) => {
   // set user bet history state
   useEffect(() => {
     if (!userData || !address) return;
-
+    setUserBetHistory(undefined);
     const filteredUserData = userData.bets.filter((_, i) => i < limit);
 
     Promise.all(
