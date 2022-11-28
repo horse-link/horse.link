@@ -4,10 +4,9 @@ import useBets from "../hooks/bet/useBets";
 import { BetHistory, FilterOptions } from "../types";
 import { PageLayout } from "../components";
 import Toggle from "../components/Toggle";
-import { BetTable } from "../components/Bets";
+import { BetFilterGroup, BetTable } from "../components/Bets";
 import { SettleBetModal } from "../components/Modals";
 import { useWalletModal } from "src/providers/WalletModal";
-import classNames from "classnames";
 
 const Bets: React.FC = () => {
   const [myBetsEnabled, setMyBetsEnabled] = useState(true);
@@ -43,7 +42,7 @@ const Bets: React.FC = () => {
           Bets History
         </h3>
         <div className="flex gap-5">
-          <FilterGroup
+          <BetFilterGroup
             value={betTableFilter}
             onChange={onFilterChange}
             disabled={isLoading}
@@ -66,42 +65,6 @@ const Bets: React.FC = () => {
         refetch={refetch}
       />
     </PageLayout>
-  );
-};
-
-const options: Map<FilterOptions, string> = new Map([
-  ["ALL_BETS", "All Bets"],
-  ["PENDING", "Pending"],
-  ["RESULTED", "Resulted"],
-  ["SETTLED", "Settled"]
-]);
-type FilterGroupProps = {
-  value: FilterOptions;
-  onChange: (option: FilterOptions) => void;
-  disabled: boolean;
-};
-const FilterGroup = ({
-  value: currentOption,
-  onChange,
-  disabled
-}: FilterGroupProps) => {
-  return (
-    <div className="flex gap-3">
-      {[...options].map(([key, text]) => (
-        <button
-          onClick={() => {
-            onChange(key);
-          }}
-          className={classNames("bg-white rounded px-2 shadow ", {
-            "bg-blue-500": key === currentOption,
-            "disabled:opacity-75": key !== currentOption
-          })}
-          disabled={disabled}
-        >
-          {text}
-        </button>
-      ))}
-    </div>
   );
 };
 
