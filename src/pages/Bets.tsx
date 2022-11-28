@@ -24,9 +24,8 @@ const Bets: React.FC = () => {
   const [betTablePagination, setBetTablePagination] =
     useState<PaginationValues>(25);
   const [betTablePage, setBetTablePage] = useState(1);
-  const [betTableFilter, setBetTableFilter] = useState<FilterOptions>(
-    FilterOptions.ALL_BETS
-  );
+  const [betTableFilter, setBetTableFilter] =
+    useState<FilterOptions>("ALL_BETS");
 
   const { isConnected } = useAccount();
   const { openWalletModal } = useWalletModal();
@@ -136,10 +135,10 @@ const Bets: React.FC = () => {
 };
 
 const options: Map<FilterOptions, string> = new Map([
-  [FilterOptions.ALL_BETS, "All Bets"],
-  [FilterOptions.PENDING, "Pending"],
-  [FilterOptions.RESULTED, "Resulted"],
-  [FilterOptions.SETTLED, "Settled"]
+  ["ALL_BETS", "All Bets"],
+  ["PENDING", "Pending"],
+  ["RESULTED", "Resulted"],
+  ["SETTLED", "Settled"]
 ]);
 type FilterGroupProps = {
   value: FilterOptions;

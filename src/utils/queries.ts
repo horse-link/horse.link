@@ -6,14 +6,14 @@ const optionalAddressFilter = (address?: string) =>
 
 const optionalFilterOptions = (filter?: FilterOptions) => {
   switch (filter) {
-    case FilterOptions.ALL_BETS:
+    case "ALL_BETS":
       return "";
-    case FilterOptions.PENDING:
+    case "PENDING":
       // TODO: filter here instead of after formatBetHistory when subgraph is updated
       return "";
-    case FilterOptions.RESULTED:
+    case "RESULTED":
       return `settled: false`;
-    case FilterOptions.SETTLED:
+    case "SETTLED":
       return `settled: true`;
     default:
       throw new Error("Invalid filter option");

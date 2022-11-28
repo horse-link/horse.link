@@ -32,12 +32,10 @@ export const BetRow: React.FC<Props> = ({ config, betData, onClick }) => {
       className={classnames(
         "cursor-pointer hover:bg-gray-100",
         {
-          "bg-emerald-300":
-            (betData.winningPropositionId || betData.marketResultAdded) &&
-            !betData.settled
+          "bg-emerald-300": betData.status === "RESULTED"
         },
         {
-          "bg-gray-300": betData.settled
+          "bg-gray-300": betData.status === "SETTLED"
         }
       )}
     >

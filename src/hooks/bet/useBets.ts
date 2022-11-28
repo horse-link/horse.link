@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
+import { handleBetHistory } from "src/utils/bets";
 import { useAccount } from "wagmi";
 import api from "../../apis/Api";
 import { BetHistory, FilterOptions } from "../../types";
 import { Aggregator, Bet } from "../../types/entities";
-import { formatBetHistory } from "../../utils/formatting";
 import { getAggregatorQuery, getBetsQuery } from "../../utils/queries";
 import useSubgraph from "../useSubgraph";
 
@@ -21,20 +21,8 @@ const filterBetsByFilterOptions = (
   bets: BetHistory[],
   filter: FilterOptions
 ) => {
-  switch (filter) {
-    case FilterOptions.ALL_BETS:
-      return bets;
-    case FilterOptions.PENDING:
-      return bets.filter(
-        bet => !bet.marketResultAdded && !bet.winningPropositionId
-      );
-    case FilterOptions.RESULTED:
-      return bets.filter(bet => bet.marketResultAdded);
-    case FilterOptions.SETTLED:
-      return bets.filter(bet => bet.marketResultAdded);
-    default:
-      throw new Error("Invalid filter option");
-  }
+  if (filter === "ALL_BETS") return bets;
+  return bets.filter(bet => bet.status === filter);
 };
 
 const useBets = (limit: number, skip: number, filter: FilterOptions) => {
@@ -82,8 +70,8 @@ const useBets = (limit: number, skip: number, filter: FilterOptions) => {
           bet.marketId,
           bet.propositionId
         );
-
-        return formatBetHistory(bet, signedBetData);
+        // const betStatus = getBetStatus(bet, signedBetData);
+        return handleBetHistory(bet, signedBetData);
       })
     ).then(async bets => {
       const betsByFilterOptions = filterBetsByFilterOptions(bets, filter);
@@ -104,7 +92,7 @@ const useBets = (limit: number, skip: number, filter: FilterOptions) => {
           bet.propositionId
         );
 
-        return formatBetHistory(bet, signedBetData);
+        return handleBetHistory(bet, signedBetData);
       })
     ).then(async bets => {
       const betsByFilterOptions = filterBetsByFilterOptions(bets, filter);
