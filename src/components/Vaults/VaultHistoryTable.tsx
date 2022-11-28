@@ -1,11 +1,14 @@
 import { FormattedVaultTransaction } from "../../types/entities";
 import { VaultHistoryRow } from ".";
+import { Config } from "../../types/config";
 
 type Props = {
   history?: FormattedVaultTransaction[];
+  config?: Config;
 };
 
-export const VaultHistoryTable: React.FC<Props> = ({ history }) => (
+export const VaultHistoryTable: React.FC<Props> = ({ history, config }) => {
+  return (
   <div className="w-full flex flex-col mt-8">
     <h3 className="text-lg mb-3 font-medium text-gray-900">History</h3>
     <div className="bg-gray-50 rounded-xl overflow-auto">
@@ -50,7 +53,7 @@ export const VaultHistoryTable: React.FC<Props> = ({ history }) => (
               <td className="p-2 select-none">loading...</td>
             ) : (
               history.map(vault => (
-                <VaultHistoryRow vault={vault} key={vault.id} />
+                <VaultHistoryRow vault={vault} key={vault.id} config={config} />
               ))
             )}
           </tbody>
@@ -58,4 +61,4 @@ export const VaultHistoryTable: React.FC<Props> = ({ history }) => (
       </div>
     </div>
   </div>
-);
+)};

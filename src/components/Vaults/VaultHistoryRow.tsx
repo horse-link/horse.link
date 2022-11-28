@@ -3,12 +3,13 @@ import moment from "moment";
 import { shortenHash } from "../../utils/formatting";
 import { FormattedVaultTransaction } from "../../types/entities";
 import { VaultTransactionType } from "../../types";
-import { useConfig } from "../../providers/Config";
 import { getVault } from "../../utils/config";
 import Skeleton from "react-loading-skeleton";
+import { Config } from "../../types/config";
 
 type Props = {
   vault: FormattedVaultTransaction;
+  config?: Config
 };
 
 const txTypeMap = new Map([
@@ -16,8 +17,7 @@ const txTypeMap = new Map([
   [VaultTransactionType.DEPOSIT, "Deposit"]
 ]);
 
-export const VaultHistoryRow: React.FC<Props> = ({ vault }) => {
-  const config = useConfig();
+export const VaultHistoryRow: React.FC<Props> = ({ vault, config }) => {
   const formattedTxType = txTypeMap.get(vault.type);
   const details = getVault(vault.vaultAddress, config);
   return (

@@ -79,7 +79,7 @@ const Vaults: React.FC = () => {
             </table>
           </div>
         </div>
-        <VaultHistoryTable history={vaultHistory} />
+        <VaultHistoryTable history={vaultHistory} config={config} />
       </div>
       {modal?.type === VaultTransactionType.DEPOSIT && (
         <DepositVaultModal
