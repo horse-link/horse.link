@@ -2,18 +2,20 @@ import { useContractRead, useContractReads } from "wagmi";
 import registryContractJson from "../../abi/Registry.json";
 import { BigNumber, ethers } from "ethers";
 import { useEffect, useState } from "react";
+import { useConfig } from "../../providers/Config";
 import api from "../../apis/Api";
 
-const registryContractAddress = process.env.VITE_REGISTRY_CONTRACT;
-if (!registryContractAddress)
-  throw new Error("No VITE_REGISTRY_CONTRACT provided");
-
-const registryContract = {
-  address: registryContractAddress,
-  abi: registryContractJson.abi
-};
-
 const useMarketAddressesFromContract = () => {
+  const config = useConfig();
+  const registryContractAddress = config?.addresses?.registry;
+  if (!registryContractAddress)
+    throw new Error("No REGISTRY_CONTRACT provided");
+
+  const registryContract = {
+    address: registryContractAddress,
+    abi: registryContractJson.abi
+  };
+
   const { data } = useContractRead({
     ...registryContract,
     functionName: "marketCount"
