@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import useUserBalance from "../../hooks/token/useUserBalance";
-import { useAccount, useSigner } from "wagmi";
+import { useSigner } from "wagmi";
 import { VaultInfo } from "../../types/config";
 import Modal from "../Modal";
 import Loader from "../Loader";
@@ -24,11 +24,9 @@ export const DepositVaultModal: React.FC<Props> = ({
   const [txHash, setTxHash] = useState<string>();
   const [error, setError] = useState<ethers.errors>();
 
-  const { address } = useAccount();
   const { data: signer } = useSigner();
 
   const { balance, refetch: refetchUserBalance } = useUserBalance(
-    address,
     vault.asset.address,
     signer
   );

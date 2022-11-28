@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useConfig } from "../../providers/Config";
 import { Back, Runner } from "../../types";
 import { getVaultFromMarket, getVaultNameFromMarket } from "../../utils/config";
-import { useAccount, useSigner } from "wagmi";
+import { useSigner } from "wagmi";
 import Loader from "../Loader";
 import Modal from "../Modal";
 import { Config, MarketInfo } from "../../types/config";
@@ -34,12 +34,10 @@ export const PlaceBetModal: React.FC<Props> = ({
   const [error, setError] = useState<ethers.errors>();
 
   const { data: signer } = useSigner();
-  const { address } = useAccount();
 
   const config = useConfig();
   const { placeBet } = useMarketContract();
   const { balance, refetch: refetchUserBalance } = useUserBalance(
-    address,
     getVaultFromMarket(selectedMarket, config)?.asset.address,
     signer
   );
