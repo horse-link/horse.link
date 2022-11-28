@@ -62,11 +62,10 @@ const Vaults: React.FC = () => {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {config ? (
-                  config.vaults.map(v => (
+                  config.vaults.map(vault => (
                     <VaultListRow
-                      key={v.address}
-                      vaultAddress={v.address}
-                      config={config}
+                      key={vault.address}
+                      vault={vault}
                       setIsModalOpen={setModal}
                       isConnected={isConnected}
                       openWalletModal={openWalletModal}

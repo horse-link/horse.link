@@ -1,25 +1,21 @@
-import { getVault } from "../../utils/config";
-import { Config } from "../../types/config";
+import { VaultInfo } from "../../types/config";
 import { ethers } from "ethers";
 import { formatToFourDecimals } from "../../utils/formatting";
 import { VaultModalState, VaultTransactionType } from "../../types";
 
 type Props = {
-  vaultAddress: string;
+  vault: VaultInfo;
   setIsModalOpen: (state: VaultModalState) => void;
-  config: Config;
   isConnected: boolean;
   openWalletModal: () => void;
 };
 
 export const VaultListRow: React.FC<Props> = ({
-  vaultAddress,
+  vault,
   setIsModalOpen,
-  config,
   isConnected,
   openWalletModal
 }) => {
-  const vault = getVault(vaultAddress, config)!;
   const openModal = (type: VaultTransactionType) =>
     isConnected
       ? setIsModalOpen({
