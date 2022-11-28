@@ -1,8 +1,7 @@
 import { arrayify, BytesLike, concat, hexlify } from "@ethersproject/bytes";
 import { HashZero } from "@ethersproject/constants";
 import { toUtf8Bytes, toUtf8String } from "ethers/lib/utils.js";
-import { BetHistory, SignedBetDataResponse } from "../types";
-import { Bet, BetId } from "../types/entities";
+import { BetId } from "../types/entities";
 
 export const formatToFourDecimals = (amount: string) => {
   const parsedAmount = parseFloat(amount);
