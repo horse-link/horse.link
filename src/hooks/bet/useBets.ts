@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAccount } from "wagmi";
 import api from "../../apis/Api";
-import { BetHistory } from "../../types";
+import { BetHistory, FilterOptions } from "../../types";
 import { Aggregator, Bet } from "../../types/entities";
 import { formatBetHistory } from "../../utils/formatting";
 import { getAggregatorQuery, getBetsQuery } from "../../utils/queries";
@@ -17,18 +17,38 @@ type AggregatorResponse = {
 
 const POLL_INTERVAL = 5000;
 
-const useBets = (limit: number, skip: number) => {
+const filterBetsByFilterOptions = (
+  bets: BetHistory[],
+  filter: FilterOptions
+) => {
+  switch (filter) {
+    case FilterOptions.ALL_BETS:
+      return bets;
+    case FilterOptions.PENDING:
+      return bets.filter(
+        bet => !bet.marketResultAdded && !bet.winningPropositionId
+      );
+    case FilterOptions.RESULTED:
+      return bets.filter(bet => bet.marketResultAdded);
+    case FilterOptions.SETTLED:
+      return bets.filter(bet => bet.marketResultAdded);
+    default:
+      throw new Error("Invalid filter option");
+  }
+};
+
+const useBets = (limit: number, skip: number, filter: FilterOptions) => {
   const { address } = useAccount();
   const [totalBetHistory, setTotalBetHistory] = useState<BetHistory[]>();
   const [userBetHistory, setUserBetHistory] = useState<BetHistory[]>();
 
   // total bets
   const { data: totalData, refetch: refetchTotal } = useSubgraph<Response>(
-    getBetsQuery(limit, skip)
+    getBetsQuery({ limit, skip, filter })
   );
   // user bets
   const { data: userData, refetch: refetchUser } = useSubgraph<Response>(
-    getBetsQuery(limit, skip, address)
+    getBetsQuery({ limit, skip, address, filter })
   );
   // total bets count
   const { data: countData, refetch: refetchCount } =
@@ -65,8 +85,11 @@ const useBets = (limit: number, skip: number) => {
 
         return formatBetHistory(bet, signedBetData);
       })
-    ).then(setTotalBetHistory);
-  }, [skip, limit, totalData]);
+    ).then(async bets => {
+      const betsByFilterOptions = filterBetsByFilterOptions(bets, filter);
+      setTotalBetHistory(betsByFilterOptions);
+    });
+  }, [skip, limit, totalData, filter]);
 
   // set user bet history state
   useEffect(() => {
@@ -83,8 +106,11 @@ const useBets = (limit: number, skip: number) => {
 
         return formatBetHistory(bet, signedBetData);
       })
-    ).then(setUserBetHistory);
-  }, [skip, limit, address, userData]);
+    ).then(async bets => {
+      const betsByFilterOptions = filterBetsByFilterOptions(bets, filter);
+      setUserBetHistory(betsByFilterOptions);
+    });
+  }, [skip, limit, address, userData, filter]);
 
   // calculate total bet count
   const totalBets = useMemo(() => {

@@ -1,17 +1,43 @@
 import { ethers } from "ethers";
+import { FilterOptions } from "src/types";
 
 const optionalAddressFilter = (address?: string) =>
-  address ? `where: { owner: "${address.toLowerCase()}" }` : "";
+  address ? `owner: "${address.toLowerCase()}"` : "";
 
-export const getBetsQuery = (
-  limit: number,
-  skip: number,
-  address?: string
-) => `{
+const optionalFilterOptions = (filter?: FilterOptions) => {
+  switch (filter) {
+    case FilterOptions.ALL_BETS:
+      return "";
+    case FilterOptions.PENDING:
+      // TODO: filter here instead of after formatBetHistory when subgraph is updated
+      return "";
+    case FilterOptions.RESULTED:
+      return `settled: false`;
+    case FilterOptions.SETTLED:
+      return `settled: true`;
+    default:
+      throw new Error("Invalid filter option");
+  }
+};
+
+export const getBetsQuery = ({
+  limit,
+  skip,
+  address,
+  filter
+}: {
+  limit: number;
+  skip: number;
+  address?: string;
+  filter?: FilterOptions;
+}) => `query GetBets{
   bets(
     skip: ${skip}
     first: ${limit}
-    ${optionalAddressFilter(address)}
+    where:{
+      ${optionalAddressFilter(address)}
+      ${optionalFilterOptions(filter)}
+    }
     orderBy: createdAt
     orderDirection: desc
   ) {
@@ -55,7 +81,9 @@ query GetProtocols{
 
 export const getVaultHistoryQuery = (vaultAddress?: string) => `{
   vaultTransactions(
-    ${optionalAddressFilter(vaultAddress)}
+    where:{
+      ${optionalAddressFilter(vaultAddress)}
+    }
     orderBy: timestamp
     orderDirection: desc
   ) {

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAccount } from "wagmi";
 import useBets from "../hooks/bet/useBets";
-import { BetHistory, PaginationValues } from "../types";
+import { BetHistory, FilterOptions, PaginationValues } from "../types";
 import { calculateMaxPages } from "../utils/bets";
 import { PageLayout } from "../components";
 import Select from "react-select";
@@ -9,6 +9,7 @@ import Toggle from "../components/Toggle";
 import { BetTable } from "../components/Bets";
 import { SettleBetModal } from "../components/Modals";
 import { useWalletModal } from "src/providers/WalletModal";
+import classNames from "classnames";
 
 const paginationOptions = [
   { label: "25", value: 25 },
@@ -23,6 +24,9 @@ const Bets: React.FC = () => {
   const [betTablePagination, setBetTablePagination] =
     useState<PaginationValues>(25);
   const [betTablePage, setBetTablePage] = useState(1);
+  const [betTableFilter, setBetTableFilter] = useState<FilterOptions>(
+    FilterOptions.ALL_BETS
+  );
 
   const { isConnected } = useAccount();
   const { openWalletModal } = useWalletModal();
@@ -31,7 +35,8 @@ const Bets: React.FC = () => {
     // limit for bets returned will be current pagination
     betTablePagination,
     // skip calculation
-    (betTablePage - 1) * betTablePagination
+    (betTablePage - 1) * betTablePagination,
+    betTableFilter
   );
 
   // max pages for "my bets" table
@@ -69,6 +74,7 @@ const Bets: React.FC = () => {
   }, [isConnected]);
 
   const onMyBetToggle = () => setMyBetsEnabled(prev => !prev);
+  const onFilterChange = (option: FilterOptions) => setBetTableFilter(option);
 
   return (
     <PageLayout requiresAuth={false}>
@@ -76,6 +82,7 @@ const Bets: React.FC = () => {
         <h3 className="text-lg font-medium text-gray-900 flex items-center">
           Bets History
         </h3>
+        <FilterGroup value={betTableFilter} onChange={onFilterChange} />
         <div className="flex items-center">
           <Select
             onChange={selection =>
@@ -125,6 +132,37 @@ const Bets: React.FC = () => {
         refetch={refetch}
       />
     </PageLayout>
+  );
+};
+
+const options: Map<FilterOptions, string> = new Map([
+  [FilterOptions.ALL_BETS, "All Bets"],
+  [FilterOptions.PENDING, "Pending"],
+  [FilterOptions.RESULTED, "Resulted"],
+  [FilterOptions.SETTLED, "Settled"]
+]);
+type FilterGroupProps = {
+  value: FilterOptions;
+  onChange: (option: FilterOptions) => void;
+};
+const FilterGroup = ({ value: currentOption, onChange }: FilterGroupProps) => {
+  return (
+    <>
+      {[...options].map(([key, text]) => (
+        <>
+          <button
+            onClick={() => {
+              onChange(key);
+            }}
+            className={classNames("bg-white rounded px-2 shadow", {
+              "bg-blue-500": key === currentOption
+            })}
+          >
+            {text}
+          </button>
+        </>
+      ))}
+    </>
   );
 };
 
