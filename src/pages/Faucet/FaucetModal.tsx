@@ -3,7 +3,7 @@ import { shortenAddress } from "../../utils/formatting";
 type Props = {
   isOpen: boolean;
   onClose: () => void;
-  txHash?: string;
+  txHash: string;
 };
 
 export const FaucetModal = ({ isOpen, onClose, txHash }: Props) => {

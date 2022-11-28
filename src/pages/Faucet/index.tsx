@@ -58,11 +58,13 @@ export const FaucetPage = () => {
 
   return (
     <PageLayout requiresAuth={false}>
-      <FaucetModal
-        isOpen={isModalOpen}
-        onClose={onModalClose}
-        txHash={txHash}
-      />
+      {txHash && (
+        <FaucetModal
+          isOpen={isModalOpen}
+          onClose={onModalClose}
+          txHash={txHash}
+        />
+      )}
       <div className="w-full text-center bg-emerald-700 rounded-md p-5 my-10">
         <h2>Welcome to the Horse Link Faucet!</h2>
         <h2 className="p-1">
