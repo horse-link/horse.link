@@ -1,4 +1,4 @@
-require("dotenv").config();
+/*require("dotenv").config();
 const axios = require("axios");
 const Web3 = require("web3");
 const bytes32 = require("bytes32");
@@ -206,3 +206,4 @@ const getAndAddRaces = async (yyyy, mm, dd) => {
 
 getCount();
 getAndAddTodaysRaces();
+*/

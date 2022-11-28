@@ -57,7 +57,7 @@ export const FaucetPage = () => {
   }, [isConnected]);
 
   return (
-    <PageLayout requiresAuth={false}>
+    <PageLayout>
       {txHash && (
         <FaucetModal
           isOpen={isModalOpen}

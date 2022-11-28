@@ -1,17 +1,40 @@
 import { ethers } from "ethers";
+import { FilterOptions } from "src/types";
 
 const optionalAddressFilter = (address?: string) =>
-  address ? `where: { owner: "${address.toLowerCase()}" }` : "";
+  address ? `owner: "${address.toLowerCase()}"` : "";
 
-export const getBetsQuery = (
-  limit: number,
-  skip: number,
-  address?: string
-) => `{
+const optionalFilterOptions = (filter?: FilterOptions) => {
+  switch (filter) {
+    case "ALL_BETS":
+      return "";
+    case "PENDING":
+      // TODO: filter here instead of after formatBetHistory when subgraph is updated with market oracle as data source
+      return "";
+    case "RESULTED":
+      return `settled: false`;
+    case "SETTLED":
+      return `settled: true`;
+    default:
+      throw new Error("Invalid filter option");
+  }
+};
+
+export const getBetsQuery = ({
+  address,
+  filter,
+  limit = 100
+}: {
+  address?: string;
+  filter?: FilterOptions;
+  limit?: number;
+}) => `query GetBets{
   bets(
-    skip: ${skip}
     first: ${limit}
-    ${optionalAddressFilter(address)}
+    where:{
+      ${optionalAddressFilter(address)}
+      ${optionalFilterOptions(filter)}
+    }
     orderBy: createdAt
     orderDirection: desc
   ) {
@@ -55,7 +78,9 @@ query GetProtocols{
 
 export const getVaultHistoryQuery = (vaultAddress?: string) => `{
   vaultTransactions(
-    ${optionalAddressFilter(vaultAddress)}
+    where:{
+      ${optionalAddressFilter(vaultAddress)}
+    }
     orderBy: timestamp
     orderDirection: desc
   ) {

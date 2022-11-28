@@ -50,8 +50,7 @@ export const SettleBetModal: React.FC<Props> = ({
   );
 
   const isWinning =
-    selectedBet &&
-    selectedBet.winningPropositionId
+    selectedBet && selectedBet.winningPropositionId
       ? selectedBet.winningPropositionId.toLowerCase() ===
         selectedBet.propositionId.toLowerCase()
       : false;
@@ -86,7 +85,12 @@ export const SettleBetModal: React.FC<Props> = ({
       ) : (
         <React.Fragment>
           <h2 className="font-bold text-2xl mr-[8vw] mb-6">
-            {selectedBet.settled || txHash ? "Settled" : "Unsettled"} Bet
+            {selectedBet.settled || txHash
+              ? "Settled"
+              : selectedBet.winningPropositionId
+              ? "Unsettled"
+              : "Pending"}{" "}
+            Bet
           </h2>
           <div className="flex flex-col">
             <h3 className="font-semibold mb-2">
@@ -129,7 +133,11 @@ export const SettleBetModal: React.FC<Props> = ({
             >
               {txLoading ? <Loader /> : "SETTLE BET"}
             </button>
-            {!selectedBet.marketResultAdded && <span className="block relative top-[1.8rem] text-xs text-black/80">Note: will require two transactions to add market results first</span>}
+            {!selectedBet.marketResultAdded && (
+              <span className="block relative top-[1.8rem] text-xs text-black/80">
+                Note: will require two transactions to add market results first
+              </span>
+            )}
             <br />
             {txHash && <Web3SuccessHandler hash={txHash} />}
             {error && <Web3ErrorHandler error={error} />}

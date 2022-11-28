@@ -1,5 +1,6 @@
 import { BigNumber, ethers } from "ethers";
 import { useEffect, useMemo, useState } from "react";
+import { formatBytes16String } from "../../utils/formatting";
 import { useContractRead } from "wagmi";
 import marketContractJson from "../../abi/Market.json";
 import api from "../../apis/Api";
@@ -21,8 +22,8 @@ const usePotentialPayoutFromContract = ({
   odds,
   tokenDecimal
 }: UsePotentialPayoutArgs) => {
-  const b32PropositionId = useMemo(
-    () => ethers.utils.formatBytes32String(propositionId),
+  const b16PropositionId = useMemo(
+    () => formatBytes16String(propositionId),
     [propositionId]
   );
   const bnWager = useMemo(
@@ -37,7 +38,7 @@ const usePotentialPayoutFromContract = ({
     address: marketAddress,
     abi: marketContractJson.abi,
     functionName: "getPotentialPayout",
-    args: [b32PropositionId, bnWager, bnOdds]
+    args: [b16PropositionId, bnWager, bnOdds]
   });
   const bnPotentialPayout = data as BigNumber;
 
@@ -90,3 +91,6 @@ const usePotentialPayout = (args: UsePotentialPayoutArgs) => {
 };
 
 export default usePotentialPayout;
+
+
+

@@ -1,61 +1,24 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import useBets from "../hooks/bet/useBets";
-import { BetHistory, PaginationValues } from "../types";
-import { calculateMaxPages } from "../utils/bets";
+import { BetHistory, FilterOptions } from "../types";
 import { PageLayout } from "../components";
-import Select from "react-select";
 import Toggle from "../components/Toggle";
-import { BetTable } from "../components/Bets";
+import { BetFilterGroup, BetTable } from "../components/Bets";
 import { SettleBetModal } from "../components/Modals";
 import { useWalletModal } from "src/providers/WalletModal";
-
-const paginationOptions = [
-  { label: "25", value: 25 },
-  { label: "50", value: 50 },
-  { label: "100", value: 100 }
-];
 
 const Bets: React.FC = () => {
   const [myBetsEnabled, setMyBetsEnabled] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBet, setSelectedBet] = useState<BetHistory>();
-  const [betTablePagination, setBetTablePagination] =
-    useState<PaginationValues>(25);
-  const [betTablePage, setBetTablePage] = useState(1);
+  const [betTableFilter, setBetTableFilter] =
+    useState<FilterOptions>("ALL_BETS");
 
   const { isConnected } = useAccount();
   const { openWalletModal } = useWalletModal();
 
-  const { totalBetHistory, userBetHistory, totalBets, refetch } = useBets(
-    // limit for bets returned will be current pagination
-    betTablePagination,
-    // skip calculation
-    (betTablePage - 1) * betTablePagination
-  );
-
-  // max pages for "my bets" table
-  const userMaxPages = useMemo(() => {
-    if (!userBetHistory || userBetHistory.length === 0) return 1;
-
-    return calculateMaxPages(betTablePagination, userBetHistory.length);
-  }, [userBetHistory, betTablePagination]);
-
-  // max pages for total bet history
-  const totalMaxPages = useMemo(() => {
-    if (!totalBets || totalBets === 0) return 1;
-
-    return calculateMaxPages(betTablePagination, totalBets);
-  }, [totalBets, betTablePagination]);
-
-  // this prevents switching to an invalid page
-  useEffect(() => {
-    if (myBetsEnabled) {
-      setBetTablePage(betTablePage > userMaxPages ? 1 : betTablePage);
-    } else {
-      setBetTablePage(betTablePage > totalMaxPages ? 1 : betTablePage);
-    }
-  }, [userMaxPages, totalMaxPages, betTablePage, myBetsEnabled]);
+  const { betHistory, refetch } = useBets(myBetsEnabled, betTableFilter);
 
   const onClickBet = (betData?: BetHistory) => {
     if (!betData) return;
@@ -69,40 +32,22 @@ const Bets: React.FC = () => {
   }, [isConnected]);
 
   const onMyBetToggle = () => setMyBetsEnabled(prev => !prev);
+  const onFilterChange = (option: FilterOptions) => setBetTableFilter(option);
 
+  const isLoading = !betHistory;
   return (
-    <PageLayout requiresAuth={false}>
+    <PageLayout>
       <div className="w-full flex justify-between col-span-2 p-5">
         <h3 className="text-lg font-medium text-gray-900 flex items-center">
           Bets History
         </h3>
-        <div className="flex items-center">
-          <Select
-            onChange={selection =>
-              selection &&
-              setBetTablePagination(selection.value as PaginationValues)
-            }
-            options={paginationOptions}
-            defaultValue={paginationOptions[0]}
-            isClearable={false}
-            isSearchable={false}
-            styles={{
-              container: base => ({
-                ...base,
-                marginRight: "1rem"
-              }),
-              valueContainer: base => ({
-                ...base,
-                paddingLeft: "1rem",
-                paddingRight: "1rem"
-              }),
-              indicatorSeparator: base => ({
-                ...base,
-                display: "none"
-              })
-            }}
+        <div className="flex gap-5">
+          <BetFilterGroup
+            value={betTableFilter}
+            onChange={onFilterChange}
+            disabled={isLoading}
           />
-          <div className="flex gap-3 self-end justify-self-end items-center pb-2">
+          <div className="flex gap-3 self-end justify-self-end items-center">
             <Toggle enabled={myBetsEnabled} onChange={onMyBetToggle} />
             <div className="font-semibold">My Bets</div>
           </div>
@@ -111,12 +56,7 @@ const Bets: React.FC = () => {
       <BetTable
         myBetsEnabled={myBetsEnabled}
         onClickBet={onClickBet}
-        page={betTablePage}
-        setPage={setBetTablePage}
-        totalBetHistory={totalBetHistory}
-        userBetHistory={userBetHistory}
-        userMaxPages={userMaxPages}
-        totalMaxPages={totalMaxPages}
+        betHistory={betHistory}
       />
       <SettleBetModal
         isModalOpen={isModalOpen}

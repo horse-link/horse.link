@@ -1,5 +1,6 @@
 import { BigNumber } from "ethers";
 import { Address } from "wagmi";
+import { VaultTransactionType } from ".";
 
 export type Aggregator = {
   // id will always be aggregator
@@ -84,11 +85,6 @@ export type FormattedBet = Pick<
   createdAt: number;
   settledAt: number;
 };
-
-enum VaultTransactionType {
-  withdraw = "withdraw",
-  deposit = "deposit"
-}
 
 export type VaultTransaction = {
   id: Address;

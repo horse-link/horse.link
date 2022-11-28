@@ -9,7 +9,7 @@ const alchemyApiKey = process.env.VITE_ALCHEMY_API_KEY;
 if (!alchemyApiKey) throw new Error("VITE_ALCHEMY_API_KEY is not defined");
 
 const { chains, provider, webSocketProvider } = configureChains(
-  [chain.goerli],
+  [chain.goerli, chain.localhost],
   [
     alchemyProvider({
       apiKey: alchemyApiKey

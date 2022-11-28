@@ -1,5 +1,7 @@
-import { BetHistory, SignedBetDataResponse } from "../types";
-import { Bet, BetId } from "../types/entities";
+import { arrayify, BytesLike, concat, hexlify } from "@ethersproject/bytes";
+import { HashZero } from "@ethersproject/constants";
+import { toUtf8Bytes, toUtf8String } from "ethers/lib/utils.js";
+import { BetId } from "../types/entities";
 
 export const formatToFourDecimals = (amount: string) => {
   const parsedAmount = parseFloat(amount);
@@ -37,27 +39,6 @@ export const formatBetId = (betId: BetId) => {
   return +segments[2];
 };
 
-export const formatBetHistory = (
-  bet: Bet,
-  signedBetData: SignedBetDataResponse
-): BetHistory => ({
-  index: formatBetId(bet.id),
-  marketId: bet.marketId.toLowerCase(),
-  marketAddress: bet.marketAddress.toLowerCase(),
-  assetAddress: bet.assetAddress.toLowerCase(),
-  propositionId: bet.propositionId.toLowerCase(),
-  winningPropositionId: signedBetData.winningPropositionId,
-  marketResultAdded: signedBetData.marketResultAdded,
-  settled: bet.settled,
-  punter: bet.owner.toLowerCase(),
-  amount: bet.amount,
-  payout: bet.payout,
-  tx: bet.createdAtTx.toLowerCase(),
-  blockNumber: +bet.createdAt,
-  settledAt: bet.settled ? +bet.settledAt : undefined,
-  marketOracleResultSig: signedBetData.marketOracleResultSig
-});
-
 export const shortenAddress = (address: string) =>
   `${address.slice(0, 5)}...${address.slice(address.length - 5)}`;
 
@@ -66,3 +47,32 @@ export const shortenHash = (hash: string) => {
   const end = hash.substring(hash.length - 15, hash.length);
   return `${start}...${end}`;
 };
+
+// Derived from EthersJS version for Bytes32
+export function formatBytes16String(text: string): string {
+  // Get the bytes
+  const bytes = toUtf8Bytes(text);
+
+  // Check we have room for null-termination
+  if (bytes.length > 15) { throw new Error("bytes16 string must be less than 16 bytes"); }
+
+  // Zero-pad (implicitly null-terminates)
+  return hexlify(concat([ bytes, HashZero ]).slice(0, 16));
+}
+
+// Derived from EthersJS version for Bytes32
+export function parseBytes16String(bytes: BytesLike): string {
+  const data = arrayify(bytes);
+
+  // Must be 16 bytes with a null-termination
+  if (data.length !== 16) { throw new Error("invalid bytes16 - not 16 bytes long"); }
+  if (data[15] !== 0) { throw new Error("invalid bytes16 string - no null terminator"); }
+
+  // Find the null termination
+  let length = 15;
+  while (data[length - 1] === 0) { length--; }
+
+  // Determine the string value
+  return toUtf8String(data.slice(0, length));
+}
+
