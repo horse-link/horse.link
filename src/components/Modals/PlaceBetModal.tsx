@@ -154,7 +154,7 @@ export const PlaceBetModal: React.FC<Props> = ({
             <h3 className="font-semibold">Markets</h3>
             <select
               onChange={e => onSelectMarket(e, config)}
-              className="border-[0.12rem] border-black mt-1 mb-6"
+              className="border-[0.12rem] border-black mt-1 mb-6 bg-white"
             >
               {config.markets.map(market => (
                 <option
@@ -169,7 +169,7 @@ export const PlaceBetModal: React.FC<Props> = ({
             <h3 className="font-semibold">Wager Amount</h3>
             <input
               type="number"
-              placeholder={wagerAmount || "0"}
+              placeholder={"0"}
               onChange={changeWagerAmount}
               className="border-b-[0.12rem] border-black pl-1 pt-1 mb-6 disabled:text-black/50 disabled:bg-white transition-colors duration-100"
               disabled={txLoading}
