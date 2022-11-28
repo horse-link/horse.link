@@ -15,8 +15,8 @@ const useUserBalance = (
   useEffect(() => {
     if (!tokenAddress || !signer) return;
 
-    const contract = ERC20__factory.connect(tokenAddress, signer);
     setBalance(undefined);
+    const contract = ERC20__factory.connect(tokenAddress, signer);
     (async () => {
       const userAddress = await signer.getAddress();
       const [decimals, amount] = await Promise.all([
