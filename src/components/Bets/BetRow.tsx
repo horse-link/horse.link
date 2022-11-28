@@ -4,7 +4,10 @@ import moment from "moment";
 import Skeleton from "react-loading-skeleton";
 import { BetHistory } from "../../types";
 import { Config } from "../../types/config";
-import { formatToFourDecimals } from "../../utils/formatting";
+import {
+  formatToFourDecimals,
+  parseBytes16String
+} from "../../utils/formatting";
 
 type Props = {
   config?: Config;
@@ -32,12 +35,10 @@ export const BetRow: React.FC<Props> = ({ config, betData, onClick }) => {
       className={classnames(
         "cursor-pointer hover:bg-gray-100",
         {
-          "bg-emerald-300":
-            (betData.winningPropositionId || betData.marketResultAdded) &&
-            !betData.settled
+          "bg-emerald-300": betData.status === "RESULTED"
         },
         {
-          "bg-gray-300": betData.settled
+          "bg-gray-300": betData.status === "SETTLED"
         }
       )}
     >
@@ -49,10 +50,10 @@ export const BetRow: React.FC<Props> = ({ config, betData, onClick }) => {
         {moment.unix(betData.blockNumber).fromNow() ?? <Skeleton />}
       </td>
       <td className="px-2 py-4 truncate">
-        {ethers.utils.parseBytes32String(betData.marketId) ?? <Skeleton />}
+        {parseBytes16String(betData.marketId) ?? <Skeleton />}
       </td>
       <td className="px-2 py-4 truncate">
-        {ethers.utils.parseBytes32String(betData.propositionId) ?? <Skeleton />}
+        {parseBytes16String(betData.propositionId) ?? <Skeleton />}
       </td>
     </tr>
   );

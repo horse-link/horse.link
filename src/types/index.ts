@@ -61,6 +61,7 @@ export type BetHistory = {
   settledAt?: number;
   winningPropositionId?: string;
   marketOracleResultSig?: EcSignature;
+  status: BetStatus;
 };
 
 export type BetHistoryResponse = {
@@ -135,12 +136,9 @@ export type Signature = {
   signature: string;
 };
 
-export enum FilterOptions {
-  ALL_BETS = "ALL_BETS",
-  RESULTED = "RESULTED",
-  PENDING = "PENDING",
-  SETTLED = "SETTLED"
-}
+export type BetStatus = "RESULTED" | "PENDING" | "SETTLED";
+
+export type FilterOptions = "ALL_BETS" | BetStatus;
 
 export type PaginationValues = 25 | 50 | 100;
 
