@@ -179,6 +179,10 @@ export const PlaceBetModal: React.FC<Props> = ({
               className="border-b-[0.12rem] border-black pl-1 pt-1 mb-6 disabled:text-black/50 disabled:bg-white transition-colors duration-100"
               disabled={txLoading}
             />
+                        <span className="text-red-500 block font-semibold">
+              {isWagerNegative && "Wager amount cannot be negative"}
+              {isWagerGreaterThanBalance && "Wager amount cannot be greater than token balance"}
+            </span>
             <span className="block font-semibold">
               Payout:{" "}
               <span className="font-normal">
