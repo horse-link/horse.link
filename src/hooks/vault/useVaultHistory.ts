@@ -1,5 +1,5 @@
 import { BigNumber } from "ethers";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import {
   FormattedVaultTransaction,
   VaultTransaction
@@ -11,10 +11,18 @@ type Response = {
   vaultTransactions: VaultTransaction[];
 };
 
+const POLL_INTERVAL = 5000;
+
 const useVaultHistory = (vaultAddress?: string) => {
-  const { data, loading } = useSubgraph<Response>(
+  const { data, loading, refetch } = useSubgraph<Response>(
     getVaultHistoryQuery(vaultAddress)
   );
+
+  useEffect(() => {
+    const refetchInterval = setInterval(refetch, POLL_INTERVAL);
+
+    return () => clearInterval(refetchInterval);
+  }, []);
 
   const formattedData = useMemo<FormattedVaultTransaction[] | undefined>(() => {
     if (loading || !data) return;

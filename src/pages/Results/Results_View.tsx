@@ -12,7 +12,7 @@ const Results: React.FC<Props> = () => {
   const { track, number } = useParams();
 
   return (
-    <PageLayout requiresAuth={false}>
+    <PageLayout>
       <div className="flex mb-6 p-2 shadow overflow-hidden border-b bg-white border-gray-200 sm:rounded-lg justify-around">
         <h1>Track: {track}</h1>
         <h1>Race #: {number}</h1>

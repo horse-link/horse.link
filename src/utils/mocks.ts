@@ -37,6 +37,7 @@ export const getMockBack = (): Back => ({
   signature: { r: "", s: "", v: 0 }
 });
 
-export const getMockRunners = () => {
-  return Array.from({ length: 5 }, () => undefined);
-};
+export const getMockRunners = () => Array.from({ length: 5 }, () => undefined);
+
+export const getMockAddresses = () =>
+  Array.from({ length: 5 }, () => ethers.constants.AddressZero);

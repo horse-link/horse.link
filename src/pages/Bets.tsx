@@ -36,7 +36,7 @@ const Bets: React.FC = () => {
 
   const isLoading = !betHistory;
   return (
-    <PageLayout requiresAuth={false}>
+    <PageLayout>
       <div className="w-full flex justify-between col-span-2 p-5">
         <h3 className="text-lg font-medium text-gray-900 flex items-center">
           Bets History

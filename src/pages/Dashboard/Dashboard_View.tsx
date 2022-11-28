@@ -30,7 +30,7 @@ const DashboardView: React.FC<Props> = (props: Props) => {
   } = props;
 
   return (
-    <PageLayout requiresAuth={false}>
+    <PageLayout>
       <div className="grid gap-6">
         <div>
           <div className="container-fluid px-4 py-5 bg-emerald-700 shadow rounded-lg overflow-hidden sm:p-6">

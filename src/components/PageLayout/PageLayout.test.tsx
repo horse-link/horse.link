@@ -5,7 +5,7 @@ import PageLayout from "./PageLayout_Logic";
 const TestPageLayout = () => {
   return (
     <MemoryRouter initialEntries={[{ pathname: "/" }]}>
-      <PageLayout requiresAuth={false}>Test</PageLayout>;
+      <PageLayout>Test</PageLayout>;
     </MemoryRouter>
   );
 };

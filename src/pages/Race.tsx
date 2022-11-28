@@ -41,7 +41,7 @@ const Race: React.FC = () => {
   };
 
   return (
-    <PageLayout requiresAuth={false}>
+    <PageLayout>
       <PlaceBetModal
         runner={selectedRunner}
         isModalOpen={isModalOpen}

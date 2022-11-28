@@ -20,7 +20,7 @@ const MarketView = ({ marketAddressList, onClickMarket, stats }: Props) => {
   const { totalBets, totalVolume, largestBet } = stats;
 
   return (
-    <PageLayout requiresAuth={false}>
+    <PageLayout>
       <div className="flex w-full justify-between gap-x-4 mb-4">
         <Card
           title="24H Volume"

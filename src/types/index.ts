@@ -1,3 +1,6 @@
+import { BigNumber } from "ethers";
+import { VaultInfo } from "./config";
+
 export type VaultUserData = {
   vaultBalance: string;
   userBalance: string;
@@ -138,3 +141,19 @@ export type BetStatus = "RESULTED" | "PENDING" | "SETTLED";
 export type FilterOptions = "ALL_BETS" | BetStatus;
 
 export type PaginationValues = 25 | 50 | 100;
+
+export enum VaultTransactionType {
+  DEPOSIT = "deposit",
+  WITHDRAW = "withdraw"
+}
+
+export type VaultModalState = {
+  type: VaultTransactionType;
+  vault: VaultInfo;
+};
+
+export type UserBalance = {
+  value: BigNumber;
+  decimals: number;
+  formatted: string;
+};
