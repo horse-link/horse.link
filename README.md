@@ -1,6 +1,6 @@
 # Abstract
 
-Horse Link https://horse.link is a non custodial Ethereum AMM protocol that allows particpants to wager on sports markets using ERC20 tokens.
+Horse Link https://horse.link is a non custodial Ethereum AMM protocol that allows participants to wager on sports markets using ERC20 tokens.
 
 Traditionally, sports betting is a multi-billion dollar industry that is dominated by a few large companies. Horse Link aims to disrupt this industry by providing a decentralized alternative that is more transparent, fair, and secure.
 

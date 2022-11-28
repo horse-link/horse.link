@@ -2,12 +2,12 @@ import Skeleton from "react-loading-skeleton";
 import { Runner } from "../../types";
 import { formatToTwoDecimals } from "../../utils/formatting";
 
-type RunnerTableProps = {
+type Props = {
   runners: Runner[] | undefined[];
   onClickRunner: (runner?: Runner) => void;
 };
 
-const RunnerTable = ({ runners, onClickRunner }: RunnerTableProps) => {
+const RunnerTable: React.FC<Props> = ({ runners, onClickRunner }) => {
   return (
     <div className="flex flex-col">
       <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -49,12 +49,12 @@ const RunnerTable = ({ runners, onClickRunner }: RunnerTableProps) => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {runners.map(runner => {
+                {runners.map((runner, i) => {
                   const { number, name, barrier, odds } = runner || {};
                   return (
                     <tr
                       className="cursor-pointer hover:bg-gray-100"
-                      key={runner?.number}
+                      key={i}
                       onClick={() => onClickRunner(runner)}
                     >
                       <td className="px-1 py-4 whitespace-nowrap bg-gray-200">

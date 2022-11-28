@@ -36,3 +36,7 @@ export const getMockBack = (): Back => ({
   end: 0,
   signature: { r: "", s: "", v: 0 }
 });
+
+export const getMockRunners = () => {
+  return Array.from({ length: 5 }, () => undefined);
+};

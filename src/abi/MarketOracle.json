@@ -10,15 +10,15 @@
       "inputs": [
         {
           "indexed": false,
-          "internalType": "bytes32",
+          "internalType": "bytes16",
           "name": "marketId",
-          "type": "bytes32"
+          "type": "bytes16"
         },
         {
           "indexed": false,
-          "internalType": "bytes32",
+          "internalType": "bytes16",
           "name": "propositionId",
-          "type": "bytes32"
+          "type": "bytes16"
         }
       ],
       "name": "ResultSet",
@@ -27,14 +27,14 @@
     {
       "inputs": [
         {
-          "internalType": "bytes32",
+          "internalType": "bytes16",
           "name": "marketId",
-          "type": "bytes32"
+          "type": "bytes16"
         },
         {
-          "internalType": "bytes32",
+          "internalType": "bytes16",
           "name": "propositionId",
-          "type": "bytes32"
+          "type": "bytes16"
         }
       ],
       "name": "checkResult",
@@ -51,17 +51,17 @@
     {
       "inputs": [
         {
-          "internalType": "bytes32",
+          "internalType": "bytes16",
           "name": "marketId",
-          "type": "bytes32"
+          "type": "bytes16"
         }
       ],
       "name": "getResult",
       "outputs": [
         {
-          "internalType": "bytes32",
+          "internalType": "bytes16",
           "name": "",
-          "type": "bytes32"
+          "type": "bytes16"
         }
       ],
       "stateMutability": "view",
@@ -70,14 +70,14 @@
     {
       "inputs": [
         {
-          "internalType": "bytes32",
+          "internalType": "bytes16",
           "name": "marketId",
-          "type": "bytes32"
+          "type": "bytes16"
         },
         {
-          "internalType": "bytes32",
+          "internalType": "bytes16",
           "name": "propositionId",
-          "type": "bytes32"
+          "type": "bytes16"
         },
         {
           "internalType": "bytes32",

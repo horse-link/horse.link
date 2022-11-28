@@ -49,7 +49,7 @@ const DashboardView: React.FC<Props> = (props: Props) => {
               />
             </div>
             <h2 className="text-lg mb-3 font-medium text-gray-900">
-              Horse Link is an Ethereum AMM protocol that allows particpants to
+              Horse Link is an Ethereum AMM protocol that allows participants to
               wager on sports markets using ERC20 tokens.
             </h2>
             <p className="text-xs my-2">
