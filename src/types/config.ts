@@ -41,4 +41,5 @@ export type Config = {
   markets: MarketInfo[];
   vaults: VaultInfo[];
   tokens: TokenInfo[];
+  locations: Record<string, string>;
 };

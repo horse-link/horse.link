@@ -7,7 +7,7 @@ const ADDRESS = "0xAA99c40A936A2cF11Eb1D5387897ce9A626E53c7";
 
 export const HlTokenPage = () => {
   return (
-    <PageLayout requiresAuth={false}>
+    <PageLayout>
       <div className="flex justify-center flex-col items-center">
         <h1 className="text-3xl pb-4 font-bold text-center">
           HL Token Private sale

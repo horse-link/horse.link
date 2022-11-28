@@ -12,7 +12,7 @@ export const Web3SuccessHandler: React.FC<Props> = ({ hash }) => {
       <span className="block">
         Hash:{" "}
         <a
-          className="italic"
+          className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
           href={`${process.env.VITE_SCANNER_URL}/tx/${hash}`}
           target="_blank"
           rel="noreferrer noopener"

@@ -1,3 +1,6 @@
+import { BigNumber } from "ethers";
+import { VaultInfo } from "./config";
+
 export type VaultUserData = {
   vaultBalance: string;
   userBalance: string;
@@ -140,3 +143,19 @@ export enum FilterOptions {
 }
 
 export type PaginationValues = 25 | 50 | 100;
+
+export enum VaultTransactionType {
+  DEPOSIT = "deposit",
+  WITHDRAW = "withdraw"
+}
+
+export type VaultModalState = {
+  type: VaultTransactionType;
+  vault: VaultInfo;
+};
+
+export type UserBalance = {
+  value: BigNumber;
+  decimals: number;
+  formatted: string;
+};

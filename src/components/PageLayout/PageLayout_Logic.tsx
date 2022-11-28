@@ -2,7 +2,6 @@ import { useLocation } from "react-router";
 import PageLayoutView from "./PageLayout_View";
 
 type Props = {
-  requiresAuth: boolean;
   children: React.ReactNode;
 };
 

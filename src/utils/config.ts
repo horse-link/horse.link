@@ -1,4 +1,4 @@
-import { Config } from "../types/config";
+import { Config, MarketInfo } from "../types/config";
 
 export const getTokenFromSymbol = (symbol: string, config?: Config) =>
   config?.tokens.find(
@@ -16,3 +16,13 @@ export const getVaultNameFromMarket = (
   config?.vaults.find(
     vault => vault.marketAddress.toLowerCase() === marketAddress.toLowerCase()
   )?.name;
+
+export const getVault = (vaultAddress: string, config?: Config) =>
+  config?.vaults.find(
+    vault => vault.address.toLowerCase() === vaultAddress.toLowerCase()
+  );
+
+export const getVaultFromMarket = (market?: MarketInfo, config?: Config) =>
+  config?.vaults.find(
+    vault => vault.address.toLowerCase() === market?.vaultAddress.toLowerCase()
+  );
