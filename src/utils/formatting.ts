@@ -40,27 +40,6 @@ export const formatBetId = (betId: BetId) => {
   return +segments[2];
 };
 
-export const formatBetHistory = (
-  bet: Bet,
-  signedBetData: SignedBetDataResponse
-): BetHistory => ({
-  index: formatBetId(bet.id),
-  marketId: bet.marketId.toLowerCase(),
-  marketAddress: bet.marketAddress.toLowerCase(),
-  assetAddress: bet.assetAddress.toLowerCase(),
-  propositionId: bet.propositionId.toLowerCase(),
-  winningPropositionId: signedBetData.winningPropositionId,
-  marketResultAdded: signedBetData.marketResultAdded,
-  settled: bet.settled,
-  punter: bet.owner.toLowerCase(),
-  amount: bet.amount,
-  payout: bet.payout,
-  tx: bet.createdAtTx.toLowerCase(),
-  blockNumber: +bet.createdAt,
-  settledAt: bet.settled ? +bet.settledAt : undefined,
-  marketOracleResultSig: signedBetData.marketOracleResultSig
-});
-
 export const shortenAddress = (address: string) =>
   `${address.slice(0, 5)}...${address.slice(address.length - 5)}`;
 
