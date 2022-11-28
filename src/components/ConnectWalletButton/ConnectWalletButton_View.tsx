@@ -1,6 +1,6 @@
 import React from "react";
 import Button from "../Button/Button_View";
-import { useAccount, useDisconnect } from "wagmi";
+import { useAccount, useDisconnect, useSigner } from "wagmi";
 
 type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   openWalletModal: () => void;
@@ -8,7 +8,14 @@ type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 
 const WalletConnectButton: React.FC<Props> = ({ openWalletModal }) => {
   const { address, isConnected, isConnecting } = useAccount();
+  const { data: signer } = useSigner();
   const { disconnect } = useDisconnect();
+
+  useEffect(async () => {
+    if (!signer) return;
+    const chainId = await signer?.getChainId()
+    chainId ===
+  }, [signer]);
 
   return (
     <>
@@ -42,3 +49,7 @@ const WalletConnectButton: React.FC<Props> = ({ openWalletModal }) => {
 };
 
 export default WalletConnectButton;
+function useEffect(arg0: () => void, arg1: (import("@wagmi/core").FetchSignerResult<import("ethers").Signer> | undefined)[]) {
+  throw new Error("Function not implemented.");
+}
+
