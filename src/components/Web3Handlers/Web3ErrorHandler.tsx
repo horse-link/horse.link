@@ -2,12 +2,15 @@ import { ethers } from "ethers";
 import React, { useMemo } from "react";
 
 type Props = {
-  error: ethers.errors;
+  error: any;
 };
 
 export const Web3ErrorHandler: React.FC<Props> = ({ error }) => {
   const message = useMemo(() => {
-    switch (error) {
+    console.error(error);
+
+    const code = error.code as ethers.errors;
+    switch (code) {
       case ethers.errors.ACTION_REJECTED:
         return "Action rejected";
       case ethers.errors.NETWORK_ERROR:
@@ -17,7 +20,6 @@ export const Web3ErrorHandler: React.FC<Props> = ({ error }) => {
       case ethers.errors.UNPREDICTABLE_GAS_LIMIT:
         return "Gas limit unpredictable";
       default:
-        debugger;
         return `Unknown error encountered: ${error}`;
     }
   }, [error]);

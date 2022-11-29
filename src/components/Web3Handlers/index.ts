@@ -1,2 +1,2 @@
-export { Web3ErrorHandler } from "./Web3ErrorHandler";
-export { Web3SuccessHandler } from "./Web3SuccessHandler";
+export * from "./Web3ErrorHandler";
+export * from "./Web3SuccessHandler";
