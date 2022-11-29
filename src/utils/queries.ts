@@ -45,6 +45,7 @@ export const getBetsQuery = ({
     assetAddress
     amount
     payout
+    payoutAt
     owner
     settled
     didWin

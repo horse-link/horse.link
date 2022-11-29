@@ -58,6 +58,7 @@ export type Bet = {
   assetAddress: Address;
   amount: string;
   payout: string;
+  payoutAt: string;
   owner: Address;
   settled: boolean;
   didWin: boolean;
@@ -82,6 +83,7 @@ export type FormattedBet = Pick<
   amount: BigNumber;
   payout: BigNumber;
   punter: Address;
+  payoutAt: number;
   createdAt: number;
   settledAt: number;
 };

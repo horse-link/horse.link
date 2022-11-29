@@ -1,4 +1,5 @@
 import {
+  formatFirstLetterCapitalised,
   formatToFourDecimals,
   formatToTwoDecimals,
   shortenAddress,
@@ -68,5 +69,19 @@ describe("address tests", () => {
       "0x28d9cb5e5a5c4c5d27cf9d8b91ca9b34c31452d105a7201ecd327876f816a592"
     );
     expect(actual).toEqual("0x28d9cb5e5a5c4...d327876f816a592");
+  });
+});
+
+describe("general formatting tests", () => {
+  it("should capitalise the first letter", () => {
+    const wordOne = "foo";
+    const wordTwo = "Bar";
+    const wordThree = "FOO";
+    const wordFour = "bAR";
+
+    expect(formatFirstLetterCapitalised(wordOne)).toEqual("Foo");
+    expect(formatFirstLetterCapitalised(wordTwo)).toEqual("Bar");
+    expect(formatFirstLetterCapitalised(wordThree)).toEqual("Foo");
+    expect(formatFirstLetterCapitalised(wordFour)).toEqual("Bar");
   });
 });

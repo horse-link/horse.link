@@ -17,6 +17,7 @@ const getBetStatus = (
 ): BetStatus => {
   const hasResult =
     signedBetData.winningPropositionId || signedBetData.marketResultAdded;
+  if (+bet.payoutAt > Math.floor(Date.now() / 1000)) return "PENDING";
   if (!hasResult && !bet.settled) return "PENDING";
   if (hasResult && !bet.settled) return "RESULTED";
   if (hasResult && bet.settled) return "SETTLED";
@@ -36,6 +37,7 @@ export const getBetHistory = (
   marketResultAdded: signedBetData.marketResultAdded,
   settled: bet.settled,
   punter: bet.owner.toLowerCase(),
+  payoutDate: +bet.payoutAt,
   amount: bet.amount,
   payout: bet.payout,
   tx: bet.createdAtTx.toLowerCase(),
