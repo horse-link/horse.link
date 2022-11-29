@@ -78,7 +78,7 @@ export const DepositVaultModal: React.FC<Props> = ({
       const tx = await deposit(vault, amount, signer);
       setTxHash(tx);
     } catch (err: any) {
-      setError(err.code as ethers.errors);
+      setError(err);
     } finally {
       setTxLoading(false);
     }
@@ -104,7 +104,7 @@ export const DepositVaultModal: React.FC<Props> = ({
         <h3 className="font-semibold">Deposit Amount</h3>
         <input
           type="number"
-          placeholder={"0"}
+          placeholder="0"
           onChange={changeDepositAmount}
           className="border-b-[0.12rem] border-black pl-1 pt-1 mb-6 disabled:text-black/50 disabled:bg-white transition-colors duration-100"
           disabled={txLoading || !balance}

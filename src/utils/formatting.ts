@@ -1,6 +1,4 @@
-import { arrayify, BytesLike, concat, hexlify } from "@ethersproject/bytes";
-import { HashZero } from "@ethersproject/constants";
-import { toUtf8Bytes, toUtf8String } from "ethers/lib/utils.js";
+import { ethers } from "ethers";
 import { BetId } from "../types/entities";
 
 export const formatToFourDecimals = (amount: string) => {
@@ -49,30 +47,32 @@ export const shortenHash = (hash: string) => {
 };
 
 // Derived from EthersJS version for Bytes32
-export function formatBytes16String(text: string): string {
+export const formatBytes16String = (text: string) => {
   // Get the bytes
-  const bytes = toUtf8Bytes(text);
+  const bytes = ethers.utils.toUtf8Bytes(text);
 
   // Check we have room for null-termination
-  if (bytes.length > 15) { throw new Error("bytes16 string must be less than 16 bytes"); }
+  if (bytes.length > 15) throw new Error("bytes16 string must be less than 16 bytes");
 
   // Zero-pad (implicitly null-terminates)
-  return hexlify(concat([ bytes, HashZero ]).slice(0, 16));
-}
+  return ethers.utils.hexlify(
+    ethers.utils.concat([ bytes, ethers.constants.HashZero ]).slice(0, 16)
+  );
+};
 
 // Derived from EthersJS version for Bytes32
-export function parseBytes16String(bytes: BytesLike): string {
-  const data = arrayify(bytes);
+export const parseBytes16String = (bytes: ethers.BytesLike) => {
+  const data = ethers.utils.arrayify(bytes);
 
   // Must be 16 bytes with a null-termination
-  if (data.length !== 16) { throw new Error("invalid bytes16 - not 16 bytes long"); }
-  if (data[15] !== 0) { throw new Error("invalid bytes16 string - no null terminator"); }
+  if (data.length !== 16) throw new Error("invalid bytes16 - not 16 bytes long");
+  if (data[15] !== 0) throw new Error("invalid bytes16 string - no null terminator");
 
   // Find the null termination
-  let length = 15;
-  while (data[length - 1] === 0) { length--; }
+  const nullTermination = data.indexOf(0);
 
   // Determine the string value
-  return toUtf8String(data.slice(0, length));
-}
-
+  return ethers.utils.toUtf8String(
+    data.slice(0, nullTermination)
+  );
+};
