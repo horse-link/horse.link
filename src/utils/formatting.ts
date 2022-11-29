@@ -77,5 +77,5 @@ export const parseBytes16String = (bytes: ethers.BytesLike) => {
   );
 };
 
-export const formatFirstLetterCapitalied = (string: string) =>
+export const formatFirstLetterCapitalised = (string: string) =>
   `${string.charAt(0).toUpperCase()}${string.slice(1).toLowerCase()}`;

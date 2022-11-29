@@ -9,7 +9,7 @@ import { ethers } from "ethers";
 import useMarketContract from "../../hooks/market/useMarketContract";
 import { Web3ErrorHandler, Web3SuccessHandler } from "../Web3Handlers";
 import { useSigner } from "wagmi";
-import { formatFirstLetterCapitalied } from "../../utils/formatting";
+import { formatFirstLetterCapitalised } from "../../utils/formatting";
 
 type Props = {
   isModalOpen: boolean;
@@ -90,7 +90,7 @@ export const SettleBetModal: React.FC<Props> = ({
       ) : (
         <React.Fragment>
           <h2 className="font-bold text-2xl mr-[8vw] mb-6">
-            {formatFirstLetterCapitalied(selectedBet.status)}{" "}
+            {formatFirstLetterCapitalised(selectedBet.status)}{" "}
             Bet
           </h2>
           <div className="flex flex-col">
