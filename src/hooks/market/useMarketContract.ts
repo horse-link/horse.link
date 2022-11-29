@@ -64,11 +64,11 @@ const useMarketContract = () => {
       signer
     );
 
-    if (!bet.marketResultAdded)
+    if (!bet.marketResultAdded && bet.winningPropositionId)
       await (
         await marketOracleContract.setResult(
           bet.marketId,
-          bet.propositionId,
+          bet.winningPropositionId,
           ethers.constants.HashZero
         )
       ).wait();
