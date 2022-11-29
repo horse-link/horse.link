@@ -37,7 +37,7 @@ const useMarketContract = () => {
 
     const receipt = await (
       await marketContract.back(
-        formatBytes16String(back.nonce),
+        back.nonce,
         formatBytes16String(back.proposition_id),
         formatBytes16String(back.market_id),
         wager,
