@@ -9,7 +9,7 @@ export const Web3ErrorHandler: React.FC<Props> = ({ error }) => {
   const message = useMemo(() => {
     console.error(error);
 
-    const code = error.code as  ethers.errors;
+    const code = error.code as ethers.errors;
     switch (code) {
       case ethers.errors.ACTION_REJECTED:
         return "Action rejected";
