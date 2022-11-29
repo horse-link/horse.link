@@ -10,6 +10,7 @@ export const getMockBet = (): Bet => ({
   assetAddress: ethers.constants.AddressZero,
   amount: "0",
   payout: "0",
+  payoutAt: "0",
   owner: ethers.constants.AddressZero,
   settled: false,
   didWin: false,
