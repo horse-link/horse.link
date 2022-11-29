@@ -56,6 +56,7 @@ export type BetHistory = {
   punter: string;
   amount: string;
   payout: string;
+  payoutDate: number;
   tx: string;
   blockNumber: number;
   settledAt?: number;

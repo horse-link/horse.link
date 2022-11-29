@@ -1,5 +1,5 @@
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { getVaultNameFromMarket } from "../../utils/config";
 import { useConfig } from "../../providers/Config";
 import { BetHistory } from "../../types";
@@ -9,6 +9,7 @@ import { ethers } from "ethers";
 import useMarketContract from "../../hooks/market/useMarketContract";
 import { Web3ErrorHandler, Web3SuccessHandler } from "../Web3Handlers";
 import { useSigner } from "wagmi";
+import { formatFirstLetterCapitalied } from "../../utils/formatting";
 
 type Props = {
   isModalOpen: boolean;
@@ -30,6 +31,8 @@ export const SettleBetModal: React.FC<Props> = ({
   const { data: signer } = useSigner();
   const config = useConfig();
   const { settleBet } = useMarketContract();
+
+  const now = useMemo(() => Math.floor(Date.now() / 1000), []);
 
   useEffect(() => {
     if (isModalOpen) return;
@@ -54,6 +57,8 @@ export const SettleBetModal: React.FC<Props> = ({
       ? selectedBet.winningPropositionId.toLowerCase() ===
         selectedBet.propositionId.toLowerCase()
       : false;
+  const isPayable = 
+    selectedBet ? now > selectedBet.payoutDate : false;
 
   const onClickSettleBet = async () => {
     if (
@@ -85,11 +90,7 @@ export const SettleBetModal: React.FC<Props> = ({
       ) : (
         <React.Fragment>
           <h2 className="font-bold text-2xl mr-[8vw] mb-6">
-            {selectedBet.settled || txHash
-              ? "Settled"
-              : selectedBet.winningPropositionId
-              ? "Unsettled"
-              : "Pending"}{" "}
+            {formatFirstLetterCapitalied(selectedBet.status)}{" "}
             Bet
           </h2>
           <div className="flex flex-col">
@@ -127,6 +128,7 @@ export const SettleBetModal: React.FC<Props> = ({
                 !signer ||
                 selectedBet.settled ||
                 !selectedBet.marketOracleResultSig ||
+                !isPayable ||
                 txLoading ||
                 !!txHash
               }
