@@ -114,16 +114,20 @@ export const SettleBetModal: React.FC<Props> = ({
                   {ethers.utils.formatEther(selectedBet.payout)} {token?.symbol}
                 </span>
               </h3>
+            ) : isWinning === false ? (
+              <h3 className="font-semibold">
+                Loss:{" "}
+                <span className="font-normal">
+                  {ethers.utils.formatEther(selectedBet.amount)} {token?.symbol}
+                </span>
+              </h3>
             ) : (
-              isWinning === false && (
-                <h3 className="font-semibold">
-                  Loss:{" "}
-                  <span className="font-normal">
-                    {ethers.utils.formatEther(selectedBet.amount)}{" "}
-                    {token?.symbol}
-                  </span>
-                </h3>
-              )
+              <h3 className="font-semibold">
+                Bet:{" "}
+                <span className="font-normal">
+                  {ethers.utils.formatEther(selectedBet.amount)} {token?.symbol}
+                </span>
+              </h3>
             )}
             <button
               className="w-full font-bold border-black border-2 py-2 rounded-md relative top-6 hover:text-white hover:bg-black transition-colors duration-100 disabled:text-black/50 disabled:border-black/50 disabled:bg-white"
