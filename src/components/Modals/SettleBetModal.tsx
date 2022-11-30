@@ -56,7 +56,8 @@ export const SettleBetModal: React.FC<Props> = ({
     selectedBet && selectedBet.winningPropositionId
       ? selectedBet.winningPropositionId.toLowerCase() ===
         selectedBet.propositionId.toLowerCase()
-      : false;
+      : undefined;
+
   const isPayable = selectedBet ? now > selectedBet.payoutDate : false;
 
   const onClickSettleBet = async () => {
@@ -106,7 +107,7 @@ export const SettleBetModal: React.FC<Props> = ({
                 {getVaultNameFromMarket(market!.address, config)}
               </span>
             </h3>
-            {isWinning ? (
+            {isWinning === true ? (
               <h3 className="font-semibold">
                 Win:{" "}
                 <span className="font-normal">
@@ -114,12 +115,15 @@ export const SettleBetModal: React.FC<Props> = ({
                 </span>
               </h3>
             ) : (
-              <h3 className="font-semibold">
-                Loss:{" "}
-                <span className="font-normal">
-                  {ethers.utils.formatEther(selectedBet.amount)} {token?.symbol}
-                </span>
-              </h3>
+              isWinning === false && (
+                <h3 className="font-semibold">
+                  Loss:{" "}
+                  <span className="font-normal">
+                    {ethers.utils.formatEther(selectedBet.amount)}{" "}
+                    {token?.symbol}
+                  </span>
+                </h3>
+              )
             )}
             <button
               className="w-full font-bold border-black border-2 py-2 rounded-md relative top-6 hover:text-white hover:bg-black transition-colors duration-100 disabled:text-black/50 disabled:border-black/50 disabled:bg-white"
