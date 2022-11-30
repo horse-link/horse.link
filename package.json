@@ -78,7 +78,7 @@
     "serve": "vite preview --port 3000",
     "test": "vitest",
     "prepare": "husky install",
-    "format-staged": "pretty-quick",
+    "format-staged": "pretty-quick --staged",
     "lint": "prettier -w src",
     "postinstall": "yarn typechain",
     "typechain": "typechain --target ethers-v5 ./src/abi/*.json --out-dir ./src/typechain"
