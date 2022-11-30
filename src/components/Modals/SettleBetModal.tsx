@@ -57,8 +57,7 @@ export const SettleBetModal: React.FC<Props> = ({
       ? selectedBet.winningPropositionId.toLowerCase() ===
         selectedBet.propositionId.toLowerCase()
       : false;
-  const isPayable = 
-    selectedBet ? now > selectedBet.payoutDate : false;
+  const isPayable = selectedBet ? now > selectedBet.payoutDate : false;
 
   const onClickSettleBet = async () => {
     if (
@@ -68,6 +67,8 @@ export const SettleBetModal: React.FC<Props> = ({
       !selectedBet.marketOracleResultSig
     )
       return;
+    setTxHash(undefined);
+    setError(undefined);
 
     try {
       setTxLoading(true);
@@ -90,8 +91,7 @@ export const SettleBetModal: React.FC<Props> = ({
       ) : (
         <React.Fragment>
           <h2 className="font-bold text-2xl mr-[8vw] mb-6">
-            {formatFirstLetterCapitalised(selectedBet.status)}{" "}
-            Bet
+            {formatFirstLetterCapitalised(selectedBet.status)} Bet
           </h2>
           <div className="flex flex-col">
             <h3 className="font-semibold mb-2">
