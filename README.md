@@ -68,3 +68,22 @@ Horse Link Token `0xfdc066DF7d7A188786A1580a9DDFbfbE716c31d5`
 `npx truffle run verify Vault@0x21D068720BDBc7EdC49Ce8D1b1E1fb2d6c3526eb --network goerli`  
 `npx truffle run verify Vault@0x6F47f0864ab7a02f9E7866d2bc8aC0BCf3C4924E --network goerli`  
 `npx truffle run verify Registry --forceConstructorArgs string: --network goerli`  
+
+## PGP Public Key
+
+```text
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Comment: GPGTools - https://gpgtools.org
+
+mDMEY4AkVBYJKwYBBAHaRw8BAQdAU+9FUdxNGY+tvYJDKcLfLVnEgR6pgLsDisyp
+z3o+2uG0I2FkbWluQGhvcnNlLmxpbmsgPGFkbWluQGhvcnNlLmxpbms+iIwEEBYK
+AD4FAmOAJFQECwkHCAkQbIP3dffWlFIDFQgKBBYAAgECGQECGwMCHgEWIQTxqp9x
+kWGJPA8vSThsg/d199aUUgAArugBAOUUGcMJ1tdmbSHVRAyMPtInh1rqbGza/ngY
+kqkFv0noAP9yKkw4WuB1yyXgD3xFVrJ+CGe9NblPSwVPE4N71IebB7g4BGOAJFQS
+CisGAQQBl1UBBQEBB0BYZjZCmgK+e5DQRCkDmAo55WW+KiYdt2NI/MYM949ycgMB
+CAeIeAQYFggAKgUCY4AkVAkQbIP3dffWlFICGwwWIQTxqp9xkWGJPA8vSThsg/d1
+99aUUgAALMwBAIoVCO/cxjf4FTcbnRPZV+9YZKiniqLoY0bRk6x3d9nmAQCZz1SJ
+YbY0ZjTeFifXI9dSpIZoH9Cb1D0xXdvGXZePBA==
+=HtcE
+-----END PGP PUBLIC KEY BLOCK-----
+```
