@@ -20,7 +20,7 @@ Payout = S \* (D - D \* (S / t))
 
 f(odds, pool, wager) = odds - odds\*(wager/pool)
 
-f(s) = s * f(odds)
+f(s) = s \* f(odds)
 
 Where
 
@@ -30,6 +30,14 @@ Where
 - t is the total locked value in the vault
 
 The liquidity is locked in the market contract until after the participant claims their payout.
+
+Status
+
+- Resulted: finished races and no protest or dead heat
+
+- Pending: races haven't started or those results haven't been finalised
+
+- Settled: Settled transaction has been done by the users or another actor
 
 # Vaults
 
@@ -56,7 +64,7 @@ USDT Market: `0x44e4cA9f8939142971D5DF043fbdD5Fa6fA1273e`
 DAI Vault: `0xf6A36eCd0b09C680C2E6AC3DaE3c7C397D9fBe10`  
 DAI Market: `0xCaEE99685Ff8cf80e605cb0E5C073056B2cf642d`  
 Registry: `0xCFa36F3692b19FF9472aEc18f7dcf5EB0A29A633`  
-Market Oracle: `0x5b559E0E44aeB2bccfd82CACF9d877EbDd28F116`  
+Market Oracle: `0x5b559E0E44aeB2bccfd82CACF9d877EbDd28F116`
 
 ## Mainnet
 
@@ -67,7 +75,7 @@ Horse Link Token `0xfdc066DF7d7A188786A1580a9DDFbfbE716c31d5`
 `npx hardhat verify --network goerli 0xd90AE997C32EdE8feCe39694460543868Da0d0D1 0xd87E8BF1327f10685c9283859A4Eb022ADbe03F9`  
 `npx truffle run verify Vault@0x21D068720BDBc7EdC49Ce8D1b1E1fb2d6c3526eb --network goerli`  
 `npx truffle run verify Vault@0x6F47f0864ab7a02f9E7866d2bc8aC0BCf3C4924E --network goerli`  
-`npx truffle run verify Registry --forceConstructorArgs string: --network goerli`  
+`npx truffle run verify Registry --forceConstructorArgs string: --network goerli`
 
 ## PGP Public Key
 
