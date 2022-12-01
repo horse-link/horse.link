@@ -91,7 +91,7 @@ export const PlaceBetModal: React.FC<Props> = ({
   }, [txLoading]);
 
   useEffect(() => {
-    if (isModalOpen) return;
+    if (isModalOpen) return refetchUserBalance();
 
     setTimeout(() => {
       setWagerAmount(undefined);

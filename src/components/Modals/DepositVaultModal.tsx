@@ -57,7 +57,7 @@ export const DepositVaultModal: React.FC<Props> = ({
   }, [signer, config, shouldRefetch]);
 
   useEffect(() => {
-    if (isModalOpen) return;
+    if (isModalOpen) return refetchUserBalance();
 
     setTimeout(() => {
       setDepositAmount(undefined);
