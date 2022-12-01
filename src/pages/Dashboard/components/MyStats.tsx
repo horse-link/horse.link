@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import Card from "../../../components/Card";
-import useUserStatistics from "../../../hooks/stats/useUserStatistics";
+import { useUserStatistics } from "../../../hooks/stats";
 import { formatNumberWithCommas } from "../../../utils/formatting";
 
 const MyStats = () => {

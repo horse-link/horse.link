@@ -13,7 +13,10 @@ type Response = {
 
 const POLL_INTERVAL = 5000;
 
-const useSubgraphBets = (myBetsEnabled: boolean, filter: FilterOptions) => {
+export const useSubgraphBets = (
+  myBetsEnabled: boolean,
+  filter: FilterOptions
+) => {
   const { address } = useAccount();
   const [betHistory, setBetHistory] = useState<BetHistory[]>();
 
@@ -53,5 +56,3 @@ const useSubgraphBets = (myBetsEnabled: boolean, filter: FilterOptions) => {
     refetch
   };
 };
-
-export default useSubgraphBets;

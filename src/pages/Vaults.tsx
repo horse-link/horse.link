@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { VaultHistoryTable, VaultListRow } from "../components/Vaults";
 import { PageLayout } from "../components";
-import useSubgraphVaults from "../hooks/subgraph/useSubgraphVaults";
+import { useSubgraphVaults } from "../hooks/subgraph";
 import { useConfig } from "../providers/Config";
 import { VaultModalState, VaultTransactionType } from "../types";
 import { DepositVaultModal, WithdrawVaultModal } from "../components/Modals";

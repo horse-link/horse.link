@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
-import useSubgraphBets from "../hooks/subgraph/useSubgraphBets";
+import { useSubgraphBets } from "../hooks/subgraph";
 import { BetHistory, FilterOptions } from "../types";
 import { PageLayout } from "../components";
 import Toggle from "../components/Toggle";

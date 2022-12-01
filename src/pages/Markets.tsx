@@ -1,4 +1,4 @@
-import useMarketStatistics from "../hooks/stats/useMarketStatistics";
+import { useMarketStatistics } from "../hooks/stats";
 import { PageLayout } from "../components";
 import Card from "../components/Card";
 import { formatToFourDecimals } from "../utils/formatting";
