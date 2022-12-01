@@ -1,6 +1,6 @@
 import { BigNumber } from "ethers";
 import { Address } from "wagmi";
-import { VaultTransactionType } from ".";
+import { VaultTransactionType } from "./vaults";
 
 export type Aggregator = {
   // id will always be aggregator

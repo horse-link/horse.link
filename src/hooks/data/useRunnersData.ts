@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { SignedRunnersResponse } from "../../types";
+import { SignedRunnersResponse } from "../../types/meets";
 import useSwr from "../useSwr";
 
 export const useRunnersData = (track: string, raceNumber: number) => {

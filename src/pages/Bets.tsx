@@ -1,19 +1,18 @@
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { useSubgraphBets } from "../hooks/subgraph";
-import { BetHistory, FilterOptions } from "../types";
-import { PageLayout } from "../components";
-import Toggle from "../components/Toggle";
+import { Toggle, PageLayout } from "../components";
 import { BetFilterGroup, BetTable } from "../components/Bets";
 import { SettleBetModal } from "../components/Modals";
-import { useWalletModal } from "src/providers/WalletModal";
+import { BetFilterOptions, BetHistory } from "../types/bets";
+import { useWalletModal } from "../providers/WalletModal";
 
-const Bets: React.FC = () => {
+export const Bets: React.FC = () => {
   const [myBetsEnabled, setMyBetsEnabled] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBet, setSelectedBet] = useState<BetHistory>();
   const [betTableFilter, setBetTableFilter] =
-    useState<FilterOptions>("ALL_BETS");
+    useState<BetFilterOptions>("ALL_BETS");
 
   const { isConnected } = useAccount();
   const { openWalletModal } = useWalletModal();
@@ -35,7 +34,8 @@ const Bets: React.FC = () => {
   }, [isConnected]);
 
   const onMyBetToggle = () => setMyBetsEnabled(prev => !prev);
-  const onFilterChange = (option: FilterOptions) => setBetTableFilter(option);
+  const onFilterChange = (option: BetFilterOptions) =>
+    setBetTableFilter(option);
 
   const isLoading = !betHistory;
   return (
@@ -70,5 +70,3 @@ const Bets: React.FC = () => {
     </PageLayout>
   );
 };
-
-export default Bets;

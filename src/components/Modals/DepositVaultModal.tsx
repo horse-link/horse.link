@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useSigner } from "wagmi";
 import { VaultInfo } from "../../types/config";
-import Modal from "../Modal";
-import Loader from "../Loader";
+import { BaseModal } from ".";
 import { ethers } from "ethers";
 import { Web3ErrorHandler, Web3SuccessHandler } from "../Web3Handlers";
 import { useVaultContract, useERC20Contract } from "../../hooks/contracts";
-import { UserBalance } from "../../types";
-import { formatToFourDecimals } from "../../utils/formatting";
 import useRefetch from "../../hooks/useRefetch";
+import utils from "../../utils";
+import { UserBalance } from "../../types/users";
+import { Loader } from "../";
 
 type Props = {
   isModalOpen: boolean;
@@ -47,7 +47,7 @@ export const DepositVaultModal: React.FC<Props> = ({
       setUserBalance({
         value: balance,
         decimals,
-        formatted: formatToFourDecimals(
+        formatted: utils.formatting.formatToFourDecimals(
           ethers.utils.formatUnits(balance, decimals)
         )
       });
@@ -114,7 +114,7 @@ export const DepositVaultModal: React.FC<Props> = ({
       : false;
 
   return (
-    <Modal isOpen={isModalOpen} onClose={closeModal}>
+    <BaseModal isOpen={isModalOpen} onClose={closeModal}>
       <h2 className="font-bold text-2xl mr-[8vw] mb-6">Deposit</h2>
       <div className="flex flex-col">
         <h3 className="font-semibold mb-2">
@@ -153,6 +153,6 @@ export const DepositVaultModal: React.FC<Props> = ({
         {txHash && <Web3SuccessHandler hash={txHash} />}
         {error && <Web3ErrorHandler error={error} />}
       </div>
-    </Modal>
+    </BaseModal>
   );
 };

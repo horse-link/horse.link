@@ -22,7 +22,6 @@
     "classnames": "^2.3.1",
     "eth-gas-reporter": "^0.2.25",
     "ethers": "^5.7.2",
-    "formik": "^2.2.7",
     "graphql": "^16.6.0",
     "moment": "^2.29.1",
     "react": "^18.2.0",
@@ -81,7 +80,7 @@
     "format-staged": "pretty-quick --staged",
     "lint": "prettier -w src",
     "postinstall": "yarn typechain",
-    "typechain": "typechain --target ethers-v5 ./src/abi/*.json --out-dir ./src/typechain"
+    "typechain": "typechain --target ethers-v5 ./src/abis/*.json --out-dir ./src/typechain"
   },
   "browserslist": [
     ">0.2%",
