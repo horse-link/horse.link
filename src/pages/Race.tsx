@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Runner } from "../types";
 import { useParams } from "react-router-dom";
-import useRunnerData from "../hooks/data/useRunnerData";
+import useRunnerData from "../hooks/data/useRunnersData";
 import { useAccount } from "wagmi";
 import { useWalletModal } from "../providers/WalletModal";
 import { getMockRunners } from "../utils/mocks";

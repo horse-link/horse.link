@@ -1,39 +1,63 @@
 import React, { useEffect, useState } from "react";
-import useUserBalance from "../../hooks/token/useUserBalance";
 import { useSigner } from "wagmi";
-import { VaultInfo } from "../../types/config";
+import { Config, VaultInfo } from "../../types/config";
 import Modal from "../Modal";
 import Loader from "../Loader";
 import { ethers } from "ethers";
 import { Web3ErrorHandler, Web3SuccessHandler } from "../Web3Handlers";
-import useVaultContract from "src/hooks/vault/useVaultContract";
+import { useVaultContract, useERC20Contract } from "../../hooks/contracts";
+import { UserBalance } from "../../types";
+import { formatToFourDecimals } from "../../utils/formatting";
+import useRefetch from "../../hooks/useRefetch";
 
 type Props = {
   isModalOpen: boolean;
   closeModal: () => void;
   vault: VaultInfo;
+  config?: Config;
 };
 
 export const DepositVaultModal: React.FC<Props> = ({
   isModalOpen,
   closeModal,
-  vault
+  vault,
+  config
 }) => {
   const [depositAmount, setDepositAmount] = useState<string>();
+  const [userBalance, setUserBalance] = useState<UserBalance>();
   const [txLoading, setTxLoading] = useState(false);
   const [txHash, setTxHash] = useState<string>();
   const [error, setError] = useState<ethers.errors>();
 
   const { data: signer } = useSigner();
 
-  const { balance, refetch: refetchUserBalance } = useUserBalance(
-    vault.asset.address,
-    signer
-  );
   const { deposit } = useVaultContract();
+  const { getBalance, getDecimals } = useERC20Contract();
+  const { shouldRefetch, refetch: refetchUserBalance } = useRefetch();
 
   useEffect(() => {
-    if (isModalOpen) return refetchUserBalance();
+    if (!signer || !config) return;
+
+    (async () => {
+      setUserBalance(undefined);
+      const assetAddress = vault.asset.address;
+      const [balance, decimals] = await Promise.all([
+        getBalance(assetAddress, signer),
+        getDecimals(assetAddress, signer)
+      ]);
+
+      setUserBalance({
+        value: balance,
+        decimals,
+        formatted: formatToFourDecimals(
+          ethers.utils.formatUnits(balance, decimals)
+        )
+      });
+    })();
+  }, [signer, config, shouldRefetch]);
+
+  useEffect(() => {
+    if (isModalOpen) return;
 
     setTimeout(() => {
       setDepositAmount(undefined);
@@ -44,20 +68,21 @@ export const DepositVaultModal: React.FC<Props> = ({
   }, [isModalOpen]);
 
   useEffect(() => {
-    if (!txHash) return;
+    if (!txLoading) return refetchUserBalance();
 
-    refetchUserBalance();
-  }, [txHash]);
+    setError(undefined);
+    setTxHash(undefined);
+  }, [txLoading]);
 
   const changeDepositAmount = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!balance) return;
+    if (!userBalance) return;
 
     event.preventDefault();
     const value = event.currentTarget.value;
 
     if (value.includes(".")) {
       const decimals = value.split(".")[1];
-      if (decimals.length > balance.decimals) {
+      if (decimals.length > userBalance.decimals) {
         event.currentTarget.value = depositAmount || "";
         return;
       }
@@ -67,9 +92,9 @@ export const DepositVaultModal: React.FC<Props> = ({
   };
 
   const onClickDeposit = async () => {
-    if (!depositAmount || !balance || !signer) return;
+    if (!depositAmount || !userBalance || !signer) return;
 
-    const amount = ethers.utils.parseUnits(depositAmount, balance.decimals);
+    const amount = ethers.utils.parseUnits(depositAmount, userBalance.decimals);
     setTxHash(undefined);
     setError(undefined);
 
@@ -86,7 +111,9 @@ export const DepositVaultModal: React.FC<Props> = ({
 
   const isDepositNegative = depositAmount ? +depositAmount < 0 : false;
   const isDepositGreaterThanBalance =
-    depositAmount && balance ? +depositAmount > +balance.formatted : false;
+    depositAmount && userBalance
+      ? +depositAmount > +userBalance.formatted
+      : false;
 
   return (
     <Modal isOpen={isModalOpen} onClose={closeModal}>
@@ -98,7 +125,7 @@ export const DepositVaultModal: React.FC<Props> = ({
         <h3 className="font-semibold mb-2">
           Available:{" "}
           <span className="font-normal">
-            {balance?.formatted || <Loader size={14} />}
+            {userBalance?.formatted || <Loader size={14} />}
           </span>
         </h3>
         <h3 className="font-semibold">Deposit Amount</h3>
@@ -107,7 +134,7 @@ export const DepositVaultModal: React.FC<Props> = ({
           placeholder="0"
           onChange={changeDepositAmount}
           className="border-b-[0.12rem] border-black pl-1 pt-1 mb-6 disabled:text-black/50 disabled:bg-white transition-colors duration-100"
-          disabled={txLoading || !balance}
+          disabled={txLoading || !userBalance}
         />
         <button
           className="w-full font-bold border-black border-2 py-2 rounded-md relative top-6 hover:text-white hover:bg-black transition-colors duration-100 disabled:text-black/50 disabled:border-black/50 disabled:bg-white"
@@ -115,8 +142,8 @@ export const DepositVaultModal: React.FC<Props> = ({
           disabled={
             !depositAmount ||
             !signer ||
-            !balance ||
-            +balance.formatted === 0 ||
+            !userBalance ||
+            +userBalance.formatted === 0 ||
             txLoading ||
             isDepositNegative ||
             isDepositGreaterThanBalance

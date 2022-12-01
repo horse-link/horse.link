@@ -7,7 +7,7 @@ type Props = {
   raceNumber: number;
 };
 
-const useRunnerData = ({ track, raceNumber }: Props) => {
+const useRunnersData = ({ track, raceNumber }: Props) => {
   const { data, isLoading, error } = useSwr<SignedRunnersResponse>(
     `/runners/${track}/${raceNumber}/win`
   );
@@ -26,4 +26,4 @@ const useRunnerData = ({ track, raceNumber }: Props) => {
   };
 };
 
-export default useRunnerData;
+export default useRunnersData;

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getBetHistory } from "src/utils/bets";
+import { filterBetsByFilterOptions, getBetHistory } from "../../utils/bets";
 import { useAccount } from "wagmi";
 import api from "../../apis/Api";
 import { BetHistory, FilterOptions } from "../../types";
@@ -13,15 +13,7 @@ type Response = {
 
 const POLL_INTERVAL = 5000;
 
-const filterBetsByFilterOptions = (
-  bets: BetHistory[],
-  filter: FilterOptions
-) => {
-  if (filter === "ALL_BETS") return bets;
-  return bets.filter(bet => bet.status === filter);
-};
-
-const useBets = (myBetsEnabled: boolean, filter: FilterOptions) => {
+const useSubgraphBets = (myBetsEnabled: boolean, filter: FilterOptions) => {
   const { address } = useAccount();
   const [betHistory, setBetHistory] = useState<BetHistory[]>();
 
@@ -62,4 +54,4 @@ const useBets = (myBetsEnabled: boolean, filter: FilterOptions) => {
   };
 };
 
-export default useBets;
+export default useSubgraphBets;

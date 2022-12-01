@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
-import useBets from "../hooks/bet/useBets";
+import useSubgraphBets from "../hooks/subgraph/useSubgraphBets";
 import { BetHistory, FilterOptions } from "../types";
 import { PageLayout } from "../components";
 import Toggle from "../components/Toggle";
@@ -18,7 +18,10 @@ const Bets: React.FC = () => {
   const { isConnected } = useAccount();
   const { openWalletModal } = useWalletModal();
 
-  const { betHistory, refetch } = useBets(myBetsEnabled, betTableFilter);
+  const { betHistory, refetch } = useSubgraphBets(
+    myBetsEnabled,
+    betTableFilter
+  );
 
   const onClickBet = (betData?: BetHistory) => {
     if (!betData) return;

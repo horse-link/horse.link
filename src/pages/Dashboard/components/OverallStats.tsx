@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import Card from "../../../components/Card";
-import useProtocolStatistics from "../../../hooks/data/useProtocolStatistics";
+import useProtocolStatistics from "../../../hooks/stats/useProtocolStatistics";
 import {
   formatNumberWithCommas,
   formatToTwoDecimals
