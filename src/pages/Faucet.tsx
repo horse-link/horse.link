@@ -1,11 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
-import { useAccount } from "wagmi";
+import { useAccount, useBalance } from "wagmi";
 import { FaucetModal } from "../components/Modals";
 import { AiOutlineCopy } from "react-icons/ai";
 import api from "../apis/Api";
 import { useConfig } from "../providers/Config";
 import { useWalletModal } from "../providers/WalletModal";
-import { useBalance } from "wagmi";
 import { Loader, PageLayout } from "../components";
 import { ClaimTokensButton } from "../components/Buttons";
 
