@@ -16,11 +16,11 @@ const WalletConnectButton: React.FC<Props> = ({ openWalletModal }) => {
         className={
           isConnecting
             ? "hidden"
-            : "inline-flex items-center px-1 text-sm font-medium justify-self-end"
+            : "inline-flex items-center text-sm font-medium justify-self-end"
         }
       >
         {isConnected ? (
-          <div className="inline-flex items-center mx-2 gap-4">
+          <div className="flex items-center gap-3">
             <span className="truncate text-gray-500">{address}</span>
             <div>
               <Button
@@ -32,7 +32,7 @@ const WalletConnectButton: React.FC<Props> = ({ openWalletModal }) => {
             </div>
           </div>
         ) : (
-          <div className="mx-4">
+          <div className="mx-3">
             <Button onClick={openWalletModal}>Connect your Wallet</Button>
           </div>
         )}
