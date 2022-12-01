@@ -1,12 +1,12 @@
 import React, { useContext } from "react";
 import classnames from "classnames";
 import { Link } from "react-router-dom";
-import { Loader } from "..";
 import { Disclosure } from "@headlessui/react";
 import WalletConnectButton from "../ConnectWalletButton/ConnectWalletButton_View";
 import WalletModal from "../WalletModal";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import { WalletModalContext } from "../../providers/WalletModal";
+import Loader from "../Loader";
 
 const navigation = [
   { name: "Dashboard", path: "/dashboard" },

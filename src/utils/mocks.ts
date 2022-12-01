@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
-import { Back } from "../types";
 import { Bet, FormattedUser } from "../types/entities";
+import { Back } from "../types/meets";
 
 export const getMockBet = (): Bet => ({
   id: `BET_${ethers.constants.AddressZero}_0`,

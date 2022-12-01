@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import api from "../../apis/Api";
-import { BetHistory, FilterOptions } from "../../types";
 import { Bet } from "../../types/entities";
 import useSubgraph from "../useSubgraph";
 import utils from "../../utils";
+import { BetFilterOptions, BetHistory } from "../../types/bets";
 
 type Response = {
   bets: Bet[];
@@ -14,7 +14,7 @@ const POLL_INTERVAL = 5000;
 
 export const useSubgraphBets = (
   myBetsEnabled: boolean,
-  filter: FilterOptions
+  filter: BetFilterOptions
 ) => {
   const { address } = useAccount();
   const [betHistory, setBetHistory] = useState<BetHistory[]>();

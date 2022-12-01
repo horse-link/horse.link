@@ -7,7 +7,6 @@
     "moduleResolution": "Node",
     "jsx": "react-jsx",
     "outDir": "./dist",
-    "baseUrl": "./",
     "useDefineForClassFields": true,
     "allowJs": false,
     "allowSyntheticDefaultImports": true,
@@ -32,5 +31,5 @@
     "strictBindCallApply": true,
     "strictNullChecks": true
   },
-  "include": ["./src/**/*", "src/utils/general/.ts"]
+  "include": ["./src/**/*"]
 }

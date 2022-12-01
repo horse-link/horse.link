@@ -4,10 +4,11 @@ import {
   Market__factory,
   Vault__factory
 } from "../../typechain";
-import { Back, BetHistory } from "../../types";
 import { BigNumber, ethers, Signer } from "ethers";
 import { MarketInfo } from "../../types/config";
 import utils from "../../utils";
+import { Back } from "../../types/meets";
+import { BetHistory } from "../../types/bets";
 
 const ODDS_DECIMALS = 6;
 

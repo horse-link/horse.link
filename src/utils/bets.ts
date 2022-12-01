@@ -1,10 +1,10 @@
+import utils from ".";
 import {
+  BetFilterOptions,
   BetHistory,
   BetStatus,
-  FilterOptions,
   SignedBetDataResponse
-} from "../types";
-import utils from ".";
+} from "../types/bets";
 import { Bet } from "../types/entities";
 
 export const calculateMaxPages = (betsArrayLength: number, totalBets: number) =>
@@ -54,7 +54,7 @@ export const getBetHistory = (
 
 export const filterBetsByFilterOptions = (
   bets: BetHistory[],
-  filter: FilterOptions
+  filter: BetFilterOptions
 ) => {
   if (filter === "ALL_BETS") return bets;
   return bets.filter(bet => bet.status === filter);

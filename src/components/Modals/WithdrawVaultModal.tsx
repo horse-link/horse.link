@@ -7,8 +7,8 @@ import { ethers } from "ethers";
 import { Web3ErrorHandler, Web3SuccessHandler } from "../Web3Handlers";
 import { useVaultContract } from "../../hooks/contracts";
 import { Vault__factory } from "../../typechain";
-import { UserBalance } from "../../types";
 import useRefetch from "../../hooks/useRefetch";
+import { UserBalance } from "../../types/users";
 
 type Props = {
   isModalOpen: boolean;

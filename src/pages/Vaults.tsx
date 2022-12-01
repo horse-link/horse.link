@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { VaultHistoryTable, VaultListRow } from "../components/Vaults";
-import { PageLayout } from "../components";
 import { useSubgraphVaults } from "../hooks/subgraph";
 import { useConfig } from "../providers/Config";
-import { VaultModalState, VaultTransactionType } from "../types";
 import { DepositVaultModal, WithdrawVaultModal } from "../components/Modals";
 import { useAccount } from "wagmi";
 import { useWalletModal } from "../providers/WalletModal";
+import { VaultModalState, VaultTransactionType } from "../types/vaults";
+import PageLayout from "../components/PageLayout/PageLayout_Logic";
 
 const Vaults: React.FC = () => {
   const [modal, setModal] = useState<VaultModalState>();

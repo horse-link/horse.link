@@ -1,5 +1,5 @@
 import Skeleton from "react-loading-skeleton";
-import { Runner } from "../../types";
+import { Runner } from "../../types/meets";
 import utils from "../../utils";
 
 type Props = {

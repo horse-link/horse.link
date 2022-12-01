@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
 import { useAccount } from "wagmi";
-import { Loader, PageLayout } from "../../components";
 import { FaucetModal } from "./FaucetModal";
 import { AiOutlineCopy } from "react-icons/ai";
 import api from "../../apis/Api";
 import { useConfig } from "../../providers/Config";
 import { useWalletModal } from "../../providers/WalletModal";
 import { useBalance } from "wagmi";
+import PageLayout from "../../components/PageLayout/PageLayout_Logic";
+import Loader from "../../components/Loader";
 
 const FAUCET_ADDRESS = "0xf919eaf2e37aac718aa19668b9071ee42c02c081";
 

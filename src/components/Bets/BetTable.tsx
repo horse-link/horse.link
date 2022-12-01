@@ -1,6 +1,6 @@
-import { BetHistory } from "../../types";
 import { BetRows } from ".";
 import React from "react";
+import { BetHistory } from "../../types/bets";
 
 type Props = {
   myBetsEnabled: boolean;

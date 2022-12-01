@@ -1,10 +1,10 @@
 import { ethers } from "ethers";
 import moment from "moment";
 import { FormattedVaultTransaction } from "../../types/entities";
-import { VaultTransactionType } from "../../types";
 import Skeleton from "react-loading-skeleton";
 import { Config } from "../../types/config";
 import utils from "../../utils";
+import { VaultTransactionType } from "../../types/vaults";
 
 type Props = {
   vault: FormattedVaultTransaction;

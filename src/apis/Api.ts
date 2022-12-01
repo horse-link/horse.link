@@ -2,16 +2,11 @@ import { AxiosInstance } from "axios";
 import { ethers } from "ethers";
 import utils from "../utils";
 import { Config } from "../types/config";
-import {
-  BetHistoryResponse,
-  Market,
-  Runner,
-  SignedBetDataResponse,
-  SignedMeetingsResponse,
-  Token,
-  Vault,
-  VaultUserData
-} from "../types/index";
+import { Runner, SignedMeetingsResponse } from "../types/meets";
+import { BetHistoryResponse, SignedBetDataResponse } from "../types/bets";
+import { Market, Vault } from "../typechain";
+import { Token } from "graphql";
+import { VaultUserData } from "../types/vaults";
 
 export class Api {
   private client: AxiosInstance;

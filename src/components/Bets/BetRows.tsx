@@ -1,8 +1,8 @@
 import React from "react";
 import { useConfig } from "../../providers/Config";
 import { useAccount } from "wagmi";
-import { BetHistory } from "../../types";
 import { BetRow } from ".";
+import { BetHistory } from "../../types/bets";
 
 type Props = {
   myBetsSelected: boolean;

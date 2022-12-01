@@ -1,7 +1,7 @@
 import { VaultInfo } from "../../types/config";
 import { ethers } from "ethers";
-import { VaultModalState, VaultTransactionType } from "../../types";
 import utils from "../../utils";
+import { VaultModalState, VaultTransactionType } from "../../types/vaults";
 
 type Props = {
   vault: VaultInfo;

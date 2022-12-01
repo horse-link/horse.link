@@ -1,4 +1,4 @@
-import { PageLayout } from "../../components";
+import PageLayout from "../../components/PageLayout/PageLayout_Logic";
 
 const TokensView: React.FC = () => {
   return (

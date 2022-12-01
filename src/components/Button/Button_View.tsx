@@ -1,6 +1,6 @@
 import * as React from "react";
 import classnames from "classnames";
-import { Loader } from "../";
+import Loader from "../Loader";
 
 type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   loading?: boolean;

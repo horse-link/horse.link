@@ -1,7 +1,6 @@
 import { ethers } from "ethers";
 import React, { useEffect, useMemo, useState } from "react";
 import { useConfig } from "../../providers/Config";
-import { Back, Runner, UserBalance } from "../../types";
 import { useSigner } from "wagmi";
 import Loader from "../Loader";
 import Modal from "../Modal";
@@ -10,6 +9,8 @@ import { useMarketContract, useERC20Contract } from "../../hooks/contracts";
 import { Web3ErrorHandler, Web3SuccessHandler } from "../Web3Handlers";
 import useRefetch from "../../hooks/useRefetch";
 import utils from "../../utils";
+import { Back, Runner } from "../../types/meets";
+import { UserBalance } from "../../types/users";
 
 type Props = {
   runner?: Runner;

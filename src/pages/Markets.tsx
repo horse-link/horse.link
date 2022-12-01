@@ -1,10 +1,10 @@
 import { useMarketStatistics } from "../hooks/stats";
-import { PageLayout } from "../components";
 import Card from "../components/Card";
 import { ethers } from "ethers";
-import { useConfig } from "src/providers/Config";
-import { MarketRow } from "src/components/Markets";
 import utils from "../utils";
+import { useConfig } from "../providers/Config";
+import PageLayout from "../components/PageLayout/PageLayout_Logic";
+import { MarketRow } from "../components/Markets";
 
 const Markets: React.FC = () => {
   const config = useConfig();

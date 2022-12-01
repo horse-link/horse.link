@@ -1,7 +1,7 @@
 import classNames from "classnames";
-import { FilterOptions } from "src/types";
+import { BetFilterOptions } from "../../types/bets";
 
-const options: Map<FilterOptions, string> = new Map([
+const options: Map<BetFilterOptions, string> = new Map([
   ["ALL_BETS", "All Bets"],
   ["PENDING", "Pending"],
   ["RESULTED", "Resulted"],
@@ -9,8 +9,8 @@ const options: Map<FilterOptions, string> = new Map([
 ]);
 
 type Props = {
-  value: FilterOptions;
-  onChange: (option: FilterOptions) => void;
+  value: BetFilterOptions;
+  onChange: (option: BetFilterOptions) => void;
   disabled: boolean;
 };
 

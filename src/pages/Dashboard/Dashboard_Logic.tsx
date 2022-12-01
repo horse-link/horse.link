@@ -1,10 +1,10 @@
 import DashboardView from "./Dashboard_View";
 import moment from "moment";
 import { useContext, useEffect, useState } from "react";
-import { Meet, Race, SignedMeetingsResponse } from "../../types/index";
 import api from "../../apis/Api";
 import { WalletModalContext } from "../../providers/WalletModal";
 import { useAccount } from "wagmi";
+import { Meet, Race, SignedMeetingsResponse } from "../../types/meets";
 
 const getMockMeets = (): Meet[] => {
   const mockRace: Race[] = Array.from({ length: 15 }, (_, i) => ({

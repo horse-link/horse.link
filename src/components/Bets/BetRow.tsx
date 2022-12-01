@@ -2,7 +2,7 @@ import classnames from "classnames";
 import { ethers } from "ethers";
 import moment from "moment";
 import Skeleton from "react-loading-skeleton";
-import { BetHistory } from "../../types";
+import { BetHistory } from "../../types/bets";
 import { Config } from "../../types/config";
 import utils from "../../utils";
 

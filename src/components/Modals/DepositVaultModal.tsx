@@ -6,9 +6,9 @@ import Loader from "../Loader";
 import { ethers } from "ethers";
 import { Web3ErrorHandler, Web3SuccessHandler } from "../Web3Handlers";
 import { useVaultContract, useERC20Contract } from "../../hooks/contracts";
-import { UserBalance } from "../../types";
 import useRefetch from "../../hooks/useRefetch";
 import utils from "../../utils";
+import { UserBalance } from "../../types/users";
 
 type Props = {
   isModalOpen: boolean;

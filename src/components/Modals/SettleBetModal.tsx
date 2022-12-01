@@ -1,7 +1,6 @@
 import moment from "moment";
 import React, { useEffect, useMemo, useState } from "react";
 import { useConfig } from "../../providers/Config";
-import { BetHistory } from "../../types";
 import Loader from "../Loader";
 import Modal from "../Modal";
 import { ethers } from "ethers";
@@ -9,6 +8,7 @@ import { useMarketContract } from "../../hooks/contracts";
 import { Web3ErrorHandler, Web3SuccessHandler } from "../Web3Handlers";
 import { useSigner } from "wagmi";
 import utils from "../../utils";
+import { BetHistory } from "../../types/bets";
 
 type Props = {
   isModalOpen: boolean;

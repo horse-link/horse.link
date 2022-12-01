@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { Runner } from "../types";
 import { useParams } from "react-router-dom";
 import { useRunnersData } from "../hooks/data";
 import { useAccount } from "wagmi";
 import { useWalletModal } from "../providers/WalletModal";
-import { PageLayout } from "../components";
 import moment from "moment";
 import RunnerTable from "../components/Race/RunnerTable";
 import { PlaceBetModal } from "../components/Modals";
 import utils from "../utils";
+import { Runner } from "../types/meets";
+import PageLayout from "../components/PageLayout/PageLayout_Logic";
 
 type HorseRaceParams = {
   track: string;

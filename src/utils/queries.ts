@@ -1,10 +1,10 @@
 import { ethers } from "ethers";
-import { FilterOptions } from "../types";
+import { BetFilterOptions } from "../types/bets";
 
 const getOptionalAddressFilter = (address?: string) =>
   address ? `owner: "${address.toLowerCase()}"` : "";
 
-const getOptionalFilterOptions = (filter?: FilterOptions) => {
+const getOptionalFilterOptions = (filter?: BetFilterOptions) => {
   switch (filter) {
     case "ALL_BETS":
       return "";
@@ -26,7 +26,7 @@ export const getBetsQuery = ({
   limit = 100
 }: {
   address?: string;
-  filter?: FilterOptions;
+  filter?: BetFilterOptions;
   limit?: number;
 }) => `query GetBets{
   bets(
