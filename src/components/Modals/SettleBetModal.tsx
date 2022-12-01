@@ -82,8 +82,6 @@ export const SettleBetModal: React.FC<Props> = ({
     }
   };
 
-  console.log(selectedBet);
-
   return (
     <BaseModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
       {!selectedBet || !config ? (
