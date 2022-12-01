@@ -1,3 +1,4 @@
+import React from "react";
 import classNames from "classnames";
 import { BetFilterOptions } from "../../types/bets";
 
@@ -14,11 +15,11 @@ type Props = {
   disabled: boolean;
 };
 
-export const BetFilterGroup = ({
+export const BetFilterGroup: React.FC<Props> = ({
   value: currentOption,
   onChange,
   disabled
-}: Props) => (
+}) => (
   <div className="flex gap-3">
     {[...options].map(([key, text]) => (
       <button
