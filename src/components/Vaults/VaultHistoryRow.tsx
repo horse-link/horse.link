@@ -1,6 +1,5 @@
 import { ethers } from "ethers";
 import moment from "moment";
-import { formatToFourDecimals } from "../../utils/formatting";
 import { FormattedVaultTransaction } from "../../types/entities";
 import Skeleton from "react-loading-skeleton";
 import { Config } from "../../types/config";
