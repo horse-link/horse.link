@@ -6,7 +6,7 @@ import { ethers } from "ethers";
 import { useConfig } from "src/providers/Config";
 import { MarketRow } from "src/components/Markets";
 
-const MarketLogic = () => {
+const Markets: React.FC = () => {
   const config = useConfig();
   const { totalBets, totalVolume, largestBet } = useMarketStatistics();
 
@@ -87,4 +87,4 @@ const MarketLogic = () => {
   );
 };
 
-export default MarketLogic;
+export default Markets;
