@@ -1,5 +1,5 @@
 import { AiOutlineCopy } from "react-icons/ai";
-import { TokenomicsChart } from "../images";
+import { TokenomicsChart } from "../icons";
 import QRCode from "react-qr-code";
 import { PageLayout } from "../components";
 
