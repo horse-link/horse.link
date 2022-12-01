@@ -1,20 +1,16 @@
 import { ethers } from "ethers";
 import React, { useEffect, useMemo, useState } from "react";
 import { useConfig } from "../../providers/Config";
-import { Back, Runner, UserBalance } from "../../types";
-import { getVaultFromMarket, getVaultNameFromMarket } from "../../utils/config";
 import { useSigner } from "wagmi";
-import Loader from "../Loader";
-import Modal from "../Modal";
+import { Loader } from "../";
+import { BaseModal } from ".";
 import { Config, MarketInfo } from "../../types/config";
-import { getMockBack } from "../../utils/mocks";
-import {
-  formatToFourDecimals,
-  formatToTwoDecimals
-} from "../../utils/formatting";
 import { useMarketContract, useERC20Contract } from "../../hooks/contracts";
 import { Web3ErrorHandler, Web3SuccessHandler } from "../Web3Handlers";
 import useRefetch from "../../hooks/useRefetch";
+import utils from "../../utils";
+import { Back, Runner } from "../../types/meets";
+import { UserBalance } from "../../types/users";
 
 type Props = {
   runner?: Runner;
@@ -42,7 +38,7 @@ export const PlaceBetModal: React.FC<Props> = ({
   const { shouldRefetch, refetch: refetchUserBalance } = useRefetch();
 
   const back = useMemo<Back>(() => {
-    if (!runner) return getMockBack();
+    if (!runner) return utils.mocks.getMockBack();
 
     return {
       nonce: runner.nonce,
@@ -60,8 +56,10 @@ export const PlaceBetModal: React.FC<Props> = ({
 
     (async () => {
       setUserBalance(undefined);
-      const assetAddress = getVaultFromMarket(selectedMarket, config)!.asset
-        .address;
+      const assetAddress = utils.config.getVaultFromMarket(
+        selectedMarket,
+        config
+      )!.asset.address;
       const [balance, decimals] = await Promise.all([
         getBalance(assetAddress, signer),
         getDecimals(assetAddress, signer)
@@ -70,7 +68,7 @@ export const PlaceBetModal: React.FC<Props> = ({
       setUserBalance({
         value: balance,
         decimals,
-        formatted: formatToFourDecimals(
+        formatted: utils.formatting.formatToFourDecimals(
           ethers.utils.formatUnits(balance, decimals)
         )
       });
@@ -153,7 +151,7 @@ export const PlaceBetModal: React.FC<Props> = ({
     wagerAmount && userBalance ? +wagerAmount > +userBalance.formatted : false;
 
   return (
-    <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+    <BaseModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
       {!config || !runner ? (
         <div className="p-10">
           <Loader />
@@ -161,7 +159,8 @@ export const PlaceBetModal: React.FC<Props> = ({
       ) : (
         <React.Fragment>
           <h2 className="font-bold text-2xl mr-[8vw] mb-6">
-            Target Odds {formatToTwoDecimals(back.odds.toString())}
+            Target Odds{" "}
+            {utils.formatting.formatToTwoDecimals(back.odds.toString())}
           </h2>
           <div className="flex flex-col">
             <h3 className="font-semibold">Markets</h3>
@@ -175,7 +174,7 @@ export const PlaceBetModal: React.FC<Props> = ({
                   className="block"
                   value={market.address}
                 >
-                  {getVaultNameFromMarket(market.address, config)}
+                  {utils.config.getVaultNameFromMarket(market.address, config)}
                 </option>
               ))}
             </select>
@@ -190,7 +189,7 @@ export const PlaceBetModal: React.FC<Props> = ({
             <span className="block font-semibold">
               Payout:{" "}
               <span className="font-normal">
-                {formatToFourDecimals(payout)}
+                {utils.formatting.formatToFourDecimals(payout)}
               </span>
             </span>
             <span className="block font-semibold">
@@ -226,6 +225,6 @@ export const PlaceBetModal: React.FC<Props> = ({
           </div>
         </React.Fragment>
       )}
-    </Modal>
+    </BaseModal>
   );
 };

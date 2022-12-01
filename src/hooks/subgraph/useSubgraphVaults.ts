@@ -4,8 +4,8 @@ import {
   FormattedVaultTransaction,
   VaultTransaction
 } from "../../types/entities";
-import { getVaultHistoryQuery } from "../../utils/queries";
 import useSubgraph from "../useSubgraph";
+import utils from "../../utils";
 
 type Response = {
   vaultTransactions: VaultTransaction[];
@@ -15,7 +15,7 @@ const POLL_INTERVAL = 5000;
 
 export const useSubgraphVaults = (vaultAddress?: string) => {
   const { data, loading, refetch } = useSubgraph<Response>(
-    getVaultHistoryQuery(vaultAddress)
+    utils.queries.getVaultHistoryQuery(vaultAddress)
   );
 
   useEffect(() => {

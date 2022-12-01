@@ -1,5 +1,5 @@
 import { rest } from "msw";
-import { SignedMeetingsResponse } from "../types";
+import { SignedMeetingsResponse } from "../types/meets";
 
 export const restHandler = [
   rest.get("/meetings", (_, res, ctx) => {

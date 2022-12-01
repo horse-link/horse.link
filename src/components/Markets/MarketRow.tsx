@@ -1,8 +1,7 @@
-import { getVault } from "../../utils/config";
+import utils from "../../utils";
 import { Config, MarketInfo } from "../../types/config";
 import Skeleton from "react-loading-skeleton";
 import { ethers } from "ethers";
-import { formatToFourDecimals } from "../../utils/formatting";
 
 type Props = {
   config: Config;
@@ -11,7 +10,7 @@ type Props = {
 };
 
 export const MarketRow: React.FC<Props> = ({ config, market, onClick }) => {
-  const vault = getVault(market.vaultAddress, config);
+  const vault = utils.config.getVault(market.vaultAddress, config);
 
   return (
     <tr
@@ -23,7 +22,7 @@ export const MarketRow: React.FC<Props> = ({ config, market, onClick }) => {
         {vault?.name || <Skeleton />}
       </td>
       <td className="px-2 py-4 whitespace-nowrap">
-        {`${formatToFourDecimals(
+        {`${utils.formatting.formatToFourDecimals(
           ethers.utils.formatUnits(market.totalInPlay, vault?.asset.decimals)
         )} ${vault?.asset.symbol}` || <Skeleton />}
       </td>

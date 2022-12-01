@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
-import { Back } from "../types";
 import { Bet, FormattedUser } from "../types/entities";
+import { Back, Meet, Race } from "../types/meets";
 
 export const getMockBet = (): Bet => ({
   id: `BET_${ethers.constants.AddressZero}_0`,
@@ -42,3 +42,20 @@ export const getMockRunners = () => Array.from({ length: 5 }, () => undefined);
 
 export const getMockAddresses = () =>
   Array.from({ length: 5 }, () => ethers.constants.AddressZero);
+
+export const getMockMeets = (): Meet[] => {
+  const mockRace: Race[] = Array.from({ length: 15 }, (_, i) => ({
+    number: i,
+    name: "",
+    status: "Normal",
+    results: [9, 1, 2, 7]
+  }));
+
+  return Array.from({ length: 5 }, (_, i) => ({
+    id: `mock${i}`,
+    name: "",
+    location: "",
+    date: "",
+    races: mockRace
+  }));
+};

@@ -1,5 +1,5 @@
 import { BigNumber, ethers, Signer } from "ethers";
-import { ERC20__factory, Vault__factory } from "src/typechain";
+import { ERC20__factory, Vault__factory } from "../../typechain";
 import { VaultInfo } from "../../types/config";
 
 export const useVaultContract = () => {

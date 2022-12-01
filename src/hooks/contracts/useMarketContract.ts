@@ -4,10 +4,11 @@ import {
   Market__factory,
   Vault__factory
 } from "../../typechain";
-import { Back, BetHistory } from "../../types";
 import { BigNumber, ethers, Signer } from "ethers";
 import { MarketInfo } from "../../types/config";
-import { formatBytes16String } from "../../utils/formatting";
+import utils from "../../utils";
+import { Back } from "../../types/meets";
+import { BetHistory } from "../../types/bets";
 
 const ODDS_DECIMALS = 6;
 
@@ -38,8 +39,8 @@ export const useMarketContract = () => {
     const receipt = await (
       await marketContract.back(
         back.nonce,
-        formatBytes16String(back.proposition_id),
-        formatBytes16String(back.market_id),
+        utils.formatting.formatBytes16String(back.proposition_id),
+        utils.formatting.formatBytes16String(back.market_id),
         wager,
         ethers.utils.parseUnits(back.odds.toString(), ODDS_DECIMALS),
         back.close,
