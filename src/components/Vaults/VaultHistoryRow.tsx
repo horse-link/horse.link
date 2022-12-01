@@ -9,7 +9,7 @@ import { Config } from "../../types/config";
 
 type Props = {
   vault: FormattedVaultTransaction;
-  config?: Config
+  config?: Config;
 };
 
 const txTypeMap = new Map([

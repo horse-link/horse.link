@@ -8,7 +8,7 @@ type Response = {
   protocol: Protocol;
 };
 
-const useProtocolStatistics = () => {
+export const useProtocolStatistics = () => {
   const { data, loading } = useSubgraph<Response>(getProtocolStatsQuery());
 
   const formattedData = useMemo<FormattedProtocol | undefined>(() => {
@@ -27,5 +27,3 @@ const useProtocolStatistics = () => {
 
   return formattedData;
 };
-
-export default useProtocolStatistics;

@@ -10,7 +10,7 @@ type Response = {
   user: User;
 };
 
-const useUserStatistics = () => {
+export const useUserStatistics = () => {
   const { address } = useAccount();
   const { data, loading } = useSubgraph<Response>(getUserStatsQuery(address));
 
@@ -31,5 +31,3 @@ const useUserStatistics = () => {
 
   return formattedUserStats;
 };
-
-export default useUserStatistics;

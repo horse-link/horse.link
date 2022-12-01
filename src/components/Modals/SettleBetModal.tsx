@@ -6,7 +6,7 @@ import { BetHistory } from "../../types";
 import Loader from "../Loader";
 import Modal from "../Modal";
 import { ethers } from "ethers";
-import useMarketContract from "../../hooks/market/useMarketContract";
+import { useMarketContract } from "../../hooks/contracts";
 import { Web3ErrorHandler, Web3SuccessHandler } from "../Web3Handlers";
 import { useSigner } from "wagmi";
 import { formatFirstLetterCapitalised } from "../../utils/formatting";

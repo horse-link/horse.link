@@ -2,12 +2,7 @@ import { useMemo } from "react";
 import { SignedRunnersResponse } from "../../types";
 import useSwr from "../useSwr";
 
-type Props = {
-  track: string;
-  raceNumber: number;
-};
-
-const useRunnerData = ({ track, raceNumber }: Props) => {
+export const useRunnersData = (track: string, raceNumber: number) => {
   const { data, isLoading, error } = useSwr<SignedRunnersResponse>(
     `/runners/${track}/${raceNumber}/win`
   );
@@ -25,5 +20,3 @@ const useRunnerData = ({ track, raceNumber }: Props) => {
     error
   };
 };
-
-export default useRunnerData;

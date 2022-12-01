@@ -2,7 +2,7 @@ import { BigNumber, ethers, Signer } from "ethers";
 import { ERC20__factory, Vault__factory } from "src/typechain";
 import { VaultInfo } from "../../types/config";
 
-const useVaultContract = () => {
+export const useVaultContract = () => {
   const deposit = async (
     vault: VaultInfo,
     amount: BigNumber,
@@ -50,5 +50,3 @@ const useVaultContract = () => {
     withdraw
   };
 };
-
-export default useVaultContract;

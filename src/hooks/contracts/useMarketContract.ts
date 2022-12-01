@@ -11,7 +11,7 @@ import { formatBytes16String } from "../../utils/formatting";
 
 const ODDS_DECIMALS = 6;
 
-const useMarketContract = () => {
+export const useMarketContract = () => {
   const placeBet = async (
     market: MarketInfo,
     back: Back,
@@ -83,5 +83,3 @@ const useMarketContract = () => {
     settleBet
   };
 };
-
-export default useMarketContract;

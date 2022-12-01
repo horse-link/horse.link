@@ -1,6 +1,11 @@
-import { BetHistory, BetStatus, SignedBetDataResponse } from "src/types";
-import { Bet } from "src/types/entities";
+import {
+  BetHistory,
+  BetStatus,
+  FilterOptions,
+  SignedBetDataResponse
+} from "../types";
 import { formatBetId } from "./formatting";
+import { Bet } from "../types/entities";
 
 export const calculateMaxPages = (betsArrayLength: number, totalBets: number) =>
   Math.ceil(totalBets / betsArrayLength);
@@ -46,3 +51,11 @@ export const getBetHistory = (
   marketOracleResultSig: signedBetData.marketOracleResultSig,
   status: getBetStatus(bet, signedBetData)
 });
+
+export const filterBetsByFilterOptions = (
+  bets: BetHistory[],
+  filter: FilterOptions
+) => {
+  if (filter === "ALL_BETS") return bets;
+  return bets.filter(bet => bet.status === filter);
+};
