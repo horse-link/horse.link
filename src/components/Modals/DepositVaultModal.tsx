@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSigner } from "wagmi";
-import { Config, VaultInfo } from "../../types/config";
+import { VaultInfo } from "../../types/config";
 import Modal from "../Modal";
 import Loader from "../Loader";
 import { ethers } from "ethers";
@@ -14,14 +14,12 @@ type Props = {
   isModalOpen: boolean;
   closeModal: () => void;
   vault: VaultInfo;
-  config?: Config;
 };
 
 export const DepositVaultModal: React.FC<Props> = ({
   isModalOpen,
   closeModal,
-  vault,
-  config
+  vault
 }) => {
   const [depositAmount, setDepositAmount] = useState<string>();
   const [userBalance, setUserBalance] = useState<UserBalance>();
@@ -36,7 +34,7 @@ export const DepositVaultModal: React.FC<Props> = ({
   const { shouldRefetch, refetch: refetchUserBalance } = useRefetch();
 
   useEffect(() => {
-    if (!signer || !config) return;
+    if (!signer) return;
 
     (async () => {
       setUserBalance(undefined);
@@ -54,7 +52,7 @@ export const DepositVaultModal: React.FC<Props> = ({
         )
       });
     })();
-  }, [signer, config, shouldRefetch]);
+  }, [signer, shouldRefetch]);
 
   useEffect(() => {
     if (isModalOpen) return refetchUserBalance();

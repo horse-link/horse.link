@@ -82,7 +82,6 @@ const Vaults: React.FC = () => {
       </div>
       {modal?.type === VaultTransactionType.DEPOSIT && (
         <DepositVaultModal
-          config={config}
           isModalOpen={!!modal}
           closeModal={closeModal}
           vault={modal.vault}
