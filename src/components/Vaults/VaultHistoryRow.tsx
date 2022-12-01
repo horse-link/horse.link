@@ -24,7 +24,9 @@ export const VaultHistoryRow: React.FC<Props> = ({ vault, config }) => {
     <tr>
       <td className="pl-5 pr-2 py-4 whitespace-nowrap">{formattedTxType}</td>
       <td className="px-2 py-4">
-        {`${formatToFourDecimals(ethers.utils.formatEther(vault.amount))}`}
+        {`${utils.formatting.formatToFourDecimals(
+          ethers.utils.formatEther(vault.amount)
+        )}`}
       </td>
       <td className="px-2 py-4 whitespace-nowrap">
         {moment.unix(vault.timestamp).fromNow()}
