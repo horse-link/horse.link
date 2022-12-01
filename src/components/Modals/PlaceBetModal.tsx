@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import React, { useEffect, useMemo, useState } from "react";
 import { useConfig } from "../../providers/Config";
-import { Back, Runner } from "../../types";
+import { Back, Runner, UserBalance } from "../../types";
 import { getVaultFromMarket, getVaultNameFromMarket } from "../../utils/config";
 import { useSigner } from "wagmi";
 import Loader from "../Loader";
@@ -12,9 +12,9 @@ import {
   formatToFourDecimals,
   formatToTwoDecimals
 } from "../../utils/formatting";
-import useMarketContract from "../../hooks/market/useMarketContract";
+import { useMarketContract, useERC20Contract } from "../../hooks/contracts";
 import { Web3ErrorHandler, Web3SuccessHandler } from "../Web3Handlers";
-import useUserBalance from "../../hooks/token/useUserBalance";
+import useRefetch from "../../hooks/useRefetch";
 
 type Props = {
   runner?: Runner;
@@ -28,6 +28,7 @@ export const PlaceBetModal: React.FC<Props> = ({
   setIsModalOpen
 }) => {
   const [selectedMarket, setSelectedMarket] = useState<MarketInfo>();
+  const [userBalance, setUserBalance] = useState<UserBalance>();
   const [wagerAmount, setWagerAmount] = useState<string>();
   const [txLoading, setTxLoading] = useState(false);
   const [txHash, setTxHash] = useState<string>();
@@ -37,10 +38,8 @@ export const PlaceBetModal: React.FC<Props> = ({
 
   const config = useConfig();
   const { placeBet } = useMarketContract();
-  const { balance, refetch: refetchUserBalance } = useUserBalance(
-    getVaultFromMarket(selectedMarket, config)?.asset.address,
-    signer
-  );
+  const { getBalance, getDecimals } = useERC20Contract();
+  const { shouldRefetch, refetch: refetchUserBalance } = useRefetch();
 
   const back = useMemo<Back>(() => {
     if (!runner) return getMockBack();
@@ -57,13 +56,35 @@ export const PlaceBetModal: React.FC<Props> = ({
   }, [runner]);
 
   useEffect(() => {
+    if (!selectedMarket || !signer || !config) return;
+
+    (async () => {
+      setUserBalance(undefined);
+      const assetAddress = getVaultFromMarket(selectedMarket, config)!.asset
+        .address;
+      const [balance, decimals] = await Promise.all([
+        getBalance(assetAddress, signer),
+        getDecimals(assetAddress, signer)
+      ]);
+
+      setUserBalance({
+        value: balance,
+        decimals,
+        formatted: formatToFourDecimals(
+          ethers.utils.formatUnits(balance, decimals)
+        )
+      });
+    })();
+  }, [selectedMarket, signer, config, shouldRefetch]);
+
+  useEffect(() => {
     if (!config) return;
 
     setSelectedMarket(config.markets[0]);
   }, [config]);
 
   useEffect(() => {
-    if (!txLoading) return;
+    if (!txLoading) return refetchUserBalance();
 
     setError(undefined);
     setTxHash(undefined);
@@ -80,12 +101,6 @@ export const PlaceBetModal: React.FC<Props> = ({
     }, 300);
   }, [isModalOpen]);
 
-  useEffect(() => {
-    if (!txHash) return;
-
-    refetchUserBalance();
-  }, [txHash]);
-
   const onSelectMarket = (
     event: React.ChangeEvent<HTMLSelectElement>,
     config: Config
@@ -97,14 +112,14 @@ export const PlaceBetModal: React.FC<Props> = ({
   };
 
   const changeWagerAmount = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!balance) return;
+    if (!userBalance) return;
 
     event.preventDefault();
     const value = event.currentTarget.value;
 
     if (value.includes(".")) {
       const decimals = value.split(".")[1];
-      if (decimals.length > balance.decimals) {
+      if (decimals.length > userBalance.decimals) {
         event.currentTarget.value = wagerAmount || "";
         return;
       }
@@ -114,9 +129,9 @@ export const PlaceBetModal: React.FC<Props> = ({
   };
 
   const onClickPlaceBet = async () => {
-    if (!selectedMarket || !wagerAmount || !balance || !signer) return;
+    if (!selectedMarket || !wagerAmount || !userBalance || !signer) return;
 
-    const wager = ethers.utils.parseUnits(wagerAmount, balance.decimals);
+    const wager = ethers.utils.parseUnits(wagerAmount, userBalance.decimals);
     setTxHash(undefined);
     setError(undefined);
 
@@ -135,7 +150,7 @@ export const PlaceBetModal: React.FC<Props> = ({
 
   const isWagerNegative = wagerAmount ? +wagerAmount < 0 : false;
   const isWagerGreaterThanBalance =
-    wagerAmount && balance ? +wagerAmount > +balance.formatted : false;
+    wagerAmount && userBalance ? +wagerAmount > +userBalance.formatted : false;
 
   return (
     <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
@@ -181,7 +196,7 @@ export const PlaceBetModal: React.FC<Props> = ({
             <span className="block font-semibold">
               Available:{" "}
               <span className="font-normal">
-                {balance?.formatted || <Loader size={14} />}
+                {userBalance?.formatted || <Loader size={14} />}
               </span>
             </span>
             <span className="text-red-500 block font-semibold">
@@ -196,8 +211,8 @@ export const PlaceBetModal: React.FC<Props> = ({
                 !selectedMarket ||
                 !wagerAmount ||
                 !signer ||
-                !balance ||
-                +balance.formatted === 0 ||
+                !userBalance ||
+                +userBalance.formatted === 0 ||
                 txLoading ||
                 isWagerNegative ||
                 isWagerGreaterThanBalance

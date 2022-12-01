@@ -12,7 +12,7 @@ type Response = {
 const MILLISECONDS_TO_SECONDS_DIVISOR = 1000;
 const SECONDS_TWENTYFOUR_HOURS = 86400;
 
-const useMarketStatistics = () => {
+export const useMarketStatistics = () => {
   const yesterdayFilter = useMemo(
     () =>
       Math.floor(
@@ -63,5 +63,3 @@ const useMarketStatistics = () => {
     largestBet
   };
 };
-
-export default useMarketStatistics;

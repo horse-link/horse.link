@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { VaultHistoryTable, VaultListRow } from "../components/Vaults";
 import { PageLayout } from "../components";
-import useVaultHistory from "../hooks/vault/useVaultHistory";
+import { useSubgraphVaults } from "../hooks/subgraph";
 import { useConfig } from "../providers/Config";
 import { VaultModalState, VaultTransactionType } from "../types";
 import { DepositVaultModal, WithdrawVaultModal } from "../components/Modals";
@@ -10,7 +10,7 @@ import { useWalletModal } from "../providers/WalletModal";
 
 const Vaults: React.FC = () => {
   const [modal, setModal] = useState<VaultModalState>();
-  const vaultHistory = useVaultHistory();
+  const vaultHistory = useSubgraphVaults();
   const config = useConfig();
   const { isConnected } = useAccount();
   const { openWalletModal } = useWalletModal();

@@ -13,7 +13,7 @@ type Response = {
 
 const POLL_INTERVAL = 5000;
 
-const useVaultHistory = (vaultAddress?: string) => {
+export const useSubgraphVaults = (vaultAddress?: string) => {
   const { data, loading, refetch } = useSubgraph<Response>(
     getVaultHistoryQuery(vaultAddress)
   );
@@ -36,5 +36,3 @@ const useVaultHistory = (vaultAddress?: string) => {
 
   return formattedData;
 };
-
-export default useVaultHistory;
