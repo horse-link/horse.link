@@ -7,8 +7,7 @@ type Props = {
   config?: Config;
 };
 
-export const VaultHistoryTable: React.FC<Props> = ({ history, config }) => {
-  return (
+export const VaultHistoryTable: React.FC<Props> = ({ history, config }) => (
   <div className="w-full flex flex-col mt-8">
     <h3 className="text-lg mb-3 font-medium text-gray-900">History</h3>
     <div className="bg-gray-50 rounded-xl overflow-auto">
@@ -61,4 +60,4 @@ export const VaultHistoryTable: React.FC<Props> = ({ history, config }) => {
       </div>
     </div>
   </div>
-)};
+);

@@ -52,11 +52,12 @@ export const formatBytes16String = (text: string) => {
   const bytes = ethers.utils.toUtf8Bytes(text);
 
   // Check we have room for null-termination
-  if (bytes.length > 15) throw new Error("bytes16 string must be less than 16 bytes");
+  if (bytes.length > 15)
+    throw new Error("bytes16 string must be less than 16 bytes");
 
   // Zero-pad (implicitly null-terminates)
   return ethers.utils.hexlify(
-    ethers.utils.concat([ bytes, ethers.constants.HashZero ]).slice(0, 16)
+    ethers.utils.concat([bytes, ethers.constants.HashZero]).slice(0, 16)
   );
 };
 
@@ -65,16 +66,16 @@ export const parseBytes16String = (bytes: ethers.BytesLike) => {
   const data = ethers.utils.arrayify(bytes);
 
   // Must be 16 bytes with a null-termination
-  if (data.length !== 16) throw new Error("invalid bytes16 - not 16 bytes long");
-  if (data[15] !== 0) throw new Error("invalid bytes16 string - no null terminator");
+  if (data.length !== 16)
+    throw new Error("invalid bytes16 - not 16 bytes long");
+  if (data[15] !== 0)
+    throw new Error("invalid bytes16 string - no null terminator");
 
   // Find the null termination
   const nullTermination = data.indexOf(0);
 
   // Determine the string value
-  return ethers.utils.toUtf8String(
-    data.slice(0, nullTermination)
-  );
+  return ethers.utils.toUtf8String(data.slice(0, nullTermination));
 };
 
 export const formatFirstLetterCapitalised = (string: string) =>

@@ -1,7 +1,7 @@
 import { VaultInfo } from "../../types/config";
 import { ethers } from "ethers";
-import { formatToFourDecimals } from "../../utils/formatting";
-import { VaultModalState, VaultTransactionType } from "../../types";
+import utils from "../../utils";
+import { VaultModalState, VaultTransactionType } from "../../types/vaults";
 
 type Props = {
   vault: VaultInfo;
@@ -30,7 +30,7 @@ export const VaultListRow: React.FC<Props> = ({
       <td className="px-2 py-4">{vault.asset.symbol}</td>
       <td className="px-2 py-4 whitespace-nowrap">
         $
-        {formatToFourDecimals(
+        {utils.formatting.formatToFourDecimals(
           ethers.utils.formatUnits(vault.totalAssets, vault.asset.decimals)
         )}
       </td>

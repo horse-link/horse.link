@@ -1,6 +1,6 @@
 import { afterAll, afterEach, beforeAll } from "vitest";
 import { fetch } from "cross-fetch";
-import { server } from "src/mocks/server";
+import { server } from "./mocks/server";
 
 global.fetch = fetch;
 global.IntersectionObserver = class {
