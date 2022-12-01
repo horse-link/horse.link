@@ -82,6 +82,8 @@ export const SettleBetModal: React.FC<Props> = ({
     }
   };
 
+  console.log(selectedBet);
+
   return (
     <BaseModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
       {!selectedBet || !config ? (
@@ -98,7 +100,7 @@ export const SettleBetModal: React.FC<Props> = ({
             <h3 className="font-semibold mb-2">
               Placed:{" "}
               <span className="font-normal">
-                {moment(selectedBet.blockNumber).format("dddd Do MMMM")}
+                {moment.unix(selectedBet.blockNumber).format("dddd Do MMMM")}
               </span>
             </h3>
             <h3 className="font-semibold mb-2">
