@@ -2,8 +2,8 @@ import { ethers } from "ethers";
 import React, { useEffect, useMemo, useState } from "react";
 import { useConfig } from "../../providers/Config";
 import { useSigner } from "wagmi";
-import Loader from "../Loader";
-import Modal from "../Modal";
+import { Loader } from "../";
+import { BaseModal } from ".";
 import { Config, MarketInfo } from "../../types/config";
 import { useMarketContract, useERC20Contract } from "../../hooks/contracts";
 import { Web3ErrorHandler, Web3SuccessHandler } from "../Web3Handlers";
@@ -151,7 +151,7 @@ export const PlaceBetModal: React.FC<Props> = ({
     wagerAmount && userBalance ? +wagerAmount > +userBalance.formatted : false;
 
   return (
-    <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+    <BaseModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
       {!config || !runner ? (
         <div className="p-10">
           <Loader />
@@ -225,6 +225,6 @@ export const PlaceBetModal: React.FC<Props> = ({
           </div>
         </React.Fragment>
       )}
-    </Modal>
+    </BaseModal>
   );
 };

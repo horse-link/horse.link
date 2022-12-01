@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useAccount, useSigner } from "wagmi";
 import { VaultInfo } from "../../types/config";
-import Modal from "../Modal";
-import Loader from "../Loader";
+import { BaseModal } from ".";
+import { Loader } from "../";
 import { ethers } from "ethers";
 import { Web3ErrorHandler, Web3SuccessHandler } from "../Web3Handlers";
 import { useVaultContract } from "../../hooks/contracts";
@@ -111,7 +111,7 @@ export const WithdrawVaultModal: React.FC<Props> = ({
       : false;
 
   return (
-    <Modal isOpen={isModalOpen} onClose={closeModal}>
+    <BaseModal isOpen={isModalOpen} onClose={closeModal}>
       <h2 className="font-bold text-2xl mr-[8vw] mb-6">Withdraw</h2>
       <div className="flex flex-col">
         <h3 className="font-semibold mb-2">
@@ -150,6 +150,6 @@ export const WithdrawVaultModal: React.FC<Props> = ({
         {txHash && <Web3SuccessHandler hash={txHash} />}
         {error && <Web3ErrorHandler error={error} />}
       </div>
-    </Modal>
+    </BaseModal>
   );
 };

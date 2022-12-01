@@ -1,11 +1,10 @@
 import { Link } from "react-router-dom";
 import moment from "moment";
 import Skeleton from "react-loading-skeleton";
-import Toggle from "../../components/Toggle";
+import { Toggle, PageLayout } from "../../components";
 import MyStats from "./components/MyStats";
 import OverallStats from "./components/OverallStats";
 import { Meet } from "../../types/meets";
-import PageLayout from "../../components/PageLayout/PageLayout_Logic";
 
 type Props = {
   asLocaltime: (raceTime: number) => string;

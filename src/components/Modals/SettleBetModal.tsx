@@ -1,8 +1,8 @@
 import moment from "moment";
 import React, { useEffect, useMemo, useState } from "react";
 import { useConfig } from "../../providers/Config";
-import Loader from "../Loader";
-import Modal from "../Modal";
+import { Loader } from "../";
+import { BaseModal } from ".";
 import { ethers } from "ethers";
 import { useMarketContract } from "../../hooks/contracts";
 import { Web3ErrorHandler, Web3SuccessHandler } from "../Web3Handlers";
@@ -83,7 +83,7 @@ export const SettleBetModal: React.FC<Props> = ({
   };
 
   return (
-    <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+    <BaseModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
       {!selectedBet || !config ? (
         <div className="p-10">
           <Loader />
@@ -154,6 +154,6 @@ export const SettleBetModal: React.FC<Props> = ({
           </div>
         </React.Fragment>
       )}
-    </Modal>
+    </BaseModal>
   );
 };

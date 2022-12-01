@@ -1,7 +1,7 @@
 import { AiOutlineCopy } from "react-icons/ai";
 import { TokenomicsChart } from "../../images";
 import QRCode from "react-qr-code";
-import PageLayout from "../../components/PageLayout/PageLayout_Logic";
+import { PageLayout } from "../../components";
 
 const ADDRESS = "0xAA99c40A936A2cF11Eb1D5387897ce9A626E53c7";
 

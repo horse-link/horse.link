@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { useSubgraphBets } from "../hooks/subgraph";
-import Toggle from "../components/Toggle";
+import { Toggle, PageLayout } from "../components";
 import { BetFilterGroup, BetTable } from "../components/Bets";
 import { SettleBetModal } from "../components/Modals";
 import { BetFilterOptions, BetHistory } from "../types/bets";
 import { useWalletModal } from "../providers/WalletModal";
-import PageLayout from "../components/PageLayout/PageLayout_Logic";
 
 const Bets: React.FC = () => {
   const [myBetsEnabled, setMyBetsEnabled] = useState(true);

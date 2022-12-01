@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import Card from "../../../components/Card";
+import { Card } from "../../../components";
 import { useUserStatistics } from "../../../hooks/stats";
 import utils from "../../../utils";
 

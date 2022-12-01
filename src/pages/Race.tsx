@@ -4,11 +4,11 @@ import { useRunnersData } from "../hooks/data";
 import { useAccount } from "wagmi";
 import { useWalletModal } from "../providers/WalletModal";
 import moment from "moment";
-import RunnerTable from "../components/Race/RunnerTable";
+import { RaceTable } from "../components/Races";
 import { PlaceBetModal } from "../components/Modals";
 import utils from "../utils";
 import { Runner } from "../types/meets";
-import PageLayout from "../components/PageLayout/PageLayout_Logic";
+import { PageLayout } from "../components";
 
 type HorseRaceParams = {
   track: string;
@@ -53,7 +53,7 @@ const Race: React.FC = () => {
           <h1>Race #: {raceNumber}</h1>
           <h1>Date: {moment().format("DD-MM-YY")}</h1>
         </div>
-        <RunnerTable
+        <RaceTable
           runners={runners || utils.mocks.getMockRunners()}
           onClickRunner={onClickRunner}
         />

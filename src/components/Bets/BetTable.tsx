@@ -1,6 +1,8 @@
 import { BetRows } from ".";
 import React from "react";
 import { BetHistory } from "../../types/bets";
+import { useConfig } from "../../providers/Config";
+import { useAccount } from "wagmi";
 
 type Props = {
   myBetsEnabled: boolean;
@@ -13,6 +15,9 @@ export const BetTable: React.FC<Props> = ({
   onClickBet,
   betHistory
 }) => {
+  const config = useConfig();
+  const { isConnected } = useAccount();
+
   return (
     <React.Fragment>
       <div className="col-span-2 bg-gray-50 rounded-xl overflow-auto">
@@ -57,6 +62,8 @@ export const BetTable: React.FC<Props> = ({
                 myBetsSelected={myBetsEnabled}
                 bets={betHistory}
                 onClickBet={onClickBet}
+                config={config}
+                isConnected={isConnected}
               />
             </tbody>
           </table>

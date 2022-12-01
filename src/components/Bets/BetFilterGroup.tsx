@@ -18,23 +18,21 @@ export const BetFilterGroup = ({
   value: currentOption,
   onChange,
   disabled
-}: Props) => {
-  return (
-    <div className="flex gap-3">
-      {[...options].map(([key, text]) => (
-        <button
-          onClick={() => {
-            onChange(key);
-          }}
-          className={classNames("bg-white rounded px-2 shadow ", {
-            "bg-blue-500": key === currentOption,
-            "disabled:opacity-75": key !== currentOption
-          })}
-          disabled={disabled}
-        >
-          {text}
-        </button>
-      ))}
-    </div>
-  );
-};
+}: Props) => (
+  <div className="flex gap-3">
+    {[...options].map(([key, text]) => (
+      <button
+        onClick={() => {
+          onChange(key);
+        }}
+        className={classNames("bg-white rounded px-2 shadow ", {
+          "bg-blue-500": key === currentOption,
+          "disabled:opacity-75": key !== currentOption
+        })}
+        disabled={disabled}
+      >
+        {text}
+      </button>
+    ))}
+  </div>
+);

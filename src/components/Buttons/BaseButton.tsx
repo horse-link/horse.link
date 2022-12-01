@@ -1,13 +1,14 @@
 import * as React from "react";
 import classnames from "classnames";
-import Loader from "../Loader";
+import { Loader } from "../";
 
 type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   loading?: boolean;
 };
 
-const Button: React.FC<Props> = props => {
+export const BaseButton: React.FC<Props> = props => {
   const { className, title, loading, disabled, ...restOfProps } = props;
+
   return (
     <button
       className={classnames(
@@ -22,5 +23,3 @@ const Button: React.FC<Props> = props => {
     </button>
   );
 };
-
-export default Button;

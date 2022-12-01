@@ -1,9 +1,8 @@
 import { useMarketStatistics } from "../hooks/stats";
-import Card from "../components/Card";
 import { ethers } from "ethers";
 import utils from "../utils";
 import { useConfig } from "../providers/Config";
-import PageLayout from "../components/PageLayout/PageLayout_Logic";
+import { PageLayout, Card } from "../components";
 import { MarketRow } from "../components/Markets";
 
 const Markets: React.FC = () => {

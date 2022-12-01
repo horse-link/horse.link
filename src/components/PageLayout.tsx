@@ -1,12 +1,12 @@
-import React, { useContext } from "react";
+import React from "react";
 import classnames from "classnames";
+import { useLocation } from "react-router";
 import { Link } from "react-router-dom";
 import { Disclosure } from "@headlessui/react";
-import WalletConnectButton from "../ConnectWalletButton/ConnectWalletButton_View";
-import WalletModal from "../WalletModal";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
-import { WalletModalContext } from "../../providers/WalletModal";
-import Loader from "../Loader";
+import { WalletModal } from "./Modals";
+import { ConnectWalletButton } from "./Buttons";
+import { useWalletModal } from "../providers/WalletModal";
 
 const navigation = [
   { name: "Dashboard", path: "/dashboard" },
@@ -23,24 +23,13 @@ const navigation = [
 ];
 
 type Props = {
-  loading: boolean;
-  currentPath: string;
-  children?: React.ReactNode;
+  children: React.ReactNode;
 };
 
-const PageLayoutView: React.FC<Props> = props => {
+export const PageLayout: React.FC<Props> = ({ children }) => {
+  const { pathname: currentPath } = useLocation();
   const { openWalletModal, closeWalletModal, isWalletModalOpen } =
-    useContext(WalletModalContext);
-
-  if (props.loading) {
-    return (
-      <div className="min-h-screen flex bg-white">
-        <div className="m-auto">
-          <Loader className="text-3xl" />
-        </div>
-      </div>
-    );
-  }
+    useWalletModal();
 
   return (
     <div className="min-h-screen bg-emerald-500">
@@ -52,7 +41,7 @@ const PageLayoutView: React.FC<Props> = props => {
                 <div className="flex">
                   <div className="hidden sm:-my-px sm:flex sm:space-x-8">
                     {navigation.map(item => {
-                      const active = item.path === props.currentPath;
+                      const active = item.path === currentPath;
 
                       return (
                         <Link
@@ -87,7 +76,7 @@ const PageLayoutView: React.FC<Props> = props => {
                   </Disclosure.Button>
                 </div>
                 <div className="hidden sm:flex">
-                  <WalletConnectButton openWalletModal={openWalletModal} />
+                  <ConnectWalletButton openWalletModal={openWalletModal} />
                 </div>
               </div>
             </div>
@@ -95,7 +84,7 @@ const PageLayoutView: React.FC<Props> = props => {
             <Disclosure.Panel className="sm:hidden">
               <div className="pt-2 pb-3 space-y-1">
                 {navigation.map(item => {
-                  const active = item.path === props.currentPath;
+                  const active = item.path === currentPath;
 
                   return (
                     <Link
@@ -117,7 +106,7 @@ const PageLayoutView: React.FC<Props> = props => {
                   );
                 })}
 
-                <WalletConnectButton openWalletModal={openWalletModal} />
+                <ConnectWalletButton openWalletModal={openWalletModal} />
               </div>
             </Disclosure.Panel>
           </>
@@ -131,12 +120,10 @@ const PageLayoutView: React.FC<Props> = props => {
             closeWalletModal={closeWalletModal}
           />
           <div className="max-w-9xl mx-auto px-4 sm:px-6 lg:px-9">
-            {props.children}
+            {children}
           </div>
         </main>
       </div>
     </div>
   );
 };
-
-export default PageLayoutView;

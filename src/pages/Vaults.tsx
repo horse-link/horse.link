@@ -6,7 +6,7 @@ import { DepositVaultModal, WithdrawVaultModal } from "../components/Modals";
 import { useAccount } from "wagmi";
 import { useWalletModal } from "../providers/WalletModal";
 import { VaultModalState, VaultTransactionType } from "../types/vaults";
-import PageLayout from "../components/PageLayout/PageLayout_Logic";
+import { PageLayout } from "../components";
 
 const Vaults: React.FC = () => {
   const [modal, setModal] = useState<VaultModalState>();
