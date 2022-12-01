@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Runner } from "../types";
 import { useParams } from "react-router-dom";
-import useRunnerData from "../hooks/data/useRunnersData";
+import { useRunnersData } from "../hooks/data";
 import { useAccount } from "wagmi";
 import { useWalletModal } from "../providers/WalletModal";
 import { getMockRunners } from "../utils/mocks";
@@ -23,7 +23,7 @@ const Race: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRunner, setSelectedRunner] = useState<Runner>();
 
-  const { runners } = useRunnerData({ track, raceNumber });
+  const { runners } = useRunnersData(track, raceNumber);
 
   const { isConnected } = useAccount();
   const { openWalletModal } = useWalletModal();
