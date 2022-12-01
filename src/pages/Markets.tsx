@@ -5,7 +5,7 @@ import { useConfig } from "../providers/Config";
 import { PageLayout, Card } from "../components";
 import { MarketRow } from "../components/Markets";
 
-const Markets: React.FC = () => {
+export const Markets: React.FC = () => {
   const config = useConfig();
   const { totalBets, totalVolume, largestBet } = useMarketStatistics();
 
@@ -87,5 +87,3 @@ const Markets: React.FC = () => {
     </PageLayout>
   );
 };
-
-export default Markets;

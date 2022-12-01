@@ -1,10 +1,11 @@
 import { ethers } from "ethers";
-import { Card } from "../../../components";
-import { useProtocolStatistics } from "../../../hooks/stats";
-import utils from "../../../utils";
+import { Card } from "../";
+import { useProtocolStatistics } from "../../hooks/stats";
+import utils from "../../utils";
 
-const OverallStats = () => {
+export const DashboardOverallStats: React.FC = () => {
   const stats = useProtocolStatistics();
+
   const formattedTvl = stats?.tvl
     ? `$${utils.formatting.formatNumberWithCommas(
         ethers.utils.formatEther(stats.tvl)
@@ -29,5 +30,3 @@ const OverallStats = () => {
     </dl>
   );
 };
-
-export default OverallStats;

@@ -80,7 +80,7 @@
     "format-staged": "pretty-quick --staged",
     "lint": "prettier -w src",
     "postinstall": "yarn typechain",
-    "typechain": "typechain --target ethers-v5 ./src/abi/*.json --out-dir ./src/typechain"
+    "typechain": "typechain --target ethers-v5 ./src/abis/*.json --out-dir ./src/typechain"
   },
   "browserslist": [
     ">0.2%",

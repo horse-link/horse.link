@@ -10,13 +10,8 @@ import utils from "../utils";
 import { Runner } from "../types/meets";
 import { PageLayout } from "../components";
 
-type HorseRaceParams = {
-  track: string;
-  number: string;
-};
-
-const Race: React.FC = () => {
-  const params = useParams<HorseRaceParams>();
+export const Races: React.FC = () => {
+  const params = useParams();
   const track = params.track || "";
   const raceNumber = Number(params.number) || 0;
 
@@ -61,5 +56,3 @@ const Race: React.FC = () => {
     </PageLayout>
   );
 };
-
-export default Race;

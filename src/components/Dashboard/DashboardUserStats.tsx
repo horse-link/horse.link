@@ -1,27 +1,29 @@
 import { ethers } from "ethers";
-import { Card } from "../../../components";
-import { useUserStatistics } from "../../../hooks/stats";
-import utils from "../../../utils";
+import { Card } from "../";
+import { useUserStatistics } from "../../hooks/stats";
+import utils from "../../utils";
 
-const MyStats = () => {
+export const DashboardUserStats: React.FC = () => {
   const stats = useUserStatistics();
 
-  const { totalDeposited, inPlay, pnl } = stats ?? {};
-  const formattedDeposits = totalDeposited
+  const formattedDeposits = stats?.totalDeposited
     ? `$${utils.formatting.formatNumberWithCommas(
-        ethers.utils.formatEther(totalDeposited)
+        ethers.utils.formatEther(stats.totalDeposited)
       )}`
     : undefined;
-  const formattedInplay = inPlay
+
+  const formattedInplay = stats?.inPlay
     ? `$${utils.formatting.formatNumberWithCommas(
-        ethers.utils.formatEther(inPlay)
+        ethers.utils.formatEther(stats.inPlay)
       )}`
     : undefined;
-  const formattedProfits = pnl
+
+  const formattedProfits = stats?.pnl
     ? `$${utils.formatting.formatNumberWithCommas(
-        ethers.utils.formatEther(pnl)
+        ethers.utils.formatEther(stats.pnl)
       )}`
     : undefined;
+
   return (
     <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
       <Card title="Deposits" data={formattedDeposits} />
@@ -30,5 +32,3 @@ const MyStats = () => {
     </dl>
   );
 };
-
-export default MyStats;

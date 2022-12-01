@@ -1,16 +1,17 @@
 import { useCallback, useEffect, useState } from "react";
 import { useAccount } from "wagmi";
-import { FaucetModal } from "../../components/Modals";
+import { FaucetModal } from "../components/Modals";
 import { AiOutlineCopy } from "react-icons/ai";
-import api from "../../apis/Api";
-import { useConfig } from "../../providers/Config";
-import { useWalletModal } from "../../providers/WalletModal";
+import api from "../apis/Api";
+import { useConfig } from "../providers/Config";
+import { useWalletModal } from "../providers/WalletModal";
 import { useBalance } from "wagmi";
-import { Loader, PageLayout } from "../../components";
+import { Loader, PageLayout } from "../components";
+import { ClaimTokensButton } from "../components/Buttons";
 
 const FAUCET_ADDRESS = "0xf919eaf2e37aac718aa19668b9071ee42c02c081";
 
-export const FaucetPage = () => {
+export const Faucet: React.FC = () => {
   const config = useConfig();
   const { address } = useAccount();
   const { openWalletModal } = useWalletModal();
@@ -102,7 +103,7 @@ export const FaucetPage = () => {
         />
         <div className="flex flex-col gap-5 w-full md:w-56">
           {config?.tokens.map(token => (
-            <ClaimButton
+            <ClaimTokensButton
               key={token.name}
               tokenName={token.name}
               onClick={() => onClickClaim(token.address, token.name)}
@@ -127,21 +128,5 @@ export const FaucetPage = () => {
         </div>
       </div>
     </PageLayout>
-  );
-};
-
-type ClaimButtonProps = {
-  tokenName: string;
-  onClick: () => void;
-  isLoading: boolean;
-};
-const ClaimButton = ({ tokenName, onClick, isLoading }: ClaimButtonProps) => {
-  return (
-    <button
-      onClick={onClick}
-      className="px-5 h-16 bg-gray-100 hover:bg-gray-200 rounded-md border border-gray-500 shadow-md "
-    >
-      {isLoading ? <Loader /> : `Claim ${tokenName}`}
-    </button>
   );
 };

@@ -7,7 +7,7 @@ import { SettleBetModal } from "../components/Modals";
 import { BetFilterOptions, BetHistory } from "../types/bets";
 import { useWalletModal } from "../providers/WalletModal";
 
-const Bets: React.FC = () => {
+export const Bets: React.FC = () => {
   const [myBetsEnabled, setMyBetsEnabled] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBet, setSelectedBet] = useState<BetHistory>();
@@ -70,5 +70,3 @@ const Bets: React.FC = () => {
     </PageLayout>
   );
 };
-
-export default Bets;
