@@ -1,4 +1,4 @@
-import Dashboard from "../pages/Dashboard/Dashboard_Logic";
+import { Dashboard } from "../pages";
 import { MemoryRouter } from "react-router-dom";
 import { render, screen, userEvent } from "./componentTestUtils";
 
