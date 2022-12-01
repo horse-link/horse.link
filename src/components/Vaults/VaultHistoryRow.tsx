@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import moment from "moment";
-import { shortenHash } from "../../utils/formatting";
+import { formatToFourDecimals, shortenHash } from "../../utils/formatting";
 import { FormattedVaultTransaction } from "../../types/entities";
 import { VaultTransactionType } from "../../types";
 import { getVault } from "../../utils/config";
@@ -9,7 +9,7 @@ import { Config } from "../../types/config";
 
 type Props = {
   vault: FormattedVaultTransaction;
-  config?: Config
+  config?: Config;
 };
 
 const txTypeMap = new Map([
@@ -24,7 +24,7 @@ export const VaultHistoryRow: React.FC<Props> = ({ vault, config }) => {
     <tr>
       <td className="pl-5 pr-2 py-4 whitespace-nowrap">{formattedTxType}</td>
       <td className="px-2 py-4">
-        {`${ethers.utils.formatEther(vault.amount)}`}
+        {`${formatToFourDecimals(ethers.utils.formatEther(vault.amount))}`}
       </td>
       <td className="px-2 py-4 whitespace-nowrap">
         {moment.unix(vault.timestamp).fromNow()}
