@@ -1,6 +1,6 @@
 import Skeleton from "react-loading-skeleton";
 import { Runner } from "../../types";
-import { formatToTwoDecimals } from "../../utils/formatting";
+import utils from "../../utils";
 
 type Props = {
   runners: Runner[] | undefined[];
@@ -73,7 +73,7 @@ const RunnerTable: React.FC<Props> = ({ runners, onClickRunner }) => {
 
                       <td className="px-2 py-4 whitespace-nowrap">
                         {odds ? (
-                          formatToTwoDecimals(odds.toString())
+                          utils.formatting.formatToTwoDecimals(odds.toString())
                         ) : (
                           <Skeleton width="2em" />
                         )}

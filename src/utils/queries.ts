@@ -1,10 +1,10 @@
 import { ethers } from "ethers";
-import { FilterOptions } from "src/types";
+import { FilterOptions } from "../types";
 
-const optionalAddressFilter = (address?: string) =>
+const getOptionalAddressFilter = (address?: string) =>
   address ? `owner: "${address.toLowerCase()}"` : "";
 
-const optionalFilterOptions = (filter?: FilterOptions) => {
+const getOptionalFilterOptions = (filter?: FilterOptions) => {
   switch (filter) {
     case "ALL_BETS":
       return "";
@@ -32,8 +32,8 @@ export const getBetsQuery = ({
   bets(
     first: ${limit}
     where:{
-      ${optionalAddressFilter(address)}
-      ${optionalFilterOptions(filter)}
+      ${getOptionalAddressFilter(address)}
+      ${getOptionalFilterOptions(filter)}
     }
     orderBy: createdAt
     orderDirection: desc
@@ -80,7 +80,7 @@ query GetProtocols{
 export const getVaultHistoryQuery = (vaultAddress?: string) => `{
   vaultTransactions(
     where:{
-      ${optionalAddressFilter(vaultAddress)}
+      ${getOptionalAddressFilter(vaultAddress)}
     }
     orderBy: timestamp
     orderDirection: desc

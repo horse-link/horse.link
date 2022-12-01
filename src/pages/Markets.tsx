@@ -1,10 +1,10 @@
 import { useMarketStatistics } from "../hooks/stats";
 import { PageLayout } from "../components";
 import Card from "../components/Card";
-import { formatToFourDecimals } from "../utils/formatting";
 import { ethers } from "ethers";
 import { useConfig } from "src/providers/Config";
 import { MarketRow } from "src/components/Markets";
+import utils from "../utils";
 
 const Markets: React.FC = () => {
   const config = useConfig();
@@ -17,7 +17,9 @@ const Markets: React.FC = () => {
           title="24H Volume"
           data={
             totalVolume &&
-            `$${formatToFourDecimals(ethers.utils.formatEther(totalVolume))}`
+            `$${utils.formatting.formatToFourDecimals(
+              ethers.utils.formatEther(totalVolume)
+            )}`
           }
         />
         <Card title="24H Bets" data={totalBets?.toString()} />
@@ -25,7 +27,7 @@ const Markets: React.FC = () => {
           title="24H Largest Bet"
           data={
             largestBet &&
-            `$${formatToFourDecimals(
+            `$${utils.formatting.formatToFourDecimals(
               ethers.utils.formatEther(largestBet.amount)
             )}`
           }

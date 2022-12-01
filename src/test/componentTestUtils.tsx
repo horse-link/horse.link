@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react";
-import ApolloClientProvider from "src/providers/Apollo";
-import { WalletModalProvider } from "src/providers/WalletModal";
+import ApolloClientProvider from "../providers/Apollo";
+import { WalletModalProvider } from "../providers/WalletModal";
 import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";

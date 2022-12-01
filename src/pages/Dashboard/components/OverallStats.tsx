@@ -1,23 +1,24 @@
 import { ethers } from "ethers";
 import Card from "../../../components/Card";
 import { useProtocolStatistics } from "../../../hooks/stats";
-import {
-  formatNumberWithCommas,
-  formatToTwoDecimals
-} from "../../../utils/formatting";
+import utils from "../../../utils";
 
 const OverallStats = () => {
   const stats = useProtocolStatistics();
   const formattedTvl = stats?.tvl
-    ? `$${formatNumberWithCommas(ethers.utils.formatEther(stats.tvl))}`
+    ? `$${utils.formatting.formatNumberWithCommas(
+        ethers.utils.formatEther(stats.tvl)
+      )}`
     : undefined;
 
   const formattedInplay = stats?.inPlay
-    ? `$${formatNumberWithCommas(ethers.utils.formatEther(stats.inPlay))}`
+    ? `$${utils.formatting.formatNumberWithCommas(
+        ethers.utils.formatEther(stats.inPlay)
+      )}`
     : undefined;
 
   const formattedPerformace = stats?.performance
-    ? `${formatToTwoDecimals(stats.performance.toString())}%`
+    ? `${utils.formatting.formatToTwoDecimals(stats.performance.toString())}%`
     : undefined;
 
   return (

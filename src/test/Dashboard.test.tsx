@@ -1,6 +1,6 @@
-import Dashboard from "./Dashboard_Logic";
+import Dashboard from "../pages/Dashboard/Dashboard_Logic";
 import { MemoryRouter } from "react-router-dom";
-import { render, screen, userEvent } from "src/test/utils";
+import { render, screen, userEvent } from "./componentTestUtils";
 
 const DashboardPage = () => {
   return (

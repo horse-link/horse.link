@@ -1,5 +1,6 @@
-import axios, { AxiosInstance } from "axios";
+import { AxiosInstance } from "axios";
 import { ethers } from "ethers";
+import utils from "../utils";
 import { Config } from "../types/config";
 import {
   BetHistoryResponse,
@@ -11,17 +12,11 @@ import {
   Vault,
   VaultUserData
 } from "../types/index";
-import { isUsdt } from "../utils/config";
 
 export class Api {
   private client: AxiosInstance;
   constructor() {
-    this.client = axios.create({
-      baseURL: process.env.VITE_API_URL,
-      headers: {
-        Accept: "application/json"
-      }
-    });
+    this.client = utils.general.getAxiosClient();
   }
 
   public getConfig = async (): Promise<Config> => {
@@ -74,7 +69,7 @@ export class Api {
     const config = await this.getConfig();
     const { data } = await this.client.post(`/faucet`, {
       to: userAddress,
-      amount: isUsdt(tokenAddress, config)
+      amount: utils.config.isUsdt(tokenAddress, config)
         ? ethers.utils.parseUnits("100", 6)
         : ethers.utils.parseUnits("100"),
       address: tokenAddress

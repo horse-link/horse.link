@@ -1,20 +1,26 @@
 import { ethers } from "ethers";
 import Card from "../../../components/Card";
 import { useUserStatistics } from "../../../hooks/stats";
-import { formatNumberWithCommas } from "../../../utils/formatting";
+import utils from "../../../utils";
 
 const MyStats = () => {
   const stats = useUserStatistics();
 
   const { totalDeposited, inPlay, pnl } = stats ?? {};
   const formattedDeposits = totalDeposited
-    ? `$${formatNumberWithCommas(ethers.utils.formatEther(totalDeposited))}`
+    ? `$${utils.formatting.formatNumberWithCommas(
+        ethers.utils.formatEther(totalDeposited)
+      )}`
     : undefined;
   const formattedInplay = inPlay
-    ? `$${formatNumberWithCommas(ethers.utils.formatEther(inPlay))}`
+    ? `$${utils.formatting.formatNumberWithCommas(
+        ethers.utils.formatEther(inPlay)
+      )}`
     : undefined;
   const formattedProfits = pnl
-    ? `$${formatNumberWithCommas(ethers.utils.formatEther(pnl))}`
+    ? `$${utils.formatting.formatNumberWithCommas(
+        ethers.utils.formatEther(pnl)
+      )}`
     : undefined;
   return (
     <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">

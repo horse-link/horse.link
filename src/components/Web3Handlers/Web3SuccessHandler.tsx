@@ -1,5 +1,5 @@
 import React from "react";
-import { shortenAddress } from "../../utils/formatting";
+import utils from "../../utils";
 
 type Props = {
   hash: string;
@@ -17,7 +17,7 @@ export const Web3SuccessHandler: React.FC<Props> = ({ hash }) => {
           target="_blank"
           rel="noreferrer noopener"
         >
-          {shortenAddress(hash)}
+          {utils.formatting.shortenAddress(hash)}
         </a>
       </span>
     </div>

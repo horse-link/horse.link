@@ -1,6 +1,5 @@
 import moment from "moment";
 import React, { useEffect, useMemo, useState } from "react";
-import { getVaultNameFromMarket } from "../../utils/config";
 import { useConfig } from "../../providers/Config";
 import { BetHistory } from "../../types";
 import Loader from "../Loader";
@@ -9,7 +8,7 @@ import { ethers } from "ethers";
 import { useMarketContract } from "../../hooks/contracts";
 import { Web3ErrorHandler, Web3SuccessHandler } from "../Web3Handlers";
 import { useSigner } from "wagmi";
-import { formatFirstLetterCapitalised } from "../../utils/formatting";
+import utils from "../../utils";
 
 type Props = {
   isModalOpen: boolean;
@@ -92,7 +91,8 @@ export const SettleBetModal: React.FC<Props> = ({
       ) : (
         <React.Fragment>
           <h2 className="font-bold text-2xl mr-[8vw] mb-6">
-            {formatFirstLetterCapitalised(selectedBet.status)} Bet
+            {utils.formatting.formatFirstLetterCapitalised(selectedBet.status)}{" "}
+            Bet
           </h2>
           <div className="flex flex-col">
             <h3 className="font-semibold mb-2">
@@ -104,7 +104,7 @@ export const SettleBetModal: React.FC<Props> = ({
             <h3 className="font-semibold mb-2">
               Market:{" "}
               <span className="font-normal">
-                {getVaultNameFromMarket(market!.address, config)}
+                {utils.config.getVaultNameFromMarket(market!.address, config)}
               </span>
             </h3>
             {isWinning === true ? (

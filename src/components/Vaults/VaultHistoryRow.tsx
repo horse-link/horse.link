@@ -1,11 +1,10 @@
 import { ethers } from "ethers";
 import moment from "moment";
-import { shortenHash } from "../../utils/formatting";
 import { FormattedVaultTransaction } from "../../types/entities";
 import { VaultTransactionType } from "../../types";
-import { getVault } from "../../utils/config";
 import Skeleton from "react-loading-skeleton";
 import { Config } from "../../types/config";
+import utils from "../../utils";
 
 type Props = {
   vault: FormattedVaultTransaction;
@@ -19,7 +18,7 @@ const txTypeMap = new Map([
 
 export const VaultHistoryRow: React.FC<Props> = ({ vault, config }) => {
   const formattedTxType = txTypeMap.get(vault.type);
-  const details = getVault(vault.vaultAddress, config);
+  const details = utils.config.getVault(vault.vaultAddress, config);
   return (
     <tr>
       <td className="pl-5 pr-2 py-4 whitespace-nowrap">{formattedTxType}</td>
@@ -39,7 +38,7 @@ export const VaultHistoryRow: React.FC<Props> = ({ vault, config }) => {
           rel="noreferrer noopener"
           className="text-blue-600"
         >
-          {shortenHash(vault.id)}
+          {utils.formatting.shortenHash(vault.id)}
         </a>
       </td>
     </tr>

@@ -1,6 +1,4 @@
-import { calculateMaxPages, incrementPage, decrementPage } from "./bets";
-import { formatBetId } from "./formatting";
-import { getMockBet } from "./mocks";
+import utils from "../utils";
 
 // calculate pages tests
 test.concurrent.each([
@@ -13,7 +11,7 @@ test.concurrent.each([
 ])(
   "should return enough pages to show all data",
   async (betsArrayLength, totalBets, expected) => {
-    const pages = calculateMaxPages(betsArrayLength, totalBets);
+    const pages = utils.bets.calculateMaxPages(betsArrayLength, totalBets);
     expect(pages).toBe(expected);
   }
 );
@@ -28,7 +26,7 @@ test.concurrent.each([
 ])(
   "should increment page number or wrap to 1",
   async (page, maxPages, expected) => {
-    const newPage = incrementPage(page, maxPages);
+    const newPage = utils.bets.incrementPage(page, maxPages);
     expect(newPage).toBe(expected);
   }
 );
@@ -42,7 +40,7 @@ test.concurrent.each([
 ])(
   "should decrement page number or wrap to max pages",
   async (page, maxPages, expected) => {
-    const newPage = decrementPage(page, maxPages);
+    const newPage = utils.bets.decrementPage(page, maxPages);
     expect(newPage).toBe(expected);
   }
 );
@@ -50,8 +48,8 @@ test.concurrent.each([
 // format bet id tests
 describe("format bet ids", () => {
   it("should return the bet number from the id", () => {
-    const mockId = getMockBet().id;
-    const id = formatBetId(mockId);
+    const mockId = utils.mocks.getMockBet().id;
+    const id = utils.formatting.formatBetId(mockId);
     expect(id).toEqual(0);
   });
 });

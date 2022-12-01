@@ -1,9 +1,8 @@
 import { BigNumber, ethers } from "ethers";
 import { useMemo } from "react";
 import { Bet } from "../../types/entities";
-import { getMockBet } from "../../utils/mocks";
-import { getMarketStatsQuery } from "../../utils/queries";
 import useSubgraph from "../useSubgraph";
+import utils from "../../utils";
 
 type Response = {
   bets: Bet[];
@@ -21,7 +20,7 @@ export const useMarketStatistics = () => {
     []
   );
   const { data, loading } = useSubgraph<Response>(
-    getMarketStatsQuery(yesterdayFilter)
+    utils.queries.getMarketStatsQuery(yesterdayFilter)
   );
 
   const betsData = useMemo(() => {
@@ -50,7 +49,7 @@ export const useMarketStatistics = () => {
 
   const largestBet = useMemo(() => {
     if (!betsData) return;
-    if (!totalBets) return getMockBet();
+    if (!totalBets) return utils.mocks.getMockBet();
 
     return betsData.reduce((prev, curr) =>
       BigNumber.from(curr.amount).gt(BigNumber.from(prev.amount)) ? curr : prev

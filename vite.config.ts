@@ -28,11 +28,6 @@ export default ({ mode }: UserConfig) => {
         VITE_SUBGRAPH_URL: "mock_url",
         VITE_ALCHEMY_API_KEY: "mock_key"
       }
-    },
-    resolve: {
-      alias: {
-        src: path.resolve(__dirname, "./src")
-      }
     }
   });
 };

@@ -1,6 +1,6 @@
 import { MemoryRouter } from "react-router-dom";
-import { render, screen, userEvent } from "src/test/utils";
-import PageLayout from "./PageLayout_Logic";
+import { render, screen, userEvent } from "./componentTestUtils";
+import PageLayout from "../components/PageLayout/PageLayout_Logic";
 
 const TestPageLayout = () => {
   return (

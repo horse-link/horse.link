@@ -2,9 +2,8 @@ import { BigNumber } from "ethers";
 import { useMemo } from "react";
 import { useAccount } from "wagmi";
 import { FormattedUser, User } from "../../types/entities";
-import { getMockUser } from "../../utils/mocks";
-import { getUserStatsQuery } from "../../utils/queries";
 import useSubgraph from "../useSubgraph";
+import utils from "../../utils";
 
 type Response = {
   user: User;
@@ -12,11 +11,13 @@ type Response = {
 
 export const useUserStatistics = () => {
   const { address } = useAccount();
-  const { data, loading } = useSubgraph<Response>(getUserStatsQuery(address));
+  const { data, loading } = useSubgraph<Response>(
+    utils.queries.getUserStatsQuery(address)
+  );
 
   const formattedUserStats = useMemo<FormattedUser | undefined>(() => {
     if (loading || !data || !address) return;
-    if (!data.user) return getMockUser();
+    if (!data.user) return utils.mocks.getMockUser();
 
     const user = data.user;
 

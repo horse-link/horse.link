@@ -1,12 +1,13 @@
 import Modal from "../../components/Modal";
-import { shortenAddress } from "../../utils/formatting";
+import utils from "../../utils";
+
 type Props = {
   isOpen: boolean;
   onClose: () => void;
   txHash: string;
 };
 
-export const FaucetModal = ({ isOpen, onClose, txHash }: Props) => {
+export const FaucetModal: React.FC<Props> = ({ isOpen, onClose, txHash }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="w-200">
@@ -24,7 +25,7 @@ export const FaucetModal = ({ isOpen, onClose, txHash }: Props) => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            {txHash ? shortenAddress(txHash) : ""}
+            {txHash ? utils.formatting.shortenAddress(txHash) : ""}
           </a>
         </div>
       </div>
