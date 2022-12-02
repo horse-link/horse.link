@@ -78,17 +78,19 @@ export const Faucet: React.FC = () => {
           your Metamask settings).
         </p>
       </div>
-      <div className="w-full text-center bg-emerald-700 rounded-md p-5 my-5">
+      <div className="flex flex-wrap justify-center w-full text-center bg-emerald-700 rounded-md p-5 my-5 text-xs sm:text-base">
         {" "}
         Current ETH balance for the faucet&nbsp;
-        <a
-          href={`${process.env.VITE_SCANNER_URL}/address/${FAUCET_ADDRESS}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline"
-        >
-          {FAUCET_ADDRESS}
-        </a>
+        <div className="flex justify-center flex-wrap">
+          <a
+            href={`${process.env.VITE_SCANNER_URL}/address/${FAUCET_ADDRESS}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline"
+          >
+            {FAUCET_ADDRESS}
+          </a>
+        </div>
         &nbsp;is:&nbsp;
         {`${data ? `${data.formatted} ${data.symbol}` : <Loader />}`}
       </div>
@@ -110,13 +112,13 @@ export const Faucet: React.FC = () => {
             />
           ))}
         </div>
-        <div className="flex flex-col gap-5 md:w-65">
+        <div className="flex flex-col gap-5 max-w-md md:max-w-2xl w-full mb-5">
           {config?.tokens.map(token => {
             return (
-              <div className="flex bg-gray-100 rounded-md p-5 md:w-155">
+              <div className="flex bg-gray-100 rounded-md p-5 text-xs sm:text-base flex-wrap px-3">
                 {token.name} Address - {token.address}
                 <button
-                  className="flex rounded-xl hover:bg-emerald-400 p-1"
+                  className="flex rounded-xl hover:bg-emerald-400 flex-wrap p-1"
                   onClick={() => navigator.clipboard.writeText(token.address)}
                 >
                   <AiOutlineCopy />
