@@ -3,6 +3,7 @@ import { Meet } from "../../types/meets";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import Skeleton from "react-loading-skeleton";
+import utils from "../../utils";
 
 type Props = {
   meets: Meet[];
@@ -66,7 +67,10 @@ export const DashboardTable: React.FC<Props> = ({ meets }) => {
                                   to={
                                     race.status !== "Paying"
                                       ? `/horses/${meet.id}/${race.number}`
-                                      : ""
+                                      : `/results/${utils.markets.getPropositionIdFromRaceMeet(
+                                          race,
+                                          meet
+                                        )}`
                                   }
                                 >
                                   <p>R{race.number}</p>

@@ -5,3 +5,4 @@ export * from "./Races";
 export * from "./Tokens";
 export * from "./Vaults";
 export * from "./Faucet";
+export * from "./Results";

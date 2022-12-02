@@ -34,6 +34,7 @@ export type SignedRunnersResponse = {
 export type SignedMeetingsResponse = {
   data: MeetResponse;
 } & SignedResponse;
+
 export type Meet = {
   id: string;
   name: string;

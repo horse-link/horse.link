@@ -4,7 +4,7 @@ import { WalletModalProvider } from "./providers/WalletModal";
 import ApolloProvider from "./providers/Apollo";
 import { ConfigProvider } from "./providers/Config";
 
-const App = () => (
+const App: React.FC = () => (
   <ConfigProvider>
     <WagmiProvider>
       <WalletModalProvider>

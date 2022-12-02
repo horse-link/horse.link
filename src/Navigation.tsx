@@ -6,10 +6,11 @@ import {
   Tokens,
   Vaults,
   Faucet,
-  Dashboard
+  Dashboard,
+  Results
 } from "./pages";
 
-const Navigation = () => (
+const Navigation: React.FC = () => (
   <BrowserRouter>
     <Routes>
       <Route path="/dashboard" element={<Dashboard />} />
@@ -17,6 +18,7 @@ const Navigation = () => (
       <Route path="/markets" element={<Markets />} />
       <Route path="/tokens" element={<Tokens />} />
       <Route path="/horses/:track/:number" element={<Races />} />
+      <Route path="/results/:propositionId" element={<Results />} />
       <Route path="/faucet" element={<Faucet />} />
       <Route path="/bets" element={<Bets />} />
 

@@ -26,6 +26,11 @@ export class Api {
     return data;
   };
 
+  public getRaceResult = async (propositionId: string): Promise<any> => {
+    const { data } = await this.client.get(`/results/${propositionId}`);
+    return data;
+  };
+
   public getMelbourneCupRunners = async () => {
     const { data } = await this.client.get<Runner[]>("/melbournecup");
     return data;
