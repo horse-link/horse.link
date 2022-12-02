@@ -17,7 +17,7 @@ export const DashboardTable: React.FC<Props> = ({ meets }) => {
         <h3 className="text-lg mb-3 font-medium text-gray-900">
           {moment(Date.now()).format("dddd Do MMMM")}
         </h3>
-        <div className="flex flex-col">
+        <div className="flex flex-col overflow-x-scroll">
           <div>
             <div className="py-2 align-middle inline-block min-w-full">
               <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">

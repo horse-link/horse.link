@@ -9,7 +9,7 @@ type Props = {
 
 export const FaucetModal: React.FC<Props> = ({ isOpen, onClose, txHash }) => (
   <BaseModal isOpen={isOpen} onClose={onClose}>
-    <div className="w-200">
+    <div className="sm:w-auto md:w-96">
       <h2>
         Tokens have been transferred.
         <br />
