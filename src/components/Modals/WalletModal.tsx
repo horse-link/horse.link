@@ -21,7 +21,7 @@ export const WalletModal: React.FC<Props> = (props: Props) => {
 
   return (
     <BaseModal isOpen={isModalOpen} onClose={closeWalletModal}>
-      <div className="text-center w-96">
+      <div className="text-center sm:w-auto md:w-96">
         <div>
           <label
             className="flex justify-center cursor-pointer"
