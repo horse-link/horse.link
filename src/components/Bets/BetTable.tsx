@@ -27,6 +27,12 @@ export const BetTable: React.FC<Props> = ({
               <tr className="text-center">
                 <th
                   scope="col"
+                  className="px-2 py-3 w-32 text-left text-xs font-medium text-gray-500 uppercase"
+                >
+                  Index
+                </th>
+                <th
+                  scope="col"
                   className="pl-5 pr-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
                 >
                   Punter
