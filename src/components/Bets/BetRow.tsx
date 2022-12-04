@@ -41,6 +41,9 @@ export const BetRow: React.FC<Props> = ({ config, betData, onClick }) => {
         }
       )}
     >
+      <td className="px-2">
+        {betData.index} ?? <Skeleton />
+      </td>
       <td className="pl-5 pr-2 py-4 truncate">
         {betData.punter ?? <Skeleton />}
       </td>
