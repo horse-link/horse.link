@@ -2,7 +2,7 @@ import { AxiosInstance } from "axios";
 import { ethers } from "ethers";
 import utils from "../utils";
 import { Config } from "../types/config";
-import { Runner, SignedMeetingsResponse } from "../types/meets";
+import { MeetResults, Runner, SignedMeetingsResponse } from "../types/meets";
 import { BetHistoryResponse, SignedBetDataResponse } from "../types/bets";
 import { Market, Vault } from "../typechain";
 import { Token } from "graphql";
@@ -23,6 +23,15 @@ export class Api {
   public getMeetings = async (): Promise<SignedMeetingsResponse> => {
     const { data } = await this.client.get<SignedMeetingsResponse>("/meetings");
 
+    return data;
+  };
+
+  public getRaceResult = async (
+    propositionId: string
+  ): Promise<MeetResults> => {
+    const { data } = await this.client.get<MeetResults>(
+      `/meetings/results/${propositionId}`
+    );
     return data;
   };
 
