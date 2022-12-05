@@ -26,7 +26,8 @@ export const getBetStatus = (
   if (!hasResult && !bet.settled) return "PENDING";
   if (hasResult && !bet.settled) return "RESULTED";
   if (hasResult && bet.settled) return "SETTLED";
-  throw new Error("Invalid bet status");
+  return "UNKNOWN";
+  // throw new Error("Invalid bet status");
 };
 
 export const getBetHistory = (
