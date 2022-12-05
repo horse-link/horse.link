@@ -67,9 +67,7 @@ export const DashboardTable: React.FC<Props> = ({ meets }) => {
                                   to={
                                     race.status !== "Paying"
                                       ? `/horses/${meet.id}/${race.number}`
-                                      : `/results/${
-                                          meet.location
-                                        }/${utils.markets.getPropositionIdFromRaceMeet(
+                                      : `/results/${utils.markets.getPropositionIdFromRaceMeet(
                                           race,
                                           meet
                                         )}`

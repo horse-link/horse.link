@@ -9,10 +9,9 @@ import utils from "../utils";
 export const Results: React.FC = () => {
   const params = useParams();
   const propositionId = params.propositionId || "";
-  const state = params.state || "";
   const details = utils.markets.getDetailsFromPropositionId(propositionId);
 
-  const results = useResultsData(propositionId, state);
+  const results = useResultsData(propositionId);
 
   return (
     <PageLayout>

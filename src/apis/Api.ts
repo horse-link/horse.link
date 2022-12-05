@@ -26,12 +26,9 @@ export class Api {
     return data;
   };
 
-  public getRaceResult = async (
-    propositionId: string,
-    state: string
-  ): Promise<any> => {
+  public getRaceResult = async (propositionId: string): Promise<any> => {
     const { data } = await this.client.get<MeetResults>(
-      `/meetings/results/${state}/${propositionId}`
+      `/meetings/results/${propositionId}`
     );
     return data;
   };
