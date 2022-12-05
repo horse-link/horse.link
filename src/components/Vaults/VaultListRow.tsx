@@ -34,7 +34,16 @@ export const VaultListRow: React.FC<Props> = ({
           ethers.utils.formatUnits(vault.totalAssets, vault.asset.decimals)
         )}
       </td>
-      <td className="px-2 py-4 whitespace-nowrap">{vault.address}</td>
+      <td className="px-2 py-4 whitespace-nowrap">
+        <a
+          href={`${process.env.VITE_SCANNER_URL}/tx/${vault.address}`}
+          target="_blank"
+          rel="noreferrer noopener"
+          className="text-blue-600"
+        >
+          {vault.address}
+        </a>
+      </td>
       <td className="px-2 py-4 whitespace-nowrap">
         <button
           className="px-4 font-bold border-black border-2 py-1 rounded-md hover:text-white hover:bg-black transition-colors duration-100 mr-4"
