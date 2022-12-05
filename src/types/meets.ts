@@ -49,6 +49,7 @@ export type MeetResponse = {
   expires: number;
   meetings: Meet[];
 };
+
 export type Back = {
   nonce: string;
   market_id: string;
@@ -58,3 +59,10 @@ export type Back = {
   proposition_id: string;
   signature: EcSignature;
 };
+
+export type MeetResults = {
+  name: string;
+  number: number;
+  jockey: string;
+  place: number;
+}[];

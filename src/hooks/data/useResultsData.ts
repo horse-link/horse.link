@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
 import api from "../../apis/Api";
+import { MeetResults } from "../../types/meets";
 
-export const useResultsData = (marketId: string) => {
-  const [results, setResults] = useState<any>();
+export const useResultsData = (marketId: string, state: string) => {
+  const [results, setResults] = useState<MeetResults>();
 
   useEffect(() => {
-    (async () => {
-      const apiResults = await api.getRaceResult(marketId);
-      console.log(apiResults);
-    })();
+    api.getRaceResult(marketId, state).then(setResults);
   }, []);
 
   return results;
