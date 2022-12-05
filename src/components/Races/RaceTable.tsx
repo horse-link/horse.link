@@ -42,7 +42,7 @@ export const RaceTable: React.FC<Props> = ({ runners, onClickRunner }) => (
                   scope="col"
                   className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
                 >
-                  Place
+                  Form
                 </th>
               </tr>
             </thead>
