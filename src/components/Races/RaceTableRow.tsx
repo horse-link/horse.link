@@ -9,7 +9,8 @@ type Props = {
 };
 
 export const RaceTableRow: React.FC<Props> = ({ runner, onClick }) => {
-  const { number, name, barrier, odds } = runner || {};
+  const { number, name, barrier, odds, handicapWeight, last5Starts } =
+    runner || {};
 
   return (
     <tr
@@ -23,18 +24,18 @@ export const RaceTableRow: React.FC<Props> = ({ runner, onClick }) => {
         {name ? `${name} (${barrier ?? "?"})` : <Skeleton width="10em" />}
       </td>
       <td className="px-2 py-4 whitespace-nowrap">
-        {name ? "?" : <Skeleton width="2em" />}
+        {name ? `${last5Starts}` : <Skeleton width="2em" />}
       </td>
 
+      <td className="px-2 py-4 whitespace-nowrap">
+        {name ? `${handicapWeight}` : <Skeleton width="2em" />}
+      </td>
       <td className="px-2 py-4 whitespace-nowrap">
         {odds ? (
           utils.formatting.formatToTwoDecimals(odds.toString())
         ) : (
           <Skeleton width="2em" />
         )}
-      </td>
-      <td className="px-2 py-4 whitespace-nowrap">
-        {name ? "?" : <Skeleton width="2em" />}
       </td>
     </tr>
   );

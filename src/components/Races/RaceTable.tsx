@@ -30,6 +30,12 @@ export const RaceTable: React.FC<Props> = ({ runners, onClickRunner }) => (
                   scope="col"
                   className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
                 >
+                  Form
+                </th>
+                <th
+                  scope="col"
+                  className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
+                >
                   Weight
                 </th>
                 <th
@@ -37,12 +43,6 @@ export const RaceTable: React.FC<Props> = ({ runners, onClickRunner }) => (
                   className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
                 >
                   Win
-                </th>
-                <th
-                  scope="col"
-                  className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
-                >
-                  Form
                 </th>
               </tr>
             </thead>
