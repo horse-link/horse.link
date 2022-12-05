@@ -8,6 +8,8 @@ export type Runner = {
   close: number;
   end: number;
   odds: number;
+  handicapWeight: number;
+  last5Starts: string;
   proposition_id: string;
   proposition_id_hash: string;
   barrier: number;
