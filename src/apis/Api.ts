@@ -26,7 +26,9 @@ export class Api {
     return data;
   };
 
-  public getRaceResult = async (propositionId: string): Promise<any> => {
+  public getRaceResult = async (
+    propositionId: string
+  ): Promise<MeetResults> => {
     const { data } = await this.client.get<MeetResults>(
       `/meetings/results/${propositionId}`
     );
