@@ -71,11 +71,13 @@ export class Api {
     tokenAddress: string
   ): Promise<{ tx: string }> => {
     const config = await this.getConfig();
+    const amount = utils.config.isUsdt(tokenAddress, config)
+      ? ethers.utils.parseUnits("100", 6)
+      : ethers.utils.parseUnits("100");
+
     const { data } = await this.client.post(`/faucet`, {
       to: userAddress,
-      amount: utils.config.isUsdt(tokenAddress, config)
-        ? ethers.utils.parseUnits("100", 6)
-        : ethers.utils.parseUnits("100"),
+      amount: amount.toString(),
       address: tokenAddress
     });
 
