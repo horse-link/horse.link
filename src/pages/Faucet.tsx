@@ -66,22 +66,17 @@ export const Faucet: React.FC = () => {
         />
       )}
       <div className="w-full text-center bg-emerald-700 rounded-md p-5 my-10">
-        <h2>Welcome to the Horse Link Faucet!</h2>
-        <h2 className="p-1">
+        <h1>Welcome to the Horse Link Faucet!</h1>
+        <p>
           These tokens are to be used to test the beta functionality of the app.
-          Please make sure you are connected to Goerli network.
-        </h2>
-        <p className="p-1">
-          To connect to the Goerli network, select your Metamask extension and
-          click the Network tab at the top. Select the Goerli test network (this
-          will be there by default, otherwise please enable test networks in
-          your Metamask settings).
+          Please make sure you are connected to Goerli network. To connect to
+          the Goerli network, select your Metamask extension and click the
+          Network tab at the top. Select the Goerli test network (this will be
+          there by default, otherwise please enable test networks in your
+          Metamask settings).
         </p>
-      </div>
-      <div className="flex flex-wrap justify-center w-full text-center bg-emerald-700 rounded-md p-5 my-5 text-xs sm:text-base">
-        {" "}
-        Current ETH balance for the faucet&nbsp;
-        <div className="flex justify-center flex-wrap">
+        <p>
+          Current ETH balance for the faucet&nbsp;
           <a
             href={`${process.env.VITE_SCANNER_URL}/address/${FAUCET_ADDRESS}`}
             target="_blank"
@@ -90,7 +85,7 @@ export const Faucet: React.FC = () => {
           >
             {FAUCET_ADDRESS}
           </a>
-        </div>
+        </p>
         &nbsp;is:&nbsp;
         {`${data ? `${data.formatted} ${data.symbol}` : <Loader />}`}
       </div>
