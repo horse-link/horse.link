@@ -1,7 +1,7 @@
 import { VaultInfo } from "../../types/config";
 import { ethers } from "ethers";
-import { formatToFourDecimals } from "../../utils/formatting";
-import { VaultModalState, VaultTransactionType } from "../../types";
+import utils from "../../utils";
+import { VaultModalState, VaultTransactionType } from "../../types/vaults";
 
 type Props = {
   vault: VaultInfo;
@@ -30,11 +30,20 @@ export const VaultListRow: React.FC<Props> = ({
       <td className="px-2 py-4">{vault.asset.symbol}</td>
       <td className="px-2 py-4 whitespace-nowrap">
         $
-        {formatToFourDecimals(
+        {utils.formatting.formatToFourDecimals(
           ethers.utils.formatUnits(vault.totalAssets, vault.asset.decimals)
         )}
       </td>
-      <td className="px-2 py-4 whitespace-nowrap">{vault.address}</td>
+      <td className="px-2 py-4 whitespace-nowrap">
+        <a
+          href={`${process.env.VITE_SCANNER_URL}/tx/${vault.address}`}
+          target="_blank"
+          rel="noreferrer noopener"
+          className="text-blue-600"
+        >
+          {vault.address}
+        </a>
+      </td>
       <td className="px-2 py-4 whitespace-nowrap">
         <button
           className="px-4 font-bold border-black border-2 py-1 rounded-md hover:text-white hover:bg-black transition-colors duration-100 mr-4"

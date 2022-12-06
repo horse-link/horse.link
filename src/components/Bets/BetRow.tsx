@@ -2,12 +2,9 @@ import classnames from "classnames";
 import { ethers } from "ethers";
 import moment from "moment";
 import Skeleton from "react-loading-skeleton";
-import { BetHistory } from "../../types";
+import { BetHistory } from "../../types/bets";
 import { Config } from "../../types/config";
-import {
-  formatToFourDecimals,
-  parseBytes16String
-} from "../../utils/formatting";
+import utils from "../../utils";
 
 type Props = {
   config?: Config;
@@ -18,7 +15,9 @@ type Props = {
 export const BetRow: React.FC<Props> = ({ config, betData, onClick }) => {
   const formattedAmount = () =>
     config ? (
-      `${formatToFourDecimals(ethers.utils.formatEther(betData.amount))} ${
+      `${utils.formatting.formatToFourDecimals(
+        ethers.utils.formatEther(betData.amount)
+      )} ${
         config.tokens.find(
           token =>
             token.address.toLowerCase() === betData.assetAddress.toLowerCase()
@@ -42,6 +41,7 @@ export const BetRow: React.FC<Props> = ({ config, betData, onClick }) => {
         }
       )}
     >
+      <td className="px-2">{betData.index}</td>
       <td className="pl-5 pr-2 py-4 truncate">
         {betData.punter ?? <Skeleton />}
       </td>
@@ -50,10 +50,12 @@ export const BetRow: React.FC<Props> = ({ config, betData, onClick }) => {
         {moment.unix(betData.blockNumber).fromNow() ?? <Skeleton />}
       </td>
       <td className="px-2 py-4 truncate">
-        {parseBytes16String(betData.marketId) ?? <Skeleton />}
+        {utils.formatting.parseBytes16String(betData.marketId) ?? <Skeleton />}
       </td>
       <td className="px-2 py-4 truncate">
-        {parseBytes16String(betData.propositionId) ?? <Skeleton />}
+        {utils.formatting.parseBytes16String(betData.propositionId) ?? (
+          <Skeleton />
+        )}
       </td>
     </tr>
   );

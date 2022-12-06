@@ -1,30 +1,32 @@
 import { ethers } from "ethers";
 import moment from "moment";
-import { shortenHash } from "../../utils/formatting";
 import { FormattedVaultTransaction } from "../../types/entities";
-import { VaultTransactionType } from "../../types";
-import { getVault } from "../../utils/config";
 import Skeleton from "react-loading-skeleton";
 import { Config } from "../../types/config";
-
-type Props = {
-  vault: FormattedVaultTransaction;
-  config?: Config
-};
+import utils from "../../utils";
+import { VaultTransactionType } from "../../types/vaults";
 
 const txTypeMap = new Map([
   [VaultTransactionType.WITHDRAW, "Withdrawal"],
   [VaultTransactionType.DEPOSIT, "Deposit"]
 ]);
 
+type Props = {
+  vault: FormattedVaultTransaction;
+  config?: Config;
+};
+
 export const VaultHistoryRow: React.FC<Props> = ({ vault, config }) => {
   const formattedTxType = txTypeMap.get(vault.type);
-  const details = getVault(vault.vaultAddress, config);
+  const details = utils.config.getVault(vault.vaultAddress, config);
+
   return (
     <tr>
       <td className="pl-5 pr-2 py-4 whitespace-nowrap">{formattedTxType}</td>
       <td className="px-2 py-4">
-        {`${ethers.utils.formatEther(vault.amount)}`}
+        {`${utils.formatting.formatToFourDecimals(
+          ethers.utils.formatEther(vault.amount)
+        )}`}
       </td>
       <td className="px-2 py-4 whitespace-nowrap">
         {moment.unix(vault.timestamp).fromNow()}
@@ -39,7 +41,7 @@ export const VaultHistoryRow: React.FC<Props> = ({ vault, config }) => {
           rel="noreferrer noopener"
           className="text-blue-600"
         >
-          {shortenHash(vault.id)}
+          {utils.formatting.shortenHash(vault.id)}
         </a>
       </td>
     </tr>

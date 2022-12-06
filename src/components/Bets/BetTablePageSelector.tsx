@@ -1,4 +1,4 @@
-import { decrementPage, incrementPage } from "../../utils/bets";
+import utils from "../../utils";
 
 type Props = {
   page: number;
@@ -21,7 +21,7 @@ export const BetTablePageSelector: React.FC<Props> = ({
           strokeWidth={3}
           stroke="black"
           className="w-5 h-5 mt-1 cursor-pointer"
-          onClick={() => setPage(decrementPage(page, maxPages))}
+          onClick={() => setPage(utils.bets.decrementPage(page, maxPages))}
         >
           <path
             strokeLinecap="round"
@@ -43,7 +43,7 @@ export const BetTablePageSelector: React.FC<Props> = ({
           strokeWidth={3}
           stroke="black"
           className="w-5 h-5 mt-1 cursor-pointer"
-          onClick={() => setPage(incrementPage(page, maxPages))}
+          onClick={() => setPage(utils.bets.incrementPage(page, maxPages))}
         >
           <path
             strokeLinecap="round"

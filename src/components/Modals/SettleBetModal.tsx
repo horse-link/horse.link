@@ -1,15 +1,14 @@
 import moment from "moment";
 import React, { useEffect, useMemo, useState } from "react";
-import { getVaultNameFromMarket } from "../../utils/config";
 import { useConfig } from "../../providers/Config";
-import { BetHistory } from "../../types";
-import Loader from "../Loader";
-import Modal from "../Modal";
+import { Loader } from "../";
+import { BaseModal } from ".";
 import { ethers } from "ethers";
-import useMarketContract from "../../hooks/market/useMarketContract";
+import { useMarketContract } from "../../hooks/contracts";
 import { Web3ErrorHandler, Web3SuccessHandler } from "../Web3Handlers";
 import { useSigner } from "wagmi";
-import { formatFirstLetterCapitalised } from "../../utils/formatting";
+import utils from "../../utils";
+import { BetHistory } from "../../types/bets";
 
 type Props = {
   isModalOpen: boolean;
@@ -84,7 +83,7 @@ export const SettleBetModal: React.FC<Props> = ({
   };
 
   return (
-    <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+    <BaseModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
       {!selectedBet || !config ? (
         <div className="p-10">
           <Loader />
@@ -92,19 +91,20 @@ export const SettleBetModal: React.FC<Props> = ({
       ) : (
         <React.Fragment>
           <h2 className="font-bold text-2xl mr-[8vw] mb-6">
-            {formatFirstLetterCapitalised(selectedBet.status)} Bet
+            {utils.formatting.formatFirstLetterCapitalised(selectedBet.status)}{" "}
+            Bet
           </h2>
           <div className="flex flex-col">
             <h3 className="font-semibold mb-2">
               Placed:{" "}
               <span className="font-normal">
-                {moment(selectedBet.blockNumber).format("dddd Do MMMM")}
+                {moment.unix(selectedBet.blockNumber).format("dddd Do MMMM")}
               </span>
             </h3>
             <h3 className="font-semibold mb-2">
               Market:{" "}
               <span className="font-normal">
-                {getVaultNameFromMarket(market!.address, config)}
+                {utils.config.getVaultNameFromMarket(market!.address, config)}
               </span>
             </h3>
             {isWinning === true ? (
@@ -154,6 +154,6 @@ export const SettleBetModal: React.FC<Props> = ({
           </div>
         </React.Fragment>
       )}
-    </Modal>
+    </BaseModal>
   );
 };

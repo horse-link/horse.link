@@ -95,7 +95,7 @@ const CSSTransition: React.FC<TransitionProps> = function CSSTransition({
   );
 };
 
-const Transition: React.FC<TransitionProps> = function Transition({
+export const Transition: React.FC<TransitionProps> = function Transition({
   show,
   appear,
   ...rest
@@ -123,5 +123,3 @@ const Transition: React.FC<TransitionProps> = function Transition({
       </transitionContext.Provider>
     );
 };
-
-export default Transition;

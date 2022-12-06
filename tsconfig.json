@@ -7,7 +7,6 @@
     "moduleResolution": "Node",
     "jsx": "react-jsx",
     "outDir": "./dist",
-    "baseUrl": "./",
     "useDefineForClassFields": true,
     "allowJs": false,
     "allowSyntheticDefaultImports": true,
