@@ -8,6 +8,7 @@ import {
   DashboardTable,
   DashboardUserStats
 } from "../components/Dashboard";
+import { NextToJumpBanner } from "../components/Dashboard/NextToJumpBanner";
 import { useWalletModal } from "../providers/WalletModal";
 import { NextToJump, SignedMeetingsResponse } from "../types/meets";
 import utils from "../utils";
@@ -43,6 +44,9 @@ export const Dashboard: React.FC = () => {
 
   return (
     <PageLayout>
+      <div>
+        <NextToJumpBanner NextToJump={[]} />
+      </div>
       <div className="grid gap-6">
         <div>
           <div className="container-fluid px-4 py-5 bg-emerald-700 shadow rounded-lg overflow-hidden sm:p-6">
