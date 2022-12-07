@@ -57,7 +57,8 @@ export const DashboardTable: React.FC<Props> = ({ meets }) => {
                             <div
                               className={`px-3 py-4 whitespace-nowrap text-sm
                                 ${
-                                  race.status === "Paying"
+                                  race.status === "Paying" ||
+                                  race.status === "Abandoned"
                                     ? "bg-gray-400 hover:bg-gray-500"
                                     : race.status === "Interim"
                                     ? "bg-emerald-400"
@@ -67,7 +68,8 @@ export const DashboardTable: React.FC<Props> = ({ meets }) => {
                               {race.name ? (
                                 <Link
                                   to={
-                                    race.status === "Interim"
+                                    race.status === "Interim" ||
+                                    race.status === "Abandoned"
                                       ? ""
                                       : race.status === "Normal"
                                       ? `/horses/${meet.id}/${race.number}`
