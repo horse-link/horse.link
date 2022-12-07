@@ -9,14 +9,22 @@ import {
   DashboardUserStats
 } from "../components/Dashboard";
 import { useWalletModal } from "../providers/WalletModal";
-import { SignedMeetingsResponse } from "../types/meets";
+import { NextToJump, SignedMeetingsResponse } from "../types/meets";
 import utils from "../utils";
 
 export const Dashboard: React.FC = () => {
   const [response, setResponse] = useState<SignedMeetingsResponse>();
+  const [nextToJump, setnextToJump] = useState<NextToJump>();
   const [myPlayEnabled, setMyPlayEnabled] = useState(false);
   const { openWalletModal } = useWalletModal();
   const { isConnected } = useAccount();
+
+  useEffect(() => {
+    (async () => {
+      const nextToJump = await api.getnextToJump();
+      setnextToJump(nextToJump);
+    })();
+  }, []);
 
   useEffect(() => {
     (async () => {
