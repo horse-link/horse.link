@@ -16,6 +16,14 @@ export type Runner = {
   signature: EcSignature;
 };
 
+export type NextToJump = {
+  jumperRaceStartTime: string;
+  jumperRaceNumber: number;
+  jumperMeetingName: string;
+  location: string;
+  raceType: string;
+};
+
 export type Race = {
   number: number;
   name: string;
