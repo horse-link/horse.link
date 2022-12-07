@@ -79,8 +79,25 @@ export const useMarketContract = () => {
     return receipt.transactionHash;
   };
 
+  const getPotentialPayout = async (
+    market: MarketInfo,
+    wager: BigNumber,
+    back: Back,
+    signer: Signer
+  ) => {
+    const marketContract = Market__factory.connect(market.address, signer);
+    const odds = ethers.utils.parseUnits(back.odds.toString(), ODDS_DECIMALS);
+    const payout = await marketContract.getPotentialPayout(
+      utils.formatting.formatBytes16String(back.proposition_id),
+      wager,
+      odds
+    );
+    return payout;
+  };
+
   return {
     placeBet,
-    settleBet
+    settleBet,
+    getPotentialPayout
   };
 };

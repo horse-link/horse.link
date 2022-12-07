@@ -23,7 +23,7 @@ export const ResultsTable: React.FC<Props> = ({ results }) => (
                   scope="col"
                   className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
                 >
-                  Horse
+                  Runner
                 </th>
                 <th
                   scope="col"
@@ -45,12 +45,14 @@ export const ResultsTable: React.FC<Props> = ({ results }) => (
                   <td className="px-1 py-4 whitespace-nowrap bg-gray-200">
                     {result.place}
                   </td>
-                  <td className="px-2 py-4 whitespace-nowrap">{result.name}</td>
+                  <td className="px-2 py-4 whitespace-nowrap">
+                    {result.runner}
+                  </td>
                   <td className="px-2 py-4 whitespace-nowrap">
                     {result.number}
                   </td>
                   <td className="px-2 py-4 whitespace-nowrap">
-                    {result.jockey}
+                    {result.rider}
                   </td>
                 </tr>
               ))}

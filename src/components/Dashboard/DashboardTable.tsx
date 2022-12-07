@@ -57,17 +57,22 @@ export const DashboardTable: React.FC<Props> = ({ meets }) => {
                             <div
                               className={`px-3 py-4 whitespace-nowrap text-sm
                                 ${
-                                  race.status == "Paying"
+                                  race.status === "Paying"
                                     ? "bg-gray-400 hover:bg-gray-500"
+                                    : race.status === "Interim"
+                                    ? "bg-emerald-400"
                                     : "hover:bg-gray-200"
                                 }`}
                             >
                               {race.name ? (
                                 <Link
                                   to={
-                                    race.status !== "Paying"
+                                    race.status === "Interim"
+                                      ? ""
+                                      : race.status === "Normal"
                                       ? `/horses/${meet.id}/${race.number}`
-                                      : `/results/${utils.markets.getPropositionIdFromRaceMeet(
+                                      : // race.status === "Paying"
+                                        `/results/${utils.markets.getPropositionIdFromRaceMeet(
                                           race,
                                           meet
                                         )}`
