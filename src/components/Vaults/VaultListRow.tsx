@@ -36,7 +36,7 @@ export const VaultListRow: React.FC<Props> = ({
       </td>
       <td className="px-2 py-4 whitespace-nowrap">
         <a
-          href={`${process.env.VITE_SCANNER_URL}/tx/${vault.address}`}
+          href={`${process.env.VITE_SCANNER_URL}/address/${vault.address}`}
           target="_blank"
           rel="noreferrer noopener"
           className="text-blue-600"

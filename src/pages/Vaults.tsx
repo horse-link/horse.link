@@ -56,7 +56,7 @@ export const Vaults: React.FC = () => {
                     scope="col"
                     className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
                   >
-                    Deposit/Withdraw
+                    Deposit / Withdraw
                   </th>
                 </tr>
               </thead>
