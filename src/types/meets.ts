@@ -63,8 +63,8 @@ export type Back = {
 };
 
 export type MeetResults = {
-  name: string;
+  runner: string;
   number: number;
-  jockey: string;
+  rider: string;
   place: number;
 }[];

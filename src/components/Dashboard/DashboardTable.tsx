@@ -59,14 +59,18 @@ export const DashboardTable: React.FC<Props> = ({ meets }) => {
                                 ${
                                   race.status == "Paying"
                                     ? "bg-gray-400 hover:bg-gray-500"
+                                    : race.status == "Interim"
+                                    ? "bg-emerald-400"
                                     : "hover:bg-gray-200"
                                 }`}
                             >
                               {race.name ? (
                                 <Link
                                   to={
-                                    race.status !== "Paying"
+                                    race.status == "Normal"
                                       ? `/horses/${meet.id}/${race.number}`
+                                      : race.status == "Interim"
+                                      ? ""
                                       : `/results/${utils.markets.getPropositionIdFromRaceMeet(
                                           race,
                                           meet

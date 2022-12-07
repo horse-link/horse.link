@@ -26,6 +26,7 @@ export const PlaceBetModal: React.FC<Props> = ({
   const [selectedMarket, setSelectedMarket] = useState<MarketInfo>();
   const [userBalance, setUserBalance] = useState<UserBalance>();
   const [wagerAmount, setWagerAmount] = useState<string>();
+  const [payout, setPayout] = useState<string>();
   const [txLoading, setTxLoading] = useState(false);
   const [txHash, setTxHash] = useState<string>();
   const [error, setError] = useState<ethers.errors>();
@@ -33,7 +34,7 @@ export const PlaceBetModal: React.FC<Props> = ({
   const { data: signer } = useSigner();
 
   const config = useConfig();
-  const { placeBet } = useMarketContract();
+  const { placeBet, getPotentialPayout } = useMarketContract();
   const { getBalance, getDecimals } = useERC20Contract();
   const { shouldRefetch, refetch: refetchUserBalance } = useRefetch();
 
@@ -50,6 +51,22 @@ export const PlaceBetModal: React.FC<Props> = ({
       signature: runner.signature
     };
   }, [runner]);
+
+  useEffect(() => {
+    if (!selectedMarket || !signer || !back || !wagerAmount || !userBalance)
+      return setPayout("0");
+
+    (async () => {
+      setPayout(undefined);
+      const payout = await getPotentialPayout(
+        selectedMarket,
+        ethers.utils.parseUnits(wagerAmount, userBalance.decimals),
+        back,
+        signer
+      );
+      setPayout(ethers.utils.formatUnits(payout, userBalance.decimals));
+    })();
+  }, [selectedMarket, signer, back, wagerAmount, userBalance, shouldRefetch]);
 
   useEffect(() => {
     if (!selectedMarket || !signer || !config) return;
@@ -144,8 +161,6 @@ export const PlaceBetModal: React.FC<Props> = ({
     }
   };
 
-  const payout = (+(wagerAmount || "0") * back.odds).toString();
-
   const isWagerNegative = wagerAmount ? +wagerAmount < 0 : false;
   const isWagerGreaterThanBalance =
     wagerAmount && userBalance ? +wagerAmount > +userBalance.formatted : false;
@@ -189,7 +204,11 @@ export const PlaceBetModal: React.FC<Props> = ({
             <span className="block font-semibold">
               Payout:{" "}
               <span className="font-normal">
-                {utils.formatting.formatToFourDecimals(payout)}
+                {payout ? (
+                  utils.formatting.formatToFourDecimals(payout)
+                ) : (
+                  <Loader size={14} />
+                )}
               </span>
             </span>
             <span className="block font-semibold">
