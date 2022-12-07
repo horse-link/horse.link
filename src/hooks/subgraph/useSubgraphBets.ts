@@ -40,9 +40,8 @@ export const useSubgraphBets = (
 
     Promise.all(
       data.bets.map<Promise<BetHistory>>(async bet => {
-        const signedBetData = await api.requestSignedBetData(
-          bet.marketId,
-          bet.propositionId
+        const signedBetData = await api.getWinningResultSignature(
+          utils.formatting.parseBytes16String(bet.marketId)
         );
 
         return utils.bets.getBetHistory(bet, signedBetData);
