@@ -70,6 +70,11 @@ export const DashboardTable: React.FC<Props> = ({ meets }) => {
                             >
                               {race.name ? (
                                 <Link
+                                  className={classNames({
+                                    "!cursor-default":
+                                      race.status === "Interim" ||
+                                      race.status === "Abandoned"
+                                  })}
                                   to={
                                     race.status === "Normal"
                                       ? `/horses/${meet.id}/${race.number}`
