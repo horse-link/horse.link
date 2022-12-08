@@ -1,28 +1,28 @@
 import React from "react";
 import classNames from "classnames";
-import { BetFilterOptions } from "../../types/bets";
+import { MeetFilters } from "../../types/meets";
 
-const options: Map<BetFilterOptions, string> = new Map([
-  ["ALL_BETS", "All Bets"],
-  ["PENDING", "Pending"],
-  ["RESULTED", "Resulted"],
-  ["SETTLED", "Settled"]
+const options: Map<MeetFilters, string> = new Map([
+  ["ALL", "All"],
+  ["AUS_NZ", "AUS & NZ"],
+  ["INTERNATIONAL", "International"]
 ]);
 
 type Props = {
-  value: BetFilterOptions;
-  onChange: (option: BetFilterOptions) => void;
+  value: MeetFilters;
+  onChange: (option: MeetFilters) => void;
   disabled: boolean;
 };
 
-export const BetFilterGroup: React.FC<Props> = ({
+export const DashboardFilterGroup: React.FC<Props> = ({
   value: currentOption,
   onChange,
   disabled
 }) => (
-  <div className="flex gap-3 flex-wrap">
+  <div className="flex gap-3">
     {[...options].map(([key, text]) => (
       <button
+        key={key}
         onClick={() => {
           onChange(key);
         }}
