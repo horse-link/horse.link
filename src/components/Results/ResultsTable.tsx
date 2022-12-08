@@ -41,7 +41,7 @@ export const ResultsTable: React.FC<Props> = ({ results }) => (
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {results.map(result => (
-                <tr className="cursor-pointer hover:bg-gray-100">
+                <tr key={result.runner}>
                   <td className="px-1 py-4 whitespace-nowrap bg-gray-200">
                     {result.place}
                   </td>
