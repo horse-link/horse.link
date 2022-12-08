@@ -40,8 +40,8 @@ export class Api {
     return data;
   };
 
-  public getnextToJump = async (): Promise<NextToJump> => {
-    const { data } = await this.client.get<NextToJump>("/meetings/next");
+  public getnextToJump = async (): Promise<NextToJump[]> => {
+    const { data } = await this.client.get<NextToJump[]>("/meetings/next");
     return data;
   };
 

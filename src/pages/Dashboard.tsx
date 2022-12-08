@@ -15,10 +15,10 @@ import utils from "../utils";
 
 export const Dashboard: React.FC = () => {
   const [response, setResponse] = useState<SignedMeetingsResponse>();
-  const [nextToJump, setnextToJump] = useState<NextToJump>();
   const [myPlayEnabled, setMyPlayEnabled] = useState(false);
   const { openWalletModal } = useWalletModal();
   const { isConnected } = useAccount();
+  const [nextToJump, setnextToJump] = useState<NextToJump[]>();
 
   useEffect(() => {
     (async () => {
@@ -44,9 +44,7 @@ export const Dashboard: React.FC = () => {
 
   return (
     <PageLayout>
-      <div>
-        <NextToJumpBanner NextToJump={[]} />
-      </div>
+      <NextToJumpBanner NextToJump={nextToJump} />
       <div className="grid gap-6">
         <div>
           <div className="container-fluid px-4 py-5 bg-emerald-700 shadow rounded-lg overflow-hidden sm:p-6">

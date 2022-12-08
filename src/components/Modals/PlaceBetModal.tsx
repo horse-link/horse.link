@@ -30,9 +30,7 @@ export const PlaceBetModal: React.FC<Props> = ({
   const [txLoading, setTxLoading] = useState(false);
   const [txHash, setTxHash] = useState<string>();
   const [error, setError] = useState<ethers.errors>();
-
   const { data: signer } = useSigner();
-
   const config = useConfig();
   const { placeBet, getPotentialPayout } = useMarketContract();
   const { getBalance, getDecimals } = useERC20Contract();
