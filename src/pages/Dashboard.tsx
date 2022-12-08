@@ -41,6 +41,7 @@ export const Dashboard: React.FC = () => {
     })();
   }, []);
 
+  // Filter meets based on filter selection
   useEffect(() => {
     if (meetsFilter !== "ALL") {
       meetsFilter === "AUS_NZ" &&

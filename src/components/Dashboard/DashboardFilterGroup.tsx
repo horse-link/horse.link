@@ -26,7 +26,7 @@ export const DashboardFilterGroup: React.FC<Props> = ({
         onClick={() => {
           onChange(key);
         }}
-        className={classNames("bg-white rounded px-2 shadow ", {
+        className={classNames("bg-white rounded px-2 shadow", {
           "bg-blue-500": key === currentOption,
           "disabled:opacity-75": key !== currentOption
         })}
