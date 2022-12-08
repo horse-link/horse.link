@@ -71,16 +71,15 @@ export const DashboardTable: React.FC<Props> = ({ meets }) => {
                               {race.name ? (
                                 <Link
                                   to={
-                                    race.status === "Interim" ||
-                                    race.status === "Abandoned"
-                                      ? ""
-                                      : race.status === "Normal"
+                                    race.status === "Normal"
                                       ? `/horses/${meet.id}/${race.number}`
-                                      : // race.status === "Paying"
-                                        `/results/${utils.markets.getPropositionIdFromRaceMeet(
+                                      : race.status === "Paying"
+                                      ? `/results/${utils.markets.getPropositionIdFromRaceMeet(
                                           race,
                                           meet
                                         )}`
+                                      : // race status in any other condition other than normal or paying
+                                        ""
                                   }
                                 >
                                   <p>R{race.number}</p>
