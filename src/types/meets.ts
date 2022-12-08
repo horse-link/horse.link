@@ -19,9 +19,7 @@ export type Runner = {
 export type NextToJump = {
   jumperRaceStartTime: string;
   jumperRaceNumber: number;
-  jumperMeetingName: string;
-  location: string;
-  raceType: string;
+  meeting: { jumperMeetingName: any; location: string; raceType: string };
 };
 
 export type Race = {
