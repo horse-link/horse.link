@@ -25,7 +25,7 @@ export type Race = {
   end_unix?: number;
   close?: string;
   close_unix?: number;
-  status: "Normal" | "Interim" | "Paying";
+  status: "Abandoned" | "Interim" | "Normal" | "Paying";
   results?: number[];
 };
 
