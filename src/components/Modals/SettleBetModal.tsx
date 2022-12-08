@@ -1,6 +1,5 @@
 import moment from "moment";
 import React, { useEffect, useMemo, useState } from "react";
-import { useConfig } from "../../providers/Config";
 import { Loader } from "../";
 import { BaseModal } from ".";
 import { ethers } from "ethers";
@@ -9,26 +8,28 @@ import { Web3ErrorHandler, Web3SuccessHandler } from "../Web3Handlers";
 import { useSigner } from "wagmi";
 import utils from "../../utils";
 import { BetHistory } from "../../types/bets";
+import { Config } from "../../types/config";
 
 type Props = {
   isModalOpen: boolean;
   setIsModalOpen: (open: boolean) => void;
   selectedBet?: BetHistory;
   refetch: () => void;
+  config?: Config;
 };
 
 export const SettleBetModal: React.FC<Props> = ({
   isModalOpen,
   setIsModalOpen,
   selectedBet,
-  refetch
+  refetch,
+  config
 }) => {
   const [txLoading, setTxLoading] = useState(false);
   const [txHash, setTxHash] = useState<string>();
   const [error, setError] = useState<ethers.errors>();
 
   const { data: signer } = useSigner();
-  const config = useConfig();
   const { settleBet } = useMarketContract();
 
   const now = useMemo(() => Math.floor(Date.now() / 1000), []);
@@ -104,7 +105,11 @@ export const SettleBetModal: React.FC<Props> = ({
             <h3 className="font-semibold mb-2">
               Market:{" "}
               <span className="font-normal">
-                {utils.config.getVaultNameFromMarket(market!.address, config)}
+                {market ? (
+                  utils.config.getVaultNameFromMarket(market.address, config)
+                ) : (
+                  <Loader size={14} />
+                )}
               </span>
             </h3>
             {isWinning === true ? (
@@ -119,6 +124,10 @@ export const SettleBetModal: React.FC<Props> = ({
                 Loss:{" "}
                 <span className="font-normal">
                   {ethers.utils.formatEther(selectedBet.amount)} {token?.symbol}
+                </span>
+                <span className="block font-normal text-xs text-black/80">
+                  (inc. exposure: {ethers.utils.formatEther(selectedBet.payout)}{" "}
+                  {token?.symbol})
                 </span>
               </h3>
             ) : (

@@ -6,6 +6,7 @@ import { BetFilterGroup, BetTable } from "../components/Bets";
 import { SettleBetModal } from "../components/Modals";
 import { BetFilterOptions, BetHistory } from "../types/bets";
 import { useWalletModal } from "../providers/WalletModal";
+import { useConfig } from "../providers/Config";
 
 export const Bets: React.FC = () => {
   const [myBetsEnabled, setMyBetsEnabled] = useState(true);
@@ -16,6 +17,8 @@ export const Bets: React.FC = () => {
 
   const { isConnected } = useAccount();
   const { openWalletModal } = useWalletModal();
+
+  const config = useConfig();
 
   const { betHistory, refetch } = useSubgraphBets(
     myBetsEnabled,
@@ -60,12 +63,14 @@ export const Bets: React.FC = () => {
         myBetsEnabled={myBetsEnabled}
         onClickBet={onClickBet}
         betHistory={betHistory}
+        config={config}
       />
       <SettleBetModal
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         selectedBet={selectedBet}
         refetch={refetch}
+        config={config}
       />
     </PageLayout>
   );
