@@ -1,21 +1,22 @@
 import { BetRows } from ".";
 import React from "react";
 import { BetHistory } from "../../types/bets";
-import { useConfig } from "../../providers/Config";
 import { useAccount } from "wagmi";
+import { Config } from "../../types/config";
 
 type Props = {
   myBetsEnabled: boolean;
   onClickBet: (bet?: BetHistory) => void;
   betHistory: BetHistory[] | undefined;
+  config?: Config;
 };
 
 export const BetTable: React.FC<Props> = ({
   myBetsEnabled,
   onClickBet,
-  betHistory
+  betHistory,
+  config
 }) => {
-  const config = useConfig();
   const { isConnected } = useAccount();
 
   return (
