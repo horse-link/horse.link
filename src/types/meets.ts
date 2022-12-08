@@ -68,3 +68,5 @@ export type MeetResults = {
   rider: string;
   place: number;
 }[];
+
+export type MeetFilters = "ALL" | "AUS_NZ" | "INTERNATIONAL";

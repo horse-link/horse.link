@@ -6,15 +6,30 @@ import { Toggle, PageLayout } from "../components";
 import {
   DashboardOverallStats,
   DashboardTable,
-  DashboardUserStats
+  DashboardUserStats,
+  DashboardFilterGroup
 } from "../components/Dashboard";
 import { useWalletModal } from "../providers/WalletModal";
-import { SignedMeetingsResponse } from "../types/meets";
+import { Meet, MeetFilters, SignedMeetingsResponse } from "../types/meets";
 import utils from "../utils";
+
+const AUS_NZ_LOCATIONS = [
+  "QLD",
+  "NSW",
+  "VIC",
+  "SA",
+  "WA",
+  "TAS",
+  "NT",
+  "ACT",
+  "NZL"
+];
 
 export const Dashboard: React.FC = () => {
   const [response, setResponse] = useState<SignedMeetingsResponse>();
+  const [meets, setMeets] = useState<Meet[]>();
   const [myPlayEnabled, setMyPlayEnabled] = useState(false);
+  const [meetsFilter, setMeetsFilter] = useState<MeetFilters>("ALL");
   const { openWalletModal } = useWalletModal();
   const { isConnected } = useAccount();
 
@@ -22,8 +37,28 @@ export const Dashboard: React.FC = () => {
     (async () => {
       const response = await api.getMeetings();
       setResponse(response);
+      response?.data.meetings && setMeets(response?.data.meetings);
     })();
   }, []);
+
+  useEffect(() => {
+    if (meetsFilter !== "ALL") {
+      meetsFilter === "AUS_NZ" &&
+        setMeets(
+          response?.data.meetings?.filter(meet =>
+            AUS_NZ_LOCATIONS.includes(meet.location)
+          )
+        );
+      meetsFilter === "INTERNATIONAL" &&
+        setMeets(
+          response?.data.meetings?.filter(
+            meet => !AUS_NZ_LOCATIONS.includes(meet.location)
+          )
+        );
+    } else {
+      setMeets(response?.data.meetings);
+    }
+  }, [meetsFilter]);
 
   useEffect(() => {
     if (myPlayEnabled && !isConnected) {
@@ -32,7 +67,10 @@ export const Dashboard: React.FC = () => {
   }, [myPlayEnabled, isConnected]);
 
   const onMyPlayToggle = () => setMyPlayEnabled(prev => !prev);
-
+  const onFilterChange = (option: MeetFilters) => {
+    setMeetsFilter(option);
+  };
+  const isLoading = !response;
   return (
     <PageLayout>
       <div className="grid gap-6">
@@ -66,13 +104,18 @@ export const Dashboard: React.FC = () => {
           {myPlayEnabled ? <DashboardUserStats /> : <DashboardOverallStats />}
         </div>
         <div className="flex gap-3 self-end justify-self-end">
+          <DashboardFilterGroup
+            value={meetsFilter}
+            onChange={onFilterChange}
+            disabled={isLoading}
+          />
+        </div>
+        <div className="flex gap-3 self-end justify-self-end">
           <Toggle enabled={myPlayEnabled} onChange={onMyPlayToggle} />
           <div>My Stats</div>
         </div>
         <div className="-mt-12">
-          <DashboardTable
-            meets={response?.data.meetings || utils.mocks.getMockMeets()}
-          />
+          <DashboardTable meets={meets || utils.mocks.getMockMeets()} />
         </div>
         <div className="flex justify-center px-4 py-5 bg-white shadow rounded-lg sm:p-6 mb-10">
           <div className="w-4/5 max-w-2xl">
