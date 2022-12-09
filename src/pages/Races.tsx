@@ -79,7 +79,7 @@ export const Races: React.FC = () => {
         />
       </div>
       <div className="flex flex-col gap-6">
-        <h1 className="text-2xl font-bold mt-4">Race Bet History</h1>
+        <h1 className="text-2xl font-bold mt-4">History</h1>
         <BetTable
           myBetsEnabled={false}
           onClickBet={onClickBet}
@@ -91,6 +91,7 @@ export const Races: React.FC = () => {
           setIsModalOpen={setSettleIsModalOpen}
           selectedBet={selectedBet}
           refetch={refetch}
+          config={config}
         />
       </div>
     </PageLayout>

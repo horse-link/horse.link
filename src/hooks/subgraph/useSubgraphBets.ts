@@ -27,7 +27,6 @@ export const useSubgraphBets = (
       marketId: marketId ? marketId : undefined
     })
   );
-  console.log("useSubgraphBets", data);
 
   // refetch data on page load -- prevents stale data
   useEffect(() => {
