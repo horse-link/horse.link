@@ -31,7 +31,7 @@ export type Race = {
   end_unix?: number;
   close?: string;
   close_unix?: number;
-  status: "Normal" | "Interim" | "Paying";
+  status: "Abandoned" | "Interim" | "Normal" | "Paying";
   results?: number[];
 };
 
@@ -74,3 +74,5 @@ export type MeetResults = {
   rider: string;
   place: number;
 }[];
+
+export type MeetFilters = "ALL" | "AUS_NZ" | "INTERNATIONAL";

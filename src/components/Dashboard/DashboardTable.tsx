@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import moment from "moment";
 import Skeleton from "react-loading-skeleton";
 import utils from "../../utils";
+import classNames from "classnames";
 
 type Props = {
   meets: Meet[];
@@ -55,27 +56,35 @@ export const DashboardTable: React.FC<Props> = ({ meets }) => {
                         {meet.races.map(race => (
                           <td key={race.number}>
                             <div
-                              className={`px-3 py-4 whitespace-nowrap text-sm
-                                ${
-                                  race.status === "Paying"
-                                    ? "bg-gray-400 hover:bg-gray-500"
-                                    : race.status === "Interim"
-                                    ? "bg-emerald-400"
-                                    : "hover:bg-gray-200"
-                                }`}
+                              className={classNames(
+                                "px-3 py-4 whitespace-nowrap text-sm",
+                                {
+                                  "bg-gray-400 hover:bg-gray-500":
+                                    race.status === "Paying",
+                                  "bg-black text-white":
+                                    race.status === "Abandoned",
+                                  "bg-emerald-400": race.status === "Interim",
+                                  "hover:bg-gray-200": race.status === "Normal"
+                                }
+                              )}
                             >
                               {race.name ? (
                                 <Link
+                                  className={classNames({
+                                    "!cursor-default":
+                                      race.status === "Interim" ||
+                                      race.status === "Abandoned"
+                                  })}
                                   to={
-                                    race.status === "Interim"
-                                      ? ""
-                                      : race.status === "Normal"
+                                    race.status === "Normal"
                                       ? `/horses/${meet.id}/${race.number}`
-                                      : // race.status === "Paying"
-                                        `/results/${utils.markets.getPropositionIdFromRaceMeet(
+                                      : race.status === "Paying"
+                                      ? `/results/${utils.markets.getPropositionIdFromRaceMeet(
                                           race,
                                           meet
                                         )}`
+                                      : // race status in any other condition other than normal or paying
+                                        ""
                                   }
                                 >
                                   <p>R{race.number}</p>
