@@ -1,28 +1,28 @@
 import moment from "moment";
 import { NextToJump } from "../../types/meets";
+import { Loader } from "../Loader";
 
 type Props = {
   NextToJump?: NextToJump[];
 };
 
-export const NextToJumpBanner: React.FC<Props> = ({ NextToJump }) => {
-  return (
-    <div className="bg-white mt-5 rounded-lg mb-5 overflow-x-scroll">
-      <div className="mx-auto sm:px-6 lg:px-8">
-        <div className="flex justify-between p-5">
-          <div className="flex flex-row divide-x-2 pl-2 divide-emerald-600">
-            {NextToJump?.map(jumper => (
-              <div className="text-xs px-3 font-medium font-white text-emerald-800">
-                {`${jumper.meeting.jumperMeetingName} (${jumper.meeting.location}) - R${jumper.jumperRaceNumber}
-                `}
-                <div className="box-border text-sx font-bold text-emerald-300">
-                  {` ${moment(jumper.jumperRaceStartTime).fromNow(true)}`}
-                </div>
-              </div>
-            ))}
-          </div>
+export const NextToJumpBanner: React.FC<Props> = ({ NextToJump }) => (
+  <div className="flex divide-x-2 divide-emerald-600 p-5 bg-white rounded-lg my-5 overflow-x-scroll">
+    {NextToJump ? (
+      NextToJump.map(jumper => (
+        <div className="w-1/2 lg:w-1/5 shrink-0 flex flex-col items-center">
+          <span className="block text-xs">
+            {`${jumper.meeting.jumperMeetingName} (${jumper.meeting.location}) - R${jumper.jumperRaceNumber}`}
+          </span>
+          <span className="block">
+            {` ${moment(jumper.jumperRaceStartTime).fromNow(true)}`}
+          </span>
         </div>
+      ))
+    ) : (
+      <div className="w-full flex flex-col items-center">
+        <Loader />
       </div>
-    </div>
-  );
-};
+    )}
+  </div>
+);
