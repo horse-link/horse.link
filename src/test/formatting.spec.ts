@@ -1,3 +1,4 @@
+import moment from "moment";
 import utils from "../utils";
 
 test.concurrent.each([
@@ -87,5 +88,16 @@ describe("general formatting tests", () => {
     expect(utils.formatting.formatFirstLetterCapitalised(wordFour)).toEqual(
       "Bar"
     );
+  });
+
+  it("should get the time difference formatted", () => {
+    const date = moment().add(1, "minute");
+
+    const formattedDifference = utils.formatting.formatTimeToMinutesAndSeconds(
+      date.toString()
+    );
+
+    // account for second elapsing
+    expect(formattedDifference).toEqual("0m 59s");
   });
 });
