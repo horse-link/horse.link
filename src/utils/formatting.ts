@@ -85,9 +85,19 @@ export const formatTimeToMinutesAndSeconds = (time: string) => {
   // get total seconds difference between given time and now
   const totalSeconds = moment(time).diff(moment(), "seconds");
   // get the minutes difference (loses precision)
-  const minuteDifference = Math.floor(totalSeconds / 60);
+  const minuteDifference =
+    totalSeconds < 0
+      ? Math.ceil(totalSeconds / 60)
+      : Math.floor(totalSeconds / 60);
   // get the remainder for the leftover seconds to regain precision
   const secondsDifference = totalSeconds % 60;
 
-  return `${minuteDifference}m ${secondsDifference}s`;
+  const formattedMinutes =
+    totalSeconds < 0 && minuteDifference == 0
+      ? "-" + minuteDifference
+      : minuteDifference;
+  const formattedSeconds =
+    totalSeconds < 0 ? secondsDifference * -1 : secondsDifference;
+
+  return `${formattedMinutes}m ${formattedSeconds}s`;
 };
