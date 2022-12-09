@@ -14,6 +14,7 @@ import { BetHistory } from "../types/bets";
 import { BetTable } from "../components/Bets";
 import { makeMarketId } from "../utils/markets";
 import { formatBytes16String } from "../utils/formatting";
+import { useConfig } from "../providers/Config";
 
 export const Races: React.FC = () => {
   const params = useParams();
@@ -24,8 +25,9 @@ export const Races: React.FC = () => {
   const [isSettleModalOpen, setSettleIsModalOpen] = useState(false);
   const [selectedRunner, setSelectedRunner] = useState<Runner>();
   const [selectedBet, setSelectedBet] = useState<BetHistory>();
-
   const { runners } = useRunnersData(track, raceNumber);
+
+  const config = useConfig();
   const meetDate = moment().format("DD-MM-YY");
   const marketId = makeMarketId(new Date(), track, raceNumber.toString());
   const b16MarketId = formatBytes16String(marketId);
@@ -82,6 +84,7 @@ export const Races: React.FC = () => {
           myBetsEnabled={false}
           onClickBet={onClickBet}
           betHistory={betHistory}
+          config={config}
         />
         <SettleBetModal
           isModalOpen={isSettleModalOpen}
