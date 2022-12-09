@@ -33,7 +33,7 @@ export const PageLayout: React.FC<Props> = ({ children }) => {
 
   return (
     <div className="min-h-screen bg-emerald-500">
-      <Disclosure as="nav" className="bg-white border-b ">
+      <Disclosure as="nav" className="bg-white border-b border-emerald-200">
         {({ open }) => (
           <>
             <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">

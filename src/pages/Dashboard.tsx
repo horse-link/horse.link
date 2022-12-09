@@ -7,9 +7,9 @@ import {
   DashboardOverallStats,
   DashboardTable,
   DashboardUserStats,
-  DashboardFilterGroup
+  DashboardFilterGroup,
+  DashboardNextToJumpBanner
 } from "../components/Dashboard";
-import { NextToJumpBanner } from "../components/Dashboard/NextToJumpBanner";
 import { useWalletModal } from "../providers/WalletModal";
 import {
   NextToJump,
@@ -38,7 +38,7 @@ export const Dashboard: React.FC = () => {
   const [meetsFilter, setMeetsFilter] = useState<MeetFilters>("ALL");
   const { openWalletModal } = useWalletModal();
   const { isConnected } = useAccount();
-  const [nextToJump, setnextToJump] = useState<NextToJump[]>();
+  const [nextToJump, setNextToJump] = useState<NextToJump[]>();
 
   useEffect(() => {
     (async () => {
@@ -46,7 +46,7 @@ export const Dashboard: React.FC = () => {
       setResponse(response);
       response?.data.meetings && setMeets(response?.data.meetings);
       const nextToJump = await api.getnextToJump();
-      setnextToJump(nextToJump);
+      setNextToJump(nextToJump);
     })();
   }, []);
 
@@ -83,7 +83,7 @@ export const Dashboard: React.FC = () => {
   const isLoading = !response;
   return (
     <PageLayout>
-      <NextToJumpBanner NextToJump={nextToJump} />
+      <DashboardNextToJumpBanner nextToJump={nextToJump} />
       <div className="grid gap-6">
         <div>
           <div className="container-fluid px-4 py-5 bg-emerald-700 shadow rounded-lg overflow-hidden sm:p-6">
