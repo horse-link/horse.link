@@ -49,7 +49,7 @@ export const PageLayout: React.FC<Props> = ({ children }) => {
                           to={item.path}
                           className={classnames(
                             {
-                              "border-indigo-500 text-gray-900": active,
+                              "border-emerald-700 text-gray-900": active,
                               "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700":
                                 !active
                             },
@@ -112,7 +112,6 @@ export const PageLayout: React.FC<Props> = ({ children }) => {
           </>
         )}
       </Disclosure>
-
       <div className="py-4">
         <main>
           <WalletModal

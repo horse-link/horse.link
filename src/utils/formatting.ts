@@ -1,4 +1,5 @@
 import { ethers } from "ethers";
+import moment from "moment";
 import { BetId } from "../types/entities";
 
 export const formatToFourDecimals = (amount: string) => {
@@ -79,3 +80,14 @@ export const parseBytes16String = (bytes: ethers.BytesLike) => {
 
 export const formatFirstLetterCapitalised = (string: string) =>
   `${string.charAt(0).toUpperCase()}${string.slice(1).toLowerCase()}`;
+
+export const formatTimeToMinutesAndSeconds = (time: string) => {
+  // get total seconds difference between given time and now
+  const totalSeconds = moment(time).diff(moment(), "seconds");
+  // get the minutes difference (loses precision)
+  const minuteDifference = Math.floor(totalSeconds / 60);
+  // get the remainder for the leftover seconds to regain precision
+  const secondsDifference = totalSeconds % 60;
+
+  return `${minuteDifference}m ${secondsDifference}s`;
+};

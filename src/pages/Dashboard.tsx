@@ -7,10 +7,11 @@ import {
   DashboardOverallStats,
   DashboardTable,
   DashboardUserStats,
-  DashboardFilterGroup
+  DashboardFilterGroup,
+  DashboardNextToJumpBanner
 } from "../components/Dashboard";
 import { useWalletModal } from "../providers/WalletModal";
-import { Meet, MeetFilters, SignedMeetingsResponse } from "../types/meets";
+import { SignedMeetingsResponse, MeetFilters, Meet } from "../types/meets";
 import utils from "../utils";
 
 const AUS_NZ_LOCATIONS = [
@@ -74,6 +75,7 @@ export const Dashboard: React.FC = () => {
   const isLoading = !response;
   return (
     <PageLayout>
+      <DashboardNextToJumpBanner />
       <div className="grid gap-6">
         <div>
           <div className="container-fluid px-4 py-5 bg-emerald-700 shadow rounded-lg overflow-hidden sm:p-6">
