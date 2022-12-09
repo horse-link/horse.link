@@ -8,7 +8,7 @@ export const useNextToJumpData = () => {
   const nextMeets = useMemo(() => {
     if (!data || error) return;
 
-    // data.data is the NextToJumpResponse from api
+    // data.slice(0, 5) so that only the next 5 races are returned
     return data.slice(0, 5);
   }, [data, error]);
 
