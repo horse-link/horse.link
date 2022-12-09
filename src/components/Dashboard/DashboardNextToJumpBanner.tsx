@@ -1,28 +1,24 @@
-import moment from "moment";
-import { NextToJump } from "../../types/meets";
+import { useNextToJumpData } from "../../hooks/data";
 import { Loader } from "../Loader";
+import { DashboardBannerRow } from ".";
 
-type Props = {
-  nextToJump?: NextToJump[];
-};
+export const DashboardNextToJumpBanner: React.FC = () => {
+  const { nextMeets } = useNextToJumpData();
 
-export const DashboardNextToJumpBanner: React.FC<Props> = ({ nextToJump }) => (
-  <div className="flex divide-x-2 divide-emerald-600 p-5 bg-white rounded-lg my-5 overflow-x-scroll">
-    {nextToJump ? (
-      nextToJump.map(jumper => (
-        <div className="w-1/2 lg:w-1/5 shrink-0 flex flex-col items-center">
-          <span className="block text-xs">
-            {`${jumper.meeting.jumperMeetingName} (${jumper.meeting.location}) - R${jumper.jumperRaceNumber}`}
-          </span>
-          <span className="block">
-            {` ${moment(jumper.jumperRaceStartTime).fromNow(true)}`}
-          </span>
+  return (
+    <div className="flex lg:divide-x-2 divide-indigo-800 p-5 bg-indigo-700 rounded-lg mb-5 mt-1 text-white text-xs shadow-md overflow-hidden">
+      {nextMeets ? (
+        nextMeets.map(meet => (
+          <DashboardBannerRow
+            meet={meet}
+            key={meet.meeting.jumperMeetingName}
+          />
+        ))
+      ) : (
+        <div className="w-full flex flex-col items-center">
+          <Loader />
         </div>
-      ))
-    ) : (
-      <div className="w-full flex flex-col items-center">
-        <Loader />
-      </div>
-    )}
-  </div>
-);
+      )}
+    </div>
+  );
+};

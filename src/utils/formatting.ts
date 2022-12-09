@@ -1,4 +1,5 @@
 import { ethers } from "ethers";
+import moment from "moment";
 import { BetId } from "../types/entities";
 
 export const formatToFourDecimals = (amount: string) => {
@@ -79,3 +80,13 @@ export const parseBytes16String = (bytes: ethers.BytesLike) => {
 
 export const formatFirstLetterCapitalised = (string: string) =>
   `${string.charAt(0).toUpperCase()}${string.slice(1).toLowerCase()}`;
+
+export const formatTimeToMinutesAndSeconds = (time: string) => {
+  const minuteDifference = moment(time).diff(moment(), "minutes");
+  const secondsDifference = moment(time).diff(
+    moment().add(minuteDifference, "minutes"),
+    "seconds"
+  );
+
+  return `${minuteDifference}m ${secondsDifference}s`;
+};
