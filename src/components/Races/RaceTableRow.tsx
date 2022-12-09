@@ -24,7 +24,7 @@ export const RaceTableRow: React.FC<Props> = ({ runner, onClick }) => {
         {name ? `${name} (${barrier ?? "?"})` : <Skeleton width="10em" />}
       </td>
       <td className="px-2 py-4 whitespace-nowrap">
-        {name ? `${last5Starts}` : <Skeleton width="2em" />}
+        {name ? `${last5Starts ? last5Starts : "-"}` : <Skeleton width="2em" />}
       </td>
 
       <td className="px-2 py-4 whitespace-nowrap">
