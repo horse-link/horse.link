@@ -4,6 +4,9 @@ import { BetFilterOptions } from "../types/bets";
 const getOptionalAddressFilter = (address?: string) =>
   address ? `owner: "${address.toLowerCase()}"` : "";
 
+const getOptionalMarketFilter = (marketId?: string) =>
+  marketId ? `marketId: "${marketId}"` : "";
+
 const getOptionalFilterOptions = (filter?: BetFilterOptions) => {
   switch (filter) {
     case "ALL_BETS":
@@ -23,10 +26,12 @@ const getOptionalFilterOptions = (filter?: BetFilterOptions) => {
 export const getBetsQuery = ({
   address,
   filter,
+  marketId,
   limit = 100
 }: {
   address?: string;
   filter?: BetFilterOptions;
+  marketId?: string;
   limit?: number;
 }) => `query GetBets{
   bets(
@@ -34,6 +39,7 @@ export const getBetsQuery = ({
     where:{
       ${getOptionalAddressFilter(address)}
       ${getOptionalFilterOptions(filter)}
+      ${getOptionalMarketFilter(marketId)}
     }
     orderBy: createdAt
     orderDirection: desc

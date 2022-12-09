@@ -12,6 +12,8 @@ import { PageLayout } from "../components";
 import { useSubgraphBets } from "../hooks/subgraph";
 import { BetHistory } from "../types/bets";
 import { BetTable } from "../components/Bets";
+import { makeMarketId } from "../utils/markets";
+import { formatBytes16String } from "../utils/formatting";
 
 export const Races: React.FC = () => {
   const params = useParams();
@@ -24,7 +26,15 @@ export const Races: React.FC = () => {
   const [selectedBet, setSelectedBet] = useState<BetHistory>();
 
   const { runners } = useRunnersData(track, raceNumber);
-  const { betHistory, refetch } = useSubgraphBets(false, "ALL_BETS");
+  const meetDate = moment().format("DD-MM-YY");
+  const marketId = makeMarketId(new Date(), track, raceNumber.toString());
+  const b16MarketId = formatBytes16String(marketId);
+
+  const { betHistory, refetch } = useSubgraphBets(
+    false,
+    "ALL_BETS",
+    b16MarketId
+  );
 
   const { isConnected } = useAccount();
   const { openWalletModal } = useWalletModal();
@@ -59,7 +69,7 @@ export const Races: React.FC = () => {
         <div className="flex p-2 shadow overflow-hidden border-b bg-white border-gray-200 sm:rounded-lg justify-around">
           <h1>Track: {track}</h1>
           <h1>Race #: {raceNumber}</h1>
-          <h1>Date: {moment().format("DD-MM-YY")}</h1>
+          <h1>Date: {meetDate}</h1>
         </div>
         <RaceTable
           runners={runners || utils.mocks.getMockRunners()}
