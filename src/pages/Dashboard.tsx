@@ -42,16 +42,11 @@ export const Dashboard: React.FC = () => {
 
   useEffect(() => {
     (async () => {
-      const nextToJump = await api.getnextToJump();
-      setnextToJump(nextToJump);
-    })();
-  }, []);
-
-  useEffect(() => {
-    (async () => {
       const response = await api.getMeetings();
       setResponse(response);
       response?.data.meetings && setMeets(response?.data.meetings);
+      const nextToJump = await api.getnextToJump();
+      setnextToJump(nextToJump);
     })();
   }, []);
 
