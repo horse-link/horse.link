@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useRunnersData } from "../hooks/data";
 import { useAccount } from "wagmi";
@@ -22,13 +22,17 @@ export const Races: React.FC = () => {
   const raceNumber = Number(params.number) || 0;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isSettleModalOpen, setSettleIsModalOpen] = useState(false);
+  const [isSettleModalOpen, setIsSettleModalOpen] = useState(false);
   const [selectedRunner, setSelectedRunner] = useState<Runner>();
   const [selectedBet, setSelectedBet] = useState<BetHistory>();
   const { runners } = useRunnersData(track, raceNumber);
 
-  const config = useConfig();
-  const meetDate = moment().format("DD-MM-YY");
+  const { config, meetDate } = useMemo(() => {
+    const config = useConfig();
+    const meetDate = moment().format("DD-MM-YY");
+    return { config, meetDate };
+  }, []);
+
   const marketId = makeMarketId(new Date(), track, raceNumber.toString());
   const b16MarketId = formatBytes16String(marketId);
 
@@ -57,7 +61,7 @@ export const Races: React.FC = () => {
     if (!betData) return;
     if (!isConnected) return openWalletModal();
     setSelectedBet(betData);
-    setSettleIsModalOpen(true);
+    setIsSettleModalOpen(true);
   };
 
   return (
@@ -86,14 +90,14 @@ export const Races: React.FC = () => {
           betHistory={betHistory}
           config={config}
         />
-        <SettleBetModal
-          isModalOpen={isSettleModalOpen}
-          setIsModalOpen={setSettleIsModalOpen}
-          selectedBet={selectedBet}
-          refetch={refetch}
-          config={config}
-        />
       </div>
+      <SettleBetModal
+        isModalOpen={isSettleModalOpen}
+        setIsModalOpen={setIsSettleModalOpen}
+        selectedBet={selectedBet}
+        refetch={refetch}
+        config={config}
+      />
     </PageLayout>
   );
 };

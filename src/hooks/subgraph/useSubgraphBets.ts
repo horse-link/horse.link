@@ -24,7 +24,7 @@ export const useSubgraphBets = (
     utils.queries.getBetsQuery({
       address: myBetsEnabled ? address : undefined,
       filter,
-      marketId: marketId ? marketId : undefined
+      marketId: marketId
     })
   );
 

@@ -72,14 +72,14 @@ export const Results: React.FC = () => {
           betHistory={betHistory}
           config={config}
         />
-        <SettleBetModal
-          isModalOpen={isSettleModalOpen}
-          setIsModalOpen={setSettleIsModalOpen}
-          selectedBet={selectedBet}
-          refetch={refetch}
-          config={config}
-        />
       </div>
+      <SettleBetModal
+        isModalOpen={isSettleModalOpen}
+        setIsModalOpen={setSettleIsModalOpen}
+        selectedBet={selectedBet}
+        refetch={refetch}
+        config={config}
+      />
     </PageLayout>
   );
 };
