@@ -91,22 +91,43 @@ describe("general formatting tests", () => {
   });
 
   it("should get the time difference formatted", () => {
-    const date = moment().add(1, "minute");
-
-    const formattedDifference = utils.formatting.formatTimeToMinutesAndSeconds(
-      date.toString()
+    const dateOne = moment().add(1, "minute");
+    const dateOneFormatted = utils.formatting.formatTimeToMinutesAndSeconds(
+      dateOne.toString()
     );
-
     // account for second elapsing
-    expect(formattedDifference).toEqual("0m 59s");
-  });
-  it("should get the time difference when race is overtime", () => {
-    const date = moment().subtract(1, "minutes");
+    expect(dateOneFormatted).toEqual("0m 59s");
 
-    const formattedDifference = utils.formatting.formatTimeToMinutesAndSeconds(
-      date.toString()
+    const dateTwo = moment().subtract(1, "minute");
+    const dateTwoFormatted = utils.formatting.formatTimeToMinutesAndSeconds(
+      dateTwo.toString()
     );
+    expect(dateTwoFormatted).toEqual("-1m 0s");
 
-    expect(formattedDifference).toEqual("-1m 0s");
+    const dateThree = moment().add(30, "seconds");
+    const dateThreeFormatted = utils.formatting.formatTimeToMinutesAndSeconds(
+      dateThree.toString()
+    );
+    // account for second elapsing
+    expect(dateThreeFormatted).toEqual("0m 29s");
+
+    const dateFour = moment().subtract(30, "seconds");
+    const dateFourFormatted = utils.formatting.formatTimeToMinutesAndSeconds(
+      dateFour.toString()
+    );
+    expect(dateFourFormatted).toEqual("-0m 30s");
+
+    const dateFive = moment().add(1, "minute").add(30, "seconds");
+    const dateFiveFormatted = utils.formatting.formatTimeToMinutesAndSeconds(
+      dateFive.toString()
+    );
+    // account for second elapsing
+    expect(dateFiveFormatted).toEqual("1m 29s");
+
+    const dateSix = moment().subtract(1, "minute").subtract(30, "seconds");
+    const dateSixFormatted = utils.formatting.formatTimeToMinutesAndSeconds(
+      dateSix.toString()
+    );
+    expect(dateSixFormatted).toEqual("-1m 30s");
   });
 });

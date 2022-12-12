@@ -84,20 +84,14 @@ export const formatFirstLetterCapitalised = (string: string) =>
 export const formatTimeToMinutesAndSeconds = (time: string) => {
   // get total seconds difference between given time and now
   const totalSeconds = moment(time).diff(moment(), "seconds");
+  const isNegative = totalSeconds < 0;
+  const prefix = isNegative ? "-" : "";
   // get the minutes difference (loses precision)
-  const minuteDifference =
-    totalSeconds < 0
-      ? Math.ceil(totalSeconds / 60)
-      : Math.floor(totalSeconds / 60);
+  const minuteDifference = isNegative
+    ? Math.ceil(totalSeconds / 60)
+    : Math.floor(totalSeconds / 60);
   // get the remainder for the leftover seconds to regain precision
-  const secondsDifference = totalSeconds % 60;
+  const secondsDifference = Math.abs(totalSeconds % 60);
 
-  const formattedMinutes =
-    totalSeconds < 0 && minuteDifference == 0
-      ? "-" + minuteDifference
-      : minuteDifference;
-  const formattedSeconds =
-    totalSeconds < 0 ? secondsDifference * -1 : secondsDifference;
-
-  return `${formattedMinutes}m ${formattedSeconds}s`;
+  return `${prefix}${Math.abs(minuteDifference)}m ${secondsDifference}s`;
 };
