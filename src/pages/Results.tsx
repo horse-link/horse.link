@@ -12,11 +12,9 @@ import { formatBytes16String } from "../utils/formatting";
 import { useConfig } from "../providers/Config";
 import utils from "../utils";
 import { useSubgraphBets } from "../hooks/subgraph";
-import { useAccount } from "wagmi";
-import { useWalletModal } from "../providers/WalletModal";
 
 export const Results: React.FC = () => {
-  const [isSettleModalOpen, setSettleIsModalOpen] = useState(false);
+  const [isSettleModalOpen, setIsSettleModalOpen] = useState(false);
   const [selectedBet, setSelectedBet] = useState<BetHistory>();
 
   const config = useConfig();
@@ -30,8 +28,6 @@ export const Results: React.FC = () => {
     details.race
   );
   const b16MarketId = formatBytes16String(marketId);
-  const { isConnected } = useAccount();
-  const { openWalletModal } = useWalletModal();
   const { betHistory, refetch } = useSubgraphBets(
     false,
     "ALL_BETS",
@@ -39,13 +35,6 @@ export const Results: React.FC = () => {
   );
 
   const results = useResultsData(propositionId);
-
-  function onClickBet(betData?: BetHistory) {
-    if (!betData) return;
-    if (!isConnected) return openWalletModal();
-    setSelectedBet(betData);
-    setSettleIsModalOpen(true);
-  }
 
   return (
     <PageLayout>
@@ -68,14 +57,15 @@ export const Results: React.FC = () => {
         <h1 className="text-2xl font-bold mt-4">History</h1>
         <BetTable
           myBetsEnabled={false}
-          onClickBet={onClickBet}
           betHistory={betHistory}
           config={config}
+          setSelectedBet={setSelectedBet}
+          setIsModalOpen={setIsSettleModalOpen}
         />
       </div>
       <SettleBetModal
         isModalOpen={isSettleModalOpen}
-        setIsModalOpen={setSettleIsModalOpen}
+        setIsModalOpen={setIsSettleModalOpen}
         selectedBet={selectedBet}
         refetch={refetch}
         config={config}

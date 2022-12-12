@@ -6,16 +6,18 @@ import { Config } from "../../types/config";
 
 type Props = {
   myBetsEnabled: boolean;
-  onClickBet: (bet?: BetHistory) => void;
   betHistory: BetHistory[] | undefined;
   config?: Config;
+  setSelectedBet: (bet?: BetHistory) => void;
+  setIsModalOpen: (open: boolean) => void;
 };
 
 export const BetTable: React.FC<Props> = ({
   myBetsEnabled,
-  onClickBet,
   betHistory,
-  config
+  config,
+  setSelectedBet,
+  setIsModalOpen
 }) => {
   const { isConnected } = useAccount();
 
@@ -68,9 +70,10 @@ export const BetTable: React.FC<Props> = ({
               <BetRows
                 myBetsSelected={myBetsEnabled}
                 bets={betHistory}
-                onClickBet={onClickBet}
                 config={config}
                 isConnected={isConnected}
+                setIsModalOpen={setIsModalOpen}
+                setSelectedBet={setSelectedBet}
               />
             </tbody>
           </table>

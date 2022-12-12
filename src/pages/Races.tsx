@@ -57,13 +57,6 @@ export const Races: React.FC = () => {
     openDialog();
   };
 
-  function onClickBet(betData?: BetHistory) {
-    if (!betData) return;
-    if (!isConnected) return openWalletModal();
-    setSelectedBet(betData);
-    setIsSettleModalOpen(true);
-  }
-
   return (
     <PageLayout>
       <PlaceBetModal
@@ -86,9 +79,10 @@ export const Races: React.FC = () => {
         <h1 className="text-2xl font-bold mt-4">History</h1>
         <BetTable
           myBetsEnabled={false}
-          onClickBet={onClickBet}
           betHistory={betHistory}
           config={config}
+          setSelectedBet={setSelectedBet}
+          setIsModalOpen={setIsSettleModalOpen}
         />
       </div>
       <SettleBetModal
