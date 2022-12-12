@@ -100,4 +100,13 @@ describe("general formatting tests", () => {
     // account for second elapsing
     expect(formattedDifference).toEqual("0m 59s");
   });
+  it("should get the time difference when race is overtime", () => {
+    const date = moment().subtract(1, "minutes");
+
+    const formattedDifference = utils.formatting.formatTimeToMinutesAndSeconds(
+      date.toString()
+    );
+
+    expect(formattedDifference).toEqual("-1m 0s");
+  });
 });
