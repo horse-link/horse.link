@@ -36,7 +36,7 @@ export const DashboardTable: React.FC<Props> = ({ meets }) => {
                       >
                         Venue
                       </th>
-                      {[...new Array(maxLength)].map((_, i) => (
+                      {Array.from({ length: maxLength }, (_, i) => (
                         <th
                           key={`header${i}`}
                           scope="col"
