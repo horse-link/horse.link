@@ -43,11 +43,11 @@ export const Bets: React.FC = () => {
   const isLoading = !betHistory;
   return (
     <PageLayout>
-      <div className="w-full lg:justify-between lg:flex col-span-2 p-3">
-        <h3 className="text-lg font-medium text-gray-900 flex items-center flex-row flex-nowrap my-3">
+      <div className="w-full lg:justify-between lg:flex p-3">
+        <h3 className="text-lg font-medium text-gray-900 flex items-center my-3">
           Bets History
         </h3>
-        <div className="flex my-3 justify-items-end">
+        <div className="flex my-3">
           <BetFilterGroup
             value={betTableFilter}
             onChange={onFilterChange}
