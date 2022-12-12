@@ -14,7 +14,8 @@ const POLL_INTERVAL = 5000;
 
 export const useSubgraphBets = (
   myBetsEnabled: boolean,
-  filter: BetFilterOptions
+  filter: BetFilterOptions,
+  marketId?: string
 ) => {
   const { address } = useAccount();
   const [betHistory, setBetHistory] = useState<BetHistory[]>();
@@ -22,7 +23,8 @@ export const useSubgraphBets = (
   const { data, refetch } = useSubgraph<Response>(
     utils.queries.getBetsQuery({
       address: myBetsEnabled ? address : undefined,
-      filter
+      filter,
+      marketId
     })
   );
 

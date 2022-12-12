@@ -5,7 +5,6 @@ import { Toggle, PageLayout } from "../components";
 import { BetFilterGroup, BetTable } from "../components/Bets";
 import { SettleBetModal } from "../components/Modals";
 import { BetFilterOptions, BetHistory } from "../types/bets";
-import { useWalletModal } from "../providers/WalletModal";
 import { useConfig } from "../providers/Config";
 
 export const Bets: React.FC = () => {
@@ -16,7 +15,6 @@ export const Bets: React.FC = () => {
     useState<BetFilterOptions>("ALL_BETS");
 
   const { isConnected } = useAccount();
-  const { openWalletModal } = useWalletModal();
 
   const config = useConfig();
 
@@ -24,13 +22,6 @@ export const Bets: React.FC = () => {
     myBetsEnabled,
     betTableFilter
   );
-
-  const onClickBet = (betData?: BetHistory) => {
-    if (!betData) return;
-    if (!isConnected) return openWalletModal();
-    setSelectedBet(betData);
-    setIsModalOpen(true);
-  };
 
   useEffect(() => {
     setMyBetsEnabled(isConnected);
@@ -61,9 +52,10 @@ export const Bets: React.FC = () => {
       </div>
       <BetTable
         myBetsEnabled={myBetsEnabled}
-        onClickBet={onClickBet}
         betHistory={betHistory}
         config={config}
+        setSelectedBet={setSelectedBet}
+        setIsModalOpen={setIsModalOpen}
       />
       <SettleBetModal
         isModalOpen={isModalOpen}

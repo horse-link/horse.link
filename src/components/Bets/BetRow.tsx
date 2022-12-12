@@ -9,7 +9,7 @@ import utils from "../../utils";
 type Props = {
   config?: Config;
   betData: BetHistory;
-  onClick?: () => void;
+  onClick: () => void;
 };
 
 export const BetRow: React.FC<Props> = ({ config, betData, onClick }) => {
