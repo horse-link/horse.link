@@ -1,4 +1,5 @@
 import { Meet, Race } from "../types/meets";
+import { MILLIS_IN_DAY } from "./constants";
 
 // MarketId 11 chars
 // AAAAAABBBCC
@@ -11,7 +12,6 @@ export const makeMarketId = (
   raceNumber: string
 ) => {
   //Turn Date object into number of days since 1/1/1970, padded to 6 digits
-  const MILLIS_IN_DAY = 1000 * 60 * 60 * 24;
   const daysSinceEpoch = Math.floor(date.getTime() / MILLIS_IN_DAY)
     .toString()
     .padStart(6, "0");
