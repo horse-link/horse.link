@@ -27,7 +27,7 @@ export const BetFilterGroup: React.FC<Props> = ({
           onChange(key);
         }}
         className={classNames(
-          "bg-white rounded lg:px-2 shadow lg:w-28 w-13 px-1",
+          "bg-white rounded px-1 lg:px-2 shadow lg:w-28 w-13",
           {
             "bg-blue-500": key === currentOption,
             "disabled:opacity-75": key !== currentOption
