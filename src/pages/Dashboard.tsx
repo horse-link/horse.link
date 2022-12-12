@@ -12,7 +12,6 @@ import {
 } from "../components/Dashboard";
 import { useWalletModal } from "../providers/WalletModal";
 import { SignedMeetingsResponse, MeetFilters, Meet } from "../types/meets";
-import utils from "../utils";
 
 const AUS_NZ_LOCATIONS = [
   "QLD",
@@ -123,7 +122,7 @@ export const Dashboard: React.FC = () => {
           <div>My Stats</div>
         </div>
         <div className="-mt-12">
-          <DashboardTable meets={meets || utils.mocks.getMockMeets()} />
+          <DashboardTable meets={meets} />
         </div>
         <div className="flex justify-center px-4 py-5 bg-white shadow rounded-lg sm:p-6 mb-10">
           <div className="w-4/5 max-w-2xl">
