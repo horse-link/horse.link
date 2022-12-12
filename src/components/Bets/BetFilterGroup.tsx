@@ -26,10 +26,13 @@ export const BetFilterGroup: React.FC<Props> = ({
         onClick={() => {
           onChange(key);
         }}
-        className={classNames("bg-white rounded px-2 shadow w-28", {
-          "bg-blue-500": key === currentOption,
-          "disabled:opacity-75": key !== currentOption
-        })}
+        className={classNames(
+          "bg-white rounded lg:px-2 shadow lg:w-28 w-13 px-1",
+          {
+            "bg-blue-500": key === currentOption,
+            "disabled:opacity-75": key !== currentOption
+          }
+        )}
         disabled={disabled}
       >
         {text}

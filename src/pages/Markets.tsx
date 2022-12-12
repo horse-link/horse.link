@@ -11,7 +11,7 @@ export const Markets: React.FC = () => {
 
   return (
     <PageLayout>
-      <div className="flex w-full lg:gap-x-4 mb-4 lg:justify-between justify-center text-left gap-x-1">
+      <div className="flex flex-col md:flex-row w-full lg:gap-x-4 mb-4 lg:justify-between justify-center text-left gap-x-1 gap-y-2">
         <Card
           title="24H Volume"
           data={
