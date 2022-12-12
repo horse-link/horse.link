@@ -1,18 +1,16 @@
 import { Meet, Race } from "../types/meets";
+import dayjs from "dayjs";
 
-// MarketId 11 chars
-// AAAAAABBBCC
-// A = date as days since epoch
-// B = location code
-// C = race number
+// copied from BE repo
 export const makeMarketId = (
   date: Date,
   location: string,
   raceNumber: string
 ) => {
-  //Turn Date object into number of days since 1/1/1970, padded to 6 digits
   const MILLIS_IN_DAY = 1000 * 60 * 60 * 24;
-  const daysSinceEpoch = Math.floor(date.getTime() / MILLIS_IN_DAY)
+  const offset = date.getTimezoneOffset();
+  const dateInTimezone = dayjs(date).subtract(offset, "minutes");
+  const daysSinceEpoch = Math.floor(dateInTimezone.valueOf() / MILLIS_IN_DAY)
     .toString()
     .padStart(6, "0");
   return `${daysSinceEpoch}${location}${raceNumber
