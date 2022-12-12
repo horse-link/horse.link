@@ -11,7 +11,7 @@ export const Markets: React.FC = () => {
 
   return (
     <PageLayout>
-      <div className="flex w-full justify-between gap-x-4 mb-4">
+      <div className="flex w-full justify-between gap-x-4 mb-4 lg:text-sm">
         <Card
           title="24H Volume"
           data={
@@ -35,7 +35,7 @@ export const Markets: React.FC = () => {
       <div className="flex flex-col">
         <h3 className="text-lg mb-3 font-medium text-gray-900">Markets </h3>
         <div className="bg-gray-50 rounded-xl overflow-auto">
-          <div className="shadow-sm overflow-hidden mt-2 mb-5">
+          <div className="shadow-sm overflow-x-scroll mt-2 mb-5">
             <table className="border-collapse table-auto w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
