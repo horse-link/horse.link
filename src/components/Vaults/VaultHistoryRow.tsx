@@ -39,9 +39,9 @@ export const VaultHistoryRow: React.FC<Props> = ({ vault, config }) => {
           href={`${process.env.VITE_SCANNER_URL}/tx/${vault.id.toLowerCase()}`}
           target="_blank"
           rel="noreferrer noopener"
-          className="text-blue-600"
+          className="text-blue-600 truncate"
         >
-          {utils.formatting.shortenHash(vault.id)}
+          {vault.id}
         </a>
       </td>
     </tr>
