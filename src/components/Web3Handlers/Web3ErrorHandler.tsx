@@ -13,6 +13,7 @@ export const Web3ErrorHandler: React.FC<Props> = ({ error }) => {
     switch (true) {
       case stringified.includes("Locked time not passed"):
         return "Locked time not passed";
+      // include other cases that require a more descriptive error message here
     }
 
     const code = error.code as ethers.errors;
