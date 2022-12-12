@@ -9,6 +9,12 @@ export const Web3ErrorHandler: React.FC<Props> = ({ error }) => {
   const message = useMemo(() => {
     console.error(error);
 
+    const stringified = JSON.stringify(error.message);
+    switch (true) {
+      case stringified.includes("Locked time not passed"):
+        return "Locked time not passed";
+    }
+
     const code = error.code as ethers.errors;
     switch (code) {
       case ethers.errors.ACTION_REJECTED:
