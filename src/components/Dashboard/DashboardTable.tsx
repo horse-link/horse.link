@@ -36,7 +36,7 @@ export const DashboardTable: React.FC<Props> = ({ meets }) => {
                       >
                         Venue
                       </th>
-                      {[...new Array(maxLength)].map((_, i) => (
+                      {Array.from({ length: maxLength }, (_, i) => (
                         <th
                           key={`header${i}`}
                           scope="col"
@@ -49,13 +49,13 @@ export const DashboardTable: React.FC<Props> = ({ meets }) => {
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {meets
-                      ? meets.map(meet => (
-                          <tr key={meet.id}>
+                      ? meets.map((meet, i) => (
+                          <tr key={`meet${i}`}>
                             <td className="px-3 py-4 whitespace-nowrap">
                               {meet.name} ({meet.location})
                             </td>
-                            {meet.races.map(race => (
-                              <td key={race.name}>
+                            {meet.races.map((race, i) => (
+                              <td key={`race${i}`}>
                                 <Link
                                   className={classNames({
                                     "!cursor-default":
@@ -108,12 +108,12 @@ export const DashboardTable: React.FC<Props> = ({ meets }) => {
                       : utils.mocks
                           .getMockRaces(LOADING_LENGTH)
                           .map((_, i, array) => (
-                            <tr key={i}>
+                            <tr key={`mock${i}`}>
                               <td className="px-3 py-4 whitespace-nowrap">
                                 <Skeleton />
                               </td>
-                              {array.map(() => (
-                                <td>
+                              {array.map((_, i) => (
+                                <td key={`skeleton${i}`}>
                                   <Skeleton count={2} />
                                 </td>
                               ))}
