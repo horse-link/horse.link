@@ -10,8 +10,8 @@ type Props = {
 export const VaultHistoryTable: React.FC<Props> = ({ history, config }) => (
   <div className="w-full flex flex-col mt-8">
     <h3 className="text-lg mb-3 font-medium text-gray-900">History</h3>
-    <div className="bg-gray-50 rounded-xl overflow-auto">
-      <div className="shadow-sm overflow-hidden mt-2 mb-5">
+    <div className="bg-gray-50 rounded-xl">
+      <div className="shadow-sm overflow-x-scroll mt-2 mb-5">
         <table className="border-collapse table-auto w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>

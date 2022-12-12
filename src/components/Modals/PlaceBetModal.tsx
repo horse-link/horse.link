@@ -181,7 +181,7 @@ export const PlaceBetModal: React.FC<Props> = ({
             <h3 className="font-semibold">Markets</h3>
             <select
               onChange={e => onSelectMarket(e, config)}
-              className="border-[0.12rem] border-black mt-1 mb-6 bg-white"
+              className="border-[0.12rem] border-black mt-1 mb-6 bg-white overflow-x-scroll"
             >
               {config.markets.map(market => (
                 <option
