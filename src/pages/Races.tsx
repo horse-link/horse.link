@@ -26,9 +26,9 @@ export const Races: React.FC = () => {
   const [selectedRunner, setSelectedRunner] = useState<Runner>();
   const [selectedBet, setSelectedBet] = useState<BetHistory>();
   const { runners } = useRunnersData(track, raceNumber);
+  const config = useConfig();
 
-  const { config, meetDate } = useMemo(() => {
-    const config = useConfig();
+  const { meetDate } = useMemo(() => {
     const meetDate = moment().format("DD-MM-YY");
     return { config, meetDate };
   }, []);
@@ -86,7 +86,7 @@ export const Races: React.FC = () => {
         <h1 className="text-2xl font-bold mt-4">History</h1>
         <BetTable
           myBetsEnabled={false}
-          onClickBet={onClickBet}
+          onClickBet={(betData?: BetHistory) => onClickBet(betData)}
           betHistory={betHistory}
           config={config}
         />

@@ -68,7 +68,7 @@ export const Results: React.FC = () => {
         <h1 className="text-2xl font-bold mt-4">History</h1>
         <BetTable
           myBetsEnabled={false}
-          onClickBet={onClickBet}
+          onClickBet={(betData?: BetHistory) => onClickBet(betData)}
           betHistory={betHistory}
           config={config}
         />
