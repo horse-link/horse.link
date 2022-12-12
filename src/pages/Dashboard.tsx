@@ -38,29 +38,34 @@ export const Dashboard: React.FC = () => {
     (async () => {
       const response = await api.getMeetings();
       setResponse(response);
-      response?.data.meetings && setMeets(response?.data.meetings);
     })();
   }, []);
 
-  // Filter meets based on filter selection
   useEffect(() => {
-    if (meetsFilter !== "ALL") {
-      meetsFilter === "AUS_NZ" &&
+    if (!response) return;
+    // error encountered that if meetings was empty it would return as an empty *object* rather than array
+    if (!Array.isArray(response.data.meetings)) return;
+
+    switch (meetsFilter) {
+      case "AUS_NZ":
         setMeets(
-          response?.data.meetings?.filter(meet =>
+          response.data.meetings.filter(meet =>
             AUS_NZ_LOCATIONS.includes(meet.location)
           )
         );
-      meetsFilter === "INTERNATIONAL" &&
+        break;
+      case "INTERNATIONAL":
         setMeets(
-          response?.data.meetings?.filter(
+          response.data.meetings.filter(
             meet => !AUS_NZ_LOCATIONS.includes(meet.location)
           )
         );
-    } else {
-      setMeets(response?.data.meetings);
+        break;
+      default:
+        setMeets(response.data.meetings);
+        break;
     }
-  }, [meetsFilter]);
+  }, [response, meetsFilter]);
 
   useEffect(() => {
     if (myPlayEnabled && !isConnected) {
