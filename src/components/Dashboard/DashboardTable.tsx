@@ -6,12 +6,16 @@ import Skeleton from "react-loading-skeleton";
 import utils from "../../utils";
 import classNames from "classnames";
 
+const LOADING_LENGTH = 15;
+
 type Props = {
-  meets: Meet[];
+  meets?: Meet[];
 };
 
 export const DashboardTable: React.FC<Props> = ({ meets }) => {
-  const maxLength = Math.max(...meets.map(meet => meet.races.length));
+  const maxLength = meets
+    ? Math.max(...meets.map(meet => meet.races.length))
+    : LOADING_LENGTH;
 
   return (
     <div className="grid grid-cols-2">
@@ -34,7 +38,7 @@ export const DashboardTable: React.FC<Props> = ({ meets }) => {
                       </th>
                       {[...new Array(maxLength)].map((_, i) => (
                         <th
-                          key={i}
+                          key={`header${i}`}
                           scope="col"
                           className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
@@ -44,31 +48,14 @@ export const DashboardTable: React.FC<Props> = ({ meets }) => {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {meets.map(meet => (
-                      <tr key={meet.id}>
-                        <td className="px-3 py-4 whitespace-nowrap">
-                          {meet.name ? (
-                            `${meet.name} (${meet.location})`
-                          ) : (
-                            <Skeleton />
-                          )}
-                        </td>
-                        {meet.races.map(race => (
-                          <td key={race.number}>
-                            <div
-                              className={classNames(
-                                "px-3 py-4 whitespace-nowrap text-sm",
-                                {
-                                  "bg-gray-400 hover:bg-gray-500":
-                                    race.status === "Paying",
-                                  "bg-black text-white":
-                                    race.status === "Abandoned",
-                                  "bg-emerald-400": race.status === "Interim",
-                                  "hover:bg-gray-200": race.status === "Normal"
-                                }
-                              )}
-                            >
-                              {race.name ? (
+                    {meets
+                      ? meets.map(meet => (
+                          <tr key={meet.id}>
+                            <td className="px-3 py-4 whitespace-nowrap">
+                              {meet.name} ({meet.location})
+                            </td>
+                            {meet.races.map(race => (
+                              <td key={race.name}>
                                 <Link
                                   className={classNames({
                                     "!cursor-default":
@@ -87,25 +74,51 @@ export const DashboardTable: React.FC<Props> = ({ meets }) => {
                                         ""
                                   }
                                 >
-                                  <p>R{race.number}</p>
-                                  {moment
-                                    .utc(race.start)
-                                    .local()
-                                    .format("H:mm")}
-                                  <p>
-                                    {race.status == "Paying"
-                                      ? race.results?.join(" ")
-                                      : moment(race.close).fromNow(true)}
-                                  </p>
+                                  <div
+                                    className={classNames(
+                                      "px-3 py-4 whitespace-nowrap text-sm",
+                                      {
+                                        "bg-gray-400 hover:bg-gray-500":
+                                          race.status === "Paying",
+                                        "bg-black text-white":
+                                          race.status === "Abandoned",
+                                        "bg-emerald-400":
+                                          race.status === "Interim",
+                                        "hover:bg-gray-200":
+                                          race.status === "Normal"
+                                      }
+                                    )}
+                                  >
+                                    <p>R{race.number}</p>
+                                    {moment
+                                      .utc(race.start)
+                                      .local()
+                                      .format("H:mm")}
+                                    <p>
+                                      {race.status == "Paying"
+                                        ? race.results?.join(" ")
+                                        : moment(race.close).fromNow(true)}
+                                    </p>
+                                  </div>
                                 </Link>
-                              ) : (
-                                <Skeleton count={2} />
-                              )}
-                            </div>
-                          </td>
-                        ))}
-                      </tr>
-                    ))}
+                              </td>
+                            ))}
+                          </tr>
+                        ))
+                      : utils.mocks
+                          .getMockRaces(LOADING_LENGTH)
+                          .map((_, i, array) => (
+                            <tr key={i}>
+                              <td className="px-3 py-4 whitespace-nowrap">
+                                <Skeleton />
+                              </td>
+                              {array.map(() => (
+                                <td>
+                                  <Skeleton count={2} />
+                                </td>
+                              ))}
+                            </tr>
+                          ))}
                   </tbody>
                 </table>
               </div>
