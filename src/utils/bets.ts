@@ -74,18 +74,16 @@ export const recoverSigSigner = (
     ["bytes16", "bytes16"],
     [marketId, winningPropositionId]
   );
-  const prefix = ethers.utils.formatBytes32String(
-    "\x19Ethereum Signed Message:\n32"
-  );
-  const prefixMessage = ethers.utils.solidityKeccak256(
-    ["bytes32", "bytes32"],
-    [prefix, messageHash]
-  );
+
   const address = ethers.utils.verifyMessage(
-    ethers.utils.arrayify(prefixMessage),
+    ethers.utils.arrayify(messageHash),
     signature
   );
   console.log(address);
+  console.log(
+    address.toLowerCase() ===
+    "0x1Ab4C6d9e25Fc65C917aFBEfB4E963C400Fb9814".toLowerCase()
+  )
 
   return (
     address.toLowerCase() ===
