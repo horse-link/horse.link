@@ -1,5 +1,5 @@
+import dayjs from "dayjs";
 import { ethers } from "ethers";
-import moment from "moment";
 import { BetId } from "../types/entities";
 
 export const formatToFourDecimals = (amount: string) => {
@@ -81,17 +81,21 @@ export const parseBytes16String = (bytes: ethers.BytesLike) => {
 export const formatFirstLetterCapitalised = (string: string) =>
   `${string.charAt(0).toUpperCase()}${string.slice(1).toLowerCase()}`;
 
-export const formatTimeToMinutesAndSeconds = (time: string) => {
-  // get total seconds difference between given time and now
-  const totalSeconds = moment(time).diff(moment(), "seconds");
-  const isNegative = totalSeconds < 0;
-  const prefix = isNegative ? "-" : "";
-  // get the minutes difference (loses precision)
-  const minuteDifference = isNegative
-    ? Math.ceil(totalSeconds / 60)
-    : Math.floor(totalSeconds / 60);
-  // get the remainder for the leftover seconds to regain precision
-  const secondsDifference = Math.abs(totalSeconds % 60);
+export const formatTimeToHMS = (time: string) => {
+  const now = dayjs();
+  const date = dayjs(time);
 
-  return `${prefix}${Math.abs(minuteDifference)}m ${secondsDifference}s`;
+  const isNegative = now > date;
+  const prefix = isNegative ? "-" : "";
+
+  const hours = date.diff(now, "hours");
+  const minutes = date.diff(now.add(hours, "hours"), "minutes");
+  const seconds = date.diff(
+    now.add(hours, "hours").add(minutes, "minutes"),
+    "seconds"
+  );
+
+  return `${prefix}${Math.abs(hours)}h ${Math.abs(minutes)}m ${Math.abs(
+    seconds
+  )}s`;
 };

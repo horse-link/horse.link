@@ -1,4 +1,4 @@
-import moment from "moment";
+import dayjs from "dayjs";
 import utils from "../utils";
 
 test.concurrent.each([
@@ -90,44 +90,75 @@ describe("general formatting tests", () => {
     );
   });
 
-  it("should get the time difference formatted", () => {
-    const dateOne = moment().add(1, "minute");
-    const dateOneFormatted = utils.formatting.formatTimeToMinutesAndSeconds(
+  it("should get the time difference formatted (minutes and seconds)", () => {
+    const dateOne = dayjs().add(1, "minute");
+    const dateOneFormatted = utils.formatting.formatTimeToHMS(
       dateOne.toString()
     );
     // account for second elapsing
-    expect(dateOneFormatted).toEqual("0m 59s");
+    expect(dateOneFormatted).toEqual("0h 0m 59s");
 
-    const dateTwo = moment().subtract(1, "minute");
-    const dateTwoFormatted = utils.formatting.formatTimeToMinutesAndSeconds(
+    const dateTwo = dayjs().subtract(1, "minute");
+    const dateTwoFormatted = utils.formatting.formatTimeToHMS(
       dateTwo.toString()
     );
-    expect(dateTwoFormatted).toEqual("-1m 0s");
+    expect(dateTwoFormatted).toEqual("-0h 1m 0s");
 
-    const dateThree = moment().add(30, "seconds");
-    const dateThreeFormatted = utils.formatting.formatTimeToMinutesAndSeconds(
+    const dateThree = dayjs().add(30, "seconds");
+    const dateThreeFormatted = utils.formatting.formatTimeToHMS(
       dateThree.toString()
     );
     // account for second elapsing
-    expect(dateThreeFormatted).toEqual("0m 29s");
+    expect(dateThreeFormatted).toEqual("0h 0m 29s");
 
-    const dateFour = moment().subtract(30, "seconds");
-    const dateFourFormatted = utils.formatting.formatTimeToMinutesAndSeconds(
+    const dateFour = dayjs().subtract(30, "seconds");
+    const dateFourFormatted = utils.formatting.formatTimeToHMS(
       dateFour.toString()
     );
-    expect(dateFourFormatted).toEqual("-0m 30s");
+    expect(dateFourFormatted).toEqual("-0h 0m 30s");
 
-    const dateFive = moment().add(1, "minute").add(30, "seconds");
-    const dateFiveFormatted = utils.formatting.formatTimeToMinutesAndSeconds(
+    const dateFive = dayjs().add(1, "minute").add(30, "seconds");
+    const dateFiveFormatted = utils.formatting.formatTimeToHMS(
       dateFive.toString()
     );
     // account for second elapsing
-    expect(dateFiveFormatted).toEqual("1m 29s");
+    expect(dateFiveFormatted).toEqual("0h 1m 29s");
 
-    const dateSix = moment().subtract(1, "minute").subtract(30, "seconds");
-    const dateSixFormatted = utils.formatting.formatTimeToMinutesAndSeconds(
+    const dateSix = dayjs().subtract(1, "minute").subtract(30, "seconds");
+    const dateSixFormatted = utils.formatting.formatTimeToHMS(
       dateSix.toString()
     );
-    expect(dateSixFormatted).toEqual("-1m 30s");
+    expect(dateSixFormatted).toEqual("-0h 1m 30s");
+  });
+
+  it("should get the time difference formatted (hours)", () => {
+    const dateOne = dayjs().add(1, "hour").add(1, "second");
+    const dateOneFormatted = utils.formatting.formatTimeToHMS(
+      dateOne.toString()
+    );
+    // account for second elapsing
+    expect(dateOneFormatted).toEqual("1h 0m 0s");
+
+    const dateTwo = dayjs().subtract(1, "hour");
+    const dateTwoFormatted = utils.formatting.formatTimeToHMS(
+      dateTwo.toString()
+    );
+    expect(dateTwoFormatted).toEqual("-1h 0m 0s");
+
+    const dateThree = dayjs()
+      .add(1, "hour")
+      .add(30, "minutes")
+      .add(1, "second");
+    const dateThreeFormatted = utils.formatting.formatTimeToHMS(
+      dateThree.toString()
+    );
+    // account for second elapsing
+    expect(dateThreeFormatted).toEqual("1h 30m 0s");
+
+    const dateFour = dayjs().subtract(1, "hour").subtract(30, "minutes");
+    const dateFourFormatted = utils.formatting.formatTimeToHMS(
+      dateFour.toString()
+    );
+    expect(dateFourFormatted).toEqual("-1h 30m 0s");
   });
 });

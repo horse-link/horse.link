@@ -10,14 +10,12 @@ type Props = {
 
 export const DashboardBannerRow: React.FC<Props> = ({ meet }) => {
   const [timeString, setTimeString] = useState(
-    utils.formatting.formatTimeToMinutesAndSeconds(meet.jumperRaceStartTime)
+    utils.formatting.formatTimeToHMS(meet.jumperRaceStartTime)
   );
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setTimeString(
-        utils.formatting.formatTimeToMinutesAndSeconds(meet.jumperRaceStartTime)
-      );
+      setTimeString(utils.formatting.formatTimeToHMS(meet.jumperRaceStartTime));
     }, INTERVAL);
 
     return () => clearInterval(interval);
