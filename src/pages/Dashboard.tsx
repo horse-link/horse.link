@@ -128,7 +128,7 @@ export const Dashboard: React.FC = () => {
           <div className="w-4/5 max-w-2xl">
             <div className="flex flex-col items-center">
               <h2 className="text-lg">Signature :</h2>
-              <h2 className="break-all lg:whitespace-nowrap">
+              <h2 className="break-all xl:whitespace-nowrap">
                 {response?.signature || <Skeleton width={"25em"} count={2} />}
               </h2>
             </div>
