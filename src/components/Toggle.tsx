@@ -9,7 +9,7 @@ export const Toggle: React.FC<Props> = ({ enabled, onChange }) => (
   <Switch
     checked={enabled}
     onChange={onChange}
-    className={`${enabled ? "bg-blue-600" : "bg-gray-200"}
+    className={`${enabled ? "bg-indigo-600" : "bg-gray-200"}
           relative inline-flex h-6 w-11 items-center rounded-full`}
   >
     <span className="sr-only">Use setting</span>

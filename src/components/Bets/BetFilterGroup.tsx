@@ -31,7 +31,7 @@ export const BetFilterGroup: React.FC<Props> = ({
           {
             "bg-indigo-600 hover:bg-indigo-700 text-white":
               key === currentOption,
-            "disabled:opacity-75 hover:bg-indigo-700": key !== currentOption
+            "disabled:opacity-75 hover:bg-gray-200": key !== currentOption
           }
         )}
         disabled={disabled}
