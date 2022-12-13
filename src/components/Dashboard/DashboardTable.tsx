@@ -97,6 +97,8 @@ export const DashboardTable: React.FC<Props> = ({ meets }) => {
                                     <p>
                                       {race.status == "Paying"
                                         ? race.results?.join(" ")
+                                        : race.status == "Abandoned"
+                                        ? "ABND"
                                         : moment(race.close).fromNow(true)}
                                     </p>
                                   </div>
