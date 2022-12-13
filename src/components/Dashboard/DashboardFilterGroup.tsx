@@ -27,8 +27,7 @@ export const DashboardFilterGroup: React.FC<Props> = ({
           onChange(key);
         }}
         className={classNames("bg-white rounded px-2 shadow w-28", {
-          "bg-indigo-600  text-white hover:bg-indigo-700":
-            key === currentOption,
+          "bg-indigo-600 text-white hover:bg-indigo-700": key === currentOption,
           "disabled:opacity-75 hover:bg-gray-200": key !== currentOption
         })}
         disabled={disabled}
@@ -38,5 +37,3 @@ export const DashboardFilterGroup: React.FC<Props> = ({
     ))}
   </div>
 );
-
-// hover:bg-indigo-700
