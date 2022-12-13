@@ -65,7 +65,8 @@ export const SettleBetModal: React.FC<Props> = ({
       !selectedBet ||
       !market ||
       !signer ||
-      !selectedBet.marketOracleResultSig
+      !selectedBet.marketOracleResultSig ||
+      !config
     )
       return;
     setTxHash(undefined);
@@ -73,7 +74,7 @@ export const SettleBetModal: React.FC<Props> = ({
 
     try {
       setTxLoading(true);
-      const tx = await settleBet(market, selectedBet, signer); // selectedBet.marketOracleResultSig -- re-add when marketOracle accepts ecdsa sigs
+      const tx = await settleBet(market, selectedBet, signer, config); // selectedBet.marketOracleResultSig -- re-add when marketOracle accepts ecdsa sigs
       setTxHash(tx);
     } catch (err: any) {
       setError(err);
