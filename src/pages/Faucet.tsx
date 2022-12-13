@@ -81,7 +81,7 @@ export const Faucet: React.FC = () => {
             href={`${process.env.VITE_SCANNER_URL}/address/${FAUCET_ADDRESS}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="underline"
+            className="underline break-all"
           >
             {FAUCET_ADDRESS}
           </a>
