@@ -66,27 +66,17 @@ export const filterBetsByFilterOptions = (
 
 export const recoverSigSigner = (
   marketId: string,
-  winningPropositionId: string,
+  propositionId: string,
   signature: EcSignature,
   config: Config
 ) => {
   const messageHash = ethers.utils.solidityKeccak256(
     ["bytes16", "bytes16"],
-    [marketId, winningPropositionId]
+    [marketId, propositionId]
   );
-
   const address = ethers.utils.verifyMessage(
     ethers.utils.arrayify(messageHash),
     signature
   );
-  console.log(address);
-  console.log(
-    address.toLowerCase() ===
-    "0x1Ab4C6d9e25Fc65C917aFBEfB4E963C400Fb9814".toLowerCase()
-  )
-
-  return (
-    address.toLowerCase() ===
-    "0x1Ab4C6d9e25Fc65C917aFBEfB4E963C400Fb9814".toLowerCase()
-  );
+  return address.toLowerCase() === config.addresses.ownerAddress.toLowerCase();
 };
