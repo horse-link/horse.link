@@ -65,12 +65,16 @@ export const useMarketContract = () => {
       signer
     );
 
-    if (!bet.marketResultAdded && bet.winningPropositionId)
+    if (
+      !bet.marketResultAdded &&
+      bet.winningPropositionId &&
+      bet.marketOracleResultSig
+    )
       await (
         await marketOracleContract.setResult(
           bet.marketId,
           bet.winningPropositionId,
-          ethers.constants.HashZero
+          bet.marketOracleResultSig
         )
       ).wait();
 
@@ -89,6 +93,7 @@ export const useMarketContract = () => {
     const odds = ethers.utils.parseUnits(back.odds.toString(), ODDS_DECIMALS);
     const payout = await marketContract.getPotentialPayout(
       utils.formatting.formatBytes16String(back.proposition_id),
+      utils.formatting.formatBytes16String(back.market_id),
       wager,
       odds
     );
