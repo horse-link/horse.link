@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { NextToJump } from "../../types/meets";
 import utils from "../../utils";
 
@@ -22,11 +23,16 @@ export const DashboardBannerRow: React.FC<Props> = ({ meet }) => {
   }, [meet]);
 
   return (
-    <div className="w-full shrink-0 h-full lg:shrink flex flex-col items-center">
-      <span className="block">
-        {`${meet.meeting.jumperMeetingName} (${meet.meeting.location}) - R${meet.jumperRaceNumber}`}
-      </span>
-      <span className="block font-semibold">{` ${timeString}`}</span>
-    </div>
+    <Link
+      className="w-full shrink-0 h-full lg:shrink flex flex-col items-center"
+      to={`/horses/${meet.meeting.meetID}/${meet.jumperRaceNumber}`}
+    >
+      <div>
+        <span className="block">
+          {`${meet.meeting.jumperMeetingName} (${meet.meeting.location}) - R${meet.jumperRaceNumber}`}
+        </span>
+        <span className="block font-semibold">{` ${timeString}`}</span>
+      </div>
+    </Link>
   );
 };
