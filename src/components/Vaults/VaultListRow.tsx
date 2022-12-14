@@ -39,7 +39,7 @@ export const VaultListRow: React.FC<Props> = ({
           href={`${process.env.VITE_SCANNER_URL}/address/${vault.address}`}
           target="_blank"
           rel="noreferrer noopener"
-          className="text-blue-600"
+          className="text-indigo-600 hover:text-purple-800 visited:text-purple-900"
         >
           {vault.address}
         </a>
@@ -61,3 +61,5 @@ export const VaultListRow: React.FC<Props> = ({
     </tr>
   );
 };
+
+//Jasmin

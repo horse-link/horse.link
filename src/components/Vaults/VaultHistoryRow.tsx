@@ -39,7 +39,7 @@ export const VaultHistoryRow: React.FC<Props> = ({ vault, config }) => {
           href={`${process.env.VITE_SCANNER_URL}/tx/${vault.id.toLowerCase()}`}
           target="_blank"
           rel="noreferrer noopener"
-          className="text-blue-600 truncate"
+          className="text-indigo-600 truncate hover:text-purple-800 visited:text-purple-900"
         >
           {vault.id}
         </a>
@@ -47,3 +47,5 @@ export const VaultHistoryRow: React.FC<Props> = ({ vault, config }) => {
     </tr>
   );
 };
+
+//Jasmin

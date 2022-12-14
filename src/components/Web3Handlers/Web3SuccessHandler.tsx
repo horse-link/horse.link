@@ -11,7 +11,7 @@ export const Web3SuccessHandler: React.FC<Props> = ({ hash }) => (
     <span className="block">
       Tx Hash:{" "}
       <a
-        className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
+        className="underline text-indigo-600 hover:text-purple-800 visited:text-purple-900"
         href={`${process.env.VITE_SCANNER_URL}/tx/${hash}`}
         target="_blank"
         rel="noreferrer noopener"
@@ -21,3 +21,4 @@ export const Web3SuccessHandler: React.FC<Props> = ({ hash }) => (
     </span>
   </div>
 );
+//Jasmin

@@ -18,7 +18,7 @@ export const FaucetModal: React.FC<Props> = ({ isOpen, onClose, txHash }) => (
       <div className="flex whitespace-nowrap">
         Tx Hash: &nbsp;
         <a
-          className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600 truncate"
+          className="underline text-indigo-600 hover:text-purple-800 visited:text-purple-900 truncate"
           href={`${process.env.VITE_SCANNER_URL}/tx/${txHash}`}
           target="_blank"
           rel="noopener noreferrer"
@@ -29,3 +29,5 @@ export const FaucetModal: React.FC<Props> = ({ isOpen, onClose, txHash }) => (
     </div>
   </BaseModal>
 );
+
+//Jasmin
