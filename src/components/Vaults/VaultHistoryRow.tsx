@@ -47,5 +47,3 @@ export const VaultHistoryRow: React.FC<Props> = ({ vault, config }) => {
     </tr>
   );
 };
-
-//Jasmin

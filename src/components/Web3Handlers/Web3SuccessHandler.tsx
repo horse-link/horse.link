@@ -21,4 +21,3 @@ export const Web3SuccessHandler: React.FC<Props> = ({ hash }) => (
     </span>
   </div>
 );
-//Jasmin

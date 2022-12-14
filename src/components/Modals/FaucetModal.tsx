@@ -29,5 +29,3 @@ export const FaucetModal: React.FC<Props> = ({ isOpen, onClose, txHash }) => (
     </div>
   </BaseModal>
 );
-
-//Jasmin
