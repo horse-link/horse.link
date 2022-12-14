@@ -110,7 +110,7 @@ export const Dashboard: React.FC = () => {
           </div>
           {myPlayEnabled ? <DashboardUserStats /> : <DashboardOverallStats />}
         </div>
-        <div className="flex gap-3 self-end justify-self-end">
+        <div className="flex w-full gap-x-3 justify-between md:justify-end">
           <DashboardFilterGroup
             value={meetsFilter}
             onChange={onFilterChange}
