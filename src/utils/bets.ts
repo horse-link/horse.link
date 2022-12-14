@@ -1,3 +1,4 @@
+import { ethers } from "ethers";
 import utils from ".";
 import {
   BetFilterOptions,
@@ -5,7 +6,9 @@ import {
   BetStatus,
   SignedBetDataResponse
 } from "../types/bets";
+import { Config } from "../types/config";
 import { Bet } from "../types/entities";
+import { EcSignature } from "../types/general";
 
 export const calculateMaxPages = (betsArrayLength: number, totalBets: number) =>
   Math.ceil(totalBets / betsArrayLength);
@@ -59,4 +62,21 @@ export const filterBetsByFilterOptions = (
 ) => {
   if (filter === "ALL_BETS") return bets;
   return bets.filter(bet => bet.status === filter);
+};
+
+export const recoverSigSigner = (
+  marketId: string,
+  propositionId: string,
+  signature: EcSignature,
+  config: Config
+) => {
+  const messageHash = ethers.utils.solidityKeccak256(
+    ["bytes16", "bytes16"],
+    [marketId, propositionId]
+  );
+  const address = ethers.utils.verifyMessage(
+    ethers.utils.arrayify(messageHash),
+    signature
+  );
+  return address.toLowerCase() === config.addresses.ownerAddress.toLowerCase();
 };
