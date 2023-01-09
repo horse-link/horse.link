@@ -246,8 +246,22 @@ export const PlaceBetModal: React.FC<Props> = ({
               </div>
             </>
           )}
-          {txHash && <Web3SuccessHandler hash={txHash} />}
-          {error && <Web3ErrorHandler error={error} />}
+          {txHash && (
+            <>
+              <h2 className="font-bold text-2xl mr-[8vw] mb-6">
+                Transaction result
+              </h2>
+              <Web3SuccessHandler hash={txHash} />
+            </>
+          )}
+          {error && (
+            <>
+              <h2 className="font-bold text-2xl mr-[8vw] mb-6">
+                Transaction result
+              </h2>
+              <Web3ErrorHandler error={error} />
+            </>
+          )}
         </div>
       )}
     </BaseModal>
