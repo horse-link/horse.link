@@ -55,7 +55,7 @@ export const BetRow: React.FC<Props> = ({ config, betData, onClick }) => {
         ) ?? <Skeleton />}
       </td>
       <td className="px-2 py-4 truncate">
-        {utils.formatting.formatpropositionId(
+        {utils.formatting.formatPropositionId(
           utils.formatting.parseBytes16String(betData.propositionId)
         ) ?? <Skeleton />}
       </td>

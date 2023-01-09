@@ -103,7 +103,7 @@ export const formatTimeToHMS = (time: string) => {
 export const formatMarketId = (marketId: string) => {
   const timestamp = marketId.slice(0, 6);
   const location = marketId.slice(6, 9);
-  const place = marketId.slice(9, 11);
+  const place = marketId.slice(-2);
   const date = dayjs(0)
     .add(+timestamp, "days")
     .format("DD-MM-YYYY");
