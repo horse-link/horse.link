@@ -1,9 +1,7 @@
 import dayjs from "dayjs";
 
-export const getPropositionFromId = (propositionId: string) => {
-  const winningPropositionId = propositionId.slice(-2);
-  return winningPropositionId;
-};
+export const getPropositionFromId = (propositionId: string) =>
+  propositionId.slice(-2);
 
 export const getMarketDetailsFromId = (marketId: string) => {
   const timestamp = marketId.slice(0, 6);
