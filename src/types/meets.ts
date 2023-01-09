@@ -14,6 +14,7 @@ export type Runner = {
   proposition_id_hash: string;
   barrier: number;
   signature: EcSignature;
+  status: "Open" | "Scratched" | "LateScratched";
 };
 
 export type NextToJump = {
