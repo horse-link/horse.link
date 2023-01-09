@@ -1,6 +1,5 @@
 import dayjs from "dayjs";
 import { ethers } from "ethers";
-import { BetHistory } from "../types/bets";
 import { BetId } from "../types/entities";
 
 export const formatToFourDecimals = (amount: string) => {
