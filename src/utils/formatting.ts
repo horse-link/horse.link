@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import { ethers } from "ethers";
+import { BetHistory } from "../types/bets";
 import { BetId } from "../types/entities";
 
 export const formatToFourDecimals = (amount: string) => {
@@ -98,4 +99,19 @@ export const formatTimeToHMS = (time: string) => {
   return `${prefix}${Math.abs(hours)}h ${Math.abs(minutes)}m ${Math.abs(
     seconds
   )}s`;
+};
+
+export const formatMarketId = (marketId: string) => {
+  const timestamp = marketId.slice(0, 6);
+  const location = marketId.slice(6, 9);
+  const place = marketId.slice(9, 11);
+  const date = dayjs(0)
+    .add(+timestamp, "days")
+    .format("DD-MM-YYYY");
+  return `${date} ${location} Race ${place}`;
+};
+
+export const formatpropositionId = (propositionId: string) => {
+  const winningPropositionId = propositionId.slice(12, 14);
+  return `Horse ${winningPropositionId} win`;
 };

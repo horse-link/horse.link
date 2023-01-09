@@ -50,12 +50,14 @@ export const BetRow: React.FC<Props> = ({ config, betData, onClick }) => {
         {moment.unix(betData.blockNumber).fromNow() ?? <Skeleton />}
       </td>
       <td className="px-2 py-4 truncate">
-        {utils.formatting.parseBytes16String(betData.marketId) ?? <Skeleton />}
+        {utils.formatting.formatMarketId(
+          utils.formatting.parseBytes16String(betData.marketId)
+        ) ?? <Skeleton />}
       </td>
       <td className="px-2 py-4 truncate">
-        {utils.formatting.parseBytes16String(betData.propositionId) ?? (
-          <Skeleton />
-        )}
+        {utils.formatting.formatpropositionId(
+          utils.formatting.parseBytes16String(betData.propositionId)
+        ) ?? <Skeleton />}
       </td>
     </tr>
   );
