@@ -63,7 +63,11 @@ export const BetRow: React.FC<Props> = ({ config, betData, onClick }) => {
         )}
       </td>
       <td className="px-2 py-4 truncate">
-        {`Horse ${winningPropositionId} win` ?? <Skeleton />}
+        {winningPropositionId ? (
+          `Horse ${winningPropositionId} win`
+        ) : (
+          <Skeleton />
+        )}
       </td>
     </tr>
   );
