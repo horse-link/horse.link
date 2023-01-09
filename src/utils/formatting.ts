@@ -111,6 +111,6 @@ export const formatMarketId = (marketId: string) => {
 };
 
 export const formatpropositionId = (propositionId: string) => {
-  const winningPropositionId = propositionId.slice(12, 14);
+  const winningPropositionId = propositionId.slice(-2);
   return `Horse ${winningPropositionId} win`;
 };
