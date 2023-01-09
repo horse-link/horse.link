@@ -8,7 +8,7 @@ type Props = {
 };
 
 const isScratchedRunner = (runner: Runner) =>
-  ["LateScratched", "Scratched"].includes(runner.bettingStatus);
+  ["LateScratched", "Scratched"].includes(runner.status);
 
 export const RaceTable: React.FC<Props> = ({ runners, onClickRunner }) => {
   const openBetRunners =

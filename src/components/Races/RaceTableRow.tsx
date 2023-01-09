@@ -21,8 +21,7 @@ export const RaceTableRow: React.FC<Props> = ({
   return (
     <tr
       className={classnames({
-        "cursor-pointer hover:bg-gray-100": !isScratched,
-        "cursor-not-allowed": isScratched
+        "cursor-pointer hover:bg-gray-100": !isScratched
       })}
       onClick={() => {
         if (!isScratched) {
@@ -30,7 +29,7 @@ export const RaceTableRow: React.FC<Props> = ({
         }
       }}
     >
-      <td className={"px-1 py-4 whitespace-nowrap bg-gray-200"}>
+      <td className="px-1 py-4 whitespace-nowrap bg-gray-200">
         {number ?? <Skeleton />}
       </td>
       <td
