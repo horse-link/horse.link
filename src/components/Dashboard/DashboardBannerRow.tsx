@@ -1,24 +1,25 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { NextToJump } from "../../types/meets";
 import utils from "../../utils";
 import { Config } from "../../types/config";
-import { getVenuefromConfig } from "../../utils/config";
+import { getVenueFromConfig } from "../../utils/config";
+import classnames from "classnames";
 
 const INTERVAL = 1000;
 
 type Props = {
   meet: NextToJump;
-  config?: Config;
+  config: Config;
 };
 
 export const DashboardBannerRow: React.FC<Props> = ({ meet, config }) => {
   const [timeString, setTimeString] = useState(
     utils.formatting.formatTimeToHMS(meet.jumperRaceStartTime)
   );
-  const venueLocation = useMemo(
-    () => getVenuefromConfig(meet.meeting.jumperMeetingName, config),
-    [meet, config]
+  const venueLocation = getVenueFromConfig(
+    meet.meeting.jumperMeetingName,
+    config
   );
 
   useEffect(() => {
@@ -29,24 +30,23 @@ export const DashboardBannerRow: React.FC<Props> = ({ meet, config }) => {
     return () => clearInterval(interval);
   }, [meet]);
 
-  return venueLocation ? (
+  return (
     <Link
-      className="w-full shrink-0 h-full lg:shrink flex flex-col text-center hover:bg-indigo-900 p-2"
-      to={`/horses/${venueLocation}/${meet.jumperRaceNumber}`}
+      className={classnames(
+        "w-full shrink-0 h-full lg:shrink flex flex-col text-center p-2",
+        {
+          "hover:bg-indigo-900": venueLocation,
+          "cursor-default": !venueLocation
+        }
+      )}
+      to={
+        venueLocation ? `/horses/${venueLocation}/${meet.jumperRaceNumber}` : ""
+      }
     >
-      <div>
-        <span className="block">
-          {`${meet.meeting.jumperMeetingName} (${meet.meeting.location}) - R${meet.jumperRaceNumber}`}
-        </span>
-        <span className="block font-semibold">{` ${timeString}`}</span>
-      </div>
-    </Link>
-  ) : (
-    <div className="w-full shrink-0 h-full lg:shrink flex flex-col text-center hover:cursor-default">
       <span className="block">
         {`${meet.meeting.jumperMeetingName} (${meet.meeting.location}) - R${meet.jumperRaceNumber}`}
       </span>
       <span className="block font-semibold">{` ${timeString}`}</span>
-    </div>
+    </Link>
   );
 };
