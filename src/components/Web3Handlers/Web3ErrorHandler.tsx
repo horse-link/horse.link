@@ -9,10 +9,12 @@ export const Web3ErrorHandler: React.FC<Props> = ({ error }) => {
   const message = useMemo(() => {
     console.error(error);
 
-    const stringified = JSON.stringify(error.message);
+    const stringified = JSON.stringify(error.message).toLowerCase();
     switch (true) {
-      case stringified.includes("Locked time not passed"):
+      case stringified.includes("locked"):
         return "Locked time not passed";
+      case stringified.includes("signature"):
+        return "Invalid signature";
       // include other cases that require a more descriptive error message here
     }
 

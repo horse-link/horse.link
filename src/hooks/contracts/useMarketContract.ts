@@ -5,7 +5,7 @@ import {
   Vault__factory
 } from "../../typechain";
 import { BigNumber, ethers, Signer } from "ethers";
-import { MarketInfo } from "../../types/config";
+import { Config, MarketInfo } from "../../types/config";
 import utils from "../../utils";
 import { Back } from "../../types/meets";
 import { BetHistory } from "../../types/bets";
@@ -55,8 +55,8 @@ export const useMarketContract = () => {
   const settleBet = async (
     market: MarketInfo,
     bet: BetHistory,
-    signer: Signer
-    // sig: EcSignature -- re-add when marketOracle accepts ecdsa sigs
+    signer: Signer,
+    config: Config
   ) => {
     const marketContract = Market__factory.connect(market.address, signer);
     const oracleAddress = await marketContract.getOracleAddress();
@@ -64,6 +64,18 @@ export const useMarketContract = () => {
       oracleAddress,
       signer
     );
+
+    if (
+      bet.winningPropositionId &&
+      bet.marketOracleResultSig &&
+      !utils.bets.recoverSigSigner(
+        bet.marketId,
+        bet.winningPropositionId,
+        bet.marketOracleResultSig,
+        config
+      )
+    )
+      throw new Error("Signature invalid");
 
     if (
       !bet.marketResultAdded &&
