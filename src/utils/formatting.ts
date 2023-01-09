@@ -110,7 +110,7 @@ export const formatMarketId = (marketId: string) => {
   return `${date} ${location} Race ${place}`;
 };
 
-export const formatpropositionId = (propositionId: string) => {
+export const formatPropositionId = (propositionId: string) => {
   const winningPropositionId = propositionId.slice(-2);
   return `Horse ${winningPropositionId} win`;
 };
