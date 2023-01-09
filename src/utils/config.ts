@@ -26,7 +26,7 @@ export const getVaultFromMarket = (market?: MarketInfo, config?: Config) =>
   config?.vaults.find(
     vault => vault.address.toLowerCase() === market?.vaultAddress.toLowerCase()
   );
-export const getVenuefromConfig = (meeting: String, config?: Config) => {
+export const getVenuefromConfig = (meeting: string, config?: Config) => {
   const key = Object.keys(config?.locations || {}).find(
     key =>
       config?.locations[key].toLowerCase().replace("-", " ") ===
