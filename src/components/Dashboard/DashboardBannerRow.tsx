@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { NextToJump } from "../../types/meets";
 import utils from "../../utils";
@@ -16,9 +16,9 @@ export const DashboardBannerRow: React.FC<Props> = ({ meet, config }) => {
   const [timeString, setTimeString] = useState(
     utils.formatting.formatTimeToHMS(meet.jumperRaceStartTime)
   );
-  const venueLocation = getVenuefromConfig(
-    meet.meeting.jumperMeetingName,
-    config
+  const venueLocation = useMemo(
+    () => getVenuefromConfig(meet.meeting.jumperMeetingName, config),
+    [meet, config]
   );
 
   useEffect(() => {
@@ -42,7 +42,7 @@ export const DashboardBannerRow: React.FC<Props> = ({ meet, config }) => {
       </div>
     </Link>
   ) : (
-    <div className="w-full shrink-0 h-full lg:shrink flex flex-col text-center hover:bg-green-700 p-2">
+    <div className="w-full shrink-0 h-full lg:shrink flex flex-col text-center hover:cursor-default">
       <span className="block">
         {`${meet.meeting.jumperMeetingName} (${meet.meeting.location}) - R${meet.jumperRaceNumber}`}
       </span>
