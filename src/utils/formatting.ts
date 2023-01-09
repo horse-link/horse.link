@@ -99,18 +99,3 @@ export const formatTimeToHMS = (time: string) => {
     seconds
   )}s`;
 };
-
-export const formatMarketId = (marketId: string) => {
-  const timestamp = marketId.slice(0, 6);
-  const location = marketId.slice(6, 9);
-  const place = marketId.slice(-2);
-  const date = dayjs(0)
-    .add(+timestamp, "days")
-    .format("DD-MM-YYYY");
-  return `${date} ${location} Race ${place}`;
-};
-
-export const formatPropositionId = (propositionId: string) => {
-  const winningPropositionId = propositionId.slice(-2);
-  return `Horse ${winningPropositionId} win`;
-};

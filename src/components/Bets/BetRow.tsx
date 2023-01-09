@@ -27,6 +27,14 @@ export const BetRow: React.FC<Props> = ({ config, betData, onClick }) => {
       <Skeleton />
     );
 
+  const winningPropositionId = utils.id.getPropositionFromId(
+    utils.formatting.parseBytes16String(betData.propositionId)
+  );
+
+  const raceDetails = utils.id.getMarketDetailsFromId(
+    utils.formatting.parseBytes16String(betData.marketId)
+  );
+
   return (
     <tr
       key={betData.propositionId}
@@ -50,14 +58,12 @@ export const BetRow: React.FC<Props> = ({ config, betData, onClick }) => {
         {moment.unix(betData.blockNumber).fromNow() ?? <Skeleton />}
       </td>
       <td className="px-2 py-4 truncate">
-        {utils.formatting.formatMarketId(
-          utils.formatting.parseBytes16String(betData.marketId)
-        ) ?? <Skeleton />}
+        {`${raceDetails.date} ${raceDetails.location} Race ${raceDetails.raceNumber}` ?? (
+          <Skeleton />
+        )}
       </td>
       <td className="px-2 py-4 truncate">
-        {utils.formatting.formatPropositionId(
-          utils.formatting.parseBytes16String(betData.propositionId)
-        ) ?? <Skeleton />}
+        {`Horse ${winningPropositionId} win` ?? <Skeleton />}
       </td>
     </tr>
   );
