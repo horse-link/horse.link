@@ -3,13 +3,14 @@ import utils from "../../utils";
 
 type Props = {
   hash: string;
+  message: string;
 };
 
-export const Web3SuccessHandler: React.FC<Props> = ({ hash }) => (
-  <div className="mt-6 px-2 py-4 bg-emerald-400 rounded-md flex flex-col items-center">
-    <h4 className="font-semibold mb-1 text-lg">Success!</h4>
+export const Web3SuccessHandler: React.FC<Props> = ({ hash, message }) => (
+  <div className="py-4 rounded-md flex flex-col">
+    <h2 className="font-bold text-2xl mr-[8vw] mb-2">Transaction result</h2>
     <span className="block">
-      Tx Hash:{" "}
+      {`${message} `}
       <a
         className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
         href={`${process.env.VITE_SCANNER_URL}/tx/${hash}`}

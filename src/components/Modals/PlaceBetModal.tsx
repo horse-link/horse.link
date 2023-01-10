@@ -172,9 +172,9 @@ export const PlaceBetModal: React.FC<Props> = ({
           <Loader />
         </div>
       ) : (
-        <div className="mb-5 lg:min-w-[510px]">
+        <div className="lg:min-w-[28rem]">
           {!txHash && !error && (
-            <>
+            <React.Fragment>
               <h2 className="font-bold text-2xl mr-[8vw] mb-6">
                 Target Odds{" "}
                 {utils.formatting.formatToTwoDecimals(back.odds.toString())}
@@ -244,23 +244,23 @@ export const PlaceBetModal: React.FC<Props> = ({
                   {txLoading ? <Loader /> : "PLACE BET"}
                 </button>
               </div>
-            </>
+            </React.Fragment>
           )}
           {txHash && (
-            <>
-              <h2 className="font-bold text-2xl mr-[8vw] mb-6">
-                Transaction result
-              </h2>
-              <Web3SuccessHandler hash={txHash} />
-            </>
+            <React.Fragment>
+              <Web3SuccessHandler
+                hash={txHash}
+                message="Your bet has been placed with"
+              />
+            </React.Fragment>
           )}
           {error && (
-            <>
-              <h2 className="font-bold text-2xl mr-[8vw] mb-6">
+            <React.Fragment>
+              <h2 className="font-bold text-2xl mr-[8vw]">
                 Transaction result
               </h2>
               <Web3ErrorHandler error={error} />
-            </>
+            </React.Fragment>
           )}
         </div>
       )}
