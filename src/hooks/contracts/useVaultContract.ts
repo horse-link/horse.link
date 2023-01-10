@@ -1,4 +1,5 @@
 import { BigNumber, ethers, Signer } from "ethers";
+import { useProvider } from "wagmi";
 import { ERC20__factory, Vault__factory } from "../../typechain";
 import { VaultInfo } from "../../types/config";
 
@@ -29,6 +30,12 @@ export const useVaultContract = () => {
     return receipt.transactionHash;
   };
 
+  const totalAssetsLocked = async (vault: VaultInfo) => {
+    const provider = useProvider();
+    const vaultContract = Vault__factory.connect(vault.address, provider);
+    return await vaultContract.totalAssetsLocked();
+  };
+
   const withdraw = async (
     vault: VaultInfo,
     amount: BigNumber,
@@ -47,6 +54,7 @@ export const useVaultContract = () => {
 
   return {
     deposit,
+    totalAssetsLocked,
     withdraw
   };
 };
