@@ -173,9 +173,12 @@ export const PlaceBetModal: React.FC<Props> = ({
         </div>
       ) : (
         <React.Fragment>
-          <h2 className="font-bold text-2xl mr-[8vw] mb-6">
-            Target Odds{" "}
-            {utils.formatting.formatToTwoDecimals(back.odds.toString())}
+          <h2 className="font-bold">
+            {runner.name ? `${runner.name} (${runner.barrier ?? " "})` : " "}
+          </h2>
+          <h2 className="font-bold mr-[8vw] mb-6">
+            {`Target Odds 
+            ${utils.formatting.formatToTwoDecimals(back.odds.toString())}`}
           </h2>
           <div className="flex flex-col">
             <h3 className="font-semibold">Markets</h3>
