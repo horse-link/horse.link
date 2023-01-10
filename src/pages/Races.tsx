@@ -25,7 +25,7 @@ export const Races: React.FC = () => {
   const [isSettleModalOpen, setIsSettleModalOpen] = useState(false);
   const [selectedRunner, setSelectedRunner] = useState<Runner>();
   const [selectedBet, setSelectedBet] = useState<BetHistory>();
-  const { runners } = useRunnersData(track, raceNumber);
+  const { race } = useRunnersData(track, raceNumber);
   const config = useConfig();
 
   const { meetDate } = useMemo(() => {
@@ -69,9 +69,12 @@ export const Races: React.FC = () => {
           <h1>Track: {track}</h1>
           <h1>Race #: {raceNumber}</h1>
           <h1>Date: {meetDate}</h1>
+          <h1>Name: {race?.raceData.name}</h1>
+          <h1>Distance: {race?.raceData.distance}</h1>
+          <h1>Class: {race?.raceData.class}</h1>
         </div>
         <RaceTable
-          runners={runners || utils.mocks.getMockRunners()}
+          runners={race?.runners || utils.mocks.getMockRunners()}
           onClickRunner={onClickRunner}
         />
       </div>

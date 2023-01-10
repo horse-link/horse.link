@@ -17,6 +17,8 @@ export const DashboardTable: React.FC<Props> = ({ meets }) => {
     ? Math.max(...meets.map(meet => meet.races.length))
     : LOADING_LENGTH;
 
+  console.log(meets);
+
   return (
     <div className="grid grid-cols-2">
       <div className="col-span-2">
@@ -60,7 +62,8 @@ export const DashboardTable: React.FC<Props> = ({ meets }) => {
                                   className={classNames({
                                     "!cursor-default":
                                       race.status === "Interim" ||
-                                      race.status === "Abandoned"
+                                      race.status === "Abandoned" ||
+                                      race.status === "Closed"
                                   })}
                                   to={
                                     race.status === "Normal"

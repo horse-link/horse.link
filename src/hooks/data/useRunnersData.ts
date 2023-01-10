@@ -7,7 +7,7 @@ export const useRunnersData = (track: string, raceNumber: number) => {
     `/runners/${track}/${raceNumber}/win`
   );
 
-  const runners = useMemo(() => {
+  const race = useMemo(() => {
     if (!data || error) return;
 
     // data.data is the SignedRunnersResponse from api
@@ -15,7 +15,7 @@ export const useRunnersData = (track: string, raceNumber: number) => {
   }, [data, error]);
 
   return {
-    runners,
+    race,
     isLoading,
     error
   };
