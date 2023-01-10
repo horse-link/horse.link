@@ -174,7 +174,7 @@ export const PlaceBetModal: React.FC<Props> = ({
       ) : (
         <React.Fragment>
           <h2 className="font-bold">
-            {runner.name ? `${runner.name} (${runner.barrier ?? "?"})` : " "}
+            {runner.name ? `${runner.name} (${runner.barrier ?? " "})` : " "}
           </h2>
           <h2 className="font-bold mr-[8vw] mb-6">
             {`Target Odds 
