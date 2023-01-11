@@ -174,25 +174,21 @@ export const PlaceBetModal: React.FC<Props> = ({
       ) : (
         <div className="lg:min-w-[28rem]">
           {!txHash && !error && (
-        <React.Fragment>
-          <h2 className="font-bold">
-            {runner.name ? `${runner.name} (${runner.barrier ?? " "})` : " "}
-          </h2>
-          <h2 className="font-bold mr-[8vw] mb-6">
-            {`Target Odds 
+            <React.Fragment>
+              <h2 className="font-bold">
+                {runner.name
+                  ? `${runner.name} (${runner.barrier ?? " "})`
+                  : " "}
+              </h2>
+              <h2 className="font-bold mr-[8vw] mb-6">
+                {`Target Odds 
             ${utils.formatting.formatToTwoDecimals(back.odds.toString())}`}
-          </h2>
-          <div className="flex flex-col">
-            <h3 className="font-semibold">Markets</h3>
-            <select
-              onChange={e => onSelectMarket(e, config)}
-              className="border-[0.12rem] border-black mt-1 mb-6 bg-white overflow-x-scroll"
-            >
-              {config.markets.map(market => (
-                <option
-                  key={market.address}
-                  className="block"
-                  value={market.address}
+              </h2>
+              <div className="flex flex-col">
+                <h3 className="font-semibold">Markets</h3>
+                <select
+                  onChange={e => onSelectMarket(e, config)}
+                  className="border-[0.12rem] border-black mt-1 mb-6 bg-white overflow-x-scroll"
                 >
                   {config.markets.map(market => (
                     <option
