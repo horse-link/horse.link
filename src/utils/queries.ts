@@ -7,6 +7,9 @@ const getOptionalAddressFilter = (address?: string) =>
 const getOptionalMarketFilter = (marketId?: string) =>
   marketId ? `marketId: "${marketId}"` : "";
 
+const getOptionalTimeFilter = (timestamp?: number) =>
+  timestamp ? `timestamp_gte: "${timestamp}"` : "";
+
 const getOptionalFilterOptions = (filter?: BetFilterOptions) => {
   switch (filter) {
     case "ALL_BETS":
@@ -87,6 +90,23 @@ export const getVaultHistoryQuery = (vaultAddress?: string) => `{
   vaultTransactions(
     where:{
       ${getOptionalAddressFilter(vaultAddress)}
+    }
+    orderBy: timestamp
+    orderDirection: desc
+  ) {
+    id
+    type
+    vaultAddress
+    userAddress
+    amount
+    timestamp
+  }
+}`;
+
+export const getVaultStatsQuery = (timestamp?: number) => `{
+  vaultTransactions(
+    where:{
+      ${getOptionalTimeFilter(timestamp)}
     }
     orderBy: timestamp
     orderDirection: desc

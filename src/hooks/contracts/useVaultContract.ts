@@ -29,6 +29,14 @@ export const useVaultContract = () => {
     return receipt.transactionHash;
   };
 
+  const totalAssetsLocked = async (
+    vault: VaultInfo,
+    provider: ethers.providers.Provider
+  ) => {
+    const vaultContract = Vault__factory.connect(vault.address, provider);
+    return vaultContract.totalAssetsLocked();
+  };
+
   const withdraw = async (
     vault: VaultInfo,
     amount: BigNumber,
@@ -47,6 +55,7 @@ export const useVaultContract = () => {
 
   return {
     deposit,
+    totalAssetsLocked,
     withdraw
   };
 };
