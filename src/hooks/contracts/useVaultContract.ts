@@ -32,7 +32,7 @@ export const useVaultContract = () => {
 
   const totalAssetsLocked = async (vault: VaultInfo, provider: Provider) => {
     const vaultContract = Vault__factory.connect(vault.address, provider);
-    return await vaultContract.totalAssetsLocked();
+    return vaultContract.totalAssetsLocked();
   };
 
   const withdraw = async (
