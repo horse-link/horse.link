@@ -4,6 +4,8 @@ import { VaultTransaction } from "../../types/entities";
 import useSubgraph from "../useSubgraph";
 import utils from "../../utils";
 import { useVaultContract } from "../contracts/useVaultContract";
+import { useConfig } from "../../providers/Config";
+import { useProvider } from "wagmi";
 
 type Response = {
   vaultTransactions: VaultTransaction[];
@@ -13,6 +15,9 @@ const MILLISECONDS_TO_SECONDS_DIVISOR = 1000;
 const SECONDS_TWENTYFOUR_HOURS = 86400;
 
 export const useVaultStatistics = () => {
+  const config = useConfig();
+  const provider = useProvider();
+  const { totalAssetsLocked } = useVaultContract();
   const yesterdayFilter = useMemo(
     () =>
       Math.floor(
@@ -33,8 +38,12 @@ export const useVaultStatistics = () => {
 
   const totalVaultDeposits = useMemo(() => {
     if (!vaultsTransactionData) return;
-    const vaultDeposits = vaultsTransactionData.filter(vaultsTransaction => vaultsTransaction.type === "deposit")
-    const amountBigNumbers = vaultDeposits.map(vaultsTransaction => BigNumber.from(vaultsTransaction.amount));
+    const vaultDeposits = vaultsTransactionData.filter(
+      vaultsTransaction => vaultsTransaction.type === "deposit"
+    );
+    const amountBigNumbers = vaultDeposits.map(vaultsTransaction =>
+      BigNumber.from(vaultsTransaction.amount)
+    );
 
     return amountBigNumbers.reduce(
       (sum, value) => sum.add(value),
@@ -44,8 +53,12 @@ export const useVaultStatistics = () => {
 
   const totalVaultWithdrawals = useMemo(() => {
     if (!vaultsTransactionData) return;
-    const vaultWithdrawals = vaultsTransactionData.filter(vaultsTransaction => vaultsTransaction.type === "withdraw")
-    const amountBigNumbers = vaultWithdrawals.map(vaultsTransaction => BigNumber.from(vaultsTransaction.amount));
+    const vaultWithdrawals = vaultsTransactionData.filter(
+      vaultsTransaction => vaultsTransaction.type === "withdraw"
+    );
+    const amountBigNumbers = vaultWithdrawals.map(vaultsTransaction =>
+      BigNumber.from(vaultsTransaction.amount)
+    );
 
     return amountBigNumbers.reduce(
       (sum, value) => sum.add(value),
@@ -60,18 +73,35 @@ export const useVaultStatistics = () => {
     return totalVaultDeposits.add(totalVaultWithdrawals);
   }, [vaultsTransactionData, totalVaultDeposits, totalVaultWithdrawals]);
 
-  const totalVaultsExposure = useMemo(() => {
-    const { totalAssetsLocked } = useVaultContract();
-    // Call the contract to get the
-    // for each vault provide info on the total assets locked
-    config
-    totalAssetsLocked()
-    return 0
-  }, [vaultsTransactionData, totalVaultDeposits, totalVaultWithdrawals]);
+  const totalVaultsExposure = useMemo(async () => {
+    console.log("vaults", config?.vaults);
+    // Call each vault to get the value of the total assets locked
+    // map over the vaults and create an array of promises for the totalAssetsLocked function
+    const promises = config?.vaults.map(async vault =>
+      totalAssetsLocked(vault, provider)
+    );
+    console.log("promises", promises);
+    // if there are no promises, return a zero value
+    if (!promises) return ethers.constants.Zero;
+    // otherwise await all promises to resolve and store the results in the variable "results"
+    const results = await Promise.all(promises);
+    console.log("results", results);
+    // reduce the results to a sum, starting with a zero value
+    return results.reduce(
+      (sum, current) => sum.add(current),
+      ethers.constants.Zero
+    );
+  }, [
+    vaultsTransactionData,
+    totalVaultDeposits,
+    totalVaultWithdrawals,
+    config?.vaults
+  ]);
 
   return {
     totalVaultDeposits,
     totalVaultWithdrawals,
-    totalVaultVolume
+    totalVaultVolume,
+    totalVaultsExposure
   };
 };

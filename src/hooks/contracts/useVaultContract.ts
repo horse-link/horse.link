@@ -1,5 +1,5 @@
 import { BigNumber, ethers, Signer } from "ethers";
-import { useProvider } from "wagmi";
+import { Provider } from "@ethersproject/abstract-provider";
 import { ERC20__factory, Vault__factory } from "../../typechain";
 import { VaultInfo } from "../../types/config";
 
@@ -30,8 +30,7 @@ export const useVaultContract = () => {
     return receipt.transactionHash;
   };
 
-  const totalAssetsLocked = async (vault: VaultInfo) => {
-    const provider = useProvider();
+  const totalAssetsLocked = async (vault: VaultInfo, provider: Provider) => {
     const vaultContract = Vault__factory.connect(vault.address, provider);
     return await vaultContract.totalAssetsLocked();
   };

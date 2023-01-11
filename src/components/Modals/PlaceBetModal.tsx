@@ -11,7 +11,6 @@ import useRefetch from "../../hooks/useRefetch";
 import utils from "../../utils";
 import { Back, Runner } from "../../types/meets";
 import { UserBalance } from "../../types/users";
-import { useVaultStatistics } from "../../hooks/stats/useVaultStatistics";
 
 type Props = {
   runner?: Runner;
@@ -166,7 +165,6 @@ export const PlaceBetModal: React.FC<Props> = ({
   const isWagerGreaterThanBalance =
     wagerAmount && userBalance ? +wagerAmount > +userBalance.formatted : false;
 
-  console.log(useVaultStatistics());
   return (
     <BaseModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
       {!config || !runner ? (
