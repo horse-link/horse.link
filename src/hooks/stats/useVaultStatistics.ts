@@ -68,8 +68,8 @@ export const useVaultStatistics = () => {
 
   const totalVaultVolume = useMemo(() => {
     if (!vaultsTransactionData) return;
-    if (!totalVaultDeposits) return ethers.constants.Zero;
-    if (!totalVaultWithdrawals) return ethers.constants.Zero;
+    if (!totalVaultDeposits || !totalVaultWithdrawals)
+      return ethers.constants.Zero;
     return totalVaultDeposits.add(totalVaultWithdrawals);
   }, [vaultsTransactionData, totalVaultDeposits, totalVaultWithdrawals]);
 
