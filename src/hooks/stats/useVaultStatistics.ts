@@ -73,9 +73,7 @@ export const useVaultStatistics = () => {
     return totalVaultDeposits.add(totalVaultWithdrawals);
   }, [vaultsTransactionData, totalVaultDeposits, totalVaultWithdrawals]);
 
-  const [totalVaultsExposure, setTotalVaultsExposure] = useState<BigNumber>(
-    ethers.constants.Zero
-  );
+  const [totalVaultsExposure, setTotalVaultsExposure] = useState<BigNumber>();
 
   useEffect(() => {
     if (!config) return;
