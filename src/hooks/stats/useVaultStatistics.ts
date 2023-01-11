@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { VaultTransaction } from "../../types/entities";
 import useSubgraph from "../useSubgraph";
 import utils from "../../utils";
-import { useVaultContract } from "../contracts/useVaultContract";
+import { useVaultContract } from "../contracts";
 import { useConfig } from "../../providers/Config";
 import { useProvider } from "wagmi";
 
