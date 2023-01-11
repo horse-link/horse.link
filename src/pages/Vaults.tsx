@@ -29,19 +29,19 @@ export const Vaults: React.FC = () => {
   return (
     <PageLayout>
       <div className="flex flex-col md:flex-row w-full justify-center text-left gap-x-1 gap-y-2 lg:gap-x-4 mb-4 lg:justify-between">
-        <Card title="24H Vault Volume" data={"69.4200"} />
+        <Card title="24H Vault Volume" data={"NaN"} />
         {/* data={totalVaultVolume && `$${utils.formatting.formatToFourDecimals(
               ethers.utils.formatEther(totalVaultVolume)
             )}`} */}
-        <Card title="Total Vault Exposure" data={"1997.2111"} />
+        <Card title="Total Vault Exposure" data={"NaN"} />
         {/* data={totalVaultsExposure && `$${utils.formatting.formatToFourDecimals(
               ethers.utils.formatEther(totalVaultsExposure)
             )}`} */}
-        <Card title="24H Deposits" data={"53.5333"} />
+        <Card title="24H Deposits" data={"NaN"} />
         {/* data={totalVaultDeposits && `$${utils.formatting.formatToFourDecimals(
               ethers.utils.formatEther(totalVaultDeposits)
             )}`} */}
-        <Card title="24H Withdrawls" data={"55.4000"} />
+        <Card title="24H Withdrawls" data={"NaN"} />
         {/* data={totalVaultWithdrawals && `$${utils.formatting.formatToFourDecimals(
               ethers.utils.formatEther(totalVaultWithdrawals)
             )}`} */}
