@@ -1,5 +1,5 @@
 import { BigNumber, ethers } from "ethers";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { VaultTransaction } from "../../types/entities";
 import useSubgraph from "../useSubgraph";
 import utils from "../../utils";
@@ -73,27 +73,21 @@ export const useVaultStatistics = () => {
     return totalVaultDeposits.add(totalVaultWithdrawals);
   }, [vaultsTransactionData, totalVaultDeposits, totalVaultWithdrawals]);
 
-  const totalVaultsExposure = useMemo(async () => {
-    // Call each vault to get the value of the total assets locked
-    // map over the vaults and create an array of promises for the totalAssetsLocked function
-    const promises = config?.vaults.map(async vault =>
-      totalAssetsLocked(vault, provider)
-    );
-    // if there are no promises, return a zero value
-    if (!promises) return ethers.constants.Zero;
-    // otherwise await all promises to resolve and store the results in the variable "results"
-    const results = await Promise.all(promises);
-    // reduce the results to a sum, starting with a zero value
-    return results.reduce(
-      (sum, current) => sum.add(current),
-      ethers.constants.Zero
-    );
-  }, [
-    vaultsTransactionData,
-    totalVaultDeposits,
-    totalVaultWithdrawals,
-    config?.vaults
-  ]);
+  const [totalVaultsExposure, setTotalVaultsExposure] = useState<BigNumber>(
+    ethers.constants.Zero
+  );
+
+  useEffect(() => {
+    if (!config) return;
+    (async () => {
+      const assets = await Promise.all(
+        config.vaults.map(v => totalAssetsLocked(v, provider))
+      );
+      setTotalVaultsExposure(
+        assets.reduce((sum, curr) => sum.add(curr), ethers.constants.Zero)
+      );
+    })();
+  }, [config, provider]);
 
   return {
     totalVaultDeposits,
