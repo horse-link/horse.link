@@ -57,7 +57,7 @@ export const Vaults: React.FC = () => {
           }
         />
         <Card
-          title="24H Withdrawls"
+          title="24H Withdrawals"
           data={
             totalVaultWithdrawals &&
             `$${utils.formatting.formatToFourDecimals(
