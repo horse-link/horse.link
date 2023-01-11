@@ -7,7 +7,6 @@ import { useAccount } from "wagmi";
 import { useWalletModal } from "../providers/WalletModal";
 import { VaultModalState, VaultTransactionType } from "../types/vaults";
 import { PageLayout } from "../components";
-import { useVaultStatistics } from "../hooks/stats/useVaultStatistics";
 
 export const Vaults: React.FC = () => {
   const [modal, setModal] = useState<VaultModalState>();
@@ -17,22 +16,6 @@ export const Vaults: React.FC = () => {
   const { openWalletModal } = useWalletModal();
 
   const closeModal = () => setModal(undefined);
-
-  const {
-    totalVaultDeposits,
-    totalVaultWithdrawals,
-    totalVaultVolume,
-    totalVaultsExposure
-  } = useVaultStatistics();
-
-  totalVaultsExposure.then(res => {
-    console.log("totalVaultsExposure", res, res?.toString());
-  });
-
-  // console.log("totalVaultDeposits", totalVaultDeposits?.toString());
-  // console.log("totalVaultWithdrawals", totalVaultWithdrawals?.toString());
-  // console.log("totalVaultVolume", totalVaultVolume?.toString());
-  // console.log("totalVaultsExposure", totalVaultsExposure);
 
   return (
     <PageLayout>

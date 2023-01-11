@@ -74,18 +74,15 @@ export const useVaultStatistics = () => {
   }, [vaultsTransactionData, totalVaultDeposits, totalVaultWithdrawals]);
 
   const totalVaultsExposure = useMemo(async () => {
-    console.log("vaults", config?.vaults);
     // Call each vault to get the value of the total assets locked
     // map over the vaults and create an array of promises for the totalAssetsLocked function
     const promises = config?.vaults.map(async vault =>
       totalAssetsLocked(vault, provider)
     );
-    console.log("promises", promises);
     // if there are no promises, return a zero value
     if (!promises) return ethers.constants.Zero;
     // otherwise await all promises to resolve and store the results in the variable "results"
     const results = await Promise.all(promises);
-    console.log("results", results);
     // reduce the results to a sum, starting with a zero value
     return results.reduce(
       (sum, current) => sum.add(current),
