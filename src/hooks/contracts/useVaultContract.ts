@@ -1,5 +1,4 @@
 import { BigNumber, ethers, Signer } from "ethers";
-import { Provider } from "@ethersproject/abstract-provider";
 import { ERC20__factory, Vault__factory } from "../../typechain";
 import { VaultInfo } from "../../types/config";
 
@@ -30,7 +29,10 @@ export const useVaultContract = () => {
     return receipt.transactionHash;
   };
 
-  const totalAssetsLocked = async (vault: VaultInfo, provider: Provider) => {
+  const totalAssetsLocked = async (
+    vault: VaultInfo,
+    provider: ethers.providers.Provider
+  ) => {
     const vaultContract = Vault__factory.connect(vault.address, provider);
     return vaultContract.totalAssetsLocked();
   };
