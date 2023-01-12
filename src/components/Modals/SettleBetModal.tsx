@@ -139,27 +139,37 @@ export const SettleBetModal: React.FC<Props> = ({
                 </span>
               </h3>
             )}
-            <button
-              className="w-full font-bold border-black border-2 py-2 rounded-md relative top-6 hover:text-white hover:bg-black transition-colors duration-100 disabled:text-black/50 disabled:border-black/50 disabled:bg-white"
-              onClick={onClickSettleBet}
-              disabled={
-                !signer ||
-                selectedBet.settled ||
-                !selectedBet.marketOracleResultSig ||
-                !isPayable ||
-                txLoading ||
-                !!txHash
-              }
-            >
-              {txLoading ? <Loader /> : "SETTLE BET"}
-            </button>
-            {!selectedBet.marketResultAdded && (
-              <span className="block relative top-[1.8rem] text-xs text-black/80">
-                Note: will require two transactions to add market results first
-              </span>
+            {!txHash && !error && (
+              <React.Fragment>
+                <button
+                  className="w-full font-bold border-black border-2 py-2 rounded-md relative top-6 hover:text-white hover:bg-black transition-colors duration-100 disabled:text-black/50 disabled:border-black/50 disabled:bg-white"
+                  onClick={onClickSettleBet}
+                  disabled={
+                    !signer ||
+                    selectedBet.settled ||
+                    !selectedBet.marketOracleResultSig ||
+                    !isPayable ||
+                    txLoading ||
+                    !!txHash
+                  }
+                >
+                  {txLoading ? <Loader /> : "SETTLE BET"}
+                </button>
+                {!selectedBet.marketResultAdded && (
+                  <span className="block relative top-[1.8rem] text-xs text-black/80">
+                    Note: will require two transactions to add market results
+                    first
+                  </span>
+                )}
+                <br />
+              </React.Fragment>
             )}
-            <br />
-            {txHash && <Web3SuccessHandler hash={txHash} />}
+            {txHash && (
+              <Web3SuccessHandler
+                hash={txHash}
+                message="Your settlement has been placed with"
+              />
+            )}
             {error && <Web3ErrorHandler error={error} />}
           </div>
         </React.Fragment>

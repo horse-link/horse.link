@@ -6,7 +6,10 @@ import { DepositVaultModal, WithdrawVaultModal } from "../components/Modals";
 import { useAccount } from "wagmi";
 import { useWalletModal } from "../providers/WalletModal";
 import { VaultModalState, VaultTransactionType } from "../types/vaults";
-import { PageLayout } from "../components";
+import { Card, PageLayout } from "../components";
+import utils from "../utils";
+import { ethers } from "ethers";
+import { useVaultStatistics } from "../hooks/stats/useVaultStatistics";
 
 export const Vaults: React.FC = () => {
   const [modal, setModal] = useState<VaultModalState>();
@@ -16,9 +19,53 @@ export const Vaults: React.FC = () => {
   const { openWalletModal } = useWalletModal();
 
   const closeModal = () => setModal(undefined);
+  const {
+    totalVaultDeposits,
+    totalVaultWithdrawals,
+    totalVaultVolume,
+    totalVaultsExposure
+  } = useVaultStatistics();
 
   return (
     <PageLayout>
+      <div className="flex flex-col md:flex-row w-full justify-center text-left gap-x-1 gap-y-2 lg:gap-x-4 mb-4 lg:justify-between">
+        <Card
+          title="24H Vault Volume"
+          data={
+            totalVaultVolume &&
+            `$${utils.formatting.formatToFourDecimals(
+              ethers.utils.formatEther(totalVaultVolume)
+            )}`
+          }
+        />
+        <Card
+          title="Total Vault Exposure"
+          data={
+            totalVaultsExposure &&
+            `$${utils.formatting.formatToFourDecimals(
+              ethers.utils.formatEther(totalVaultsExposure)
+            )}`
+          }
+        />
+        <Card
+          title="24H Deposits"
+          data={
+            totalVaultDeposits &&
+            `$${utils.formatting.formatToFourDecimals(
+              ethers.utils.formatEther(totalVaultDeposits)
+            )}`
+          }
+        />
+        <Card
+          title="24H Withdrawals"
+          data={
+            totalVaultWithdrawals &&
+            `$${utils.formatting.formatToFourDecimals(
+              ethers.utils.formatEther(totalVaultWithdrawals)
+            )}`
+          }
+        />
+      </div>
       <div className="flex flex-col">
         <h3 className="text-lg mb-3 font-medium text-gray-900">
           Vaults / Liquidity Pools

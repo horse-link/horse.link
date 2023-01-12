@@ -138,7 +138,7 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "id",
+        "name": "index",
         "type": "uint256"
       },
       {
@@ -156,7 +156,7 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "owner",
+        "name": "recipient",
         "type": "address"
       }
     ],
@@ -318,9 +318,9 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "index",
-        "type": "uint256"
+        "type": "uint64"
       }
     ],
     "name": "getBetByIndex",
@@ -369,9 +369,9 @@
     "name": "getCount",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "",
-        "type": "uint256"
+        "type": "uint64"
       }
     ],
     "stateMutability": "view",
@@ -381,7 +381,7 @@
     "inputs": [
       {
         "internalType": "uint64",
-        "name": "id",
+        "name": "index",
         "type": "uint64"
       }
     ],
@@ -512,25 +512,6 @@
       }
     ],
     "name": "getPotentialPayout",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes16",
-        "name": "marketId",
-        "type": "bytes16"
-      }
-    ],
-    "name": "getRiskCoefficient",
     "outputs": [
       {
         "internalType": "uint256",
@@ -786,17 +767,12 @@
   {
     "inputs": [
       {
-        "internalType": "bytes16",
-        "name": "marketId",
-        "type": "bytes16"
-      },
-      {
-        "internalType": "uint256",
-        "name": "risk",
-        "type": "uint256"
+        "internalType": "uint64",
+        "name": "index",
+        "type": "uint64"
       }
     ],
-    "name": "setRiskCoefficient",
+    "name": "settle",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -804,12 +780,12 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "index",
-        "type": "uint256"
+        "internalType": "bytes16",
+        "name": "marketId",
+        "type": "bytes16"
       }
     ],
-    "name": "settle",
+    "name": "settleMarket",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

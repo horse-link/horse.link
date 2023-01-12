@@ -6,7 +6,6 @@ import { useWalletModal } from "../providers/WalletModal";
 import moment from "moment";
 import { RaceTable } from "../components/Races";
 import { PlaceBetModal, SettleBetModal } from "../components/Modals";
-import utils from "../utils";
 import { Runner } from "../types/meets";
 import { PageLayout } from "../components";
 import { useSubgraphBets } from "../hooks/subgraph";
@@ -74,10 +73,7 @@ export const Races: React.FC = () => {
           <h1>Distance: {race ? race.raceData.distance : <Skeleton />}</h1>
           <h1>Class: {race ? race.raceData.class : <Skeleton />}</h1>
         </div>
-        <RaceTable
-          runners={race?.runners || utils.mocks.getMockRunners()}
-          onClickRunner={onClickRunner}
-        />
+        <RaceTable runners={race?.runners} onClickRunner={onClickRunner} />
       </div>
       <div className="flex flex-col gap-6">
         <h1 className="text-2xl font-bold mt-4">History</h1>
