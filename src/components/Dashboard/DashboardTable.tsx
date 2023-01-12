@@ -17,8 +17,6 @@ export const DashboardTable: React.FC<Props> = ({ meets }) => {
     ? Math.max(...meets.map(meet => meet.races.length))
     : LOADING_LENGTH;
 
-  console.log(meets);
-
   return (
     <div className="grid grid-cols-2">
       <div className="col-span-2">
