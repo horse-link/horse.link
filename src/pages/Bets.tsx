@@ -59,7 +59,7 @@ export const Bets: React.FC = () => {
           }
         />
       </div>
-      <div className="w-full lg:justify-between lg:flex p-3">
+      <div className="w-full lg:justify-between lg:flex p-3 mb-3">
         <h3 className="text-lg font-medium text-gray-900 flex items-center my-3">
           Bets History
         </h3>
