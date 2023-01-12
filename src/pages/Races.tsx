@@ -1,11 +1,11 @@
 import { useMemo, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useRunnersData } from "../hooks/data";
 import { useAccount } from "wagmi";
 import { useWalletModal } from "../providers/WalletModal";
 import { RaceTable, RacesButton } from "../components/Races";
 import { PlaceBetModal, SettleBetModal } from "../components/Modals";
-import { Runner, RaceInfo } from "../types/meets";
+import { Runner } from "../types/meets";
 import { PageLayout } from "../components";
 import { useSubgraphBets } from "../hooks/subgraph";
 import { useMeetData } from "../hooks/data";
@@ -56,7 +56,6 @@ export const Races: React.FC = () => {
         {params && meetRaces && (
           <RacesButton params={params} meetRaces={meetRaces} />
         )}
-        {params && meetRaces && <h1>Hello!</h1>}
         <div className="flex p-2 shadow overflow-hidden border-b bg-white border-gray-200 sm:rounded-lg justify-around">
           <h1>Track: {track}</h1>
           <h1>Race #: {raceNumber}</h1>
