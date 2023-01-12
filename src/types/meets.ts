@@ -71,6 +71,17 @@ export type MeetResponse = {
   meetings: Meet[];
 };
 
+export type RaceInfo = {
+  raceNumber: number;
+  raceName: string;
+  raceClassConditions: string;
+  raceDistance: number;
+  raceStartTime: string;
+  status: "Abandoned" | "Interim" | "Normal" | "Paying";
+};
+
+export type RacesResponse = RaceInfo[];
+
 export type Back = {
   nonce: string;
   market_id: string;

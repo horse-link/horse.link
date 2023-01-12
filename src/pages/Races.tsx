@@ -1,23 +1,28 @@
 import { useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useRunnersData } from "../hooks/data";
-import moment from "moment";
-import { RaceTable } from "../components/Races";
+import { useAccount } from "wagmi";
+import { useWalletModal } from "../providers/WalletModal";
+import { RaceTable, RacesButton } from "../components/Races";
 import { PlaceBetModal, SettleBetModal } from "../components/Modals";
-import { Runner } from "../types/meets";
+import { Runner, RaceInfo } from "../types/meets";
 import { PageLayout } from "../components";
 import { useSubgraphBets } from "../hooks/subgraph";
+import { useMeetData } from "../hooks/data";
 import { BetHistory } from "../types/bets";
 import { BetTable } from "../components/Bets";
 import { makeMarketId } from "../utils/markets";
 import { formatBytes16String } from "../utils/formatting";
 import { useConfig } from "../providers/Config";
 import Skeleton from "react-loading-skeleton";
+import classNames from "classnames";
+import dayjs from "dayjs";
 
 export const Races: React.FC = () => {
   const params = useParams();
   const track = params.track || "";
   const raceNumber = Number(params.number) || 0;
+  const meetRaces = useMeetData(params.track || "");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSettleModalOpen, setIsSettleModalOpen] = useState(false);
@@ -27,7 +32,7 @@ export const Races: React.FC = () => {
   const config = useConfig();
 
   const { meetDate } = useMemo(() => {
-    const meetDate = moment().format("DD-MM-YY");
+    const meetDate = dayjs().format("DD-MM-YY");
     return { config, meetDate };
   }, []);
 
@@ -48,6 +53,10 @@ export const Races: React.FC = () => {
         setIsModalOpen={setIsModalOpen}
       />
       <div className="flex flex-col gap-6">
+        {params && meetRaces && (
+          <RacesButton params={params} meetRaces={meetRaces} />
+        )}
+        {params && meetRaces && <h1>Hello!</h1>}
         <div className="flex p-2 shadow overflow-hidden border-b bg-white border-gray-200 sm:rounded-lg justify-around">
           <h1>Track: {track}</h1>
           <h1>Race #: {raceNumber}</h1>
