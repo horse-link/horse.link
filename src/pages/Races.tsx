@@ -73,7 +73,10 @@ export const Races: React.FC = () => {
           <h1>Distance: {race ? race.raceData.distance : <Skeleton />}</h1>
           <h1>Class: {race ? race.raceData.class : <Skeleton />}</h1>
         </div>
-        <RaceTable runners={race?.runners} onClickRunner={onClickRunner} />
+        <RaceTable
+          runners={race?.runners}
+          onClickRunner={() => onClickRunner}
+        />
       </div>
       <div className="flex flex-col gap-6">
         <h1 className="text-2xl font-bold mt-4">History</h1>
