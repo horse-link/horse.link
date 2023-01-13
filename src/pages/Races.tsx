@@ -14,12 +14,7 @@ import { formatBytes16String } from "../utils/formatting";
 import { useConfig } from "../providers/Config";
 import Skeleton from "react-loading-skeleton";
 
-type Props = {
-  setSelectedRunner: (runner?: Runner) => void;
-  setIsModalOpen: boolean;
-};
-
-export const Races: React.FC<Props> = () => {
+export const Races: React.FC = () => {
   const params = useParams();
   const track = params.track || "";
   const raceNumber = Number(params.number) || 0;
