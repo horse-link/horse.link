@@ -95,6 +95,17 @@ export const useMarketContract = () => {
     return receipt.transactionHash;
   };
 
+  const settleMarket = async (
+    market: MarketInfo,
+    marketId: string,
+    signer: Signer
+  ) => {
+    const marketContract = Market__factory.connect(market.address, signer);
+    const receipt = await (await marketContract.settleMarket(marketId)).wait();
+
+    return receipt.transactionHash;
+  };
+
   const getPotentialPayout = async (
     market: MarketInfo,
     wager: BigNumber,
@@ -115,6 +126,7 @@ export const useMarketContract = () => {
   return {
     placeBet,
     settleBet,
+    settleMarket,
     getPotentialPayout
   };
 };

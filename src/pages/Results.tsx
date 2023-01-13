@@ -12,6 +12,7 @@ import { formatBytes16String } from "../utils/formatting";
 import { useConfig } from "../providers/Config";
 import utils from "../utils";
 import { useSubgraphBets } from "../hooks/subgraph";
+import { useMarketContract } from "../hooks/contracts";
 
 export const Results: React.FC = () => {
   const [isSettleModalOpen, setIsSettleModalOpen] = useState(false);
@@ -35,6 +36,26 @@ export const Results: React.FC = () => {
   );
 
   const results = useResultsData(propositionId);
+  const { settleMarket } = useMarketContract();
+
+  const onClickSettleMarket = async () => {
+    const tx = await settleMarket(vault, amount, signer);
+    // if (!depositAmount || !userBalance || !signer) return;
+
+    // const amount = ethers.utils.parseUnits(depositAmount, userBalance.decimals);
+    // setTxHash(undefined);
+    // setError(undefined);
+
+    // try {
+    //   setTxLoading(true);
+    //   const tx = await deposit(vault, amount, signer);
+    //   setTxHash(tx);
+    // } catch (err: any) {
+    //   setError(err);
+    // } finally {
+    //   setTxLoading(false);
+    // }
+  };
 
   return (
     <PageLayout>
@@ -62,7 +83,14 @@ export const Results: React.FC = () => {
           setSelectedBet={setSelectedBet}
           setIsModalOpen={setIsSettleModalOpen}
         />
+        <button
+          className="px-4 font-bold border-black border-2 py-1 rounded-md hover:text-white hover:bg-black transition-colors duration-100 mr-4"
+          onClick={() => onClickSettleMarket()}
+        >
+          Settle Market
+        </button>
       </div>
+      <div className="flex flex-col gap-6"></div>
       <SettleBetModal
         isModalOpen={isSettleModalOpen}
         setIsModalOpen={setIsSettleModalOpen}
