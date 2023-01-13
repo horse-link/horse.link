@@ -47,9 +47,7 @@ export const Results: React.FC = () => {
   return (
     <PageLayout>
       <div className="rounded-lg gap-6">
-        {params && meetRaces && (
-          <RacesButton params={raceParams} meetRaces={meetRaces} />
-        )}
+        <RacesButton params={raceParams} meetRaces={meetRaces} />
         <h1 className="font-semibold text-3xl mb-10 mt-2">
           {details.track} {details.race} Results{" "}
           <span className="block text-lg text-black/50">

@@ -17,6 +17,7 @@ import { useConfig } from "../providers/Config";
 import Skeleton from "react-loading-skeleton";
 import classNames from "classnames";
 import dayjs from "dayjs";
+import Skeleton from "react-loading-skeleton";
 
 export const Races: React.FC = () => {
   const params = useParams();
@@ -53,9 +54,8 @@ export const Races: React.FC = () => {
         setIsModalOpen={setIsModalOpen}
       />
       <div className="flex flex-col gap-6">
-        {params && meetRaces && (
-          <RacesButton params={params} meetRaces={meetRaces} />
-        )}
+        <RacesButton params={params} meetRaces={meetRaces} />
+
         <div className="flex p-2 shadow overflow-hidden border-b bg-white border-gray-200 sm:rounded-lg justify-around">
           <h1>Track: {track}</h1>
           <h1>Race #: {raceNumber}</h1>

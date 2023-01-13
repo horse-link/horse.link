@@ -77,7 +77,7 @@ export type RaceInfo = {
   raceClassConditions: string;
   raceDistance: number;
   raceStartTime: string;
-  raceStatus: "Abandoned" | "Interim" | "Normal" | "Paying";
+  raceStatus: "Abandoned" | "Interim" | "Normal" | "Paying" | "Closed";
 };
 
 export type RacesResponse = RaceInfo[];
