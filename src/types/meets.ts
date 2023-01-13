@@ -24,6 +24,7 @@ export type NextToJump = {
     jumperMeetingName: string;
     location: string;
     raceType: string;
+    venueCode: string;
   };
 };
 
