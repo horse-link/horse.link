@@ -68,6 +68,7 @@ export const RaceTable: React.FC<Props> = ({
               <tbody className="bg-white divide-y divide-gray-200">
                 {openBetRunners.map(runner => (
                   <RaceTableRow
+                    key={runner?.name}
                     runner={runner}
                     setIsModalOpen={setIsModalOpen}
                     setSelectedRunner={setSelectedRunner}
@@ -77,6 +78,7 @@ export const RaceTable: React.FC<Props> = ({
                 ))}
                 {scratchedRunners?.map(runner => (
                   <RaceTableRow
+                    key={runner?.name}
                     runner={runner}
                     setIsModalOpen={setIsModalOpen}
                     setSelectedRunner={setSelectedRunner}
