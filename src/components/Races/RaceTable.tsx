@@ -1,8 +1,8 @@
 import { Runner } from "../../types/meets";
 import { RaceTableRow } from ".";
 import utils from "../../utils";
-import { useAccount } from "wagmi";
 import { useWalletModal } from "../../providers/WalletModal";
+import { useAccount } from "wagmi";
 
 type Props = {
   runners?: Runner[];
@@ -10,8 +10,6 @@ type Props = {
   setIsModalOpen: (open: boolean) => void;
 };
 
-const { isConnected } = useAccount();
-const { openWalletModal } = useWalletModal();
 const isScratchedRunner = (runner: Runner) =>
   ["LateScratched", "Scratched"].includes(runner.status);
 
@@ -20,6 +18,8 @@ export const RaceTable: React.FC<Props> = ({
   setIsModalOpen,
   setSelectedRunner
 }) => {
+  const { isConnected } = useAccount();
+  const { openWalletModal } = useWalletModal();
   const openBetRunners =
     runners?.filter(runner => !isScratchedRunner(runner)) ??
     utils.mocks.getMockRunners();
