@@ -53,7 +53,9 @@ export const Races: React.FC = () => {
           <h1>Race #: {raceNumber}</h1>
           <h1>Date: {meetDate}</h1>
           <h1>Name: {race ? race.raceData.name : <Skeleton />}</h1>
-          <h1>Distance: {race ? race.raceData.distance : <Skeleton />}</h1>
+          <h1>
+            Distance: {`${race ? race.raceData.distance : <Skeleton />}m`}
+          </h1>
           <h1>Class: {race ? race.raceData.class : <Skeleton />}</h1>
         </div>
         <RaceTable
