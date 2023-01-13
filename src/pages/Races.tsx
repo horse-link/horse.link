@@ -13,6 +13,7 @@ import { makeMarketId } from "../utils/markets";
 import { formatBytes16String } from "../utils/formatting";
 import { useConfig } from "../providers/Config";
 import Skeleton from "react-loading-skeleton";
+import { ethers } from "ethers";
 
 export const Races: React.FC = () => {
   const params = useParams();
@@ -40,6 +41,44 @@ export const Races: React.FC = () => {
     b16MarketId
   );
 
+  const totalBetsOnPropositions = useMemo(() => {
+    if (!betHistory) return {};
+    const firstScan = betHistory.reduce(
+      (acc, bet) => {
+        const { propositionId, amount: rawAmount } = bet;
+        const amount = +ethers.utils.formatEther(rawAmount);
+        if (!acc[propositionId]) {
+          acc[propositionId] = 0;
+        }
+        acc[propositionId] += amount;
+        acc["total"] += amount;
+        return acc;
+      },
+      { total: 0 } as Record<string, number>
+    );
+    // calculate how much proposition in percentage compare to total
+    const secondScan = Object.keys(firstScan).reduce(
+      (acc, key) => {
+        if (key === "total") return acc;
+        const amount = firstScan[key];
+        acc[key] = {
+          amount,
+          percentage: (amount / firstScan.total) * 100
+        };
+        return acc;
+      },
+      {} as Record<
+        string,
+        {
+          amount: number;
+          percentage: number;
+        }
+      >
+    );
+
+    return secondScan;
+  }, [betHistory]);
+
   return (
     <PageLayout>
       <PlaceBetModal
@@ -60,6 +99,7 @@ export const Races: React.FC = () => {
           runners={race?.runners}
           setSelectedRunner={setSelectedRunner}
           setIsModalOpen={setIsModalOpen}
+          totalBetsOnPropositions={totalBetsOnPropositions}
         />
       </div>
       <div className="flex flex-col gap-6">

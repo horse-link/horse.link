@@ -1,4 +1,5 @@
 import classnames from "classnames";
+import { ethers } from "ethers";
 import React from "react";
 import Skeleton from "react-loading-skeleton";
 import { Runner } from "../../types/meets";
@@ -11,6 +12,10 @@ type Props = {
   isConnected: boolean;
   setSelectedRunner: (runner?: Runner) => void;
   setIsModalOpen: (open: boolean) => void;
+  betData: {
+    amount: number;
+    percentage: number;
+  };
 };
 
 export const RaceTableRow: React.FC<Props> = ({
@@ -19,7 +24,8 @@ export const RaceTableRow: React.FC<Props> = ({
   setIsModalOpen,
   setSelectedRunner,
   openWalletModal,
-  isConnected
+  isConnected,
+  betData
 }) => {
   const openDialog = () => {
     if (!isConnected) return openWalletModal();
@@ -33,6 +39,10 @@ export const RaceTableRow: React.FC<Props> = ({
   };
   const { number, name, barrier, odds, handicapWeight, last5Starts } =
     runner || {};
+
+  const { amount: betAmount, percentage: betPercentage } = betData || {};
+
+  // const formattedBetAmount = ethers.utils.formatEther(betData?.amount ?? 0);
 
   return (
     <tr
@@ -80,6 +90,24 @@ export const RaceTableRow: React.FC<Props> = ({
         ) : (
           <Skeleton width="2em" />
         )}
+      </td>
+      <td
+        className={classnames("px-2 py-4 whitespace-nowrap", {
+          "line-through": isScratched
+        })}
+      >
+        {betAmount ? (
+          `$ ${betAmount.toLocaleString()}`
+        ) : (
+          <Skeleton width="2em" />
+        )}
+      </td>
+      <td
+        className={classnames("px-2 py-4 whitespace-nowrap", {
+          "line-through": isScratched
+        })}
+      >
+        {betPercentage ? `${betPercentage} %` : <Skeleton width="2em" />}
       </td>
     </tr>
   );
