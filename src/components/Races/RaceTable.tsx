@@ -1,20 +1,40 @@
 import { Runner } from "../../types/meets";
 import { RaceTableRow } from ".";
 import utils from "../../utils";
+import { useAccount } from "wagmi";
+import { useWalletModal } from "../../providers/WalletModal";
 
 type Props = {
   runners?: Runner[];
-  onClickRunner: (runner?: Runner) => void;
+  setSelectedRunner: (runner?: Runner) => void;
+  setIsModalOpen: (open: boolean) => void;
 };
 
+const { isConnected } = useAccount();
+const { openWalletModal } = useWalletModal();
 const isScratchedRunner = (runner: Runner) =>
   ["LateScratched", "Scratched"].includes(runner.status);
 
-export const RaceTable: React.FC<Props> = ({ runners, onClickRunner }) => {
+export const RaceTable: React.FC<Props> = ({
+  runners,
+  setIsModalOpen,
+  setSelectedRunner
+}) => {
   const openBetRunners =
     runners?.filter(runner => !isScratchedRunner(runner)) ??
     utils.mocks.getMockRunners();
   const scratchedRunners = runners?.filter(isScratchedRunner);
+
+  const openDialog = () => {
+    if (!isConnected) return openWalletModal();
+
+    setIsModalOpen(true);
+  };
+  const onClickRunner = (runner?: Runner) => {
+    if (!runner) return;
+    setSelectedRunner(runner);
+    openDialog();
+  };
 
   return (
     <div className="flex flex-col">

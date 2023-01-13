@@ -1,8 +1,6 @@
 import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useRunnersData } from "../hooks/data";
-import { useAccount } from "wagmi";
-import { useWalletModal } from "../providers/WalletModal";
 import moment from "moment";
 import { RaceTable } from "../components/Races";
 import { PlaceBetModal, SettleBetModal } from "../components/Modals";
@@ -16,7 +14,12 @@ import { formatBytes16String } from "../utils/formatting";
 import { useConfig } from "../providers/Config";
 import Skeleton from "react-loading-skeleton";
 
-export const Races: React.FC = () => {
+type Props = {
+  setSelectedRunner: (runner?: Runner) => void;
+  setIsModalOpen: boolean;
+};
+
+export const Races: React.FC<Props> = () => {
   const params = useParams();
   const track = params.track || "";
   const raceNumber = Number(params.number) || 0;
@@ -42,21 +45,6 @@ export const Races: React.FC = () => {
     b16MarketId
   );
 
-  const { isConnected } = useAccount();
-  const { openWalletModal } = useWalletModal();
-
-  const openDialog = () => {
-    if (!isConnected) return openWalletModal();
-
-    setIsModalOpen(true);
-  };
-
-  const onClickRunner = (runner?: Runner) => {
-    if (!runner) return;
-    setSelectedRunner(runner);
-    openDialog();
-  };
-
   return (
     <PageLayout>
       <PlaceBetModal
@@ -75,7 +63,8 @@ export const Races: React.FC = () => {
         </div>
         <RaceTable
           runners={race?.runners}
-          onClickRunner={() => onClickRunner}
+          setSelectedRunner={setSelectedRunner}
+          setIsModalOpen={setIsModalOpen}
         />
       </div>
       <div className="flex flex-col gap-6">
