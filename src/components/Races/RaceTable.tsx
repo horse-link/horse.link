@@ -25,17 +25,6 @@ export const RaceTable: React.FC<Props> = ({
     utils.mocks.getMockRunners();
   const scratchedRunners = runners?.filter(isScratchedRunner);
 
-  const openDialog = () => {
-    if (!isConnected) return openWalletModal();
-
-    setIsModalOpen(true);
-  };
-  const onClickRunner = (runner?: Runner) => {
-    if (!runner) return;
-    setSelectedRunner(runner);
-    openDialog();
-  };
-
   return (
     <div className="flex flex-col">
       <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -78,13 +67,22 @@ export const RaceTable: React.FC<Props> = ({
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {openBetRunners.map(runner => (
-                  <RaceTableRow runner={runner} onClick={onClickRunner} />
+                  <RaceTableRow
+                    runner={runner}
+                    setIsModalOpen={setIsModalOpen}
+                    setSelectedRunner={setSelectedRunner}
+                    isConnected={isConnected}
+                    openWalletModal={openWalletModal}
+                  />
                 ))}
                 {scratchedRunners?.map(runner => (
                   <RaceTableRow
                     runner={runner}
-                    onClick={onClickRunner}
-                    isScratched={true}
+                    setIsModalOpen={setIsModalOpen}
+                    setSelectedRunner={setSelectedRunner}
+                    isConnected={isConnected}
+                    openWalletModal={openWalletModal}
+                    isScratched
                   />
                 ))}
               </tbody>
