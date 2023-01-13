@@ -1,8 +1,6 @@
 import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useRunnersData } from "../hooks/data";
-import { useAccount } from "wagmi";
-import { useWalletModal } from "../providers/WalletModal";
 import moment from "moment";
 import { RaceTable } from "../components/Races";
 import { PlaceBetModal, SettleBetModal } from "../components/Modals";
@@ -14,6 +12,7 @@ import { BetTable } from "../components/Bets";
 import { makeMarketId } from "../utils/markets";
 import { formatBytes16String } from "../utils/formatting";
 import { useConfig } from "../providers/Config";
+import Skeleton from "react-loading-skeleton";
 
 export const Races: React.FC = () => {
   const params = useParams();
@@ -24,7 +23,7 @@ export const Races: React.FC = () => {
   const [isSettleModalOpen, setIsSettleModalOpen] = useState(false);
   const [selectedRunner, setSelectedRunner] = useState<Runner>();
   const [selectedBet, setSelectedBet] = useState<BetHistory>();
-  const { runners } = useRunnersData(track, raceNumber);
+  const { race } = useRunnersData(track, raceNumber);
   const config = useConfig();
 
   const { meetDate } = useMemo(() => {
@@ -41,21 +40,6 @@ export const Races: React.FC = () => {
     b16MarketId
   );
 
-  const { isConnected } = useAccount();
-  const { openWalletModal } = useWalletModal();
-
-  const openDialog = () => {
-    if (!isConnected) return openWalletModal();
-
-    setIsModalOpen(true);
-  };
-
-  const onClickRunner = (runner?: Runner) => {
-    if (!runner) return;
-    setSelectedRunner(runner);
-    openDialog();
-  };
-
   return (
     <PageLayout>
       <PlaceBetModal
@@ -68,8 +52,15 @@ export const Races: React.FC = () => {
           <h1>Track: {track}</h1>
           <h1>Race #: {raceNumber}</h1>
           <h1>Date: {meetDate}</h1>
+          <h1>Name: {race ? race.raceData.name : <Skeleton />}</h1>
+          <h1>Distance: {race ? race.raceData.distance : <Skeleton />}</h1>
+          <h1>Class: {race ? race.raceData.class : <Skeleton />}</h1>
         </div>
-        <RaceTable runners={runners} onClickRunner={onClickRunner} />
+        <RaceTable
+          runners={race?.runners}
+          setSelectedRunner={setSelectedRunner}
+          setIsModalOpen={setIsModalOpen}
+        />
       </div>
       <div className="flex flex-col gap-6">
         <h1 className="text-2xl font-bold mt-4">History</h1>

@@ -60,7 +60,8 @@ export const DashboardTable: React.FC<Props> = ({ meets }) => {
                                   className={classNames({
                                     "!cursor-default":
                                       race.status === "Interim" ||
-                                      race.status === "Abandoned"
+                                      race.status === "Abandoned" ||
+                                      race.status === "Closed"
                                   })}
                                   to={
                                     race.status === "Normal"

@@ -6,15 +6,31 @@ import utils from "../../utils";
 
 type Props = {
   runner?: Runner;
-  onClick: (runner?: Runner) => void;
   isScratched?: boolean;
+  openWalletModal: () => void;
+  isConnected: boolean;
+  setSelectedRunner: (runner?: Runner) => void;
+  setIsModalOpen: (open: boolean) => void;
 };
 
 export const RaceTableRow: React.FC<Props> = ({
   runner,
-  onClick,
-  isScratched
+  isScratched,
+  setIsModalOpen,
+  setSelectedRunner,
+  openWalletModal,
+  isConnected
 }) => {
+  const openDialog = () => {
+    if (!isConnected) return openWalletModal();
+
+    setIsModalOpen(true);
+  };
+  const onClickRunner = (runner?: Runner) => {
+    if (!runner) return;
+    setSelectedRunner(runner);
+    openDialog();
+  };
   const { number, name, barrier, odds, handicapWeight, last5Starts } =
     runner || {};
 
@@ -25,7 +41,7 @@ export const RaceTableRow: React.FC<Props> = ({
       })}
       onClick={() => {
         if (!isScratched) {
-          onClick(runner);
+          onClickRunner(runner);
         }
       }}
     >

@@ -1,16 +1,25 @@
 import { Runner } from "../../types/meets";
 import { RaceTableRow } from ".";
 import utils from "../../utils";
+import { useWalletModal } from "../../providers/WalletModal";
+import { useAccount } from "wagmi";
 
 type Props = {
   runners?: Runner[];
-  onClickRunner: (runner?: Runner) => void;
+  setSelectedRunner: (runner?: Runner) => void;
+  setIsModalOpen: (open: boolean) => void;
 };
 
 const isScratchedRunner = (runner: Runner) =>
   ["LateScratched", "Scratched"].includes(runner.status);
 
-export const RaceTable: React.FC<Props> = ({ runners, onClickRunner }) => {
+export const RaceTable: React.FC<Props> = ({
+  runners,
+  setIsModalOpen,
+  setSelectedRunner
+}) => {
+  const { isConnected } = useAccount();
+  const { openWalletModal } = useWalletModal();
   const openBetRunners =
     runners?.filter(runner => !isScratchedRunner(runner)) ??
     utils.mocks.getMockRunners();
@@ -58,13 +67,24 @@ export const RaceTable: React.FC<Props> = ({ runners, onClickRunner }) => {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {openBetRunners.map(runner => (
-                  <RaceTableRow runner={runner} onClick={onClickRunner} />
+                  <RaceTableRow
+                    key={runner?.name}
+                    runner={runner}
+                    setIsModalOpen={setIsModalOpen}
+                    setSelectedRunner={setSelectedRunner}
+                    isConnected={isConnected}
+                    openWalletModal={openWalletModal}
+                  />
                 ))}
                 {scratchedRunners?.map(runner => (
                   <RaceTableRow
+                    key={runner?.name}
                     runner={runner}
-                    onClick={onClickRunner}
-                    isScratched={true}
+                    setIsModalOpen={setIsModalOpen}
+                    setSelectedRunner={setSelectedRunner}
+                    isConnected={isConnected}
+                    openWalletModal={openWalletModal}
+                    isScratched
                   />
                 ))}
               </tbody>

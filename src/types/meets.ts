@@ -37,12 +37,19 @@ export type Race = {
   end_unix?: number;
   close?: string;
   close_unix?: number;
-  status: "Abandoned" | "Interim" | "Normal" | "Paying";
+  status: "Abandoned" | "Interim" | "Normal" | "Paying" | "Closed";
   results?: number[];
 };
 
 export type SignedRunnersResponse = {
-  data: Runner[];
+  data: {
+    raceData: {
+      name: string;
+      distance: number;
+      class: string;
+    };
+    runners: Runner[];
+  };
 } & SignedResponse;
 
 export type SignedMeetingsResponse = {
