@@ -1,23 +1,18 @@
 import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useRunnersData } from "../hooks/data";
-import { useAccount } from "wagmi";
-import { useWalletModal } from "../providers/WalletModal";
+import { useRunnersData, useMeetData } from "../hooks/data";
 import { RaceTable, RacesButton } from "../components/Races";
 import { PlaceBetModal, SettleBetModal } from "../components/Modals";
 import { Runner } from "../types/meets";
 import { PageLayout } from "../components";
 import { useSubgraphBets } from "../hooks/subgraph";
-import { useMeetData } from "../hooks/data";
 import { BetHistory } from "../types/bets";
 import { BetTable } from "../components/Bets";
 import { makeMarketId } from "../utils/markets";
 import { formatBytes16String } from "../utils/formatting";
 import { useConfig } from "../providers/Config";
 import Skeleton from "react-loading-skeleton";
-import classNames from "classnames";
 import dayjs from "dayjs";
-import Skeleton from "react-loading-skeleton";
 
 export const Races: React.FC = () => {
   const params = useParams();
