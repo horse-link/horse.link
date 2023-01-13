@@ -10,26 +10,12 @@ type Props = {
 };
 
 export const RacesButton: React.FC<Props> = ({ meetRaces, params }) => {
-  const url = meetRaces?.map((race: RaceInfo) => {
-    console.log(race.raceStatus);
-    return race.raceStatus === "Normal"
-      ? `/horses/${params.track || ""}/${race.raceNumber}`
-      : race.raceStatus === "Paying"
-      ? `/results/${dayjs().format("YYYY-MM-DD")}_${params.track}_${
-          race.raceNumber
-        }_W1`
-      : // race raceStatus in any other condition other than normal or paying
-        "";
-  });
-
-  console.log(url);
-
   return (
-    <div className="flex flex-wrap">
+    <div className="flex flex-wrap justify-end">
       {meetRaces?.map((race: RaceInfo) => (
         <div
           key={`race${race.raceNumber}`}
-          className="flex justify-between rounded-full mr-1 bg-emerald-400 hover:bg-gray-100"
+          className="flex justify-between rounded-full mt-1 ml-1 bg-emerald-400 hover:bg-gray-100"
         >
           <Link
             className={classNames({
@@ -51,7 +37,9 @@ export const RacesButton: React.FC<Props> = ({ meetRaces, params }) => {
               className={classNames(
                 "px-3 py-3 whitespace-nowrap text-sm rounded-full",
                 {
-                  "bg-gray-400 hover:bg-gray-500": race.raceStatus === "Paying",
+                  "bg-gray-400 hover:bg-gray-500":
+                    race.raceStatus === "Paying" &&
+                    race.raceNumber != params.number,
                   "bg-black text-white": race.raceStatus === "Abandoned",
                   "bg-emerald-400": race.raceStatus === "Interim",
                   "hover:bg-gray-200": race.raceStatus === "Normal",
