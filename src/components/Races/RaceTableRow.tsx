@@ -1,9 +1,13 @@
 import classnames from "classnames";
-import { ethers } from "ethers";
 import React from "react";
 import Skeleton from "react-loading-skeleton";
 import { Runner } from "../../types/meets";
 import utils from "../../utils";
+import {
+  formatBytes16String,
+  formatNumberWithCommas,
+  formatToFourDecimals
+} from "../../utils/formatting";
 
 type Props = {
   runner?: Runner;
@@ -12,10 +16,13 @@ type Props = {
   isConnected: boolean;
   setSelectedRunner: (runner?: Runner) => void;
   setIsModalOpen: (open: boolean) => void;
-  betData: {
-    amount: number;
-    percentage: number;
-  };
+  totalBetsOnPropositions?: Record<
+    string,
+    {
+      amount: number;
+      percentage: number;
+    }
+  >;
 };
 
 export const RaceTableRow: React.FC<Props> = ({
@@ -25,7 +32,7 @@ export const RaceTableRow: React.FC<Props> = ({
   setSelectedRunner,
   openWalletModal,
   isConnected,
-  betData
+  totalBetsOnPropositions
 }) => {
   const openDialog = () => {
     if (!isConnected) return openWalletModal();
@@ -37,12 +44,18 @@ export const RaceTableRow: React.FC<Props> = ({
     setSelectedRunner(runner);
     openDialog();
   };
-  const { number, name, barrier, odds, handicapWeight, last5Starts } =
-    runner || {};
+  const {
+    number,
+    name,
+    barrier,
+    odds,
+    handicapWeight,
+    last5Starts,
+    proposition_id
+  } = runner || {};
 
-  const { amount: betAmount, percentage: betPercentage } = betData || {};
-
-  // const formattedBetAmount = ethers.utils.formatEther(betData?.amount ?? 0);
+  const b16PropositionId = formatBytes16String(proposition_id ?? "");
+  const betData = totalBetsOnPropositions?.[b16PropositionId];
 
   return (
     <tr
@@ -96,8 +109,8 @@ export const RaceTableRow: React.FC<Props> = ({
           "line-through": isScratched
         })}
       >
-        {betAmount ? (
-          `$ ${betAmount.toLocaleString()}`
+        {totalBetsOnPropositions ? (
+          `$ ${formatNumberWithCommas(betData?.amount?.toString() ?? "0")}`
         ) : (
           <Skeleton width="2em" />
         )}
@@ -107,7 +120,11 @@ export const RaceTableRow: React.FC<Props> = ({
           "line-through": isScratched
         })}
       >
-        {betPercentage ? `${betPercentage} %` : <Skeleton width="2em" />}
+        {totalBetsOnPropositions ? (
+          `${formatToFourDecimals(betData?.percentage?.toString() ?? "0")} %`
+        ) : (
+          <Skeleton width="2em" />
+        )}
       </td>
     </tr>
   );

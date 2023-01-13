@@ -42,7 +42,7 @@ export const Races: React.FC = () => {
   );
 
   const totalBetsOnPropositions = useMemo(() => {
-    if (!betHistory) return {};
+    if (!betHistory) return;
     const firstScan = betHistory.reduce(
       (acc, bet) => {
         const { propositionId, amount: rawAmount } = bet;

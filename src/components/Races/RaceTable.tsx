@@ -9,7 +9,7 @@ type Props = {
   runners?: Runner[];
   setSelectedRunner: (runner?: Runner) => void;
   setIsModalOpen: (open: boolean) => void;
-  totalBetsOnPropositions: Record<
+  totalBetsOnPropositions?: Record<
     string,
     {
       amount: number;
@@ -88,9 +88,6 @@ export const RaceTable: React.FC<Props> = ({
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {openBetRunners.map(runner => {
-                  const b16PropositionId = formatBytes16String(
-                    runner?.proposition_id ?? ""
-                  );
                   return (
                     <RaceTableRow
                       key={runner?.name}
@@ -99,14 +96,11 @@ export const RaceTable: React.FC<Props> = ({
                       setSelectedRunner={setSelectedRunner}
                       isConnected={isConnected}
                       openWalletModal={openWalletModal}
-                      betData={totalBetsOnPropositions[b16PropositionId]}
+                      totalBetsOnPropositions={totalBetsOnPropositions}
                     />
                   );
                 })}
                 {scratchedRunners?.map(runner => {
-                  const b16PropositionId = formatBytes16String(
-                    runner?.proposition_id ?? ""
-                  );
                   return (
                     <RaceTableRow
                       key={runner?.name}
@@ -115,7 +109,7 @@ export const RaceTable: React.FC<Props> = ({
                       setSelectedRunner={setSelectedRunner}
                       isConnected={isConnected}
                       openWalletModal={openWalletModal}
-                      betData={totalBetsOnPropositions[b16PropositionId]}
+                      totalBetsOnPropositions={totalBetsOnPropositions}
                       isScratched
                     />
                   );
