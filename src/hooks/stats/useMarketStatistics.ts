@@ -11,7 +11,7 @@ type Response = {
 const MILLISECONDS_TO_SECONDS_DIVISOR = 1000;
 const SECONDS_TWENTYFOUR_HOURS = 86400;
 
-export const useMarketStatistics = () => {
+export const useMarketStatistics = (didWin?: boolean) => {
   const yesterdayFilter = useMemo(
     () =>
       Math.floor(
@@ -21,7 +21,7 @@ export const useMarketStatistics = () => {
   );
   // This is the last 24 hours of data
   const { data, loading } = useSubgraph<Response>(
-    utils.queries.getMarketStatsQuery(yesterdayFilter)
+    utils.queries.getMarketStatsQuery(yesterdayFilter, didWin)
   );
 
   const betsData = useMemo(() => {
