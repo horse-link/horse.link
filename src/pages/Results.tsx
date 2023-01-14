@@ -13,6 +13,7 @@ import { useConfig } from "../providers/Config";
 import utils from "../utils";
 import { useSubgraphBets } from "../hooks/subgraph";
 import { useMarketContract } from "../hooks/contracts";
+import { useSigner } from "wagmi";
 
 export const Results: React.FC = () => {
   const [isSettleModalOpen, setIsSettleModalOpen] = useState(false);
@@ -20,6 +21,7 @@ export const Results: React.FC = () => {
 
   const config = useConfig();
   const params = useParams();
+  const { data: signer } = useSigner();
 
   const propositionId = params.propositionId || "";
   const details = utils.markets.getDetailsFromPropositionId(propositionId);
@@ -39,22 +41,14 @@ export const Results: React.FC = () => {
   const { settleMarket } = useMarketContract();
 
   const onClickSettleMarket = async () => {
-    const tx = await settleMarket(vault, amount, signer);
-    // if (!depositAmount || !userBalance || !signer) return;
+    if (!signer) return;
 
-    // const amount = ethers.utils.parseUnits(depositAmount, userBalance.decimals);
-    // setTxHash(undefined);
-    // setError(undefined);
+    config?.markets.forEach(async market => {
+      // todo: check market has something first
 
-    // try {
-    //   setTxLoading(true);
-    //   const tx = await deposit(vault, amount, signer);
-    //   setTxHash(tx);
-    // } catch (err: any) {
-    //   setError(err);
-    // } finally {
-    //   setTxLoading(false);
-    // }
+      // push the tx into an array
+      const tx = await settleMarket(market, marketId, signer);
+    });
   };
 
   return (
