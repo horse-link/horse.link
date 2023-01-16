@@ -14,6 +14,7 @@ import { formatBytes16String } from "../utils/formatting";
 import { useConfig } from "../providers/Config";
 import Skeleton from "react-loading-skeleton";
 import utils from "../utils";
+import { BigNumber, ethers } from "ethers";
 
 export const Races: React.FC = () => {
   const params = useParams();
@@ -28,11 +29,28 @@ export const Races: React.FC = () => {
   const config = useConfig();
   //JASMINS CODE BELOW
   // runners={race?.runners}
-  const getMarginOdds = (runner: Runner) => {
-    const calculateMargin = (1 / runner.odds) * 100;
-    return utils.formatting.formatToTwoDecimals(calculateMargin.toString());
-  };
-  //every runner in a race has odds and u need to getb them
+  // const getMarginOdds = (runner: Runner) => {
+  //   const calculateMargin = (1 / runner.odds) * 100;
+  //   return utils.formatting.formatToTwoDecimals(calculateMargin.toString());
+  // };
+
+  const getTheOddsForARace = race?.runners.map(race =>
+    BigNumber.from(race?.odds)
+  );
+  console.log(getTheOddsForARace, "getTheOddsForARace");
+
+  const calculateMargin = getTheOddsForARace?.reduce(
+    (sum, value) => sum.add(1 / value) * 100,
+    ethers.constants.Zero
+  );
+  console.log(calculateMargin, "newMath");
+  //I NEED TO
+  // GET ALL THE ODDS FOR A RACE
+  // DEVIDE each with 1/n
+  // ADD THE VALUES TO GET A TOTAL
+  // TIMES THAT TOTAL BY 100
+
+  //every runner in a race has odds and u need to get them
   //use reduce .add .div
   //JASMINS CODE ABOVE
   const { meetDate } = useMemo(() => {
@@ -65,7 +83,7 @@ export const Races: React.FC = () => {
             Distance: {race ? `${race.raceData.distance}m` : <Skeleton />}
           </h1>
           <h1>Class: {race ? race.raceData.class : <Skeleton />}</h1>
-          <h1>Margin: {race ? `${getMarginOdds}%` : <Skeleton />}</h1>
+          <h1>Margin: {race ? `${calculateMargin}%` : <Skeleton />}</h1>
         </div>
         <RaceTable
           runners={race?.runners}
