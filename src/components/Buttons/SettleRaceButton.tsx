@@ -1,9 +1,10 @@
 import React, { useCallback } from "react";
 import { BaseButton } from ".";
-import { Config, MarketInfo } from "../../types/config";
+import { Config } from "../../types/config";
 import { BetHistory } from "../../types/bets";
 import { Signer } from "ethers";
-import { useMarketContract } from "../../hooks/contracts";
+import { useWalletModal } from "../../providers/WalletModal";
+import { MarketOracle__factory, Market__factory } from "../../typechain";
 
 type Props = {
   betHistory?: BetHistory[];
@@ -27,53 +28,51 @@ export const SettleRaceButton: React.FC<Props> = props => {
     setSettleHashes,
     setLoading
   } = props;
-  const { settleBet, setResult } = useMarketContract();
+  const { openWalletModal } = useWalletModal();
 
   const settleRace = useCallback(async () => {
-    if (
-      !betHistory ||
-      !betHistory.length ||
-      !config ||
-      !isConnected ||
-      loading ||
-      !signer ||
-      !config
-    )
+    if (!betHistory || !betHistory.length || !config || loading || !config)
       return;
+    if (!isConnected || !signer) return openWalletModal();
 
     setIsSettledMarketModalOpen(false);
     setSettleHashes(undefined);
     setLoading(true);
     try {
-      // try to set results for both markets
-      await Promise.all(
-        config.markets.map(market =>
-          setResult(
-            market,
-            signer,
-            // find a bet that matches the market, will always be defined
-            betHistory.find(
-              bet =>
-                bet.marketAddress.toLowerCase() === market.address.toLowerCase()
-            )!,
-            config
-          )
-        )
+      // connect to markets
+      const markets = config.markets.map(m =>
+        Market__factory.connect(m.address, signer)
       );
-      // settle all bets and collect hashes
-      const hashes = await Promise.all(
+      // connect to oracle
+      const oracleContract = MarketOracle__factory.connect(
+        config.addresses.marketOracle,
+        signer
+      );
+      // get winning data (all bets should have data and have the same data)
+      const marketId = betHistory[0].marketId;
+      const winningId = betHistory[0].winningPropositionId!;
+      const sig = betHistory[0].marketOracleResultSig!;
+      // add result
+      try {
+        await oracleContract.setResult(marketId, winningId, sig);
+      } catch (err: any) {
+        console.error(err);
+      }
+      // settle all bets for respective market
+      const txs = await Promise.all(
         betHistory.map(async bet =>
-          settleBet(
-            // we only need the address
-            {
-              address: bet.marketAddress
-            } as MarketInfo,
-            bet,
-            signer,
-            config
-          )
+          // market will always match a marketAddress
+          (
+            await markets
+              .find(
+                m => m.address.toLowerCase() === bet.marketAddress.toLowerCase()
+              )!
+              .settle(bet.index)
+          ).wait()
         )
       );
+      // get hashes from transactions
+      const hashes = txs.map(tx => tx.transactionHash);
       // set hashes and show success modal
       setSettleHashes(hashes);
       setIsSettledMarketModalOpen(true);
@@ -90,7 +89,7 @@ export const SettleRaceButton: React.FC<Props> = props => {
       loading={!config || !betHistory || loading}
       loaderSize={20}
       onClick={settleRace}
-      disabled={!isConnected || !signer || !betHistory?.length}
+      disabled={!betHistory?.length}
     >
       Settle Race
     </BaseButton>
