@@ -54,7 +54,7 @@ export const Bets: React.FC = () => {
           data={
             largestBet &&
             `$${utils.formatting.formatToFourDecimals(
-              ethers.utils.formatEther(largestBet.amount)
+              ethers.utils.formatEther(largestBet.payout)
             )}`
           }
         />

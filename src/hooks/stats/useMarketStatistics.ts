@@ -30,13 +30,14 @@ export const useMarketStatistics = (didWin?: boolean) => {
     return data.bets;
   }, [data, loading]);
 
+  //Total winning bets
   const totalBets = useMemo(() => {
     if (!betsData) return;
 
     return betsData.length;
   }, [betsData]);
 
-  // total volume of winning bets including payouts
+  //Total volume of winning bets including payouts
   const totalVolume = useMemo(() => {
     if (!betsData) return;
     if (!totalBets) return ethers.constants.Zero;
@@ -49,13 +50,13 @@ export const useMarketStatistics = (didWin?: boolean) => {
     );
   }, [betsData, totalBets]);
 
-  // largest winning bet, payout amount
+  //Largest winning bet, payout amount
   const largestBet = useMemo(() => {
     if (!betsData) return;
     if (!totalBets) return utils.mocks.getMockBet();
 
     return betsData.reduce((prev, curr) =>
-      BigNumber.from(curr.payout).gt(BigNumber.from(prev.payout)) ? curr : prev
+      BigNumber.from(curr.amount).gt(BigNumber.from(prev.amount)) ? curr : prev
     );
   }, [betsData, totalBets]);
 
