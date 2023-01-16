@@ -3,11 +3,13 @@ import { RaceTableRow } from ".";
 import utils from "../../utils";
 import { useWalletModal } from "../../providers/WalletModal";
 import { useAccount } from "wagmi";
+import { TotalBetsOnPropositions } from "../../types/bets";
 
 type Props = {
   runners?: Runner[];
   setSelectedRunner: (runner?: Runner) => void;
   setIsModalOpen: (open: boolean) => void;
+  totalBetsOnPropositions?: TotalBetsOnPropositions;
 };
 
 const isScratchedRunner = (runner: Runner) =>
@@ -16,7 +18,8 @@ const isScratchedRunner = (runner: Runner) =>
 export const RaceTable: React.FC<Props> = ({
   runners,
   setIsModalOpen,
-  setSelectedRunner
+  setSelectedRunner,
+  totalBetsOnPropositions
 }) => {
   const { isConnected } = useAccount();
   const { openWalletModal } = useWalletModal();
@@ -63,6 +66,18 @@ export const RaceTable: React.FC<Props> = ({
                   >
                     Win
                   </th>
+                  <th
+                    scope="col"
+                    className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
+                  >
+                    Backed
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase"
+                  >
+                    Proportion
+                  </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -74,6 +89,7 @@ export const RaceTable: React.FC<Props> = ({
                     setSelectedRunner={setSelectedRunner}
                     isConnected={isConnected}
                     openWalletModal={openWalletModal}
+                    totalBetsOnPropositions={totalBetsOnPropositions}
                   />
                 ))}
                 {scratchedRunners?.map(runner => (
@@ -84,6 +100,7 @@ export const RaceTable: React.FC<Props> = ({
                     setSelectedRunner={setSelectedRunner}
                     isConnected={isConnected}
                     openWalletModal={openWalletModal}
+                    totalBetsOnPropositions={totalBetsOnPropositions}
                     isScratched
                   />
                 ))}

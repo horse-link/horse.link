@@ -1,8 +1,14 @@
 import classnames from "classnames";
 import React from "react";
 import Skeleton from "react-loading-skeleton";
+import { TotalBetsOnPropositions } from "../../types/bets";
 import { Runner } from "../../types/meets";
 import utils from "../../utils";
+import {
+  formatBytes16String,
+  formatNumberWithCommas,
+  formatToFourDecimals
+} from "../../utils/formatting";
 
 type Props = {
   runner?: Runner;
@@ -11,6 +17,7 @@ type Props = {
   isConnected: boolean;
   setSelectedRunner: (runner?: Runner) => void;
   setIsModalOpen: (open: boolean) => void;
+  totalBetsOnPropositions?: TotalBetsOnPropositions;
 };
 
 export const RaceTableRow: React.FC<Props> = ({
@@ -19,7 +26,8 @@ export const RaceTableRow: React.FC<Props> = ({
   setIsModalOpen,
   setSelectedRunner,
   openWalletModal,
-  isConnected
+  isConnected,
+  totalBetsOnPropositions
 }) => {
   const openDialog = () => {
     if (!isConnected) return openWalletModal();
@@ -31,8 +39,18 @@ export const RaceTableRow: React.FC<Props> = ({
     setSelectedRunner(runner);
     openDialog();
   };
-  const { number, name, barrier, odds, handicapWeight, last5Starts } =
-    runner || {};
+  const {
+    number,
+    name,
+    barrier,
+    odds,
+    handicapWeight,
+    last5Starts,
+    proposition_id
+  } = runner || {};
+
+  const b16PropositionId = formatBytes16String(proposition_id ?? "");
+  const betData = totalBetsOnPropositions?.[b16PropositionId];
 
   return (
     <tr
@@ -77,6 +95,28 @@ export const RaceTableRow: React.FC<Props> = ({
       >
         {odds ? (
           utils.formatting.formatToTwoDecimals(odds.toString())
+        ) : (
+          <Skeleton width="2em" />
+        )}
+      </td>
+      <td
+        className={classnames("px-2 py-4 whitespace-nowrap", {
+          "line-through": isScratched
+        })}
+      >
+        {totalBetsOnPropositions ? (
+          `$ ${formatNumberWithCommas(betData?.amount?.toString() ?? "0")}`
+        ) : (
+          <Skeleton width="2em" />
+        )}
+      </td>
+      <td
+        className={classnames("px-2 py-4 whitespace-nowrap", {
+          "line-through": isScratched
+        })}
+      >
+        {totalBetsOnPropositions ? (
+          `${formatToFourDecimals(betData?.percentage?.toString() ?? "0")} %`
         ) : (
           <Skeleton width="2em" />
         )}
