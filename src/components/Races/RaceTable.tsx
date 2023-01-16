@@ -3,7 +3,6 @@ import { RaceTableRow } from ".";
 import utils from "../../utils";
 import { useWalletModal } from "../../providers/WalletModal";
 import { useAccount } from "wagmi";
-import { formatBytes16String } from "../../utils/formatting";
 
 type Props = {
   runners?: Runner[];

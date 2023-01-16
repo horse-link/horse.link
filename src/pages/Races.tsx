@@ -43,27 +43,25 @@ export const Races: React.FC = () => {
 
   const totalBetsOnPropositions = useMemo(() => {
     if (!betHistory) return;
-    const firstScan = betHistory.reduce(
-      (acc, bet) => {
-        const { propositionId, amount: rawAmount } = bet;
-        const amount = +ethers.utils.formatEther(rawAmount);
-        if (!acc[propositionId]) {
-          acc[propositionId] = 0;
-        }
-        acc[propositionId] += amount;
-        acc["total"] += amount;
-        return acc;
-      },
-      { total: 0 } as Record<string, number>
-    );
+    let totalAmount = 0;
+    const sumMap = betHistory.reduce((acc, bet) => {
+      const { propositionId, amount: bnAmount } = bet;
+      const amount = +ethers.utils.formatEther(bnAmount);
+      if (!acc[propositionId]) {
+        acc[propositionId] = 0;
+      }
+      acc[propositionId] += amount;
+      totalAmount += amount;
+      return acc;
+    }, {} as Record<string, number>);
     // calculate how much proposition in percentage compare to total
-    const secondScan = Object.keys(firstScan).reduce(
+    const sumWithPercentageMap = Object.keys(sumMap).reduce(
       (acc, key) => {
         if (key === "total") return acc;
-        const amount = firstScan[key];
+        const amount = sumMap[key];
         acc[key] = {
           amount,
-          percentage: (amount / firstScan.total) * 100
+          percentage: (amount / totalAmount) * 100
         };
         return acc;
       },
@@ -76,7 +74,7 @@ export const Races: React.FC = () => {
       >
     );
 
-    return secondScan;
+    return sumWithPercentageMap;
   }, [betHistory]);
 
   return (
