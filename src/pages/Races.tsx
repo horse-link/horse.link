@@ -13,6 +13,7 @@ import { makeMarketId } from "../utils/markets";
 import { formatBytes16String } from "../utils/formatting";
 import { useConfig } from "../providers/Config";
 import Skeleton from "react-loading-skeleton";
+import utils from "../utils";
 
 export const Races: React.FC = () => {
   const params = useParams();
@@ -25,12 +26,19 @@ export const Races: React.FC = () => {
   const [selectedBet, setSelectedBet] = useState<BetHistory>();
   const { race } = useRunnersData(track, raceNumber);
   const config = useConfig();
-
+  //JASMINS CODE BELOW
+  // runners={race?.runners}
+  const getMarginOdds = (runner: Runner) => {
+    const calculateMargin = (1 / runner.odds) * 100;
+    return utils.formatting.formatToTwoDecimals(calculateMargin.toString());
+  };
+  //every runner in a race has odds and u need to getb them
+  //use reduce .add .div
+  //JASMINS CODE ABOVE
   const { meetDate } = useMemo(() => {
     const meetDate = moment().format("DD-MM-YY");
     return { config, meetDate };
   }, []);
-
   const marketId = makeMarketId(new Date(), track, raceNumber.toString());
   const b16MarketId = formatBytes16String(marketId);
 
@@ -57,6 +65,7 @@ export const Races: React.FC = () => {
             Distance: {race ? `${race.raceData.distance}m` : <Skeleton />}
           </h1>
           <h1>Class: {race ? race.raceData.class : <Skeleton />}</h1>
+          <h1>Margin: {race ? `${getMarginOdds}%` : <Skeleton />}</h1>
         </div>
         <RaceTable
           runners={race?.runners}
