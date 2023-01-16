@@ -6,9 +6,9 @@ import { BetFilterGroup, BetTable } from "../components/Bets";
 import { SettleBetModal } from "../components/Modals";
 import { BetFilterOptions, BetHistory } from "../types/bets";
 import { useConfig } from "../providers/Config";
-import { useBetsStatistics } from "../hooks/stats/useBetsStatistics";
 import utils from "../utils";
 import { ethers } from "ethers";
+import { useBetsStatistics } from "../hooks/stats";
 
 export const Bets: React.FC = () => {
   const { totalWinningBets, totalWinningVolume, largestWinningBet } =
