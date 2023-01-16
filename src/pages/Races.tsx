@@ -35,7 +35,7 @@ export const Races: React.FC = () => {
   const marketId = makeMarketId(new Date(), track, raceNumber.toString());
   const b16MarketId = formatBytes16String(marketId);
 
-  const { betHistory, refetch } = useSubgraphBets(
+  const { betHistory, totalBetsOnPropositions, refetch } = useSubgraphBets(
     false,
     "ALL_BETS",
     b16MarketId
@@ -52,10 +52,10 @@ export const Races: React.FC = () => {
         <RacesButton params={params} meetRaces={meetRaces} />
 
         <div className="flex p-2 shadow overflow-hidden border-b bg-white border-gray-200 sm:rounded-lg justify-around">
+          <h1>{race ? race.raceData.name : <Skeleton />}</h1>
           <h1>Track: {track}</h1>
           <h1>Race #: {raceNumber}</h1>
           <h1>Date: {meetDate}</h1>
-          <h1>Name: {race ? race.raceData.name : <Skeleton />}</h1>
           <h1>
             Distance: {race ? `${race.raceData.distance}m` : <Skeleton />}
           </h1>
@@ -65,6 +65,7 @@ export const Races: React.FC = () => {
           runners={race?.runners}
           setSelectedRunner={setSelectedRunner}
           setIsModalOpen={setIsModalOpen}
+          totalBetsOnPropositions={totalBetsOnPropositions}
         />
       </div>
       <div className="flex flex-col gap-6">
