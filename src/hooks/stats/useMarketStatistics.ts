@@ -40,7 +40,7 @@ export const useMarketStatistics = (didWin?: boolean) => {
     if (!betsData) return;
     if (!totalBets) return ethers.constants.Zero;
 
-    const amountBigNumbers = betsData.map(bet => BigNumber.from(bet.amount));
+    const amountBigNumbers = betsData.map(bet => BigNumber.from(bet.payout));
 
     return amountBigNumbers.reduce(
       (sum, value) => sum.add(value),
