@@ -28,6 +28,13 @@ export type NextToJump = {
   };
 };
 
+export type RaceStatus =
+  | "Abandoned"
+  | "Interim"
+  | "Normal"
+  | "Paying"
+  | "Closed";
+
 export type Race = {
   number: number;
   name: string;
@@ -37,7 +44,7 @@ export type Race = {
   end_unix?: number;
   close?: string;
   close_unix?: number;
-  status: "Abandoned" | "Interim" | "Normal" | "Paying" | "Closed";
+  status: RaceStatus;
   results?: number[];
 };
 
@@ -77,7 +84,7 @@ export type RaceInfo = {
   raceClassConditions: string;
   raceDistance: number;
   raceStartTime: string;
-  raceStatus: "Abandoned" | "Interim" | "Normal" | "Paying" | "Closed";
+  raceStatus: RaceStatus;
 };
 
 export type RacesResponse = RaceInfo[];

@@ -2,18 +2,18 @@ import classNames from "classnames";
 import dayjs from "dayjs";
 import React from "react";
 import Skeleton from "react-loading-skeleton";
-import { Link } from "react-router-dom";
+import { Link, Params } from "react-router-dom";
 import { RaceInfo } from "../../types/meets";
 
 type Props = {
   meetRaces?: RaceInfo[];
-  params: any;
+  params: Params<string>;
 };
 
 export const RacesButton: React.FC<Props> = ({ meetRaces, params }) => {
   return params && meetRaces ? (
     <div className="flex flex-wrap">
-      {meetRaces?.map((race: RaceInfo) => (
+      {meetRaces.map(race => (
         <div key={`race${race.raceNumber}`} className="flex justify-between">
           <Link
             className={classNames({
@@ -33,19 +33,19 @@ export const RacesButton: React.FC<Props> = ({ meetRaces, params }) => {
           >
             <div
               className={classNames(
-                "px-3 py-3 mt-1 mr-1 whitespace-nowrap text-sm rounded-full",
+                "p-3 mt-1 mr-1 whitespace-nowrap text-sm rounded-full",
                 {
                   "bg-gray-400 hover:bg-gray-500":
                     race.raceStatus === "Paying" &&
-                    race.raceNumber != params.number,
+                    race.raceNumber.toString() != params.number,
                   "bg-black text-white hover:bg-gray-100":
                     race.raceStatus === "Abandoned",
                   "bg-emerald-200 ": race.raceStatus === "Interim",
                   "hover:bg-gray-200 bg-emerald-400":
                     race.raceStatus === "Normal" &&
-                    race.raceNumber != params.number,
+                    race.raceNumber.toString() != params.number,
                   "bg-emerald-400": race.raceStatus === "Closed",
-                  "bg-white": race.raceNumber == params.number
+                  "bg-white": race.raceNumber.toString() == params.number
                 }
               )}
             >
