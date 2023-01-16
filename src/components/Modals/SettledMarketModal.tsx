@@ -21,7 +21,7 @@ export const SettledMarketModal: React.FC<Props> = ({
       <h3 className="mt-4 font-semibold">Transactions:</h3>
       <ol className="ml-4 list-decimal">
         {hashes?.map(hash => (
-          <li>
+          <li key={hash}>
             <a
               href={`${SCANNER_URL}/tx/${hash}`}
               target="_blank"

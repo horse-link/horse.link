@@ -12,16 +12,15 @@ import { formatBytes16String } from "../utils/formatting";
 import { useConfig } from "../providers/Config";
 import utils from "../utils";
 import { useSubgraphBets } from "../hooks/subgraph";
-import { BaseButton } from "../components/Buttons";
+import { SettleRaceButton } from "../components/Buttons";
 import { useAccount, useSigner } from "wagmi";
-import { useMarketContract } from "../hooks/contracts";
-import { MarketInfo } from "../types/config";
 import { RacesButton } from "../components/Races";
 
 export const Results: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [settleHashes, setSettleHashes] = useState<string[]>();
-  const [isSettledMarketModalOpen, setIsSettledMarketModal] = useState(false);
+  const [isSettledMarketModalOpen, setIsSettledMarketModalOpen] =
+    useState(false);
   const [isSettleModalOpen, setIsSettleModalOpen] = useState(false);
   const [selectedBet, setSelectedBet] = useState<BetHistory>();
 
@@ -29,7 +28,6 @@ export const Results: React.FC = () => {
   const params = useParams();
   const { isConnected } = useAccount();
   const { data: signer } = useSigner();
-  const { settleBet, setResult } = useMarketContract();
 
   const propositionId = params.propositionId || "";
 
@@ -54,62 +52,7 @@ export const Results: React.FC = () => {
 
   const results = useResultsData(propositionId);
 
-  const settleRace = async () => {
-    if (
-      !betHistory ||
-      !betHistory.length ||
-      !config ||
-      !isConnected ||
-      loading ||
-      !signer ||
-      !config
-    )
-      return;
-
-    setIsSettledMarketModal(false);
-    setSettleHashes(undefined);
-    setLoading(true);
-    try {
-      // try to set results for both markets
-      await Promise.all(
-        config.markets.map(market =>
-          setResult(
-            market,
-            signer,
-            // find a bet that matches the market, will always be defined
-            betHistory.find(
-              bet =>
-                bet.marketAddress.toLowerCase() === market.address.toLowerCase()
-            )!,
-            config
-          )
-        )
-      );
-      // settle all bets and collect hashes
-      const hashes = await Promise.all(
-        betHistory.map(async bet =>
-          settleBet(
-            // we only need the address
-            {
-              address: bet.marketAddress
-            } as MarketInfo,
-            bet,
-            signer,
-            config
-          )
-        )
-      );
-      // set hashes and show success modal
-      setSettleHashes(hashes);
-      setIsSettledMarketModal(true);
-    } catch (err: any) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const closeSettledMarketModal = () => setIsSettledMarketModal(false);
+  const closeSettledMarketModal = () => setIsSettledMarketModalOpen(false);
 
   return (
     <PageLayout>
@@ -140,15 +83,16 @@ export const Results: React.FC = () => {
         />
       </div>
       <div className="mt-4 flex w-full justify-end">
-        <BaseButton
-          className="!w-auto !px-6 !py-3 !text-md"
-          loading={!config || !betHistory || loading}
-          loaderSize={20}
-          onClick={settleRace}
-          disabled={!isConnected || !signer || !betHistory?.length}
-        >
-          Settle Race
-        </BaseButton>
+        <SettleRaceButton
+          betHistory={betHistory}
+          loading={loading}
+          isConnected={isConnected}
+          config={config}
+          signer={signer}
+          setIsSettledMarketModalOpen={setIsSettledMarketModalOpen}
+          setSettleHashes={setSettleHashes}
+          setLoading={setLoading}
+        />
       </div>
       <SettleBetModal
         isModalOpen={isSettleModalOpen}

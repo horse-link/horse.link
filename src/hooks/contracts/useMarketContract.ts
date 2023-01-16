@@ -87,8 +87,8 @@ export const useMarketContract = () => {
           bet.marketOracleResultSig
         )
       ).wait();
-    } finally {
-      return;
+    } catch (err: any) {
+      console.error(err);
     }
   };
 
