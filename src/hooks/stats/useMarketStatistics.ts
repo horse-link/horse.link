@@ -53,7 +53,7 @@ export const useMarketStatistics = (didWin?: boolean) => {
     if (!totalBets) return utils.mocks.getMockBet();
 
     return betsData.reduce((prev, curr) =>
-      BigNumber.from(curr.amount).gt(BigNumber.from(prev.amount)) ? curr : prev
+      BigNumber.from(curr.payout).gt(BigNumber.from(prev.payout)) ? curr : prev
     );
   }, [betsData, totalBets]);
 
