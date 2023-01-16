@@ -49,13 +49,17 @@ export const SettleRaceButton: React.FC<Props> = props => {
         signer
       );
       // get winning data (all bets should have data and have the same data)
-      const marketId = betHistory[0].marketId;
-      const winningId = betHistory[0].winningPropositionId!;
-      const sig = betHistory[0].marketOracleResultSig!;
+      const { marketId, winningPropositionId, marketOracleResultSig } =
+        betHistory[0];
       // add result
       try {
-        await oracleContract.setResult(marketId, winningId, sig);
+        await oracleContract.setResult(
+          marketId,
+          winningPropositionId!,
+          marketOracleResultSig!
+        );
       } catch (err: any) {
+        // fails if result is already set
         console.error(err);
       }
       // settle all bets for respective market
