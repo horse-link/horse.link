@@ -11,7 +11,7 @@ import utils from "../utils";
 import { ethers } from "ethers";
 
 export const Bets: React.FC = () => {
-  const { totalBets, totalVolume, largestBet } = useMarketStatistics();
+  const { totalBets, totalVolume, largestBet } = useMarketStatistics(true);
   const [myBetsEnabled, setMyBetsEnabled] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBet, setSelectedBet] = useState<BetHistory>();
