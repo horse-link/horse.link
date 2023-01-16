@@ -7,7 +7,7 @@ export const useResultsData = (propositionid: string) => {
 
   useEffect(() => {
     api.getRaceResult(propositionid).then(setResults);
-  }, []);
+  }, [propositionid]);
 
   return results;
 };
