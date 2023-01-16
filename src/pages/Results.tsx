@@ -76,6 +76,7 @@ export const Results: React.FC = () => {
           setResult(
             market,
             signer,
+            // find a bet that matches the market, will always be defined
             betHistory.find(
               bet =>
                 bet.marketAddress.toLowerCase() === market.address.toLowerCase()
@@ -88,6 +89,7 @@ export const Results: React.FC = () => {
       const hashes = await Promise.all(
         betHistory.map(async bet =>
           settleBet(
+            // we only need the address
             {
               address: bet.marketAddress
             } as MarketInfo,
