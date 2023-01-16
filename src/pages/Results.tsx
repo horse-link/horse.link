@@ -1,5 +1,5 @@
 import moment from "moment";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Loader, PageLayout } from "../components";
 import { BetTable } from "../components/Bets";
@@ -52,7 +52,10 @@ export const Results: React.FC = () => {
 
   const results = useResultsData(propositionId);
 
-  const closeSettledMarketModal = () => setIsSettledMarketModalOpen(false);
+  const closeSettledMarketModal = useCallback(
+    () => setIsSettledMarketModalOpen(false),
+    [isSettledMarketModalOpen, setIsSettledMarketModalOpen]
+  );
 
   return (
     <PageLayout>

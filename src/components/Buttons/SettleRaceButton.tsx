@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { BaseButton } from ".";
 import { Config, MarketInfo } from "../../types/config";
 import { BetHistory } from "../../types/bets";
@@ -16,19 +16,20 @@ type Props = {
   setSettleHashes: (hashes?: string[]) => void;
 };
 
-export const SettleRaceButton: React.FC<Props> = ({
-  config,
-  betHistory,
-  loading,
-  isConnected,
-  signer,
-  setIsSettledMarketModalOpen,
-  setSettleHashes,
-  setLoading
-}) => {
+export const SettleRaceButton: React.FC<Props> = props => {
+  const {
+    config,
+    betHistory,
+    loading,
+    isConnected,
+    signer,
+    setIsSettledMarketModalOpen,
+    setSettleHashes,
+    setLoading
+  } = props;
   const { settleBet, setResult } = useMarketContract();
 
-  const settleRace = async () => {
+  const settleRace = useCallback(async () => {
     if (
       !betHistory ||
       !betHistory.length ||
@@ -81,7 +82,7 @@ export const SettleRaceButton: React.FC<Props> = ({
     } finally {
       setLoading(false);
     }
-  };
+  }, [props]);
 
   return (
     <BaseButton
