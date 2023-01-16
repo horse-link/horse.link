@@ -40,7 +40,7 @@ export const Bets: React.FC = () => {
     <PageLayout>
       <div className="flex flex-col md:flex-row w-full justify-center text-left gap-x-1 gap-y-2 lg:gap-x-4 mb-4 lg:justify-between">
         <Card
-          title="24H Volume"
+          title="24H Winning Volume"
           data={
             totalVolume &&
             `$${utils.formatting.formatToFourDecimals(
@@ -48,9 +48,9 @@ export const Bets: React.FC = () => {
             )}`
           }
         />
-        <Card title="24H Bets" data={totalBets?.toString()} />
+        <Card title="24H Winning Bets" data={totalBets?.toString()} />
         <Card
-          title="24H Largest Bet"
+          title="24H Largest Winning Bet"
           data={
             largestBet &&
             `$${utils.formatting.formatToFourDecimals(
