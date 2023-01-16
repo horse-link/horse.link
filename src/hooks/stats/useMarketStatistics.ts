@@ -36,6 +36,7 @@ export const useMarketStatistics = (didWin?: boolean) => {
     return betsData.length;
   }, [betsData]);
 
+  // total volume of winning bets including payouts
   const totalVolume = useMemo(() => {
     if (!betsData) return;
     if (!totalBets) return ethers.constants.Zero;
@@ -48,6 +49,7 @@ export const useMarketStatistics = (didWin?: boolean) => {
     );
   }, [betsData, totalBets]);
 
+  // largest winning bet, payout amount
   const largestBet = useMemo(() => {
     if (!betsData) return;
     if (!totalBets) return utils.mocks.getMockBet();
