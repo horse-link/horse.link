@@ -13,7 +13,6 @@ import { makeMarketId } from "../utils/markets";
 import { formatBytes16String } from "../utils/formatting";
 import { useConfig } from "../providers/Config";
 import Skeleton from "react-loading-skeleton";
-import { ethers } from "ethers";
 
 export const Races: React.FC = () => {
   const params = useParams();
@@ -35,47 +34,11 @@ export const Races: React.FC = () => {
   const marketId = makeMarketId(new Date(), track, raceNumber.toString());
   const b16MarketId = formatBytes16String(marketId);
 
-  const { betHistory, refetch } = useSubgraphBets(
+  const { betHistory, totalBetsOnPropositions, refetch } = useSubgraphBets(
     false,
     "ALL_BETS",
     b16MarketId
   );
-
-  const totalBetsOnPropositions = useMemo(() => {
-    if (!betHistory) return;
-    let totalAmount = 0;
-    const sumMap = betHistory.reduce((acc, bet) => {
-      const { propositionId, amount: bnAmount } = bet;
-      const amount = +ethers.utils.formatEther(bnAmount);
-      if (!acc[propositionId]) {
-        acc[propositionId] = 0;
-      }
-      acc[propositionId] += amount;
-      totalAmount += amount;
-      return acc;
-    }, {} as Record<string, number>);
-    // calculate how much proposition in percentage compare to total
-    const sumWithPercentageMap = Object.keys(sumMap).reduce(
-      (acc, key) => {
-        if (key === "total") return acc;
-        const amount = sumMap[key];
-        acc[key] = {
-          amount,
-          percentage: (amount / totalAmount) * 100
-        };
-        return acc;
-      },
-      {} as Record<
-        string,
-        {
-          amount: number;
-          percentage: number;
-        }
-      >
-    );
-
-    return sumWithPercentageMap;
-  }, [betHistory]);
 
   return (
     <PageLayout>

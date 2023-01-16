@@ -3,18 +3,13 @@ import { RaceTableRow } from ".";
 import utils from "../../utils";
 import { useWalletModal } from "../../providers/WalletModal";
 import { useAccount } from "wagmi";
+import { TotalBetsOnPropositions } from "../../types/bets";
 
 type Props = {
   runners?: Runner[];
   setSelectedRunner: (runner?: Runner) => void;
   setIsModalOpen: (open: boolean) => void;
-  totalBetsOnPropositions?: Record<
-    string,
-    {
-      amount: number;
-      percentage: number;
-    }
-  >;
+  totalBetsOnPropositions?: TotalBetsOnPropositions;
 };
 
 const isScratchedRunner = (runner: Runner) =>
@@ -86,33 +81,29 @@ export const RaceTable: React.FC<Props> = ({
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {openBetRunners.map(runner => {
-                  return (
-                    <RaceTableRow
-                      key={runner?.name}
-                      runner={runner}
-                      setIsModalOpen={setIsModalOpen}
-                      setSelectedRunner={setSelectedRunner}
-                      isConnected={isConnected}
-                      openWalletModal={openWalletModal}
-                      totalBetsOnPropositions={totalBetsOnPropositions}
-                    />
-                  );
-                })}
-                {scratchedRunners?.map(runner => {
-                  return (
-                    <RaceTableRow
-                      key={runner?.name}
-                      runner={runner}
-                      setIsModalOpen={setIsModalOpen}
-                      setSelectedRunner={setSelectedRunner}
-                      isConnected={isConnected}
-                      openWalletModal={openWalletModal}
-                      totalBetsOnPropositions={totalBetsOnPropositions}
-                      isScratched
-                    />
-                  );
-                })}
+                {openBetRunners.map(runner => (
+                  <RaceTableRow
+                    key={runner?.name}
+                    runner={runner}
+                    setIsModalOpen={setIsModalOpen}
+                    setSelectedRunner={setSelectedRunner}
+                    isConnected={isConnected}
+                    openWalletModal={openWalletModal}
+                    totalBetsOnPropositions={totalBetsOnPropositions}
+                  />
+                ))}
+                {scratchedRunners?.map(runner => (
+                  <RaceTableRow
+                    key={runner?.name}
+                    runner={runner}
+                    setIsModalOpen={setIsModalOpen}
+                    setSelectedRunner={setSelectedRunner}
+                    isConnected={isConnected}
+                    openWalletModal={openWalletModal}
+                    totalBetsOnPropositions={totalBetsOnPropositions}
+                    isScratched
+                  />
+                ))}
               </tbody>
             </table>
           </div>

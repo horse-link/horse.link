@@ -1,10 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAccount } from "wagmi";
 import api from "../../apis/Api";
 import { Bet } from "../../types/entities";
 import useSubgraph from "../useSubgraph";
 import utils from "../../utils";
-import { BetFilterOptions, BetHistory } from "../../types/bets";
+import {
+  BetFilterOptions,
+  BetHistory,
+  TotalBetsOnPropositions
+} from "../../types/bets";
+import { ethers } from "ethers";
 
 type Response = {
   bets: Bet[];
@@ -57,8 +62,37 @@ export const useSubgraphBets = (
     });
   }, [data, address, filter]);
 
+  const totalBetsOnPropositions = useMemo(() => {
+    if (!betHistory) return;
+    let totalSumAmount = 0;
+
+    const sumMap = betHistory.reduce((acc, bet) => {
+      const { propositionId, amount: bnAmount } = bet;
+      const amount = +ethers.utils.formatEther(bnAmount);
+      if (!acc[propositionId]) {
+        acc[propositionId] = 0;
+      }
+      acc[propositionId] += amount;
+      totalSumAmount += amount;
+      return acc;
+    }, {} as Record<string, number>);
+
+    const sumWithPercentageMap = Object.keys(sumMap).reduce((acc, key) => {
+      if (key === "total") return acc;
+      const amount = sumMap[key];
+      acc[key] = {
+        amount,
+        percentage: (amount / totalSumAmount) * 100
+      };
+      return acc;
+    }, {} as TotalBetsOnPropositions);
+
+    return sumWithPercentageMap;
+  }, [betHistory]);
+
   return {
     betHistory,
+    totalBetsOnPropositions,
     refetch
   };
 };

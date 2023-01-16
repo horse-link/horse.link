@@ -1,6 +1,7 @@
 import classnames from "classnames";
 import React from "react";
 import Skeleton from "react-loading-skeleton";
+import { TotalBetsOnPropositions } from "../../types/bets";
 import { Runner } from "../../types/meets";
 import utils from "../../utils";
 import {
@@ -16,13 +17,7 @@ type Props = {
   isConnected: boolean;
   setSelectedRunner: (runner?: Runner) => void;
   setIsModalOpen: (open: boolean) => void;
-  totalBetsOnPropositions?: Record<
-    string,
-    {
-      amount: number;
-      percentage: number;
-    }
-  >;
+  totalBetsOnPropositions?: TotalBetsOnPropositions;
 };
 
 export const RaceTableRow: React.FC<Props> = ({
