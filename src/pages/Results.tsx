@@ -14,7 +14,7 @@ import utils from "../utils";
 import { useSubgraphBets } from "../hooks/subgraph";
 import { SettleRaceButton } from "../components/Buttons";
 import { useAccount, useSigner } from "wagmi";
-import { RacesButton } from "../components/Races";
+import { RacesButton } from "../components/Buttons";
 
 export const Results: React.FC = () => {
   const [loading, setLoading] = useState(false);

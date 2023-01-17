@@ -6,6 +6,7 @@ import * as mocks from "./mocks";
 import * as queries from "./queries";
 import * as markets from "./markets";
 import * as id from "./id";
+import * as races from "./races";
 
 const utils = {
   general,
@@ -15,7 +16,8 @@ const utils = {
   mocks,
   bets,
   markets,
-  id
+  id,
+  races
 };
 
 export default utils;
