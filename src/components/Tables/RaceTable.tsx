@@ -7,15 +7,18 @@ import Skeleton from "react-loading-skeleton";
 import classnames from "classnames";
 import { useWalletModal } from "../../providers/WalletModal";
 import { useAccount } from "wagmi";
+import { TotalBetsOnPropositions } from "../../types/bets";
 
 type Props = {
   runners?: Runner[];
+  totalBetsOnPropositions?: TotalBetsOnPropositions;
   setSelectedRunner: (runner?: Runner) => void;
   setIsModalOpen: (open: boolean) => void;
 };
 
 export const RaceTable: React.FC<Props> = ({
   runners,
+  totalBetsOnPropositions,
   setSelectedRunner,
   setIsModalOpen
 }) => {
@@ -52,8 +55,15 @@ export const RaceTable: React.FC<Props> = ({
     isScratched: boolean,
     runner?: Runner
   ): DataProps[] => {
-    const { number, name, barrier, odds, handicapWeight, last5Starts } =
-      runner || {};
+    const {
+      number,
+      name,
+      barrier,
+      odds,
+      handicapWeight,
+      last5Starts,
+      proposition_id
+    } = runner || {};
 
     return [
       {
@@ -79,6 +89,32 @@ export const RaceTable: React.FC<Props> = ({
           <Skeleton width="2em" />
         ),
         classNames: isScratchedDataStyles(isScratched)
+      },
+      {
+        title:
+          proposition_id && totalBetsOnPropositions ? (
+            `$${utils.formatting.formatToFourDecimals(
+              totalBetsOnPropositions[proposition_id]
+                ? totalBetsOnPropositions[proposition_id].amount.toString()
+                : "0.0000"
+            )}`
+          ) : (
+            <Skeleton width="2em" />
+          ),
+        classNames: isScratchedDataStyles(isScratched)
+      },
+      {
+        title:
+          proposition_id && totalBetsOnPropositions ? (
+            `${utils.formatting.formatToFourDecimals(
+              totalBetsOnPropositions[proposition_id]
+                ? totalBetsOnPropositions[proposition_id].percentage.toString()
+                : "0.0000"
+            )}%`
+          ) : (
+            <Skeleton width="2em" />
+          ),
+        classNames: isScratchedDataStyles(isScratched)
       }
     ];
   };
@@ -99,6 +135,12 @@ export const RaceTable: React.FC<Props> = ({
     },
     {
       title: "Win"
+    },
+    {
+      title: "Backed"
+    },
+    {
+      title: "Proportion"
     }
   ];
 
