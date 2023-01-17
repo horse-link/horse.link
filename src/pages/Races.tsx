@@ -14,7 +14,6 @@ import { formatBytes16String } from "../utils/formatting";
 import { useConfig } from "../providers/Config";
 import Skeleton from "react-loading-skeleton";
 import { BigNumber } from "bignumber.js";
-import { ethers } from "ethers";
 
 export const Races: React.FC = () => {
   const params = useParams();
@@ -27,32 +26,23 @@ export const Races: React.FC = () => {
   const [selectedBet, setSelectedBet] = useState<BetHistory>();
   const { race } = useRunnersData(track, raceNumber);
   const config = useConfig();
-  //JASMINS CODE BELOW
-  // runners={race?.runners}
-  //   sum.plus((1 / value) * 100),
-  //   return utils.formatting.formatToTwoDecimals(calculateMargin.toString());
-  // };
+
   const getTheOddsForARace = race?.runners.map(
     race => new BigNumber(race.odds)
   );
-  const oneOverOdds = new BigNumber(1);
-  const calcMarginFormula = getTheOddsForARace(
-    oneOverOdds.div(getTheOddsForARace)
-  ).multipliedBy(100);
-  const calculateMargin = getTheOddsForARace?.reduce(
-    (sum, calcMarginFormula) => sum.plus(calcMarginFormula),
-    ethers.constants.Zero
-  );
 
-  console.log(getTheOddsForARace, "getTheOddsForARace");
-  console.log(calcMarginFormula, "calcMarginFormula");
+  // Number given from formula
+  const oneOverOdds = new BigNumber(1);
+
+  const zero = new BigNumber(0);
+  const calcMarginFormula = (odds: BigNumber) =>
+    oneOverOdds.div(odds).multipliedBy(100);
+  const calculateMargin = getTheOddsForARace?.reduce(
+    (sum, odds) => sum.plus(calcMarginFormula(odds)),
+    zero
+  );
   console.log(calculateMargin, "calculateMargin");
-  //I NEED TO
-  // GET ALL THE ODDS FOR A RACE
-  // DEVIDE each with 1/n
-  // ADD THE VALUES TO GET A TOTAL
-  // TIMES THAT TOTAL BY 100
-  //JASMINS CODE ABOVE
+
   const { meetDate } = useMemo(() => {
     const meetDate = moment().format("DD-MM-YY");
     return { config, meetDate };
