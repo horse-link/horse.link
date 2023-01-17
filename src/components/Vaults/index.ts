@@ -1,1 +1,0 @@
-export { VaultListRow } from "./VaultListRow";
