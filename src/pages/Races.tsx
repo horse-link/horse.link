@@ -41,7 +41,10 @@ export const Races: React.FC = () => {
     (sum, odds) => sum.plus(calcMarginFormula(odds)),
     zero
   );
-  console.log(calculateMargin, "calculateMargin");
+
+  const isScratchedRunner = (runner: Runner) =>
+    ["LateScratched", "Scratched"].includes(runner.status);
+  // if (isScratchedRunner) remove from list
 
   const { meetDate } = useMemo(() => {
     const meetDate = moment().format("DD-MM-YY");
@@ -73,7 +76,9 @@ export const Races: React.FC = () => {
             Distance: {race ? `${race.raceData.distance}m` : <Skeleton />}
           </h1>
           <h1>Class: {race ? race.raceData.class : <Skeleton />}</h1>
-          <h1>Margin: {race ? `${calculateMargin}%` : <Skeleton />}</h1>
+          <h1>
+            Margin: {race ? `${calculateMargin?.toFixed(2)}%` : <Skeleton />}
+          </h1>
         </div>
         <RaceTable
           runners={race?.runners}
