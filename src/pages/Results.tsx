@@ -2,7 +2,7 @@ import moment from "moment";
 import React, { useCallback, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Loader, PageLayout } from "../components";
-import { BetTable } from "../components/Bets";
+import { BetTable } from "../components/Tables";
 import { SettleBetModal, SettledMarketModal } from "../components/Modals";
 import { ResultsTable } from "../components/Tables";
 import { useMeetData, useResultsData } from "../hooks/data";

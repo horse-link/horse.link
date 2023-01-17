@@ -1,6 +1,6 @@
 import React from "react";
 import { MeetResults, MeetResult } from "../../types/meets";
-import { BaseTable } from "./BaseTable";
+import { BaseTable } from ".";
 import { TableData, TableHeader, TableRow } from "../../types/table";
 
 type Props = {
