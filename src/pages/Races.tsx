@@ -13,8 +13,8 @@ import { makeMarketId } from "../utils/markets";
 import { formatBytes16String } from "../utils/formatting";
 import { useConfig } from "../providers/Config";
 import Skeleton from "react-loading-skeleton";
-import utils from "../utils";
-import { BigNumber, ethers } from "ethers";
+import { BigNumber } from "bignumber.js";
+import { ethers } from "ethers";
 
 export const Races: React.FC = () => {
   const params = useParams();
@@ -34,8 +34,8 @@ export const Races: React.FC = () => {
   //   return utils.formatting.formatToTwoDecimals(calculateMargin.toString());
   // };
 
-  const getTheOddsForARace = race?.runners.map(race =>
-    BigNumber.from(race?.odds)
+  const getTheOddsForARace = race?.runners.map(
+    race => new BigNumber(race?.odds)
   );
   console.log(getTheOddsForARace, "getTheOddsForARace");
 
