@@ -12,7 +12,7 @@ import { useBetsStatistics } from "../hooks/stats";
 
 export const Bets: React.FC = () => {
   const { totalWinningBets, totalWinningVolume, largestWinningBet } =
-    useBetsStatistics(true);
+    useBetsStatistics();
   const [myBetsEnabled, setMyBetsEnabled] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBet, setSelectedBet] = useState<BetHistory>();
