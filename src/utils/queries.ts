@@ -145,6 +145,31 @@ export const getMarketStatsQuery = (timestamp: number, didWin?: boolean) => `{
   }
 }`;
 
+export const getBetsStatsQuery = (timestamp: number, didWin?: boolean) => `{
+  bets(
+    orderBy: amount
+    orderDirection: desc
+    where: {
+      createdAt_gte: ${timestamp}
+      ${didWin ? "didWin: true" : ""}
+    }
+  ) {
+    id
+    propositionId
+    marketId
+    marketAddress
+    amount
+    payout
+    owner
+    settled
+    didWin
+    createdAt
+    settledAt
+    createdAtTx
+    settledAtTx
+  }
+}`;
+
 export const getUserStatsQuery = (address?: string) => `{
   user(id: "${
     address ? address.toLowerCase() : ethers.constants.AddressZero
