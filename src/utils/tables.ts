@@ -7,7 +7,7 @@ export const getBlankRow = (
   blankIndex: number = 1
 ): TableRow[] => [
   {
-    data: Array.from({ length }).map((_, i) =>
+    data: Array.from({ length }, (_, i) =>
       i == blankIndex
         ? {
             title,
