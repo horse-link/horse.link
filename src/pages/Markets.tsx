@@ -73,7 +73,6 @@ export const Markets: React.FC = () => {
                       key={market.address}
                       config={config}
                       market={market}
-                      onClick={() => {}}
                     />
                   ))
                 ) : (
