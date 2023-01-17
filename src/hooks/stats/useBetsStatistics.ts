@@ -11,7 +11,7 @@ type Response = {
 const MILLISECONDS_TO_SECONDS_DIVISOR = 1000;
 const SECONDS_TWENTYFOUR_HOURS = 86400;
 
-export const useMarketStatistics = () => {
+export const useBetsStatistics = () => {
   const yesterdayFilter = useMemo(
     () =>
       Math.floor(
@@ -21,7 +21,7 @@ export const useMarketStatistics = () => {
   );
   // This is the last 24 hours of data
   const { data, loading } = useSubgraph<Response>(
-    utils.queries.getMarketStatsQuery(yesterdayFilter)
+    utils.queries.getMarketStatsQuery(yesterdayFilter, true)
   );
 
   const betsData = useMemo(() => {
@@ -30,39 +30,39 @@ export const useMarketStatistics = () => {
     return data.bets;
   }, [data, loading]);
 
-  //Total bets used on the market page
-  const totalBets = useMemo(() => {
+  //Total winning bets for the bets page
+  const totalWinningBets = useMemo(() => {
     if (!betsData) return;
 
     return betsData.length;
   }, [betsData]);
 
-  //Total volume bets used on the market page
-  const totalVolume = useMemo(() => {
+  //Winning volume bets on the bets page
+  const totalWinningVolume = useMemo(() => {
     if (!betsData) return;
-    if (!totalBets) return ethers.constants.Zero;
+    if (!totalWinningBets) return ethers.constants.Zero;
 
-    const amountBigNumbers = betsData.map(bet => BigNumber.from(bet.amount));
+    const amountBigNumbers = betsData.map(bet => BigNumber.from(bet.payout));
 
     return amountBigNumbers.reduce(
       (sum, value) => sum.add(value),
       ethers.constants.Zero
     );
-  }, [betsData, totalBets]);
+  }, [betsData, totalWinningBets]);
 
-  //Largest bet used on the market page
-  const largestBet = useMemo(() => {
+  //Largest winning bet on the bets page
+  const largestWinningBet = useMemo(() => {
     if (!betsData) return;
-    if (!totalBets) return utils.mocks.getMockBet();
+    if (!totalWinningBets) return utils.mocks.getMockBet();
 
     return betsData.reduce((prev, curr) =>
-      BigNumber.from(curr.amount).gt(BigNumber.from(prev.amount)) ? curr : prev
+      BigNumber.from(curr.payout).gt(BigNumber.from(prev.payout)) ? curr : prev
     );
-  }, [betsData, totalBets]);
+  }, [betsData, totalWinningBets]);
 
   return {
-    totalBets,
-    totalVolume,
-    largestBet
+    totalWinningBets,
+    totalWinningVolume,
+    largestWinningBet
   };
 };

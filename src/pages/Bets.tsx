@@ -6,12 +6,13 @@ import { BetFilterGroup, BetTable } from "../components/Bets";
 import { SettleBetModal } from "../components/Modals";
 import { BetFilterOptions, BetHistory } from "../types/bets";
 import { useConfig } from "../providers/Config";
-import { useMarketStatistics } from "../hooks/stats";
 import utils from "../utils";
 import { ethers } from "ethers";
+import { useBetsStatistics } from "../hooks/stats";
 
 export const Bets: React.FC = () => {
-  const { totalBets, totalVolume, largestBet } = useMarketStatistics(true);
+  const { totalWinningBets, totalWinningVolume, largestWinningBet } =
+    useBetsStatistics();
   const [myBetsEnabled, setMyBetsEnabled] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBet, setSelectedBet] = useState<BetHistory>();
@@ -42,19 +43,19 @@ export const Bets: React.FC = () => {
         <Card
           title="24H Winning Volume"
           data={
-            totalVolume &&
+            totalWinningVolume &&
             `$${utils.formatting.formatToFourDecimals(
-              ethers.utils.formatEther(totalVolume)
+              ethers.utils.formatEther(totalWinningVolume)
             )}`
           }
         />
-        <Card title="24H Winning Bets" data={totalBets?.toString()} />
+        <Card title="24H Winning Bets" data={totalWinningBets?.toString()} />
         <Card
           title="24H Largest Winning Bet"
           data={
-            largestBet &&
+            largestWinningBet &&
             `$${utils.formatting.formatToFourDecimals(
-              ethers.utils.formatEther(largestBet.amount)
+              ethers.utils.formatEther(largestWinningBet.payout)
             )}`
           }
         />

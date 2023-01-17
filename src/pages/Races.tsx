@@ -36,7 +36,7 @@ export const Races: React.FC = () => {
   const marketId = makeMarketId(new Date(), track, raceNumber.toString());
   const b16MarketId = formatBytes16String(marketId);
 
-  const { betHistory, refetch } = useSubgraphBets(
+  const { betHistory, totalBetsOnPropositions, refetch } = useSubgraphBets(
     false,
     "ALL_BETS",
     b16MarketId
@@ -66,6 +66,7 @@ export const Races: React.FC = () => {
           runners={race?.runners}
           setSelectedRunner={setSelectedRunner}
           setIsModalOpen={setIsModalOpen}
+          totalBetsOnPropositions={totalBetsOnPropositions}
         />
       </div>
       <div className="flex flex-col gap-6">
