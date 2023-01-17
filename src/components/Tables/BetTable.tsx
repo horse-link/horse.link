@@ -135,44 +135,13 @@ export const BetTable: React.FC<Props> = ({
     })
   );
 
-  const getBlankRow = (title: string) => [
-    {
-      data: [
-        {
-          title: "",
-          classNames: "!p-2 select-none"
-        },
-        {
-          title,
-          classNames: "!p-2 select-none"
-        },
-        {
-          title: "",
-          classNames: "!p-2 select-none"
-        },
-        {
-          title: "",
-          classNames: "!p-2 select-none"
-        },
-        {
-          title: "",
-          classNames: "!p-2 select-none"
-        },
-        {
-          title: "",
-          classNames: "!p-2 select-none"
-        }
-      ]
-    }
-  ];
-
   const TERNARY_ROWS =
     !isConnected && myBetsEnabled
-      ? getBlankRow("Please connect your wallet")
+      ? utils.tables.getBlankRow("Please connect your wallet", HEADERS.length)
       : !betHistory
-      ? getBlankRow("Loading...")
+      ? utils.tables.getBlankRow("Loading...", HEADERS.length)
       : !betHistory.length
-      ? getBlankRow("No bets")
+      ? utils.tables.getBlankRow("No bets", HEADERS.length)
       : ROWS;
 
   return <BaseTable headers={HEADERS} rows={TERNARY_ROWS} />;
