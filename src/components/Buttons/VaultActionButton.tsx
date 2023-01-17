@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { BaseButton } from ".";
 import { VaultModalState, VaultTransactionType } from "../../types/vaults";
 import { VaultInfo } from "../../types/config";
@@ -20,13 +20,16 @@ export const VaultActionButton: React.FC<Props> = ({
   openWalletModal,
   setIsModalOpen
 }) => {
-  const openModal = (type: VaultTransactionType, vault: VaultInfo) =>
-    isConnected
-      ? setIsModalOpen({
-          type,
-          vault
-        })
-      : openWalletModal();
+  const openModal = useCallback(
+    (type: VaultTransactionType, vault: VaultInfo) =>
+      isConnected
+        ? setIsModalOpen({
+            type,
+            vault
+          })
+        : openWalletModal(),
+    [type, vault]
+  );
 
   return (
     <BaseButton
