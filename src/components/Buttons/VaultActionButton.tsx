@@ -21,7 +21,7 @@ export const VaultActionButton: React.FC<Props> = ({
   setIsModalOpen
 }) => {
   const openModal = useCallback(
-    (type: VaultTransactionType, vault: VaultInfo) =>
+    () =>
       isConnected
         ? setIsModalOpen({
             type,
@@ -34,9 +34,9 @@ export const VaultActionButton: React.FC<Props> = ({
   return (
     <BaseButton
       title={title}
-      className="px-4 font-bold border-black border-2 py-1 rounded-md hover:text-white hover:bg-black transition-colors duration-100 mr-4"
+      className="px-4 font-bold border-black border-2 py-2 rounded-md text-black hover:text-white hover:bg-black transition-colors duration-100 mr-4"
       baseStyleOverride
-      onClick={() => openModal(type, vault)}
+      onClick={openModal}
     />
   );
 };
