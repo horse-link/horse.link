@@ -12,6 +12,10 @@ export const BaseTable: React.FC<Props> = props => {
     "px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase";
   const cellStyles = "px-2 py-4 whitespace-nowrap";
 
+  const createHeaderKey = (i: number) => `header-${i}`;
+  const createRowKey = (i: number) => `row-${i}`;
+  const createDataKey = (i: number) => `data-${i}`;
+
   return (
     <div className="flex flex-col">
       <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -22,7 +26,7 @@ export const BaseTable: React.FC<Props> = props => {
                 <tr>
                   {headers.map((header, i) => (
                     <th
-                      key={`${header.title}-${i}`}
+                      key={createHeaderKey(i)}
                       scope="col"
                       className={`${headerStyles} ${header.classNames || ""}`}
                     >
@@ -34,12 +38,13 @@ export const BaseTable: React.FC<Props> = props => {
               <tbody className="bg-white divide-y divide-gray-200">
                 {rows.map(({ data, row }, i) => (
                   <tr
-                    key={`row-${i}`}
+                    key={createRowKey(i)}
                     className={row?.classNames || ""}
                     {...row?.props}
                   >
-                    {data.map(d => (
+                    {data.map((d, i) => (
                       <td
+                        key={createDataKey(i)}
                         className={`${cellStyles} ${d.classNames || ""}`}
                         {...d.props}
                       >

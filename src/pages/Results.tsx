@@ -12,9 +12,8 @@ import { formatBytes16String } from "../utils/formatting";
 import { useConfig } from "../providers/Config";
 import utils from "../utils";
 import { useSubgraphBets } from "../hooks/subgraph";
-import { SettleRaceButton } from "../components/Buttons";
+import { SettleRaceButton, RacesButton } from "../components/Buttons";
 import { useAccount, useSigner } from "wagmi";
-import { RacesButton } from "../components/Buttons";
 
 export const Results: React.FC = () => {
   const [loading, setLoading] = useState(false);
