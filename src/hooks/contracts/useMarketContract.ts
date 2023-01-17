@@ -52,6 +52,46 @@ export const useMarketContract = () => {
     return receipt.transactionHash;
   };
 
+  const setResult = async (
+    { address }: MarketInfo,
+    signer: Signer,
+    bet: BetHistory,
+    config: Config
+  ) => {
+    const marketContract = Market__factory.connect(address, signer);
+    const oracleAddress = await marketContract.getOracleAddress();
+    const marketOracleContract = MarketOracle__factory.connect(
+      oracleAddress,
+      signer
+    );
+
+    try {
+      if (!bet.winningPropositionId || !bet.marketOracleResultSig)
+        throw new Error("No winningPropositionId or marketOracleResultSig");
+
+      if (
+        !utils.bets.recoverSigSigner(
+          bet.marketId,
+          bet.winningPropositionId,
+          bet.marketOracleResultSig,
+          config
+        )
+      )
+        throw new Error("Signature invalid");
+
+      // tx can fail if the result is already set
+      await (
+        await marketOracleContract.setResult(
+          bet.marketId,
+          bet.winningPropositionId,
+          bet.marketOracleResultSig
+        )
+      ).wait();
+    } catch (err: any) {
+      console.error(err);
+    }
+  };
+
   const settleBet = async (
     market: MarketInfo,
     bet: BetHistory,
@@ -115,6 +155,7 @@ export const useMarketContract = () => {
   return {
     placeBet,
     settleBet,
-    getPotentialPayout
+    getPotentialPayout,
+    setResult
   };
 };

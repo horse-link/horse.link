@@ -4,10 +4,19 @@ import { Loader } from "../";
 
 type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   loading?: boolean;
+  loaderSize?: number;
 };
 
 export const BaseButton: React.FC<Props> = props => {
-  const { className, title, loading, disabled, ...restOfProps } = props;
+  const {
+    className,
+    title,
+    loading,
+    disabled,
+    onClick,
+    loaderSize,
+    ...restOfProps
+  } = props;
 
   return (
     <button
@@ -18,8 +27,13 @@ export const BaseButton: React.FC<Props> = props => {
       )}
       disabled={loading || disabled}
       {...restOfProps}
+      onClick={onClick}
     >
-      {loading ? <Loader className="text-lg" /> : title || props.children}
+      {loading ? (
+        <Loader className="text-lg" size={loaderSize} />
+      ) : (
+        title || props.children
+      )}
     </button>
   );
 };
