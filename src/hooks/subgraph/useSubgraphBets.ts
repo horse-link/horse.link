@@ -38,13 +38,20 @@ export const useSubgraphBets = (
     const refetchInterval = setInterval(refetch, POLL_INTERVAL);
 
     return () => clearInterval(refetchInterval);
-  }, []);
+  }, [marketId]);
 
   useEffect(() => {
     const missingRequiredParam = myBetsEnabled && !address;
     if (!data || missingRequiredParam) return;
+    console.log("Setting bet history to undefined");
     setBetHistory(undefined);
-
+    /*
+(async () => {
+ const values = await Promise.all(data.bets.map(etc...));
+  etc...
+  setState(...)
+})();
+*/
     Promise.all(
       data.bets.map<Promise<BetHistory>>(async bet => {
         const signedBetData = await api.getWinningResultSignature(
@@ -54,13 +61,16 @@ export const useSubgraphBets = (
         return utils.bets.getBetHistory(bet, signedBetData);
       })
     ).then(async bets => {
+      console.log(marketId, bets[0]?.marketId, marketId == bets[0]?.marketId);
+
       const betsByFilterOptions = utils.bets.filterBetsByFilterOptions(
         bets,
         filter
       );
+      console.log("Setting bet history to betsByFilterOptions");
       setBetHistory(betsByFilterOptions);
     });
-  }, [data, address, filter]);
+  }, [data, address, filter, marketId]);
 
   const totalBetsOnPropositions = useMemo(() => {
     if (!betHistory) return;
