@@ -1,24 +1,25 @@
 import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useRunnersData } from "../hooks/data";
-import moment from "moment";
-import { RaceTable } from "../components/Races";
+import { useRunnersData, useMeetData } from "../hooks/data";
+import { RacesButton } from "../components/Buttons";
+import { RaceTable, BetTable } from "../components/Tables";
 import { PlaceBetModal, SettleBetModal } from "../components/Modals";
 import { Runner } from "../types/meets";
 import { PageLayout } from "../components";
 import { useSubgraphBets } from "../hooks/subgraph";
 import { BetHistory } from "../types/bets";
-import { BetTable } from "../components/Bets";
 import { makeMarketId } from "../utils/markets";
 import { formatBytes16String } from "../utils/formatting";
 import { useConfig } from "../providers/Config";
 import Skeleton from "react-loading-skeleton";
 import { BigNumber } from "bignumber.js";
+import dayjs from "dayjs";
 
 export const Races: React.FC = () => {
   const params = useParams();
   const track = params.track || "";
   const raceNumber = Number(params.number) || 0;
+  const meetRaces = useMeetData(params.track || "");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSettleModalOpen, setIsSettleModalOpen] = useState(false);
@@ -47,13 +48,13 @@ export const Races: React.FC = () => {
   // if (isScratchedRunner) remove from list
 
   const { meetDate } = useMemo(() => {
-    const meetDate = moment().format("DD-MM-YY");
+    const meetDate = dayjs().format("DD-MM-YY");
     return { config, meetDate };
   }, []);
   const marketId = makeMarketId(new Date(), track, raceNumber.toString());
   const b16MarketId = formatBytes16String(marketId);
 
-  const { betHistory, refetch } = useSubgraphBets(
+  const { betHistory, totalBetsOnPropositions, refetch } = useSubgraphBets(
     false,
     "ALL_BETS",
     b16MarketId
@@ -67,11 +68,13 @@ export const Races: React.FC = () => {
         setIsModalOpen={setIsModalOpen}
       />
       <div className="flex flex-col gap-6">
+        <RacesButton params={params} meetRaces={meetRaces} />
+
         <div className="flex p-2 shadow overflow-hidden border-b bg-white border-gray-200 sm:rounded-lg justify-around">
+          <h1>{race ? race.raceData.name : <Skeleton />}</h1>
           <h1>Track: {track}</h1>
           <h1>Race #: {raceNumber}</h1>
           <h1>Date: {meetDate}</h1>
-          <h1>Name: {race ? race.raceData.name : <Skeleton />}</h1>
           <h1>
             Distance: {race ? `${race.raceData.distance}m` : <Skeleton />}
           </h1>
@@ -84,6 +87,7 @@ export const Races: React.FC = () => {
           runners={race?.runners}
           setSelectedRunner={setSelectedRunner}
           setIsModalOpen={setIsModalOpen}
+          totalBetsOnPropositions={totalBetsOnPropositions}
         />
       </div>
       <div className="flex flex-col gap-6">

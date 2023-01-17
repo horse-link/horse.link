@@ -28,6 +28,13 @@ export type NextToJump = {
   };
 };
 
+export type RaceStatus =
+  | "Abandoned"
+  | "Interim"
+  | "Normal"
+  | "Paying"
+  | "Closed";
+
 export type Race = {
   number: number;
   name: string;
@@ -37,7 +44,7 @@ export type Race = {
   end_unix?: number;
   close?: string;
   close_unix?: number;
-  status: "Abandoned" | "Interim" | "Normal" | "Paying" | "Closed";
+  status: RaceStatus;
   results?: number[];
 };
 
@@ -71,6 +78,17 @@ export type MeetResponse = {
   meetings: Meet[];
 };
 
+export type RaceInfo = {
+  raceNumber: number;
+  raceName: string;
+  raceClassConditions: string;
+  raceDistance: number;
+  raceStartTime: string;
+  raceStatus: RaceStatus;
+};
+
+export type RacesResponse = RaceInfo[];
+
 export type Back = {
   nonce: string;
   market_id: string;
@@ -81,11 +99,13 @@ export type Back = {
   signature: EcSignature;
 };
 
-export type MeetResults = {
+export type MeetResult = {
   runner: string;
   number: number;
   rider: string;
   place: number;
-}[];
+};
+
+export type MeetResults = MeetResult[];
 
 export type MeetFilters = "ALL" | "AUS_NZ" | "INTERNATIONAL";
