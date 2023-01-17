@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { Loader, PageLayout } from "../components";
 import { BetTable } from "../components/Bets";
 import { SettleBetModal, SettledMarketModal } from "../components/Modals";
-import { ResultsTable } from "../components/Results";
+import { ResultsTable } from "../components/Tables";
 import { useMeetData, useResultsData } from "../hooks/data";
 import { BetHistory } from "../types/bets";
 import { makeMarketId } from "../utils/markets";
