@@ -29,29 +29,29 @@ export const Races: React.FC = () => {
   const config = useConfig();
   //JASMINS CODE BELOW
   // runners={race?.runners}
-  // const getMarginOdds = (runner: Runner) => {
-  //   const calculateMargin = (1 / runner.odds) * 100;
+  //   sum.plus((1 / value) * 100),
   //   return utils.formatting.formatToTwoDecimals(calculateMargin.toString());
   // };
-
   const getTheOddsForARace = race?.runners.map(
-    race => new BigNumber(race?.odds)
+    race => new BigNumber(race.odds)
   );
-  console.log(getTheOddsForARace, "getTheOddsForARace");
-
+  const oneOverOdds = new BigNumber(1);
+  const calcMarginFormula = getTheOddsForARace(
+    oneOverOdds.div(getTheOddsForARace)
+  ).multipliedBy(100);
   const calculateMargin = getTheOddsForARace?.reduce(
-    (sum, value) => sum.add(1 / value) * 100,
+    (sum, calcMarginFormula) => sum.plus(calcMarginFormula),
     ethers.constants.Zero
   );
-  console.log(calculateMargin, "newMath");
+
+  console.log(getTheOddsForARace, "getTheOddsForARace");
+  console.log(calcMarginFormula, "calcMarginFormula");
+  console.log(calculateMargin, "calculateMargin");
   //I NEED TO
   // GET ALL THE ODDS FOR A RACE
   // DEVIDE each with 1/n
   // ADD THE VALUES TO GET A TOTAL
   // TIMES THAT TOTAL BY 100
-
-  //every runner in a race has odds and u need to get them
-  //use reduce .add .div
   //JASMINS CODE ABOVE
   const { meetDate } = useMemo(() => {
     const meetDate = moment().format("DD-MM-YY");
