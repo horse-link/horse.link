@@ -1,0 +1,108 @@
+import React from "react";
+import { BaseTable } from "./BaseTable";
+import { FormattedVaultTransaction } from "../../types/entities";
+import { Config } from "../../types/config";
+import { DataProps, HeaderProps, RowProps } from "../../types/table";
+import utils from "../../utils";
+import { VaultTransactionType } from "../../types/vaults";
+import { ethers } from "ethers";
+import Skeleton from "react-loading-skeleton";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+dayjs.extend(relativeTime);
+
+const SCANNER_URL = process.env.VITE_SCANNER_URL;
+if (!SCANNER_URL) throw new Error("No VITE_SCANNER_URL env provided");
+
+const txTypeMap = new Map([
+  [VaultTransactionType.WITHDRAW, "Withdrawal"],
+  [VaultTransactionType.DEPOSIT, "Deposit"]
+]);
+
+type Props = {
+  history?: FormattedVaultTransaction[];
+  config?: Config;
+};
+
+export const VaultHistoryTable: React.FC<Props> = ({ history, config }) => {
+  const getHistoryData = (vault?: FormattedVaultTransaction): DataProps[] => {
+    const formattedTxType = vault && txTypeMap.get(vault.type);
+    const details =
+      vault && config && utils.config.getVault(vault.vaultAddress, config);
+
+    return [
+      {
+        title: formattedTxType,
+        classNames: "!pl-5 !pr-2"
+      },
+      {
+        title: vault ? (
+          utils.formatting.formatToFourDecimals(
+            ethers.utils.formatEther(vault.amount)
+          )
+        ) : (
+          <Skeleton width="2em" />
+        )
+      },
+      {
+        title: vault ? (
+          dayjs.unix(vault.timestamp).fromNow()
+        ) : (
+          <Skeleton width="2em" />
+        )
+      },
+      {
+        title: details ? details.name : <Skeleton />
+      },
+      {
+        title: vault ? (
+          <a
+            href={`${SCANNER_URL}/tx/${vault.id.toLowerCase()}`}
+            target="_blank"
+            rel="noreferrer noopener"
+            className="text-blue-600 truncate"
+          >
+            {vault.id}
+          </a>
+        ) : (
+          <Skeleton width="2em" />
+        )
+      }
+    ];
+  };
+
+  const HEADERS: HeaderProps[] = [
+    {
+      title: "Type",
+      classNames: "!pl-5 !pr-2"
+    },
+    {
+      title: "Amount"
+    },
+    {
+      title: "Time"
+    },
+    {
+      title: "Vault Name"
+    },
+    {
+      title: "TxID"
+    }
+  ];
+
+  const ROWS: RowProps[] = (history || utils.mocks.getMockVaultTableRows()).map(
+    vault => ({
+      data: getHistoryData(vault)
+    })
+  );
+
+  return (
+    <BaseTable
+      title="History"
+      tableStyles="w-full mt-8"
+      headers={HEADERS}
+      rows={ROWS}
+    />
+  );
+};

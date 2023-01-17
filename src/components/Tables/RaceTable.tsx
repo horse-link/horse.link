@@ -24,9 +24,11 @@ export const RaceTable: React.FC<Props> = ({
 }) => {
   const { isConnected } = useAccount();
   const { openWalletModal } = useWalletModal();
+
   const openBetRunners =
     runners?.filter(runner => !utils.races.isScratchedRunner(runner)) ??
     utils.mocks.getMockRunners();
+
   const scratchedRunners =
     runners?.filter(utils.races.isScratchedRunner) ??
     utils.mocks.getMockRunners();
@@ -35,6 +37,7 @@ export const RaceTable: React.FC<Props> = ({
     classnames({
       "cursor-pointer hover:bg-gray-100": !isScratched
     });
+
   const isScratchedDataStyles = (isScratched: boolean) =>
     classnames({
       "line-through": isScratched
@@ -42,9 +45,9 @@ export const RaceTable: React.FC<Props> = ({
 
   const openDialog = () => {
     if (!isConnected) return openWalletModal();
-
     setIsModalOpen(true);
   };
+
   const onClickRunner = (runner?: Runner) => {
     if (!runner) return;
     setSelectedRunner(runner);
