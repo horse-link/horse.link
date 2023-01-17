@@ -120,13 +120,12 @@ export const getVaultStatsQuery = (timestamp?: number) => `{
   }
 }`;
 
-export const getMarketStatsQuery = (timestamp: number, didWin?: boolean) => `{
+export const getMarketStatsQuery = (timestamp: number) => `{
   bets(
     orderBy: amount
     orderDirection: desc
     where: {
       createdAt_gte: ${timestamp}
-      ${didWin ? "didWin: true" : ""}
     }
   ) {
     id
