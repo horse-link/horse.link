@@ -1,16 +1,18 @@
 import { ReactNode } from "react";
 
-export type HeaderProps = {
+export type TableHeader = {
   title: ReactNode;
   classNames?: string;
 };
-export type DataProps = {
+
+export type TableData = {
   title: ReactNode;
   classNames?: string;
   props?: React.HTMLAttributes<HTMLTableCellElement>;
 };
-export type RowProps = {
-  data: DataProps[];
+
+export type TableRow = {
+  data: TableData[];
   row?: {
     classNames?: string;
     props?: React.HTMLAttributes<HTMLTableRowElement>;

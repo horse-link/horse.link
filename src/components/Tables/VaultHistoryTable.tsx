@@ -2,7 +2,7 @@ import React from "react";
 import { BaseTable } from "./BaseTable";
 import { FormattedVaultTransaction } from "../../types/entities";
 import { Config } from "../../types/config";
-import { DataProps, HeaderProps, RowProps } from "../../types/table";
+import { TableData, TableHeader, TableRow } from "../../types/table";
 import utils from "../../utils";
 import { VaultTransactionType } from "../../types/vaults";
 import { ethers } from "ethers";
@@ -26,7 +26,7 @@ type Props = {
 };
 
 export const VaultHistoryTable: React.FC<Props> = ({ history, config }) => {
-  const getHistoryData = (vault?: FormattedVaultTransaction): DataProps[] => {
+  const getHistoryData = (vault?: FormattedVaultTransaction): TableData[] => {
     const formattedTxType = vault && txTypeMap.get(vault.type);
     const details =
       vault && config && utils.config.getVault(vault.vaultAddress, config);
@@ -72,7 +72,7 @@ export const VaultHistoryTable: React.FC<Props> = ({ history, config }) => {
     ];
   };
 
-  const HEADERS: HeaderProps[] = [
+  const HEADERS: TableHeader[] = [
     {
       title: "Type",
       classNames: "!pl-5 !pr-2"
@@ -91,7 +91,7 @@ export const VaultHistoryTable: React.FC<Props> = ({ history, config }) => {
     }
   ];
 
-  const ROWS: RowProps[] = (history || utils.mocks.getMockVaultTableRows()).map(
+  const ROWS: TableRow[] = (history || utils.mocks.getMockVaultTableRows()).map(
     vault => ({
       data: getHistoryData(vault)
     })

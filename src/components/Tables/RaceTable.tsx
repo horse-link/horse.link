@@ -1,7 +1,7 @@
 import React from "react";
 import { BaseTable } from ".";
 import utils from "../../utils";
-import { DataProps, HeaderProps, RowProps } from "../../types/table";
+import { TableData, TableHeader, TableRow } from "../../types/table";
 import { Runner } from "../../types/meets";
 import Skeleton from "react-loading-skeleton";
 import classnames from "classnames";
@@ -57,7 +57,7 @@ export const RaceTable: React.FC<Props> = ({
   const getRunnerData = (
     isScratched: boolean,
     runner?: Runner
-  ): DataProps[] => {
+  ): TableData[] => {
     const {
       number,
       name,
@@ -122,7 +122,7 @@ export const RaceTable: React.FC<Props> = ({
     ];
   };
 
-  const HEADERS: HeaderProps[] = [
+  const HEADERS: TableHeader[] = [
     {
       title: "#",
       classNames: "!px-1 !w-10 !bg-gray-200"
@@ -147,7 +147,7 @@ export const RaceTable: React.FC<Props> = ({
     }
   ];
 
-  const OPEN_BET_ROWS: RowProps[] = openBetRunners.map(runner => ({
+  const OPEN_BET_ROWS: TableRow[] = openBetRunners.map(runner => ({
     data: getRunnerData(false, runner),
     row: {
       classNames: isScratchedRowStyles(false),
@@ -157,7 +157,7 @@ export const RaceTable: React.FC<Props> = ({
     }
   }));
 
-  const SCRATCHED_BET_ROWS: RowProps[] = scratchedRunners.map(runner => ({
+  const SCRATCHED_BET_ROWS: TableRow[] = scratchedRunners.map(runner => ({
     data: getRunnerData(true, runner),
     row: {
       classNames: isScratchedRowStyles(true)

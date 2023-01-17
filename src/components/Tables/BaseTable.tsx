@@ -1,9 +1,9 @@
 import React from "react";
-import { HeaderProps, RowProps } from "../../types/table";
+import { TableHeader, TableRow } from "../../types/table";
 
 type Props = {
-  headers: HeaderProps[];
-  rows: RowProps[];
+  headers: TableHeader[];
+  rows: TableRow[];
   title?: string;
   tableStyles?: string;
 };

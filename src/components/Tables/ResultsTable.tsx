@@ -1,14 +1,14 @@
 import React from "react";
 import { MeetResults, MeetResult } from "../../types/meets";
 import { BaseTable } from "./BaseTable";
-import { DataProps, HeaderProps, RowProps } from "../../types/table";
+import { TableData, TableHeader, TableRow } from "../../types/table";
 
 type Props = {
   results: MeetResults;
 };
 
 export const ResultsTable: React.FC<Props> = ({ results }) => {
-  const getResultsData = (result: MeetResult): DataProps[] => [
+  const getResultsData = (result: MeetResult): TableData[] => [
     {
       title: result.place,
       classNames: "bg-gray-200"
@@ -24,7 +24,7 @@ export const ResultsTable: React.FC<Props> = ({ results }) => {
     }
   ];
 
-  const HEADERS: HeaderProps[] = [
+  const HEADERS: TableHeader[] = [
     {
       title: "#",
       classNames: "!px-1 !w-10 !bg-gray-200"
@@ -40,7 +40,7 @@ export const ResultsTable: React.FC<Props> = ({ results }) => {
     }
   ];
 
-  const ROWS: RowProps[] = results.map(result => ({
+  const ROWS: TableRow[] = results.map(result => ({
     data: getResultsData(result)
   }));
 
