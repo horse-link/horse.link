@@ -120,31 +120,7 @@ export const getVaultStatsQuery = (timestamp?: number) => `{
   }
 }`;
 
-export const getMarketStatsQuery = (timestamp: number) => `{
-  bets(
-    orderBy: amount
-    orderDirection: desc
-    where: {
-      createdAt_gte: ${timestamp}
-    }
-  ) {
-    id
-    propositionId
-    marketId
-    marketAddress
-    amount
-    payout
-    owner
-    settled
-    didWin
-    createdAt
-    settledAt
-    createdAtTx
-    settledAtTx
-  }
-}`;
-
-export const getBetsStatsQuery = (timestamp: number, didWin?: boolean) => `{
+export const getMarketStatsQuery = (timestamp: number, didWin?: boolean) => `{
   bets(
     orderBy: amount
     orderDirection: desc
