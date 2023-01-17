@@ -1,13 +1,13 @@
 import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useRunnersData, useMeetData } from "../hooks/data";
-import { RaceTable, RacesButton } from "../components/Races";
+import { RacesButton } from "../components/Buttons";
+import { RaceTable, BetTable } from "../components/Tables";
 import { PlaceBetModal, SettleBetModal } from "../components/Modals";
 import { Runner } from "../types/meets";
 import { PageLayout } from "../components";
 import { useSubgraphBets } from "../hooks/subgraph";
 import { BetHistory } from "../types/bets";
-import { BetTable } from "../components/Bets";
 import { makeMarketId } from "../utils/markets";
 import { formatBytes16String } from "../utils/formatting";
 import { useConfig } from "../providers/Config";

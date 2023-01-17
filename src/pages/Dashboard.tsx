@@ -5,11 +5,11 @@ import api from "../apis/Api";
 import { Toggle, PageLayout } from "../components";
 import {
   DashboardOverallStats,
-  DashboardTable,
   DashboardUserStats,
   DashboardFilterGroup,
   DashboardNextToJumpBanner
 } from "../components/Dashboard";
+import { DashboardTable } from "../components/Tables";
 import { useWalletModal } from "../providers/WalletModal";
 import { SignedMeetingsResponse, MeetFilters, Meet } from "../types/meets";
 
@@ -121,9 +121,7 @@ export const Dashboard: React.FC = () => {
           <Toggle enabled={myPlayEnabled} onChange={onMyPlayToggle} />
           <div>My Stats</div>
         </div>
-        <div className="-mt-12">
-          <DashboardTable meets={meets} />
-        </div>
+        <DashboardTable meets={meets} />
         <div className="flex justify-center px-4 py-5 bg-white shadow rounded-lg sm:p-6 mb-10">
           <div className="w-4/5 max-w-2xl">
             <div className="flex flex-col items-center">

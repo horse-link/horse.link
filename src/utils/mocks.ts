@@ -59,3 +59,9 @@ export const getMockMeets = (): Meet[] =>
     date: "",
     races: getMockRaces()
   }));
+
+export const getMockVaultTableRows = () =>
+  Array.from({ length: 4 }, () => undefined);
+
+export const getMockBetHistory = () =>
+  Array.from({ length: 5 }, () => undefined);
