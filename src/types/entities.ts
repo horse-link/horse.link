@@ -119,3 +119,5 @@ export type FormattedUser = Pick<User, "id"> & {
   pnl: BigNumber;
   lastUpdate: number;
 };
+
+export type TimeStampFilter = "createdAt_gte" | "settledAt_gte";
