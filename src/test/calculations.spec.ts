@@ -17,6 +17,12 @@ describe("Calculation tests", () => {
 
     expect((+biggerMargin).toFixed(PRECISION)).to.equal("1.296935157");
 
+    // division by zero test
+    const zero = [0];
+    const zeroMargin = utils.races.calculateRaceMargin(zero);
+
+    expect(+zeroMargin).to.equal(1);
+
     // display test
     const display = utils.formatting.formatToTwoDecimals(
       (+biggerMargin * 100).toString()

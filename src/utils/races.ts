@@ -8,7 +8,7 @@ export const calculateRaceMargin = (odds: number[]) => {
   const one = ethers.utils.parseEther("1");
 
   // if odds arent present, use 1 odds (prevents division by zero error)
-  const filteredOdds = odds.map(o => (!o ? 1 : o));
+  const filteredOdds = odds.map(o => o || 1);
 
   const bnOdds = filteredOdds.map(o => ethers.utils.parseEther(o.toString()));
   const oneOverOdds = bnOdds.map(o =>
