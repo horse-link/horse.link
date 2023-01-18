@@ -41,17 +41,13 @@ export const useSubgraphBets = (
   }, [marketId]);
 
   useEffect(() => {
+    // local variable to prevent setting state after component unmounts
+    // For more information see https://www.developerway.com/posts/fetching-in-react-lost-promises
+    let isActive = true;
     const missingRequiredParam = myBetsEnabled && !address;
     if (!data || missingRequiredParam) return;
-    console.log("Setting bet history to undefined");
     setBetHistory(undefined);
-    /*
-(async () => {
- const values = await Promise.all(data.bets.map(etc...));
-  etc...
-  setState(...)
-})();
-*/
+
     Promise.all(
       data.bets.map<Promise<BetHistory>>(async bet => {
         const signedBetData = await api.getWinningResultSignature(
@@ -61,15 +57,17 @@ export const useSubgraphBets = (
         return utils.bets.getBetHistory(bet, signedBetData);
       })
     ).then(async bets => {
-      console.log(marketId, bets[0]?.marketId, marketId == bets[0]?.marketId);
-
       const betsByFilterOptions = utils.bets.filterBetsByFilterOptions(
         bets,
         filter
       );
-      console.log("Setting bet history to betsByFilterOptions");
-      setBetHistory(betsByFilterOptions);
+      isActive && setBetHistory(betsByFilterOptions);
     });
+
+    return () => {
+      // local variable from above
+      isActive = false;
+    };
   }, [data, address, filter, marketId]);
 
   const totalBetsOnPropositions = useMemo(() => {
