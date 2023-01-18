@@ -1,6 +1,5 @@
 import { ethers } from "ethers";
 import { BetFilterOptions, FilterObject } from "../types/bets";
-import { TimeStampFilter } from "../types/entities";
 
 const getOptionalAddressFilter = (address?: string) =>
   address ? `owner: "${address.toLowerCase()}"` : "";
