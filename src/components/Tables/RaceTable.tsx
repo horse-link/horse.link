@@ -111,7 +111,9 @@ export const RaceTable: React.FC<Props> = ({
         title: !totalBetsOnPropositions ? (
           <Skeleton width="2em" />
         ) : (
-          `${stats?.percentage || 0}%`
+          `${utils.formatting.formatToFourDecimals(
+            stats?.percentage.toString() || "0"
+          )}%`
         ),
         classNames: isScratchedDataStyles(isScratched)
       }
