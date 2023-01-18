@@ -74,16 +74,20 @@ export const useSubgraphBets = (
         .parseEther(prevObject[proposition]?.amount || "0")
         .add(ethers.utils.parseEther(bet.amount));
 
-      const arrayPercentage = 1 / array.length;
-      const percentage = prevObject[proposition]?.percentage
-        ? prevObject[proposition].percentage + arrayPercentage
-        : arrayPercentage;
+      const totalBetValue = array.reduce(
+        (sum, cur) => sum.add(ethers.utils.parseEther(cur.amount)),
+        ethers.constants.Zero
+      );
+
+      const proportion = amount
+        .mul(ethers.constants.WeiPerEther)
+        .div(totalBetValue);
 
       return {
         ...prevObject,
         [proposition]: {
           amount: ethers.utils.formatEther(amount),
-          percentage: percentage * 100
+          percentage: +ethers.utils.formatEther(proportion) * 100
         }
       };
     }, {} as TotalBetsOnPropositions);
