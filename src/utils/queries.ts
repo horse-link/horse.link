@@ -132,7 +132,7 @@ export const getMarketStatsQuery = (filter?: FilterObject) => `{
           : ""
       }
       ${filter}: ${filter}
-      ${filter ? "didWin: true" : ""}
+      ${filter ? "didWin" : "true"}
     }
   ) {
     id

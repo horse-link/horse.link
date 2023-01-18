@@ -18,7 +18,7 @@ export type BetHistoryResponse = {
 
 export type Filters = "createdAt_gte" | "settledAt_gte" | "didWin";
 
-export type FilterObject = Record<Filters, string | number>;
+export type FilterObject = Record<Filters, string | number | boolean>;
 
 export type BetHistory = {
   index: number;
