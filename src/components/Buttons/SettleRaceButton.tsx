@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo, useRef } from "react";
 import { BaseButton } from ".";
 import { Config } from "../../types/config";
 import { BetHistory } from "../../types/bets";
@@ -30,8 +30,21 @@ export const SettleRaceButton: React.FC<Props> = props => {
   } = props;
   const { openWalletModal } = useWalletModal();
 
+  const { current: now } = useRef(Date.now());
+
+  const settlableBets = useMemo(
+    () => betHistory?.filter(bet => bet.payoutDate < now),
+    [betHistory]
+  );
+
   const settleRace = useCallback(async () => {
-    if (!betHistory || !betHistory.length || !config || loading || !config)
+    if (
+      !settlableBets ||
+      !settlableBets.length ||
+      !config ||
+      loading ||
+      !config
+    )
       return;
     if (!isConnected || !signer) return openWalletModal();
 
@@ -50,7 +63,7 @@ export const SettleRaceButton: React.FC<Props> = props => {
       );
       // get winning data (all bets should have data and have the same data)
       const { marketId, winningPropositionId, marketOracleResultSig } =
-        betHistory[0];
+        settlableBets[0];
       // add result
       try {
         await oracleContract.setResult(
@@ -64,7 +77,7 @@ export const SettleRaceButton: React.FC<Props> = props => {
       }
       // settle all bets for respective market
       const txs = await Promise.all(
-        betHistory.map(async bet =>
+        settlableBets.map(async bet =>
           // market will always match a marketAddress
           (
             await markets
@@ -85,15 +98,15 @@ export const SettleRaceButton: React.FC<Props> = props => {
     } finally {
       setLoading(false);
     }
-  }, [props]);
+  }, [props, settlableBets]);
 
   return (
     <BaseButton
       className="!w-auto !px-6 !py-3 !text-md"
-      loading={!config || !betHistory || loading}
+      loading={!config || !settlableBets || loading}
       loaderSize={20}
       onClick={settleRace}
-      disabled={!betHistory?.length}
+      disabled={!settlableBets?.length}
     >
       Settle Race
     </BaseButton>

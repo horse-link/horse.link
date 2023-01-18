@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { useSubgraphBets } from "../hooks/subgraph";
 import { Toggle, PageLayout, Card } from "../components";
-import { BetFilterGroup, BetTable } from "../components/Bets";
+import { BetFilterGroup } from "../components/Bets";
+import { BetTable } from "../components/Tables";
 import { SettleBetModal } from "../components/Modals";
 import { BetFilterOptions, BetHistory } from "../types/bets";
 import { useConfig } from "../providers/Config";
@@ -41,7 +42,7 @@ export const Bets: React.FC = () => {
     <PageLayout>
       <div className="flex flex-col md:flex-row w-full justify-center text-left gap-x-1 gap-y-2 lg:gap-x-4 mb-4 lg:justify-between">
         <Card
-          title="24H Winning Volume"
+          title="24H Winning Bets Value"
           data={
             totalWinningVolume &&
             `$${utils.formatting.formatToFourDecimals(

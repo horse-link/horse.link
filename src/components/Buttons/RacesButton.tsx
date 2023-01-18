@@ -22,7 +22,7 @@ export const RacesButton: React.FC<Props> = ({ meetRaces, params }) => {
             })}
             to={
               race.raceStatus === "Normal"
-                ? `/horses/${params.track || ""}/${race.raceNumber}`
+                ? `/races/${params.track || ""}/${race.raceNumber}`
                 : race.raceStatus === "Paying"
                 ? `/results/${dayjs().format("YYYY-MM-DD")}_${params.track}_${
                     race.raceNumber

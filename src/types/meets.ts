@@ -99,11 +99,13 @@ export type Back = {
   signature: EcSignature;
 };
 
-export type MeetResults = {
+export type MeetResult = {
   runner: string;
   number: number;
   rider: string;
   place: number;
-}[];
+};
+
+export type MeetResults = MeetResult[];
 
 export type MeetFilters = "ALL" | "AUS_NZ" | "INTERNATIONAL";

@@ -2,9 +2,8 @@ import moment from "moment";
 import React, { useCallback, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Loader, PageLayout } from "../components";
-import { BetTable } from "../components/Bets";
+import { BetTable, ResultsTable } from "../components/Tables";
 import { SettleBetModal, SettledMarketModal } from "../components/Modals";
-import { ResultsTable } from "../components/Results";
 import { useMeetData, useResultsData } from "../hooks/data";
 import { BetHistory } from "../types/bets";
 import { makeMarketId } from "../utils/markets";
@@ -12,9 +11,8 @@ import { formatBytes16String } from "../utils/formatting";
 import { useConfig } from "../providers/Config";
 import utils from "../utils";
 import { useSubgraphBets } from "../hooks/subgraph";
-import { SettleRaceButton } from "../components/Buttons";
+import { SettleRaceButton, RacesButton } from "../components/Buttons";
 import { useAccount, useSigner } from "wagmi";
-import { RacesButton } from "../components/Races";
 
 export const Results: React.FC = () => {
   const [loading, setLoading] = useState(false);
