@@ -43,9 +43,9 @@ export const Races: React.FC = () => {
     zero
   );
 
-  const isScratchedRunner = (runner: Runner) =>
-    ["LateScratched", "Scratched"].includes(runner.status);
-  // if (isScratchedRunner) remove from list
+  // const isScratchedRunner = (runner: Runner) =>
+  //   ["LateScratched", "Scratched"].includes(runner.status);
+  // // if (isScratchedRunner) remove from list
 
   const { meetDate } = useMemo(() => {
     const meetDate = dayjs().format("DD-MM-YY");
