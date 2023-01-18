@@ -122,7 +122,6 @@ export const getVaultStatsQuery = (timestamp?: number) => `{
 }`;
 
 export const getMarketStatsQuery = (
-  timestamp: number,
   didWin?: boolean,
   filter?: FilterObject
 ) => `{
@@ -135,7 +134,7 @@ export const getMarketStatsQuery = (
           ? Object.entries(filter).map(([key, value]) => `${key}: ${value}`)
           : ""
       }
-      ${filter}: ${timestamp}
+      ${filter}: ${filter}
       ${didWin ? "didWin: true" : ""}
     }
   ) {
