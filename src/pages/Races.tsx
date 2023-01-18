@@ -15,9 +15,6 @@ import Skeleton from "react-loading-skeleton";
 import dayjs from "dayjs";
 import utils from "../utils";
 
-// units of precision as per ticket
-const PRECISION = 9;
-
 export const Races: React.FC = () => {
   const params = useParams();
   const track = params.track || "";
@@ -50,9 +47,8 @@ export const Races: React.FC = () => {
     const validRunners = race.runners.filter(
       runner => !utils.races.isScratchedRunner(runner)
     );
-    const sum = utils.races.calculateRaceMargin(validRunners.map(r => r.odds));
 
-    return (+sum).toFixed(PRECISION);
+    return utils.races.calculateRaceMargin(validRunners.map(r => r.odds));
   }, [race]);
 
   return (
