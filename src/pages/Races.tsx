@@ -77,7 +77,9 @@ export const Races: React.FC = () => {
           <h1>
             Margin:{" "}
             {margin ? (
-              utils.formatting.formatToTwoDecimals(margin)
+              `${utils.formatting.formatToTwoDecimals(
+                (+margin * 100).toString()
+              )}%`
             ) : (
               <Skeleton />
             )}

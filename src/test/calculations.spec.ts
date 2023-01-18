@@ -14,5 +14,11 @@ describe("Calculation tests", () => {
     const biggerMargin = utils.races.calculateRaceMargin(biggerOddsArray);
 
     expect((+biggerMargin).toFixed(9)).to.equal("1.296935157");
+
+    // display test
+    const display = utils.formatting.formatToTwoDecimals(
+      (+biggerMargin * 100).toString()
+    );
+    expect(display).to.equal("129.69");
   });
 });
