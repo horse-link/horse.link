@@ -30,7 +30,8 @@ export const DashboardTable: React.FC<Props> = ({ meets }) => {
 
   const getDashboardData = (meet: Meet): TableData[] => [
     {
-      title: `${meet.name} (${meet.location})`
+      title: `${meet.name} (${meet.location})`,
+      classNames: "bg-gray-200"
     },
     ...meet.races.map(race => ({
       title: (
@@ -82,7 +83,8 @@ export const DashboardTable: React.FC<Props> = ({ meets }) => {
 
   const HEADERS: TableHeader[] = [
     {
-      title: "Venue"
+      title: "Venue",
+      classNames: "bg-gray-200 !w-[14rem]"
     },
     ...Array.from({ length }, (_, i) => ({
       title: `Race ${i + 1}`

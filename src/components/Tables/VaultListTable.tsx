@@ -25,7 +25,7 @@ export const VaultListTable: React.FC<Props> = ({ config, setIsModalOpen }) => {
   const getVaultListData = (vault: VaultInfo): TableData[] => [
     {
       title: vault.name,
-      classNames: "!pl-5 !pr-2"
+      classNames: "!pl-5 !pr-2 bg-gray-200"
     },
     {
       title: vault.asset.symbol
@@ -74,7 +74,7 @@ export const VaultListTable: React.FC<Props> = ({ config, setIsModalOpen }) => {
   const HEADERS: TableHeader[] = [
     {
       title: "Name",
-      classNames: "!pl-5 !pr-2"
+      classNames: "!pl-5 !pr-2 bg-gray-200 !w-[10rem]"
     },
     {
       title: "Token"

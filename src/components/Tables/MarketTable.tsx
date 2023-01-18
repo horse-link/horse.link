@@ -17,7 +17,7 @@ export const MarketTable: React.FC<Props> = ({ config }) => {
     return [
       {
         title: vault?.name ?? <Skeleton />,
-        classNames: "!pl-5 !pr-2"
+        classNames: "!pl-5 !pr-2 bg-gray-200"
       },
       {
         title: vault ? (
@@ -40,7 +40,7 @@ export const MarketTable: React.FC<Props> = ({ config }) => {
   const HEADERS: TableHeader[] = [
     {
       title: "Name",
-      classNames: "!pl-5 !pr-2"
+      classNames: "!pl-5 !pr-2 bg-gray-200 !w-[10rem]"
     },
     {
       title: "Total In Play",
