@@ -64,30 +64,31 @@ export const useSubgraphBets = (
 
   const totalBetsOnPropositions = useMemo(() => {
     if (!betHistory) return;
-    let totalSumAmount = 0;
 
-    const sumMap = betHistory.reduce((acc, bet) => {
-      const { propositionId, amount: bnAmount } = bet;
-      const amount = +ethers.utils.formatEther(bnAmount);
-      if (!acc[propositionId]) {
-        acc[propositionId] = 0;
-      }
-      acc[propositionId] += amount;
-      totalSumAmount += amount;
-      return acc;
-    }, {} as Record<string, number>);
+    const totalBets = betHistory.reduce((prevObject, bet, _, array) => {
+      const proposition = utils.formatting.parseBytes16String(
+        bet.propositionId
+      );
 
-    const sumWithPercentageMap = Object.keys(sumMap).reduce((acc, key) => {
-      if (key === "total") return acc;
-      const amount = sumMap[key];
-      acc[key] = {
-        amount,
-        percentage: (amount / totalSumAmount) * 100
+      const amount = ethers.utils
+        .parseEther(prevObject[proposition]?.amount || "0")
+        .add(ethers.utils.parseEther(bet.amount));
+
+      const arrayPercentage = 1 / array.length;
+      const percentage = prevObject[proposition]?.percentage
+        ? prevObject[proposition].percentage + arrayPercentage
+        : arrayPercentage;
+
+      return {
+        ...prevObject,
+        [proposition]: {
+          amount: ethers.utils.formatEther(amount),
+          percentage: percentage * 100
+        }
       };
-      return acc;
     }, {} as TotalBetsOnPropositions);
 
-    return sumWithPercentageMap;
+    return totalBets;
   }, [betHistory]);
 
   return {

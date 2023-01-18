@@ -34,7 +34,7 @@ export const VaultHistoryTable: React.FC<Props> = ({ history, config }) => {
     return [
       {
         title: formattedTxType,
-        classNames: "!pl-5 !pr-2"
+        classNames: "!pl-5 !pr-2 bg-gray-200"
       },
       {
         title: vault ? (
@@ -75,7 +75,7 @@ export const VaultHistoryTable: React.FC<Props> = ({ history, config }) => {
   const HEADERS: TableHeader[] = [
     {
       title: "Type",
-      classNames: "!pl-5 !pr-2"
+      classNames: "!pl-5 !pr-2 bg-gray-200 !w-[10rem]"
     },
     {
       title: "Amount"

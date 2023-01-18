@@ -39,7 +39,7 @@ export const Vaults: React.FC = () => {
           data={
             totalVaultsExposure &&
             `$${utils.formatting.formatToFourDecimals(
-              totalVaultsExposure.toString()
+              ethers.utils.formatEther(totalVaultsExposure)
             )}`
           }
         />

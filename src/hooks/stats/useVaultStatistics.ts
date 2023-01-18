@@ -1,5 +1,4 @@
 import { BigNumber, ethers } from "ethers";
-import { BigNumber as BigNumberJS } from "bignumber.js";
 import { useEffect, useMemo, useState } from "react";
 import { VaultTransaction } from "../../types/entities";
 import useSubgraph from "../useSubgraph";
@@ -74,11 +73,11 @@ export const useVaultStatistics = () => {
     return totalVaultDeposits.add(totalVaultWithdrawals);
   }, [vaultsTransactionData, totalVaultDeposits, totalVaultWithdrawals]);
 
-  // We need to use BigNumberJS here because etherBigNumber doesn't support decimals
-  const [totalVaultsExposure, setTotalVaultsExposure] = useState<BigNumberJS>();
+  const [totalVaultsExposure, setTotalVaultsExposure] = useState<BigNumber>();
 
   useEffect(() => {
     if (!config) return;
+
     (async () => {
       const assets = await Promise.all(
         config.vaults.map(async v => {
@@ -86,9 +85,11 @@ export const useVaultStatistics = () => {
           return ethers.utils.formatUnits(balance, v.asset.decimals);
         })
       );
-      setTotalVaultsExposure(
-        assets.reduce((sum, curr) => sum.plus(curr), new BigNumberJS(0))
+      const exposure = assets.reduce(
+        (sum, cur) => sum.add(ethers.utils.parseEther(cur)),
+        ethers.constants.Zero
       );
+      setTotalVaultsExposure(exposure);
     })();
   }, [config, provider]);
 
