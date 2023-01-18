@@ -39,7 +39,7 @@ export type BetHistory = {
 export type TotalBetsOnPropositions = Record<
   string,
   {
-    amount: number;
+    amount: string;
     percentage: number;
   }
 >;
