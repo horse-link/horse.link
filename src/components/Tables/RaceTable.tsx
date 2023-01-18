@@ -8,6 +8,7 @@ import classnames from "classnames";
 import { useWalletModal } from "../../providers/WalletModal";
 import { useAccount } from "wagmi";
 import { TotalBetsOnPropositions } from "../../types/bets";
+import { ethers } from "ethers";
 
 type Props = {
   runners?: Runner[];
@@ -68,6 +69,11 @@ export const RaceTable: React.FC<Props> = ({
       proposition_id
     } = runner || {};
 
+    const stats = totalBetsOnPropositions?.[proposition_id || ""];
+    const formattedBacked = stats
+      ? ethers.utils.formatEther((+stats.amount).toString())
+      : "0.0000";
+
     return [
       {
         title: number ?? <Skeleton />,
@@ -94,29 +100,19 @@ export const RaceTable: React.FC<Props> = ({
         classNames: isScratchedDataStyles(isScratched)
       },
       {
-        title:
-          proposition_id && totalBetsOnPropositions ? (
-            `$${utils.formatting.formatToFourDecimals(
-              totalBetsOnPropositions[proposition_id]
-                ? totalBetsOnPropositions[proposition_id].amount.toString()
-                : "0.0000"
-            )}`
-          ) : (
-            <Skeleton width="2em" />
-          ),
+        title: !totalBetsOnPropositions ? (
+          <Skeleton width="2em" />
+        ) : (
+          `$${utils.formatting.formatToFourDecimals(formattedBacked)}`
+        ),
         classNames: isScratchedDataStyles(isScratched)
       },
       {
-        title:
-          proposition_id && totalBetsOnPropositions ? (
-            `${utils.formatting.formatToFourDecimals(
-              totalBetsOnPropositions[proposition_id]
-                ? totalBetsOnPropositions[proposition_id].percentage.toString()
-                : "0.0000"
-            )}%`
-          ) : (
-            <Skeleton width="2em" />
-          ),
+        title: !totalBetsOnPropositions ? (
+          <Skeleton width="2em" />
+        ) : (
+          `${stats?.percentage || 0}%`
+        ),
         classNames: isScratchedDataStyles(isScratched)
       }
     ];
