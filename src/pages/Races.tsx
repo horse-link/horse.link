@@ -12,8 +12,11 @@ import { makeMarketId } from "../utils/markets";
 import { formatBytes16String } from "../utils/formatting";
 import { useConfig } from "../providers/Config";
 import Skeleton from "react-loading-skeleton";
-import { BigNumber } from "bignumber.js";
 import dayjs from "dayjs";
+import utils from "../utils";
+
+// units of precision as per ticket
+const PRECISION = 9;
 
 export const Races: React.FC = () => {
   const params = useParams();
@@ -28,25 +31,6 @@ export const Races: React.FC = () => {
   const { race } = useRunnersData(track, raceNumber);
   const config = useConfig();
 
-  const getTheOddsForARace = race?.runners.map(
-    race => new BigNumber(race.odds)
-  );
-
-  // Number given from formula
-  const oneOverOdds = new BigNumber(1);
-
-  const zero = new BigNumber(0);
-  const calcMarginFormula = (odds: BigNumber) =>
-    oneOverOdds.div(odds).multipliedBy(100);
-  const calculateMargin = getTheOddsForARace?.reduce(
-    (sum, odds) => sum.plus(calcMarginFormula(odds)),
-    zero
-  );
-
-  // const isScratchedRunner = (runner: Runner) =>
-  //   ["LateScratched", "Scratched"].includes(runner.status);
-  // // if (isScratchedRunner) remove from list
-
   const { meetDate } = useMemo(() => {
     const meetDate = dayjs().format("DD-MM-YY");
     return { config, meetDate };
@@ -59,6 +43,17 @@ export const Races: React.FC = () => {
     "ALL_BETS",
     b16MarketId
   );
+
+  const margin = useMemo(() => {
+    if (!race || !race.runners.length) return;
+
+    const validRunners = race.runners.filter(
+      runner => !utils.races.isScratchedRunner(runner)
+    );
+    const sum = utils.races.calculateRaceMargin(validRunners.map(r => r.odds));
+
+    return (+sum).toFixed(PRECISION);
+  }, [race]);
 
   return (
     <PageLayout>
@@ -80,7 +75,12 @@ export const Races: React.FC = () => {
           </h1>
           <h1>Class: {race ? race.raceData.class : <Skeleton />}</h1>
           <h1>
-            Margin: {race ? `${calculateMargin?.toFixed(2)}%` : <Skeleton />}
+            Margin:{" "}
+            {margin ? (
+              utils.formatting.formatToTwoDecimals(margin)
+            ) : (
+              <Skeleton />
+            )}
           </h1>
         </div>
         <RaceTable
