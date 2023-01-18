@@ -42,7 +42,7 @@ export const Bets: React.FC = () => {
     <PageLayout>
       <div className="flex flex-col md:flex-row w-full justify-center text-left gap-x-1 gap-y-2 lg:gap-x-4 mb-4 lg:justify-between">
         <Card
-          title="24H Winning Volume"
+          title="24H Winning Bets Value"
           data={
             totalWinningVolume &&
             `$${utils.formatting.formatToFourDecimals(
