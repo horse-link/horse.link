@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { BetFilterOptions } from "../types/bets";
+import { BetFilterOptions, FilterObject } from "../types/bets";
 import { TimeStampFilter } from "../types/entities";
 
 const getOptionalAddressFilter = (address?: string) =>
@@ -124,12 +124,18 @@ export const getVaultStatsQuery = (timestamp?: number) => `{
 export const getMarketStatsQuery = (
   timestamp: number,
   timeStampFilter: TimeStampFilter,
-  didWin?: boolean
+  didWin?: boolean,
+  filter?: FilterObject
 ) => `{
   bets(
     orderBy: amount
     orderDirection: desc
     where: {
+      ${
+        filter
+          ? Object.entries(filter).map(([key, value]) => `${key}: ${value}`)
+          : ""
+      }
       ${timeStampFilter}: ${timestamp}
       ${didWin ? "didWin: true" : ""}
     }

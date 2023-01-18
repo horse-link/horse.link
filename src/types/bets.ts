@@ -16,6 +16,10 @@ export type BetHistoryResponse = {
   results: BetHistory[];
 };
 
+export type Filters = "createdAt_gte" | "settledAt_gte";
+
+export type FilterObject = Record<Filters, string | number>;
+
 export type BetHistory = {
   index: number;
   marketId: string;
