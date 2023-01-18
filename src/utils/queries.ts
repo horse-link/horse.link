@@ -121,10 +121,7 @@ export const getVaultStatsQuery = (timestamp?: number) => `{
   }
 }`;
 
-export const getMarketStatsQuery = (
-  didWin?: boolean,
-  filter?: FilterObject
-) => `{
+export const getMarketStatsQuery = (filter?: FilterObject) => `{
   bets(
     orderBy: amount
     orderDirection: desc
@@ -135,7 +132,7 @@ export const getMarketStatsQuery = (
           : ""
       }
       ${filter}: ${filter}
-      ${didWin ? "didWin: true" : ""}
+      ${filter ? "didWin: true" : ""}
     }
   ) {
     id
