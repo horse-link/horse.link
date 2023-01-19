@@ -38,9 +38,12 @@ export const useSubgraphBets = (
     const refetchInterval = setInterval(refetch, POLL_INTERVAL);
 
     return () => clearInterval(refetchInterval);
-  }, []);
+  }, [marketId]);
 
   useEffect(() => {
+    // local variable to prevent setting state after component unmounts
+    // For more information see https://www.developerway.com/posts/fetching-in-react-lost-promises
+    let isActive = true;
     const missingRequiredParam = myBetsEnabled && !address;
     if (!data || missingRequiredParam) return;
     setBetHistory(undefined);
@@ -58,36 +61,46 @@ export const useSubgraphBets = (
         bets,
         filter
       );
-      setBetHistory(betsByFilterOptions);
+      isActive && setBetHistory(betsByFilterOptions);
     });
-  }, [data, address, filter]);
+
+    return () => {
+      // local variable from above
+      isActive = false;
+    };
+  }, [data, address, filter, marketId]);
 
   const totalBetsOnPropositions = useMemo(() => {
     if (!betHistory) return;
-    let totalSumAmount = 0;
 
-    const sumMap = betHistory.reduce((acc, bet) => {
-      const { propositionId, amount: bnAmount } = bet;
-      const amount = +ethers.utils.formatEther(bnAmount);
-      if (!acc[propositionId]) {
-        acc[propositionId] = 0;
-      }
-      acc[propositionId] += amount;
-      totalSumAmount += amount;
-      return acc;
-    }, {} as Record<string, number>);
+    const totalBets = betHistory.reduce((prevObject, bet, _, array) => {
+      const proposition = utils.formatting.parseBytes16String(
+        bet.propositionId
+      );
 
-    const sumWithPercentageMap = Object.keys(sumMap).reduce((acc, key) => {
-      if (key === "total") return acc;
-      const amount = sumMap[key];
-      acc[key] = {
-        amount,
-        percentage: (amount / totalSumAmount) * 100
+      const amount = ethers.utils
+        .parseEther(prevObject[proposition]?.amount || "0")
+        .add(ethers.utils.parseEther(bet.amount));
+
+      const totalBetValue = array.reduce(
+        (sum, cur) => sum.add(ethers.utils.parseEther(cur.amount)),
+        ethers.constants.Zero
+      );
+
+      const proportion = amount
+        .mul(ethers.constants.WeiPerEther)
+        .div(totalBetValue);
+
+      return {
+        ...prevObject,
+        [proposition]: {
+          amount: ethers.utils.formatEther(amount),
+          percentage: +ethers.utils.formatEther(proportion) * 100
+        }
       };
-      return acc;
     }, {} as TotalBetsOnPropositions);
 
-    return sumWithPercentageMap;
+    return totalBets;
   }, [betHistory]);
 
   return {

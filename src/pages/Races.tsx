@@ -1,18 +1,19 @@
 import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useRunnersData, useMeetData } from "../hooks/data";
-import { RaceTable, RacesButton } from "../components/Races";
+import { RacesButton } from "../components/Buttons";
+import { RaceTable, BetTable } from "../components/Tables";
 import { PlaceBetModal, SettleBetModal } from "../components/Modals";
 import { Runner } from "../types/meets";
 import { PageLayout } from "../components";
 import { useSubgraphBets } from "../hooks/subgraph";
 import { BetHistory } from "../types/bets";
-import { BetTable } from "../components/Bets";
 import { makeMarketId } from "../utils/markets";
 import { formatBytes16String } from "../utils/formatting";
 import { useConfig } from "../providers/Config";
 import Skeleton from "react-loading-skeleton";
 import dayjs from "dayjs";
+import utils from "../utils";
 
 export const Races: React.FC = () => {
   const params = useParams();
@@ -31,7 +32,6 @@ export const Races: React.FC = () => {
     const meetDate = dayjs().format("DD-MM-YY");
     return { config, meetDate };
   }, []);
-
   const marketId = makeMarketId(new Date(), track, raceNumber.toString());
   const b16MarketId = formatBytes16String(marketId);
 
@@ -40,6 +40,16 @@ export const Races: React.FC = () => {
     "ALL_BETS",
     b16MarketId
   );
+
+  const margin = useMemo(() => {
+    if (!race || !race.runners.length) return;
+
+    const validRunners = race.runners.filter(
+      runner => !utils.races.isScratchedRunner(runner)
+    );
+
+    return utils.races.calculateRaceMargin(validRunners.map(r => r.odds));
+  }, [race]);
 
   return (
     <PageLayout>
@@ -60,6 +70,16 @@ export const Races: React.FC = () => {
             Distance: {race ? `${race.raceData.distance}m` : <Skeleton />}
           </h1>
           <h1>Class: {race ? race.raceData.class : <Skeleton />}</h1>
+          <h1>
+            Margin:{" "}
+            {margin ? (
+              `${utils.formatting.formatToTwoDecimals(
+                (+margin * 100).toString()
+              )}%`
+            ) : (
+              <Skeleton />
+            )}
+          </h1>
         </div>
         <RaceTable
           runners={race?.runners}

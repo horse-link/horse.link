@@ -26,7 +26,8 @@ export default ({ mode }: UserConfig) => {
       setupFiles: ["./src/test/setup.ts"],
       env: {
         VITE_SUBGRAPH_URL: "mock_url",
-        VITE_ALCHEMY_API_KEY: "mock_key"
+        VITE_ALCHEMY_API_KEY: "mock_key",
+        VITE_SCANNER_URL: "https://goerli.etherscan.io"
       }
     }
   });
