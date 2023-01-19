@@ -3,7 +3,7 @@ import { useEffect, useMemo } from "react";
 import {
   FormattedVaultTransaction,
   VaultTransaction
-} from "../../types/entities";
+} from "../../types/subgraph";
 import useSubgraph from "../useSubgraph";
 import utils from "../../utils";
 

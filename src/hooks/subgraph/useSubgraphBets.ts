@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAccount } from "wagmi";
 import api from "../../apis/Api";
-import { Bet } from "../../types/entities";
+import { Bet } from "../../types/subgraph";
 import useSubgraph from "../useSubgraph";
 import utils from "../../utils";
 import {

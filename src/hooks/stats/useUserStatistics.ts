@@ -1,7 +1,7 @@
 import { BigNumber } from "ethers";
 import { useMemo } from "react";
 import { useAccount } from "wagmi";
-import { FormattedUser, User } from "../../types/entities";
+import { FormattedUser, User } from "../../types/subgraph";
 import useSubgraph from "../useSubgraph";
 import utils from "../../utils";
 

@@ -1,6 +1,6 @@
 import { BigNumber, ethers } from "ethers";
 import { useEffect, useMemo, useState } from "react";
-import { VaultTransaction } from "../../types/entities";
+import { VaultTransaction } from "../../types/subgraph";
 import useSubgraph from "../useSubgraph";
 import utils from "../../utils";
 import { useVaultContract } from "../contracts";

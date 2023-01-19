@@ -11,7 +11,7 @@ export type Subgraphable<T extends SubgraphValues> =
   | `${T}_gte`
   | `${T}_lte`;
 
-export type Filters =
+export type SubgraphKeys =
   | Subgraphable<keyof Aggregator>
   | Subgraphable<keyof Protocol>
   | Subgraphable<keyof Registry>
@@ -19,7 +19,7 @@ export type Filters =
   | Subgraphable<keyof VaultTransaction>
   | Subgraphable<keyof User>;
 
-export type FilterObject = Partial<Record<Filters, SubgraphValues>>;
+export type SubgraphFilter = Partial<Record<SubgraphKeys, SubgraphValues>>;
 
 export type Aggregator = {
   // id will always be aggregator

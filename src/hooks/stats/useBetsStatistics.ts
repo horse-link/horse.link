@@ -1,6 +1,6 @@
 import { BigNumber, ethers } from "ethers";
 import { useMemo } from "react";
-import { Bet } from "../../types/entities";
+import { Bet } from "../../types/subgraph";
 import useSubgraph from "../useSubgraph";
 import utils from "../../utils";
 

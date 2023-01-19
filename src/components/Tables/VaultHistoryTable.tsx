@@ -1,6 +1,6 @@
 import React from "react";
 import { BaseTable } from ".";
-import { FormattedVaultTransaction } from "../../types/entities";
+import { FormattedVaultTransaction } from "../../types/subgraph";
 import { Config } from "../../types/config";
 import { TableData, TableHeader, TableRow } from "../../types/table";
 import utils from "../../utils";

@@ -1,8 +1,8 @@
 import { ethers } from "ethers";
 import { BetFilterOptions } from "../types/bets";
-import { FilterObject } from "../types/entities";
+import { SubgraphFilter } from "../types/subgraph";
 
-const getFiltersFromObject = (filter?: FilterObject) => {
+const getFiltersFromObject = (filter?: SubgraphFilter) => {
   if (!filter) return "";
 
   return Object.entries(filter)
@@ -34,7 +34,7 @@ const getOptionalFilterOptions = (filter?: BetFilterOptions) => {
 };
 
 export const getBetsQuery = (
-  filter?: FilterObject,
+  filter?: SubgraphFilter,
   statusFilter?: BetFilterOptions
 ) => `query GetBets{
   bets(
@@ -84,7 +84,7 @@ query GetProtocols{
   }
 }`;
 
-export const getVaultHistoryQuery = (filter?: FilterObject) => `{
+export const getVaultHistoryQuery = (filter?: SubgraphFilter) => `{
   vaultTransactions(
     where:{
       ${getFiltersFromObject(filter)}
@@ -101,7 +101,7 @@ export const getVaultHistoryQuery = (filter?: FilterObject) => `{
   }
 }`;
 
-export const getVaultStatsQuery = (filter?: FilterObject) => `{
+export const getVaultStatsQuery = (filter?: SubgraphFilter) => `{
   vaultTransactions(
     where:{
       ${getFiltersFromObject(filter)}
@@ -118,7 +118,7 @@ export const getVaultStatsQuery = (filter?: FilterObject) => `{
   }
 }`;
 
-export const getMarketStatsQuery = (filter?: FilterObject) => `{
+export const getMarketStatsQuery = (filter?: SubgraphFilter) => `{
   bets(
     orderBy: amount
     orderDirection: desc
