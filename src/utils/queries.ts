@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { BetFilterOptions } from "../types/bets";
+import { BetFilterOptions, FilterObject } from "../types/bets";
 
 const getOptionalAddressFilter = (address?: string) =>
   address ? `owner: "${address.toLowerCase()}"` : "";
@@ -120,38 +120,16 @@ export const getVaultStatsQuery = (timestamp?: number) => `{
   }
 }`;
 
-export const getMarketStatsQuery = (timestamp: number, didWin?: boolean) => `{
+export const getMarketStatsQuery = (filter: FilterObject) => `{
   bets(
     orderBy: amount
     orderDirection: desc
     where: {
-      createdAt_gte: ${timestamp}
-      ${didWin ? "didWin: true" : ""}
-    }
-  ) {
-    id
-    propositionId
-    marketId
-    marketAddress
-    amount
-    payout
-    owner
-    settled
-    didWin
-    createdAt
-    settledAt
-    createdAtTx
-    settledAtTx
-  }
-}`;
-
-export const getBetStatsQuery = (timestamp: number, didWin?: boolean) => `{
-  bets(
-    orderBy: amount
-    orderDirection: desc
-    where: {
-      settledAt_gte: ${timestamp}
-      ${didWin ? "didWin: true" : ""}
+      ${
+        filter
+          ? Object.entries(filter).map(([key, value]) => `${key}: ${value}`)
+          : ""
+      }
     }
   ) {
     id
