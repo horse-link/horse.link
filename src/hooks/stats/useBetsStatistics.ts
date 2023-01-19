@@ -20,8 +20,11 @@ export const useBetsStatistics = () => {
     []
   );
   // This is the last 24 hours of data
+  const filterObject = {
+    createdAt_gte: yesterdayFilter
+  };
   const { data, loading } = useSubgraph<Response>(
-    utils.queries.getMarketStatsQuery(yesterdayFilter, "settledAt_gte", true)
+    utils.queries.getMarketStatsQuery(filterObject)
   );
 
   const betsData = useMemo(() => {
