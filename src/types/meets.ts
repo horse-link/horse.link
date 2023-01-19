@@ -54,6 +54,7 @@ export type SignedRunnersResponse = {
       name: string;
       distance: number;
       class: string;
+      hasOdds: boolean;
     };
     runners: Runner[];
   };

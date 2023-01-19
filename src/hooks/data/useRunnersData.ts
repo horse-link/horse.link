@@ -11,7 +11,20 @@ export const useRunnersData = (track: string, raceNumber: number) => {
     if (!data || error) return;
 
     // data.data is the SignedRunnersResponse from api
-    return data.data;
+    const rData = data.data;
+    if (rData.raceData.hasOdds) {
+      return rData;
+    }
+
+    return {
+      ...rData,
+      runners: rData.runners.map(runner => {
+        return {
+          ...runner,
+          odds: 1.0
+        };
+      })
+    };
   }, [data, error]);
 
   return {
