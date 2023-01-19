@@ -126,10 +126,6 @@ export const SettleBetModal: React.FC<Props> = ({
                 <span className="font-normal">
                   {ethers.utils.formatEther(selectedBet.amount)} {token?.symbol}
                 </span>
-                <span className="block font-normal text-xs text-black/80">
-                  (inc. exposure: {ethers.utils.formatEther(selectedBet.payout)}{" "}
-                  {token?.symbol})
-                </span>
               </h3>
             ) : (
               <h3 className="font-semibold">
