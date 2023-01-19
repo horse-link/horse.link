@@ -4,7 +4,7 @@ import { VaultTransactionType } from "./vaults";
 
 export type SubgraphValues = string | number | boolean;
 
-export type Subgraphable<T extends SubgraphValues> =
+export type Subgraphable<T extends string> =
   | T
   | `${T}_gt`
   | `${T}_lt`
