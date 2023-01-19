@@ -12,6 +12,11 @@
         "type": "uint8"
       },
       {
+        "internalType": "uint8",
+        "name": "timeoutDays",
+        "type": "uint8"
+      },
+      {
         "internalType": "address",
         "name": "oracle",
         "type": "address"
