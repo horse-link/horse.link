@@ -23,6 +23,7 @@ export const BetFilterGroup: React.FC<Props> = ({
   <div className="flex gap-3 flex-wrap">
     {[...options].map(([key, text]) => (
       <button
+        key={key}
         onClick={() => {
           onChange(key);
         }}

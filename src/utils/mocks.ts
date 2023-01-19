@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { Bet, FormattedUser } from "../types/entities";
+import { Bet, FormattedUser } from "../types/subgraph";
 import { Back, Meet, Race } from "../types/meets";
 
 export const getMockBet = (): Bet => ({

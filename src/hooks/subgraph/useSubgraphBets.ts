@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAccount } from "wagmi";
 import api from "../../apis/Api";
-import { Bet } from "../../types/entities";
+import { Bet } from "../../types/subgraph";
 import useSubgraph from "../useSubgraph";
 import utils from "../../utils";
 import {
@@ -26,11 +26,13 @@ export const useSubgraphBets = (
   const [betHistory, setBetHistory] = useState<BetHistory[]>();
 
   const { data, refetch } = useSubgraph<Response>(
-    utils.queries.getBetsQuery({
-      address: myBetsEnabled ? address : undefined,
-      filter,
-      marketId
-    })
+    utils.queries.getBetsQuery(
+      {
+        owner: myBetsEnabled && address ? address.toLowerCase() : undefined,
+        marketId
+      },
+      filter
+    )
   );
 
   // refetch data on page load -- prevents stale data

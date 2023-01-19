@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { ethers } from "ethers";
-import { BetId } from "../types/entities";
+import { BetId } from "../types/subgraph";
 
 export const formatToFourDecimals = (amount: string) => {
   const parsedAmount = parseFloat(amount);

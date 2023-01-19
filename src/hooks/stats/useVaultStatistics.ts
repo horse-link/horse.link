@@ -1,6 +1,6 @@
 import { BigNumber, ethers } from "ethers";
 import { useEffect, useMemo, useState } from "react";
-import { VaultTransaction } from "../../types/entities";
+import { VaultTransaction } from "../../types/subgraph";
 import useSubgraph from "../useSubgraph";
 import utils from "../../utils";
 import { useVaultContract } from "../contracts";
@@ -27,7 +27,9 @@ export const useVaultStatistics = () => {
   );
   // This is the last 24 hours of data
   const { data, loading } = useSubgraph<Response>(
-    utils.queries.getVaultStatsQuery(yesterdayFilter)
+    utils.queries.getVaultStatsQuery({
+      timestamp_gte: yesterdayFilter
+    })
   );
 
   const vaultsTransactionData = useMemo(() => {

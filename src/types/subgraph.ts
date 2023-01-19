@@ -2,6 +2,25 @@ import { BigNumber } from "ethers";
 import { Address } from "wagmi";
 import { VaultTransactionType } from "./vaults";
 
+export type SubgraphValues = string | number | boolean;
+
+export type Subgraphable<T extends string> =
+  | T
+  | `${T}_gt`
+  | `${T}_lt`
+  | `${T}_gte`
+  | `${T}_lte`;
+
+export type SubgraphKeys =
+  | Subgraphable<keyof Aggregator>
+  | Subgraphable<keyof Protocol>
+  | Subgraphable<keyof Registry>
+  | Subgraphable<keyof Bet>
+  | Subgraphable<keyof VaultTransaction>
+  | Subgraphable<keyof User>;
+
+export type SubgraphFilter = Partial<Record<SubgraphKeys, SubgraphValues>>;
+
 export type Aggregator = {
   // id will always be aggregator
   id: "aggregator";

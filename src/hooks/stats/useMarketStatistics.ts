@@ -1,6 +1,6 @@
 import { BigNumber, ethers } from "ethers";
 import { useMemo } from "react";
-import { Bet } from "../../types/entities";
+import { Bet } from "../../types/subgraph";
 import useSubgraph from "../useSubgraph";
 import utils from "../../utils";
 
@@ -19,12 +19,11 @@ export const useMarketStatistics = () => {
       ),
     []
   );
-  const filterObject = {
-    createdAt_gte: yesterdayFilter
-  };
   // This is the last 24 hours of data
   const { data, loading } = useSubgraph<Response>(
-    utils.queries.getMarketStatsQuery(filterObject)
+    utils.queries.getMarketStatsQuery({
+      createdAt_gte: yesterdayFilter
+    })
   );
 
   const betsData = useMemo(() => {

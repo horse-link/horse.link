@@ -7,7 +7,7 @@ import {
   SignedBetDataResponse
 } from "../types/bets";
 import { Config } from "../types/config";
-import { Bet } from "../types/entities";
+import { Bet } from "../types/subgraph";
 import { EcSignature } from "../types/general";
 
 export const calculateMaxPages = (betsArrayLength: number, totalBets: number) =>

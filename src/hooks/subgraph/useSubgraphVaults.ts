@@ -3,7 +3,7 @@ import { useEffect, useMemo } from "react";
 import {
   FormattedVaultTransaction,
   VaultTransaction
-} from "../../types/entities";
+} from "../../types/subgraph";
 import useSubgraph from "../useSubgraph";
 import utils from "../../utils";
 
@@ -15,7 +15,9 @@ const POLL_INTERVAL = 5000;
 
 export const useSubgraphVaults = (vaultAddress?: string) => {
   const { data, loading, refetch } = useSubgraph<Response>(
-    utils.queries.getVaultHistoryQuery(vaultAddress)
+    utils.queries.getVaultHistoryQuery({
+      vaultAddress: vaultAddress ? vaultAddress.toLowerCase() : undefined
+    })
   );
 
   useEffect(() => {

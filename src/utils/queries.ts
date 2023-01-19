@@ -1,14 +1,22 @@
 import { ethers } from "ethers";
-import { BetFilterOptions, FilterObject } from "../types/bets";
+import { BetFilterOptions } from "../types/bets";
+import { SubgraphFilter } from "../types/subgraph";
 
-const getOptionalAddressFilter = (address?: string) =>
-  address ? `owner: "${address.toLowerCase()}"` : "";
+const getFiltersFromObject = (filter?: SubgraphFilter) => {
+  if (!filter) return "";
 
-const getOptionalMarketFilter = (marketId?: string) =>
-  marketId ? `marketId: "${marketId}"` : "";
+  return Object.entries(filter)
+    .map(([key, value]) => {
+      // if value is undefined
+      if (typeof value === "undefined") return "";
+      // if value is boolean
+      if (typeof value === "boolean") return `${key}: ${value}`;
 
-const getOptionalTimeFilter = (timestamp?: number) =>
-  timestamp ? `timestamp_gte: "${timestamp}"` : "";
+      // type is string
+      return `${key}: "${value}"`;
+    })
+    .join("\n");
+};
 
 const getOptionalFilterOptions = (filter?: BetFilterOptions) => {
   switch (filter) {
@@ -26,23 +34,14 @@ const getOptionalFilterOptions = (filter?: BetFilterOptions) => {
   }
 };
 
-export const getBetsQuery = ({
-  address,
-  filter,
-  marketId,
-  limit = 100
-}: {
-  address?: string;
-  filter?: BetFilterOptions;
-  marketId?: string;
-  limit?: number;
-}) => `query GetBets{
+export const getBetsQuery = (
+  filter?: SubgraphFilter,
+  statusFilter?: BetFilterOptions
+) => `query GetBets{
   bets(
-    first: ${limit}
     where:{
-      ${getOptionalAddressFilter(address)}
-      ${getOptionalFilterOptions(filter)}
-      ${getOptionalMarketFilter(marketId)}
+      ${getFiltersFromObject(filter)}
+      ${getOptionalFilterOptions(statusFilter)}
     }
     orderBy: createdAt
     orderDirection: desc
@@ -86,10 +85,10 @@ query GetProtocols{
   }
 }`;
 
-export const getVaultHistoryQuery = (vaultAddress?: string) => `{
+export const getVaultHistoryQuery = (filter?: SubgraphFilter) => `{
   vaultTransactions(
     where:{
-      ${getOptionalAddressFilter(vaultAddress)}
+      ${getFiltersFromObject(filter)}
     }
     orderBy: timestamp
     orderDirection: desc
@@ -103,10 +102,10 @@ export const getVaultHistoryQuery = (vaultAddress?: string) => `{
   }
 }`;
 
-export const getVaultStatsQuery = (timestamp?: number) => `{
+export const getVaultStatsQuery = (filter?: SubgraphFilter) => `{
   vaultTransactions(
     where:{
-      ${getOptionalTimeFilter(timestamp)}
+      ${getFiltersFromObject(filter)}
     }
     orderBy: timestamp
     orderDirection: desc
@@ -120,16 +119,12 @@ export const getVaultStatsQuery = (timestamp?: number) => `{
   }
 }`;
 
-export const getMarketStatsQuery = (filter: FilterObject) => `{
+export const getMarketStatsQuery = (filter?: SubgraphFilter) => `{
   bets(
     orderBy: amount
     orderDirection: desc
     where: {
-      ${
-        filter
-          ? Object.entries(filter).map(([key, value]) => `${key}: ${value}`)
-          : ""
-      }
+      ${getFiltersFromObject(filter)}
     }
   ) {
     id
