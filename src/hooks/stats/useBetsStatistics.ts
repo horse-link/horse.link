@@ -22,7 +22,7 @@ export const useBetsStatistics = () => {
   const { data, loading } = useSubgraph<Response>(
     utils.queries.getMarketStatsQuery({
       settledAt_gte: yesterdayFilter,
-      didWin: "true"
+      didWin: true
     })
   );
 

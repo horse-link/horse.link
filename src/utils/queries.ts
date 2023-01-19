@@ -8,9 +8,9 @@ const getFiltersFromObject = (filter?: FilterObject) => {
   return Object.entries(filter)
     .map(([key, value]) => {
       // if value is undefined
-      if (value == undefined) return "";
+      if (typeof value === "undefined") return "";
       // if value is boolean
-      if (value == "true" || value == "false") return `${key}: ${value}`;
+      if (typeof value === "boolean") return `${key}: ${value}`;
 
       return `${key}: "${value}"`;
     })
