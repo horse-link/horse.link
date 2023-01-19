@@ -120,7 +120,7 @@ export const getVaultStatsQuery = (timestamp?: number) => `{
   }
 }`;
 
-export const getMarketStatsQuery = (filter?: FilterObject) => `{
+export const getMarketStatsQuery = (filter: FilterObject) => `{
   bets(
     orderBy: amount
     orderDirection: desc
