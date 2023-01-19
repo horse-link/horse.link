@@ -27,7 +27,9 @@ export const useVaultStatistics = () => {
   );
   // This is the last 24 hours of data
   const { data, loading } = useSubgraph<Response>(
-    utils.queries.getVaultStatsQuery(yesterdayFilter)
+    utils.queries.getVaultStatsQuery({
+      timestamp_gte: yesterdayFilter
+    })
   );
 
   const vaultsTransactionData = useMemo(() => {

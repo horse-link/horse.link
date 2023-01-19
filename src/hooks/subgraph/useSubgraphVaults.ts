@@ -15,7 +15,9 @@ const POLL_INTERVAL = 5000;
 
 export const useSubgraphVaults = (vaultAddress?: string) => {
   const { data, loading, refetch } = useSubgraph<Response>(
-    utils.queries.getVaultHistoryQuery(vaultAddress)
+    utils.queries.getVaultHistoryQuery({
+      vaultAddress
+    })
   );
 
   useEffect(() => {

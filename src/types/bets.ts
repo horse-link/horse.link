@@ -16,10 +16,6 @@ export type BetHistoryResponse = {
   results: BetHistory[];
 };
 
-export type Filters = "createdAt_gte" | "settledAt_gte" | "didWin";
-
-export type FilterObject = Partial<Record<Filters, string | number | boolean>>;
-
 export type BetHistory = {
   index: number;
   marketId: string;
