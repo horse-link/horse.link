@@ -12,6 +12,7 @@ const getFiltersFromObject = (filter?: SubgraphFilter) => {
       // if value is boolean
       if (typeof value === "boolean") return `${key}: ${value}`;
 
+      // type is string
       return `${key}: "${value}"`;
     })
     .join("\n");
