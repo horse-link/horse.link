@@ -130,8 +130,6 @@ export const getMarketStatsQuery = (filter?: FilterObject) => `{
           ? Object.entries(filter).map(([key, value]) => `${key}: ${value}`)
           : ""
       }
-      ${filter}: ${filter}
-      ${filter ? "didWin" : "true"}
     }
   ) {
     id
