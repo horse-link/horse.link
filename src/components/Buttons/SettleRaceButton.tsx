@@ -30,7 +30,7 @@ export const SettleRaceButton: React.FC<Props> = props => {
   } = props;
   const { openWalletModal } = useWalletModal();
 
-  const { current: now } = useRef(Date.now());
+  const { current: now } = useRef(Math.floor(Date.now() / 1000));
 
   const settlableBets = useMemo(
     () => betHistory?.filter(bet => bet.payoutDate < now),
@@ -106,7 +106,7 @@ export const SettleRaceButton: React.FC<Props> = props => {
       loading={!config || !settlableBets || loading}
       loaderSize={20}
       onClick={settleRace}
-      disabled={!settlableBets?.length}
+      disabled={!settlableBets || !settlableBets.length}
     >
       Settle Race
     </BaseButton>

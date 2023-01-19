@@ -38,9 +38,12 @@ export const useSubgraphBets = (
     const refetchInterval = setInterval(refetch, POLL_INTERVAL);
 
     return () => clearInterval(refetchInterval);
-  }, []);
+  }, [marketId]);
 
   useEffect(() => {
+    // local variable to prevent setting state after component unmounts
+    // For more information see https://www.developerway.com/posts/fetching-in-react-lost-promises
+    let isActive = true;
     const missingRequiredParam = myBetsEnabled && !address;
     if (!data || missingRequiredParam) return;
     setBetHistory(undefined);
@@ -58,9 +61,14 @@ export const useSubgraphBets = (
         bets,
         filter
       );
-      setBetHistory(betsByFilterOptions);
+      isActive && setBetHistory(betsByFilterOptions);
     });
-  }, [data, address, filter]);
+
+    return () => {
+      // local variable from above
+      isActive = false;
+    };
+  }, [data, address, filter, marketId]);
 
   const totalBetsOnPropositions = useMemo(() => {
     if (!betHistory) return;
