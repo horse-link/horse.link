@@ -9,9 +9,7 @@ import utils from "../../utils";
 import { ethers } from "ethers";
 import { VaultActionButton } from "../Buttons";
 import Skeleton from "react-loading-skeleton";
-
-const SCANNER_URL = process.env.VITE_SCANNER_URL;
-if (!SCANNER_URL) throw new Error("No VITE_SCANNER_URL env provided");
+import constants from "../../constants";
 
 type Props = {
   config?: Config;
@@ -38,7 +36,7 @@ export const VaultListTable: React.FC<Props> = ({ config, setIsModalOpen }) => {
     {
       title: (
         <a
-          href={`${SCANNER_URL}/address/${vault.address}`}
+          href={`${constants.env.SCANNER_URL}/address/${vault.address}`}
           target="_blank"
           rel="noreferrer noopener"
           className="text-blue-600"

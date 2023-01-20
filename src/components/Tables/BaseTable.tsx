@@ -15,10 +15,6 @@ export const BaseTable: React.FC<Props> = props => {
     "px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase";
   const cellStyles = "px-2 py-4 whitespace-nowrap";
 
-  const createHeaderKey = (i: number) => `header-${i}`;
-  const createRowKey = (i: number) => `row-${i}`;
-  const createDataKey = (i: number) => `data-${i}`;
-
   return (
     <div className={`flex flex-col ${tableStyles || ""}`}>
       {title && (
@@ -30,9 +26,9 @@ export const BaseTable: React.FC<Props> = props => {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  {headers.map((header, i) => (
+                  {headers.map(header => (
                     <th
-                      key={createHeaderKey(i)}
+                      key={JSON.stringify(header)}
                       scope="col"
                       className={`${headerStyles} ${header.classNames || ""}`}
                     >
@@ -42,15 +38,15 @@ export const BaseTable: React.FC<Props> = props => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {rows.map(({ data, row }, i) => (
+                {rows.map(({ data, row }) => (
                   <tr
-                    key={createRowKey(i)}
+                    key={JSON.stringify(data)}
                     className={row?.classNames || ""}
                     {...row?.props}
                   >
-                    {data.map((d, i) => (
+                    {data.map(d => (
                       <td
-                        key={createDataKey(i)}
+                        key={JSON.stringify(d)}
                         className={`${cellStyles} ${d.classNames || ""}`}
                         {...d.props}
                       >

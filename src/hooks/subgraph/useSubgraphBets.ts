@@ -10,12 +10,11 @@ import {
   TotalBetsOnPropositions
 } from "../../types/bets";
 import { ethers } from "ethers";
+import constants from "../../constants";
 
 type Response = {
   bets: Bet[];
 };
-
-const POLL_INTERVAL = 5000;
 
 export const useSubgraphBets = (
   myBetsEnabled: boolean,
@@ -37,7 +36,10 @@ export const useSubgraphBets = (
 
   // refetch data on page load -- prevents stale data
   useEffect(() => {
-    const refetchInterval = setInterval(refetch, POLL_INTERVAL);
+    const refetchInterval = setInterval(
+      refetch,
+      constants.time.ONE_SECOND_MS * 5
+    );
 
     return () => clearInterval(refetchInterval);
   }, [marketId]);

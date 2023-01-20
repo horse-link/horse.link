@@ -12,18 +12,7 @@ import {
 import { DashboardTable } from "../components/Tables";
 import { useWalletModal } from "../providers/WalletModal";
 import { SignedMeetingsResponse, MeetFilters, Meet } from "../types/meets";
-
-const AUS_NZ_LOCATIONS = [
-  "QLD",
-  "NSW",
-  "VIC",
-  "SA",
-  "WA",
-  "TAS",
-  "NT",
-  "ACT",
-  "NZL"
-];
+import constants from "../constants";
 
 export const Dashboard: React.FC = () => {
   const [response, setResponse] = useState<SignedMeetingsResponse>();
@@ -49,14 +38,15 @@ export const Dashboard: React.FC = () => {
       case "AUS_NZ":
         setMeets(
           response.data.meetings.filter(meet =>
-            AUS_NZ_LOCATIONS.includes(meet.location)
+            constants.locations.AUS_NZ_LOCATIONS.includes(meet.location)
           )
         );
         break;
       case "INTERNATIONAL":
         setMeets(
           response.data.meetings.filter(
-            meet => !AUS_NZ_LOCATIONS.includes(meet.location)
+            meet =>
+              !constants.locations.AUS_NZ_LOCATIONS.includes(meet.location)
           )
         );
         break;

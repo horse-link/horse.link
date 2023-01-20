@@ -9,11 +9,9 @@ import { ethers } from "ethers";
 import Skeleton from "react-loading-skeleton";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import constants from "../../constants";
 
 dayjs.extend(relativeTime);
-
-const SCANNER_URL = process.env.VITE_SCANNER_URL;
-if (!SCANNER_URL) throw new Error("No VITE_SCANNER_URL env provided");
 
 const txTypeMap = new Map([
   [VaultTransactionType.WITHDRAW, "Withdrawal"],
@@ -58,7 +56,7 @@ export const VaultHistoryTable: React.FC<Props> = ({ history, config }) => {
       {
         title: vault ? (
           <a
-            href={`${SCANNER_URL}/tx/${vault.id.toLowerCase()}`}
+            href={`${constants.env.SCANNER_URL}/tx/${vault.id.toLowerCase()}`}
             target="_blank"
             rel="noreferrer noopener"
             className="text-blue-600 truncate"

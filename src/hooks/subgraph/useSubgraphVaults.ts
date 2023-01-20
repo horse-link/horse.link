@@ -6,12 +6,11 @@ import {
 } from "../../types/subgraph";
 import useSubgraph from "../useSubgraph";
 import utils from "../../utils";
+import constants from "../../constants";
 
 type Response = {
   vaultTransactions: VaultTransaction[];
 };
-
-const POLL_INTERVAL = 5000;
 
 export const useSubgraphVaults = (vaultAddress?: string) => {
   const { data, loading, refetch } = useSubgraph<Response>(
@@ -21,7 +20,10 @@ export const useSubgraphVaults = (vaultAddress?: string) => {
   );
 
   useEffect(() => {
-    const refetchInterval = setInterval(refetch, POLL_INTERVAL);
+    const refetchInterval = setInterval(
+      refetch,
+      constants.time.ONE_SECOND_MS * 5
+    );
 
     return () => clearInterval(refetchInterval);
   }, []);

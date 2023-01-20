@@ -1,18 +1,15 @@
 import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
-
 import { publicProvider } from "wagmi/providers/public";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
 import { alchemyProvider } from "wagmi/providers/alchemy";
-
-const alchemyApiKey = process.env.VITE_ALCHEMY_API_KEY;
-if (!alchemyApiKey) throw new Error("VITE_ALCHEMY_API_KEY is not defined");
+import constants from "../constants";
 
 const { chains, provider, webSocketProvider } = configureChains(
   [chain.goerli, chain.localhost],
   [
     alchemyProvider({
-      apiKey: alchemyApiKey
+      apiKey: constants.env.ALCHEMY_KEY
     }),
     publicProvider()
   ]
