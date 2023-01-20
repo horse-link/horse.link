@@ -1,13 +1,19 @@
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { useSubgraphBets } from "../hooks/subgraph";
-import { Toggle, PageLayout } from "../components";
-import { BetFilterGroup, BetTable } from "../components/Bets";
+import { Toggle, PageLayout, Card } from "../components";
+import { BetFilterGroup } from "../components/Bets";
+import { BetTable } from "../components/Tables";
 import { SettleBetModal } from "../components/Modals";
 import { BetFilterOptions, BetHistory } from "../types/bets";
-import { useWalletModal } from "../providers/WalletModal";
+import { useConfig } from "../providers/Config";
+import utils from "../utils";
+import { ethers } from "ethers";
+import { useBetsStatistics } from "../hooks/stats";
 
 export const Bets: React.FC = () => {
+  const { totalWinningBets, totalWinningVolume, largestWinningBet } =
+    useBetsStatistics();
   const [myBetsEnabled, setMyBetsEnabled] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBet, setSelectedBet] = useState<BetHistory>();
@@ -15,19 +21,13 @@ export const Bets: React.FC = () => {
     useState<BetFilterOptions>("ALL_BETS");
 
   const { isConnected } = useAccount();
-  const { openWalletModal } = useWalletModal();
+
+  const config = useConfig();
 
   const { betHistory, refetch } = useSubgraphBets(
     myBetsEnabled,
     betTableFilter
   );
-
-  const onClickBet = (betData?: BetHistory) => {
-    if (!betData) return;
-    if (!isConnected) return openWalletModal();
-    setSelectedBet(betData);
-    setIsModalOpen(true);
-  };
 
   useEffect(() => {
     setMyBetsEnabled(isConnected);
@@ -40,32 +40,56 @@ export const Bets: React.FC = () => {
   const isLoading = !betHistory;
   return (
     <PageLayout>
-      <div className="w-full flex justify-between col-span-2 p-5">
-        <h3 className="text-lg font-medium text-gray-900 flex items-center">
+      <div className="flex flex-col md:flex-row w-full justify-center text-left gap-x-1 gap-y-2 lg:gap-x-4 mb-4 lg:justify-between">
+        <Card
+          title="24H Winning Bets Value"
+          data={
+            totalWinningVolume &&
+            `$${utils.formatting.formatToFourDecimals(
+              ethers.utils.formatEther(totalWinningVolume)
+            )}`
+          }
+        />
+        <Card title="24H Winning Bets" data={totalWinningBets?.toString()} />
+        <Card
+          title="24H Largest Winning Bet"
+          data={
+            largestWinningBet &&
+            `$${utils.formatting.formatToFourDecimals(
+              ethers.utils.formatEther(largestWinningBet.payout)
+            )}`
+          }
+        />
+      </div>
+      <div className="w-full lg:justify-between lg:flex p-3 mb-3">
+        <h3 className="text-lg font-medium text-gray-900 flex items-center my-3">
           Bets History
         </h3>
-        <div className="flex gap-5">
+        <div className="flex my-3">
           <BetFilterGroup
             value={betTableFilter}
             onChange={onFilterChange}
             disabled={isLoading}
           />
-          <div className="flex gap-3 self-end justify-self-end items-center">
-            <Toggle enabled={myBetsEnabled} onChange={onMyBetToggle} />
-            <div className="font-semibold">My Bets</div>
-          </div>
+        </div>
+        <div className="flex gap-3 items-center">
+          <Toggle enabled={myBetsEnabled} onChange={onMyBetToggle} />
+          <div className="font-semibold">My Bets</div>
         </div>
       </div>
       <BetTable
         myBetsEnabled={myBetsEnabled}
-        onClickBet={onClickBet}
         betHistory={betHistory}
+        config={config}
+        setSelectedBet={setSelectedBet}
+        setIsModalOpen={setIsModalOpen}
       />
       <SettleBetModal
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         selectedBet={selectedBet}
         refetch={refetch}
+        config={config}
       />
     </PageLayout>
   );

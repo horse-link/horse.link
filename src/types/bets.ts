@@ -35,3 +35,11 @@ export type BetHistory = {
   marketOracleResultSig?: EcSignature;
   status: BetStatus;
 };
+
+export type TotalBetsOnPropositions = Record<
+  string,
+  {
+    amount: string;
+    percentage: number;
+  }
+>;

@@ -17,7 +17,7 @@ const Navigation: React.FC = () => (
       <Route path="/vaults" element={<Vaults />} />
       <Route path="/markets" element={<Markets />} />
       <Route path="/tokens" element={<Tokens />} />
-      <Route path="/horses/:track/:number" element={<Races />} />
+      <Route path="/races/:track/:number" element={<Races />} />
       <Route path="/results/:propositionId" element={<Results />} />
       <Route path="/faucet" element={<Faucet />} />
       <Route path="/bets" element={<Bets />} />

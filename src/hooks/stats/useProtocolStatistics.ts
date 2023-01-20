@@ -1,6 +1,6 @@
 import { BigNumber } from "ethers";
 import { useMemo } from "react";
-import { FormattedProtocol, Protocol } from "../../types/entities";
+import { FormattedProtocol, Protocol } from "../../types/subgraph";
 import useSubgraph from "../useSubgraph";
 import utils from "../../utils";
 

@@ -14,7 +14,26 @@ export type Runner = {
   proposition_id_hash: string;
   barrier: number;
   signature: EcSignature;
+  status: "Open" | "Scratched" | "LateScratched";
 };
+
+export type NextToJump = {
+  jumperRaceStartTime: string;
+  jumperRaceNumber: number;
+  meeting: {
+    jumperMeetingName: string;
+    location: string;
+    raceType: string;
+    venueCode: string;
+  };
+};
+
+export type RaceStatus =
+  | "Abandoned"
+  | "Interim"
+  | "Normal"
+  | "Paying"
+  | "Closed";
 
 export type Race = {
   number: number;
@@ -25,12 +44,20 @@ export type Race = {
   end_unix?: number;
   close?: string;
   close_unix?: number;
-  status: "Normal" | "Interim" | "Paying";
+  status: RaceStatus;
   results?: number[];
 };
 
 export type SignedRunnersResponse = {
-  data: Runner[];
+  data: {
+    raceData: {
+      name: string;
+      distance: number;
+      class: string;
+      hasOdds: boolean;
+    };
+    runners: Runner[];
+  };
 } & SignedResponse;
 
 export type SignedMeetingsResponse = {
@@ -52,6 +79,17 @@ export type MeetResponse = {
   meetings: Meet[];
 };
 
+export type RaceInfo = {
+  raceNumber: number;
+  raceName: string;
+  raceClassConditions: string;
+  raceDistance: number;
+  raceStartTime: string;
+  raceStatus: RaceStatus;
+};
+
+export type RacesResponse = RaceInfo[];
+
 export type Back = {
   nonce: string;
   market_id: string;
@@ -62,9 +100,13 @@ export type Back = {
   signature: EcSignature;
 };
 
-export type MeetResults = {
-  name: string;
+export type MeetResult = {
+  runner: string;
   number: number;
-  jockey: string;
+  rider: string;
   place: number;
-}[];
+};
+
+export type MeetResults = MeetResult[];
+
+export type MeetFilters = "ALL" | "AUS_NZ" | "INTERNATIONAL";

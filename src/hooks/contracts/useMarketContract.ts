@@ -5,12 +5,11 @@ import {
   Vault__factory
 } from "../../typechain";
 import { BigNumber, ethers, Signer } from "ethers";
-import { MarketInfo } from "../../types/config";
+import { Config, MarketInfo } from "../../types/config";
 import utils from "../../utils";
 import { Back } from "../../types/meets";
 import { BetHistory } from "../../types/bets";
-
-const ODDS_DECIMALS = 6;
+import constants from "../../constants";
 
 export const useMarketContract = () => {
   const placeBet = async (
@@ -42,7 +41,10 @@ export const useMarketContract = () => {
         utils.formatting.formatBytes16String(back.proposition_id),
         utils.formatting.formatBytes16String(back.market_id),
         wager,
-        ethers.utils.parseUnits(back.odds.toString(), ODDS_DECIMALS),
+        ethers.utils.parseUnits(
+          back.odds.toString(),
+          constants.contracts.MARKET_ODDS_DECIMALS
+        ),
         back.close,
         back.end,
         back.signature
@@ -52,11 +54,51 @@ export const useMarketContract = () => {
     return receipt.transactionHash;
   };
 
+  const setResult = async (
+    { address }: MarketInfo,
+    signer: Signer,
+    bet: BetHistory,
+    config: Config
+  ) => {
+    const marketContract = Market__factory.connect(address, signer);
+    const oracleAddress = await marketContract.getOracleAddress();
+    const marketOracleContract = MarketOracle__factory.connect(
+      oracleAddress,
+      signer
+    );
+
+    try {
+      if (!bet.winningPropositionId || !bet.marketOracleResultSig)
+        throw new Error("No winningPropositionId or marketOracleResultSig");
+
+      if (
+        !utils.bets.recoverSigSigner(
+          bet.marketId,
+          bet.winningPropositionId,
+          bet.marketOracleResultSig,
+          config
+        )
+      )
+        throw new Error("Signature invalid");
+
+      // tx can fail if the result is already set
+      await (
+        await marketOracleContract.setResult(
+          bet.marketId,
+          bet.winningPropositionId,
+          bet.marketOracleResultSig
+        )
+      ).wait();
+    } catch (err: any) {
+      console.error(err);
+    }
+  };
+
   const settleBet = async (
     market: MarketInfo,
     bet: BetHistory,
-    signer: Signer
-    // sig: EcSignature -- re-add when marketOracle accepts ecdsa sigs
+    signer: Signer,
+    config: Config
   ) => {
     const marketContract = Market__factory.connect(market.address, signer);
     const oracleAddress = await marketContract.getOracleAddress();
@@ -65,12 +107,28 @@ export const useMarketContract = () => {
       signer
     );
 
-    if (!bet.marketResultAdded && bet.winningPropositionId)
+    if (
+      bet.winningPropositionId &&
+      bet.marketOracleResultSig &&
+      !utils.bets.recoverSigSigner(
+        bet.marketId,
+        bet.winningPropositionId,
+        bet.marketOracleResultSig,
+        config
+      )
+    )
+      throw new Error("Signature invalid");
+
+    if (
+      !bet.marketResultAdded &&
+      bet.winningPropositionId &&
+      bet.marketOracleResultSig
+    )
       await (
         await marketOracleContract.setResult(
           bet.marketId,
           bet.winningPropositionId,
-          ethers.constants.HashZero
+          bet.marketOracleResultSig
         )
       ).wait();
 
@@ -79,8 +137,30 @@ export const useMarketContract = () => {
     return receipt.transactionHash;
   };
 
+  const getPotentialPayout = async (
+    market: MarketInfo,
+    wager: BigNumber,
+    back: Back,
+    signer: Signer
+  ) => {
+    const marketContract = Market__factory.connect(market.address, signer);
+    const odds = ethers.utils.parseUnits(
+      back.odds.toString(),
+      constants.contracts.MARKET_ODDS_DECIMALS
+    );
+    const payout = await marketContract.getPotentialPayout(
+      utils.formatting.formatBytes16String(back.proposition_id),
+      utils.formatting.formatBytes16String(back.market_id),
+      wager,
+      odds
+    );
+    return payout;
+  };
+
   return {
     placeBet,
-    settleBet
+    settleBet,
+    getPotentialPayout,
+    setResult
   };
 };

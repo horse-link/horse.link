@@ -1,6 +1,5 @@
 import moment from "moment";
 import React, { useEffect, useMemo, useState } from "react";
-import { useConfig } from "../../providers/Config";
 import { Loader } from "../";
 import { BaseModal } from ".";
 import { ethers } from "ethers";
@@ -9,26 +8,28 @@ import { Web3ErrorHandler, Web3SuccessHandler } from "../Web3Handlers";
 import { useSigner } from "wagmi";
 import utils from "../../utils";
 import { BetHistory } from "../../types/bets";
+import { Config } from "../../types/config";
 
 type Props = {
   isModalOpen: boolean;
   setIsModalOpen: (open: boolean) => void;
   selectedBet?: BetHistory;
   refetch: () => void;
+  config?: Config;
 };
 
 export const SettleBetModal: React.FC<Props> = ({
   isModalOpen,
   setIsModalOpen,
   selectedBet,
-  refetch
+  refetch,
+  config
 }) => {
   const [txLoading, setTxLoading] = useState(false);
   const [txHash, setTxHash] = useState<string>();
   const [error, setError] = useState<ethers.errors>();
 
   const { data: signer } = useSigner();
-  const config = useConfig();
   const { settleBet } = useMarketContract();
 
   const now = useMemo(() => Math.floor(Date.now() / 1000), []);
@@ -64,7 +65,8 @@ export const SettleBetModal: React.FC<Props> = ({
       !selectedBet ||
       !market ||
       !signer ||
-      !selectedBet.marketOracleResultSig
+      !selectedBet.marketOracleResultSig ||
+      !config
     )
       return;
     setTxHash(undefined);
@@ -72,7 +74,7 @@ export const SettleBetModal: React.FC<Props> = ({
 
     try {
       setTxLoading(true);
-      const tx = await settleBet(market, selectedBet, signer); // selectedBet.marketOracleResultSig -- re-add when marketOracle accepts ecdsa sigs
+      const tx = await settleBet(market, selectedBet, signer, config);
       setTxHash(tx);
     } catch (err: any) {
       setError(err);
@@ -104,7 +106,11 @@ export const SettleBetModal: React.FC<Props> = ({
             <h3 className="font-semibold mb-2">
               Market:{" "}
               <span className="font-normal">
-                {utils.config.getVaultNameFromMarket(market!.address, config)}
+                {market ? (
+                  utils.config.getVaultNameFromMarket(market.address, config)
+                ) : (
+                  <Loader size={14} />
+                )}
               </span>
             </h3>
             {isWinning === true ? (
@@ -129,27 +135,37 @@ export const SettleBetModal: React.FC<Props> = ({
                 </span>
               </h3>
             )}
-            <button
-              className="w-full font-bold border-black border-2 py-2 rounded-md relative top-6 hover:text-white hover:bg-black transition-colors duration-100 disabled:text-black/50 disabled:border-black/50 disabled:bg-white"
-              onClick={onClickSettleBet}
-              disabled={
-                !signer ||
-                selectedBet.settled ||
-                !selectedBet.marketOracleResultSig ||
-                !isPayable ||
-                txLoading ||
-                !!txHash
-              }
-            >
-              {txLoading ? <Loader /> : "SETTLE BET"}
-            </button>
-            {!selectedBet.marketResultAdded && (
-              <span className="block relative top-[1.8rem] text-xs text-black/80">
-                Note: will require two transactions to add market results first
-              </span>
+            {!txHash && !error && (
+              <React.Fragment>
+                <button
+                  className="w-full font-bold border-black border-2 py-2 rounded-md relative top-6 hover:text-white hover:bg-black transition-colors duration-100 disabled:text-black/50 disabled:border-black/50 disabled:bg-white"
+                  onClick={onClickSettleBet}
+                  disabled={
+                    !signer ||
+                    selectedBet.settled ||
+                    !selectedBet.marketOracleResultSig ||
+                    !isPayable ||
+                    txLoading ||
+                    !!txHash
+                  }
+                >
+                  {txLoading ? <Loader /> : "SETTLE BET"}
+                </button>
+                {!selectedBet.marketResultAdded && (
+                  <span className="block relative top-[1.8rem] text-xs text-black/80">
+                    Note: will require two transactions to add market results
+                    first
+                  </span>
+                )}
+                <br />
+              </React.Fragment>
             )}
-            <br />
-            {txHash && <Web3SuccessHandler hash={txHash} />}
+            {txHash && (
+              <Web3SuccessHandler
+                hash={txHash}
+                message="Your settlement has been placed with"
+              />
+            )}
             {error && <Web3ErrorHandler error={error} />}
           </div>
         </React.Fragment>

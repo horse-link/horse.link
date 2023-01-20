@@ -20,16 +20,21 @@ export const BetFilterGroup: React.FC<Props> = ({
   onChange,
   disabled
 }) => (
-  <div className="flex gap-3">
+  <div className="flex gap-3 flex-wrap">
     {[...options].map(([key, text]) => (
       <button
+        key={key}
         onClick={() => {
           onChange(key);
         }}
-        className={classNames("bg-white rounded px-2 shadow ", {
-          "bg-blue-500": key === currentOption,
-          "disabled:opacity-75": key !== currentOption
-        })}
+        className={classNames(
+          "bg-white rounded px-1 w-13 lg:px-2 shadow lg:w-28",
+          {
+            "bg-indigo-600 hover:bg-indigo-700 text-white":
+              key === currentOption,
+            "disabled:opacity-75 hover:bg-gray-200": key !== currentOption
+          }
+        )}
         disabled={disabled}
       >
         {text}

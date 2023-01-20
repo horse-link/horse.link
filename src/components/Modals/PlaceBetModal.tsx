@@ -26,6 +26,7 @@ export const PlaceBetModal: React.FC<Props> = ({
   const [selectedMarket, setSelectedMarket] = useState<MarketInfo>();
   const [userBalance, setUserBalance] = useState<UserBalance>();
   const [wagerAmount, setWagerAmount] = useState<string>();
+  const [payout, setPayout] = useState<string>();
   const [txLoading, setTxLoading] = useState(false);
   const [txHash, setTxHash] = useState<string>();
   const [error, setError] = useState<ethers.errors>();
@@ -33,7 +34,7 @@ export const PlaceBetModal: React.FC<Props> = ({
   const { data: signer } = useSigner();
 
   const config = useConfig();
-  const { placeBet } = useMarketContract();
+  const { placeBet, getPotentialPayout } = useMarketContract();
   const { getBalance, getDecimals } = useERC20Contract();
   const { shouldRefetch, refetch: refetchUserBalance } = useRefetch();
 
@@ -50,6 +51,22 @@ export const PlaceBetModal: React.FC<Props> = ({
       signature: runner.signature
     };
   }, [runner]);
+
+  useEffect(() => {
+    if (!selectedMarket || !signer || !back || !wagerAmount || !userBalance)
+      return setPayout("0");
+
+    (async () => {
+      setPayout(undefined);
+      const payout = await getPotentialPayout(
+        selectedMarket,
+        ethers.utils.parseUnits(wagerAmount, userBalance.decimals),
+        back,
+        signer
+      );
+      setPayout(ethers.utils.formatUnits(payout, userBalance.decimals));
+    })();
+  }, [selectedMarket, signer, back, wagerAmount, userBalance, shouldRefetch]);
 
   useEffect(() => {
     if (!selectedMarket || !signer || !config) return;
@@ -144,8 +161,6 @@ export const PlaceBetModal: React.FC<Props> = ({
     }
   };
 
-  const payout = (+(wagerAmount || "0") * back.odds).toString();
-
   const isWagerNegative = wagerAmount ? +wagerAmount < 0 : false;
   const isWagerGreaterThanBalance =
     wagerAmount && userBalance ? +wagerAmount > +userBalance.formatted : false;
@@ -157,73 +172,102 @@ export const PlaceBetModal: React.FC<Props> = ({
           <Loader />
         </div>
       ) : (
-        <React.Fragment>
-          <h2 className="font-bold text-2xl mr-[8vw] mb-6">
-            Target Odds{" "}
-            {utils.formatting.formatToTwoDecimals(back.odds.toString())}
-          </h2>
-          <div className="flex flex-col">
-            <h3 className="font-semibold">Markets</h3>
-            <select
-              onChange={e => onSelectMarket(e, config)}
-              className="border-[0.12rem] border-black mt-1 mb-6 bg-white"
-            >
-              {config.markets.map(market => (
-                <option
-                  key={market.address}
-                  className="block"
-                  value={market.address}
+        <div className="lg:min-w-[28rem]">
+          {!txHash && !error && (
+            <React.Fragment>
+              <h2 className="font-bold">
+                {runner.name
+                  ? `${runner.name} (${runner.barrier ?? " "})`
+                  : " "}
+              </h2>
+              <h2 className="font-bold mr-[8vw] mb-6">
+                {`Target Odds 
+            ${utils.formatting.formatToTwoDecimals(back.odds.toString())}`}
+              </h2>
+              <div className="flex flex-col">
+                <h3 className="font-semibold">Markets</h3>
+                <select
+                  onChange={e => onSelectMarket(e, config)}
+                  className="border-[0.12rem] border-black mt-1 mb-6 bg-white overflow-x-scroll"
                 >
-                  {utils.config.getVaultNameFromMarket(market.address, config)}
-                </option>
-              ))}
-            </select>
-            <h3 className="font-semibold">Wager Amount</h3>
-            <input
-              type="number"
-              placeholder="0"
-              onChange={changeWagerAmount}
-              className="border-b-[0.12rem] border-black pl-1 pt-1 mb-6 disabled:text-black/50 disabled:bg-white transition-colors duration-100"
-              disabled={txLoading}
-            />
-            <span className="block font-semibold">
-              Payout:{" "}
-              <span className="font-normal">
-                {utils.formatting.formatToFourDecimals(payout)}
-              </span>
-            </span>
-            <span className="block font-semibold">
-              Available:{" "}
-              <span className="font-normal">
-                {userBalance?.formatted || <Loader size={14} />}
-              </span>
-            </span>
-            <span className="text-red-500 block font-semibold">
-              {isWagerNegative && "Wager amount cannot be negative"}
-              {isWagerGreaterThanBalance &&
-                "Wager amount cannot be greater than token balance"}
-            </span>
-            <button
-              className="w-full font-bold border-black border-2 py-2 rounded-md relative top-6 hover:text-white hover:bg-black transition-colors duration-100 disabled:text-black/50 disabled:border-black/50 disabled:bg-white"
-              onClick={onClickPlaceBet}
-              disabled={
-                !selectedMarket ||
-                !wagerAmount ||
-                !signer ||
-                !userBalance ||
-                +userBalance.formatted === 0 ||
-                txLoading ||
-                isWagerNegative ||
-                isWagerGreaterThanBalance
-              }
-            >
-              {txLoading ? <Loader /> : "PLACE BET"}
-            </button>
-            <br />
-            {txHash && <Web3SuccessHandler hash={txHash} />}
-            {error && <Web3ErrorHandler error={error} />}
-          </div>
-        </React.Fragment>
+                  {config.markets.map(market => (
+                    <option
+                      key={market.address}
+                      className="block"
+                      value={market.address}
+                    >
+                      {utils.config.getVaultNameFromMarket(
+                        market.address,
+                        config
+                      )}
+                    </option>
+                  ))}
+                </select>
+                <h3 className="font-semibold">Wager Amount</h3>
+                <input
+                  type="number"
+                  placeholder="0"
+                  onChange={changeWagerAmount}
+                  className="border-b-[0.12rem] border-black pl-1 pt-1 mb-6 disabled:text-black/50 disabled:bg-white transition-colors duration-100"
+                  disabled={txLoading}
+                />
+                <span className="block font-semibold">
+                  Payout:{" "}
+                  <span className="font-normal">
+                    {payout ? (
+                      utils.formatting.formatToFourDecimals(payout)
+                    ) : (
+                      <Loader size={14} />
+                    )}
+                  </span>
+                </span>
+                <span className="block font-semibold">
+                  Available:{" "}
+                  <span className="font-normal">
+                    {userBalance?.formatted || <Loader size={14} />}
+                  </span>
+                </span>
+                <span className="text-red-500 block font-semibold">
+                  {isWagerNegative && "Wager amount cannot be negative"}
+                  {isWagerGreaterThanBalance &&
+                    "Wager amount cannot be greater than token balance"}
+                </span>
+                <button
+                  className="w-full font-bold border-black border-2 py-2 mb-8 rounded-md relative top-6 hover:text-white hover:bg-black transition-colors duration-100 disabled:text-black/50 disabled:border-black/50 disabled:bg-white"
+                  onClick={onClickPlaceBet}
+                  disabled={
+                    !selectedMarket ||
+                    !wagerAmount ||
+                    !signer ||
+                    !userBalance ||
+                    +userBalance.formatted === 0 ||
+                    txLoading ||
+                    isWagerNegative ||
+                    isWagerGreaterThanBalance
+                  }
+                >
+                  {txLoading ? <Loader /> : "PLACE BET"}
+                </button>
+              </div>
+            </React.Fragment>
+          )}
+          {txHash && (
+            <React.Fragment>
+              <Web3SuccessHandler
+                hash={txHash}
+                message="Your bet has been placed with"
+              />
+            </React.Fragment>
+          )}
+          {error && (
+            <React.Fragment>
+              <h2 className="font-bold text-2xl mr-[8vw]">
+                Transaction result
+              </h2>
+              <Web3ErrorHandler error={error} />
+            </React.Fragment>
+          )}
+        </div>
       )}
     </BaseModal>
   );

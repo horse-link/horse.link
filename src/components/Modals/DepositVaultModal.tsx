@@ -126,31 +126,40 @@ export const DepositVaultModal: React.FC<Props> = ({
             {userBalance?.formatted || <Loader size={14} />}
           </span>
         </h3>
-        <h3 className="font-semibold">Deposit Amount</h3>
-        <input
-          type="number"
-          placeholder="0"
-          onChange={changeDepositAmount}
-          className="border-b-[0.12rem] border-black pl-1 pt-1 mb-6 disabled:text-black/50 disabled:bg-white transition-colors duration-100"
-          disabled={txLoading || !userBalance}
-        />
-        <button
-          className="w-full font-bold border-black border-2 py-2 rounded-md relative top-6 hover:text-white hover:bg-black transition-colors duration-100 disabled:text-black/50 disabled:border-black/50 disabled:bg-white"
-          onClick={onClickDeposit}
-          disabled={
-            !depositAmount ||
-            !signer ||
-            !userBalance ||
-            +userBalance.formatted === 0 ||
-            txLoading ||
-            isDepositNegative ||
-            isDepositGreaterThanBalance
-          }
-        >
-          {txLoading ? <Loader /> : `DEPOSIT ${vault.asset.symbol}`}
-        </button>
-        <br />
-        {txHash && <Web3SuccessHandler hash={txHash} />}
+        {!txHash && !error && (
+          <React.Fragment>
+            <h3 className="font-semibold">Deposit Amount</h3>
+            <input
+              type="number"
+              placeholder="0"
+              onChange={changeDepositAmount}
+              className="border-b-[0.12rem] border-black pl-1 pt-1 mb-6 disabled:text-black/50 disabled:bg-white transition-colors duration-100"
+              disabled={txLoading || !userBalance}
+            />
+            <button
+              className="w-full font-bold border-black border-2 py-2 rounded-md relative top-6 hover:text-white hover:bg-black transition-colors duration-100 disabled:text-black/50 disabled:border-black/50 disabled:bg-white"
+              onClick={onClickDeposit}
+              disabled={
+                !depositAmount ||
+                !signer ||
+                !userBalance ||
+                +userBalance.formatted === 0 ||
+                txLoading ||
+                isDepositNegative ||
+                isDepositGreaterThanBalance
+              }
+            >
+              {txLoading ? <Loader /> : `DEPOSIT ${vault.asset.symbol}`}
+            </button>
+            <br />
+          </React.Fragment>
+        )}
+        {txHash && (
+          <Web3SuccessHandler
+            hash={txHash}
+            message="Your deposit has been placed with"
+          />
+        )}
         {error && <Web3ErrorHandler error={error} />}
       </div>
     </BaseModal>

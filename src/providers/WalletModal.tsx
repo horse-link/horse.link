@@ -1,12 +1,8 @@
 import { createContext, useContext, useState } from "react";
 
 const defaultValue = {
-  openWalletModal: () => {
-    // do nothing.
-  },
-  closeWalletModal: () => {
-    // do nothing.
-  },
+  openWalletModal: () => {},
+  closeWalletModal: () => {},
   isWalletModalOpen: false
 };
 

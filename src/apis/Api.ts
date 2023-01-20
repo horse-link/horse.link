@@ -2,7 +2,12 @@ import { AxiosInstance } from "axios";
 import { ethers } from "ethers";
 import utils from "../utils";
 import { Config } from "../types/config";
-import { MeetResults, Runner, SignedMeetingsResponse } from "../types/meets";
+import {
+  MeetResults,
+  RacesResponse,
+  Runner,
+  SignedMeetingsResponse
+} from "../types/meets";
 import { BetHistoryResponse, SignedBetDataResponse } from "../types/bets";
 import { Market, Vault } from "../typechain";
 import { Token } from "graphql";
@@ -22,6 +27,15 @@ export class Api {
 
   public getMeetings = async (): Promise<SignedMeetingsResponse> => {
     const { data } = await this.client.get<SignedMeetingsResponse>("/meetings");
+
+    return data;
+  };
+
+  // Get all the races for a given meeting
+  public getMeeting = async (locationCode: string): Promise<RacesResponse> => {
+    const { data } = await this.client.get<RacesResponse>(
+      `/meetings/${locationCode}`
+    );
 
     return data;
   };
@@ -46,14 +60,10 @@ export class Api {
     return data;
   };
 
-  public requestSignedBetData = async (
-    marketId: string,
-    propositionId: string
+  public getWinningResultSignature = async (
+    marketId: string
   ): Promise<SignedBetDataResponse> => {
-    const { data } = await this.client.post("/bets/sign", {
-      marketId,
-      propositionId
-    });
+    const { data } = await this.client.get(`/bets/sign/${marketId}`);
 
     return data;
   };

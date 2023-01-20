@@ -15,10 +15,12 @@ export const Faucet: React.FC = () => {
   const { address } = useAccount();
   const { openWalletModal } = useWalletModal();
   const { isConnected } = useAccount();
+
   const [isClaimUsdtLoading, setIsClaimUsdtLoading] = useState(false);
   const [isClaimDiaLoading, setIsClaimDiaLoading] = useState(false);
   const [txHash, setTxHash] = useState<string>();
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   const onClickClaim = useCallback(
     async (tokenAddress: string, tokenName: string) => {
       if (!address || isClaimUsdtLoading || isClaimDiaLoading) return;
@@ -81,7 +83,7 @@ export const Faucet: React.FC = () => {
             href={`${process.env.VITE_SCANNER_URL}/address/${FAUCET_ADDRESS}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="underline"
+            className="underline break-all"
           >
             {FAUCET_ADDRESS}
           </a>

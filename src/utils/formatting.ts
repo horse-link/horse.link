@@ -1,5 +1,6 @@
+import dayjs from "dayjs";
 import { ethers } from "ethers";
-import { BetId } from "../types/entities";
+import { BetId } from "../types/subgraph";
 
 export const formatToFourDecimals = (amount: string) => {
   const parsedAmount = parseFloat(amount);
@@ -79,3 +80,22 @@ export const parseBytes16String = (bytes: ethers.BytesLike) => {
 
 export const formatFirstLetterCapitalised = (string: string) =>
   `${string.charAt(0).toUpperCase()}${string.slice(1).toLowerCase()}`;
+
+export const formatTimeToHMS = (time: string) => {
+  const now = dayjs();
+  const date = dayjs(time);
+
+  const isNegative = now > date;
+  const prefix = isNegative ? "-" : "";
+
+  const hours = date.diff(now, "hours");
+  const minutes = date.diff(now.add(hours, "hours"), "minutes");
+  const seconds = date.diff(
+    now.add(hours, "hours").add(minutes, "minutes"),
+    "seconds"
+  );
+
+  return `${prefix}${Math.abs(hours)}h ${Math.abs(minutes)}m ${Math.abs(
+    seconds
+  )}s`;
+};

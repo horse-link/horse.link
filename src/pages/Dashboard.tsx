@@ -5,16 +5,20 @@ import api from "../apis/Api";
 import { Toggle, PageLayout } from "../components";
 import {
   DashboardOverallStats,
-  DashboardTable,
-  DashboardUserStats
+  DashboardUserStats,
+  DashboardFilterGroup,
+  DashboardNextToJumpBanner
 } from "../components/Dashboard";
+import { DashboardTable } from "../components/Tables";
 import { useWalletModal } from "../providers/WalletModal";
-import { SignedMeetingsResponse } from "../types/meets";
-import utils from "../utils";
+import { SignedMeetingsResponse, MeetFilters, Meet } from "../types/meets";
+import constants from "../constants";
 
 export const Dashboard: React.FC = () => {
   const [response, setResponse] = useState<SignedMeetingsResponse>();
+  const [meets, setMeets] = useState<Meet[]>();
   const [myPlayEnabled, setMyPlayEnabled] = useState(false);
+  const [meetsFilter, setMeetsFilter] = useState<MeetFilters>("ALL");
   const { openWalletModal } = useWalletModal();
   const { isConnected } = useAccount();
 
@@ -26,15 +30,46 @@ export const Dashboard: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    if (!response) return;
+    // error encountered that if meetings was empty it would return as an empty *object* rather than array
+    if (!Array.isArray(response.data.meetings)) return;
+
+    switch (meetsFilter) {
+      case "AUS_NZ":
+        setMeets(
+          response.data.meetings.filter(meet =>
+            constants.locations.AUS_NZ_LOCATIONS.includes(meet.location)
+          )
+        );
+        break;
+      case "INTERNATIONAL":
+        setMeets(
+          response.data.meetings.filter(
+            meet =>
+              !constants.locations.AUS_NZ_LOCATIONS.includes(meet.location)
+          )
+        );
+        break;
+      default:
+        setMeets(response.data.meetings);
+        break;
+    }
+  }, [response, meetsFilter]);
+
+  useEffect(() => {
     if (myPlayEnabled && !isConnected) {
       openWalletModal();
     }
   }, [myPlayEnabled, isConnected]);
 
   const onMyPlayToggle = () => setMyPlayEnabled(prev => !prev);
-
+  const onFilterChange = (option: MeetFilters) => {
+    setMeetsFilter(option);
+  };
+  const isLoading = !response;
   return (
     <PageLayout>
+      <DashboardNextToJumpBanner />
       <div className="grid gap-6">
         <div>
           <div className="container-fluid px-4 py-5 bg-emerald-700 shadow rounded-lg overflow-hidden sm:p-6">
@@ -65,20 +100,23 @@ export const Dashboard: React.FC = () => {
           </div>
           {myPlayEnabled ? <DashboardUserStats /> : <DashboardOverallStats />}
         </div>
+        <div className="flex w-full gap-x-3 justify-between md:justify-end">
+          <DashboardFilterGroup
+            value={meetsFilter}
+            onChange={onFilterChange}
+            disabled={isLoading}
+          />
+        </div>
         <div className="flex gap-3 self-end justify-self-end">
           <Toggle enabled={myPlayEnabled} onChange={onMyPlayToggle} />
           <div>My Stats</div>
         </div>
-        <div className="-mt-12">
-          <DashboardTable
-            meets={response?.data.meetings || utils.mocks.getMockMeets()}
-          />
-        </div>
+        <DashboardTable meets={meets} />
         <div className="flex justify-center px-4 py-5 bg-white shadow rounded-lg sm:p-6 mb-10">
           <div className="w-4/5 max-w-2xl">
             <div className="flex flex-col items-center">
               <h2 className="text-lg">Signature :</h2>
-              <h2 className="break-all">
+              <h2 className="break-all xl:whitespace-nowrap">
                 {response?.signature || <Skeleton width={"25em"} count={2} />}
               </h2>
             </div>
