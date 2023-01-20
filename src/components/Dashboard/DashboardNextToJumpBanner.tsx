@@ -12,7 +12,7 @@ export const DashboardNextToJumpBanner: React.FC = () => {
           <DashboardBannerRow
             meet={meet}
             key={
-              // nothing unique about the meet
+              // no unique key in meet
               JSON.stringify(meet)
             }
           />
