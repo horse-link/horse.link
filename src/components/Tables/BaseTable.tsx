@@ -28,7 +28,7 @@ export const BaseTable: React.FC<Props> = props => {
                 <tr>
                   {headers.map(header => (
                     <th
-                      key={JSON.stringify(header)}
+                      key={header.title!.toString()}
                       scope="col"
                       className={`${headerStyles} ${header.classNames || ""}`}
                     >
@@ -40,13 +40,13 @@ export const BaseTable: React.FC<Props> = props => {
               <tbody className="bg-white divide-y divide-gray-200">
                 {rows.map(({ data, row }) => (
                   <tr
-                    key={JSON.stringify(data)}
+                    key={JSON.stringify(row)}
                     className={row?.classNames || ""}
                     {...row?.props}
                   >
                     {data.map(d => (
                       <td
-                        key={JSON.stringify(d)}
+                        key={d.title!.toString()}
                         className={`${cellStyles} ${d.classNames || ""}`}
                         {...d.props}
                       >
