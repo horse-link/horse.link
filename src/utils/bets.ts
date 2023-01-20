@@ -25,12 +25,18 @@ export const getBetStatus = (
 ): BetStatus => {
   const hasResult =
     signedBetData.winningPropositionId || signedBetData.marketResultAdded;
-  if (+bet.payoutAt > Math.floor(Date.now() / 1000)) return "PENDING";
-  if (!hasResult && !bet.settled) return "PENDING";
-  if (hasResult && !bet.settled) return "RESULTED";
-  if (hasResult && bet.settled) return "SETTLED";
-  return "UNKNOWN";
-  // throw new Error("Invalid bet status");
+  switch (true) {
+    case +bet.payoutAt > Math.floor(Date.now() / 1000):
+      return "PENDING";
+    case !hasResult && !bet.settled:
+      return "PENDING";
+    case hasResult && !bet.settled:
+      return "RESULTED";
+    case hasResult && bet.settled:
+      return "SETTLED";
+    default:
+      throw new Error("Invalid bet status");
+  }
 };
 
 export const getBetHistory = (
