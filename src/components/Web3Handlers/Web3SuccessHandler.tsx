@@ -1,5 +1,6 @@
 import React from "react";
 import utils from "../../utils";
+import constants from "../../constants";
 
 type Props = {
   hash: string;
@@ -13,7 +14,7 @@ export const Web3SuccessHandler: React.FC<Props> = ({ hash, message }) => (
       {`${message}: `}
       <a
         className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
-        href={`${process.env.VITE_SCANNER_URL}/tx/${hash}`}
+        href={`${constants.env.SCANNER_URL}/tx/${hash}`}
         target="_blank"
         rel="noreferrer noopener"
       >
@@ -25,7 +26,7 @@ export const Web3SuccessHandler: React.FC<Props> = ({ hash, message }) => (
       <br />
       <a
         className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
-        href={`${process.env.VITE_SCANNER_URL}/tx/${hash}`}
+        href={`${constants.env.SCANNER_URL}/tx/${hash}`}
         target="_blank"
         rel="noreferrer noopener"
       >

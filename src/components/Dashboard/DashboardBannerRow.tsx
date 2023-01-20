@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { NextToJump } from "../../types/meets";
 import utils from "../../utils";
-
-const INTERVAL = 1000;
+import constants from "../../constants";
 
 type Props = {
   meet: NextToJump;
@@ -17,7 +16,7 @@ export const DashboardBannerRow: React.FC<Props> = ({ meet }) => {
   useEffect(() => {
     const interval = setInterval(() => {
       setTimeString(utils.formatting.formatTimeToHMS(meet.jumperRaceStartTime));
-    }, INTERVAL);
+    }, constants.time.ONE_SECOND_MS);
 
     return () => clearInterval(interval);
   }, [meet]);

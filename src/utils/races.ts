@@ -1,18 +1,17 @@
 import { Runner } from "../types/meets";
 import { ethers } from "ethers";
+import constants from "../constants";
 
 export const isScratchedRunner = (runner: Runner) =>
   ["LateScratched", "Scratched"].includes(runner.status);
 
 export const calculateRaceMargin = (odds: number[]) => {
-  const one = ethers.utils.parseEther("1");
-
   // if odds arent present, use 1 odds (prevents division by zero error)
   const filteredOdds = odds.map(o => o || 1);
 
   const bnOdds = filteredOdds.map(o => ethers.utils.parseEther(o.toString()));
   const oneOverOdds = bnOdds.map(o =>
-    one.mul(ethers.constants.WeiPerEther).div(o)
+    constants.blockchain.ONE_ETHER.mul(ethers.constants.WeiPerEther).div(o)
   );
 
   const summed = oneOverOdds.reduce(
