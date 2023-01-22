@@ -9,8 +9,7 @@ import { Config, MarketInfo } from "../../types/config";
 import utils from "../../utils";
 import { Back } from "../../types/meets";
 import { BetHistory } from "../../types/bets";
-
-const ODDS_DECIMALS = 6;
+import constants from "../../constants";
 
 export const useMarketContract = () => {
   const placeBet = async (
@@ -42,7 +41,10 @@ export const useMarketContract = () => {
         utils.formatting.formatBytes16String(back.proposition_id),
         utils.formatting.formatBytes16String(back.market_id),
         wager,
-        ethers.utils.parseUnits(back.odds.toString(), ODDS_DECIMALS),
+        ethers.utils.parseUnits(
+          back.odds.toString(),
+          constants.contracts.MARKET_ODDS_DECIMALS
+        ),
         back.close,
         back.end,
         back.signature
@@ -142,7 +144,10 @@ export const useMarketContract = () => {
     signer: Signer
   ) => {
     const marketContract = Market__factory.connect(market.address, signer);
-    const odds = ethers.utils.parseUnits(back.odds.toString(), ODDS_DECIMALS);
+    const odds = ethers.utils.parseUnits(
+      back.odds.toString(),
+      constants.contracts.MARKET_ODDS_DECIMALS
+    );
     const payout = await marketContract.getPotentialPayout(
       utils.formatting.formatBytes16String(back.proposition_id),
       utils.formatting.formatBytes16String(back.market_id),

@@ -1,5 +1,6 @@
 import { Meet, Race } from "../types/meets";
 import dayjs from "dayjs";
+import constants from "../constants";
 
 // copied from BE repo
 export const makeMarketId = (
@@ -7,10 +8,11 @@ export const makeMarketId = (
   location: string,
   raceNumber: string
 ) => {
-  const MILLIS_IN_DAY = 1000 * 60 * 60 * 24;
   const offset = date.getTimezoneOffset();
   const dateInTimezone = dayjs(date).subtract(offset, "minutes");
-  const daysSinceEpoch = Math.floor(dateInTimezone.valueOf() / MILLIS_IN_DAY)
+  const daysSinceEpoch = Math.floor(
+    dateInTimezone.valueOf() / constants.time.ONE_DAY_MS
+  )
     .toString()
     .padStart(6, "0");
   return `${daysSinceEpoch}${location}${raceNumber

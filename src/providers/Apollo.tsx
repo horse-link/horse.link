@@ -5,12 +5,10 @@ import {
   ApolloProvider
 } from "@apollo/client";
 import React from "react";
-
-const uri = process.env.VITE_SUBGRAPH_URL;
-if (!uri) throw new Error("No subgraph url provided");
+import constants from "../constants";
 
 const client = new ApolloClient({
-  link: new HttpLink({ uri, fetch }),
+  link: new HttpLink({ uri: constants.env.SUBGRAPH_URL, fetch }),
   cache: new InMemoryCache()
 });
 

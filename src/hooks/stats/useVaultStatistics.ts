@@ -6,13 +6,11 @@ import utils from "../../utils";
 import { useVaultContract } from "../contracts";
 import { useConfig } from "../../providers/Config";
 import { useProvider } from "wagmi";
+import constants from "../../constants";
 
 type Response = {
   vaultTransactions: VaultTransaction[];
 };
-
-const MILLISECONDS_TO_SECONDS_DIVISOR = 1000;
-const SECONDS_TWENTYFOUR_HOURS = 86400;
 
 export const useVaultStatistics = () => {
   const config = useConfig();
@@ -21,7 +19,8 @@ export const useVaultStatistics = () => {
   const yesterdayFilter = useMemo(
     () =>
       Math.floor(
-        Date.now() / MILLISECONDS_TO_SECONDS_DIVISOR - SECONDS_TWENTYFOUR_HOURS
+        Date.now() / constants.time.ONE_SECOND_MS -
+          constants.time.TWENTY_FOUR_HOURS_S
       ),
     []
   );

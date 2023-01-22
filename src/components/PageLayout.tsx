@@ -35,7 +35,7 @@ export const PageLayout: React.FC<Props> = ({ children }) => {
     <div className="min-h-screen bg-emerald-500">
       <Disclosure as="nav" className="bg-white border-b border-emerald-200">
         {({ open }) => (
-          <>
+          <React.Fragment>
             <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex justify-between h-16">
                 <div className="flex">
@@ -109,7 +109,7 @@ export const PageLayout: React.FC<Props> = ({ children }) => {
                 <ConnectWalletButton openWalletModal={openWalletModal} />
               </div>
             </Disclosure.Panel>
-          </>
+          </React.Fragment>
         )}
       </Disclosure>
       <div className="py-4">

@@ -3,19 +3,18 @@ import { useMemo } from "react";
 import { Bet } from "../../types/subgraph";
 import useSubgraph from "../useSubgraph";
 import utils from "../../utils";
+import constants from "../../constants";
 
 type Response = {
   bets: Bet[];
 };
 
-const MILLISECONDS_TO_SECONDS_DIVISOR = 1000;
-const SECONDS_TWENTYFOUR_HOURS = 86400;
-
 export const useMarketStatistics = () => {
   const yesterdayFilter = useMemo(
     () =>
       Math.floor(
-        Date.now() / MILLISECONDS_TO_SECONDS_DIVISOR - SECONDS_TWENTYFOUR_HOURS
+        Date.now() / constants.time.ONE_SECOND_MS -
+          constants.time.TWENTY_FOUR_HOURS_S
       ),
     []
   );

@@ -1,8 +1,6 @@
 import { BaseModal } from ".";
 import utils from "../../utils";
-
-const SCANNER_URL = process.env.VITE_SCANNER_URL;
-if (!SCANNER_URL) throw new Error("No VITE_SCANNER_URL env provided");
+import constants from "../../constants";
 
 type Props = {
   isOpen: boolean;
@@ -23,7 +21,7 @@ export const SettledMarketModal: React.FC<Props> = ({
         {hashes?.map(hash => (
           <li key={hash}>
             <a
-              href={`${SCANNER_URL}/tx/${hash}`}
+              href={`${constants.env.SCANNER_URL}/tx/${hash}`}
               target="_blank"
               rel="noopener noreferrer"
               className="underline underline-offset-2 text-blue-500 visited:text-blue-800"
