@@ -5,10 +5,23 @@ import { Config, MarketInfo } from "../../types/config";
 import utils from "../../utils";
 import Skeleton from "react-loading-skeleton";
 import { ethers } from "ethers";
+import constants from "../../constants";
+import { Address } from "wagmi";
 
 type Props = {
   config?: Config;
 };
+
+const ClickableAddress = (props: { address: Address }) => (
+  <a
+    href={`${constants.env.SCANNER_URL}/address/${props.address}`}
+    target="_blank"
+    rel="noreferrer noopener"
+    className="text-blue-600"
+  >
+    {props.address}
+  </a>
+);
 
 export const MarketTable: React.FC<Props> = ({ config }) => {
   const getMarketData = (market: MarketInfo): TableData[] => {
@@ -29,10 +42,10 @@ export const MarketTable: React.FC<Props> = ({ config }) => {
         )
       },
       {
-        title: market.address
+        title: <ClickableAddress address={market.address} />
       },
       {
-        title: market.vaultAddress
+        title: <ClickableAddress address={market.vaultAddress} />
       }
     ];
   };
