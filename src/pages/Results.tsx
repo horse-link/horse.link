@@ -1,5 +1,4 @@
-import moment from "moment";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Loader, PageLayout } from "../components";
 import { BetTable, ResultsTable } from "../components/Tables";
@@ -13,12 +12,16 @@ import utils from "../utils";
 import { useSubgraphBets } from "../hooks/subgraph";
 import { SettleRaceButton, RacesButton } from "../components/Buttons";
 import { useAccount, useSigner } from "wagmi";
+import dayjs from "dayjs";
+import { RaceInfo } from "../types/meets";
+import Skeleton from "react-loading-skeleton";
 
 export const Results: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [settleHashes, setSettleHashes] = useState<string[]>();
   const [isSettledMarketModalOpen, setIsSettledMarketModalOpen] =
     useState(false);
+  const [thisRace, setThisRace] = useState<RaceInfo>();
   const [isSettleModalOpen, setIsSettleModalOpen] = useState(false);
   const [selectedBet, setSelectedBet] = useState<BetHistory>();
 
@@ -28,10 +31,21 @@ export const Results: React.FC = () => {
   const { data: signer } = useSigner();
 
   const propositionId = params.propositionId || "";
-
   const details = utils.markets.getDetailsFromPropositionId(propositionId);
 
+  const { current: date } = useRef(dayjs().format("DD-MM-YY"));
+
   const meetRaces = useMeetData(details.track || "");
+
+  useEffect(() => {
+    if (!meetRaces) return;
+
+    const raceResultsData = meetRaces.find(
+      meet => meet.raceNumber.toString() === details.race
+    );
+    setThisRace(raceResultsData);
+  }, [meetRaces, details]);
+
   const raceParams = {
     track: details.track,
     number: details.race
@@ -57,14 +71,20 @@ export const Results: React.FC = () => {
 
   return (
     <PageLayout>
-      <div className="rounded-lg gap-6">
+      <div className="flex flex-col gap-6">
         <RacesButton params={raceParams} meetRaces={meetRaces} />
-        <h1 className="font-semibold text-3xl mb-10 mt-2">
-          {details.track} {details.race} Results{" "}
-          <span className="block text-lg text-black/50">
-            {moment(Date.now()).format("dddd Do MMMM")}
-          </span>
-        </h1>
+        <div className="lg:flex text-center flex-row p-2 gap-6 shadow border-b bg-white border-gray-200 rounded-lg lg:justify-around overflow-scroll">
+          <h1>{thisRace ? thisRace.raceName : <Skeleton />}</h1>
+          <h1>Track: {details.track}</h1>
+          <h1>Race #: {thisRace ? thisRace.raceNumber : <Skeleton />}</h1>
+          <h1>Date: {date}</h1>
+          <h1>
+            Distance: {thisRace ? `${thisRace.raceDistance}m` : <Skeleton />}
+          </h1>
+          <h1>
+            Class: {thisRace ? thisRace.raceClassConditions : <Skeleton />}
+          </h1>
+        </div>
         {results ? (
           <ResultsTable results={results} />
         ) : (
