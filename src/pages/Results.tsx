@@ -73,7 +73,7 @@ export const Results: React.FC = () => {
     <PageLayout>
       <div className="flex flex-col gap-6 ">
         <RacesButton params={raceParams} meetRaces={meetRaces} />
-        <div className="lg:flex text-center flex-row  p-2 gap-6 shadow border-b bg-white border-gray-200 rounded-lg lg:justify-around overflow-scroll">
+        <div className="lg:flex text-center flex-row p-2 gap-6 shadow border-b bg-white border-gray-200 rounded-lg lg:justify-around overflow-scroll">
           <h1>{thisRace ? thisRace.raceName : <Skeleton />}</h1>
           <h1>Track: {details.track}</h1>
           <h1>Race #: {thisRace ? thisRace.raceNumber : <Skeleton />}</h1>
