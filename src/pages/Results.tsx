@@ -82,12 +82,7 @@ export const Results: React.FC = () => {
             Distance: {thisRace ? `${thisRace.raceDistance}m` : <Skeleton />}
           </h1>
           <h1>
-            Class:{" "}
-            {thisRace?.raceClassConditions ? (
-              thisRace?.raceClassConditions
-            ) : (
-              <Skeleton />
-            )}
+            Class: {thisRace ? thisRace?.raceClassConditions : <Skeleton />}
           </h1>
         </div>
         {results ? (
