@@ -62,17 +62,22 @@ export const Races: React.FC = () => {
         <RacesButton params={params} meetRaces={meetRaces} />
 
         <div className="flex p-2 shadow overflow-hidden border-b bg-white border-gray-200 sm:rounded-lg justify-around">
-          <h1>{race ? race.raceData.name : <Skeleton />}</h1>
+          <h1>{race ? race.raceData.name : <Skeleton width={200} />}</h1>
           <h1>
             Track:{" "}
-            {race ? `${race.track.name} - (${race.track.code})` : <Skeleton />}
+            {race ? (
+              `${race.track.name} - (${race.track.code})`
+            ) : (
+              <Skeleton width={150} />
+            )}
           </h1>
           <h1>Race #: {raceNumber}</h1>
           <h1>Date: {meetDate}</h1>
           <h1>
-            Distance: {race ? `${race.raceData.distance}m` : <Skeleton />}
+            Distance:{" "}
+            {race ? `${race.raceData.distance}m` : <Skeleton width={50} />}
           </h1>
-          <h1>Class: {race ? race.raceData.class : <Skeleton />}</h1>
+          <h1>Class: {race ? race.raceData.class : <Skeleton width={30} />}</h1>
           <h1>
             Margin:{" "}
             {margin ? (
@@ -80,7 +85,7 @@ export const Races: React.FC = () => {
                 (+margin * 100).toString()
               )}%`
             ) : (
-              <Skeleton />
+              <Skeleton width={50} />
             )}
           </h1>
         </div>
