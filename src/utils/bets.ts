@@ -35,7 +35,10 @@ export const getBetStatus = (
     case hasResult && bet.settled:
       return "SETTLED";
     default:
-      throw new Error("Invalid bet status");
+      console.error(
+        "Invalid bet status: the bet is settled, but has no result set!"
+      );
+      return "INVALID";
   }
 };
 

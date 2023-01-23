@@ -8,7 +8,7 @@ export type SignedBetDataResponse = {
 
 export type BetTablePaginationValues = 25 | 50 | 100;
 
-export type BetStatus = "RESULTED" | "PENDING" | "SETTLED";
+export type BetStatus = "RESULTED" | "PENDING" | "SETTLED" | "INVALID";
 
 export type BetFilterOptions = "ALL_BETS" | BetStatus;
 
