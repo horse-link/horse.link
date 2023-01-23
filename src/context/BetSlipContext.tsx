@@ -11,6 +11,8 @@ import { useMarketContract } from "../hooks/contracts";
 import { useSigner } from "wagmi";
 import { BetSlipSuccessModal } from "../components/Modals";
 
+const LOCAL_STORAGE_KEY = "horse.link-bet-slip";
+
 export const BetSlipContext = createContext<BetSlipContextType>({
   txLoading: false,
   hashes: undefined,
@@ -59,6 +61,11 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
     [bets]
   );
 
+  const clearBets = useCallback(() => {
+    setBets(undefined);
+    localStorage.removeItem(LOCAL_STORAGE_KEY);
+  }, [bets]);
+
   const removeBet = useCallback(
     (id: number) => {
       // if there are no bets do nothing
@@ -71,7 +78,7 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
       const newBets = [...bets].filter(bet => bet.id !== id);
 
       // if the new bets has no length, set undefined
-      if (!newBets.length) return setBets(undefined);
+      if (!newBets.length) return clearBets();
 
       // set the bets
       setBets(
@@ -83,8 +90,6 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
     },
     [bets]
   );
-
-  const clearBets = useCallback(() => setBets(undefined), [bets]);
 
   const placeBets = useCallback(async () => {
     // if there are no bets, or signer, do nothing
