@@ -5,7 +5,7 @@ import { Config, MarketInfo } from "../../types/config";
 import utils from "../../utils";
 import Skeleton from "react-loading-skeleton";
 import { ethers } from "ethers";
-import { AddressLink } from "../AddressLink";
+import { AddressLink } from "../../components";
 
 type Props = {
   config?: Config;
