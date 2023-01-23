@@ -28,16 +28,16 @@ export const BetSlip: React.FC = () => {
   const { bets, removeBet } = useBetSlipContext();
 
   return (
-    <div className="mx-4 w-full shadow-lg">
+    <div className="mx-4 w-full shadow-lg sticky top-4">
       <h2 className="w-full bg-indigo-600 p-6 rounded-t-lg text-center font-bold text-3xl text-white">
         Bet Slip
       </h2>
       <div className="bg-white p-2 rounded-b-lg">
-        <div className="p-4 border-emerald-500 border-2 rounded-b-lg">
+        <div className="py-4 px-2 border-emerald-500 border-2 rounded-b-lg">
           {!bets?.length ? (
             <div className="w-full text-center">No Bets</div>
           ) : (
-            <div className="flex flex-col divide-y divide-black">
+            <div className="flex flex-col divide-y divide-black max-h-[calc(50vh)] overflow-y-scroll px-4 scrollbar-thin scrollbar-thumb-indigo-600">
               {bets.map((bet, _, array) => (
                 <div
                   key={`${bet.back.proposition_id}-${bet.timestamp}`}
@@ -49,7 +49,7 @@ export const BetSlip: React.FC = () => {
                     }
                   )}
                 >
-                  <div className="col-span-1 pr-4 flex flex-col justify-center items-center text-black/50 font-semibold">
+                  <div className="col-span-1 pr-6 flex flex-col justify-center items-center text-black/50 font-semibold">
                     {bet.id}
                   </div>
                   <div className="col-span-8 flex flex-col">
@@ -84,7 +84,7 @@ export const BetSlip: React.FC = () => {
                       </span>
                     </div>
                   </div>
-                  <div className="col-span-1 pl-3 flex flex-col justify-center items-center">
+                  <div className="col-span-1 pl-5 flex flex-col justify-center items-center">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
