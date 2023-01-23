@@ -77,7 +77,7 @@ export const Results: React.FC = () => {
           <h1>{thisRace ? thisRace.raceName : <Skeleton />}</h1>
           <h1>Track: {details.track}</h1>
           <h1>Race #: {thisRace ? thisRace?.raceNumber : <Skeleton />}</h1>
-          <h1>Date: {date ? date : <Skeleton />}</h1>
+          <h1>Date: {date}</h1>
           <h1>
             Distance: {thisRace ? `${thisRace.raceDistance}m` : <Skeleton />}
           </h1>
