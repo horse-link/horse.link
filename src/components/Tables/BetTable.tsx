@@ -126,7 +126,9 @@ export const BetTable: React.FC<Props> = ({
       row: {
         classNames: classnames("cursor-pointer hover:bg-gray-200", {
           "bg-emerald-300": bet?.status === "RESULTED",
-          "bg-gray-300": bet?.status === "SETTLED"
+          "bg-gray-300": bet?.status === "SETTLED",
+          // invalid bets are highlighted -- results from a bet that is settled, but has no result set
+          "bg-red-600": bet?.status === "INVALID"
         }),
         props: {
           onClick: () => onClickBet(bet)
