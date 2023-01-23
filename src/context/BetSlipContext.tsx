@@ -3,6 +3,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useMemo,
   useState
 } from "react";
 import { BetSlipContextType, BetSlipEntry } from "../types/context";
@@ -102,7 +103,6 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
       console.error(e);
     } finally {
       setTxLoading(false);
-      return;
     }
   }, [bets, signer, placeBet]);
 
@@ -112,15 +112,17 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
     clearBets();
   }, [setIsModalOpen, clearBets, setHashes]);
 
-  const value = {
-    hashes,
-    txLoading,
-    bets,
-    addBet,
-    removeBet,
-    clearBets,
-    placeBets
-  };
+  const value = useMemo(
+    () => ({
+      txLoading,
+      bets,
+      addBet,
+      removeBet,
+      clearBets,
+      placeBets
+    }),
+    [txLoading, bets, addBet, removeBet, clearBets, placeBets]
+  );
 
   return (
     <BetSlipContext.Provider value={value}>

@@ -40,6 +40,7 @@ export const BetSlip: React.FC = () => {
             <div className="flex flex-col divide-y divide-black">
               {bets.map((bet, _, array) => (
                 <div
+                  key={`${bet.back.proposition_id}-${bet.timestamp}`}
                   className={classnames(
                     "w-full grid grid-cols-10 grid-rows-1",
                     {
