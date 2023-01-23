@@ -3,6 +3,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState
 } from "react";
@@ -35,6 +36,19 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
   const [txLoading, setTxLoading] = useState(false);
   const [hashes, setHashes] = useState<string[]>();
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // write bet slip to local storage if bets exist
+  useEffect(() => {
+    if (bets && bets.length)
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(bets));
+  }, [bets]);
+
+  // load bets on page load
+  useEffect(() => {
+    const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (!raw || raw === "undefined") return;
+    setBets(JSON.parse(raw));
+  }, []);
 
   const addBet = useCallback(
     (bet: Omit<BetSlipEntry, "id">) => {
