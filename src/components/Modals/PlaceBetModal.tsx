@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useConfig } from "../../providers/Config";
 import { useSigner } from "wagmi";
 import { Loader } from "../";
@@ -11,6 +11,7 @@ import useRefetch from "../../hooks/useRefetch";
 import utils from "../../utils";
 import { Back, Runner } from "../../types/meets";
 import { UserBalance } from "../../types/users";
+import { useBetSlipContext } from "../../context/BetSlipContext";
 
 type Props = {
   runner?: Runner;
@@ -34,9 +35,10 @@ export const PlaceBetModal: React.FC<Props> = ({
   const { data: signer } = useSigner();
 
   const config = useConfig();
-  const { placeBet, getPotentialPayout } = useMarketContract();
+  const { getPotentialPayout } = useMarketContract();
   const { getBalance, getDecimals } = useERC20Contract();
   const { shouldRefetch, refetch: refetchUserBalance } = useRefetch();
+  const { addBet } = useBetSlipContext();
 
   const back = useMemo<Back>(() => {
     if (!runner) return utils.mocks.getMockBack();
@@ -143,23 +145,22 @@ export const PlaceBetModal: React.FC<Props> = ({
     setWagerAmount(value);
   };
 
-  const onClickPlaceBet = async () => {
-    if (!selectedMarket || !wagerAmount || !userBalance || !signer) return;
+  const onClickPlaceBet = useCallback(() => {
+    if (!selectedMarket || !wagerAmount || !runner || !config) return;
+    const vault = utils.config.getVaultFromMarket(selectedMarket, config);
+    if (!vault)
+      throw new Error(
+        `Could not find vault associated with market ${selectedMarket.address}`
+      );
 
-    const wager = ethers.utils.parseUnits(wagerAmount, userBalance.decimals);
-    setTxHash(undefined);
-    setError(undefined);
-
-    try {
-      setTxLoading(true);
-      const tx = await placeBet(selectedMarket, back, wager, signer);
-      setTxHash(tx);
-    } catch (err: any) {
-      setError(err);
-    } finally {
-      setTxLoading(false);
-    }
-  };
+    addBet({
+      market: selectedMarket,
+      back,
+      wager: ethers.utils.parseUnits(wagerAmount, vault.asset.decimals),
+      runner,
+      timestamp: Math.floor(Date.now() / 1000)
+    });
+  }, [selectedMarket, back, wagerAmount]);
 
   const isWagerNegative = wagerAmount ? +wagerAmount < 0 : false;
   const isWagerGreaterThanBalance =

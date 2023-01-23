@@ -1,7 +1,7 @@
 import React from "react";
-import { BaseModal } from ".";
 import utils from "../../utils";
 import constants from "../../constants";
+import { BaseModal } from "./BaseModal";
 
 type Props = {
   isOpen: boolean;
@@ -9,14 +9,14 @@ type Props = {
   hashes?: string[];
 };
 
-export const SettledMarketModal: React.FC<Props> = ({
+export const BetSlipSuccessModal: React.FC<Props> = ({
   isOpen,
   onClose,
   hashes
 }) => (
   <BaseModal isOpen={isOpen} onClose={onClose}>
     <div className="max-w-[95vw] lg:min-w-[28rem]">
-      <h2 className="font-bold text-2xl">Settled Race</h2>
+      <h2 className="font-bold text-2xl">Bet Slip Placed</h2>
       <h3 className="mt-4 font-semibold">Transactions:</h3>
       <ol className="ml-4 list-decimal">
         {hashes?.map(hash => (
