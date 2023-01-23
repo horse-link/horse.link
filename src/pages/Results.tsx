@@ -44,7 +44,7 @@ export const Results: React.FC = () => {
       meet => meet.raceNumber.toString() === details.race
     );
     setThisRace(raceResultsData);
-  }, [details]);
+  }, [meetRaces, details]);
 
   const raceParams = {
     track: details.track,
