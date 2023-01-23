@@ -75,7 +75,7 @@ export const Results: React.FC = () => {
         <RacesButton params={raceParams} meetRaces={meetRaces} />
         <div className="flex p-2 shadow overflow-hidden border-b bg-white border-gray-200 sm:rounded-lg justify-around">
           <h1>{thisRace?.raceName ? thisRace?.raceName : <Skeleton />}</h1>
-          <h1>Track: {details.track ? details.track : <Skeleton />}</h1>
+          <h1>Track: {details.track}</h1>
           <h1>
             Race #: {thisRace?.raceNumber ? thisRace?.raceNumber : <Skeleton />}
           </h1>
