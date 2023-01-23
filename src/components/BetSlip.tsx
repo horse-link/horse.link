@@ -28,7 +28,7 @@ export const BetSlip: React.FC = () => {
   const { bets, removeBet } = useBetSlipContext();
 
   return (
-    <div className="mx-4 w-full mt-1 shadow-lg">
+    <div className="mx-4 w-full shadow-lg">
       <h2 className="w-full bg-indigo-600 p-6 rounded-t-lg text-center font-bold text-3xl text-white">
         Bet Slip
       </h2>

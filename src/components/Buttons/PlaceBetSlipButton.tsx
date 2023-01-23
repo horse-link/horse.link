@@ -7,6 +7,7 @@ export const PlaceBetSlipButton: React.FC = () => {
 
   return (
     <BaseButton
+      loaderColor="white"
       loading={txLoading}
       loaderSize={20}
       onClick={placeBets}

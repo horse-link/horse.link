@@ -119,7 +119,7 @@ export const PageLayout: React.FC<Props> = ({ children }) => {
             isModalOpen={isWalletModalOpen}
             closeWalletModal={closeWalletModal}
           />
-          <div className="max-w-9xl mx-auto px-4 sm:px-6 lg:px-9 lg:grid lg:grid-cols-5">
+          <div className="max-w-9xl mx-auto px-4 sm:px-6 lg:px-9 lg:grid lg:grid-cols-5 pt-1">
             <div className="lg:col-span-4">{children}</div>
             <div className="lg:col-span-1">
               <BetSlip />

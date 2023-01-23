@@ -5,6 +5,7 @@ import { Loader } from "../";
 type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   loading?: boolean;
   loaderSize?: number;
+  loaderColor?: string;
   baseStyleOverride?: boolean;
 };
 
@@ -17,6 +18,7 @@ export const BaseButton: React.FC<Props> = props => {
     onClick,
     loaderSize,
     baseStyleOverride,
+    loaderColor,
     ...restOfProps
   } = props;
 
@@ -36,7 +38,7 @@ export const BaseButton: React.FC<Props> = props => {
       onClick={onClick}
     >
       {loading ? (
-        <Loader className="text-lg" size={loaderSize} />
+        <Loader className="text-lg" size={loaderSize} color={loaderColor} />
       ) : (
         title || props.children
       )}

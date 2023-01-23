@@ -16,11 +16,10 @@ export const ClearBetSlipButton: React.FC = () => {
 
   return (
     <BaseButton
-      loading={txLoading}
-      loaderSize={20}
+      disabled={txLoading}
       onClick={clear}
       baseStyleOverride
-      className="w-full bg-red-600 rounded-lg p-4 flex items-center justify-center h-full"
+      className="w-full bg-red-600 disabled:bg-red-700 rounded-lg p-4 flex items-center justify-center h-full"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
