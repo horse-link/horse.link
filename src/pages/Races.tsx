@@ -63,7 +63,10 @@ export const Races: React.FC = () => {
 
         <div className="flex p-2 shadow overflow-hidden border-b bg-white border-gray-200 sm:rounded-lg justify-around">
           <h1>{race ? race.raceData.name : <Skeleton />}</h1>
-          <h1>Track: {track}</h1>
+          <h1>
+            Track:{" "}
+            {race ? `${race.track.name} - (${race.track.code})` : <Skeleton />}
+          </h1>
           <h1>Race #: {raceNumber}</h1>
           <h1>Date: {meetDate}</h1>
           <h1>

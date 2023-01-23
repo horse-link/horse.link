@@ -56,6 +56,10 @@ export type SignedRunnersResponse = {
       class: string;
       hasOdds: boolean;
     };
+    track: {
+      name: string;
+      code: string;
+    };
     runners: Runner[];
   };
 } & SignedResponse;
@@ -100,13 +104,19 @@ export type Back = {
   signature: EcSignature;
 };
 
-export type MeetResult = {
+export type WinningHorse = {
   runner: string;
   number: number;
   rider: string;
   place: number;
 };
 
-export type MeetResults = MeetResult[];
+export type MeetResults = {
+  track: {
+    name: string;
+    code: string;
+  };
+  winningHorses: WinningHorse[];
+};
 
 export type MeetFilters = "ALL" | "AUS_NZ" | "INTERNATIONAL";

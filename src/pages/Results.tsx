@@ -60,7 +60,10 @@ export const Results: React.FC = () => {
       <div className="rounded-lg gap-6">
         <RacesButton params={raceParams} meetRaces={meetRaces} />
         <h1 className="font-semibold text-3xl mb-10 mt-2">
-          {details.track} {details.race} Results{" "}
+          {results
+            ? `${results.track.name} - (${results.track.code})`
+            : details.track}{" "}
+          {details.race} Results
           <span className="block text-lg text-black/50">
             {moment(Date.now()).format("dddd Do MMMM")}
           </span>
