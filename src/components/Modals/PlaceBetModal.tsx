@@ -6,7 +6,6 @@ import { Loader } from "../";
 import { BaseModal } from ".";
 import { Config, MarketInfo } from "../../types/config";
 import { useMarketContract, useERC20Contract } from "../../hooks/contracts";
-import { Web3ErrorHandler, Web3SuccessHandler } from "../Web3Handlers";
 import useRefetch from "../../hooks/useRefetch";
 import utils from "../../utils";
 import { Back, Runner } from "../../types/meets";
@@ -28,9 +27,6 @@ export const PlaceBetModal: React.FC<Props> = ({
   const [userBalance, setUserBalance] = useState<UserBalance>();
   const [wagerAmount, setWagerAmount] = useState<string>();
   const [payout, setPayout] = useState<string>();
-  const [txLoading, setTxLoading] = useState(false);
-  const [txHash, setTxHash] = useState<string>();
-  const [error, setError] = useState<ethers.errors>();
 
   const { data: signer } = useSigner();
 
@@ -101,20 +97,10 @@ export const PlaceBetModal: React.FC<Props> = ({
   }, [config]);
 
   useEffect(() => {
-    if (!txLoading) return refetchUserBalance();
-
-    setError(undefined);
-    setTxHash(undefined);
-  }, [txLoading]);
-
-  useEffect(() => {
     if (isModalOpen) return refetchUserBalance();
 
     setTimeout(() => {
       setWagerAmount(undefined);
-      setTxHash(undefined);
-      setTxLoading(false);
-      setError(undefined);
     }, 300);
   }, [isModalOpen]);
 
@@ -174,100 +160,73 @@ export const PlaceBetModal: React.FC<Props> = ({
         </div>
       ) : (
         <div className="lg:min-w-[28rem]">
-          {!txHash && !error && (
-            <React.Fragment>
-              <h2 className="font-bold">
-                {runner.name
-                  ? `${runner.name} (${runner.barrier ?? " "})`
-                  : " "}
-              </h2>
-              <h2 className="font-bold mr-[8vw] mb-6">
-                {`Target Odds 
+          <h2 className="font-bold">
+            {runner.name ? `${runner.name} (${runner.barrier ?? " "})` : " "}
+          </h2>
+          <h2 className="font-bold mr-[8vw] mb-6">
+            {`Target Odds 
             ${utils.formatting.formatToTwoDecimals(back.odds.toString())}`}
-              </h2>
-              <div className="flex flex-col">
-                <h3 className="font-semibold">Markets</h3>
-                <select
-                  onChange={e => onSelectMarket(e, config)}
-                  className="border-[0.12rem] border-black mt-1 mb-6 bg-white overflow-x-scroll"
+          </h2>
+          <div className="flex flex-col">
+            <h3 className="font-semibold">Markets</h3>
+            <select
+              onChange={e => onSelectMarket(e, config)}
+              className="border-[0.12rem] border-black mt-1 mb-6 bg-white overflow-x-scroll"
+            >
+              {config.markets.map(market => (
+                <option
+                  key={market.address}
+                  className="block"
+                  value={market.address}
                 >
-                  {config.markets.map(market => (
-                    <option
-                      key={market.address}
-                      className="block"
-                      value={market.address}
-                    >
-                      {utils.config.getVaultNameFromMarket(
-                        market.address,
-                        config
-                      )}
-                    </option>
-                  ))}
-                </select>
-                <h3 className="font-semibold">Wager Amount</h3>
-                <input
-                  type="number"
-                  placeholder="0"
-                  onChange={changeWagerAmount}
-                  className="border-b-[0.12rem] border-black pl-1 pt-1 mb-6 disabled:text-black/50 disabled:bg-white transition-colors duration-100"
-                  disabled={txLoading}
-                />
-                <span className="block font-semibold">
-                  Payout:{" "}
-                  <span className="font-normal">
-                    {payout ? (
-                      utils.formatting.formatToFourDecimals(payout)
-                    ) : (
-                      <Loader size={14} />
-                    )}
-                  </span>
-                </span>
-                <span className="block font-semibold">
-                  Available:{" "}
-                  <span className="font-normal">
-                    {userBalance?.formatted || <Loader size={14} />}
-                  </span>
-                </span>
-                <span className="text-red-500 block font-semibold">
-                  {isWagerNegative && "Wager amount cannot be negative"}
-                  {isWagerGreaterThanBalance &&
-                    "Wager amount cannot be greater than token balance"}
-                </span>
-                <button
-                  className="w-full font-bold border-black border-2 py-2 mb-8 rounded-md relative top-6 hover:text-white hover:bg-black transition-colors duration-100 disabled:text-black/50 disabled:border-black/50 disabled:bg-white"
-                  onClick={onClickPlaceBet}
-                  disabled={
-                    !selectedMarket ||
-                    !wagerAmount ||
-                    !signer ||
-                    !userBalance ||
-                    +userBalance.formatted === 0 ||
-                    txLoading ||
-                    isWagerNegative ||
-                    isWagerGreaterThanBalance
-                  }
-                >
-                  {txLoading ? <Loader /> : "PLACE BET"}
-                </button>
-              </div>
-            </React.Fragment>
-          )}
-          {txHash && (
-            <React.Fragment>
-              <Web3SuccessHandler
-                hash={txHash}
-                message="Your bet has been placed with"
-              />
-            </React.Fragment>
-          )}
-          {error && (
-            <React.Fragment>
-              <h2 className="font-bold text-2xl mr-[8vw]">
-                Transaction result
-              </h2>
-              <Web3ErrorHandler error={error} />
-            </React.Fragment>
-          )}
+                  {utils.config.getVaultNameFromMarket(market.address, config)}
+                </option>
+              ))}
+            </select>
+            <h3 className="font-semibold">Wager Amount</h3>
+            <input
+              type="number"
+              placeholder="0"
+              onChange={changeWagerAmount}
+              className="border-b-[0.12rem] border-black pl-1 pt-1 mb-6 disabled:text-black/50 disabled:bg-white transition-colors duration-100"
+            />
+            <span className="block font-semibold">
+              Payout:{" "}
+              <span className="font-normal">
+                {payout ? (
+                  utils.formatting.formatToFourDecimals(payout)
+                ) : (
+                  <Loader size={14} />
+                )}
+              </span>
+            </span>
+            <span className="block font-semibold">
+              Available:{" "}
+              <span className="font-normal">
+                {userBalance?.formatted || <Loader size={14} />}
+              </span>
+            </span>
+            <span className="text-red-500 block font-semibold">
+              {isWagerNegative && "Wager amount cannot be negative"}
+              {isWagerGreaterThanBalance &&
+                "Wager amount cannot be greater than token balance"}
+            </span>
+            <button
+              className="w-full font-bold border-black border-2 py-2 mb-8 rounded-md relative top-6 hover:text-white hover:bg-black transition-colors duration-100 disabled:text-black/50 disabled:border-black/50 disabled:bg-white"
+              onClick={onClickPlaceBet}
+              disabled={
+                !selectedMarket ||
+                !wagerAmount ||
+                !signer ||
+                !userBalance ||
+                !+userBalance.formatted ||
+                isWagerNegative ||
+                isWagerGreaterThanBalance
+              }
+            >
+              ADD TO BET SLIP
+            </button>
+          </div>
         </div>
       )}
     </BaseModal>
