@@ -76,9 +76,7 @@ export const Results: React.FC = () => {
         <div className="flex p-2 shadow overflow-hidden border-b bg-white border-gray-200 sm:rounded-lg justify-around">
           <h1>{thisRace ? thisRace.raceName : <Skeleton />}</h1>
           <h1>Track: {details.track}</h1>
-          <h1>
-            Race #: {thisRace?.raceNumber ? thisRace?.raceNumber : <Skeleton />}
-          </h1>
+          <h1>Race #: {thisRace ? thisRace?.raceNumber : <Skeleton />}</h1>
           <h1>Date: {date ? date : <Skeleton />}</h1>
           <h1>
             Distance:{" "}
