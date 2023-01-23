@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from "react";
 import { useParams } from "react-router-dom";
 import { Loader, PageLayout } from "../components";
 import { BetTable, ResultsTable } from "../components/Tables";
@@ -14,6 +20,7 @@ import { SettleRaceButton, RacesButton } from "../components/Buttons";
 import { useAccount, useSigner } from "wagmi";
 import dayjs from "dayjs";
 import { RaceInfo } from "../types/meets";
+import Skeleton from "react-loading-skeleton";
 
 export const Results: React.FC = () => {
   const [loading, setLoading] = useState(false);
@@ -32,20 +39,17 @@ export const Results: React.FC = () => {
   const propositionId = params.propositionId || "";
   const details = utils.markets.getDetailsFromPropositionId(propositionId);
 
-  const { date } = useMemo(() => {
-    const date = dayjs().format("DD-MM-YY");
-    return { config, date };
-  }, []);
+  const { current: date } = useRef(dayjs().format("DD-MM-YY"));
 
   const meetRaces = useMeetData(details.track || "");
 
   useEffect(() => {
-    if (meetRaces) {
-      const raceResultsData = meetRaces.find(
-        meet => meet.raceNumber.toString() == details.race
-      );
-      setThisRace(raceResultsData);
-    }
+    if (!meetRaces) return;
+
+    const raceResultsData = meetRaces.find(
+      meet => meet.raceNumber.toString() === details.race
+    );
+    setThisRace(raceResultsData);
   }, [details]);
 
   const raceParams = {
@@ -76,12 +80,28 @@ export const Results: React.FC = () => {
       <div className="rounded-lg flex flex-col gap-6">
         <RacesButton params={raceParams} meetRaces={meetRaces} />
         <div className="flex p-2 shadow overflow-hidden border-b bg-white border-gray-200 sm:rounded-lg justify-around">
-          <h1>{thisRace?.raceName}</h1>
-          <h1>Track: {details.track}</h1>
-          <h1>Race #: {thisRace?.raceNumber}</h1>
-          <h1>Date: {date}</h1>
-          <h1>Distance: {`${thisRace?.raceDistance}m`}</h1>
-          <h1>Class: {thisRace?.raceClassConditions}</h1>
+          <h1>{thisRace?.raceName ? thisRace?.raceName : <Skeleton />}</h1>
+          <h1>Track: {details.track ? details.track : <Skeleton />}</h1>
+          <h1>
+            Race #: {thisRace?.raceNumber ? thisRace?.raceNumber : <Skeleton />}
+          </h1>
+          <h1>Date: {date ? date : <Skeleton />}</h1>
+          <h1>
+            Distance:{" "}
+            {thisRace?.raceDistance ? (
+              `${thisRace.raceDistance}m`
+            ) : (
+              <Skeleton />
+            )}
+          </h1>
+          <h1>
+            Class:{" "}
+            {thisRace?.raceClassConditions ? (
+              thisRace?.raceClassConditions
+            ) : (
+              <Skeleton />
+            )}
+          </h1>
         </div>
         {results ? (
           <ResultsTable results={results} />
