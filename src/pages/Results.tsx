@@ -79,12 +79,7 @@ export const Results: React.FC = () => {
           <h1>Race #: {thisRace ? thisRace?.raceNumber : <Skeleton />}</h1>
           <h1>Date: {date ? date : <Skeleton />}</h1>
           <h1>
-            Distance:{" "}
-            {thisRace?.raceDistance ? (
-              `${thisRace.raceDistance}m`
-            ) : (
-              <Skeleton />
-            )}
+            Distance: {thisRace ? `${thisRace.raceDistance}m` : <Skeleton />}
           </h1>
           <h1>
             Class:{" "}
