@@ -142,7 +142,8 @@ export const SettleBetModal: React.FC<Props> = ({
                       )
                     ) : (
                       <Loader size={14} />
-                    )}
+                    )}{" "}
+                    {token?.symbol}
                   </span>
                 </h3>
               </h3>
