@@ -3,8 +3,8 @@ import { ethers } from "ethers";
 import utils from "../utils";
 import { Config } from "../types/config";
 import {
+  MeetInfo,
   MeetResults,
-  RacesResponse,
   Runner,
   SignedMeetingsResponse
 } from "../types/meets";
@@ -32,8 +32,8 @@ export class Api {
   };
 
   // Get all the races for a given meeting
-  public getMeeting = async (locationCode: string): Promise<RacesResponse> => {
-    const { data } = await this.client.get<RacesResponse>(
+  public getMeeting = async (locationCode: string): Promise<MeetInfo> => {
+    const { data } = await this.client.get<MeetInfo>(
       `/meetings/${locationCode}`
     );
 

@@ -83,6 +83,19 @@ export type MeetResponse = {
   meetings: Meet[];
 };
 
+export type MeetInfo = {
+  meetingName: string;
+  location: string;
+  raceType: string;
+  meetingDate: string;
+  prizeMoney: string;
+  weatherCondition: string | null;
+  trackCondition: string | null;
+  railPosition: string | null;
+  venueMnemonic: string;
+  raceInfo: RaceInfo[];
+};
+
 export type RaceInfo = {
   raceNumber: number;
   raceName: string;
@@ -91,8 +104,6 @@ export type RaceInfo = {
   raceStartTime: string;
   raceStatus: RaceStatus;
 };
-
-export type RacesResponse = RaceInfo[];
 
 export type Back = {
   nonce: string;

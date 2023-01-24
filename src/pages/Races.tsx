@@ -14,6 +14,7 @@ import { useConfig } from "../providers/Config";
 import Skeleton from "react-loading-skeleton";
 import dayjs from "dayjs";
 import utils from "../utils";
+import { checkProperties } from "ethers/lib/utils.js";
 
 export const Races: React.FC = () => {
   const params = useParams();
@@ -51,6 +52,18 @@ export const Races: React.FC = () => {
     return utils.races.calculateRaceMargin(validRunners.map(r => r.odds));
   }, [race]);
 
+  const trackConditionFormatter = meetRaces?.trackCondition ? (
+    meetRaces?.trackCondition.slice(-1)
+  ) : (
+    <Skeleton />
+  );
+
+  const blah = meetRaces?.trackCondition ? (
+    meetRaces?.trackCondition
+  ) : (
+    <Skeleton />
+  );
+
   return (
     <PageLayout>
       <PlaceBetModal
@@ -59,8 +72,13 @@ export const Races: React.FC = () => {
         setIsModalOpen={setIsModalOpen}
       />
       <div className="flex flex-col gap-6">
-        <RacesButton params={params} meetRaces={meetRaces} />
-
+        <div className="flex gap-2">
+          <RacesButton params={params} meetRaces={meetRaces?.raceInfo} />
+          <h1 className="p-3 font-bold">
+            Weather: {blah}({trackConditionFormatter}){" "}
+            {meetRaces?.weatherCondition}
+          </h1>
+        </div>
         <div className="flex p-2 shadow overflow-hidden border-b bg-white border-gray-200 sm:rounded-lg justify-around">
           <h1>{race ? race.raceData.name : <Skeleton width={200} />}</h1>
           <h1>
