@@ -8,6 +8,7 @@ import { PlaceBetSlipButton, ClearBetSlipButton } from "./Buttons";
 import constants from "../constants";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import Skeleton from "react-loading-skeleton";
 
 dayjs.extend(relativeTime);
 
@@ -64,12 +65,18 @@ export const BetSlip: React.FC = () => {
                     </div>
                     <div className="flex justify-between">
                       <span className="block">
-                        {utils.formatting.formatToFourDecimals(
-                          ethers.utils.formatUnits(
-                            bet.wager,
-                            utils.config.getVaultFromMarket(bet.market, config)
-                              ?.asset.decimals
+                        {config ? (
+                          utils.formatting.formatToFourDecimals(
+                            ethers.utils.formatUnits(
+                              bet.wager,
+                              utils.config.getVaultFromMarket(
+                                bet.market,
+                                config
+                              )?.asset.decimals
+                            )
                           )
+                        ) : (
+                          <Skeleton width="4rem" />
                         )}{" "}
                         {
                           utils.config.getVaultFromMarket(bet.market, config)

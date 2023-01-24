@@ -3,7 +3,7 @@ import { BaseButton } from "./BaseButton";
 import { useBetSlipContext } from "../../context/BetSlipContext";
 
 export const ClearBetSlipButton: React.FC = () => {
-  const { txLoading, clearBets } = useBetSlipContext();
+  const { clearBets } = useBetSlipContext();
 
   const clear = useCallback(() => {
     const confirmation = confirm(
@@ -16,7 +16,6 @@ export const ClearBetSlipButton: React.FC = () => {
 
   return (
     <BaseButton
-      disabled={txLoading}
       onClick={clear}
       baseStyleOverride
       className="w-full bg-red-600 disabled:bg-red-700 rounded-lg p-4 flex items-center justify-center h-full"

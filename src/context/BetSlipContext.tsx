@@ -10,7 +10,6 @@ import {
 import { BetSlipContextType, BetSlipEntry } from "../types/context";
 import { useMarketContract } from "../hooks/contracts";
 import { useSigner } from "wagmi";
-import { BetSlipSuccessModal } from "../components/Modals";
 
 const LOCAL_STORAGE_KEY = "horse.link-bet-slip";
 
@@ -21,7 +20,8 @@ export const BetSlipContext = createContext<BetSlipContextType>({
   addBet: () => {},
   removeBet: () => {},
   clearBets: () => {},
-  placeBets: async () => []
+  placeBets: async () => [],
+  openModal: () => {}
 });
 
 export const useBetSlipContext = () => useContext(BetSlipContext);
@@ -35,6 +35,7 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
   const [bets, setBets] = useState<BetSlipEntry[]>();
   const [txLoading, setTxLoading] = useState(false);
   const [hashes, setHashes] = useState<string[]>();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // write bet slip to local storage if bets exist
@@ -117,7 +118,6 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
       );
 
       setHashes(hashes);
-      setIsModalOpen(true);
     } catch (e: any) {
       console.error(e);
     } finally {
@@ -125,32 +125,37 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
     }
   }, [bets, signer, placeBet]);
 
-  const closeModal = useCallback(() => {
-    setIsModalOpen(false);
-    setHashes(undefined);
-    clearBets();
-  }, [setIsModalOpen, clearBets, setHashes]);
+  const openModal = useCallback(() => setIsModalOpen(true), [setIsModalOpen]);
+
+  const closeModal = useCallback(() => setIsModalOpen(false), [setIsModalOpen]);
 
   const value = useMemo(
     () => ({
       txLoading,
+      hashes,
       bets,
       addBet,
       removeBet,
       clearBets,
-      placeBets
+      placeBets,
+      openModal
     }),
-    [txLoading, bets, addBet, removeBet, clearBets, placeBets]
+    [
+      txLoading,
+      hashes,
+      bets,
+      addBet,
+      removeBet,
+      clearBets,
+      placeBets,
+      openModal
+    ]
   );
 
   return (
     <BetSlipContext.Provider value={value}>
       {children}
-      <BetSlipSuccessModal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        hashes={hashes}
-      />
+      {/* modal goes here */}
     </BetSlipContext.Provider>
   );
 };

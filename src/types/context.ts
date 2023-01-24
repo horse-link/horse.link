@@ -19,4 +19,5 @@ export type BetSlipContextType = {
   removeBet: (id: number) => void;
   clearBets: () => void;
   placeBets: () => void;
+  openModal: () => void;
 };
