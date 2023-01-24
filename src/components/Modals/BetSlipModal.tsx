@@ -150,8 +150,11 @@ export const BetSlipModal: React.FC<Props> = ({ isOpen, onClose }) => {
               </React.Fragment>
             ) : (
               [...Object.entries(stakePerMarket)].map(([name, stake]) => (
-                <React.Fragment key={name}>
-                  <div className="p-2 border-gray-200 border-x border-b">
+                <React.Fragment>
+                  <div
+                    className="p-2 border-gray-200 border-x border-b"
+                    key={name}
+                  >
                     {name}
                   </div>
                   <div className="p-2 border-gray-200 border-r border-b">
