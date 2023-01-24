@@ -10,6 +10,10 @@ import {
 import { BetSlipContextType, BetSlipEntry } from "../types/context";
 import { useMarketContract } from "../hooks/contracts";
 import { useSigner } from "wagmi";
+import { BetSlipModal } from "../components/Modals";
+import { ethers } from "ethers";
+import utils from "../utils";
+import { useConfig } from "../providers/Config";
 
 const LOCAL_STORAGE_KEY = "horse.link-bet-slip";
 
@@ -31,6 +35,7 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const { data: signer } = useSigner();
   const { placeBet } = useMarketContract();
+  const config = useConfig();
 
   const [bets, setBets] = useState<BetSlipEntry[]>();
   const [txLoading, setTxLoading] = useState(false);
@@ -108,13 +113,25 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
 
   const placeBets = useCallback(async () => {
     // if there are no bets, or signer, do nothing
-    if (!bets?.length || !signer) return;
+    if (!bets?.length || !signer || !config) return;
 
     setTxLoading(true);
     setHashes(undefined);
     try {
       const hashes = await Promise.all(
-        bets.map(bet => placeBet(bet.market, bet.back, bet.wager, signer))
+        bets.map(bet =>
+          placeBet(
+            bet.market,
+            bet.back,
+            // parse wager into BigNumber
+            ethers.utils.parseUnits(
+              bet.wager,
+              utils.config.getVaultFromMarket(bet.market, config)?.asset
+                .decimals
+            ),
+            signer
+          )
+        )
       );
 
       setHashes(hashes);
@@ -123,7 +140,7 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
     } finally {
       setTxLoading(false);
     }
-  }, [bets, signer, placeBet]);
+  }, [config, bets, signer, placeBet]);
 
   const openModal = useCallback(() => setIsModalOpen(true), [setIsModalOpen]);
 
@@ -155,7 +172,7 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
   return (
     <BetSlipContext.Provider value={value}>
       {children}
-      {/* modal goes here */}
+      <BetSlipModal isOpen={isModalOpen} onClose={closeModal} />
     </BetSlipContext.Provider>
   );
 };

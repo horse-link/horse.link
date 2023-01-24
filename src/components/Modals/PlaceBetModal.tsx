@@ -142,7 +142,9 @@ export const PlaceBetModal: React.FC<Props> = ({
     addBet({
       market: selectedMarket,
       back,
-      wager: ethers.utils.parseUnits(wagerAmount, vault.asset.decimals),
+      wager: ethers.utils
+        .parseUnits(wagerAmount, vault.asset.decimals)
+        .toString(),
       runner,
       timestamp: Math.floor(Date.now() / 1000)
     });

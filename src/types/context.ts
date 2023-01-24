@@ -1,4 +1,3 @@
-import { BigNumber } from "ethers";
 import { MarketInfo } from "./config";
 import { Back, Runner } from "./meets";
 
@@ -6,7 +5,7 @@ export type BetSlipEntry = {
   id: number;
   market: MarketInfo;
   back: Back;
-  wager: BigNumber;
+  wager: string;
   runner: Runner;
   timestamp: number;
 };
