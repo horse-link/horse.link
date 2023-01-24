@@ -136,9 +136,9 @@ export const SettleBetModal: React.FC<Props> = ({
                 <h3 className="font-semibold">
                   Potential Payout:{" "}
                   <span className="font-normal">
-                    {ethers.utils.formatUnits(selectedBet.payout) ? (
+                    {selectedBet.payout ? (
                       utils.formatting.formatToFourDecimals(
-                        ethers.utils.formatUnits(selectedBet.payout)
+                        ethers.utils.formatEther(selectedBet.payout)
                       )
                     ) : (
                       <Loader size={14} />
