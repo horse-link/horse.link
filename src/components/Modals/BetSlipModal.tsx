@@ -8,6 +8,7 @@ import { Loader } from "../Loader";
 import dayjs from "dayjs";
 import { useMarketContract } from "../../hooks/contracts";
 import { useSigner } from "wagmi";
+import Skeleton from "react-loading-skeleton";
 
 type Props = {
   isOpen: boolean;
@@ -20,7 +21,15 @@ export const BetSlipModal: React.FC<Props> = ({ isOpen, onClose }) => {
   const { data: signer } = useSigner();
   const { getPotentialPayout } = useMarketContract();
 
-  const [payout, setPayout] = useState<Record<string, BigNumber>>();
+  const [payout, setPayout] = useState<
+    Record<
+      string,
+      {
+        symbol: string;
+        bn: BigNumber;
+      }
+    >
+  >();
 
   useEffect(() => {
     if (!bets || !bets.length || !config || !signer) return;
@@ -64,16 +73,54 @@ export const BetSlipModal: React.FC<Props> = ({ isOpen, onClose }) => {
 
         return {
           ...prevObject,
-          [name]: prevObject[name]
-            ? prevObject[name].add(parsedUnits)
-            : parsedUnits
+          [name]: {
+            bn: prevObject[name]
+              ? prevObject[name].bn.add(parsedUnits)
+              : parsedUnits,
+            symbol: vault.asset.symbol
+          }
         };
-      }, {} as Record<string, BigNumber>);
+      }, {} as NonNullable<typeof payout>);
 
       // set state
       setPayout(payoutsPerMarket);
     })();
   }, [bets, config, signer]);
+
+  const stakePerMarket = useMemo(() => {
+    if (!bets || !bets.length || !config) return;
+
+    return bets.reduce(
+      (prevObject, bet) => {
+        const vault = utils.config.getVaultFromMarket(bet.market, config);
+        if (!vault)
+          throw new Error(
+            `No Vault associated with market, ${bet.market.address}`
+          );
+
+        const name = vault.name;
+        const units = ethers.utils.formatUnits(bet.wager, vault.asset.decimals);
+        const parsedUnits = ethers.utils.parseEther(units);
+
+        return {
+          ...prevObject,
+          [name]: {
+            bn: prevObject[name]
+              ? prevObject[name].bn.add(parsedUnits)
+              : parsedUnits,
+            symbol: vault.asset.symbol
+          }
+        };
+      },
+      {} as Record<
+        string,
+        {
+          bn: BigNumber;
+          symbol: string;
+        }
+      >
+    );
+  }, [bets, config]);
 
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}>
@@ -96,9 +143,38 @@ export const BetSlipModal: React.FC<Props> = ({ isOpen, onClose }) => {
             <h4 className="w-full font-semibold text-center bg-gray-200 rounded-tr-xl">
               Stake
             </h4>
+            {!stakePerMarket ? (
+              <React.Fragment>
+                <Skeleton width="4rem" />
+                <Skeleton width="4rem" />
+              </React.Fragment>
+            ) : (
+              [...Object.entries(stakePerMarket)].map(([name, stake]) => (
+                <React.Fragment>
+                  <div className="p-2 border-gray-200 border-x border-b">
+                    {name}
+                  </div>
+                  <div className="p-2 border-gray-200 border-r border-b">
+                    {ethers.utils.formatEther(stake.bn)} {stake.symbol}
+                  </div>
+                </React.Fragment>
+              ))
+            )}
           </div>
           <div className="mt-6">
-            <h4 className="font-semibold">Potential Payout:</h4>
+            <h4 className="font-semibold">Potential Payouts:</h4>
+            {payout ? (
+              [...Object.entries(payout)].map(([name, p]) => (
+                <span className="block" key={name}>
+                  {utils.formatting.formatToFourDecimals(
+                    ethers.utils.formatEther(p.bn)
+                  )}{" "}
+                  {p.symbol}
+                </span>
+              ))
+            ) : (
+              <Skeleton />
+            )}
           </div>
         </div>
       )}
