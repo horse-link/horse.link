@@ -137,10 +137,10 @@ export const BetSlipModal: React.FC<Props> = ({ isOpen, onClose }) => {
             </h3>
           </div>
           <div className="mt-6 grid grid-cols-2 w-full">
-            <h4 className="w-full font-semibold text-center bg-gray-200 rounded-tl-xl">
+            <h4 className="w-full py-1 font-semibold text-center bg-gray-200 rounded-tl-xl">
               Market
             </h4>
-            <h4 className="w-full font-semibold text-center bg-gray-200 rounded-tr-xl">
+            <h4 className="w-full py-1 font-semibold text-center bg-gray-200 rounded-tr-xl">
               Stake
             </h4>
             {!stakePerMarket ? (
@@ -150,7 +150,7 @@ export const BetSlipModal: React.FC<Props> = ({ isOpen, onClose }) => {
               </React.Fragment>
             ) : (
               [...Object.entries(stakePerMarket)].map(([name, stake]) => (
-                <React.Fragment>
+                <React.Fragment key={name}>
                   <div className="p-2 border-gray-200 border-x border-b">
                     {name}
                   </div>
