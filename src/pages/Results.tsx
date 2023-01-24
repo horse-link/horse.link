@@ -73,6 +73,15 @@ export const Results: React.FC = () => {
     <PageLayout>
       <div className="flex flex-col gap-6">
         <RacesButton params={raceParams} meetRaces={meetRaces} />
+        <h1 className="font-semibold text-3xl mb-10 mt-2">
+          {results
+            ? `${results.track.name} - (${results.track.code})`
+            : details.track}{" "}
+          {details.race} Results
+          <span className="block text-lg text-black/50">
+            {dayjs(Date.now()).format("dddd Do MMMM")}
+          </span>
+        </h1>
         <div className="lg:flex text-center flex-row p-2 gap-6 shadow border-b bg-white border-gray-200 rounded-lg lg:justify-around overflow-scroll">
           <h1>{thisRace ? thisRace.raceName : <Skeleton />}</h1>
           <h1>Track: {details.track}</h1>
