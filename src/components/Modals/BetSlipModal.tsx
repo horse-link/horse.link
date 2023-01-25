@@ -8,7 +8,6 @@ import { Loader } from "../Loader";
 import { useMarketContract } from "../../hooks/contracts";
 import { useSigner } from "wagmi";
 import Skeleton from "react-loading-skeleton";
-import { ConfirmBetsButton } from "../Buttons";
 import constants from "../../constants";
 
 type Props = {
@@ -114,7 +113,7 @@ export const BetSlipModal: React.FC<Props> = ({ isOpen, onClose }) => {
   }, [bets, config]);
 
   return (
-    <BaseModal isOpen={isOpen} onClose={onClose}>
+    <BaseModal isOpen={true} onClose={onClose}>
       {!config ? (
         <div className="m-10">
           <Loader />
@@ -182,9 +181,6 @@ export const BetSlipModal: React.FC<Props> = ({ isOpen, onClose }) => {
             ) : (
               <Skeleton />
             )}
-          </div>
-          <div className="mt-6">
-            <ConfirmBetsButton />
           </div>
         </div>
       )}

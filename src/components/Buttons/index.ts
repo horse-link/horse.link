@@ -4,5 +4,4 @@ export * from "./ClaimTokensButton";
 export * from "./SettleRaceButton";
 export * from "./RacesButton";
 export * from "./VaultActionButton";
-export * from "./PlaceBetSlipButton";
-export * from "./ConfirmBetsButton";
+export * from "./PlaceBetsButton";

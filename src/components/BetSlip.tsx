@@ -1,19 +1,25 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useBetSlipContext } from "../context/BetSlipContext";
 import classnames from "classnames";
 import { ethers } from "ethers";
 import utils from "../utils";
 import { useConfig } from "../providers/Config";
-import { PlaceBetSlipButton } from "./Buttons";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Skeleton from "react-loading-skeleton";
+import { PlaceBetsButton } from "./Buttons";
 
 dayjs.extend(relativeTime);
 
 export const BetSlip: React.FC = () => {
   const config = useConfig();
   const { bets, removeBet } = useBetSlipContext();
+
+  const stakeAndPayout = useMemo(() => {
+    if (!bets?.length) return;
+
+    // stake and payouts
+  }, [bets]);
 
   return (
     <div className="mt-6 lg:mt-0 lg:mx-4 w-full shadow-lg lg:sticky lg:top-4">
@@ -98,8 +104,14 @@ export const BetSlip: React.FC = () => {
           )}
         </div>
         {bets?.length && (
+          <div className="mt-2 grid grid-cols-2">
+            <h4 className="w-full text-center font-bold">Stake</h4>
+            <h4 className="w-full text-center font-bold">Payout</h4>
+          </div>
+        )}
+        {bets?.length && (
           <div className="mt-2">
-            <PlaceBetSlipButton />
+            <PlaceBetsButton />
           </div>
         )}
       </div>
