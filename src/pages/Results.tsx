@@ -40,8 +40,8 @@ export const Results: React.FC = () => {
   useEffect(() => {
     if (!meetRaces) return;
 
-    const raceResultsData = meetRaces.find(
-      meet => meet.raceNumber.toString() === details.race
+    const raceResultsData = meetRaces.raceInfo.find(
+      meetInfo => meetInfo.raceNumber.toString() === details.race
     );
     setThisRace(raceResultsData);
   }, [meetRaces, details]);
@@ -72,7 +72,7 @@ export const Results: React.FC = () => {
   return (
     <PageLayout>
       <div className="flex flex-col gap-6">
-        <RacesButton params={raceParams} meetRaces={meetRaces} />
+        <RacesButton params={raceParams} meetRaces={meetRaces?.raceInfo} />
         <div className="lg:flex text-center flex-row p-2 gap-6 shadow border-b bg-white border-gray-200 rounded-lg lg:justify-around overflow-scroll">
           <h1>{thisRace ? thisRace.raceName : <Skeleton />}</h1>
           <h1>
