@@ -52,17 +52,21 @@ export const Races: React.FC = () => {
     return utils.races.calculateRaceMargin(validRunners.map(r => r.odds));
   }, [race]);
 
-  const trackConditionFormatter = meetRaces?.trackCondition ? (
-    meetRaces?.trackCondition.slice(-1)
-  ) : (
-    <Skeleton />
-  );
+  const blah = () => {
+    if (meetRaces?.weatherCondition !== null) {
+      const trackConditionFormatter = meetRaces?.trackCondition
+        ? meetRaces?.trackCondition.slice(-1)
+        : " ";
 
-  const blah = meetRaces?.trackCondition ? (
-    meetRaces?.trackCondition
-  ) : (
-    <Skeleton />
-  );
+      const trackConditionNumberFormatter = meetRaces?.trackCondition
+        ? meetRaces?.trackCondition.slice(0, -1)
+        : " ";
+
+      return `${trackConditionNumberFormatter}(${trackConditionFormatter}) ${meetRaces?.weatherCondition}`;
+    } else {
+      return;
+    }
+  };
 
   return (
     <PageLayout>
@@ -74,28 +78,23 @@ export const Races: React.FC = () => {
       <div className="flex flex-col gap-6">
         <div className="flex gap-2">
           <RacesButton params={params} meetRaces={meetRaces?.raceInfo} />
-          <h1 className="p-3 font-bold">
-            Weather: {blah}({trackConditionFormatter}){" "}
-            {meetRaces?.weatherCondition}
-          </h1>
         </div>
         <div className="flex p-2 shadow overflow-hidden border-b bg-white border-gray-200 sm:rounded-lg justify-around">
           <h1>{race ? race.raceData.name : <Skeleton width={200} />}</h1>
           <h1>
-            Track:{" "}
             {race ? (
               `${race.track.name} - (${race.track.code})`
             ) : (
               <Skeleton width={150} />
             )}
           </h1>
-          <h1>Race #: {raceNumber}</h1>
-          <h1>Date: {meetDate}</h1>
+          <h1>{meetDate}</h1>
           <h1>
-            Distance:{" "}
             {race ? `${race.raceData.distance}m` : <Skeleton width={50} />}
           </h1>
+          <h1>Race #: {raceNumber}</h1>
           <h1>Class: {race ? race.raceData.class : <Skeleton width={30} />}</h1>
+          <h1>{meetRaces ? blah() : <Skeleton />}</h1>
           <h1>
             Margin:{" "}
             {margin ? (
