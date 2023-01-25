@@ -51,7 +51,7 @@ export const Races: React.FC = () => {
     return utils.races.calculateRaceMargin(validRunners.map(r => r.odds));
   }, [race]);
 
-  const blah = () => {
+  const checkForTrackAndWeatherConditions = () => {
     if (meetRaces?.weatherCondition !== null) {
       const trackConditionFormatter = meetRaces?.trackCondition
         ? meetRaces?.trackCondition.slice(-1)
@@ -93,7 +93,6 @@ export const Races: React.FC = () => {
           </h1>
           <h1>Race #: {raceNumber}</h1>
           <h1>Class: {race ? race.raceData.class : <Skeleton width={30} />}</h1>
-          <h1>{meetRaces ? blah() : <Skeleton />}</h1>
           <h1>
             Margin:{" "}
             {margin ? (
@@ -103,6 +102,9 @@ export const Races: React.FC = () => {
             ) : (
               <Skeleton width={50} />
             )}
+          </h1>
+          <h1>
+            {meetRaces ? checkForTrackAndWeatherConditions() : <Skeleton />}
           </h1>
         </div>
         <RaceTable
