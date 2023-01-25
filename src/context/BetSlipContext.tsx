@@ -91,9 +91,6 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
       // if there are no bets do nothing
       if (!bets?.length) return;
 
-      const confirmation = confirm("Are you sure you want to remove this bet?");
-      if (!confirmation) return;
-
       // create a new reference to bets and filter it
       const newBets = [...bets].filter(bet => bet.id !== id);
 

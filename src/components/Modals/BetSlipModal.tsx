@@ -5,7 +5,6 @@ import utils from "../../utils";
 import { useConfig } from "../../providers/Config";
 import { BigNumber, ethers } from "ethers";
 import { Loader } from "../Loader";
-import dayjs from "dayjs";
 import { useMarketContract } from "../../hooks/contracts";
 import { useSigner } from "wagmi";
 import Skeleton from "react-loading-skeleton";
@@ -122,12 +121,7 @@ export const BetSlipModal: React.FC<Props> = ({ isOpen, onClose }) => {
         </div>
       ) : hashes && hashes.length ? (
         <div className="w-[75vw] lg:w-[28rem]">
-          <div className="flex justify-between items-center pr-8">
-            <h2 className="font-bold text-2xl">Bet Slip Transactions</h2>
-            <h3 className="text-black/50 italic">
-              {dayjs().format("MM-DD-YYYY")}
-            </h3>
-          </div>
+          <h2 className="font-bold text-2xl">Bet Slip Transactions</h2>
           <ol className="ml-4 mt-6 list-decimal">
             {hashes.map(hash => (
               <li key={hash}>
@@ -145,12 +139,7 @@ export const BetSlipModal: React.FC<Props> = ({ isOpen, onClose }) => {
         </div>
       ) : (
         <div className="w-[75vw] lg:w-[28rem]">
-          <div className="flex justify-between items-center pr-8">
-            <h2 className="font-bold text-2xl">Bet Slip</h2>
-            <h3 className="text-black/50 italic">
-              {dayjs().format("MM-DD-YYYY")}
-            </h3>
-          </div>
+          <h2 className="font-bold text-2xl">Bet Slip</h2>
           <div className="mt-6 grid grid-cols-2 w-full">
             <h4 className="w-full py-1 font-semibold text-center bg-gray-200 rounded-tl-lg">
               Market

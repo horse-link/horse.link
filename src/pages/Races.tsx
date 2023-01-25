@@ -65,6 +65,7 @@ export const Races: React.FC = () => {
     <PageLayout>
       <PlaceBetModal
         runner={selectedRunner}
+        race={race}
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
       />

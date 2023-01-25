@@ -1,5 +1,5 @@
 import { MarketInfo } from "./config";
-import { Back, Runner } from "./meets";
+import { Back, RaceData, Runner } from "./meets";
 
 export type BetSlipEntry = {
   id: number;
@@ -7,6 +7,8 @@ export type BetSlipEntry = {
   back: Back;
   wager: string;
   runner: Runner;
+  race: RaceData;
+  raceNumber: string;
   timestamp: number;
 };
 

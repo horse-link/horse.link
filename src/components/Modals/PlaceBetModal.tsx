@@ -8,18 +8,21 @@ import { Config, MarketInfo } from "../../types/config";
 import { useMarketContract, useERC20Contract } from "../../hooks/contracts";
 import useRefetch from "../../hooks/useRefetch";
 import utils from "../../utils";
-import { Back, Runner } from "../../types/meets";
+import { Back, RaceData, Runner } from "../../types/meets";
 import { UserBalance } from "../../types/users";
 import { useBetSlipContext } from "../../context/BetSlipContext";
+import { useParams } from "react-router-dom";
 
 type Props = {
   runner?: Runner;
+  race?: RaceData;
   isModalOpen: boolean;
   setIsModalOpen: (open: boolean) => void;
 };
 
 export const PlaceBetModal: React.FC<Props> = ({
   runner,
+  race,
   isModalOpen,
   setIsModalOpen
 }) => {
@@ -35,6 +38,7 @@ export const PlaceBetModal: React.FC<Props> = ({
   const { getBalance, getDecimals } = useERC20Contract();
   const { shouldRefetch, refetch: refetchUserBalance } = useRefetch();
   const { bets, addBet } = useBetSlipContext();
+  const { number: raceNumber } = useParams();
 
   const back = useMemo<Back>(() => {
     if (!runner) return utils.mocks.getMockBack();
@@ -132,7 +136,15 @@ export const PlaceBetModal: React.FC<Props> = ({
   };
 
   const onClickPlaceBet = useCallback(() => {
-    if (!selectedMarket || !wagerAmount || !runner || !config) return;
+    if (
+      !selectedMarket ||
+      !wagerAmount ||
+      !runner ||
+      !config ||
+      !race ||
+      !raceNumber
+    )
+      return;
     const vault = utils.config.getVaultFromMarket(selectedMarket, config);
     if (!vault)
       throw new Error(
@@ -146,9 +158,13 @@ export const PlaceBetModal: React.FC<Props> = ({
         .parseUnits(wagerAmount, vault.asset.decimals)
         .toString(),
       runner,
+      race,
+      raceNumber,
       timestamp: Math.floor(Date.now() / 1000)
     });
-  }, [selectedMarket, back, wagerAmount]);
+
+    setIsModalOpen(false);
+  }, [selectedMarket, back, wagerAmount, race, raceNumber]);
 
   const isWagerNegative = wagerAmount ? +wagerAmount < 0 : false;
   const isWagerGreaterThanBalance =
@@ -257,11 +273,21 @@ export const PlaceBetModal: React.FC<Props> = ({
               </span>
             </span>
             <span className="text-red-500 block font-semibold">
-              {isWagerNegative && "Wager amount cannot be negative"}
-              {isWagerGreaterThanBalance &&
-                "Wager amount cannot be greater than token balance"}
-              {isWagerPlusBetsExceedingBalance &&
-                "Current bets plus wager cannot exceed balance"}
+              {isWagerNegative ? (
+                <span className="block mt-1">
+                  Wager amount cannot be negative.
+                </span>
+              ) : isWagerPlusBetsExceedingBalance ? (
+                <span className="block mt-1">
+                  Current bets plus wager cannot exceed balance.
+                </span>
+              ) : (
+                isWagerGreaterThanBalance && (
+                  <span className="block mt-1">
+                    Wager amount cannot be greater than token balance.
+                  </span>
+                )
+              )}
             </span>
             <button
               className="w-full font-bold border-black border-2 py-2 mb-8 rounded-md relative top-6 hover:text-white hover:bg-black transition-colors duration-100 disabled:text-black/50 disabled:border-black/50 disabled:bg-white"

@@ -23,7 +23,7 @@ export const BaseTable: React.FC<Props> = props => {
   return (
     <div
       className={classnames(
-        "flex flex-col overflow-x-scroll overflow-y-hidden",
+        "flex flex-col overflow-x-scroll lg:overflow-x-hidden overflow-y-hidden",
         {
           [tableStyles || ""]: !!tableStyles
         }
