@@ -209,7 +209,7 @@ export const PlaceBetModal: React.FC<Props> = ({
           <Loader />
         </div>
       ) : (
-        <div className="lg:min-w-[28rem]">
+        <div className="w-[70vw] lg:min-w-[28rem]">
           <h2 className="font-bold">
             {runner.name ? `${runner.name} (${runner.barrier ?? " "})` : " "}
           </h2>

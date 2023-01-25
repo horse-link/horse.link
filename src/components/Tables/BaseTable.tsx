@@ -1,5 +1,6 @@
 import React from "react";
 import { TableHeader, TableRow } from "../../types/table";
+import classnames from "classnames";
 
 type Props = {
   headers: TableHeader[];
@@ -20,7 +21,14 @@ export const BaseTable: React.FC<Props> = props => {
   const createDataKey = (i: number) => `data-${i}`;
 
   return (
-    <div className={`flex flex-col ${tableStyles || ""}`}>
+    <div
+      className={classnames(
+        "flex flex-col overflow-x-scroll overflow-y-hidden",
+        {
+          [tableStyles || ""]: !!tableStyles
+        }
+      )}
+    >
       {title && (
         <h3 className="text-lg mb-3 font-medium text-gray-900">{title}</h3>
       )}
