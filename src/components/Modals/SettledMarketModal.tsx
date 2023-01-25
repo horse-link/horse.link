@@ -1,3 +1,4 @@
+import React from "react";
 import { BaseModal } from ".";
 import utils from "../../utils";
 import constants from "../../constants";

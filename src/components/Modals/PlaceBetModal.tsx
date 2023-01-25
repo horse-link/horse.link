@@ -1,16 +1,16 @@
 import { ethers } from "ethers";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useConfig } from "../../providers/Config";
 import { useSigner } from "wagmi";
 import { Loader } from "../";
 import { BaseModal } from ".";
 import { Config, MarketInfo } from "../../types/config";
 import { useMarketContract, useERC20Contract } from "../../hooks/contracts";
-import { Web3ErrorHandler, Web3SuccessHandler } from "../Web3Handlers";
 import useRefetch from "../../hooks/useRefetch";
 import utils from "../../utils";
 import { Back, Runner } from "../../types/meets";
 import { UserBalance } from "../../types/users";
+import { useBetSlipContext } from "../../context/BetSlipContext";
 
 type Props = {
   runner?: Runner;
@@ -27,16 +27,14 @@ export const PlaceBetModal: React.FC<Props> = ({
   const [userBalance, setUserBalance] = useState<UserBalance>();
   const [wagerAmount, setWagerAmount] = useState<string>();
   const [payout, setPayout] = useState<string>();
-  const [txLoading, setTxLoading] = useState(false);
-  const [txHash, setTxHash] = useState<string>();
-  const [error, setError] = useState<ethers.errors>();
 
   const { data: signer } = useSigner();
 
   const config = useConfig();
-  const { placeBet, getPotentialPayout } = useMarketContract();
+  const { getPotentialPayout } = useMarketContract();
   const { getBalance, getDecimals } = useERC20Contract();
   const { shouldRefetch, refetch: refetchUserBalance } = useRefetch();
+  const { bets, addBet } = useBetSlipContext();
 
   const back = useMemo<Back>(() => {
     if (!runner) return utils.mocks.getMockBack();
@@ -99,20 +97,10 @@ export const PlaceBetModal: React.FC<Props> = ({
   }, [config]);
 
   useEffect(() => {
-    if (!txLoading) return refetchUserBalance();
-
-    setError(undefined);
-    setTxHash(undefined);
-  }, [txLoading]);
-
-  useEffect(() => {
     if (isModalOpen) return refetchUserBalance();
 
     setTimeout(() => {
       setWagerAmount(undefined);
-      setTxHash(undefined);
-      setTxLoading(false);
-      setError(undefined);
     }, 300);
   }, [isModalOpen]);
 
@@ -143,27 +131,76 @@ export const PlaceBetModal: React.FC<Props> = ({
     setWagerAmount(value);
   };
 
-  const onClickPlaceBet = async () => {
-    if (!selectedMarket || !wagerAmount || !userBalance || !signer) return;
+  const onClickPlaceBet = useCallback(() => {
+    if (!selectedMarket || !wagerAmount || !runner || !config) return;
+    const vault = utils.config.getVaultFromMarket(selectedMarket, config);
+    if (!vault)
+      throw new Error(
+        `Could not find vault associated with market ${selectedMarket.address}`
+      );
 
-    const wager = ethers.utils.parseUnits(wagerAmount, userBalance.decimals);
-    setTxHash(undefined);
-    setError(undefined);
-
-    try {
-      setTxLoading(true);
-      const tx = await placeBet(selectedMarket, back, wager, signer);
-      setTxHash(tx);
-    } catch (err: any) {
-      setError(err);
-    } finally {
-      setTxLoading(false);
-    }
-  };
+    addBet({
+      market: selectedMarket,
+      back,
+      wager: ethers.utils
+        .parseUnits(wagerAmount, vault.asset.decimals)
+        .toString(),
+      runner,
+      timestamp: Math.floor(Date.now() / 1000)
+    });
+  }, [selectedMarket, back, wagerAmount]);
 
   const isWagerNegative = wagerAmount ? +wagerAmount < 0 : false;
   const isWagerGreaterThanBalance =
     wagerAmount && userBalance ? +wagerAmount > +userBalance.formatted : false;
+
+  const isWagerPlusBetsExceedingBalance = useMemo(() => {
+    if (
+      !bets ||
+      !bets.length ||
+      !selectedMarket ||
+      !wagerAmount ||
+      !config ||
+      !userBalance
+    )
+      return false;
+
+    // find all bets for given market
+    const betMarkets = bets.filter(
+      bet =>
+        bet.market.address.toLowerCase() ===
+        selectedMarket.address.toLowerCase()
+    );
+    // get sum of all wagers
+    const marketSum = betMarkets.reduce((sum, cur) => {
+      const betVault = utils.config.getVaultFromMarket(cur.market, config);
+      if (!betVault)
+        throw new Error(
+          `Could not find vault associated with market ${cur.market.address}`
+        );
+
+      const formatted = ethers.utils.formatUnits(
+        cur.wager,
+        betVault.asset.decimals
+      );
+      const bn = ethers.utils.parseUnits(formatted, betVault.asset.decimals);
+
+      return sum.add(bn);
+    }, ethers.constants.Zero);
+
+    const marketVault = utils.config.getVaultFromMarket(selectedMarket, config);
+    if (!marketVault)
+      throw new Error(
+        `Could not find vault associated with market ${selectedMarket.address}`
+      );
+
+    const userWagerBn = ethers.utils.parseUnits(
+      wagerAmount,
+      marketVault.asset.decimals
+    );
+
+    return marketSum.add(userWagerBn).gt(userBalance.value);
+  }, [bets, wagerAmount, selectedMarket, config, userBalance]);
 
   return (
     <BaseModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
@@ -172,101 +209,77 @@ export const PlaceBetModal: React.FC<Props> = ({
           <Loader />
         </div>
       ) : (
-        <div className="lg:min-w-[28rem]">
-          {!txHash && !error && (
-            <React.Fragment>
-              <h2 className="font-bold">
-                {runner.name
-                  ? `${runner.name} (${runner.barrier ?? " "})`
-                  : " "}
-              </h2>
-              <h2 className="font-bold mr-[8vw] mb-6">
-                {`Target Odds 
+        <div className="w-[70vw] lg:w-[28rem]">
+          <h2 className="font-bold">
+            {runner.name ? `${runner.name} (${runner.barrier ?? " "})` : " "}
+          </h2>
+          <h2 className="font-bold mr-[8vw] mb-6">
+            {`Target Odds 
             ${utils.formatting.formatToTwoDecimals(back.odds.toString())}`}
-              </h2>
-              <div className="flex flex-col">
-                <h3 className="font-semibold">Markets</h3>
-                <select
-                  onChange={e => onSelectMarket(e, config)}
-                  className="border-[0.12rem] border-black mt-1 mb-6 bg-white overflow-x-scroll"
+          </h2>
+          <div className="flex flex-col">
+            <h3 className="font-semibold">Markets</h3>
+            <select
+              onChange={e => onSelectMarket(e, config)}
+              className="border-[0.12rem] border-black mt-1 mb-6 bg-white overflow-x-scroll"
+            >
+              {config.markets.map(market => (
+                <option
+                  key={market.address}
+                  className="block"
+                  value={market.address}
                 >
-                  {config.markets.map(market => (
-                    <option
-                      key={market.address}
-                      className="block"
-                      value={market.address}
-                    >
-                      {utils.config.getVaultNameFromMarket(
-                        market.address,
-                        config
-                      )}
-                    </option>
-                  ))}
-                </select>
-                <h3 className="font-semibold">Wager Amount</h3>
-                <input
-                  type="number"
-                  placeholder="0"
-                  onChange={changeWagerAmount}
-                  className="border-b-[0.12rem] border-black pl-1 pt-1 mb-6 disabled:text-black/50 disabled:bg-white transition-colors duration-100"
-                  disabled={txLoading}
-                />
-                <span className="block font-semibold">
-                  Payout:{" "}
-                  <span className="font-normal">
-                    {payout ? (
-                      utils.formatting.formatToFourDecimals(payout)
-                    ) : (
-                      <Loader size={14} />
-                    )}
-                  </span>
-                </span>
-                <span className="block font-semibold">
-                  Available:{" "}
-                  <span className="font-normal">
-                    {userBalance?.formatted || <Loader size={14} />}
-                  </span>
-                </span>
-                <span className="text-red-500 block font-semibold">
-                  {isWagerNegative && "Wager amount cannot be negative"}
-                  {isWagerGreaterThanBalance &&
-                    "Wager amount cannot be greater than token balance"}
-                </span>
-                <button
-                  className="w-full font-bold border-black border-2 py-2 mb-8 rounded-md relative top-6 hover:text-white hover:bg-black transition-colors duration-100 disabled:text-black/50 disabled:border-black/50 disabled:bg-white"
-                  onClick={onClickPlaceBet}
-                  disabled={
-                    !selectedMarket ||
-                    !wagerAmount ||
-                    !signer ||
-                    !userBalance ||
-                    +userBalance.formatted === 0 ||
-                    txLoading ||
-                    isWagerNegative ||
-                    isWagerGreaterThanBalance
-                  }
-                >
-                  {txLoading ? <Loader /> : "PLACE BET"}
-                </button>
-              </div>
-            </React.Fragment>
-          )}
-          {txHash && (
-            <React.Fragment>
-              <Web3SuccessHandler
-                hash={txHash}
-                message="Your bet has been placed with"
-              />
-            </React.Fragment>
-          )}
-          {error && (
-            <React.Fragment>
-              <h2 className="font-bold text-2xl mr-[8vw]">
-                Transaction result
-              </h2>
-              <Web3ErrorHandler error={error} />
-            </React.Fragment>
-          )}
+                  {utils.config.getVaultNameFromMarket(market.address, config)}
+                </option>
+              ))}
+            </select>
+            <h3 className="font-semibold">Wager Amount</h3>
+            <input
+              type="number"
+              placeholder="0"
+              onChange={changeWagerAmount}
+              className="border-b-[0.12rem] border-black pl-1 pt-1 mb-6 disabled:text-black/50 disabled:bg-white transition-colors duration-100"
+            />
+            <span className="block font-semibold">
+              Payout:{" "}
+              <span className="font-normal">
+                {payout ? (
+                  utils.formatting.formatToFourDecimals(payout)
+                ) : (
+                  <Loader size={14} />
+                )}
+              </span>
+            </span>
+            <span className="block font-semibold">
+              Available:{" "}
+              <span className="font-normal">
+                {userBalance?.formatted || <Loader size={14} />}
+              </span>
+            </span>
+            <span className="text-red-500 block font-semibold">
+              {isWagerNegative && "Wager amount cannot be negative"}
+              {isWagerGreaterThanBalance &&
+                "Wager amount cannot be greater than token balance"}
+              {isWagerPlusBetsExceedingBalance &&
+                "Current bets plus wager cannot exceed balance"}
+            </span>
+            <button
+              className="w-full font-bold border-black border-2 py-2 mb-8 rounded-md relative top-6 hover:text-white hover:bg-black transition-colors duration-100 disabled:text-black/50 disabled:border-black/50 disabled:bg-white"
+              onClick={onClickPlaceBet}
+              disabled={
+                !selectedMarket ||
+                !wagerAmount ||
+                !signer ||
+                !userBalance ||
+                !+userBalance.formatted ||
+                isWagerNegative ||
+                isWagerGreaterThanBalance ||
+                isWagerPlusBetsExceedingBalance
+              }
+            >
+              ADD TO BET SLIP
+            </button>
+          </div>
         </div>
       )}
     </BaseModal>

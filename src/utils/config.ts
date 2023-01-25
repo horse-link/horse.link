@@ -26,3 +26,8 @@ export const getVaultFromMarket = (market?: MarketInfo, config?: Config) =>
   config?.vaults.find(
     vault => vault.address.toLowerCase() === market?.vaultAddress.toLowerCase()
   );
+
+export const getVaultFromAssetAddress = (address: string, config?: Config) =>
+  config?.vaults.find(
+    vault => vault.asset.address.toLowerCase() === address.toLowerCase()
+  );
