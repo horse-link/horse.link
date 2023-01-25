@@ -159,7 +159,7 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
 
   // clear bets once hashes have gone through
   useEffect(() => {
-    if (!hashes || !hashes.length) return;
+    if (!!hashes) return;
 
     clearBets();
   }, [hashes]);
