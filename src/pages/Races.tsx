@@ -51,21 +51,15 @@ export const Races: React.FC = () => {
     return utils.races.calculateRaceMargin(validRunners.map(r => r.odds));
   }, [race]);
 
-  const checkForTrackAndWeatherConditions = () => {
-    if (meetRaces?.weatherCondition !== null) {
-      const trackConditionFormatter = meetRaces?.trackCondition
-        ? meetRaces?.trackCondition.slice(-1)
-        : " ";
+  const checkForTrackAndWeatherConditions = useMemo(() => {
+    if (!meetRaces) return;
+    if (!meetRaces.weatherCondition || !meetRaces.trackCondition) return;
 
-      const trackConditionNumberFormatter = meetRaces?.trackCondition
-        ? meetRaces?.trackCondition.slice(0, -1)
-        : " ";
+    const trackConditionFormatter = meetRaces.trackCondition.slice(-1);
+    const trackConditionNumberFormatter = meetRaces.trackCondition.slice(0, -1);
 
-      return `${trackConditionNumberFormatter}(${trackConditionFormatter}) ${meetRaces?.weatherCondition}`;
-    } else {
-      return;
-    }
-  };
+    return `${trackConditionNumberFormatter}(${trackConditionFormatter}) ${meetRaces.weatherCondition}`;
+  }, [meetRaces]);
 
   return (
     <PageLayout>
@@ -103,9 +97,7 @@ export const Races: React.FC = () => {
               <Skeleton width={50} />
             )}
           </h1>
-          <h1>
-            {meetRaces ? checkForTrackAndWeatherConditions() : <Skeleton />}
-          </h1>
+          <h1>{checkForTrackAndWeatherConditions || <Skeleton />}</h1>
         </div>
         <RaceTable
           runners={race?.runners}
