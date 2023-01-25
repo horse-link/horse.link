@@ -3,7 +3,11 @@ import { NextToJump } from "../../types/meets";
 import useSwr from "../useSwr";
 
 export const useNextToJumpData = () => {
-  const { data, isLoading, error } = useSwr<NextToJump[]>("/meetings/next");
+  const ONE_SECOND = 1000;
+  const { data, isLoading, error } = useSwr<NextToJump[]>(
+    "/meetings/next",
+    ONE_SECOND * 15
+  );
 
   const nextMeets = useMemo(() => {
     if (!data || error) return;
