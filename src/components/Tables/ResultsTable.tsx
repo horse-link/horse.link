@@ -1,5 +1,5 @@
 import React from "react";
-import { MeetResults, MeetResult } from "../../types/meets";
+import { MeetResults, WinningHorse } from "../../types/meets";
 import { BaseTable } from ".";
 import { TableData, TableHeader, TableRow } from "../../types/table";
 
@@ -8,19 +8,19 @@ type Props = {
 };
 
 export const ResultsTable: React.FC<Props> = ({ results }) => {
-  const getResultsData = (result: MeetResult): TableData[] => [
+  const getWinningHorseData = (horse: WinningHorse): TableData[] => [
     {
-      title: result.place,
+      title: horse.place,
       classNames: "bg-gray-200"
     },
     {
-      title: result.runner
+      title: horse.runner
     },
     {
-      title: result.number
+      title: horse.number
     },
     {
-      title: result.rider
+      title: horse.rider
     }
   ];
 
@@ -40,8 +40,8 @@ export const ResultsTable: React.FC<Props> = ({ results }) => {
     }
   ];
 
-  const ROWS: TableRow[] = results.map(result => ({
-    data: getResultsData(result)
+  const ROWS: TableRow[] = results.winningHorses.map(horse => ({
+    data: getWinningHorseData(horse)
   }));
 
   return <BaseTable headers={HEADERS} rows={ROWS} />;

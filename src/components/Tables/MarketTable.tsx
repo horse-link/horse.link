@@ -5,6 +5,7 @@ import { Config, MarketInfo } from "../../types/config";
 import utils from "../../utils";
 import Skeleton from "react-loading-skeleton";
 import { ethers } from "ethers";
+import { AddressLink } from "../../components";
 
 type Props = {
   config?: Config;
@@ -29,10 +30,10 @@ export const MarketTable: React.FC<Props> = ({ config }) => {
         )
       },
       {
-        title: market.address
+        title: <AddressLink address={market.address} />
       },
       {
-        title: market.vaultAddress
+        title: <AddressLink address={market.vaultAddress} />
       }
     ];
   };

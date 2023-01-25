@@ -92,16 +92,17 @@ export const RaceTable: React.FC<Props> = ({
         classNames: isScratchedDataStyles(isScratched)
       },
       {
-        title: odds ? (
-          utils.formatting.formatToTwoDecimals(odds.toString())
-        ) : (
-          <Skeleton width="2em" />
-        ),
+        title:
+          odds !== undefined ? (
+            utils.formatting.formatToTwoDecimals(odds.toString())
+          ) : (
+            <Skeleton width="2em" />
+          ),
         classNames: isScratchedDataStyles(isScratched)
       },
       {
         title: !totalBetsOnPropositions ? (
-          <Skeleton width="2em" />
+          <Skeleton width="3.5em" />
         ) : (
           `$${utils.formatting.formatToFourDecimals(formattedBacked)}`
         ),
@@ -109,7 +110,7 @@ export const RaceTable: React.FC<Props> = ({
       },
       {
         title: !totalBetsOnPropositions ? (
-          <Skeleton width="2em" />
+          <Skeleton width="4em" />
         ) : (
           `${utils.formatting.formatToFourDecimals(
             stats?.percentage.toString() || "0"
