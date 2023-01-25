@@ -141,6 +141,7 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
       );
 
       setHashes(hashes);
+      clearBets();
     } catch (e: any) {
       console.error(e);
     } finally {
@@ -156,13 +157,6 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
       setHashes(undefined);
     }, 300);
   }, [setIsModalOpen]);
-
-  // clear bets once hashes have gone through
-  useEffect(() => {
-    if (!!hashes) return;
-
-    clearBets();
-  }, [hashes]);
 
   const value = useMemo(
     () => ({

@@ -121,7 +121,7 @@ export const BetSlipModal: React.FC<Props> = ({ isOpen, onClose }) => {
           <Loader />
         </div>
       ) : hashes && hashes.length ? (
-        <div className="w-[75vw] lg:min-w-[28rem]">
+        <div className="w-[75vw] lg:w-[28rem]">
           <div className="flex justify-between items-center pr-8">
             <h2 className="font-bold text-2xl">Bet Slip Transactions</h2>
             <h3 className="text-black/50 italic">
@@ -144,7 +144,7 @@ export const BetSlipModal: React.FC<Props> = ({ isOpen, onClose }) => {
           </ol>
         </div>
       ) : (
-        <div className="w-[75vw] lg:min-w-[28rem]">
+        <div className="w-[75vw] lg:w-[28rem]">
           <div className="flex justify-between items-center pr-8">
             <h2 className="font-bold text-2xl">Bet Slip</h2>
             <h3 className="text-black/50 italic">
