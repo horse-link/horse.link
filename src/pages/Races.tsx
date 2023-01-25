@@ -14,7 +14,6 @@ import { useConfig } from "../providers/Config";
 import Skeleton from "react-loading-skeleton";
 import dayjs from "dayjs";
 import utils from "../utils";
-import { checkProperties } from "ethers/lib/utils.js";
 
 export const Races: React.FC = () => {
   const params = useParams();
