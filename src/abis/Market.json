@@ -351,11 +351,6 @@
         "type": "bool"
       },
       {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      },
-      {
         "internalType": "bytes16",
         "name": "",
         "type": "bytes16"
