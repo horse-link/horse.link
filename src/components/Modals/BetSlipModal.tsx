@@ -10,6 +10,7 @@ import { useMarketContract } from "../../hooks/contracts";
 import { useSigner } from "wagmi";
 import Skeleton from "react-loading-skeleton";
 import { ConfirmBetsButton } from "../Buttons";
+import constants from "../../constants";
 
 type Props = {
   isOpen: boolean;
@@ -18,7 +19,7 @@ type Props = {
 
 export const BetSlipModal: React.FC<Props> = ({ isOpen, onClose }) => {
   const config = useConfig();
-  const { bets } = useBetSlipContext();
+  const { bets, hashes } = useBetSlipContext();
   const { data: signer } = useSigner();
   const { getPotentialPayout } = useMarketContract();
 
@@ -118,6 +119,29 @@ export const BetSlipModal: React.FC<Props> = ({ isOpen, onClose }) => {
       {!config ? (
         <div className="m-10">
           <Loader />
+        </div>
+      ) : hashes && hashes.length ? (
+        <div className="max-w-[95vw] lg:min-w-[28rem]">
+          <div className="flex justify-between items-center pr-8">
+            <h2 className="font-bold text-2xl">Bet Slip Transactions</h2>
+            <h3 className="text-black/50 italic">
+              {dayjs().format("MM-DD-YYYY")}
+            </h3>
+          </div>
+          <ol className="ml-4 mt-6 list-decimal">
+            {hashes.map(hash => (
+              <li key={hash}>
+                <a
+                  href={`${constants.env.SCANNER_URL}/tx/${hash}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline underline-offset-2 text-blue-500 visited:text-blue-800"
+                >
+                  {utils.formatting.shortenHash(hash)}
+                </a>
+              </li>
+            ))}
+          </ol>
         </div>
       ) : (
         <div className="max-w-[95vw] lg:min-w-[28rem]">

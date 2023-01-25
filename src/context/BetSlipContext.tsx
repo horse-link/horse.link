@@ -119,19 +119,25 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
     setHashes(undefined);
     try {
       const hashes = await Promise.all(
-        bets.map(bet =>
-          placeBet(
+        bets.map(bet => {
+          const vault = utils.config.getVaultFromMarket(bet.market, config);
+          if (!vault)
+            throw new Error(
+              `Could not find vault associated with market, ${bet.market.address}`
+            );
+          const formattedWager = ethers.utils.formatUnits(
+            bet.wager,
+            vault.asset.decimals
+          );
+
+          return placeBet(
             bet.market,
             bet.back,
             // parse wager into BigNumber
-            ethers.utils.parseUnits(
-              bet.wager,
-              utils.config.getVaultFromMarket(bet.market, config)?.asset
-                .decimals
-            ),
+            ethers.utils.parseUnits(formattedWager, vault.asset.decimals),
             signer
-          )
-        )
+          );
+        })
       );
 
       setHashes(hashes);
@@ -144,7 +150,19 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
 
   const openModal = useCallback(() => setIsModalOpen(true), [setIsModalOpen]);
 
-  const closeModal = useCallback(() => setIsModalOpen(false), [setIsModalOpen]);
+  const closeModal = useCallback(() => {
+    setIsModalOpen(false);
+    setTimeout(() => {
+      setHashes(undefined);
+    }, 300);
+  }, [setIsModalOpen]);
+
+  // clear bets once hashes have gone through
+  useEffect(() => {
+    if (!hashes || !hashes.length) return;
+
+    clearBets();
+  }, [hashes]);
 
   const value = useMemo(
     () => ({
