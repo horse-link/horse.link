@@ -34,7 +34,7 @@ export const PlaceBetModal: React.FC<Props> = ({
   const { getPotentialPayout } = useMarketContract();
   const { getBalance, getDecimals } = useERC20Contract();
   const { shouldRefetch, refetch: refetchUserBalance } = useRefetch();
-  const { addBet } = useBetSlipContext();
+  const { bets, addBet } = useBetSlipContext();
 
   const back = useMemo<Back>(() => {
     if (!runner) return utils.mocks.getMockBack();
@@ -154,6 +154,54 @@ export const PlaceBetModal: React.FC<Props> = ({
   const isWagerGreaterThanBalance =
     wagerAmount && userBalance ? +wagerAmount > +userBalance.formatted : false;
 
+  const isWagerPlusBetsExceedingBalance = useMemo(() => {
+    if (
+      !bets ||
+      !bets.length ||
+      !selectedMarket ||
+      !wagerAmount ||
+      !config ||
+      !userBalance
+    )
+      return false;
+
+    // find all bets for given market
+    const betMarkets = bets.filter(
+      bet =>
+        bet.market.address.toLowerCase() ===
+        selectedMarket.address.toLowerCase()
+    );
+    // get sum of all wagers
+    const marketSum = betMarkets.reduce((sum, cur) => {
+      const betVault = utils.config.getVaultFromMarket(cur.market, config);
+      if (!betVault)
+        throw new Error(
+          `Could not find vault associated with market ${cur.market.address}`
+        );
+
+      const formatted = ethers.utils.formatUnits(
+        cur.wager,
+        betVault.asset.decimals
+      );
+      const bn = ethers.utils.parseUnits(formatted, betVault.asset.decimals);
+
+      return sum.add(bn);
+    }, ethers.constants.Zero);
+
+    const marketVault = utils.config.getVaultFromMarket(selectedMarket, config);
+    if (!marketVault)
+      throw new Error(
+        `Could not find vault associated with market ${selectedMarket.address}`
+      );
+
+    const userWagerBn = ethers.utils.parseUnits(
+      wagerAmount,
+      marketVault.asset.decimals
+    );
+
+    return marketSum.add(userWagerBn).gt(userBalance.value);
+  }, [bets, wagerAmount, selectedMarket, config, userBalance]);
+
   return (
     <BaseModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
       {!config || !runner ? (
@@ -212,6 +260,8 @@ export const PlaceBetModal: React.FC<Props> = ({
               {isWagerNegative && "Wager amount cannot be negative"}
               {isWagerGreaterThanBalance &&
                 "Wager amount cannot be greater than token balance"}
+              {isWagerPlusBetsExceedingBalance &&
+                "Current bets plus wager cannot exceed balance"}
             </span>
             <button
               className="w-full font-bold border-black border-2 py-2 mb-8 rounded-md relative top-6 hover:text-white hover:bg-black transition-colors duration-100 disabled:text-black/50 disabled:border-black/50 disabled:bg-white"
@@ -223,7 +273,8 @@ export const PlaceBetModal: React.FC<Props> = ({
                 !userBalance ||
                 !+userBalance.formatted ||
                 isWagerNegative ||
-                isWagerGreaterThanBalance
+                isWagerGreaterThanBalance ||
+                isWagerPlusBetsExceedingBalance
               }
             >
               ADD TO BET SLIP

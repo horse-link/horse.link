@@ -9,6 +9,7 @@ import dayjs from "dayjs";
 import { useMarketContract } from "../../hooks/contracts";
 import { useSigner } from "wagmi";
 import Skeleton from "react-loading-skeleton";
+import { ConfirmBetsButton } from "../Buttons";
 
 type Props = {
   isOpen: boolean;
@@ -35,14 +36,6 @@ export const BetSlipModal: React.FC<Props> = ({ isOpen, onClose }) => {
     if (!bets || !bets.length || !config || !signer) return;
 
     (async () => {
-      // get array of market and payouts,
-      // shape below:
-
-      //  {
-      //    market: MarketInfo;
-      //    payout: BigNumber;
-      //  }[];
-
       const payouts = await Promise.all(
         bets.map(async bet => {
           const result = await getPotentialPayout(
@@ -59,15 +52,14 @@ export const BetSlipModal: React.FC<Props> = ({ isOpen, onClose }) => {
         })
       );
 
-      // take payouts and reduce to market -> total potential payout values, Record<string, BigNumber>
-      const payoutsPerMarket = payouts.reduce((prevObject, p) => {
+      const payoutsPerAsset = payouts.reduce((prevObject, p) => {
         const vault = utils.config.getVaultFromMarket(p.market, config);
         if (!vault)
           throw new Error(
             `No Vault associated with market, ${p.market.address}`
           );
 
-        const name = vault.name;
+        const name = vault.asset.address;
         const units = ethers.utils.formatUnits(p.payout, vault.asset.decimals);
         const parsedUnits = ethers.utils.parseEther(units);
 
@@ -82,12 +74,11 @@ export const BetSlipModal: React.FC<Props> = ({ isOpen, onClose }) => {
         };
       }, {} as NonNullable<typeof payout>);
 
-      // set state
-      setPayout(payoutsPerMarket);
+      setPayout(payoutsPerAsset);
     })();
   }, [bets, config, signer]);
 
-  const stakePerMarket = useMemo(() => {
+  const stakePerToken = useMemo(() => {
     if (!bets || !bets.length || !config) return;
 
     return bets.reduce(
@@ -137,23 +128,23 @@ export const BetSlipModal: React.FC<Props> = ({ isOpen, onClose }) => {
             </h3>
           </div>
           <div className="mt-6 grid grid-cols-2 w-full">
-            <h4 className="w-full py-1 font-semibold text-center bg-gray-200 rounded-tl-xl">
+            <h4 className="w-full py-1 font-semibold text-center bg-gray-200 rounded-tl-lg">
               Market
             </h4>
-            <h4 className="w-full py-1 font-semibold text-center bg-gray-200 rounded-tr-xl">
+            <h4 className="w-full py-1 font-semibold text-center bg-gray-200 rounded-tr-lg">
               Stake
             </h4>
-            {!stakePerMarket ? (
+            {!stakePerToken ? (
               <React.Fragment>
                 <Skeleton width="4rem" />
                 <Skeleton width="4rem" />
               </React.Fragment>
             ) : (
-              [...Object.entries(stakePerMarket)].map(([name, stake]) => (
-                <React.Fragment>
+              [...Object.entries(stakePerToken)].map(([name, stake]) => (
+                <React.Fragment key={name}>
                   <div
                     className="p-2 border-gray-200 border-x border-b"
-                    key={name}
+                    key={JSON.stringify(stake)}
                   >
                     {name}
                   </div>
@@ -178,6 +169,9 @@ export const BetSlipModal: React.FC<Props> = ({ isOpen, onClose }) => {
             ) : (
               <Skeleton />
             )}
+          </div>
+          <div className="mt-6">
+            <ConfirmBetsButton />
           </div>
         </div>
       )}
