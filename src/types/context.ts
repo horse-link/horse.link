@@ -7,9 +7,14 @@ export type BetSlipEntry = {
   back: Back;
   wager: string;
   runner: Runner;
-  race: RaceData;
-  raceNumber: string;
+  race: Omit<
+    RaceData & {
+      raceNumber: string;
+    },
+    "runners"
+  >;
   timestamp: number;
+  error?: string;
 };
 
 export type BetSlipContextType = {

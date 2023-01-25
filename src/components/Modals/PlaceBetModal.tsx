@@ -158,8 +158,10 @@ export const PlaceBetModal: React.FC<Props> = ({
         .parseUnits(wagerAmount, vault.asset.decimals)
         .toString(),
       runner,
-      race,
-      raceNumber,
+      race: {
+        ...race,
+        raceNumber
+      },
       timestamp: Math.floor(Date.now() / 1000)
     });
 

@@ -44,7 +44,7 @@ export const BetSlip: React.FC = () => {
                     <div className="flex justify-between">
                       <h4 className="font-bold">{bet.runner.name}</h4>
                       <span className="font-normal block text-black/50">
-                        {bet.race.track.name} {bet.raceNumber}
+                        {bet.race.track.name} {bet.race.raceNumber}
                       </span>
                     </div>
                     <div className="flex justify-between">
