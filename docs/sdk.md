@@ -1,3 +1,24 @@
+# HORSELINK SDK
+
+## Index
+
+- [Getting started](#getting-started)
+-
+
+# Getting started
+
+```ts
+const hl = new HorseLink(options);
+```
+
+## Options object
+
+### provider
+
+The Ethereum provider to use. Defaults to `window.ethereum` if available.ß
+
+# PLATFORM
+
 # Get configuration
 
 ## Parameters
@@ -16,21 +37,47 @@ const config = await hl.getConfig();
 
 # Get total in play
 
+```ts
+const total: string = hl.getTotalInPlay(marketAddress);
+```
+
 ## Parameters
 
 None
 
 ## Returns
 
-Returns the total amount of asset tokens deposited as bets into all registered Market contracts.
+Returns a numeric string represending the total amount of asset tokens deposited as bets intothe specified Market contract, formatted with the correct number of decimals for the ERC-20 asset token used in the specified market, eg `"1000.123456"`
 
-### Response attributes
+# Get platform totals
 
-- total
-
-```ts
-const { total } = hl.getTotalInPlay();
 ```
+const totals: PlatformTotals = await hl.getPlatformTotals();
+```
+
+## Parameters
+
+None
+
+## Returns
+
+A `PlatformTotals` object containing properties for number of vaults, market contracts and bets in the platform.
+
+# Get platform statistics
+
+```
+const statistics: PlatformStatistics = await hl.getPlatformStatistics();
+```
+
+## Parameters
+
+None
+
+## Returns
+
+A `PlatformStatistics` object containing aggregated statistics for all registered vaults and market contracts.
+
+# MARKETS
 
 # Get market contracts
 
@@ -92,6 +139,24 @@ The identifier for a market (within a market contract)
 
 A `SignedBetData` object representing the result signature for the specified market.
 
+# Get market contract history
+
+```
+const history: MarketContractActivity[] = await hl.getMarketContractHistory(marketContractAddress);
+```
+
+## Parameters
+
+### marketContractAddress
+
+The address of a market contract
+
+## Returns
+
+An array of `MarketContractActivity` objects containing historical data for the specified market contract.
+
+# TOKENS
+
 # Get registered asset tokens
 
 ```js
@@ -139,6 +204,56 @@ Format the response with a given number of decimals points.
 
 A string representing a number of tokens that `tokenSpender` can spend on behalf of `tokenOwner`, eg `1000.123456`
 
+# Request funds from faucet
+
+```js
+const txHash: string = await hl.requestFunds(tokenAddress, recipientAddress);
+```
+
+## Parameters
+
+### tokenAddress
+
+The address of the token contract for which you want to request funds.
+
+### recipientAddress
+
+The address of the wallet to which you want the funds sent.
+
+## Action
+
+Requests funds from the faucet for the specified token contract and sends them to the specified recipient address.
+
+## Returns
+
+A transaction hash.
+
+# BETS
+
+# Get bets
+
+```js
+const bets: Bet[] = await hl.getBets(userAddress, filter);
+```
+
+## Parameters
+
+### user address
+
+The address of a user
+
+### filter
+
+A string representing the type of bets to return. Can be one of the following:
+
+- `all` - all bets (default)
+- `resulted` - bets that have a result but have not yet been settled
+- `settled` - bets that have been settled
+
+## Returns
+
+An array of `Bet` objects representing bets made by the specified user.
+
 # Get odds
 
 ```js
@@ -168,6 +283,8 @@ The amount of tokens to bet
 A numeric string representing the odds that would be given for this proposition, expressed as a positive number, where 1 x 10^6 represents decimal odds of 1.0, eg `1234567` for decimal odds of `1.234567`
 
 # Get potential payout
+
+For a hypothetical bet on a proposition with the specified odds, what would the payout be if the bet was successful?
 
 ```js
 const payout: string = await hl.getPayout(
@@ -200,29 +317,7 @@ The odds of the proposition, expressed as a positive number, where 1 x 10^6 repr
 
 A string representing the potential payout of a bet in tokens, formatted with the correct number of decimals for the ERC token used in the specified market, eg `1000.123456`
 
-# Request funds from faucet
-
-```js
-const txHash: string = await hl.requestFunds(tokenAddress, recipientAddress);
-```
-
-## Parameters
-
-### tokenAddress
-
-The address of the token contract for which you want to request funds.
-
-### recipientAddress
-
-The address of the wallet to which you want the funds sent.
-
-## Action
-
-Requests funds from the faucet for the specified token contract and sends them to the specified recipient address.
-
-## Returns
-
-A transaction hash.
+# VAULTS
 
 # Get registered vault contracts
 
@@ -295,6 +390,40 @@ The address of an investor
 
 A `VaultStatistics` object representing the statistics for the specified vault and investor.
 
+# Get vault history
+
+```
+const history: VaultActivity[] = await hl.getVaultHistory(vaultAddress);
+```
+
+## Parameters
+
+### vaultAddress
+
+The address of a vault contract
+
+## Returns
+
+An array of `VaultActivity` objects containing historical data for the specified vault.
+
+# USERS
+
+# Get user history
+
+```
+const history: UserActivity[] = await hl.getUserHistory(userAddress);
+```
+
+## Parameters
+
+### userAddress
+
+The address of a user
+
+## Returns
+
+An array of `UserActivity` objects containing historical data for the specified user.
+
 # Objects
 
 ## Config object
@@ -305,7 +434,11 @@ A `VaultStatistics` object representing the statistics for the specified vault a
 - Markets
 - Vaults
 
+#
+
 ## MarketContract object
+
+#
 
 ## SignedBetData object
 
@@ -320,6 +453,8 @@ The ID of the winning proposition.
 ### marketOracleResultSig
 
 The signature of the market result, in the form of a `Signature` object.
+
+#
 
 ## VaultStatistics object
 
@@ -338,3 +473,31 @@ A string representing the performance of the specified vault for the specified i
 ### assetTokenAddress
 
 The address of the ERC-20 token used as an underlying asset in the specified vault
+
+#
+
+## PlatformStatistics object
+
+TODO
+
+#
+
+## VaultActivity object
+
+TODO
+
+#
+
+## MarketContractActivity object
+
+TODO
+
+## UserActivity object
+
+TODO
+
+#
+
+## Bet object
+
+TODO
