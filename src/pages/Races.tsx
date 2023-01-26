@@ -54,11 +54,17 @@ export const Races: React.FC = () => {
   const checkForTrackAndWeatherConditions = useMemo(() => {
     if (!meetRaces) return;
     if (!meetRaces.weatherCondition || !meetRaces.trackCondition) return;
-
-    const trackConditionFormatter = meetRaces.trackCondition.slice(-1);
-    const trackConditionNumberFormatter = meetRaces.trackCondition.slice(0, -1);
-
-    return `${trackConditionNumberFormatter}(${trackConditionFormatter}) ${meetRaces.weatherCondition}`;
+    const checkIdTrackHasNumbers = Boolean(meetRaces.trackCondition);
+    if (checkIdTrackHasNumbers == false) {
+      return `${meetRaces.trackCondition} ${meetRaces.weatherCondition}`;
+    } else {
+      const trackConditionFormatter = meetRaces.trackCondition.slice(-1);
+      const trackConditionNumberFormatter = meetRaces.trackCondition.slice(
+        0,
+        -1
+      );
+      return `${trackConditionNumberFormatter}(${trackConditionFormatter}) ${meetRaces.weatherCondition}`;
+    }
   }, [meetRaces]);
 
   return (
