@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { useBetSlipContext } from "../context/BetSlipContext";
 import classnames from "classnames";
 import { ethers } from "ethers";
@@ -14,12 +14,6 @@ dayjs.extend(relativeTime);
 export const BetSlip: React.FC = () => {
   const config = useConfig();
   const { bets, removeBet } = useBetSlipContext();
-
-  const stakeAndPayout = useMemo(() => {
-    if (!bets?.length) return;
-
-    // stake and payouts
-  }, [bets]);
 
   return (
     <div className="mt-6 lg:mt-0 lg:mx-4 w-full shadow-lg lg:sticky lg:top-4">
@@ -103,12 +97,6 @@ export const BetSlip: React.FC = () => {
             </div>
           )}
         </div>
-        {bets?.length && (
-          <div className="mt-2 grid grid-cols-2">
-            <h4 className="w-full text-center font-bold">Stake</h4>
-            <h4 className="w-full text-center font-bold">Payout</h4>
-          </div>
-        )}
         {bets?.length && (
           <div className="mt-2">
             <PlaceBetsButton />

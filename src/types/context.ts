@@ -14,7 +14,6 @@ export type BetSlipEntry = {
     "runners"
   >;
   timestamp: number;
-  error?: string;
 };
 
 export type BetSlipContextType = {

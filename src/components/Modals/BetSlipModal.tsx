@@ -9,6 +9,7 @@ import { useMarketContract } from "../../hooks/contracts";
 import { useSigner } from "wagmi";
 import Skeleton from "react-loading-skeleton";
 import constants from "../../constants";
+import { SubmitBetsButton } from "../Buttons";
 
 type Props = {
   isOpen: boolean;
@@ -17,7 +18,7 @@ type Props = {
 
 export const BetSlipModal: React.FC<Props> = ({ isOpen, onClose }) => {
   const config = useConfig();
-  const { bets, hashes } = useBetSlipContext();
+  const { bets, hashes, txLoading } = useBetSlipContext();
   const { data: signer } = useSigner();
   const { getPotentialPayout } = useMarketContract();
 
@@ -113,7 +114,7 @@ export const BetSlipModal: React.FC<Props> = ({ isOpen, onClose }) => {
   }, [bets, config]);
 
   return (
-    <BaseModal isOpen={true} onClose={onClose}>
+    <BaseModal isOpen={isOpen} onClose={!txLoading ? onClose : () => {}}>
       {!config ? (
         <div className="m-10">
           <Loader />
@@ -181,6 +182,9 @@ export const BetSlipModal: React.FC<Props> = ({ isOpen, onClose }) => {
             ) : (
               <Skeleton />
             )}
+          </div>{" "}
+          <div className="mt-6">
+            <SubmitBetsButton />
           </div>
         </div>
       )}
