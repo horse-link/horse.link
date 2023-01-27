@@ -139,22 +139,6 @@ The identifier for a market (within a market contract)
 
 A `SignedBetData` object representing the result signature for the specified market.
 
-# Get market contract history
-
-```
-const history: MarketContractActivity[] = await hl.getMarketContractHistory(marketContractAddress);
-```
-
-## Parameters
-
-### marketContractAddress
-
-The address of a market contract.
-
-## Returns
-
-An array of `MarketContractActivity` objects containing historical data for the specified market contract.
-
 # TOKENS
 
 # Get registered asset tokens
@@ -408,10 +392,10 @@ An array of `VaultActivity` objects containing historical data for the specified
 
 # USERS
 
-# Get user history
+# Get user statistics
 
 ```
-const history: UserActivity[] = await hl.getUserHistory(userAddress);
+const history: UserStatistics = await hl.getUserStatistics(userAddress);
 ```
 
 ## Parameters
@@ -488,15 +472,15 @@ TODO
 
 #
 
-## MarketContractActivity object
+## UserStatistics object
 
-TODO
+### totalDeposited
 
-#
+### inPlay
 
-## UserActivity object
+### pnl
 
-TODO
+### lastUpdate
 
 #
 
