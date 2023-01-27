@@ -4,12 +4,15 @@ import { useRunnersData, useMeetData } from "../hooks/data";
 import { RacesButton } from "../components/Buttons";
 import { RaceTable, BetTable } from "../components/Tables";
 import { PlaceBetModal, SettleBetModal } from "../components/Modals";
-import { Runner } from "../types/meets";
+import { MeetInfo, Runner } from "../types/meets";
 import { PageLayout } from "../components";
 import { useSubgraphBets } from "../hooks/subgraph";
 import { BetHistory } from "../types/bets";
 import { makeMarketId } from "../utils/markets";
-import { formatBytes16String } from "../utils/formatting";
+import {
+  formatBytes16String,
+  formattingTrackAndWeatherConditions
+} from "../utils/formatting";
 import { useConfig } from "../providers/Config";
 import Skeleton from "react-loading-skeleton";
 import dayjs from "dayjs";
@@ -41,6 +44,7 @@ export const Races: React.FC = () => {
     b16MarketId
   );
 
+  console.log(1111111, meetRaces);
   const margin = useMemo(() => {
     if (!race || !race.runners.length) return;
 
@@ -52,19 +56,7 @@ export const Races: React.FC = () => {
   }, [race]);
 
   const checkForTrackAndWeatherConditions = useMemo(() => {
-    if (!meetRaces) return;
-    if (!meetRaces.weatherCondition || !meetRaces.trackCondition) return;
-    const checkIdTrackHasNumbers = Boolean(meetRaces.trackCondition);
-    if (checkIdTrackHasNumbers == false) {
-      return `${meetRaces.trackCondition} ${meetRaces.weatherCondition}`;
-    } else {
-      const trackConditionFormatter = meetRaces.trackCondition.slice(-1);
-      const trackConditionNumberFormatter = meetRaces.trackCondition.slice(
-        0,
-        -1
-      );
-      return `${trackConditionNumberFormatter}(${trackConditionFormatter}) ${meetRaces.weatherCondition}`;
-    }
+    formattingTrackAndWeatherConditions(meetRaces);
   }, [meetRaces]);
 
   return (
@@ -103,7 +95,9 @@ export const Races: React.FC = () => {
               <Skeleton width={50} />
             )}
           </h1>
-          <h1>{checkForTrackAndWeatherConditions || <Skeleton />}</h1>
+          <h1>
+            {formattingTrackAndWeatherConditions(meetRaces) || <Skeleton />}
+          </h1>
         </div>
         <RaceTable
           runners={race?.runners}

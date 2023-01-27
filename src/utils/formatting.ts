@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import { ethers } from "ethers";
+import { MeetInfo } from "../types/meets";
 import { BetId } from "../types/subgraph";
 
 export const formatToFourDecimals = (amount: string) => {
@@ -98,4 +99,20 @@ export const formatTimeToHMS = (time: string) => {
   return `${prefix}${Math.abs(hours)}h ${Math.abs(minutes)}m ${Math.abs(
     seconds
   )}s`;
+};
+
+export const formattingTrackAndWeatherConditions = (meetRaces: MeetInfo) => {
+  if (!meetRaces?.weatherCondition || !meetRaces.trackCondition) return;
+  const splitForNumberInTrackCondition = meetRaces.trackCondition.split("");
+
+  if (
+    splitForNumberInTrackCondition.includes("3" || "4" || "5" || "6") == false
+  ) {
+    console.log(splitForNumberInTrackCondition, "includes 3,4,5,6");
+    return `${meetRaces.trackCondition} ${meetRaces.weatherCondition}`;
+  } else {
+    const trackConditionFormatter = meetRaces.trackCondition.slice(-1);
+    const trackConditionNumberFormatter = meetRaces.trackCondition.slice(0, -1);
+    return `${trackConditionNumberFormatter}(${trackConditionFormatter}) ${meetRaces.weatherCondition}`;
+  }
 };

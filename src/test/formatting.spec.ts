@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import { MeetInfo } from "../types/meets";
 import utils from "../utils";
 
 test.concurrent.each([
@@ -160,5 +161,98 @@ describe("general formatting tests", () => {
       dateFour.toString()
     );
     expect(dateFourFormatted).toEqual("-1h 30m 0s");
+  });
+
+  it.only("Should return correctly formatted track & weather string", () => {
+    const meetRaces = {
+      meetingName: "TAREE",
+      location: "NSW",
+      raceType: "R",
+      meetingDate: "2023-01-27",
+      prizeMoney: "$222000.00",
+      weatherCondition: "FINE",
+      trackCondition: "SOFT5",
+      railPosition: "True",
+      venueMnemonic: "TRE",
+      raceInfo: [
+        {
+          raceNumber: 1,
+          raceName: "SAXBYS SOFT DRINK CLASS 1 & MAIDEN PLATE",
+          raceClassConditions: "CL1-SW",
+          raceDistance: 2000,
+          raceStartTime: "2023-01-27T02:35:00.000Z",
+          raceStatus: "Paying"
+        },
+        {
+          raceNumber: 2,
+          raceName: "CLUB TAREE MAIDEN HANDICAP",
+          raceClassConditions: "MAIDEN",
+          raceDistance: 1000,
+          raceStartTime: "2023-01-27T03:10:00.000Z",
+          raceStatus: "Paying"
+        },
+        {
+          raceNumber: 3,
+          raceName: "KEL PENFOLD FINANCE BM58 HANDICAP",
+          raceClassConditions: "BM-58",
+          raceDistance: 1000,
+          raceStartTime: "2023-01-27T03:45:00.000Z",
+          raceStatus: "Paying"
+        },
+        {
+          raceNumber: 4,
+          raceName: "XXXX GOLD MAIDEN HANDICAP",
+          raceClassConditions: "MAIDEN",
+          raceDistance: 1600,
+          raceStartTime: "2023-01-27T04:25:00.000Z",
+          raceStatus: "Paying"
+        },
+        {
+          raceNumber: 5,
+          raceName: "AG MOWERS BM58 HANDICAP",
+          raceClassConditions: "BM-58",
+          raceDistance: 1600,
+          raceStartTime: "2023-01-27T05:05:00.000Z",
+          raceStatus: "Normal"
+        },
+        {
+          raceNumber: 6,
+          raceName: "LADIES DAY SUN 19TH FEB MAIDEN PLATE",
+          raceClassConditions: "MDN-SW",
+          raceDistance: 1300,
+          raceStartTime: "2023-01-27T05:40:00.000Z",
+          raceStatus: "Normal"
+        },
+        {
+          raceNumber: 7,
+          raceName: "UNDERWOOD ELECTRICAL BM58 HANDICAP",
+          raceClassConditions: "BM-58",
+          raceDistance: 1300,
+          raceStartTime: "2023-01-27T06:15:00.000Z",
+          raceStatus: "Normal"
+        },
+        {
+          raceNumber: 8,
+          raceName: "MID COAST AUTO GROUP CLASS 1 HANDICAP",
+          raceClassConditions: "CLS1",
+          raceDistance: 1400,
+          raceStartTime: "2023-01-27T06:50:00.000Z",
+          raceStatus: "Normal"
+        }
+      ]
+    };
+    const result =
+      utils.formatting.formattingTrackAndWeatherConditions(meetRaces);
+    const expectedTackCondition = "SOFT(5)";
+    const expectedWeatherCondition = "FINE";
+    expect(result).to.equal(expectedTackCondition, expectedWeatherCondition);
+
+    // const resultTwo =
+    //   utils.formatting.formattingTrackAndWeatherConditions(trackCondition);
+    // const expectedTwo = {
+    //   trackCondition: "GOOD",
+    //   weatherCondition: "FINE"
+    // };
+    // expect(resultTwo.trackCondition).to.equal(expectedTwo.trackCondition);
   });
 });
