@@ -9,7 +9,7 @@ import { useConfig } from "../providers/Config";
 import utils from "../utils";
 import { ethers } from "ethers";
 import { useBetsStatistics } from "../hooks/stats";
-import { useRefactoredSubgraphBets } from "../hooks/subgraph/useRefactoredSubgraphBets";
+import { useSubgraphBets } from "../hooks/subgraph";
 
 export const Bets: React.FC = () => {
   const { totalWinningBets, totalWinningVolume, largestWinningBet } =
@@ -28,8 +28,9 @@ export const Bets: React.FC = () => {
     betData: betHistory,
     currentPage,
     incrementPage,
-    decrementPage
-  } = useRefactoredSubgraphBets(myBetsEnabled, betTableFilter);
+    decrementPage,
+    refetch
+  } = useSubgraphBets(myBetsEnabled, betTableFilter);
 
   useEffect(() => {
     setMyBetsEnabled(isConnected);
@@ -109,7 +110,7 @@ export const Bets: React.FC = () => {
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         selectedBet={selectedBet}
-        refetch={() => {}}
+        refetch={refetch}
         config={config}
       />
     </PageLayout>
