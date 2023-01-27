@@ -101,18 +101,28 @@ export const formatTimeToHMS = (time: string) => {
   )}s`;
 };
 
-export const formattingTrackAndWeatherConditions = (meetRaces: MeetInfo) => {
-  if (!meetRaces?.weatherCondition || !meetRaces.trackCondition) return;
-  const splitForNumberInTrackCondition = meetRaces.trackCondition.split("");
-
-  if (
-    splitForNumberInTrackCondition.includes("3" || "4" || "5" || "6") == false
-  ) {
-    console.log(splitForNumberInTrackCondition, "includes 3,4,5,6");
-    return `${meetRaces.trackCondition} ${meetRaces.weatherCondition}`;
-  } else {
-    const trackConditionFormatter = meetRaces.trackCondition.slice(-1);
-    const trackConditionNumberFormatter = meetRaces.trackCondition.slice(0, -1);
-    return `${trackConditionNumberFormatter}(${trackConditionFormatter}) ${meetRaces.weatherCondition}`;
+export const formattingTrackConditions = (meetRaces: MeetInfo) => {
+  if (!meetRaces) {
+    return;
   }
+  type Lookup = {
+    [key: string]: string;
+  };
+  const lookup: Lookup = {
+    GOOD: "GOOD",
+    GOOD3: "GOOD (3)",
+    GOOD4: "GOOD (4)",
+    FIRM1: "FIRM (1)",
+    FIRM2: "FIRM (2)",
+    SOFT5: "SOFT (5)",
+    SOFT6: "SOFT (6)",
+    SOFT7: "SOFT (7)",
+    HEAVY8: "HEAVY (8)",
+    HEAVY9: "HEAVY (9)",
+    HEAVY10: "HEAVY (10)",
+    SYNTHETIC: "Synthetic",
+    UNKNOWN: "Unknown"
+  };
+
+  return lookup[meetRaces.trackCondition ?? ""] ?? "Unknown";
 };

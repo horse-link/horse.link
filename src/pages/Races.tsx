@@ -4,14 +4,14 @@ import { useRunnersData, useMeetData } from "../hooks/data";
 import { RacesButton } from "../components/Buttons";
 import { RaceTable, BetTable } from "../components/Tables";
 import { PlaceBetModal, SettleBetModal } from "../components/Modals";
-import { MeetInfo, Runner } from "../types/meets";
+import { Runner } from "../types/meets";
 import { PageLayout } from "../components";
 import { useSubgraphBets } from "../hooks/subgraph";
 import { BetHistory } from "../types/bets";
 import { makeMarketId } from "../utils/markets";
 import {
   formatBytes16String,
-  formattingTrackAndWeatherConditions
+  formattingTrackConditions
 } from "../utils/formatting";
 import { useConfig } from "../providers/Config";
 import Skeleton from "react-loading-skeleton";
@@ -22,7 +22,7 @@ export const Races: React.FC = () => {
   const params = useParams();
   const track = params.track || "";
   const raceNumber = Number(params.number) || 0;
-  const meetRaces = useMeetData(params.track || "");
+  const meetRaces = useMeetData(params.track || "") ?? undefined;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSettleModalOpen, setIsSettleModalOpen] = useState(false);
@@ -44,7 +44,6 @@ export const Races: React.FC = () => {
     b16MarketId
   );
 
-  console.log(1111111, meetRaces);
   const margin = useMemo(() => {
     if (!race || !race.runners.length) return;
 
@@ -55,9 +54,12 @@ export const Races: React.FC = () => {
     return utils.races.calculateRaceMargin(validRunners.map(r => r.odds));
   }, [race]);
 
-  const checkForTrackAndWeatherConditions = useMemo(() => {
-    formattingTrackAndWeatherConditions(meetRaces);
-  }, [meetRaces]);
+  const checkForTrackConditions = () => {
+    if (!meetRaces) {
+      return;
+    }
+    return formattingTrackConditions(meetRaces);
+  };
 
   return (
     <PageLayout>
@@ -96,7 +98,9 @@ export const Races: React.FC = () => {
             )}
           </h1>
           <h1>
-            {formattingTrackAndWeatherConditions(meetRaces) || <Skeleton />}
+            {`${checkForTrackConditions()}, ${meetRaces?.weatherCondition}` || (
+              <Skeleton />
+            )}
           </h1>
         </div>
         <RaceTable
