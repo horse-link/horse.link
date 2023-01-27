@@ -11,6 +11,7 @@ import Skeleton from "react-loading-skeleton";
 import { ethers } from "ethers";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { useRefactoredSubgraphBets } from "../../hooks/subgraph/useRefactoredSubgraphBets";
 
 dayjs.extend(relativeTime);
 
@@ -31,6 +32,8 @@ export const BetTable: React.FC<Props> = ({
 }) => {
   const { isConnected } = useAccount();
   const { openWalletModal } = useWalletModal();
+
+  useRefactoredSubgraphBets(true, "ALL_BETS");
 
   const onClickBet = (bet?: BetHistory) => {
     if (!bet) return;

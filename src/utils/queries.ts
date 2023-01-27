@@ -36,9 +36,12 @@ const getOptionalFilterOptions = (filter?: BetFilterOptions) => {
 
 export const getBetsQuery = (
   filter?: SubgraphFilter,
-  statusFilter?: BetFilterOptions
+  statusFilter?: BetFilterOptions,
+  skipMultiplier?: number
 ) => `query GetBets{
   bets(
+    first: 20
+    skip: ${skipMultiplier ? 20 * skipMultiplier : 0}
     where:{
       ${getFiltersFromObject(filter)}
       ${getOptionalFilterOptions(statusFilter)}

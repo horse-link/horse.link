@@ -16,4 +16,5 @@ const ApolloClientProvider: React.FC<{ children: React.ReactNode }> = ({
   children
 }) => <ApolloProvider client={client}>{children}</ApolloProvider>;
 
+export { client as ApolloClient };
 export default ApolloClientProvider;
