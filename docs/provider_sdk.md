@@ -22,9 +22,11 @@ A `Meeting` object representing the details of the soonest meeting.
 
 # Get meetings taking place on a date
 
-# Get runners for a meeting
+#
 
-## Meeting Object
+# OBJECXTS AND TYPES
+
+# Meeting Object
 
 ### id
 
@@ -46,7 +48,7 @@ A date string in the format `YYYY-MM-DD` representing the regional date on which
 
 An array of `Race` objects
 
-## Race object
+# Race object
 
 ### number
 
@@ -70,8 +72,18 @@ A timestamp representing the time at which bets will no longer be accepted
 
 ### status
 
-The status of the race
+The status of the race. One of:
+
+"abandoned"
+"interim"
+"normal"
+"paying"
+"closed"
 
 ### results
 
 An array of `RaceResult` objects
+
+## RaceResult object
+
+TODO

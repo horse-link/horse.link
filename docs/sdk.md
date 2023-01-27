@@ -492,6 +492,8 @@ TODO
 
 TODO
 
+#
+
 ## UserActivity object
 
 TODO
@@ -500,4 +502,30 @@ TODO
 
 ## Bet object
 
-TODO
+### id
+
+The ID of the bet.
+
+### propositionId
+
+The ID of the proposition that was bet on.
+
+### marketId
+
+The ID of the market that the bet was made on.
+
+### amount
+
+The amount of tokens that was bet.
+
+### payout
+
+The amount of tokens that were/could have been paid out.
+
+### won
+
+A boolean indicating whether the bet was successful.
+
+### settled
+
+A boolean indicating whether the bet has been settled.
