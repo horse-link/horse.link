@@ -46,29 +46,29 @@ A date string in the format `YYYY-MM-DD` representing the regional date on which
 
 ### races
 
-An array of `Race` objects
+An array of `Race` objects.
 
 # Race object
 
 ### number
 
-The race number, eg 1
+The race number, eg 1.
 
 ### name
 
-The name of the race
+The name of the race.
 
 ### start
 
-A timestamp representing the race start time
+A timestamp representing the race start time.
 
 ### end
 
-A timestamp representing the race end time
+A timestamp representing the race end time.
 
 ### close
 
-A timestamp representing the time at which bets will no longer be accepted
+A timestamp representing the time at which bets will no longer be accepted.
 
 ### status
 
@@ -82,7 +82,7 @@ The status of the race. One of:
 
 ### results
 
-An array of `RaceResult` objects
+An array of `RaceResult` objects.
 
 ## RaceResult object
 
