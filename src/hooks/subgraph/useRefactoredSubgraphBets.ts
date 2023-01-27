@@ -7,7 +7,7 @@ import {
 import { Aggregator, Bet } from "../../types/subgraph";
 import utils from "../../utils";
 import useSubgraph from "../useSubgraph";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ApolloClient } from "../../providers/Apollo";
 import { gql } from "@apollo/client";
 import api from "../../apis/Api";
@@ -41,8 +41,12 @@ export const useRefactoredSubgraphBets = (
 
     const totalBets = +aggregatorData.aggregator.totalBets;
     const nextMulti = skipMultiplier + 1;
-    if (nextMulti * constants.subgraph.MAX_BET_ENTITIES > totalBets)
-      return setSkipMultiplier(skipMultiplier);
+
+    if (
+      totalBets % (nextMulti * constants.subgraph.MAX_BET_ENTITIES) ===
+      totalBets
+    )
+      return;
 
     setSkipMultiplier(nextMulti);
   }, [aggregatorData, skipMultiplier]);
@@ -51,20 +55,20 @@ export const useRefactoredSubgraphBets = (
     if (!aggregatorData) return;
 
     const previousMulti = skipMultiplier - 1;
-    if (previousMulti * constants.subgraph.MAX_BET_ENTITIES < 0)
-      return setSkipMultiplier(skipMultiplier);
+    if (skipMultiplier === 0) return;
 
     setSkipMultiplier(previousMulti);
   }, [aggregatorData, skipMultiplier]);
 
+  // https://www.developerway.com/posts/fetching-in-react-lost-promises
+  const isActiveRef = useRef(false);
+
   // get bet data
   useEffect(() => {
-    if (!aggregatorData) return;
+    if (!aggregatorData || isActiveRef.current) return;
 
-    // https://www.developerway.com/posts/fetching-in-react-lost-promises
-    let isActive: boolean;
     (async () => {
-      isActive = true;
+      isActiveRef.current = true;
       setBetData(undefined);
 
       const query = gql`
@@ -99,11 +103,12 @@ export const useRefactoredSubgraphBets = (
         betFilterOptions
       );
 
-      if (isActive) setBetData(filteredBets);
+      if (isActiveRef.current) setBetData(filteredBets);
+      isActiveRef.current = false;
     })();
 
     return () => {
-      isActive = false;
+      isActiveRef.current = false;
     };
   }, [
     myBetsEnabled,
@@ -150,6 +155,7 @@ export const useRefactoredSubgraphBets = (
   return {
     betData,
     totalBetsOnPropositions,
+    currentPage: skipMultiplier + 1,
     incrementPage,
     decrementPage
   };

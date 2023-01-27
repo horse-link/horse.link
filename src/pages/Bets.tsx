@@ -24,10 +24,12 @@ export const Bets: React.FC = () => {
 
   const config = useConfig();
 
-  const { betData: betHistory } = useRefactoredSubgraphBets(
-    myBetsEnabled,
-    betTableFilter
-  );
+  const {
+    betData: betHistory,
+    currentPage,
+    incrementPage,
+    decrementPage
+  } = useRefactoredSubgraphBets(myBetsEnabled, betTableFilter);
 
   useEffect(() => {
     setMyBetsEnabled(isConnected);
@@ -84,6 +86,25 @@ export const Bets: React.FC = () => {
         setSelectedBet={setSelectedBet}
         setIsModalOpen={setIsModalOpen}
       />
+      <div className="mt-2 w-full flex justify-end">
+        <div className="w-auto bg-gray-200 flex items-center gap-x-4 px-4 py-2 rounded-lg">
+          <button
+            className="uppercase font-semibold text-gray-600 text-[0.8rem]"
+            onClick={decrementPage}
+          >
+            prev
+          </button>
+          <span className="block uppercase font-semibold text-gray-600 text-[1rem]">
+            {currentPage}
+          </span>
+          <button
+            className="uppercase font-semibold text-gray-600 text-[0.8rem]"
+            onClick={incrementPage}
+          >
+            next
+          </button>
+        </div>
+      </div>
       <SettleBetModal
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
