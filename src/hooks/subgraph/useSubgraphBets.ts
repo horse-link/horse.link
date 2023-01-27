@@ -1,83 +1,130 @@
-import { useEffect, useMemo, useState } from "react";
 import { useAccount } from "wagmi";
-import api from "../../apis/Api";
-import { Bet } from "../../types/subgraph";
-import useSubgraph from "../useSubgraph";
-import utils from "../../utils";
 import {
   BetFilterOptions,
   BetHistory,
   TotalBetsOnPropositions
 } from "../../types/bets";
+import { Aggregator, Bet } from "../../types/subgraph";
+import utils from "../../utils";
+import useSubgraph from "../useSubgraph";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { ApolloClient } from "../../providers/Apollo";
+import { gql } from "@apollo/client";
+import api from "../../apis/Api";
 import { ethers } from "ethers";
 import constants from "../../constants";
+import useRefetch from "../useRefetch";
 
-type Response = {
+type BetResponse = {
   bets: Bet[];
+};
+type AggregatorResponse = {
+  aggregator: Aggregator;
 };
 
 export const useSubgraphBets = (
   myBetsEnabled: boolean,
-  filter: BetFilterOptions,
+  betFilterOptions: BetFilterOptions,
   marketId?: string
 ) => {
   const { address } = useAccount();
-  const [betHistory, setBetHistory] = useState<BetHistory[]>();
+  const { shouldRefetch, refetch } = useRefetch();
 
-  const { data, refetch } = useSubgraph<Response>(
-    utils.queries.getBetsQuery(
-      {
-        owner: myBetsEnabled && address ? address.toLowerCase() : undefined,
-        marketId
-      },
-      filter
-    )
+  const [skipMultiplier, setSkipMultiplier] = useState(0);
+  const [betData, setBetData] = useState<BetHistory[]>();
+
+  // get aggregator data
+  const { data: aggregatorData } = useSubgraph<AggregatorResponse>(
+    utils.queries.getAggregatorQuery()
   );
 
-  // refetch data on page load -- prevents stale data
-  useEffect(() => {
-    const refetchInterval = setInterval(
-      refetch,
-      constants.time.ONE_SECOND_MS * 5
-    );
+  const incrementPage = useCallback(() => {
+    if (!aggregatorData || myBetsEnabled) return;
 
-    return () => clearInterval(refetchInterval);
-  }, [marketId]);
+    const totalBets = +aggregatorData.aggregator.totalBets;
+    const nextMulti = skipMultiplier + 1;
 
+    if (
+      totalBets % (nextMulti * constants.subgraph.MAX_BET_ENTITIES) ===
+      totalBets
+    )
+      return;
+
+    setSkipMultiplier(nextMulti);
+  }, [aggregatorData, skipMultiplier, setSkipMultiplier, myBetsEnabled]);
+
+  const decrementPage = useCallback(() => {
+    if (!aggregatorData || myBetsEnabled) return;
+
+    const previousMulti = skipMultiplier - 1;
+    if (skipMultiplier === 0) return;
+
+    setSkipMultiplier(previousMulti);
+  }, [aggregatorData, skipMultiplier, setSkipMultiplier, myBetsEnabled]);
+
+  // reset page when my bets get toggled
   useEffect(() => {
-    // local variable to prevent setting state after component unmounts
-    // For more information see https://www.developerway.com/posts/fetching-in-react-lost-promises
+    setSkipMultiplier(0);
+    setBetData(undefined);
+  }, [myBetsEnabled]);
+
+  // get bet data
+  useEffect(() => {
+    // https://www.developerway.com/posts/fetching-in-react-lost-promises
     let isActive = true;
-    const missingRequiredParam = myBetsEnabled && !address;
-    if (!data || missingRequiredParam) return;
-    setBetHistory(undefined);
 
-    Promise.all(
-      data.bets.map<Promise<BetHistory>>(async bet => {
-        const signedBetData = await api.getWinningResultSignature(
-          utils.formatting.parseBytes16String(bet.marketId)
+    if (!aggregatorData) return;
+    setBetData(undefined);
+
+    const query = gql`
+      ${utils.queries.getBetsQuery(
+        {
+          owner: myBetsEnabled && address ? address.toLowerCase() : undefined,
+          marketId
+        },
+        betFilterOptions,
+        skipMultiplier
+      )}
+    `;
+
+    ApolloClient.query<BetResponse>({
+      query
+    }).then(({ data: { bets } }) => {
+      Promise.all(
+        bets.map(async bet => {
+          const signedData = await api.getWinningResultSignature(
+            utils.formatting.parseBytes16String(bet.marketId)
+          );
+
+          return utils.bets.getBetHistory(bet, signedData);
+        })
+      ).then(betsWithApiData => {
+        const filteredBets = utils.bets.filterBetsByFilterOptions(
+          betsWithApiData,
+          betFilterOptions
         );
 
-        return utils.bets.getBetHistory(bet, signedBetData);
-      })
-    ).then(async bets => {
-      const betsByFilterOptions = utils.bets.filterBetsByFilterOptions(
-        bets,
-        filter
-      );
-      isActive && setBetHistory(betsByFilterOptions);
+        if (isActive) setBetData(filteredBets);
+      });
     });
 
     return () => {
-      // local variable from above
       isActive = false;
     };
-  }, [data, address, filter, marketId]);
+  }, [
+    myBetsEnabled,
+    betFilterOptions,
+    marketId,
+    aggregatorData,
+    address,
+    skipMultiplier,
+    shouldRefetch
+  ]);
 
   const totalBetsOnPropositions = useMemo(() => {
-    if (!betHistory) return;
+    if (!betData) return;
 
-    const totalBets = betHistory.reduce((prevObject, bet, _, array) => {
+    const totalBets = betData.reduce((prevObject, bet, _, array) => {
       const proposition = utils.formatting.parseBytes16String(
         bet.propositionId
       );
@@ -105,11 +152,14 @@ export const useSubgraphBets = (
     }, {} as TotalBetsOnPropositions);
 
     return totalBets;
-  }, [betHistory]);
+  }, [betData]);
 
   return {
-    betHistory,
+    betData,
     totalBetsOnPropositions,
-    refetch
+    currentPage: skipMultiplier + 1,
+    refetch,
+    incrementPage,
+    decrementPage
   };
 };
