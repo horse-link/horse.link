@@ -32,9 +32,8 @@ export const WalletModal: React.FC<Props> = (props: Props) => {
   return (
     <BaseModal isOpen={isModalOpen} onClose={closeWalletModal}>
       <div className="text-center sm:w-auto md:w-96">
-        {false &&
-          currentChain?.name.toLowerCase() !==
-            constants.blockchain.GOERLI_NETWORK.name.toLowerCase() &&
+        {currentChain?.name.toLowerCase() !==
+          constants.blockchain.GOERLI_NETWORK.name.toLowerCase() &&
           isConnected && (
             <span className="block mb-4 text-red-600 font-semibold">
               Please connect to Goerli to use Horse Link
