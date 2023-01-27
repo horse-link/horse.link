@@ -19,14 +19,14 @@ export const WalletModal: React.FC<Props> = (props: Props) => {
   useEffect(() => {
     if (!isConnected || !currentChain || !switchNetwork) return;
 
-    /*if (
+    if (
       currentChain.name.toLowerCase() !==
       constants.blockchain.GOERLI_NETWORK.name.toLowerCase()
     ) {
       switchNetwork(constants.blockchain.GOERLI_NETWORK.id);
     } else {
       closeWalletModal();
-    }*/
+    }
   }, [isConnected, currentChain, switchNetwork]);
 
   return (
