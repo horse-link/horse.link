@@ -2,8 +2,141 @@
 
 ## Index
 
+- [HORSELINK SDK](#horselink-sdk)
+  - [Index](#index)
 - [Getting started](#getting-started)
--
+  - [Options object](#options-object)
+    - [provider](#provider)
+    - [apiRoot](#apiroot)
+    - [subLinkConfig](#sublinkconfig)
+- [PLATFORM](#platform)
+- [Get configuration](#get-configuration)
+  - [Parameters](#parameters)
+  - [Returns](#returns)
+- [Get total in play](#get-total-in-play)
+  - [Parameters](#parameters-1)
+  - [Returns](#returns-1)
+- [Get platform totals](#get-platform-totals)
+  - [Parameters](#parameters-2)
+  - [Returns](#returns-2)
+- [Get platform statistics](#get-platform-statistics)
+  - [Parameters](#parameters-3)
+  - [Returns](#returns-3)
+- [MARKETS](#markets)
+- [Get market contracts](#get-market-contracts)
+  - [Parameters](#parameters-4)
+  - [Returns](#returns-4)
+- [Get details of a market contract](#get-details-of-a-market-contract)
+  - [Parameters](#parameters-5)
+    - [market_address](#market_address)
+  - [Returns](#returns-5)
+- [Get details of all market contracts](#get-details-of-all-market-contracts)
+  - [Parameters](#parameters-6)
+  - [Returns](#returns-6)
+- [Get the result for a market](#get-the-result-for-a-market)
+  - [Parameters](#parameters-7)
+    - [marketId](#marketid)
+  - [Returns](#returns-7)
+- [TOKENS](#tokens)
+- [Get registered asset tokens](#get-registered-asset-tokens)
+  - [Parameters](#parameters-8)
+  - [Returns](#returns-8)
+- [Get a token allowance](#get-a-token-allowance)
+  - [Parameters](#parameters-9)
+    - [tokenAddress](#tokenaddress)
+    - [tokenOwner](#tokenowner)
+    - [tokenSpender](#tokenspender)
+    - [decimals](#decimals)
+  - [Returns](#returns-9)
+- [Request funds from faucet](#request-funds-from-faucet)
+  - [Parameters](#parameters-10)
+    - [tokenAddress](#tokenaddress-1)
+    - [recipientAddress](#recipientaddress)
+  - [Action](#action)
+  - [Returns](#returns-10)
+- [BETS](#bets)
+- [Get bets](#get-bets)
+  - [Parameters](#parameters-11)
+    - [user address](#user-address)
+    - [filter](#filter)
+  - [Returns](#returns-11)
+- [Get odds](#get-odds)
+  - [Parameters](#parameters-12)
+    - [marketContractAddress](#marketcontractaddress)
+    - [propositionId](#propositionid)
+    - [wagerAmount](#wageramount)
+  - [Returns](#returns-12)
+- [Get potential payout](#get-potential-payout)
+  - [Parameters](#parameters-13)
+    - [marketContractAddress](#marketcontractaddress-1)
+    - [propositionId](#propositionid-1)
+    - [wagerAmount](#wageramount-1)
+    - [odds](#odds)
+  - [Returns](#returns-13)
+- [VAULTS](#vaults)
+- [Get registered vault contracts](#get-registered-vault-contracts)
+  - [Parameters](#parameters-14)
+  - [Returns](#returns-14)
+- [Get vault performance](#get-vault-performance)
+  - [Parameters](#parameters-15)
+    - [vaultAddress](#vaultaddress)
+  - [Returns](#returns-15)
+- [Get vault liquidity](#get-vault-liquidity)
+  - [Parameters](#parameters-16)
+    - [vaultAddress](#vaultaddress-1)
+  - [Returns](#returns-16)
+- [Get vault statistics](#get-vault-statistics)
+  - [Parameters](#parameters-17)
+    - [vaultAddress](#vaultaddress-2)
+    - [investorAddress](#investoraddress)
+  - [Returns](#returns-17)
+- [Get vault history](#get-vault-history)
+  - [Parameters](#parameters-18)
+    - [vaultAddress](#vaultaddress-3)
+  - [Returns](#returns-18)
+- [USERS](#users)
+- [Get user statistics](#get-user-statistics)
+  - [Parameters](#parameters-19)
+    - [userAddress](#useraddress)
+  - [Returns](#returns-19)
+- [Objects](#objects)
+  - [Config object](#config-object)
+    - [Attributes](#attributes)
+  - [MarketContract object](#marketcontract-object)
+    - [address](#address)
+    - [name](#name)
+    - [vaultAddress](#vaultaddress-4)
+  - [SignedBetData object](#signedbetdata-object)
+    - [marketResultAdded](#marketresultadded)
+    - [winningPropositionId](#winningpropositionid)
+    - [marketOracleResultSig](#marketoracleresultsig)
+  - [VaultStatistics object](#vaultstatistics-object)
+    - [liquidity](#liquidity)
+    - [userBalance](#userbalance)
+    - [userPerformance](#userperformance)
+    - [assetTokenAddress](#assettokenaddress)
+  - [PlatformStatistics object](#platformstatistics-object)
+    - [totalInPlay](#totalinplay)
+    - [totalPerformance](#totalperformance)
+    - [totalExposure](#totalexposure)
+  - [VaultActivity object](#vaultactivity-object)
+    - [activityType](#activitytype)
+    - [amount](#amount)
+    - [actorAddress](#actoraddress)
+    - [timestamp](#timestamp)
+  - [UserStatistics object](#userstatistics-object)
+    - [totalDeposited](#totaldeposited)
+    - [inPlay](#inplay)
+    - [pnl](#pnl)
+    - [lastUpdate](#lastupdate)
+  - [Bet object](#bet-object)
+    - [id](#id)
+    - [propositionId](#propositionid-2)
+    - [marketId](#marketid-1)
+    - [amount](#amount-1)
+    - [payout](#payout)
+    - [won](#won)
+    - [settled](#settled)
 
 # Getting started
 
@@ -11,11 +144,21 @@
 const hl = new HorseLink(options);
 ```
 
+To instantiate the HorseLink SDK, you must pass an `options` object to the `HorseLink` constructor.
+
 ## Options object
 
 ### provider
 
 The Ethereum provider to use. Defaults to `window.ethereum` if available.
+
+### apiRoot
+
+Base URL for the HorseLink API, if this is in use. Defaults to `https://horse.link/api`.
+
+### subLinkConfig
+
+Settings for HorseLink SubLink, id in use.
 
 # PLATFORM
 
@@ -418,11 +561,19 @@ An array of `UserActivity` objects containing historical data for the specified 
 - Markets
 - Vaults
 
-#
-
 ## MarketContract object
 
-#
+### address
+
+Address of the Market contract.
+
+### name
+
+Name of the Market.
+
+### vaultAddress
+
+Address of the Market's Vault contract.
 
 ## SignedBetData object
 
@@ -437,8 +588,6 @@ The ID of the winning proposition.
 ### marketOracleResultSig
 
 The signature of the market result, in the form of a `Signature` object.
-
-#
 
 ## VaultStatistics object
 
@@ -458,19 +607,41 @@ A string representing the performance of the specified vault for the specified i
 
 The address of the ERC-20 token used as an underlying asset in the specified vault.
 
-#
-
 ## PlatformStatistics object
 
-TODO
+### totalInPlay
 
-#
+Total asset tokens in play across all markets.
+
+### totalPerformance
+
+Total performance across all vaults.
+
+### totalExposure
+
+Total asset tokens sent from vault to market contracts that may be lost.
 
 ## VaultActivity object
 
-TODO
+### activityType
 
-#
+The type of activity. Can be one of the following:
+
+- `deposit` - Deposit of asset tokens into the vault.
+- `redeem` - Redemption of vault shares for asset tokens from the vault.
+- `collateralize` - Supply of collateral tokens to the market.
+
+### amount
+
+The amount of tokens involved in the activity.
+
+### actorAddress
+
+The address of the actor that performed the activity.
+
+### timestamp
+
+The timestamp of the activity.
 
 ## UserStatistics object
 
@@ -481,8 +652,6 @@ TODO
 ### pnl
 
 ### lastUpdate
-
-#
 
 ## Bet object
 
