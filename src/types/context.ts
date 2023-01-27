@@ -1,6 +1,11 @@
 import { MarketInfo } from "./config";
 import { Back, RaceData, Runner } from "./meets";
 
+export type BetSlipErrorEntry = {
+  bet: Omit<BetSlipEntry, "id">;
+  errorMessage: string;
+};
+
 export type BetSlipEntry = {
   id: number;
   market: MarketInfo;
@@ -20,6 +25,7 @@ export type BetSlipContextType = {
   txLoading: boolean;
   hashes?: string[];
   bets?: BetSlipEntry[];
+  errors?: BetSlipErrorEntry[];
   addBet: (bet: Omit<BetSlipEntry, "id">) => void;
   removeBet: (id: number) => void;
   clearBets: () => void;
