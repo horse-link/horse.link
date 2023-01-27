@@ -1,3 +1,5 @@
+This document describes the API for data providers for HorseLink. This needs some careful thought and design, thus it is largely a placeholder for now.
+
 # Get meetings
 
 ```ts
@@ -22,9 +24,7 @@ A `Meeting` object representing the details of the soonest meeting.
 
 # Get meetings taking place on a date
 
-#
-
-# OBJECXTS AND TYPES
+# OBJECTS AND TYPES
 
 # Meeting Object
 
@@ -74,11 +74,11 @@ A timestamp representing the time at which bets will no longer be accepted
 
 The status of the race. One of:
 
-"abandoned"
-"interim"
-"normal"
-"paying"
-"closed"
+- "abandoned"
+- "interim"
+- "normal"
+- "paying"
+- "closed"
 
 ### results
 
