@@ -150,8 +150,8 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
 
         setTxLoading(false);
       })
-      .catch(e => {
-        const err = (e as any).reason as string;
+      .catch((e: any) => {
+        const err = e.reason as string;
         switch (true) {
           case err.includes("date"):
             setError("One or more bets have an invalid date");
