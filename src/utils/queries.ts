@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
 import { BetFilterOptions } from "../types/bets";
 import { SubgraphFilter } from "../types/subgraph";
+import constants from "../constants";
 
 const getFiltersFromObject = (filter?: SubgraphFilter) => {
   if (!filter) return "";
@@ -37,11 +38,11 @@ const getOptionalFilterOptions = (filter?: BetFilterOptions) => {
 export const getBetsQuery = (
   filter?: SubgraphFilter,
   statusFilter?: BetFilterOptions,
-  skipMultiplier?: number
+  skipMultiplier = 0
 ) => `query GetBets{
   bets(
-    first: 20
-    skip: ${skipMultiplier ? 20 * skipMultiplier : 0}
+    first: ${constants.subgraph.MAX_BET_ENTITIES}
+    skip: ${constants.subgraph.MAX_BET_ENTITIES * skipMultiplier}
     where:{
       ${getFiltersFromObject(filter)}
       ${getOptionalFilterOptions(statusFilter)}

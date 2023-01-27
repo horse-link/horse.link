@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
-import { useSubgraphBets } from "../hooks/subgraph";
 import { Toggle, PageLayout, Card } from "../components";
 import { BetFilterGroup } from "../components/Bets";
 import { BetTable } from "../components/Tables";
@@ -10,6 +9,7 @@ import { useConfig } from "../providers/Config";
 import utils from "../utils";
 import { ethers } from "ethers";
 import { useBetsStatistics } from "../hooks/stats";
+import { useRefactoredSubgraphBets } from "../hooks/subgraph/useRefactoredSubgraphBets";
 
 export const Bets: React.FC = () => {
   const { totalWinningBets, totalWinningVolume, largestWinningBet } =
@@ -24,7 +24,7 @@ export const Bets: React.FC = () => {
 
   const config = useConfig();
 
-  const { betHistory, refetch } = useSubgraphBets(
+  const { betData: betHistory } = useRefactoredSubgraphBets(
     myBetsEnabled,
     betTableFilter
   );
@@ -88,7 +88,7 @@ export const Bets: React.FC = () => {
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         selectedBet={selectedBet}
-        refetch={refetch}
+        refetch={() => {}}
         config={config}
       />
     </PageLayout>
