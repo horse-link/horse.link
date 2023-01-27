@@ -38,11 +38,11 @@ export const Races: React.FC = () => {
   const marketId = makeMarketId(new Date(), track, raceNumber.toString());
   const b16MarketId = formatBytes16String(marketId);
 
-  const { betHistory, totalBetsOnPropositions, refetch } = useSubgraphBets(
-    false,
-    "ALL_BETS",
-    b16MarketId
-  );
+  const {
+    betData: betHistory,
+    totalBetsOnPropositions,
+    refetch
+  } = useSubgraphBets(false, "ALL_BETS", b16MarketId);
 
   const margin = useMemo(() => {
     if (!race || !race.runners.length) return;

@@ -1,2 +1,2 @@
-export * from "./useSubgraphBets";
 export * from "./useSubgraphVaults";
+export * from "./useSubgraphBets";
