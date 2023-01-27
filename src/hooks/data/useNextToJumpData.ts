@@ -1,12 +1,12 @@
 import { useMemo } from "react";
 import { NextToJump } from "../../types/meets";
 import useSwr from "../useSwr";
+import constants from "../../constants";
 
 export const useNextToJumpData = () => {
-  const ONE_SECOND = 1000;
   const { data, isLoading, error } = useSwr<NextToJump[]>(
     "/meetings/next",
-    ONE_SECOND * 15
+    constants.time.ONE_SECOND_MS * 15
   );
 
   const nextMeets = useMemo(() => {
