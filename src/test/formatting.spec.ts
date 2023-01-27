@@ -1,5 +1,4 @@
 import dayjs from "dayjs";
-import { MeetInfo } from "../types/meets";
 import utils from "../utils";
 
 test.concurrent.each([
