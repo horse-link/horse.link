@@ -48,6 +48,20 @@ export type Race = {
   results?: number[];
 };
 
+export type RaceData = {
+  raceData: {
+    name: string;
+    distance: number;
+    class: string;
+    hasOdds: boolean;
+  };
+  track: {
+    name: string;
+    code: string;
+  };
+  runners: Runner[];
+};
+
 export type SignedRunnersResponse = {
   data: {
     raceData: {
