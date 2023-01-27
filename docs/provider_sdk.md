@@ -40,7 +40,7 @@ The mnemonic identifer for the location of the meeting.
 
 ### date
 
-A date string in the format `YYYY-MM-YY` representing the regional date on which the meeting will occur.
+A date string in the format `YYYY-MM-DD` representing the regional date on which the meeting will occur.
 
 ### races
 
