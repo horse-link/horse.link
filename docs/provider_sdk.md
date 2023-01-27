@@ -1,6 +1,6 @@
 # Get meetings
 
-```js
+```ts
 const meetings: Meeting[] = await hl.getMeetings();
 ```
 
@@ -10,7 +10,7 @@ An array of `Meeting` objects representing the details of all meetings taking pl
 
 # Get next meeting
 
-```js
+```ts
 const meeting: Meeting = await hl.getNextMeeting();
 ```
 

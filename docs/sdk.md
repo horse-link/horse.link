@@ -15,7 +15,7 @@ const hl = new HorseLink(options);
 
 ### provider
 
-The Ethereum provider to use. Defaults to `window.ethereum` if available.ß
+The Ethereum provider to use. Defaults to `window.ethereum` if available.
 
 # PLATFORM
 
@@ -47,7 +47,7 @@ None
 
 ## Returns
 
-Returns a numeric string represending the total amount of asset tokens deposited as bets intothe specified Market contract, formatted with the correct number of decimals for the ERC-20 asset token used in the specified market, eg `"1000.123456"`
+Returns a numeric string represending the total amount of asset tokens deposited as bets into the specified Market contract, formatted with the correct number of decimals for the ERC-20 asset token used in the specified market, eg `"1000.123456"`.
 
 # Get platform totals
 
@@ -81,7 +81,7 @@ A `PlatformStatistics` object containing aggregated statistics for all registere
 
 # Get market contracts
 
-```js
+```ts
 const marketAddresses = await hl.getMarketAddresses();
 ```
 
@@ -95,7 +95,7 @@ Returns an array of address for all registered market contracts.
 
 # Get details of a market contract
 
-```js
+```ts
 const market: MarketContract = await hl.getMarket("0x123...456");
 ```
 
@@ -111,7 +111,7 @@ A `MarketContract` object representing the details of the requested market contr
 
 # Get details of all market contracts
 
-```js
+```ts
 const markets: MarketContract[] = await hl.getMarkets();
 ```
 
@@ -125,7 +125,7 @@ An array of `MarketContract` objects representing the details of all registered 
 
 # Get the result for a market
 
-```js
+```ts
 const result: SignedBetData = await hl.getMarketResult(marketId);
 ```
 
@@ -149,7 +149,7 @@ const history: MarketContractActivity[] = await hl.getMarketContractHistory(mark
 
 ### marketContractAddress
 
-The address of a market contract
+The address of a market contract.
 
 ## Returns
 
@@ -159,13 +159,13 @@ An array of `MarketContractActivity` objects containing historical data for the 
 
 # Get registered asset tokens
 
-```js
+```ts
 const assetTokens: string[] = await hl.getRegisteredAssetTokens();
 ```
 
 ## Parameters
 
-None
+None.
 
 ## Returns
 
@@ -173,7 +173,7 @@ An array of addresses for all registered asset tokens.
 
 # Get a token allowance
 
-```js
+```ts
 const allowance: string = await hl.getMarketAllowance(
   tokenAddress,
   tokenOwner,
@@ -186,15 +186,15 @@ const allowance: string = await hl.getMarketAllowance(
 
 ### tokenAddress
 
-The address of an ERC-20 token
+The address of an ERC-20 token.
 
 ### tokenOwner
 
-A wallet address
+A wallet address.
 
 ### tokenSpender
 
-The address of a wallet which has an allowance to spend `tokenOwner`'s tokens
+The address of a wallet which has an allowance to spend `tokenOwner`'s tokens.
 
 ### decimals
 
@@ -202,11 +202,11 @@ Format the response with a given number of decimals points.
 
 ## Returns
 
-A string representing a number of tokens that `tokenSpender` can spend on behalf of `tokenOwner`, eg `1000.123456`
+A string representing a number of tokens that `tokenSpender` can spend on behalf of `tokenOwner`, eg `1000.123456`.
 
 # Request funds from faucet
 
-```js
+```ts
 const txHash: string = await hl.requestFunds(tokenAddress, recipientAddress);
 ```
 
@@ -232,7 +232,7 @@ A transaction hash.
 
 # Get bets
 
-```js
+```ts
 const bets: Bet[] = await hl.getBets(userAddress, filter);
 ```
 
@@ -240,7 +240,7 @@ const bets: Bet[] = await hl.getBets(userAddress, filter);
 
 ### user address
 
-The address of a user
+The address of a user.
 
 ### filter
 
@@ -256,7 +256,7 @@ An array of `Bet` objects representing bets made by the specified user.
 
 # Get odds
 
-```js
+```ts
 const odds: string = await hl.getOdds(
   marketContractAddress,
   propositionId,
@@ -268,25 +268,25 @@ const odds: string = await hl.getOdds(
 
 ### marketContractAddress
 
-The address of a MarketContract
+The address of a MarketContract.
 
 ### propositionId
 
-The id of a proposition that can be bet on
+The id of a proposition that can be bet on.
 
 ### wagerAmount
 
-The amount of tokens to bet
+The amount of tokens to bet.
 
 ## Returns
 
-A numeric string representing the odds that would be given for this proposition, expressed as a positive number, where 1 x 10^6 represents decimal odds of 1.0, eg `1234567` for decimal odds of `1.234567`
+A numeric string representing the odds that would be given for this proposition, expressed as a positive number, where 1 x 10^6 represents decimal odds of 1.0, eg `1234567` for decimal odds of `1.234567`.
 
 # Get potential payout
 
 For a hypothetical bet on a proposition with the specified odds, what would the payout be if the bet was successful?
 
-```js
+```ts
 const payout: string = await hl.getPayout(
   marketContractAddress,
   propositionId,
@@ -299,23 +299,23 @@ const payout: string = await hl.getPayout(
 
 ### marketContractAddress
 
-The address of a MarketContract
+The address of a MarketContract.
 
 ### propositionId
 
-The id of a proposition that can be bet on
+The id of a proposition that can be bet on.
 
 ### wagerAmount
 
-The amount of tokens to bet
+The amount of tokens to bet.
 
 ### odds
 
-The odds of the proposition, expressed as a positive number, where 1 x 10^6 represents decimal odds of 1.0
+The odds of the proposition, expressed as a positive number, where `1 x 10^6` represents decimal odds of `1.0`.
 
 ## Returns
 
-A string representing the potential payout of a bet in tokens, formatted with the correct number of decimals for the ERC token used in the specified market, eg `1000.123456`
+A string representing the potential payout of a bet in tokens, formatted with the correct number of decimals for the ERC token used in the specified market, eg `1000.123456`.
 
 # VAULTS
 
@@ -345,15 +345,15 @@ const performancePercentage: string = await hl.getVaultPerformance(
 
 ### vaultAddress
 
-The address of a vault contract
+The address of a vault contract.
 
 ## Returns
 
-A string representing the performance of the specified vault, expressed as a percentage, eg `120.123456`
+A string representing the performance of the specified vault, expressed as a percentage, eg `120.123456`.
 
 # Get vault liquidity
 
-```js
+```ts
 const liquidity: string = await hl.getVaultLiquidity(vaultAddress);
 ```
 
@@ -361,11 +361,11 @@ const liquidity: string = await hl.getVaultLiquidity(vaultAddress);
 
 ### vaultAddress
 
-The address of a vault contract
+The address of a vault contract.
 
 ## Returns
 
-A numeric string representing the number of asset tokens underlying shares for the specified vault, using the correct number of decimals for the ERC-20 token used in the specified vault, eg `10099990.123456`
+A numeric string representing the number of asset tokens underlying shares for the specified vault, using the correct number of decimals for the ERC-20 token used in the specified vault, eg `10099990.123456`.
 
 # Get vault statistics
 
@@ -380,11 +380,11 @@ const statistics: VaultStatistics = await hl.getVaultStats(
 
 ### vaultAddress
 
-The address of a vault contract
+The address of a vault contract.
 
 ### investorAddress
 
-The address of an investor
+The address of an investor.
 
 ## Returns
 
@@ -400,7 +400,7 @@ const history: VaultActivity[] = await hl.getVaultHistory(vaultAddress);
 
 ### vaultAddress
 
-The address of a vault contract
+The address of a vault contract.
 
 ## Returns
 
@@ -418,7 +418,7 @@ const history: UserActivity[] = await hl.getUserHistory(userAddress);
 
 ### userAddress
 
-The address of a user
+The address of a user.
 
 ## Returns
 
@@ -460,19 +460,19 @@ The signature of the market result, in the form of a `Signature` object.
 
 ### liquidity
 
-A numeric string representing the number of asset tokens underlying shares for the specified vault, using the correct number of decimals for the ERC-20 token used in the specified vault, eg `10099990.123456`
+A numeric string representing the number of asset tokens underlying shares for the specified vault, using the correct number of decimals for the ERC-20 token used in the specified vault, eg `10099990.123456`.
 
 ### userBalance
 
-A numeric string representing the number of shares held by the specified investor, using the correct number of decimals for the ERC-20 token used in the specified vault, eg `10099990.123456`
+A numeric string representing the number of shares held by the specified investor, using the correct number of decimals for the ERC-20 token used in the specified vault, eg `10099990.123456`.
 
 ### userPerformance
 
-A string representing the performance of the specified vault for the specified investor, expressed as a percentage, eg `120.123456`
+A string representing the performance of the specified vault for the specified investor, expressed as a percentage, eg `120.123456`.
 
 ### assetTokenAddress
 
-The address of the ERC-20 token used as an underlying asset in the specified vault
+The address of the ERC-20 token used as an underlying asset in the specified vault.
 
 #
 
