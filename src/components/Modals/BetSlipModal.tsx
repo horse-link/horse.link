@@ -189,7 +189,9 @@ export const BetSlipModal: React.FC<Props> = ({ isOpen, onClose }) => {
           {errors && errors.length && (
             <div className="mt-6 bg-red-600 text-white py-4 flex flex-col items-center">
               {errors.map(e => (
-                <span className="block w-full">{e.errorMessage}</span>
+                <span key={`error-${e.bet.timestamp}`} className="block w-full">
+                  {e.errorMessage}
+                </span>
               ))}
             </div>
           )}
