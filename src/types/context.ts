@@ -25,7 +25,7 @@ export type BetSlipContextType = {
   txLoading: boolean;
   hashes?: string[];
   bets?: BetSlipEntry[];
-  errors?: BetSlipErrorEntry[];
+  error?: string;
   addBet: (bet: Omit<BetSlipEntry, "id">) => void;
   removeBet: (id: number) => void;
   clearBets: () => void;

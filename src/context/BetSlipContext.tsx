@@ -7,11 +7,7 @@ import {
   useMemo,
   useState
 } from "react";
-import {
-  BetSlipContextType,
-  BetSlipEntry,
-  BetSlipErrorEntry
-} from "../types/context";
+import { BetSlipContextType, BetSlipEntry } from "../types/context";
 import { useMarketContract } from "../hooks/contracts";
 import { useSigner } from "wagmi";
 import { BetSlipModal } from "../components/Modals";
@@ -25,11 +21,11 @@ export const BetSlipContext = createContext<BetSlipContextType>({
   txLoading: false,
   hashes: undefined,
   bets: undefined,
-  errors: undefined,
+  error: undefined,
   addBet: () => {},
   removeBet: () => {},
   clearBets: () => {},
-  placeBets: async () => [],
+  placeBets: () => {},
   openModal: () => {}
 });
 
@@ -45,7 +41,7 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
   const [bets, setBets] = useState<BetSlipEntry[]>();
   const [txLoading, setTxLoading] = useState(false);
   const [hashes, setHashes] = useState<string[]>();
-  const [errors, setErrors] = useState<BetSlipErrorEntry[]>();
+  const [error, setError] = useState<string>();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -89,7 +85,7 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
 
   const clearBets = useCallback(() => {
     setBets(undefined);
-    setErrors(undefined);
+    setError(undefined);
     localStorage.removeItem(LOCAL_STORAGE_KEY);
   }, [bets]);
 
@@ -115,64 +111,58 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
     [bets]
   );
 
-  const addError = useCallback(
-    (error: BetSlipErrorEntry) => {
-      if (!errors || !errors.length) return setErrors([error]);
-
-      const newState = [...errors, error];
-      setErrors(newState);
-    },
-    [errors]
-  );
-
-  const placeBets = useCallback(async () => {
+  const placeBets = useCallback(() => {
     // if there are no bets, or signer, do nothing
     if (!bets?.length || !signer || !config) return;
 
     setTxLoading(true);
     setHashes(undefined);
-    try {
-      const ERROR_VALUE = "error";
-      const hashes = await Promise.all(
-        bets.map(bet => {
-          const vault = utils.config.getVaultFromMarket(bet.market, config);
-          if (!vault)
-            throw new Error(
-              `Could not find vault associated with market, ${bet.market.address}`
-            );
-          const formattedWager = ethers.utils.formatUnits(
-            bet.wager,
-            vault.asset.decimals
+
+    const ERROR_VALUE = "error";
+
+    Promise.all(
+      bets.map(bet => {
+        const vault = utils.config.getVaultFromMarket(bet.market, config);
+        if (!vault)
+          throw new Error(
+            `Could not find vault associated with market, ${bet.market.address}`
           );
+        const formattedWager = ethers.utils.formatUnits(
+          bet.wager,
+          vault.asset.decimals
+        );
 
-          try {
-            return placeBet(
-              bet.market,
-              bet.back,
-              // parse wager into BigNumber
-              ethers.utils.parseUnits(formattedWager, vault.asset.decimals),
-              signer
-            );
-          } catch (e) {
-            addError({
-              bet,
-              errorMessage: JSON.stringify(e)
-            });
-            return ERROR_VALUE;
-          }
-        })
-      );
+        return placeBet(
+          bet.market,
+          bet.back,
+          // parse wager into BigNumber
+          ethers.utils.parseUnits(formattedWager, vault.asset.decimals),
+          signer
+        );
+      })
+    )
+      .then(hashes => {
+        const filteredHashes = hashes.filter(hash => hash !== ERROR_VALUE);
+        if (!filteredHashes.length) return setTxLoading(false);
 
-      const filteredHashes = hashes.filter(hash => hash !== ERROR_VALUE);
-      if (!filteredHashes.length) return;
+        setHashes(filteredHashes);
+        clearBets();
 
-      setHashes(filteredHashes);
-      clearBets();
-    } catch (e: any) {
-      console.error(e);
-    } finally {
-      setTxLoading(false);
-    }
+        setTxLoading(false);
+      })
+      .catch(e => {
+        const err = (e as any).reason as string;
+        switch (true) {
+          case err.includes("date"):
+            setError("One or more bets have an invalid date");
+            break;
+          default:
+            setError(err);
+            break;
+        }
+
+        setTxLoading(false);
+      });
   }, [config, bets, signer, placeBet]);
 
   const openModal = useCallback(() => setIsModalOpen(true), [setIsModalOpen]);
@@ -181,7 +171,7 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
     setIsModalOpen(false);
     setTimeout(() => {
       setHashes(undefined);
-      setErrors(undefined);
+      setError(undefined);
     }, 300);
   }, [setIsModalOpen]);
 
@@ -190,7 +180,7 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
       txLoading,
       hashes,
       bets,
-      errors,
+      error,
       addBet,
       removeBet,
       clearBets,
@@ -201,7 +191,7 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
       txLoading,
       hashes,
       bets,
-      errors,
+      error,
       addBet,
       removeBet,
       clearBets,

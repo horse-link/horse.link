@@ -18,7 +18,7 @@ type Props = {
 
 export const BetSlipModal: React.FC<Props> = ({ isOpen, onClose }) => {
   const config = useConfig();
-  const { bets, hashes, txLoading, errors } = useBetSlipContext();
+  const { bets, hashes, txLoading, error } = useBetSlipContext();
   const { data: signer } = useSigner();
   const { getPotentialPayout } = useMarketContract();
 
@@ -186,13 +186,9 @@ export const BetSlipModal: React.FC<Props> = ({ isOpen, onClose }) => {
           <div className="mt-6">
             <SubmitBetsButton />
           </div>
-          {errors && errors.length && (
-            <div className="mt-6 bg-red-600 text-white py-4 flex flex-col items-center">
-              {errors.map(e => (
-                <span key={`error-${e.bet.timestamp}`} className="block w-full">
-                  {e.errorMessage}
-                </span>
-              ))}
+          {error && (
+            <div className="mt-6 rounded-lg bg-red-600 text-white py-4 flex flex-col items-center text-sm">
+              {error}
             </div>
           )}
         </div>
