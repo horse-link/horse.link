@@ -1,143 +1,5 @@
 # HORSELINK SDK
 
-## Index
-
-- [HORSELINK SDK](#horselink-sdk)
-  - [Index](#index)
-- [Getting started](#getting-started)
-  - [Options object](#options-object)
-    - [provider](#provider)
-    - [apiRoot](#apiroot)
-    - [subLinkConfig](#sublinkconfig)
-- [PLATFORM](#platform)
-- [Get configuration](#get-configuration)
-  - [Parameters](#parameters)
-  - [Returns](#returns)
-- [Get total in play](#get-total-in-play)
-  - [Parameters](#parameters-1)
-  - [Returns](#returns-1)
-- [Get platform totals](#get-platform-totals)
-  - [Parameters](#parameters-2)
-  - [Returns](#returns-2)
-- [Get platform statistics](#get-platform-statistics)
-  - [Parameters](#parameters-3)
-  - [Returns](#returns-3)
-- [MARKETS](#markets)
-- [Get market contracts](#get-market-contracts)
-  - [Parameters](#parameters-4)
-  - [Returns](#returns-4)
-- [Get details of a market contract](#get-details-of-a-market-contract)
-  - [Parameters](#parameters-5)
-    - [market_address](#market_address)
-  - [Returns](#returns-5)
-- [Get details of all market contracts](#get-details-of-all-market-contracts)
-  - [Parameters](#parameters-6)
-  - [Returns](#returns-6)
-- [Get the result for a market](#get-the-result-for-a-market)
-  - [Parameters](#parameters-7)
-    - [marketId](#marketid)
-  - [Returns](#returns-7)
-- [TOKENS](#tokens)
-- [Get registered asset tokens](#get-registered-asset-tokens)
-  - [Parameters](#parameters-8)
-  - [Returns](#returns-8)
-- [Get a token allowance](#get-a-token-allowance)
-  - [Parameters](#parameters-9)
-    - [tokenAddress](#tokenaddress)
-    - [tokenOwner](#tokenowner)
-    - [tokenSpender](#tokenspender)
-    - [decimals](#decimals)
-  - [Returns](#returns-9)
-- [Request funds from faucet](#request-funds-from-faucet)
-  - [Parameters](#parameters-10)
-    - [tokenAddress](#tokenaddress-1)
-    - [recipientAddress](#recipientaddress)
-  - [Action](#action)
-  - [Returns](#returns-10)
-- [BETS](#bets)
-- [Get bets](#get-bets)
-  - [Parameters](#parameters-11)
-    - [user address](#user-address)
-    - [filter](#filter)
-  - [Returns](#returns-11)
-- [Get odds](#get-odds)
-  - [Parameters](#parameters-12)
-    - [marketContractAddress](#marketcontractaddress)
-    - [propositionId](#propositionid)
-    - [wagerAmount](#wageramount)
-  - [Returns](#returns-12)
-- [Get potential payout](#get-potential-payout)
-  - [Parameters](#parameters-13)
-    - [marketContractAddress](#marketcontractaddress-1)
-    - [propositionId](#propositionid-1)
-    - [wagerAmount](#wageramount-1)
-    - [odds](#odds)
-  - [Returns](#returns-13)
-- [VAULTS](#vaults)
-- [Get registered vault contracts](#get-registered-vault-contracts)
-  - [Parameters](#parameters-14)
-  - [Returns](#returns-14)
-- [Get vault performance](#get-vault-performance)
-  - [Parameters](#parameters-15)
-    - [vaultAddress](#vaultaddress)
-  - [Returns](#returns-15)
-- [Get vault liquidity](#get-vault-liquidity)
-  - [Parameters](#parameters-16)
-    - [vaultAddress](#vaultaddress-1)
-  - [Returns](#returns-16)
-- [Get vault statistics](#get-vault-statistics)
-  - [Parameters](#parameters-17)
-    - [vaultAddress](#vaultaddress-2)
-    - [investorAddress](#investoraddress)
-  - [Returns](#returns-17)
-- [Get vault history](#get-vault-history)
-  - [Parameters](#parameters-18)
-    - [vaultAddress](#vaultaddress-3)
-  - [Returns](#returns-18)
-- [USERS](#users)
-- [Get user statistics](#get-user-statistics)
-  - [Parameters](#parameters-19)
-    - [userAddress](#useraddress)
-  - [Returns](#returns-19)
-- [Objects](#objects)
-  - [Config object](#config-object)
-    - [Attributes](#attributes)
-  - [MarketContract object](#marketcontract-object)
-    - [address](#address)
-    - [name](#name)
-    - [vaultAddress](#vaultaddress-4)
-  - [SignedBetData object](#signedbetdata-object)
-    - [marketResultAdded](#marketresultadded)
-    - [winningPropositionId](#winningpropositionid)
-    - [marketOracleResultSig](#marketoracleresultsig)
-  - [VaultStatistics object](#vaultstatistics-object)
-    - [liquidity](#liquidity)
-    - [userBalance](#userbalance)
-    - [userPerformance](#userperformance)
-    - [assetTokenAddress](#assettokenaddress)
-  - [PlatformStatistics object](#platformstatistics-object)
-    - [totalInPlay](#totalinplay)
-    - [totalPerformance](#totalperformance)
-    - [totalExposure](#totalexposure)
-  - [VaultActivity object](#vaultactivity-object)
-    - [activityType](#activitytype)
-    - [amount](#amount)
-    - [actorAddress](#actoraddress)
-    - [timestamp](#timestamp)
-  - [UserStatistics object](#userstatistics-object)
-    - [totalDeposited](#totaldeposited)
-    - [inPlay](#inplay)
-    - [pnl](#pnl)
-    - [lastUpdate](#lastupdate)
-  - [Bet object](#bet-object)
-    - [id](#id)
-    - [propositionId](#propositionid-2)
-    - [marketId](#marketid-1)
-    - [amount](#amount-1)
-    - [payout](#payout)
-    - [won](#won)
-    - [settled](#settled)
-
 # Getting started
 
 ```ts
@@ -549,17 +411,30 @@ The address of a user.
 
 ## Returns
 
-An array of `UserActivity` objects containing historical data for the specified user.
+A `UserStatistics` object containing statistical data for the specified user.
 
 # Objects
 
 ## Config object
 
-### Attributes
+### addresses
 
-- Addresses
-- Markets
-- Vaults
+An object containing the following attributes:
+
+- registry - The address of the Registry contract.
+- marketOracle - The address of the MarketOracle contract.
+
+### markets
+
+An array of registered `MarketContract` objects
+
+### vaults
+
+An array of registered `Vault` objects
+
+### tokens
+
+An array of addresses for ERC-20 tokens used in registered markets and vaults.
 
 ## MarketContract object
 
