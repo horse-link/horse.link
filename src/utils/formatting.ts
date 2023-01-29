@@ -100,29 +100,24 @@ export const formatTimeToHMS = (time: string) => {
     seconds
   )}s`;
 };
+export const formatTrackCondition = (meetRaces: MeetInfo) => {
+  if (!meetRaces.trackCondition) return;
 
-export const formattingTrackConditions = (meetRaces: MeetInfo) => {
-  if (!meetRaces) {
-    return;
-  }
-  type Lookup = {
-    [key: string]: string;
-  };
-  const lookup: Lookup = {
-    GOOD: "GOOD",
-    GOOD3: "GOOD (3)",
-    GOOD4: "GOOD (4)",
-    FIRM1: "FIRM (1)",
-    FIRM2: "FIRM (2)",
-    SOFT5: "SOFT (5)",
-    SOFT6: "SOFT (6)",
-    SOFT7: "SOFT (7)",
-    HEAVY8: "HEAVY (8)",
-    HEAVY9: "HEAVY (9)",
-    HEAVY10: "HEAVY (10)",
-    SYNTHETIC: "Synthetic",
-    UNKNOWN: "Unknown"
-  };
+  const LookupMap: Map<string, string> = new Map([
+    ["GOOD", "GOOD"],
+    ["GOOD3", "GOOD (3)"],
+    ["GOOD4", "GOOD (4)"],
+    ["FIRM1", "FIRM (1)"],
+    ["FIRM2", "FIRM (2)"],
+    ["SOFT5", "SOFT (5)"],
+    ["SOFT6", "SOFT (6)"],
+    ["SOFT7", "SOFT (7)"],
+    ["HEAVY8", "HEAVY (8)"],
+    ["HEAVY9", "HEAVY (9)"],
+    ["HEAVY10", "HEAVY (10)"],
+    ["SYNTHETIC", "Synthetic"],
+    ["UNKNOWN", "Unknown"]
+  ]);
 
-  return lookup[meetRaces.trackCondition ?? ""] ?? "Unknown";
+  return LookupMap.get(meetRaces.trackCondition.toUpperCase());
 };

@@ -9,10 +9,7 @@ import { PageLayout } from "../components";
 import { useSubgraphBets } from "../hooks/subgraph";
 import { BetHistory } from "../types/bets";
 import { makeMarketId } from "../utils/markets";
-import {
-  formatBytes16String,
-  formattingTrackConditions
-} from "../utils/formatting";
+import { formatBytes16String } from "../utils/formatting";
 import { useConfig } from "../providers/Config";
 import Skeleton from "react-loading-skeleton";
 import dayjs from "dayjs";
@@ -54,13 +51,6 @@ export const Races: React.FC = () => {
     return utils.races.calculateRaceMargin(validRunners.map(r => r.odds));
   }, [race]);
 
-  const checkForTrackConditions = () => {
-    if (!meetRaces) {
-      return;
-    }
-    return formattingTrackConditions(meetRaces);
-  };
-
   return (
     <PageLayout>
       <PlaceBetModal
@@ -98,11 +88,15 @@ export const Races: React.FC = () => {
               <Skeleton width={50} />
             )}
           </h1>
-          <h1>
-            {`${checkForTrackConditions()}, ${meetRaces?.weatherCondition}` || (
+          <h2>
+            {!meetRaces ? (
               <Skeleton />
+            ) : !utils.formatting.formatTrackCondition(meetRaces) ? null : (
+              `${utils.formatting.formatTrackCondition(meetRaces)}, ${
+                meetRaces.weatherCondition
+              }`
             )}
-          </h1>
+          </h2>
         </div>
         <RaceTable
           runners={race?.runners}
