@@ -5,12 +5,11 @@ import utils from "../../utils";
 import { useConfig } from "../../providers/Config";
 import { BigNumber, ethers } from "ethers";
 import { Loader } from "../Loader";
-import dayjs from "dayjs";
 import { useMarketContract } from "../../hooks/contracts";
 import { useSigner } from "wagmi";
 import Skeleton from "react-loading-skeleton";
-import { ConfirmBetsButton } from "../Buttons";
 import constants from "../../constants";
+import { SubmitBetsButton } from "../Buttons";
 
 type Props = {
   isOpen: boolean;
@@ -19,7 +18,7 @@ type Props = {
 
 export const BetSlipModal: React.FC<Props> = ({ isOpen, onClose }) => {
   const config = useConfig();
-  const { bets, hashes } = useBetSlipContext();
+  const { bets, hashes, txLoading, error } = useBetSlipContext();
   const { data: signer } = useSigner();
   const { getPotentialPayout } = useMarketContract();
 
@@ -115,19 +114,14 @@ export const BetSlipModal: React.FC<Props> = ({ isOpen, onClose }) => {
   }, [bets, config]);
 
   return (
-    <BaseModal isOpen={isOpen} onClose={onClose}>
+    <BaseModal isOpen={isOpen} onClose={!txLoading ? onClose : () => {}}>
       {!config ? (
         <div className="m-10">
           <Loader />
         </div>
       ) : hashes && hashes.length ? (
         <div className="w-[75vw] lg:w-[28rem]">
-          <div className="flex justify-between items-center pr-8">
-            <h2 className="font-bold text-2xl">Bet Slip Transactions</h2>
-            <h3 className="text-black/50 italic">
-              {dayjs().format("MM-DD-YYYY")}
-            </h3>
-          </div>
+          <h2 className="font-bold text-2xl">Bet Slip Transactions</h2>
           <ol className="ml-4 mt-6 list-decimal">
             {hashes.map(hash => (
               <li key={hash}>
@@ -145,12 +139,7 @@ export const BetSlipModal: React.FC<Props> = ({ isOpen, onClose }) => {
         </div>
       ) : (
         <div className="w-[75vw] lg:w-[28rem]">
-          <div className="flex justify-between items-center pr-8">
-            <h2 className="font-bold text-2xl">Bet Slip</h2>
-            <h3 className="text-black/50 italic">
-              {dayjs().format("MM-DD-YYYY")}
-            </h3>
-          </div>
+          <h2 className="font-bold text-2xl">Bet Slip</h2>
           <div className="mt-6 grid grid-cols-2 w-full">
             <h4 className="w-full py-1 font-semibold text-center bg-gray-200 rounded-tl-lg">
               Market
@@ -180,7 +169,7 @@ export const BetSlipModal: React.FC<Props> = ({ isOpen, onClose }) => {
             )}
           </div>
           <div className="mt-6">
-            <h4 className="font-semibold">Potential Payouts:</h4>
+            <h4 className="font-semibold">Potential Payout:</h4>
             {payout ? (
               [...Object.entries(payout)].map(([name, p]) => (
                 <span className="block" key={name}>
@@ -193,10 +182,15 @@ export const BetSlipModal: React.FC<Props> = ({ isOpen, onClose }) => {
             ) : (
               <Skeleton />
             )}
-          </div>
+          </div>{" "}
           <div className="mt-6">
-            <ConfirmBetsButton />
+            <SubmitBetsButton />
           </div>
+          {error && (
+            <div className="mt-6 rounded-lg bg-red-600 text-white py-4 flex flex-col items-center text-sm">
+              {error}
+            </div>
+          )}
         </div>
       )}
     </BaseModal>

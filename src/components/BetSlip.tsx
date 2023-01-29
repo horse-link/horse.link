@@ -1,30 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useBetSlipContext } from "../context/BetSlipContext";
 import classnames from "classnames";
 import { ethers } from "ethers";
 import utils from "../utils";
 import { useConfig } from "../providers/Config";
-import { PlaceBetSlipButton, ClearBetSlipButton } from "./Buttons";
-import constants from "../constants";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Skeleton from "react-loading-skeleton";
+import { PlaceBetsButton } from "./Buttons";
 
 dayjs.extend(relativeTime);
 
 export const BetSlip: React.FC = () => {
-  const [currentTimestamp, setCurrentTimestamp] = useState(
-    Math.floor(Date.now() / 1000)
-  );
-
-  useEffect(() => {
-    const setTime = () => setCurrentTimestamp(Math.floor(Date.now() / 1000));
-    // set time every 5 seconds
-    const interval = setInterval(setTime, constants.time.ONE_SECOND_MS * 5);
-
-    return () => clearInterval(interval);
-  }, []);
-
   const config = useConfig();
   const { bets, removeBet } = useBetSlipContext();
 
@@ -51,16 +38,13 @@ export const BetSlip: React.FC = () => {
                   )}
                 >
                   <div className="col-span-1 pr-6 flex flex-col justify-center items-center text-black/50 font-semibold">
-                    {bet.id}
+                    {bet.id + 1}
                   </div>
                   <div className="col-span-8 flex flex-col">
                     <div className="flex justify-between">
                       <h4 className="font-bold">{bet.runner.name}</h4>
-                      <span className="font-normal block italic text-black/50">
-                        {/* take away 5 seconds to prevent "in a few seconds" bug */}
-                        {dayjs(dayjs.unix(bet.timestamp - 5)).from(
-                          dayjs.unix(currentTimestamp)
-                        )}
+                      <span className="font-normal block text-black/50">
+                        {bet.race.track.name} {bet.race.raceNumber}
                       </span>
                     </div>
                     <div className="flex justify-between">
@@ -91,7 +75,7 @@ export const BetSlip: React.FC = () => {
                       </span>
                     </div>
                   </div>
-                  <div className="col-span-1 pl-5 flex flex-col justify-center items-center">
+                  <div className="col-span-1 pl-6 flex flex-col justify-center items-center">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -114,13 +98,8 @@ export const BetSlip: React.FC = () => {
           )}
         </div>
         {bets?.length && (
-          <div className="mt-2 grid grid-cols-5 grid-rows-1 gap-x-2">
-            <div className="col-span-4">
-              <PlaceBetSlipButton />
-            </div>
-            <div className="col-span-1">
-              <ClearBetSlipButton />
-            </div>
+          <div className="mt-2">
+            <PlaceBetsButton />
           </div>
         )}
       </div>

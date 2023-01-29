@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { SignedRunnersResponse } from "../../types/meets";
+import { RaceData, SignedRunnersResponse } from "../../types/meets";
 import useSwr from "../useSwr";
 
 export const useRunnersData = (track: string, raceNumber: number) => {
@@ -7,7 +7,7 @@ export const useRunnersData = (track: string, raceNumber: number) => {
     `/runners/${track}/${raceNumber}/win`
   );
 
-  const race = useMemo(() => {
+  const race: RaceData | undefined = useMemo(() => {
     if (!data || error) return;
 
     // data.data is the SignedRunnersResponse from api
