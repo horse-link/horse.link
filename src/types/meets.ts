@@ -116,7 +116,7 @@ export type RaceInfo = {
   raceClassConditions: string;
   raceDistance: number;
   raceStartTime: string;
-  raceStatus: string;
+  raceStatus: RaceStatus;
 };
 
 export type Back = {
