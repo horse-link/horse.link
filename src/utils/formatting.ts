@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import { ethers } from "ethers";
+import { MeetInfo } from "../types/meets";
 import { BetId } from "../types/subgraph";
 
 export const formatToFourDecimals = (amount: string) => {
@@ -98,4 +99,25 @@ export const formatTimeToHMS = (time: string) => {
   return `${prefix}${Math.abs(hours)}h ${Math.abs(minutes)}m ${Math.abs(
     seconds
   )}s`;
+};
+export const formatTrackCondition = (meetRaces: MeetInfo) => {
+  if (!meetRaces.trackCondition) return;
+
+  const LookupMap: Map<string, string> = new Map([
+    ["GOOD", "GOOD"],
+    ["GOOD3", "GOOD (3)"],
+    ["GOOD4", "GOOD (4)"],
+    ["FIRM1", "FIRM (1)"],
+    ["FIRM2", "FIRM (2)"],
+    ["SOFT5", "SOFT (5)"],
+    ["SOFT6", "SOFT (6)"],
+    ["SOFT7", "SOFT (7)"],
+    ["HEAVY8", "HEAVY (8)"],
+    ["HEAVY9", "HEAVY (9)"],
+    ["HEAVY10", "HEAVY (10)"],
+    ["SYNTHETIC", "Synthetic"],
+    ["UNKNOWN", "Unknown"]
+  ]);
+
+  return LookupMap.get(meetRaces.trackCondition.toUpperCase());
 };
