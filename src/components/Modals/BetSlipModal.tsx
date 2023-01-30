@@ -129,7 +129,7 @@ export const BetSlipModal: React.FC<Props> = ({ isOpen, onClose }) => {
                   href={`${constants.env.SCANNER_URL}/tx/${hash}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="underline underline-offset-2 text-blue-500 visited:text-blue-800"
+                  className="underline underline-offset-2 hyperlink"
                 >
                   {utils.formatting.shortenHash(hash)}
                 </a>
