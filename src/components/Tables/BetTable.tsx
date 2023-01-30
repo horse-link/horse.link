@@ -113,10 +113,10 @@ export const BetTable: React.FC<Props> = ({
       title: "Time"
     },
     {
-      title: "Market ID"
+      title: "Race"
     },
     {
-      title: "Proposition ID"
+      title: "Proposition"
     }
   ];
 
