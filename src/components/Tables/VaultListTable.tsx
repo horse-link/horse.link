@@ -39,7 +39,7 @@ export const VaultListTable: React.FC<Props> = ({ config, setIsModalOpen }) => {
           href={`${constants.env.SCANNER_URL}/address/${vault.address}`}
           target="_blank"
           rel="noreferrer noopener"
-          className="text-blue-600"
+          className="hyperlink"
         >
           {vault.address}
         </a>

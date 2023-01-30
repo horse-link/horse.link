@@ -13,7 +13,7 @@ export const Web3SuccessHandler: React.FC<Props> = ({ hash, message }) => (
     <span className="block lg:hidden">
       {`${message}: `}
       <a
-        className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
+        className="underline hyperlink"
         href={`${constants.env.SCANNER_URL}/tx/${hash}`}
         target="_blank"
         rel="noreferrer noopener"
@@ -25,7 +25,7 @@ export const Web3SuccessHandler: React.FC<Props> = ({ hash, message }) => (
       {`${message}: `}
       <br />
       <a
-        className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
+        className="underline hyperlink"
         href={`${constants.env.SCANNER_URL}/tx/${hash}`}
         target="_blank"
         rel="noreferrer noopener"

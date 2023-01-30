@@ -14,6 +14,10 @@ import { BetSlipModal } from "../components/Modals";
 import { ethers } from "ethers";
 import utils from "../utils";
 import { useConfig } from "../providers/Config";
+import dayjs from "dayjs";
+import isYesterday from "dayjs/plugin/isYesterday";
+
+dayjs.extend(isYesterday);
 
 const LOCAL_STORAGE_KEY = "horse.link-bet-slip";
 
@@ -48,14 +52,28 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
   // write bet slip to local storage if bets exist
   useEffect(() => {
     if (bets && bets.length)
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(bets));
+      localStorage.setItem(
+        LOCAL_STORAGE_KEY,
+        JSON.stringify({
+          data: bets,
+          createdAt: dayjs()
+        })
+      );
   }, [bets]);
 
   // load bets on page load
   useEffect(() => {
     const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (!raw || raw === "undefined") return;
-    setBets(JSON.parse(raw));
+
+    const parsed = JSON.parse(raw);
+
+    if (dayjs(parsed.createdAt).isYesterday()) {
+      setBets(undefined);
+      return localStorage.removeItem(LOCAL_STORAGE_KEY);
+    }
+
+    setBets(parsed.data);
   }, []);
 
   const addBet = useCallback(
