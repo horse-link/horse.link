@@ -112,9 +112,9 @@ export const formatTrackCondition = (meetRaces: MeetInfo) => {
     ["SOFT5", "SOFT (5)"],
     ["SOFT6", "SOFT (6)"],
     ["SOFT7", "SOFT (7)"],
-    ["HEAVY8", "HEAVY (8)"],
-    ["HEAVY9", "HEAVY (9)"],
-    ["HEAVY10", "HEAVY (10)"],
+    ["HVY8", "HEAVY (8)"],
+    ["HVY9", "HEAVY (9)"],
+    ["HVY10", "HEAVY (10)"],
     ["SYNTHETIC", "Synthetic"],
     ["UNKNOWN", "Unknown"]
   ]);
