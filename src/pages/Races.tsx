@@ -19,7 +19,7 @@ export const Races: React.FC = () => {
   const params = useParams();
   const track = params.track || "";
   const raceNumber = Number(params.number) || 0;
-  const meetRaces = useMeetData(params.track || "") ?? undefined;
+  const meetRaces = useMeetData(params.track || "");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSettleModalOpen, setIsSettleModalOpen] = useState(false);
