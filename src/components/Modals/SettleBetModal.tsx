@@ -176,7 +176,7 @@ export const SettleBetModal: React.FC<Props> = ({
             {txHash && (
               <Web3SuccessHandler
                 hash={txHash}
-                message="Your settlement has been placed with"
+                message="Click on the link below to view your transaction"
               />
             )}
             {error && <Web3ErrorHandler error={error} />}

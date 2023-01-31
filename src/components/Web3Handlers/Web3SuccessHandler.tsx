@@ -9,7 +9,9 @@ type Props = {
 
 export const Web3SuccessHandler: React.FC<Props> = ({ hash, message }) => (
   <div className="py-4 rounded-md flex flex-col">
-    <h2 className="font-bold text-2xl mr-[8vw] mb-2">Transaction result</h2>
+    <h2 className="font-bold text-2xl mr-[8vw] mb-2">
+      Transaction Confirmation
+    </h2>
     <span className="block lg:hidden">
       {`${message}: `}
       <a

@@ -154,7 +154,7 @@ export const WithdrawVaultModal: React.FC<Props> = ({
         {txHash && (
           <Web3SuccessHandler
             hash={txHash}
-            message="Your withdrawal has been placed with"
+            message="Your withdrawal has been placed, click here to view the transaction"
           />
         )}
         {error && <Web3ErrorHandler error={error} />}

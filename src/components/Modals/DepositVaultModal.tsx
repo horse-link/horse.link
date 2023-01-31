@@ -157,7 +157,7 @@ export const DepositVaultModal: React.FC<Props> = ({
         {txHash && (
           <Web3SuccessHandler
             hash={txHash}
-            message="Your deposit has been placed with"
+            message="Your deposit has been placed, click here to view the transaction"
           />
         )}
         {error && <Web3ErrorHandler error={error} />}
