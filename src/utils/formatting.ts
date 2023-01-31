@@ -100,6 +100,7 @@ export const formatTimeToHMS = (time: string) => {
     seconds
   )}s`;
 };
+
 export const formatTrackCondition = (meetRaces: MeetInfo) => {
   if (!meetRaces.trackCondition) return;
 
