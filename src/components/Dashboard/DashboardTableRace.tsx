@@ -13,12 +13,12 @@ type Props = {
 
 export const DashboardTableRace: React.FC<Props> = ({ race, meet }) => {
   const [timeString, setTimeString] = useState(
-    utils.formatting.formatTimeToHMS(race.close!, true)
+    utils.formatting.formatTimeToHMS(race.start!, true)
   );
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setTimeString(utils.formatting.formatTimeToHMS(race.close!, true));
+      setTimeString(utils.formatting.formatTimeToHMS(race.start!, true));
     }, constants.time.ONE_SECOND_MS);
 
     return () => clearInterval(interval);
