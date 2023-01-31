@@ -82,7 +82,7 @@ export const parseBytes16String = (bytes: ethers.BytesLike) => {
 export const formatFirstLetterCapitalised = (string: string) =>
   `${string.charAt(0).toUpperCase()}${string.slice(1).toLowerCase()}`;
 
-export const formatTimeToHMS = (time: string) => {
+export const formatTimeToHMS = (time: string, shortForm?: boolean) => {
   const now = dayjs();
   const date = dayjs(time);
 
@@ -96,9 +96,28 @@ export const formatTimeToHMS = (time: string) => {
     "seconds"
   );
 
-  return `${prefix}${Math.abs(hours)}h ${Math.abs(minutes)}m ${Math.abs(
-    seconds
-  )}s`;
+  // return longform H M S
+  if (!shortForm)
+    return `${prefix}${Math.abs(hours)}h ${Math.abs(minutes)}m ${Math.abs(
+      seconds
+    )}s`;
+
+  // if time > 2 hours
+  if (Math.abs(hours) > 2) {
+    const shortformHours = minutes > 30 ? hours + 1 : hours;
+    return `${prefix}${Math.abs(shortformHours)}h`;
+  }
+
+  // if time is between 1 and 2 hours
+  if (Math.abs(hours) >= 1)
+    return `${prefix}${Math.abs(hours)}h ${Math.abs(minutes)}m`;
+
+  // if time is less than 1 hour but over 5 minutes
+  if (Math.abs(hours) < 1 && minutes >= 5)
+    return `${prefix}${Math.abs(minutes)}m`;
+
+  // time is less than 5 mins
+  return `${prefix}${Math.abs(minutes)}m ${Math.abs(seconds)}s`;
 };
 
 export const formatTrackCondition = (meetRaces: MeetInfo) => {
