@@ -33,7 +33,7 @@ export const RacesButton: React.FC<Props> = ({ meetRaces, params }) => {
           >
             <div
               className={classNames(
-                "p-3 mt-1 mr-1 whitespace-nowrap text-sm rounded-full",
+                "p-3 mt-1 mr-1 whitespace-nowrap text-sm rounded-full h-11 w-11",
                 {
                   "bg-gray-400 hover:bg-gray-500":
                     race.raceStatus === "Paying" &&
