@@ -39,7 +39,7 @@ export const useSubgraphBets = (
   );
 
   const incrementPage = useCallback(() => {
-    if (!aggregatorData || myBetsEnabled) return;
+    if (!aggregatorData) return;
 
     const totalBets = +aggregatorData.aggregator.totalBets;
     const nextMulti = skipMultiplier + 1;
@@ -51,16 +51,16 @@ export const useSubgraphBets = (
       return;
 
     setSkipMultiplier(nextMulti);
-  }, [aggregatorData, skipMultiplier, setSkipMultiplier, myBetsEnabled]);
+  }, [aggregatorData, skipMultiplier, setSkipMultiplier]);
 
   const decrementPage = useCallback(() => {
-    if (!aggregatorData || myBetsEnabled) return;
+    if (!aggregatorData) return;
 
     const previousMulti = skipMultiplier - 1;
     if (skipMultiplier === 0) return;
 
     setSkipMultiplier(previousMulti);
-  }, [aggregatorData, skipMultiplier, setSkipMultiplier, myBetsEnabled]);
+  }, [aggregatorData, skipMultiplier, setSkipMultiplier]);
 
   // reset page when my bets get toggled
   useEffect(() => {
