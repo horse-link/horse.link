@@ -28,7 +28,7 @@ export const VaultActionButton: React.FC<Props> = ({
             vault
           })
         : openWalletModal(),
-    [type, vault]
+    [type, vault, isConnected]
   );
 
   return (
