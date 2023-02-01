@@ -39,6 +39,9 @@ export const BetTable: React.FC<Props> = ({
     setIsModalOpen(true);
   };
 
+  console.log(
+    utils.formatting.parseBytes16String("0x30313933383957424f30335730370000")
+  );
   const getBetHistoryData = (bet?: BetHistory): TableData[] => {
     const formattedAmount = () =>
       config &&

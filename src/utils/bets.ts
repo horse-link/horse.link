@@ -45,25 +45,31 @@ export const getBetStatus = (
 export const getBetHistory = (
   bet: Bet,
   signedBetData: SignedBetDataResponse
-): BetHistory => ({
-  index: utils.formatting.formatBetId(bet.id),
-  marketId: bet.marketId.toLowerCase(),
-  marketAddress: bet.marketAddress.toLowerCase(),
-  assetAddress: bet.assetAddress.toLowerCase(),
-  propositionId: bet.propositionId.toLowerCase(),
-  winningPropositionId: signedBetData.winningPropositionId,
-  marketResultAdded: signedBetData.marketResultAdded,
-  settled: bet.settled,
-  punter: bet.owner.toLowerCase(),
-  payoutDate: +bet.payoutAt,
-  amount: bet.amount,
-  payout: bet.payout,
-  tx: bet.createdAtTx.toLowerCase(),
-  blockNumber: +bet.createdAt,
-  settledAt: bet.settled ? +bet.settledAt : undefined,
-  marketOracleResultSig: signedBetData.marketOracleResultSig,
-  status: getBetStatus(bet, signedBetData)
-});
+): BetHistory => {
+  const scratched = signedBetData.scratchedRunners.find(scratched => {
+    return scratched.b16propositionId === bet.propositionId;
+  });
+  return {
+    index: utils.formatting.formatBetId(bet.id),
+    marketId: bet.marketId.toLowerCase(),
+    marketAddress: bet.marketAddress.toLowerCase(),
+    assetAddress: bet.assetAddress.toLowerCase(),
+    propositionId: bet.propositionId.toLowerCase(),
+    winningPropositionId: signedBetData.winningPropositionId,
+    marketResultAdded: signedBetData.marketResultAdded,
+    settled: bet.settled,
+    punter: bet.owner.toLowerCase(),
+    payoutDate: +bet.payoutAt,
+    amount: bet.amount,
+    payout: bet.payout,
+    tx: bet.createdAtTx.toLowerCase(),
+    blockNumber: +bet.createdAt,
+    settledAt: bet.settled ? +bet.settledAt : undefined,
+    marketOracleResultSig: signedBetData.marketOracleResultSig,
+    scratched: scratched,
+    status: getBetStatus(bet, signedBetData)
+  };
+};
 
 export const filterBetsByFilterOptions = (
   bets: BetHistory[],

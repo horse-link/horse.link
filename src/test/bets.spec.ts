@@ -53,3 +53,26 @@ describe("format bet ids", () => {
     expect(id).toEqual(0);
   });
 });
+
+// detect scratched runners
+describe("detect scratched runners", () => {
+  it("should return the correct BetHistory for a scratched runner", () => {
+    const mockBet = utils.mocks.getRealExampleMockBet();
+    const mockSignedBetData = utils.mocks.getMockSignedBetDataResponse();
+    const betHistory = utils.bets.getBetHistory(mockBet, mockSignedBetData);
+    expect(betHistory.propositionId).toEqual(
+      mockSignedBetData.scratchedRunners[0].b16propositionId
+    );
+    expect(betHistory.propositionId).toEqual(mockBet.propositionId);
+    expect(!!betHistory.scratched).toEqual(true);
+  });
+  it("should return the correct BetHistory for a non-scratched runner", () => {
+    const mockBet = utils.mocks.getMockBet();
+    const mockSignedBetData = utils.mocks.getMockSignedBetDataResponse();
+    const betHistory = utils.bets.getBetHistory(mockBet, mockSignedBetData);
+    expect(betHistory.propositionId).not.toBe(
+      mockSignedBetData.scratchedRunners[0].b16propositionId
+    );
+    expect(!!betHistory.scratched).not.toBe(true);
+  });
+});
