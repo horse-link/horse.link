@@ -154,9 +154,9 @@
       },
       {
         "indexed": false,
-        "internalType": "bool",
+        "internalType": "uint8",
         "name": "result",
-        "type": "bool"
+        "type": "uint8"
       },
       {
         "indexed": true,
@@ -302,6 +302,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "baseURI",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -330,6 +343,11 @@
     ],
     "name": "getBetByIndex",
     "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
       {
         "internalType": "uint256",
         "name": "",
@@ -619,19 +637,6 @@
   },
   {
     "inputs": [],
-    "name": "min",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "name",
     "outputs": [
       {
@@ -851,7 +856,7 @@
         "type": "string"
       }
     ],
-    "stateMutability": "pure",
+    "stateMutability": "view",
     "type": "function"
   },
   {

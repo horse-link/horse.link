@@ -39,9 +39,6 @@ export const BetTable: React.FC<Props> = ({
     setIsModalOpen(true);
   };
 
-  console.log(
-    utils.formatting.parseBytes16String("0x30313933383957424f30335730370000")
-  );
   const getBetHistoryData = (bet?: BetHistory): TableData[] => {
     const formattedAmount = () =>
       config &&
@@ -124,20 +121,24 @@ export const BetTable: React.FC<Props> = ({
   ];
 
   const ROWS: TableRow[] = (betHistory || utils.mocks.getMockBetHistory()).map(
-    bet => ({
-      data: getBetHistoryData(bet),
-      row: {
-        classNames: classnames("cursor-pointer hover:bg-gray-200", {
-          "bg-emerald-300": bet?.status === "RESULTED",
-          "bg-gray-300": bet?.status === "SETTLED",
-          // invalid bets are highlighted -- results from a bet that is settled, but has no result set
-          "bg-red-600": bet?.status === "INVALID"
-        }),
-        props: {
-          onClick: () => onClickBet(bet)
+    bet => {
+      const data = getBetHistoryData(bet);
+      return {
+        data,
+        row: {
+          classNames: classnames("cursor-pointer hover:bg-gray-200", {
+            "bg-emerald-300": bet?.status === "RESULTED",
+            "bg-gray-300": bet?.status === "SETTLED",
+            "bg-yellow-300": bet?.status === "SCRATCHED",
+            // invalid bets are highlighted -- results from a bet that is settled, but has no result set
+            "bg-red-600": bet?.status === "INVALID"
+          }),
+          props: {
+            onClick: () => onClickBet(bet)
+          }
         }
-      }
-    })
+      };
+    }
   );
 
   const TERNARY_ROWS =

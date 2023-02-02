@@ -94,6 +94,48 @@ export const useMarketContract = () => {
     }
   };
 
+  const scratchBet = async (
+    { address }: MarketInfo,
+    signer: Signer,
+    bet: BetHistory,
+    config: Config
+  ) => {
+    if (!bet.scratched) throw new Error("No scratched odds");
+    const marketContract = Market__factory.connect(address, signer);
+    const oracleAddress = await marketContract.getOracleAddress();
+    const marketOracleContract = MarketOracle__factory.connect(
+      oracleAddress,
+      signer
+    );
+
+    try {
+      if (!bet.winningPropositionId || !bet.marketOracleResultSig)
+        throw new Error("No winningPropositionId or marketOracleResultSig");
+
+      if (
+        !utils.bets.recoverSigSigner(
+          bet.marketId,
+          bet.winningPropositionId,
+          bet.marketOracleResultSig,
+          config
+        )
+      )
+        throw new Error("Signature invalid");
+
+      // tx can fail if the result is already set
+      await (
+        await marketOracleContract.setScratchedResult(
+          bet.marketId,
+          bet.winningPropositionId,
+          bet.scratched.odds,
+          bet.marketOracleResultSig
+        )
+      ).wait();
+    } catch (err: any) {
+      console.error(err);
+    }
+  };
+
   const settleBet = async (
     market: MarketInfo,
     bet: BetHistory,

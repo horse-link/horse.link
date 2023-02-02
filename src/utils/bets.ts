@@ -4,6 +4,7 @@ import {
   BetFilterOptions,
   BetHistory,
   BetStatus,
+  ScratchedRunner,
   SignedBetDataResponse
 } from "../types/bets";
 import { Config } from "../types/config";
@@ -21,18 +22,21 @@ export const decrementPage = (page: number, maxPages: number) =>
 
 export const getBetStatus = (
   bet: Bet,
-  signedBetData: SignedBetDataResponse
+  signedBetData: SignedBetDataResponse,
+  scratched?: ScratchedRunner
 ): BetStatus => {
-  const hasResult =
+  const hasWinningResult =
     signedBetData.winningPropositionId || signedBetData.marketResultAdded;
   switch (true) {
-    case +bet.payoutAt > Math.floor(Date.now() / 1000):
+    case +bet.payoutAt > Math.floor(Date.now() / 1000) && !scratched:
       return "PENDING";
-    case !hasResult && !bet.settled:
+    case !hasWinningResult && !scratched && !bet.settled:
       return "PENDING";
-    case hasResult && !bet.settled:
+    case hasWinningResult && !bet.settled:
       return "RESULTED";
-    case hasResult && bet.settled:
+    case !!scratched && !bet.settled:
+      return "SCRATCHED";
+    case hasWinningResult && bet.settled:
       return "SETTLED";
     default:
       console.error(
@@ -67,7 +71,7 @@ export const getBetHistory = (
     settledAt: bet.settled ? +bet.settledAt : undefined,
     marketOracleResultSig: signedBetData.marketOracleResultSig,
     scratched: scratched,
-    status: getBetStatus(bet, signedBetData)
+    status: getBetStatus(bet, signedBetData, scratched)
   };
 };
 

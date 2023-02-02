@@ -30,7 +30,7 @@ export const SettleBetModal: React.FC<Props> = ({
   const [error, setError] = useState<ethers.errors>();
 
   const { data: signer } = useSigner();
-  const { settleBet } = useMarketContract();
+  const { settleBet, scratchBet } = useMarketContract();
 
   const now = useMemo(() => Math.floor(Date.now() / 1000), []);
 
@@ -65,7 +65,7 @@ export const SettleBetModal: React.FC<Props> = ({
       !selectedBet ||
       !market ||
       !signer ||
-      !selectedBet.marketOracleResultSig ||
+      (!selectedBet.marketOracleResultSig && !selectedBet.scratched) ||
       !config
     )
       return;
@@ -74,7 +74,12 @@ export const SettleBetModal: React.FC<Props> = ({
 
     try {
       setTxLoading(true);
-      const tx = await settleBet(market, selectedBet, signer, config);
+      let tx;
+      if (selectedBet.marketOracleResultSig && !selectedBet.scratched) {
+        tx = await settleBet(market, selectedBet, signer, config);
+      } else if (selectedBet.scratched) {
+        tx = await scratchBet(market, selectedBet, signer, config);
+      }
       setTxHash(tx);
     } catch (err: any) {
       setError(err);

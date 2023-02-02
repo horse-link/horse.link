@@ -3,7 +3,6 @@ import { EcSignature } from "./general";
 export type ScratchedRunner = {
   b16propositionId: string;
   odds: number;
-  totalOdds: string;
   marketResultAdded: boolean;
   signature?: EcSignature;
 };
@@ -17,7 +16,12 @@ export type SignedBetDataResponse = {
 
 export type BetTablePaginationValues = 25 | 50 | 100;
 
-export type BetStatus = "RESULTED" | "PENDING" | "SETTLED" | "INVALID";
+export type BetStatus =
+  | "RESULTED"
+  | "PENDING"
+  | "SCRATCHED"
+  | "SETTLED"
+  | "INVALID";
 
 export type BetFilterOptions = "ALL_BETS" | BetStatus;
 
