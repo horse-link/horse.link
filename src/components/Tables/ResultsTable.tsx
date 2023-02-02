@@ -2,7 +2,7 @@ import React from "react";
 import { MeetResults, WinningHorse } from "../../types/meets";
 import { BaseTable } from ".";
 import { TableData, TableHeader, TableRow } from "../../types/table";
-import { formatOrdinals } from "../../utils/formatting";
+import utils from "../../utils";
 
 type Props = {
   results: MeetResults;
@@ -11,7 +11,7 @@ type Props = {
 export const ResultsTable: React.FC<Props> = ({ results }) => {
   const getWinningHorseData = (horse: WinningHorse): TableData[] => [
     {
-      title: formatOrdinals(horse.place),
+      title: utils.formatting.formatOrdinals(horse.place),
       classNames: "bg-gray-200"
     },
     {
