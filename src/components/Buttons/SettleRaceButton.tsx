@@ -15,6 +15,7 @@ type Props = {
   setIsSettledMarketModalOpen: (state: boolean) => void;
   setLoading: (loading: boolean) => void;
   setSettleHashes: (hashes?: string[]) => void;
+  refetch: () => void;
 };
 
 export const SettleRaceButton: React.FC<Props> = props => {
@@ -26,7 +27,8 @@ export const SettleRaceButton: React.FC<Props> = props => {
     signer,
     setIsSettledMarketModalOpen,
     setSettleHashes,
-    setLoading
+    setLoading,
+    refetch
   } = props;
   const { openWalletModal } = useWalletModal();
 
@@ -93,6 +95,7 @@ export const SettleRaceButton: React.FC<Props> = props => {
       console.error(err);
     } finally {
       setLoading(false);
+      refetch();
     }
   }, [props, settlableBets]);
 

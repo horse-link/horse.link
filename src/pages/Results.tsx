@@ -118,6 +118,7 @@ export const Results: React.FC = () => {
           setIsSettledMarketModalOpen={setIsSettledMarketModalOpen}
           setSettleHashes={setSettleHashes}
           setLoading={setLoading}
+          refetch={refetch}
         />
       </div>
       <SettleBetModal
