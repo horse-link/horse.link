@@ -161,4 +161,19 @@ describe("general formatting tests", () => {
     );
     expect(dateFourFormatted).toEqual("-1h 30m 0s");
   });
+
+  test.concurrent.each([
+    [0, "0th"],
+    [1, "1st"],
+    [2, "2nd"],
+    [3, "3rd"],
+    [4, "4th"],
+    [11, "11th"],
+    [21, "21st"],
+    [42, "42nd"],
+    [103, "103rd"]
+  ])("should add ordinal suffix to number", async (input, expected) => {
+    const result = utils.formatting.formatOrdinals(input);
+    expect(result).toBe(expected);
+  });
 });
