@@ -50,7 +50,7 @@ export const getBetHistory = (
   bet: Bet,
   signedBetData: SignedBetDataResponse
 ): BetHistory => {
-  const scratched = signedBetData.scratchedRunners.find(scratched => {
+  const scratched = signedBetData?.scratchedRunners?.find(scratched => {
     return scratched.b16propositionId === bet.propositionId;
   });
   return {
@@ -87,12 +87,22 @@ export const recoverSigSigner = (
   marketId: string,
   propositionId: string,
   signature: EcSignature,
-  config: Config
+  config: Config,
+  odds?: ethers.BigNumber,
+  totalOdds?: ethers.BigNumber
 ) => {
-  const messageHash = ethers.utils.solidityKeccak256(
-    ["bytes16", "bytes16"],
-    [marketId, propositionId]
-  );
+  let messageHash;
+  if (odds && totalOdds) {
+    messageHash = ethers.utils.solidityKeccak256(
+      ["bytes16", "bytes16", "uint256", "uint256"],
+      [marketId, propositionId, odds, totalOdds]
+    );
+  } else {
+    messageHash = ethers.utils.solidityKeccak256(
+      ["bytes16", "bytes16"],
+      [marketId, propositionId]
+    );
+  }
   const address = ethers.utils.verifyMessage(
     ethers.utils.arrayify(messageHash),
     signature

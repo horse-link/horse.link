@@ -96,8 +96,8 @@ export const useMarketContract = () => {
 
   const scratchBet = async (
     { address }: MarketInfo,
-    signer: Signer,
     bet: BetHistory,
+    signer: Signer,
     config: Config
   ) => {
     if (!bet.scratched) throw new Error("No scratched odds");
@@ -117,7 +117,9 @@ export const useMarketContract = () => {
           bet.marketId,
           bet.winningPropositionId,
           bet.marketOracleResultSig,
-          config
+          config,
+          ethers.utils.parseUnits(bet.scratched.odds.toString(), 8),
+          ethers.BigNumber.from(bet.scratched.totalOdds)
         )
       )
         throw new Error("Signature invalid");
@@ -128,9 +130,14 @@ export const useMarketContract = () => {
           bet.marketId,
           bet.winningPropositionId,
           bet.scratched.odds,
+          bet.scratched.totalOdds,
           bet.marketOracleResultSig
         )
       ).wait();
+
+      const receipt = await (await marketContract.settle(bet.index)).wait();
+
+      return receipt.transactionHash;
     } catch (err: any) {
       console.error(err);
     }
@@ -202,6 +209,7 @@ export const useMarketContract = () => {
   return {
     placeBet,
     settleBet,
+    scratchBet,
     getPotentialPayout,
     setResult
   };

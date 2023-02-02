@@ -3,6 +3,7 @@ import { EcSignature } from "./general";
 export type ScratchedRunner = {
   b16propositionId: string;
   odds: number;
+  totalOdds: string;
   marketResultAdded: boolean;
   signature?: EcSignature;
 };
@@ -11,7 +12,7 @@ export type SignedBetDataResponse = {
   marketResultAdded: boolean;
   winningPropositionId?: string;
   marketOracleResultSig?: EcSignature;
-  scratchedRunners: ScratchedRunner[];
+  scratchedRunners?: ScratchedRunner[];
 };
 
 export type BetTablePaginationValues = 25 | 50 | 100;
