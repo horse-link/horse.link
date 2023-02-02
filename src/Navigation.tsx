@@ -21,6 +21,7 @@ const Navigation: React.FC = () => (
       <Route path="/results/:propositionId" element={<Results />} />
       <Route path="/faucet" element={<Faucet />} />
       <Route path="/bets" element={<Bets />} />
+      <Route path="/bets/:owner" element={<Bets />} />
 
       <Route path="*" element={<Navigate to="/dashboard" replace />} />
     </Routes>

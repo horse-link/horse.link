@@ -57,7 +57,7 @@ export const Results: React.FC = () => {
   );
   const b16MarketId = formatBytes16String(marketId);
   const { betData: betHistory, refetch } = useSubgraphBets(
-    false,
+    "",
     "ALL_BETS",
     b16MarketId
   );

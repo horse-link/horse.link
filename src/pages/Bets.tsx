@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { useAccount } from "wagmi";
 import { Toggle, PageLayout, Card } from "../components";
 import { BetFilterGroup } from "../components/Bets";
@@ -12,17 +13,22 @@ import { useBetsStatistics } from "../hooks/stats";
 import { useSubgraphBets } from "../hooks/subgraph";
 
 export const Bets: React.FC = () => {
+  const config = useConfig();
+  const params = useParams();
+  const navigate = useNavigate();
+  const { address, isConnected } = useAccount();
+
   const { totalWinningBets, totalWinningVolume, largestWinningBet } =
     useBetsStatistics();
   const [myBetsEnabled, setMyBetsEnabled] = useState(true);
+  // The punter who's bets we're currently showing (not necessarily the user)
+  const [owner, setOwner] = useState(
+    params.owner || (myBetsEnabled && address) || ""
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBet, setSelectedBet] = useState<BetHistory>();
   const [betTableFilter, setBetTableFilter] =
     useState<BetFilterOptions>("ALL_BETS");
-
-  const { isConnected } = useAccount();
-
-  const config = useConfig();
 
   const {
     betData: betHistory,
@@ -30,13 +36,23 @@ export const Bets: React.FC = () => {
     incrementPage,
     decrementPage,
     refetch
-  } = useSubgraphBets(myBetsEnabled, betTableFilter);
+  } = useSubgraphBets(owner, betTableFilter);
 
   useEffect(() => {
     setMyBetsEnabled(isConnected);
   }, [isConnected]);
 
-  const onMyBetToggle = () => setMyBetsEnabled(prev => !prev);
+  useEffect(() => {
+    navigate(owner ? `/bets/${owner}` : "/bets", { replace: true });
+  }, [owner]);
+
+  const onMyBetToggle = () => {
+    setMyBetsEnabled(prev => {
+      setOwner((!prev && address) || "");
+      return !prev;
+    });
+  };
+
   const onFilterChange = (option: BetFilterOptions) =>
     setBetTableFilter(option);
 
