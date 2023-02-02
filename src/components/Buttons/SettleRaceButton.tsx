@@ -33,19 +33,15 @@ export const SettleRaceButton: React.FC<Props> = props => {
   const { current: now } = useRef(Math.floor(Date.now() / 1000));
 
   const settlableBets = useMemo(
-    () => betHistory?.filter(bet => bet.payoutDate < now),
+    () =>
+      betHistory
+        ?.filter(bet => bet.payoutDate < now)
+        .filter(bet => !bet.settled),
     [betHistory]
   );
 
   const settleRace = useCallback(async () => {
-    if (
-      !settlableBets ||
-      !settlableBets.length ||
-      !config ||
-      loading ||
-      !config
-    )
-      return;
+    if (!settlableBets?.length || !config || loading || !config) return;
     if (!isConnected || !signer) return openWalletModal();
 
     setIsSettledMarketModalOpen(false);
@@ -106,7 +102,7 @@ export const SettleRaceButton: React.FC<Props> = props => {
       loading={!config || !settlableBets || loading}
       loaderSize={20}
       onClick={settleRace}
-      disabled={!settlableBets || !settlableBets.length}
+      disabled={!settlableBets?.length}
     >
       Settle Race
     </BaseButton>
