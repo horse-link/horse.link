@@ -27,17 +27,22 @@ export const getBetStatus = (
 ): BetStatus => {
   const hasWinningResult =
     signedBetData.winningPropositionId || signedBetData.marketResultAdded;
-  if (+bet.payoutAt > Math.floor(Date.now() / 1000) && !scratched)
-    return "PENDING";
-  if (bet.settled) return "SETTLED";
-  if (scratched) return "SCRATCHED";
-  // then the rest dont need to check `!settled` and `!scratched` anymore
-  if (!hasWinningResult) return "RESULTED";
-  else {
-    console.error(
-      "Invalid bet status: the bet is settled, but has no result set!"
-    );
-    return "INVALID";
+  switch (true) {
+    case +bet.payoutAt > Math.floor(Date.now() / 1000) && !scratched:
+      return "PENDING";
+    case !hasWinningResult && !scratched && !bet.settled:
+      return "PENDING";
+    case hasWinningResult && !bet.settled:
+      return "RESULTED";
+    case !!scratched && !bet.settled:
+      return "SCRATCHED";
+    case hasWinningResult && bet.settled:
+      return "SETTLED";
+    default:
+      console.error(
+        "Invalid bet status: the bet is settled, but has no result set!"
+      );
+      return "INVALID";
   }
 };
 
