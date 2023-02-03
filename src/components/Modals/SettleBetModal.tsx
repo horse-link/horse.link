@@ -30,7 +30,7 @@ export const SettleBetModal: React.FC<Props> = ({
   const [error, setError] = useState<ethers.errors>();
 
   const { data: signer } = useSigner();
-  const { settleBet, scratchBet } = useMarketContract();
+  const { settleBet } = useMarketContract();
 
   const now = useMemo(() => Math.floor(Date.now() / 1000), []);
 
