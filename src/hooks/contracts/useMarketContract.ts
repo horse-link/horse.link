@@ -107,30 +107,55 @@ export const useMarketContract = () => {
       signer
     );
 
-    if (
-      bet.winningPropositionId &&
-      bet.marketOracleResultSig &&
-      !utils.bets.recoverSigSigner(
-        bet.marketId,
-        bet.winningPropositionId,
-        bet.marketOracleResultSig,
-        config
-      )
-    )
-      throw new Error("Signature invalid");
-
-    if (
-      !bet.marketResultAdded &&
-      bet.winningPropositionId &&
-      bet.marketOracleResultSig
-    )
-      await (
-        await marketOracleContract.setResult(
+    if (bet.marketOracleResultSig && !bet.scratched) {
+      if (
+        bet.winningPropositionId &&
+        bet.marketOracleResultSig &&
+        !utils.bets.recoverSigSigner(
           bet.marketId,
           bet.winningPropositionId,
-          bet.marketOracleResultSig
+          bet.marketOracleResultSig,
+          config
+        )
+      )
+        throw new Error("Signature invalid");
+
+      if (
+        !bet.marketResultAdded &&
+        bet.winningPropositionId &&
+        bet.marketOracleResultSig
+      )
+        await (
+          await marketOracleContract.setResult(
+            bet.marketId,
+            bet.winningPropositionId,
+            bet.marketOracleResultSig
+          )
+        ).wait();
+    } else if (bet.scratched && bet.scratched.signature) {
+      if (
+        !utils.bets.recoverSigSigner(
+          bet.marketId,
+          bet.propositionId,
+          bet.scratched.signature,
+          config,
+          ethers.utils.parseUnits(bet.scratched.odds.toString(), 8),
+          ethers.BigNumber.from(bet.scratched.totalOdds)
+        )
+      )
+        throw new Error("Signature invalid");
+
+      // tx can fail if the result is already set
+      await (
+        await marketOracleContract.setScratchedResult(
+          bet.marketId,
+          bet.propositionId,
+          bet.scratched.odds,
+          bet.scratched.totalOdds,
+          bet.scratched.signature
         )
       ).wait();
+    }
 
     const receipt = await (await marketContract.settle(bet.index)).wait();
 
