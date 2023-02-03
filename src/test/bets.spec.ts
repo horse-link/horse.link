@@ -62,7 +62,7 @@ describe("detect scratched runners", () => {
     const betHistory = utils.bets.getBetHistory(mockBet, mockSignedBetData);
     expect(mockSignedBetData?.scratchedRunners?.length).toBeGreaterThan(0);
     expect(betHistory.propositionId).toEqual(
-      mockSignedBetData?.scratchedRunners[0].b16propositionId
+      mockSignedBetData!.scratchedRunners![0].b16propositionId
     );
     expect(betHistory.propositionId).toEqual(mockBet.propositionId);
     expect(!!betHistory.scratched).toEqual(true);
@@ -74,7 +74,7 @@ describe("detect scratched runners", () => {
     const betHistory = utils.bets.getBetHistory(mockBet, mockSignedBetData);
     expect(mockSignedBetData?.scratchedRunners?.length).toBeGreaterThan(0);
     expect(betHistory.propositionId).not.toBe(
-      mockSignedBetData?.scratchedRunners[0].b16propositionId
+      mockSignedBetData!.scratchedRunners![0].b16propositionId
     );
     expect(!!betHistory.scratched).not.toBe(true);
   });
