@@ -11,7 +11,6 @@ export type Runner = {
   handicapWeight: number;
   last5Starts: string;
   proposition_id: string;
-  proposition_id_hash: string;
   barrier: number;
   signature: EcSignature;
   status: "Open" | "Scratched" | "LateScratched";
