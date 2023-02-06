@@ -108,6 +108,7 @@ export const Races: React.FC = () => {
       <div className="flex flex-col gap-6">
         <h1 className="text-2xl font-bold mt-4">History</h1>
         <BetTable
+          paramsAddressExists={false}
           myBetsEnabled={false}
           betHistory={betHistory}
           config={config}
