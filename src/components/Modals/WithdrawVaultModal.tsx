@@ -134,7 +134,7 @@ export const WithdrawVaultModal: React.FC<Props> = ({
               disabled={txLoading || !userAssets}
             />
             <button
-              className="w-full font-bold border-black border-2 py-2 rounded-md relative top-6 hover:text-white hover:bg-black transition-colors duration-100 disabled:text-black/50 disabled:border-black/50 disabled:bg-white"
+              className="w-full font-bold border-black border-2 mb-3 py-2 rounded-md relative top-6 hover:text-white hover:bg-black transition-colors duration-100 disabled:text-black/50 disabled:border-black/50 disabled:bg-white"
               onClick={onClickWithdraw}
               disabled={
                 !withdrawAmount ||
