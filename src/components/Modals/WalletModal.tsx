@@ -35,13 +35,13 @@ export const WalletModal: React.FC<Props> = (props: Props) => {
         {currentChain?.name.toLowerCase() !==
           constants.blockchain.GOERLI_NETWORK.name.toLowerCase() &&
           isConnected && (
-            <span className="block mb-4 text-red-600 font-semibold">
+            <span className="mb-4 block font-semibold text-red-600">
               Please connect to Goerli to use Horse Link
             </span>
           )}
         <div>
           <label
-            className="flex justify-center cursor-pointer"
+            className="flex cursor-pointer justify-center"
             onClick={e => {
               e.preventDefault();
               connect({ connector: connectors[0] });
@@ -49,17 +49,17 @@ export const WalletModal: React.FC<Props> = (props: Props) => {
           >
             <MetaMaskIcon
               title="meta-mask-icon"
-              className="w-20 h-20 transition-opacity duration-500 ease-out opacity-100 hover:opacity-40"
+              className="h-20 w-20 opacity-100 transition-opacity duration-500 ease-out hover:opacity-40"
             />
           </label>
           <div className="font-bold">METAMASK</div>
           <div>Connect using your browser.</div>
         </div>
 
-        <div className="py-4 mb-3 border-0 border-b border-solid"></div>
+        <div className="mb-3 border-0 border-b border-solid py-4"></div>
         <div>
           <label
-            className="flex justify-center cursor-pointer"
+            className="flex cursor-pointer justify-center"
             onClick={e => {
               e.preventDefault();
               connect({ connector: connectors[1] });
@@ -67,7 +67,7 @@ export const WalletModal: React.FC<Props> = (props: Props) => {
           >
             <WalletConnectIcon
               title="wallet-connect-icon"
-              className="w-20 h-20 transition-opacity duration-500 ease-out opacity-100 hover:opacity-40"
+              className="h-20 w-20 opacity-100 transition-opacity duration-500 ease-out hover:opacity-40"
             />
           </label>
           <div className="font-bold">WALLET CONNECT</div>

@@ -11,7 +11,7 @@ export const SubmitBetsButton: React.FC = () => {
       disabled={!bets || !bets.length || txLoading}
       onClick={placeBets}
       baseStyleOverride
-      className="w-full bg-emerald-500 rounded-lg p-4 flex items-center justify-center h-full"
+      className="flex h-full w-full items-center justify-center rounded-lg bg-emerald-500 p-4"
     >
       Submit Bets
     </BaseButton>

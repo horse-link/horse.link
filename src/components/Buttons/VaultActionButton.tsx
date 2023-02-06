@@ -34,7 +34,7 @@ export const VaultActionButton: React.FC<Props> = ({
   return (
     <BaseButton
       title={title}
-      className="px-4 font-bold border-black border-2 py-2 rounded-md text-black hover:text-white hover:bg-black transition-colors duration-100 mr-4"
+      className="mr-4 rounded-md border-2 border-black px-4 py-2 font-bold text-black transition-colors duration-100 hover:bg-black hover:text-white"
       baseStyleOverride
       onClick={openModal}
     />

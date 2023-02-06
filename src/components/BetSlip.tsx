@@ -16,34 +16,34 @@ export const BetSlip: React.FC = () => {
   const { bets, removeBet } = useBetSlipContext();
 
   return (
-    <div className="mt-6 lg:mt-0 lg:mx-4 w-full shadow-lg lg:sticky lg:top-4">
-      <h2 className="w-full bg-indigo-600 p-6 rounded-t-lg text-center font-bold text-3xl text-white">
+    <div className="mt-6 w-full shadow-lg lg:sticky lg:top-4 lg:mx-4 lg:mt-0">
+      <h2 className="w-full rounded-t-lg bg-indigo-600 p-6 text-center text-3xl font-bold text-white">
         Bet Slip
       </h2>
-      <div className="bg-white p-2 rounded-b-lg">
-        <div className="py-4 px-2 border-emerald-500 border-2 rounded-b-lg">
+      <div className="rounded-b-lg bg-white p-2">
+        <div className="rounded-b-lg border-2 border-emerald-500 py-4 px-2">
           {!bets?.length ? (
             <div className="w-full text-center">No Bets</div>
           ) : (
-            <div className="flex flex-col divide-y divide-black max-h-[calc(50vh)] overflow-y-scroll px-4 scrollbar-thin scrollbar-thumb-indigo-600">
+            <div className="flex max-h-[calc(50vh)] flex-col divide-y divide-black overflow-y-scroll px-4 scrollbar-thin scrollbar-thumb-indigo-600">
               {bets.map((bet, _, array) => (
                 <div
                   key={`${bet.back.proposition_id}-${bet.timestamp}`}
                   className={classnames(
-                    "w-full grid grid-cols-10 grid-rows-1",
+                    "grid w-full grid-cols-10 grid-rows-1",
                     {
                       "pt-4": bet.id !== 0,
                       "pb-4": bet.id !== array.length - 1
                     }
                   )}
                 >
-                  <div className="col-span-1 pr-6 flex flex-col justify-center items-center text-black/50 font-semibold">
+                  <div className="col-span-1 flex flex-col items-center justify-center pr-6 font-semibold text-black/50">
                     {bet.id + 1}
                   </div>
                   <div className="col-span-8 flex flex-col">
                     <div className="flex justify-between">
                       <h4 className="font-bold">{bet.runner.name}</h4>
-                      <span className="font-normal block text-black/50">
+                      <span className="block font-normal text-black/50">
                         {bet.race.track.name} {bet.race.raceNumber}
                       </span>
                     </div>
@@ -75,7 +75,7 @@ export const BetSlip: React.FC = () => {
                       </span>
                     </div>
                   </div>
-                  <div className="col-span-1 pl-6 flex flex-col justify-center items-center">
+                  <div className="col-span-1 flex flex-col items-center justify-center pl-6">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"

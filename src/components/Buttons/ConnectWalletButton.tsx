@@ -15,15 +15,15 @@ export const ConnectWalletButton: React.FC<Props> = ({ openWalletModal }) => {
       className={
         isConnecting
           ? "hidden"
-          : "flex justify-center items-center text-sm font-medium"
+          : "flex items-center justify-center text-sm font-medium"
       }
     >
       {isConnected ? (
-        <div className="flex flex-col sm:flex-row items-center gap-3 mt-2 sm:mt-0">
+        <div className="mt-2 flex flex-col items-center gap-3 sm:mt-0 sm:flex-row">
           <span className="truncate text-gray-500">{address}</span>
           <div>
             <BaseButton
-              className="cursor-pointer hover:bg-gray-200 hover:text-white sm:w-auto sm:mb-0"
+              className="cursor-pointer hover:bg-gray-200 hover:text-white sm:mb-0 sm:w-auto"
               onClick={() => disconnect()}
             >
               Disconnect

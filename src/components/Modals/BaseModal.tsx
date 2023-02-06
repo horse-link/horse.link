@@ -34,9 +34,9 @@ export const BaseModal: React.FC<Props> = ({ isOpen, onClose, children }) => (
             leaveTo="opacity-0 scale-95"
           >
             <Dialog.Panel className="transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-              <div className="w-full -mb-6 relative flex justify-end">
+              <div className="relative -mb-6 flex w-full justify-end">
                 <button
-                  className="text-gray-300 hover:text-gray-700 focus:outline-none"
+                  className="text-gray-300 focus:outline-none hover:text-gray-700"
                   onClick={onClose}
                 >
                   X

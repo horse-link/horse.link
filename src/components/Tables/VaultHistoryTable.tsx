@@ -59,7 +59,7 @@ export const VaultHistoryTable: React.FC<Props> = ({ history, config }) => {
             href={`${constants.env.SCANNER_URL}/tx/${vault.id.toLowerCase()}`}
             target="_blank"
             rel="noreferrer noopener"
-            className="truncate hyperlink"
+            className="hyperlink truncate"
           >
             {vault.id}
           </a>

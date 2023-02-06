@@ -7,12 +7,12 @@ const ADDRESS = "0xAA99c40A936A2cF11Eb1D5387897ce9A626E53c7";
 
 export const Tokens: React.FC = () => (
   <PageLayout>
-    <div className="flex justify-center flex-col items-center">
-      <h1 className="text-3xl pb-4 font-bold text-center">
+    <div className="flex flex-col items-center justify-center">
+      <h1 className="pb-4 text-center text-3xl font-bold">
         HL Token Private sale
       </h1>
-      <div className="bg-white rounded-md py-5">
-        <p className="text-center text-sm px-4 pb-4 lg:text-sm lg:px-32 lg:py-4">
+      <div className="rounded-md bg-white py-5">
+        <p className="px-4 pb-4 text-center text-sm lg:px-32 lg:py-4 lg:text-sm">
           We are currently raising funds in our Private round for Horse Link. If
           you would like to participate, please send USDT/USDC/DAI on the ETH
           network to the below address. Once HL Token is live your tokens will
@@ -21,26 +21,26 @@ export const Tokens: React.FC = () => (
           <span className="font-bold">DO NOT USE EXCHANGE WALLETS</span> ie
           Binance as they do not list our token currently.
         </p>
-        <div className="bg-gray-100 p-5 mb-2 lg:mb-0 text-center justify-center text-sm lg:text-sm">
+        <div className="mb-2 justify-center bg-gray-100 p-5 text-center text-sm lg:mb-0 lg:text-sm">
           Address: {ADDRESS}
           <button
-            className="lg:ml-2 hover:bg-emerald-400"
+            className="hover:bg-emerald-400 lg:ml-2"
             onClick={() => navigator.clipboard.writeText(ADDRESS)}
           >
             <AiOutlineCopy />
           </button>
         </div>
-        <div className="w-full flex flex-col lg:flex-row justify-evenly items-center">
+        <div className="flex w-full flex-col items-center justify-evenly lg:flex-row">
           <div>
-            <h3 className="text-center mb-2 mt-2 lg:mt-0 text-sm">
+            <h3 className="mb-2 mt-2 text-center text-sm lg:mt-0">
               Scan for ERC20 deposit address
             </h3>
             <QRCode level="H" value={ADDRESS} />
           </div>
           <img src={TokenomicsChart} alt="Tokenomics" className="mt-4" />
         </div>
-        <h3 className="text-xl pb-2 font-bold text-center">Rounds</h3>
-        <div className="px-4 text-sm flex flex-col gap-y-2 mb-3 text-center">
+        <h3 className="pb-2 text-center text-xl font-bold">Rounds</h3>
+        <div className="mb-3 flex flex-col gap-y-2 px-4 text-center text-sm">
           <p className="text-center line-through">
             Seed - 10,000,000 tokens at 11.76 for $1 (0.085) / $850,000 USD
             (SOLD)
