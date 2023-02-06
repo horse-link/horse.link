@@ -68,7 +68,7 @@ export const Bets: React.FC = () => {
   const isLoading = !betHistory;
   return (
     <PageLayout>
-      <div className="flex flex-col md:flex-row w-full justify-center text-left gap-x-1 gap-y-2 lg:gap-x-4 mb-4 lg:justify-between">
+      <div className="mb-4 flex w-full flex-col justify-center gap-x-1 gap-y-2 text-left md:flex-row lg:justify-between lg:gap-x-4">
         <Card
           title="24H Winning Bets Value"
           data={
@@ -89,18 +89,18 @@ export const Bets: React.FC = () => {
           }
         />
       </div>
-      <div className="w-full lg:justify-between lg:flex p-3 mb-3">
-        <h3 className="text-lg font-medium text-gray-900 flex items-center my-3">
+      <div className="mb-3 w-full p-3 lg:flex lg:justify-between">
+        <h3 className="my-3 flex items-center text-lg font-medium text-gray-900">
           Bets History
         </h3>
-        <div className="flex my-3">
+        <div className="my-3 flex">
           <BetFilterGroup
             value={betTableFilter}
             onChange={onFilterChange}
             disabled={isLoading}
           />
         </div>
-        <div className="flex gap-3 items-center">
+        <div className="flex items-center gap-3">
           <Toggle enabled={myBetsEnabled} onChange={onMyBetToggle} />
           <div className="font-semibold">My Bets</div>
         </div>
@@ -113,19 +113,19 @@ export const Bets: React.FC = () => {
         setSelectedBet={setSelectedBet}
         setIsModalOpen={setIsModalOpen}
       />
-      <div className="mt-2 w-full flex justify-end">
-        <div className="w-auto bg-gray-200 flex items-center gap-x-4 px-4 py-2 rounded-lg">
+      <div className="mt-2 flex w-full justify-end">
+        <div className="flex w-auto items-center gap-x-4 rounded-lg bg-gray-200 px-4 py-2">
           <button
-            className="uppercase font-semibold text-gray-600 text-[0.8rem]"
+            className="text-[0.8rem] font-semibold uppercase text-gray-600"
             onClick={decrementPage}
           >
             prev
           </button>
-          <span className="block uppercase font-semibold text-gray-600 text-[1rem]">
+          <span className="block text-[1rem] font-semibold uppercase text-gray-600">
             {currentPage}
           </span>
           <button
-            className="uppercase font-semibold text-gray-600 text-[0.8rem]"
+            className="text-[0.8rem] font-semibold uppercase text-gray-600"
             onClick={incrementPage}
           >
             next

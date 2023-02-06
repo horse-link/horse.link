@@ -63,7 +63,7 @@ export const Races: React.FC = () => {
         <div className="flex gap-2">
           <RacesButton params={params} meetRaces={meetRaces?.raceInfo} />
         </div>
-        <div className="flex p-2 shadow overflow-hidden border-b bg-white border-gray-200 sm:rounded-lg justify-around">
+        <div className="flex justify-around overflow-hidden border-b border-gray-200 bg-white p-2 shadow sm:rounded-lg">
           <h1>{race ? race.raceData.name : <Skeleton width={200} />}</h1>
           <h1>
             {race ? (
@@ -106,7 +106,7 @@ export const Races: React.FC = () => {
         />
       </div>
       <div className="flex flex-col gap-6">
-        <h1 className="text-2xl font-bold mt-4">History</h1>
+        <h1 className="mt-4 text-2xl font-bold">History</h1>
         <BetTable
           paramsAddressExists={false}
           myBetsEnabled={false}

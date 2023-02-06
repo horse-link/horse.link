@@ -231,7 +231,7 @@ export const PlaceBetModal: React.FC<Props> = ({
           <h2 className="font-bold">
             {runner.name ? `${runner.name} (${runner.barrier ?? " "})` : " "}
           </h2>
-          <h2 className="font-bold mr-[8vw] mb-6">
+          <h2 className="mr-[8vw] mb-6 font-bold">
             {`Target Odds 
             ${utils.formatting.formatToTwoDecimals(back.odds.toString())}`}
           </h2>
@@ -239,7 +239,7 @@ export const PlaceBetModal: React.FC<Props> = ({
             <h3 className="font-semibold">Markets</h3>
             <select
               onChange={e => onSelectMarket(e, config)}
-              className="border-[0.12rem] border-black mt-1 mb-6 bg-white overflow-x-scroll"
+              className="mt-1 mb-6 overflow-x-scroll border-[0.12rem] border-black bg-white"
             >
               {config.markets.map(market => (
                 <option
@@ -256,7 +256,7 @@ export const PlaceBetModal: React.FC<Props> = ({
               type="number"
               placeholder="0"
               onChange={changeWagerAmount}
-              className="border-b-[0.12rem] border-black pl-1 pt-1 mb-6 disabled:text-black/50 disabled:bg-white transition-colors duration-100"
+              className="mb-6 border-b-[0.12rem] border-black pl-1 pt-1 transition-colors duration-100 disabled:bg-white disabled:text-black/50"
             />
             <span className="block font-semibold">
               Payout:{" "}
@@ -274,25 +274,25 @@ export const PlaceBetModal: React.FC<Props> = ({
                 {userBalance?.formatted || <Loader size={14} />}
               </span>
             </span>
-            <span className="text-red-500 block font-semibold">
+            <span className="block font-semibold text-red-500">
               {isWagerNegative ? (
-                <span className="block mt-1">
+                <span className="mt-1 block">
                   Wager amount cannot be negative.
                 </span>
               ) : isWagerPlusBetsExceedingBalance ? (
-                <span className="block mt-1">
+                <span className="mt-1 block">
                   Current bets plus wager cannot exceed balance.
                 </span>
               ) : (
                 isWagerGreaterThanBalance && (
-                  <span className="block mt-1">
+                  <span className="mt-1 block">
                     Wager amount cannot be greater than token balance.
                   </span>
                 )
               )}
             </span>
             <button
-              className="w-full font-bold border-black border-2 py-2 mb-8 rounded-md relative top-6 hover:text-white hover:bg-black transition-colors duration-100 disabled:text-black/50 disabled:border-black/50 disabled:bg-white"
+              className="relative top-6 mb-8 w-full rounded-md border-2 border-black py-2 font-bold transition-colors duration-100 disabled:border-black/50 disabled:bg-white disabled:text-black/50 hover:bg-black hover:text-white"
               onClick={onClickPlaceBet}
               disabled={
                 !selectedMarket ||

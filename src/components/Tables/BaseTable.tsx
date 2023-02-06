@@ -23,18 +23,18 @@ export const BaseTable: React.FC<Props> = props => {
   return (
     <div
       className={classnames(
-        "flex flex-col overflow-x-scroll lg:overflow-x-hidden overflow-y-hidden",
+        "flex flex-col overflow-x-scroll overflow-y-hidden lg:overflow-x-hidden",
         {
           [tableStyles || ""]: !!tableStyles
         }
       )}
     >
       {title && (
-        <h3 className="text-lg mb-3 font-medium text-gray-900">{title}</h3>
+        <h3 className="mb-3 text-lg font-medium text-gray-900">{title}</h3>
       )}
       <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-        <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-          <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+        <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+          <div className="overflow-hidden border-b border-gray-200 shadow sm:rounded-lg">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
@@ -49,7 +49,7 @@ export const BaseTable: React.FC<Props> = props => {
                   ))}
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="divide-y divide-gray-200 bg-white">
                 {rows.map(({ data, row }, i) => (
                   <tr
                     key={createRowKey(i)}

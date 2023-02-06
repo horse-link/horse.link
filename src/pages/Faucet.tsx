@@ -67,7 +67,7 @@ export const Faucet: React.FC = () => {
           txHash={txHash}
         />
       )}
-      <div className="w-full text-center bg-emerald-700 rounded-md p-5 my-10">
+      <div className="my-10 w-full rounded-md bg-emerald-700 p-5 text-center">
         <h1>Welcome to the Horse Link Faucet!</h1>
         <p>
           These tokens are to be used to test the beta functionality of the app.
@@ -83,7 +83,7 @@ export const Faucet: React.FC = () => {
             href={`${process.env.VITE_SCANNER_URL}/address/${FAUCET_ADDRESS}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="underline break-all"
+            className="break-all underline"
           >
             {FAUCET_ADDRESS}
           </a>
@@ -91,7 +91,7 @@ export const Faucet: React.FC = () => {
         &nbsp;is:&nbsp;
         {`${data ? `${data.formatted} ${data.symbol}` : <Loader />}`}
       </div>
-      <div className="flex gap-3 flex-wrap">
+      <div className="flex flex-wrap gap-3">
         <img
           loading="lazy"
           src="/images/goerli-test-network.png"
@@ -99,7 +99,7 @@ export const Faucet: React.FC = () => {
           width="300"
           height="300"
         />
-        <div className="flex flex-col gap-5 w-full md:w-56">
+        <div className="flex w-full flex-col gap-5 md:w-56">
           {config?.tokens.map(token => (
             <ClaimTokensButton
               key={token.name}
@@ -109,13 +109,13 @@ export const Faucet: React.FC = () => {
             />
           ))}
         </div>
-        <div className="flex flex-col gap-5 max-w-md md:max-w-2xl w-full mb-5">
+        <div className="mb-5 flex w-full max-w-md flex-col gap-5 md:max-w-2xl">
           {config?.tokens.map(token => {
             return (
-              <div className="flex bg-gray-100 rounded-md p-5 text-xs sm:text-base flex-wrap px-3">
+              <div className="flex flex-wrap rounded-md bg-gray-100 p-5 px-3 text-xs sm:text-base">
                 {token.name} Address - {token.address}
                 <button
-                  className="flex rounded-xl hover:bg-emerald-400 flex-wrap p-1"
+                  className="flex flex-wrap rounded-xl p-1 hover:bg-emerald-400"
                   onClick={() => navigator.clipboard.writeText(token.address)}
                 >
                   <AiOutlineCopy />

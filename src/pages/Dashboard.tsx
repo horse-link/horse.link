@@ -72,7 +72,7 @@ export const Dashboard: React.FC = () => {
       <DashboardNextToJumpBanner />
       <div className="grid gap-6">
         <div>
-          <div className="container-fluid px-4 py-5 bg-emerald-700 shadow rounded-lg overflow-hidden sm:p-6">
+          <div className="container-fluid overflow-hidden rounded-lg bg-emerald-700 px-4 py-5 shadow sm:p-6">
             <div className="flex flex-wrap justify-between">
               <img
                 loading="lazy"
@@ -87,11 +87,11 @@ export const Dashboard: React.FC = () => {
                 className="h-20"
               />
             </div>
-            <h2 className="text-lg mb-3 font-medium text-gray-900">
+            <h2 className="mb-3 text-lg font-medium text-gray-900">
               Horse Link is an Ethereum AMM protocol that allows participants to
               wager on sports markets using ERC20 tokens.
             </h2>
-            <p className="text-xs my-2">
+            <p className="my-2 text-xs">
               Horse Link&apos;s smart contract guaranteed bets are always placed
               within the slippage band of the constant product function. Like
               other AMM protocols based on curve functions, bets based within
@@ -100,7 +100,7 @@ export const Dashboard: React.FC = () => {
           </div>
           {myPlayEnabled ? <DashboardUserStats /> : <DashboardOverallStats />}
         </div>
-        <div className="flex w-full gap-x-3 justify-between md:justify-end">
+        <div className="flex w-full justify-between gap-x-3 md:justify-end">
           <DashboardFilterGroup
             value={meetsFilter}
             onChange={onFilterChange}
@@ -112,7 +112,7 @@ export const Dashboard: React.FC = () => {
           <div>My Stats</div>
         </div>
         <DashboardTable meets={meets} />
-        <div className="flex justify-center px-4 py-5 bg-white shadow rounded-lg sm:p-6 lg:mb-10">
+        <div className="flex justify-center rounded-lg bg-white px-4 py-5 shadow sm:p-6 lg:mb-10">
           <div className="w-4/5 max-w-2xl">
             <div className="flex flex-col items-center">
               <h2 className="text-lg">Signature :</h2>

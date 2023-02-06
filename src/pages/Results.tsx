@@ -72,7 +72,7 @@ export const Results: React.FC = () => {
     <PageLayout>
       <div className="flex flex-col gap-6">
         <RacesButton params={raceParams} meetRaces={meetRaces?.raceInfo} />
-        <div className="lg:flex text-center flex-row p-2 gap-6 shadow border-b bg-white border-gray-200 rounded-lg lg:justify-around overflow-scroll">
+        <div className="flex-row gap-6 overflow-scroll rounded-lg border-b border-gray-200 bg-white p-2 text-center shadow lg:flex lg:justify-around">
           <h1>{thisRace ? thisRace.raceName : <Skeleton />}</h1>
           <h1>
             Track:{" "}
@@ -92,13 +92,13 @@ export const Results: React.FC = () => {
         {results ? (
           <ResultsTable results={results} />
         ) : (
-          <span className="flex w-full justify-center items-center">
+          <span className="flex w-full items-center justify-center">
             <Loader />
           </span>
         )}
       </div>
       <div className="flex flex-col gap-6">
-        <h1 className="text-2xl font-bold mt-4">History</h1>
+        <h1 className="mt-4 text-2xl font-bold">History</h1>
         <BetTable
           paramsAddressExists={false}
           myBetsEnabled={false}

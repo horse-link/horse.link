@@ -92,18 +92,18 @@ export const SettleBetModal: React.FC<Props> = ({
         </div>
       ) : (
         <React.Fragment>
-          <h2 className="font-bold text-2xl mr-[8vw] mb-6">
+          <h2 className="mr-[8vw] mb-6 text-2xl font-bold">
             {utils.formatting.formatFirstLetterCapitalised(selectedBet.status)}{" "}
             Bet
           </h2>
           <div className="flex flex-col">
-            <h3 className="font-semibold mb-2">
+            <h3 className="mb-2 font-semibold">
               Placed:{" "}
               <span className="font-normal">
                 {moment.unix(selectedBet.blockNumber).format("dddd Do MMMM")}
               </span>
             </h3>
-            <h3 className="font-semibold mb-2">
+            <h3 className="mb-2 font-semibold">
               Market:{" "}
               <span className="font-normal">
                 {market ? (
@@ -133,7 +133,7 @@ export const SettleBetModal: React.FC<Props> = ({
                 <span className="font-normal">
                   {ethers.utils.formatEther(selectedBet.amount)} {token?.symbol}
                 </span>
-                <h3 className="font-semibold mt-2">
+                <h3 className="mt-2 font-semibold">
                   Potential Payout:{" "}
                   <span className="font-normal">
                     {selectedBet.payout ? (
@@ -151,7 +151,7 @@ export const SettleBetModal: React.FC<Props> = ({
             {!txHash && !error && (
               <React.Fragment>
                 <button
-                  className="w-full font-bold border-black border-2 py-2 rounded-md relative top-6 enabled:hover:text-white enabled:hover:bg-black transition-colors duration-100 disabled:text-black/50 disabled:border-black/50 disabled:bg-white"
+                  className="relative top-6 w-full rounded-md border-2 border-black py-2 font-bold transition-colors duration-100 disabled:border-black/50 disabled:bg-white disabled:text-black/50 enabled:hover:bg-black enabled:hover:text-white"
                   onClick={onClickSettleBet}
                   disabled={
                     !signer ||
@@ -165,7 +165,7 @@ export const SettleBetModal: React.FC<Props> = ({
                   {txLoading ? <Loader /> : "SETTLE BET"}
                 </button>
                 {!selectedBet.marketResultAdded && (
-                  <span className="block mb-3 relative top-[1.8rem] text-xs text-black/80">
+                  <span className="relative top-[1.8rem] mb-3 block text-xs text-black/80">
                     Note: will require two transactions to add market results
                     first
                   </span>
