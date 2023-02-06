@@ -63,7 +63,7 @@ export const RaceTable: React.FC<Props> = ({
       number,
       name,
       barrier,
-      odds,
+      odds = 0,
       handicapWeight,
       last5Starts,
       proposition_id
@@ -92,12 +92,11 @@ export const RaceTable: React.FC<Props> = ({
         classNames: isScratchedDataStyles(isScratched)
       },
       {
-        title:
-          odds !== undefined ? (
-            utils.formatting.formatToTwoDecimals(odds.toString())
-          ) : (
-            <Skeleton width="2em" />
-          ),
+        title: runner ? (
+          utils.formatting.formatToTwoDecimals(odds.toString())
+        ) : (
+          <Skeleton width="2em" />
+        ),
         classNames: isScratchedDataStyles(isScratched)
       },
       {

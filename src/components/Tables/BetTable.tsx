@@ -16,6 +16,7 @@ dayjs.extend(relativeTime);
 
 type Props = {
   myBetsEnabled: boolean;
+  paramsAddressExists: boolean;
   betHistory?: BetHistory[];
   config?: Config;
   setSelectedBet: (bet?: BetHistory) => void;
@@ -24,6 +25,7 @@ type Props = {
 
 export const BetTable: React.FC<Props> = ({
   myBetsEnabled,
+  paramsAddressExists,
   betHistory,
   config,
   setSelectedBet,
@@ -142,8 +144,11 @@ export const BetTable: React.FC<Props> = ({
   );
 
   const TERNARY_ROWS =
-    !isConnected && myBetsEnabled
-      ? utils.tables.getBlankRow("Please connect your wallet", HEADERS.length)
+    myBetsEnabled && !paramsAddressExists
+      ? utils.tables.getBlankRow(
+          "Connect your wallet or add an address to the URL",
+          HEADERS.length
+        )
       : !betHistory
       ? utils.tables.getBlankRow("Loading...", HEADERS.length)
       : !betHistory.length

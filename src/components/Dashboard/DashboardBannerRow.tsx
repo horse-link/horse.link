@@ -23,7 +23,7 @@ export const DashboardBannerRow: React.FC<Props> = ({ meet }) => {
 
   return (
     <Link
-      className="w-full shrink-0 h-full lg:shrink flex flex-col text-center p-2 hover:bg-indigo-900"
+      className="flex h-full w-full shrink-0 flex-col p-2 text-center hover:bg-indigo-900 lg:shrink"
       to={`/races/${meet.meeting.venueCode}/${meet.jumperRaceNumber}`}
     >
       <span className="block">

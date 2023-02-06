@@ -101,7 +101,7 @@ export const SettleRaceButton: React.FC<Props> = props => {
 
   return (
     <BaseButton
-      className="!w-auto !px-6 !py-3 !text-md"
+      className="!text-md !w-auto !px-6 !py-3"
       loading={!config || !settlableBets || loading}
       loaderSize={20}
       onClick={settleRace}

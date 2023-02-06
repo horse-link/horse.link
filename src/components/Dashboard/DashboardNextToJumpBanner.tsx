@@ -6,7 +6,7 @@ export const DashboardNextToJumpBanner: React.FC = () => {
   const { nextMeets } = useNextToJumpData();
 
   return (
-    <div className="flex lg:divide-x-2 divide-indigo-800 p-5 bg-indigo-600 rounded-lg mb-5 text-white text-xs shadow-md overflow-hidden">
+    <div className="mb-5 flex divide-indigo-800 overflow-hidden rounded-lg bg-indigo-600 p-5 text-xs text-white shadow-md lg:divide-x-2">
       {nextMeets ? (
         nextMeets.map(meet => (
           <DashboardBannerRow
@@ -18,7 +18,7 @@ export const DashboardNextToJumpBanner: React.FC = () => {
           />
         ))
       ) : (
-        <div className="w-full flex flex-col items-center">
+        <div className="flex w-full flex-col items-center">
           <Loader />
         </div>
       )}

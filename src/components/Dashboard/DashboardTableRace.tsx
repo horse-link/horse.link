@@ -44,14 +44,13 @@ export const DashboardTableRace: React.FC<Props> = ({ race, meet }) => {
       }
     >
       <div
-        className={classnames("px-3 py-4 whitespace-nowrap text-sm", {
+        className={classnames("whitespace-nowrap px-3 py-4 text-sm", {
           "bg-gray-400 hover:bg-gray-500": race.status === "Paying",
           "bg-black text-white": race.status === "Abandoned",
           "bg-emerald-400": race.status === "Interim",
           "hover:bg-gray-200": race.status === "Normal"
         })}
       >
-        <p>R{race.number}</p>
         {dayjs.utc(race.start).local().format("H:mm")}
         <p>
           {race.status == "Paying"

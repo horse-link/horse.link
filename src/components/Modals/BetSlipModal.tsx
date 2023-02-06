@@ -121,7 +121,7 @@ export const BetSlipModal: React.FC<Props> = ({ isOpen, onClose }) => {
         </div>
       ) : hashes && hashes.length ? (
         <div className="w-[75vw] lg:w-[28rem]">
-          <h2 className="font-bold text-2xl">Bet Slip Transactions</h2>
+          <h2 className="text-2xl font-bold">Bet Slip Transactions</h2>
           <ol className="ml-4 mt-6 list-decimal">
             {hashes.map(hash => (
               <li key={hash}>
@@ -129,7 +129,7 @@ export const BetSlipModal: React.FC<Props> = ({ isOpen, onClose }) => {
                   href={`${constants.env.SCANNER_URL}/tx/${hash}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="underline underline-offset-2 hyperlink"
+                  className="hyperlink underline underline-offset-2"
                 >
                   {utils.formatting.shortenHash(hash)}
                 </a>
@@ -139,12 +139,12 @@ export const BetSlipModal: React.FC<Props> = ({ isOpen, onClose }) => {
         </div>
       ) : (
         <div className="w-[75vw] lg:w-[28rem]">
-          <h2 className="font-bold text-2xl">Bet Slip</h2>
-          <div className="mt-6 grid grid-cols-2 w-full">
-            <h4 className="w-full py-1 font-semibold text-center bg-gray-200 rounded-tl-lg">
+          <h2 className="text-2xl font-bold">Bet Slip</h2>
+          <div className="mt-6 grid w-full grid-cols-2">
+            <h4 className="w-full rounded-tl-lg bg-gray-200 py-1 text-center font-semibold">
               Market
             </h4>
-            <h4 className="w-full py-1 font-semibold text-center bg-gray-200 rounded-tr-lg">
+            <h4 className="w-full rounded-tr-lg bg-gray-200 py-1 text-center font-semibold">
               Stake
             </h4>
             {!stakePerToken ? (
@@ -156,12 +156,12 @@ export const BetSlipModal: React.FC<Props> = ({ isOpen, onClose }) => {
               [...Object.entries(stakePerToken)].map(([name, stake]) => (
                 <React.Fragment key={name}>
                   <div
-                    className="p-2 border-gray-200 border-x border-b"
+                    className="border-x border-b border-gray-200 p-2"
                     key={JSON.stringify(stake)}
                   >
                     {name}
                   </div>
-                  <div className="p-2 border-gray-200 border-r border-b">
+                  <div className="border-r border-b border-gray-200 p-2">
                     {ethers.utils.formatEther(stake.bn)} {stake.symbol}
                   </div>
                 </React.Fragment>
@@ -187,7 +187,7 @@ export const BetSlipModal: React.FC<Props> = ({ isOpen, onClose }) => {
             <SubmitBetsButton />
           </div>
           {error && (
-            <div className="mt-6 rounded-lg bg-red-600 text-white py-4 flex flex-col items-center text-sm">
+            <div className="mt-6 flex flex-col items-center rounded-lg bg-red-600 py-4 text-sm text-white">
               {error}
             </div>
           )}
