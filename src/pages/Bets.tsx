@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { useAccount } from "wagmi";
 import { Toggle, PageLayout, Card } from "../components";
 import { BetFilterGroup } from "../components/Bets";
@@ -12,6 +13,11 @@ import { useBetsStatistics } from "../hooks/stats";
 import { useSubgraphBets } from "../hooks/subgraph";
 
 export const Bets: React.FC = () => {
+  const config = useConfig();
+  const navigate = useNavigate();
+  const { owner: paramsAddress } = useParams();
+  const { address, isConnected } = useAccount();
+
   const { totalWinningBets, totalWinningVolume, largestWinningBet } =
     useBetsStatistics();
   const [myBetsEnabled, setMyBetsEnabled] = useState(true);
@@ -20,9 +26,23 @@ export const Bets: React.FC = () => {
   const [betTableFilter, setBetTableFilter] =
     useState<BetFilterOptions>("ALL_BETS");
 
-  const { isConnected } = useAccount();
+  useEffect(() => {
+    // redirect back to /bets if disconnected
+    if (!isConnected && !paramsAddress)
+      navigate("/bets", {
+        replace: true
+      });
+  }, [isConnected]);
 
-  const config = useConfig();
+  useEffect(() => {
+    if (!address) return;
+
+    // if user is logged in navigate to static url
+    navigate(`/bets/${address}`, {
+      replace: true
+    });
+    setMyBetsEnabled(true);
+  }, [address]);
 
   const {
     betData: betHistory,
@@ -30,13 +50,18 @@ export const Bets: React.FC = () => {
     incrementPage,
     decrementPage,
     refetch
-  } = useSubgraphBets(myBetsEnabled, betTableFilter);
+  } = useSubgraphBets(
+    betTableFilter,
+    undefined,
+    myBetsEnabled ? paramsAddress : undefined
+  );
 
   useEffect(() => {
-    setMyBetsEnabled(isConnected);
-  }, [isConnected]);
+    setMyBetsEnabled(!!paramsAddress);
+  }, [paramsAddress]);
 
   const onMyBetToggle = () => setMyBetsEnabled(prev => !prev);
+
   const onFilterChange = (option: BetFilterOptions) =>
     setBetTableFilter(option);
 
@@ -82,6 +107,7 @@ export const Bets: React.FC = () => {
       </div>
       <BetTable
         myBetsEnabled={myBetsEnabled}
+        paramsAddressExists={!!paramsAddress}
         betHistory={betHistory}
         config={config}
         setSelectedBet={setSelectedBet}

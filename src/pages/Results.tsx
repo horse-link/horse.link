@@ -57,7 +57,6 @@ export const Results: React.FC = () => {
   );
   const b16MarketId = formatBytes16String(marketId);
   const { betData: betHistory, refetch } = useSubgraphBets(
-    false,
     "ALL_BETS",
     b16MarketId
   );
@@ -101,6 +100,7 @@ export const Results: React.FC = () => {
       <div className="flex flex-col gap-6">
         <h1 className="text-2xl font-bold mt-4">History</h1>
         <BetTable
+          paramsAddressExists={false}
           myBetsEnabled={false}
           betHistory={betHistory}
           config={config}

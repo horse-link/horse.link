@@ -39,7 +39,7 @@ export const Races: React.FC = () => {
     betData: betHistory,
     totalBetsOnPropositions,
     refetch
-  } = useSubgraphBets(false, "ALL_BETS", b16MarketId);
+  } = useSubgraphBets("ALL_BETS", b16MarketId);
 
   const margin = useMemo(() => {
     if (!race || !race.runners.length) return;
@@ -108,6 +108,7 @@ export const Races: React.FC = () => {
       <div className="flex flex-col gap-6">
         <h1 className="text-2xl font-bold mt-4">History</h1>
         <BetTable
+          paramsAddressExists={false}
           myBetsEnabled={false}
           betHistory={betHistory}
           config={config}

@@ -1,4 +1,3 @@
-import { useAccount } from "wagmi";
 import {
   BetFilterOptions,
   BetHistory,
@@ -23,11 +22,10 @@ type AggregatorResponse = {
 };
 
 export const useSubgraphBets = (
-  myBetsEnabled: boolean,
   betFilterOptions: BetFilterOptions,
-  marketId?: string
+  marketId?: string,
+  owner?: string
 ) => {
-  const { address } = useAccount();
   const { shouldRefetch, refetch } = useRefetch();
 
   const [skipMultiplier, setSkipMultiplier] = useState(0);
@@ -66,7 +64,7 @@ export const useSubgraphBets = (
   useEffect(() => {
     setSkipMultiplier(0);
     setBetData(undefined);
-  }, [myBetsEnabled]);
+  }, [owner]);
 
   // get bet data
   useEffect(() => {
@@ -79,7 +77,7 @@ export const useSubgraphBets = (
     const query = gql`
       ${utils.queries.getBetsQuery(
         {
-          owner: myBetsEnabled && address ? address.toLowerCase() : undefined,
+          owner: owner?.toLowerCase(),
           marketId
         },
         betFilterOptions,
@@ -112,11 +110,10 @@ export const useSubgraphBets = (
       isActive = false;
     };
   }, [
-    myBetsEnabled,
+    owner,
     betFilterOptions,
     marketId,
     aggregatorData,
-    address,
     skipMultiplier,
     shouldRefetch
   ]);
