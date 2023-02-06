@@ -22,9 +22,9 @@ type AggregatorResponse = {
 };
 
 export const useSubgraphBets = (
-  owner: string = "",
   betFilterOptions: BetFilterOptions,
-  marketId?: string
+  marketId?: string,
+  owner?: string
 ) => {
   const { shouldRefetch, refetch } = useRefetch();
 
@@ -77,7 +77,7 @@ export const useSubgraphBets = (
     const query = gql`
       ${utils.queries.getBetsQuery(
         {
-          owner: owner.toLowerCase() || undefined,
+          owner: owner?.toLowerCase(),
           marketId
         },
         betFilterOptions,

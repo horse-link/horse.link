@@ -14,21 +14,34 @@ import { useSubgraphBets } from "../hooks/subgraph";
 
 export const Bets: React.FC = () => {
   const config = useConfig();
-  const params = useParams();
   const navigate = useNavigate();
+  const { owner: paramsAddress } = useParams();
   const { address, isConnected } = useAccount();
 
   const { totalWinningBets, totalWinningVolume, largestWinningBet } =
     useBetsStatistics();
   const [myBetsEnabled, setMyBetsEnabled] = useState(true);
-  // The punter who's bets we're currently showing (not necessarily the user)
-  const [owner, setOwner] = useState(
-    params.owner || (myBetsEnabled && address) || ""
-  );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBet, setSelectedBet] = useState<BetHistory>();
   const [betTableFilter, setBetTableFilter] =
     useState<BetFilterOptions>("ALL_BETS");
+
+  useEffect(() => {
+    // redirect back to /bets if disconnected
+    if (!isConnected)
+      navigate("/bets", {
+        replace: true
+      });
+  }, [isConnected]);
+
+  useEffect(() => {
+    if (!address) return;
+
+    // if user is logged in navigate to static url
+    navigate(`/bets/${address}`, {
+      replace: true
+    });
+  }, [address]);
 
   const {
     betData: betHistory,
@@ -36,22 +49,18 @@ export const Bets: React.FC = () => {
     incrementPage,
     decrementPage,
     refetch
-  } = useSubgraphBets(owner, betTableFilter);
+  } = useSubgraphBets(
+    betTableFilter,
+    undefined,
+    myBetsEnabled ? paramsAddress : undefined
+  );
 
   useEffect(() => {
-    setMyBetsEnabled(isConnected);
-  }, [isConnected]);
+    console.log(paramsAddress);
+    setMyBetsEnabled(!!paramsAddress);
+  }, [paramsAddress]);
 
-  useEffect(() => {
-    navigate(owner ? `/bets/${owner}` : "/bets", { replace: true });
-  }, [owner]);
-
-  const onMyBetToggle = () => {
-    setMyBetsEnabled(prev => {
-      setOwner((!prev && address) || "");
-      return !prev;
-    });
-  };
+  const onMyBetToggle = () => setMyBetsEnabled(prev => !prev);
 
   const onFilterChange = (option: BetFilterOptions) =>
     setBetTableFilter(option);

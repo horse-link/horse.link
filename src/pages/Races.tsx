@@ -39,7 +39,7 @@ export const Races: React.FC = () => {
     betData: betHistory,
     totalBetsOnPropositions,
     refetch
-  } = useSubgraphBets(undefined, "ALL_BETS", b16MarketId);
+  } = useSubgraphBets("ALL_BETS", b16MarketId);
 
   const margin = useMemo(() => {
     if (!race || !race.runners.length) return;
