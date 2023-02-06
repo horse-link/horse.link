@@ -28,7 +28,7 @@ export const Bets: React.FC = () => {
 
   useEffect(() => {
     // redirect back to /bets if disconnected
-    if (!isConnected)
+    if (!isConnected && !paramsAddress)
       navigate("/bets", {
         replace: true
       });
@@ -41,6 +41,7 @@ export const Bets: React.FC = () => {
     navigate(`/bets/${address}`, {
       replace: true
     });
+    setMyBetsEnabled(true);
   }, [address]);
 
   const {
@@ -106,6 +107,7 @@ export const Bets: React.FC = () => {
       </div>
       <BetTable
         myBetsEnabled={myBetsEnabled}
+        paramsAddressExists={!!paramsAddress}
         betHistory={betHistory}
         config={config}
         setSelectedBet={setSelectedBet}
