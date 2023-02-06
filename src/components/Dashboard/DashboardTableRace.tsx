@@ -51,7 +51,6 @@ export const DashboardTableRace: React.FC<Props> = ({ race, meet }) => {
           "hover:bg-gray-200": race.status === "Normal"
         })}
       >
-        <p>R{race.number}</p>
         {dayjs.utc(race.start).local().format("H:mm")}
         <p>
           {race.status == "Paying"
