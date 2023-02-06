@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef } from "react";
+import React, { useCallback, useMemo } from "react";
 import { BaseButton } from ".";
 import { Config } from "../../types/config";
 import { BetHistory } from "../../types/bets";
