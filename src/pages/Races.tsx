@@ -63,7 +63,7 @@ export const Races: React.FC = () => {
         <div className="flex gap-2">
           <RacesButton params={params} meetRaces={meetRaces?.raceInfo} />
         </div>
-        <div className="lg:flex p-2 shadow overflow-hidden border-b bg-white border-gray-200 rounded-lg justify-around inline-block lg:text-sm text-center">
+        <div className="lg:flex p-2 shadow border-b bg-white border-gray-200 rounded-lg justify-around lg:text-sm text-center">
           <h1 className="m-1">
             {race ? race.raceData.name : <Skeleton width={200} />}
           </h1>
