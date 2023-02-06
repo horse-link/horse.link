@@ -54,12 +54,14 @@ export const BaseTable: React.FC<Props> = props => {
                   <tr
                     key={createRowKey(i)}
                     className={row?.classNames || ""}
+                    role="row"
                     {...row?.props}
                   >
                     {data.map((d, i) => (
                       <td
                         key={createDataKey(i)}
                         className={`${cellStyles} ${d.classNames || ""}`}
+                        role="cell"
                         {...d.props}
                       >
                         {d.title}
