@@ -2,6 +2,7 @@ import React from "react";
 import { MeetResults, WinningHorse } from "../../types/meets";
 import { BaseTable } from ".";
 import { TableData, TableHeader, TableRow } from "../../types/table";
+import utils from "../../utils";
 
 type Props = {
   results: MeetResults;
@@ -10,7 +11,7 @@ type Props = {
 export const ResultsTable: React.FC<Props> = ({ results }) => {
   const getWinningHorseData = (horse: WinningHorse): TableData[] => [
     {
-      title: horse.place,
+      title: utils.formatting.formatOrdinals(horse.place),
       classNames: "bg-gray-200"
     },
     {
@@ -33,7 +34,7 @@ export const ResultsTable: React.FC<Props> = ({ results }) => {
       title: "Runner"
     },
     {
-      title: "Number"
+      title: "Rider Number"
     },
     {
       title: "Rider"

@@ -65,7 +65,7 @@ export const SettleBetModal: React.FC<Props> = ({
       !selectedBet ||
       !market ||
       !signer ||
-      !selectedBet.marketOracleResultSig ||
+      (!selectedBet.marketOracleResultSig && !selectedBet.scratched) ||
       !config
     )
       return;

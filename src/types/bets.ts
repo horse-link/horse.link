@@ -1,14 +1,28 @@
 import { EcSignature } from "./general";
 
+export type ScratchedRunner = {
+  b16propositionId: string;
+  odds: number;
+  totalOdds: string;
+  marketResultAdded: boolean;
+  signature?: EcSignature;
+};
+
 export type SignedBetDataResponse = {
   marketResultAdded: boolean;
-  winningPropositionId: string | undefined;
-  marketOracleResultSig: EcSignature | undefined;
+  winningPropositionId?: string;
+  marketOracleResultSig?: EcSignature;
+  scratchedRunners?: ScratchedRunner[];
 };
 
 export type BetTablePaginationValues = 25 | 50 | 100;
 
-export type BetStatus = "RESULTED" | "PENDING" | "SETTLED" | "INVALID";
+export type BetStatus =
+  | "RESULTED"
+  | "PENDING"
+  | "SCRATCHED"
+  | "SETTLED"
+  | "INVALID";
 
 export type BetFilterOptions = "ALL_BETS" | BetStatus;
 
@@ -33,6 +47,7 @@ export type BetHistory = {
   settledAt?: number;
   winningPropositionId?: string;
   marketOracleResultSig?: EcSignature;
+  scratched?: ScratchedRunner;
   status: BetStatus;
 };
 

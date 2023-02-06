@@ -24,6 +24,64 @@
     "type": "event"
   },
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes16",
+        "name": "marketId",
+        "type": "bytes16"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes16",
+        "name": "propositionId",
+        "type": "bytes16"
+      }
+    ],
+    "name": "ScratchedSet",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "LOSER",
+    "outputs": [
+      {
+        "internalType": "uint8",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "SCRATCHED",
+    "outputs": [
+      {
+        "internalType": "uint8",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "WINNER",
+    "outputs": [
+      {
+        "internalType": "uint8",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "bytes16",
@@ -39,9 +97,9 @@
     "name": "checkResult",
     "outputs": [
       {
-        "internalType": "bool",
+        "internalType": "uint8",
         "name": "",
-        "type": "bool"
+        "type": "uint8"
       }
     ],
     "stateMutability": "view",
@@ -71,9 +129,43 @@
     "name": "getResult",
     "outputs": [
       {
-        "internalType": "bytes16",
+        "components": [
+          {
+            "internalType": "bytes16",
+            "name": "winningPropositionId",
+            "type": "bytes16"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes16",
+                "name": "scratchedPropositionId",
+                "type": "bytes16"
+              },
+              {
+                "internalType": "uint256",
+                "name": "timestamp",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "odds",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "totalOdds",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct IOracle.Scratched[]",
+            "name": "scratched",
+            "type": "tuple[]"
+          }
+        ],
+        "internalType": "struct IOracle.Result",
         "name": "",
-        "type": "bytes16"
+        "type": "tuple"
       }
     ],
     "stateMutability": "view",
@@ -88,7 +180,7 @@
       },
       {
         "internalType": "bytes16",
-        "name": "propositionId",
+        "name": "winningPropositionId",
         "type": "bytes16"
       },
       {
@@ -115,6 +207,56 @@
       }
     ],
     "name": "setResult",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes16",
+        "name": "marketId",
+        "type": "bytes16"
+      },
+      {
+        "internalType": "bytes16",
+        "name": "scratchedPropositionId",
+        "type": "bytes16"
+      },
+      {
+        "internalType": "uint256",
+        "name": "odds",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "totalOdds",
+        "type": "uint256"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint8",
+            "name": "v",
+            "type": "uint8"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "r",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "s",
+            "type": "bytes32"
+          }
+        ],
+        "internalType": "struct SignatureLib.Signature",
+        "name": "signature",
+        "type": "tuple"
+      }
+    ],
+    "name": "setScratchedResult",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

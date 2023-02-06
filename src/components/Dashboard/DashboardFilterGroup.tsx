@@ -27,9 +27,9 @@ export const DashboardFilterGroup: React.FC<Props> = ({
           onChange(key);
         }}
         className={classNames(
-          "bg-white rounded w-full md:w-28 text-sm md:text-base text-black",
+          "bg-white rounded w-full md:w-28 text-sm md:text-base ",
           {
-            "bg-indigo-600 text-white hover:bg-indigo-700":
+            "bg-indigo-700 text-white":
               key.toLowerCase() === currentOption.toLowerCase(),
             "disabled:opacity-75 hover:bg-gray-200":
               key.toLowerCase() !== currentOption.toLowerCase()

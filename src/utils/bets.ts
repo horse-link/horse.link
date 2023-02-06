@@ -4,6 +4,7 @@ import {
   BetFilterOptions,
   BetHistory,
   BetStatus,
+  ScratchedRunner,
   SignedBetDataResponse
 } from "../types/bets";
 import { Config } from "../types/config";
@@ -21,18 +22,21 @@ export const decrementPage = (page: number, maxPages: number) =>
 
 export const getBetStatus = (
   bet: Bet,
-  signedBetData: SignedBetDataResponse
+  signedBetData: SignedBetDataResponse,
+  scratched?: ScratchedRunner
 ): BetStatus => {
-  const hasResult =
+  const hasWinningResult =
     signedBetData.winningPropositionId || signedBetData.marketResultAdded;
   switch (true) {
-    case +bet.payoutAt > Math.floor(Date.now() / 1000):
+    case +bet.payoutAt > Math.floor(Date.now() / 1000) && !scratched:
       return "PENDING";
-    case !hasResult && !bet.settled:
+    case !hasWinningResult && !scratched && !bet.settled:
       return "PENDING";
-    case hasResult && !bet.settled:
+    case hasWinningResult && !bet.settled:
       return "RESULTED";
-    case hasResult && bet.settled:
+    case !!scratched && !bet.settled:
+      return "SCRATCHED";
+    case hasWinningResult && bet.settled:
       return "SETTLED";
     default:
       console.error(
@@ -45,25 +49,31 @@ export const getBetStatus = (
 export const getBetHistory = (
   bet: Bet,
   signedBetData: SignedBetDataResponse
-): BetHistory => ({
-  index: utils.formatting.formatBetId(bet.id),
-  marketId: bet.marketId.toLowerCase(),
-  marketAddress: bet.marketAddress.toLowerCase(),
-  assetAddress: bet.assetAddress.toLowerCase(),
-  propositionId: bet.propositionId.toLowerCase(),
-  winningPropositionId: signedBetData.winningPropositionId,
-  marketResultAdded: signedBetData.marketResultAdded,
-  settled: bet.settled,
-  punter: bet.owner.toLowerCase(),
-  payoutDate: +bet.payoutAt,
-  amount: bet.amount,
-  payout: bet.payout,
-  tx: bet.createdAtTx.toLowerCase(),
-  blockNumber: +bet.createdAt,
-  settledAt: bet.settled ? +bet.settledAt : undefined,
-  marketOracleResultSig: signedBetData.marketOracleResultSig,
-  status: getBetStatus(bet, signedBetData)
-});
+): BetHistory => {
+  const scratched = signedBetData?.scratchedRunners?.find(scratched => {
+    return scratched.b16propositionId === bet.propositionId;
+  });
+  return {
+    index: utils.formatting.formatBetId(bet.id),
+    marketId: bet.marketId.toLowerCase(),
+    marketAddress: bet.marketAddress.toLowerCase(),
+    assetAddress: bet.assetAddress.toLowerCase(),
+    propositionId: bet.propositionId.toLowerCase(),
+    winningPropositionId: signedBetData.winningPropositionId,
+    marketResultAdded: signedBetData.marketResultAdded,
+    settled: bet.settled,
+    punter: bet.owner.toLowerCase(),
+    payoutDate: +bet.payoutAt,
+    amount: bet.amount,
+    payout: bet.payout,
+    tx: bet.createdAtTx.toLowerCase(),
+    blockNumber: +bet.createdAt,
+    settledAt: bet.settled ? +bet.settledAt : undefined,
+    marketOracleResultSig: signedBetData.marketOracleResultSig,
+    scratched: scratched,
+    status: getBetStatus(bet, signedBetData, scratched)
+  };
+};
 
 export const filterBetsByFilterOptions = (
   bets: BetHistory[],
@@ -77,12 +87,22 @@ export const recoverSigSigner = (
   marketId: string,
   propositionId: string,
   signature: EcSignature,
-  config: Config
+  config: Config,
+  odds?: ethers.BigNumber,
+  totalOdds?: ethers.BigNumber
 ) => {
-  const messageHash = ethers.utils.solidityKeccak256(
-    ["bytes16", "bytes16"],
-    [marketId, propositionId]
-  );
+  let messageHash;
+  if (odds && totalOdds) {
+    messageHash = ethers.utils.solidityKeccak256(
+      ["bytes16", "bytes16", "uint256", "uint256"],
+      [marketId, propositionId, odds, totalOdds]
+    );
+  } else {
+    messageHash = ethers.utils.solidityKeccak256(
+      ["bytes16", "bytes16"],
+      [marketId, propositionId]
+    );
+  }
   const address = ethers.utils.verifyMessage(
     ethers.utils.arrayify(messageHash),
     signature
