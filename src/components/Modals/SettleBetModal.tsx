@@ -165,7 +165,7 @@ export const SettleBetModal: React.FC<Props> = ({
                   {txLoading ? <Loader /> : "SETTLE BET"}
                 </button>
                 {!selectedBet.marketResultAdded && (
-                  <span className="block relative top-[1.8rem] text-xs text-black/80">
+                  <span className="block mb-3 relative top-[1.8rem] text-xs text-black/80">
                     Note: will require two transactions to add market results
                     first
                   </span>
