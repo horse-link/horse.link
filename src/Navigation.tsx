@@ -1,31 +1,19 @@
 import { Routes, Route, BrowserRouter, Navigate } from "react-router-dom";
-import {
-  Bets,
-  Markets,
-  Races,
-  Tokens,
-  Vaults,
-  Faucet,
-  Dashboard,
-  Results
-} from "./pages";
+import Routing from "./Routing";
+import { Suspense } from "react";
+import Transition from "./pages/Transition";
 
 const Navigation: React.FC = () => (
   <BrowserRouter>
-    <Routes>
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/vaults" element={<Vaults />} />
-      <Route path="/markets" element={<Markets />} />
-      <Route path="/tokens" element={<Tokens />} />
-      <Route path="/races/:track/:number" element={<Races />} />
-      <Route path="/results/:propositionId" element={<Results />} />
-      <Route path="/faucet" element={<Faucet />} />
-      <Route path="/bets" element={<Bets />}>
-        <Route path="/bets/:owner" element={<Bets />} />
-      </Route>
+    <Suspense fallback={<Transition />}>
+      <Routes>
+        {Routing.map(({ path, element, props }) => (
+          <Route path={path} element={element} {...props} key={path} />
+        ))}
 
-      <Route path="*" element={<Navigate to="/dashboard" replace />} />
-    </Routes>
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      </Routes>
+    </Suspense>
   </BrowserRouter>
 );
 

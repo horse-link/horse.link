@@ -14,7 +14,7 @@ import { useWalletModal } from "../providers/WalletModal";
 import { SignedMeetingsResponse, MeetFilters, Meet } from "../types/meets";
 import constants from "../constants";
 
-export const Dashboard: React.FC = () => {
+const Dashboard: React.FC = () => {
   const [response, setResponse] = useState<SignedMeetingsResponse>();
   const [meets, setMeets] = useState<Meet[]>();
   const [myPlayEnabled, setMyPlayEnabled] = useState(false);
@@ -132,3 +132,5 @@ export const Dashboard: React.FC = () => {
     </PageLayout>
   );
 };
+
+export default Dashboard;
