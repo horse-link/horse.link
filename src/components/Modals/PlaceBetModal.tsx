@@ -10,7 +10,7 @@ import useRefetch from "../../hooks/useRefetch";
 import utils from "../../utils";
 import { Back, RaceData, Runner } from "../../types/meets";
 import { UserBalance } from "../../types/users";
-import { useBetSlipContext } from "../../context/BetSlipContext";
+import { useBetSlipContext } from "../../providers/BetSlip";
 import { useParams } from "react-router-dom";
 
 type Props = {

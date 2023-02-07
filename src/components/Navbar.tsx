@@ -3,9 +3,9 @@ import classnames from "classnames";
 import { Link, useLocation } from "react-router-dom";
 import { Disclosure } from "@headlessui/react";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
-import { ConnectWalletButton } from "../Buttons";
-import { useWalletModal } from "../../providers/WalletModal";
-import { NavbarRouting } from "../../Routing";
+import { ConnectWalletButton } from "./Buttons";
+import { useWalletModal } from "../providers/WalletModal";
+import { NavbarRouting } from "../Routing";
 
 export const Navbar: React.FC = () => {
   const { pathname: currentPath } = useLocation();

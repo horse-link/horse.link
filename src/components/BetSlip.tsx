@@ -1,5 +1,5 @@
 import React from "react";
-import { useBetSlipContext } from "../context/BetSlipContext";
+import { useBetSlipContext } from "../providers/BetSlip";
 import classnames from "classnames";
 import { ethers } from "ethers";
 import utils from "../utils";
