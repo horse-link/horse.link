@@ -15,7 +15,7 @@ import Skeleton from "react-loading-skeleton";
 import dayjs from "dayjs";
 import utils from "../utils";
 
-export const Races: React.FC = () => {
+const Races: React.FC = () => {
   const params = useParams();
   const track = params.track || "";
   const raceNumber = Number(params.number) || 0;
@@ -63,7 +63,7 @@ export const Races: React.FC = () => {
         <div className="flex gap-2">
           <RacesButton params={params} meetRaces={meetRaces?.raceInfo} />
         </div>
-        <div className="lg:flex p-2 gap-2 shadow border-b bg-white border-gray-200 rounded-lg justify-around lg:text-sm text-center">
+        <div className="justify-around gap-2 rounded-lg border-b border-gray-200 bg-white p-2 text-center shadow lg:flex lg:text-sm">
           <h1>{race ? race.raceData.name : <Skeleton width={200} />}</h1>
           <h1>
             {race ? (
@@ -126,3 +126,5 @@ export const Races: React.FC = () => {
     </PageLayout>
   );
 };
+
+export default Races;

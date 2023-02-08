@@ -10,7 +10,7 @@ import { ClaimTokensButton } from "../components/Buttons";
 
 const FAUCET_ADDRESS = "0xf919eaf2e37aac718aa19668b9071ee42c02c081";
 
-export const Faucet: React.FC = () => {
+const Faucet: React.FC = () => {
   const config = useConfig();
   const { address } = useAccount();
   const { openWalletModal } = useWalletModal();
@@ -128,3 +128,5 @@ export const Faucet: React.FC = () => {
     </PageLayout>
   );
 };
+
+export default Faucet;

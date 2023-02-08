@@ -9,7 +9,7 @@ import utils from "../utils";
 import { ethers } from "ethers";
 import { useVaultStatistics } from "../hooks/stats/useVaultStatistics";
 
-export const Vaults: React.FC = () => {
+const Vaults: React.FC = () => {
   const [modal, setModal] = useState<VaultModalState>();
   const vaultHistory = useSubgraphVaults();
   const config = useConfig();
@@ -81,3 +81,5 @@ export const Vaults: React.FC = () => {
     </PageLayout>
   );
 };
+
+export default Vaults;

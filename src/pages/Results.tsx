@@ -16,7 +16,7 @@ import dayjs from "dayjs";
 import { RaceInfo } from "../types/meets";
 import Skeleton from "react-loading-skeleton";
 
-export const Results: React.FC = () => {
+const Results: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [settleHashes, setSettleHashes] = useState<string[]>();
   const [isSettledMarketModalOpen, setIsSettledMarketModalOpen] =
@@ -136,3 +136,5 @@ export const Results: React.FC = () => {
     </PageLayout>
   );
 };
+
+export default Results;
