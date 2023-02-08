@@ -9,10 +9,12 @@ import React, {
 import { TokenContextType } from "../types/context";
 import { Token } from "../types/tokens";
 import { useConfig } from "./Config";
+import { TokenModal } from "../components/Modals";
 
 export const TokenContext = createContext<TokenContextType>({
   tokensLoading: false,
-  changeToken: () => {}
+  changeToken: () => {},
+  openModal: () => {}
 });
 
 export const useTokenContext = () => useContext(TokenContext);
@@ -24,6 +26,7 @@ export const TokenContextProvider: React.FC<{ children: React.ReactNode }> = ({
   const [currentToken, setCurrentToken] = useState<Token>();
   const [availableTokens, setAvailableTokens] = useState<Array<Token>>();
   const [tokensLoading, setTokensLoading] = useState(false);
+  const [tokenModalOpen, setTokenModalOpen] = useState(false);
 
   // load tokens
   useEffect(() => {
@@ -65,12 +68,16 @@ export const TokenContextProvider: React.FC<{ children: React.ReactNode }> = ({
     [filteredTokens]
   );
 
+  const openModal = useCallback(() => setTokenModalOpen(true), []);
+  const closeModal = useCallback(() => setTokenModalOpen(false), []);
+
   const value = useMemo<TokenContextType>(
     () => ({
       currentToken,
       availableTokens,
       tokensLoading,
-      changeToken
+      changeToken,
+      openModal
     }),
     [
       currentToken,
@@ -79,11 +86,20 @@ export const TokenContextProvider: React.FC<{ children: React.ReactNode }> = ({
       setAvailableTokens,
       tokensLoading,
       setTokensLoading,
-      changeToken
+      changeToken,
+      openModal
     ]
   );
 
   return (
-    <TokenContext.Provider value={value}>{children}</TokenContext.Provider>
+    <TokenContext.Provider value={value}>
+      {children}
+      <TokenModal
+        availableTokens={availableTokens}
+        tokensLoading={tokensLoading}
+        isOpen={tokenModalOpen}
+        onClose={closeModal}
+      />
+    </TokenContext.Provider>
   );
 };

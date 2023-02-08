@@ -39,4 +39,5 @@ export type TokenContextType = {
   availableTokens?: Array<Token>;
   tokensLoading: boolean;
   changeToken: (to: Token) => void;
+  openModal: () => void;
 };
