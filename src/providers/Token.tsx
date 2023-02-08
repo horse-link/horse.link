@@ -27,7 +27,7 @@ export const TokenContextProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // load tokens
   useEffect(() => {
-    if (!config) return;
+    if (!config) return setTokensLoading(true);
 
     const tokens: Array<Token> = config.tokens.map(t => ({
       address: t.address,
@@ -35,10 +35,12 @@ export const TokenContextProvider: React.FC<{ children: React.ReactNode }> = ({
       decimals: t.decimals.toString()
     }));
 
-    if (!tokens.length) return;
+    if (!tokens.length) return setTokensLoading(false);
 
     setAvailableTokens(tokens);
     setCurrentToken(tokens[0]);
+
+    setTokensLoading(false);
   }, [config]);
 
   const filteredTokens = useMemo(() => {

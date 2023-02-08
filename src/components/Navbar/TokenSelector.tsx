@@ -3,7 +3,7 @@ import { TokenSelectorButton } from "../Buttons";
 
 export const TokenSelector: React.FC = () => {
   return (
-    <div className="flex h-full items-center text-black">
+    <div className="flex h-full w-full items-center justify-center text-black">
       <TokenSelectorButton />
     </div>
   );
