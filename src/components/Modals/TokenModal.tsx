@@ -3,6 +3,8 @@ import { Token } from "../../types/tokens";
 import { BaseModal } from "./BaseModal";
 import { Loader } from "../Loader";
 import { useTokenContext } from "../../providers/Token";
+import { AddressLink } from "../AddressLink";
+import { Address } from "wagmi";
 
 type Props = {
   isOpen: boolean;
@@ -44,7 +46,9 @@ export const TokenModal: React.FC<Props> = ({
                   onClick={() => onClick(t)}
                 >
                   <span className="block">{t.symbol}</span>
-                  <span className="block">{t.address}</span>
+                  <span className="block">
+                    <AddressLink address={t.address as Address} />
+                  </span>
                 </button>
               </div>
             ))}
