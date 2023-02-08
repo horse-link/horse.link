@@ -1,19 +1,88 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useBetSlipContext } from "../context/BetSlipContext";
 import classnames from "classnames";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import utils from "../utils";
 import { useConfig } from "../providers/Config";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Skeleton from "react-loading-skeleton";
 import { PlaceBetsButton } from "./Buttons";
+import { useERC20Contract } from "../hooks/contracts";
+import { useMarketContract } from "../hooks/contracts";
+import { useSigner } from "wagmi";
 
 dayjs.extend(relativeTime);
 
 export const BetSlip: React.FC = () => {
   const config = useConfig();
+  const { data: signer } = useSigner();
   const { bets, removeBet } = useBetSlipContext();
+  const { getPotentialPayout } = useMarketContract();
+  const [payout, setPayout] = useState<
+    Record<
+      string,
+      {
+        symbol: string;
+        payout: BigNumber;
+      }
+    >
+  >();
+
+  useEffect(() => {
+    if (!bets || !signer) return;
+
+    const displayPayout = async () => {
+      const payouts = await Promise.all(
+        bets.map(async bet => {
+          const payout = await getPotentialPayout(
+            bet.market,
+            BigNumber.from(bet.wager),
+            bet.back,
+            signer
+          );
+          console.log("hi");
+          return {
+            market: bet.market,
+            payout: payout
+          };
+        })
+      );
+      const payoutsPerAsset = payouts.reduce(
+        (previousPayout, currentPayout) => {
+          const vault = utils.config.getVaultFromMarket(
+            currentPayout.market,
+            config
+          );
+          if (!vault)
+            throw new Error(
+              `No vault associated with market, ${currentPayout.market.address}`
+            );
+          const name = vault.asset.address;
+          const units = ethers.utils.formatUnits(
+            currentPayout.payout,
+            vault.asset.decimals
+          );
+          const parsedUnits = ethers.utils.parseEther(units);
+
+          return {
+            ...previousPayout,
+            [name]: {
+              payout: previousPayout[name]
+                ? previousPayout[name].payout.add(parsedUnits)
+                : parsedUnits,
+              symbol: vault.asset.symbol
+            }
+          };
+        },
+        {} as NonNullable<typeof payout>
+      );
+
+      setPayout(payoutsPerAsset);
+      console.log(bets);
+    };
+    displayPayout();
+  }, [bets, config, signer]);
 
   return (
     <div className="mt-6 w-full shadow-lg lg:sticky lg:top-4 lg:mx-4 lg:mt-0">
@@ -97,6 +166,24 @@ export const BetSlip: React.FC = () => {
             </div>
           )}
         </div>
+        <div className="flex justify-between pt-3">
+          <span className="text-lg font-bold pl-2">
+            {bets ? `Potential Payout: ` : ""}
+          </span>
+          <div className="flex flex-col pr-4 pb-2 text-lg">
+            {payout && bets
+              ? Object.entries(payout).map(([n, p]) => (
+                  <span className="block" key={n}>
+                    {utils.formatting.formatToFourDecimals(
+                      ethers.utils.formatEther(p.payout)
+                    )}{" "}
+                    {p.symbol}
+                  </span>
+                ))
+              : ""}
+          </div>
+        </div>
+
         {bets?.length && (
           <div className="mt-2">
             <PlaceBetsButton />
