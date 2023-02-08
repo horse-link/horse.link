@@ -1,5 +1,6 @@
 import { MarketInfo } from "./config";
 import { Back, RaceData, Runner } from "./meets";
+import { Token } from "./tokens";
 
 export type BetSlipErrorEntry = {
   bet: Omit<BetSlipEntry, "id">;
@@ -31,4 +32,11 @@ export type BetSlipContextType = {
   clearBets: () => void;
   placeBets: () => void;
   openModal: () => void;
+};
+
+export type TokenContextType = {
+  currentToken?: Token;
+  availableTokens?: Array<Token>;
+  tokensLoading: boolean;
+  changeToken: (to: Token) => void;
 };

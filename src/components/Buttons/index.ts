@@ -6,3 +6,4 @@ export * from "./RacesButton";
 export * from "./VaultActionButton";
 export * from "./PlaceBetsButton";
 export * from "./SubmitBetsButton";
+export * from "./TokenSelectorButton";

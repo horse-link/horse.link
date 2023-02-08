@@ -6,6 +6,7 @@ import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import { ConnectWalletButton } from "./Buttons";
 import { useWalletModal } from "../providers/WalletModal";
 import { NavbarRouting } from "../Routing";
+import { TokenSelector } from "./Navbar/TokenSelector";
 
 export const Navbar: React.FC = () => {
   const { pathname: currentPath } = useLocation();
@@ -19,6 +20,7 @@ export const Navbar: React.FC = () => {
             <div className="flex h-16 justify-between">
               <div className="flex">
                 <div className="hidden sm:-my-px sm:flex sm:space-x-8">
+                  <TokenSelector />
                   {NavbarRouting.map(item => {
                     const active = item.path === currentPath;
 
@@ -62,6 +64,7 @@ export const Navbar: React.FC = () => {
 
           <Disclosure.Panel className="sm:hidden">
             <div className="space-y-1 pt-2 pb-3">
+              <TokenSelector />
               {NavbarRouting.map(item => {
                 const active = item.path === currentPath;
 
