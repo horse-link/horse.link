@@ -39,7 +39,7 @@ export const TokenModal: React.FC<Props> = ({
           <h2 className="text-xl font-bold">Available Tokens</h2>
           <div className="mt-4 w-full">
             {availableTokens.map(t => (
-              <div className="w-full">
+              <div className="w-full" key={t.address}>
                 <button
                   className="flex w-full justify-between rounded-md py-1 px-2 hover:bg-zinc-100"
                   onClick={() => onClick(t)}
