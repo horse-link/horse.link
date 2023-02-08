@@ -90,7 +90,7 @@ export const BetSlip: React.FC = () => {
         Bet Slip
       </h2>
       <div className="rounded-b-lg bg-white p-2">
-        <div className="rounded-b-lg border-2 border-emerald-500 py-4 px-2">
+        <div className="rounded-b-lg py-4 px-2">
           {!bets?.length ? (
             <div className="w-full text-center">No Bets</div>
           ) : (

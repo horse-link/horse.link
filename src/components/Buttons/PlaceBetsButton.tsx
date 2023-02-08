@@ -13,7 +13,7 @@ export const PlaceBetsButton: React.FC = () => {
       baseStyleOverride
       className="flex h-full w-full justify-center font-bold text-lg border-2 border-black rounded-lg text-black p-4 hover:bg-black hover:text-white"
     >
-      PLACE BETS
+      BET NOW
     </BaseButton>
   );
 };
