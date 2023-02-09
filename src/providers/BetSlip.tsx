@@ -10,7 +10,6 @@ import {
 import { BetSlipContextType, BetSlipEntry } from "../types/context";
 import { useMarketContract } from "../hooks/contracts";
 import { useSigner } from "wagmi";
-import { BetSlipModal } from "../components/Modals";
 import { ethers } from "ethers";
 import utils from "../utils";
 import { useConfig } from "./Config";
@@ -219,9 +218,6 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
   );
 
   return (
-    <BetSlipContext.Provider value={value}>
-      {children}
-      <BetSlipModal isOpen={isModalOpen} onClose={closeModal} />
-    </BetSlipContext.Provider>
+    <BetSlipContext.Provider value={value}>{children}</BetSlipContext.Provider>
   );
 };

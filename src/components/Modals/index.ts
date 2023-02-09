@@ -6,5 +6,4 @@ export * from "./WalletModal";
 export * from "./BaseModal";
 export * from "./FaucetModal";
 export * from "./SettledMarketModal";
-export * from "./BetSlipModal";
 export * from "./TokenModal";
