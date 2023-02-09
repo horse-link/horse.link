@@ -54,7 +54,7 @@ export const DashboardTableRace: React.FC<Props> = ({ race, meet }) => {
         {dayjs.utc(race.start).local().format("H:mm")}
         <p>
           {race.status == "Paying"
-            ? race.results?.join(" ")
+            ? race.results?.join(", ")
             : race.status == "Abandoned"
             ? "ABND"
             : isAfterClosingTime
