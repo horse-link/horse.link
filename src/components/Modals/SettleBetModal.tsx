@@ -44,7 +44,8 @@ export const SettleBetModal: React.FC<Props> = ({
     api
       .getWinningResultSignature(
         utils.formatting.parseBytes16String(selectedBet.marketId),
-        true
+        // we want to sign if the bet isnt already settled
+        !selectedBet.settled
       )
       .then(signedData => {
         const formattedBet: BetHistory = {
