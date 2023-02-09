@@ -91,14 +91,7 @@ export const SettleBetModal: React.FC<Props> = ({
   const isPayable = bet ? now > bet.payoutDate : false;
 
   const onClickSettleBet = async () => {
-    if (
-      !bet ||
-      !market ||
-      !signer ||
-      (!bet.marketOracleResultSig && !bet.scratched) ||
-      !config
-    )
-      return;
+    if (!bet || !market || !signer || !config) return;
     setTxHash(undefined);
     setError(undefined);
 
@@ -185,7 +178,6 @@ export const SettleBetModal: React.FC<Props> = ({
                   disabled={
                     !signer ||
                     bet.settled ||
-                    (!bet.scratched && !bet.marketOracleResultSig) ||
                     !isPayable ||
                     txLoading ||
                     !!txHash
