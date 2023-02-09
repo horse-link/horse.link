@@ -92,7 +92,7 @@ export const BetSlip: React.FC = () => {
       <div className="rounded-b-lg bg-white p-2">
         <div className="rounded-b-lg py-4 px-2">
           {!bets?.length ? (
-            <div className="w-full text-center">No Bets</div>
+            <div className="w-full pt-2 text-center">No Bets</div>
           ) : (
             <div className="flex max-h-[calc(50vh)] flex-col divide-y divide-black overflow-y-scroll px-4 scrollbar-thin scrollbar-thumb-indigo-600">
               {bets.map((bet, _, array) => (
