@@ -1,4 +1,3 @@
-import moment from "moment";
 import React, { useEffect, useMemo, useState } from "react";
 import { Loader } from "../";
 import { BaseModal } from ".";
@@ -9,6 +8,8 @@ import { useSigner } from "wagmi";
 import utils from "../../utils";
 import { BetHistory } from "../../types/bets";
 import { Config } from "../../types/config";
+import api from "../../apis/Api";
+import dayjs from "dayjs";
 
 type Props = {
   isModalOpen: boolean;
@@ -29,11 +30,39 @@ export const SettleBetModal: React.FC<Props> = ({
   const [txHash, setTxHash] = useState<string>();
   const [error, setError] = useState<ethers.errors>();
 
+  const [bet, setBet] = useState<BetHistory>();
+
   const { data: signer } = useSigner();
   const { settleBet } = useMarketContract();
 
   const now = useMemo(() => Math.floor(Date.now() / 1000), []);
 
+  // get signed bet
+  useEffect(() => {
+    if (!selectedBet) return;
+
+    api
+      .getWinningResultSignature(
+        utils.formatting.parseBytes16String(selectedBet.marketId),
+        true
+      )
+      .then(signedData => {
+        const formattedBet: BetHistory = {
+          ...selectedBet,
+          marketResultAdded: signedData.marketResultAdded,
+          winningPropositionId: signedData.winningPropositionId,
+          marketOracleResultSig: signedData.marketOracleResultSig,
+          scratched: signedData.scratchedRunners?.find(
+            s => s.b16propositionId === selectedBet.propositionId
+          )
+        };
+
+        setBet(formattedBet);
+      })
+      .catch(console.error);
+  }, [selectedBet]);
+
+  // clean up
   useEffect(() => {
     if (isModalOpen) return;
 
@@ -41,31 +70,32 @@ export const SettleBetModal: React.FC<Props> = ({
       setTxHash(undefined);
       setTxLoading(false);
       setError(undefined);
+      setBet(undefined);
     }, 300);
   }, [isModalOpen]);
 
   const market = config?.markets.find(
-    m => m.address.toLowerCase() === selectedBet?.marketAddress.toLowerCase()
+    m => m.address.toLowerCase() === bet?.marketAddress.toLowerCase()
   );
 
   const token = config?.tokens.find(
-    t => t.address.toLowerCase() === selectedBet?.assetAddress.toLowerCase()
+    t => t.address.toLowerCase() === bet?.assetAddress.toLowerCase()
   );
 
   const isWinning =
-    selectedBet && selectedBet.winningPropositionId
-      ? selectedBet.winningPropositionId.toLowerCase() ===
-        selectedBet.propositionId.toLowerCase()
+    bet && bet.winningPropositionId
+      ? bet.winningPropositionId.toLowerCase() ===
+        bet.propositionId.toLowerCase()
       : undefined;
 
-  const isPayable = selectedBet ? now > selectedBet.payoutDate : false;
+  const isPayable = bet ? now > bet.payoutDate : false;
 
   const onClickSettleBet = async () => {
     if (
-      !selectedBet ||
+      !bet ||
       !market ||
       !signer ||
-      (!selectedBet.marketOracleResultSig && !selectedBet.scratched) ||
+      (!bet.marketOracleResultSig && !bet.scratched) ||
       !config
     )
       return;
@@ -74,7 +104,7 @@ export const SettleBetModal: React.FC<Props> = ({
 
     try {
       setTxLoading(true);
-      const tx = await settleBet(market, selectedBet, signer, config);
+      const tx = await settleBet(market, bet, signer, config);
       setTxHash(tx);
     } catch (err: any) {
       setError(err);
@@ -86,21 +116,20 @@ export const SettleBetModal: React.FC<Props> = ({
 
   return (
     <BaseModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-      {!selectedBet || !config ? (
+      {!bet || !config ? (
         <div className="p-10">
           <Loader />
         </div>
       ) : (
         <React.Fragment>
           <h2 className="mr-[8vw] mb-6 text-2xl font-bold">
-            {utils.formatting.formatFirstLetterCapitalised(selectedBet.status)}{" "}
-            Bet
+            {utils.formatting.formatFirstLetterCapitalised(bet.status)} Bet
           </h2>
           <div className="flex flex-col">
             <h3 className="mb-2 font-semibold">
               Placed:{" "}
               <span className="font-normal">
-                {moment.unix(selectedBet.blockNumber).format("dddd Do MMMM")}
+                {dayjs.unix(bet.blockNumber).format("dddd Do MMMM")}
               </span>
             </h3>
             <h3 className="mb-2 font-semibold">
@@ -117,28 +146,28 @@ export const SettleBetModal: React.FC<Props> = ({
               <h3 className="font-semibold">
                 Win:{" "}
                 <span className="font-normal">
-                  {ethers.utils.formatEther(selectedBet.payout)} {token?.symbol}
+                  {ethers.utils.formatEther(bet.payout)} {token?.symbol}
                 </span>
               </h3>
             ) : isWinning === false ? (
               <h3 className="font-semibold">
                 Loss:{" "}
                 <span className="font-normal">
-                  {ethers.utils.formatEther(selectedBet.amount)} {token?.symbol}
+                  {ethers.utils.formatEther(bet.amount)} {token?.symbol}
                 </span>
               </h3>
             ) : (
               <h3 className="font-semibold">
                 Bet:{" "}
                 <span className="font-normal">
-                  {ethers.utils.formatEther(selectedBet.amount)} {token?.symbol}
+                  {ethers.utils.formatEther(bet.amount)} {token?.symbol}
                 </span>
                 <h3 className="mt-2 font-semibold">
                   Potential Payout:{" "}
                   <span className="font-normal">
-                    {selectedBet.payout ? (
+                    {bet.payout ? (
                       utils.formatting.formatToFourDecimals(
-                        ethers.utils.formatEther(selectedBet.payout)
+                        ethers.utils.formatEther(bet.payout)
                       )
                     ) : (
                       <Loader size={14} />
@@ -155,9 +184,8 @@ export const SettleBetModal: React.FC<Props> = ({
                   onClick={onClickSettleBet}
                   disabled={
                     !signer ||
-                    selectedBet.settled ||
-                    (!selectedBet.scratched &&
-                      !selectedBet.marketOracleResultSig) ||
+                    bet.settled ||
+                    (!bet.scratched && !bet.marketOracleResultSig) ||
                     !isPayable ||
                     txLoading ||
                     !!txHash
@@ -165,7 +193,7 @@ export const SettleBetModal: React.FC<Props> = ({
                 >
                   {txLoading ? <Loader /> : "SETTLE BET"}
                 </button>
-                {!selectedBet.marketResultAdded && (
+                {!bet.marketResultAdded && (
                   <span className="relative top-[1.8rem] mb-3 block text-xs text-black/80">
                     Note: will require two transactions to add market results
                     first
