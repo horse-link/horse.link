@@ -156,7 +156,8 @@ export const SettleBetModal: React.FC<Props> = ({
                   disabled={
                     !signer ||
                     selectedBet.settled ||
-                    !selectedBet.marketOracleResultSig ||
+                    (!selectedBet.scratched &&
+                      !selectedBet.marketOracleResultSig) ||
                     !isPayable ||
                     txLoading ||
                     !!txHash
