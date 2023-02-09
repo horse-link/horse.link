@@ -11,7 +11,7 @@ export const PlaceBetsButton: React.FC = () => {
       disabled={!bets || !bets.length || txLoading}
       onClick={placeBets}
       baseStyleOverride
-      className="flex h-full w-full justify-center font-bold text-lg border-2 border-black rounded-lg text-black p-4 hover:bg-black hover:text-white"
+      className="flex h-full w-full justify-center font-bold text-2xl border-2 border-black rounded-lg text-black p-4 hover:bg-black hover:text-white"
     >
       BET NOW
     </BaseButton>
