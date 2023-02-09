@@ -12,6 +12,8 @@ import { useConfig } from "./Config";
 import { TokenModal } from "../components/Modals";
 import utils from "../utils";
 
+const LOCAL_STORAGE_KEY = "horse.link-token";
+
 export const TokenContext = createContext<TokenContextType>({
   tokensLoading: false,
   changeToken: () => {},
@@ -29,6 +31,13 @@ export const TokenContextProvider: React.FC<{ children: React.ReactNode }> = ({
   const [tokensLoading, setTokensLoading] = useState(false);
   const [tokenModalOpen, setTokenModalOpen] = useState(false);
 
+  // write currentToken to local storage
+  useEffect(() => {
+    if (!currentToken) return;
+
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(currentToken));
+  }, [currentToken]);
+
   // load tokens
   useEffect(() => {
     if (!config) return setTokensLoading(true);
@@ -43,8 +52,13 @@ export const TokenContextProvider: React.FC<{ children: React.ReactNode }> = ({
 
     if (!tokens.length) return setTokensLoading(false);
 
+    // load from local storage
+    const localToken = localStorage.getItem(LOCAL_STORAGE_KEY);
+    let defaultToken = tokens[0];
+    if (!!localToken) defaultToken = JSON.parse(localToken);
+
     setAvailableTokens(tokens);
-    setCurrentToken(tokens[0]);
+    setCurrentToken(defaultToken);
 
     setTokensLoading(false);
   }, [config]);

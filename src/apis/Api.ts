@@ -61,9 +61,10 @@ export class Api {
   };
 
   public getWinningResultSignature = async (
-    marketId: string
+    marketId: string,
+    sign: boolean = false
   ): Promise<SignedBetDataResponse> => {
-    const { data } = await this.client.get(`/bets/sign/${marketId}`);
+    const { data } = await this.client.get(`/bets/${marketId}?sign=${sign}`);
 
     return data;
   };
