@@ -10,6 +10,7 @@ import { TokenContextType } from "../types/context";
 import { Token } from "../types/tokens";
 import { useConfig } from "./Config";
 import { TokenModal } from "../components/Modals";
+import utils from "../utils";
 
 export const TokenContext = createContext<TokenContextType>({
   tokensLoading: false,
@@ -35,7 +36,9 @@ export const TokenContextProvider: React.FC<{ children: React.ReactNode }> = ({
     const tokens: Array<Token> = config.tokens.map(t => ({
       address: t.address,
       symbol: t.symbol,
-      decimals: t.decimals.toString()
+      decimals: t.decimals.toString(),
+      src: utils.images.getImageFromSymbol(t.symbol),
+      name: t.name
     }));
 
     if (!tokens.length) return setTokensLoading(false);

@@ -3,8 +3,6 @@ import { Token } from "../../types/tokens";
 import { BaseModal } from "./BaseModal";
 import { Loader } from "../Loader";
 import { useTokenContext } from "../../providers/Token";
-import { AddressLink } from "../AddressLink";
-import { Address } from "wagmi";
 
 type Props = {
   isOpen: boolean;
@@ -37,18 +35,25 @@ export const TokenModal: React.FC<Props> = ({
         </div>
       ) : (
         <div className="w-[95vw] max-w-full lg:max-w-[28rem]">
-          <h2 className="text-xl font-bold">Available Tokens</h2>
+          <h2 className="text-xl font-bold">Select a Token</h2>
           <div className="mt-4 w-full">
             {availableTokens.map(t => (
               <div className="w-full" key={t.address}>
                 <button
-                  className="flex w-full justify-between rounded-md py-1 px-2 hover:bg-zinc-100"
+                  className="flex items-center w-full rounded-md py-1 px-2 hover:bg-zinc-100"
                   onClick={() => onClick(t)}
                 >
-                  <span className="block">{t.symbol}</span>
-                  <span className="block">
-                    <AddressLink address={t.address as Address} />
-                  </span>
+                  <img
+                    src={t.src}
+                    alt={`${t.symbol} icon`}
+                    className="h-[2rem] mr-4"
+                  />
+                  <div className="flex flex-col justify-start items-start pt-2">
+                    <h5 className="font-semibold text-lg">{t?.name}</h5>
+                    <h6 className="text-black/50 relative bottom-2">
+                      {t.symbol}
+                    </h6>
+                  </div>
                 </button>
               </div>
             ))}
