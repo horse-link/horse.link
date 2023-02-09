@@ -179,7 +179,7 @@ export const BetSlip: React.FC = () => {
         </div>
 
         {bets ? (
-          <div className="flex flex-col pl-8 pr-8 pt-6 pb-4">
+          <div className="flex flex-col pl-12 pr-12 pt-6 pb-4">
             {slipTotals ? (
               <div className="grid grid-cols-2 text-center pb-4">
                 <span className="font-bold text-xl text-left">
@@ -187,7 +187,7 @@ export const BetSlip: React.FC = () => {
                 </span>
                 <div>
                   {Object.entries(slipTotals).map(([n, p]) => (
-                    <div className="text-right text-lg" key={n}>
+                    <div className="text-right text-lg pt-1" key={n}>
                       <span>
                         {utils.formatting.formatToFourDecimals(
                           ethers.utils.formatEther(p.payout)
@@ -209,7 +209,7 @@ export const BetSlip: React.FC = () => {
                 </span>
                 <div className="">
                   {Object.entries(slipTotals).map(([n, p]) => (
-                    <div key={n} className="text-right text-lg">
+                    <div key={n} className="text-right text-lg pt-1">
                       <span>
                         {utils.formatting.formatToFourDecimals(
                           ethers.utils.formatEther(p.stake)
