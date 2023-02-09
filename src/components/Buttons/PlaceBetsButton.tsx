@@ -1,6 +1,6 @@
 import React from "react";
 import { BaseButton } from "./BaseButton";
-import { useBetSlipContext } from "../../context/BetSlipContext";
+import { useBetSlipContext } from "../../providers/BetSlip";
 
 export const PlaceBetsButton: React.FC = () => {
   const { bets, txLoading, placeBets } = useBetSlipContext();

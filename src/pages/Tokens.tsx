@@ -5,7 +5,7 @@ import { PageLayout } from "../components";
 
 const ADDRESS = "0xAA99c40A936A2cF11Eb1D5387897ce9A626E53c7";
 
-export const Tokens: React.FC = () => (
+const Tokens: React.FC = () => (
   <PageLayout>
     <div className="flex flex-col items-center justify-center">
       <h1 className="pb-4 text-center text-3xl font-bold">
@@ -60,3 +60,5 @@ export const Tokens: React.FC = () => (
     </div>
   </PageLayout>
 );
+
+export default Tokens;

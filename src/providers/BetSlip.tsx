@@ -13,7 +13,7 @@ import { useSigner } from "wagmi";
 import { BetSlipModal } from "../components/Modals";
 import { ethers } from "ethers";
 import utils from "../utils";
-import { useConfig } from "../providers/Config";
+import { useConfig } from "./Config";
 import dayjs from "dayjs";
 import isYesterday from "dayjs/plugin/isYesterday";
 

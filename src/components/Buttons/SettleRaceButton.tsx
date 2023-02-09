@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef } from "react";
+import React, { useCallback, useMemo } from "react";
 import { BaseButton } from ".";
 import { Config } from "../../types/config";
 import { BetHistory } from "../../types/bets";
@@ -32,13 +32,8 @@ export const SettleRaceButton: React.FC<Props> = props => {
   } = props;
   const { openWalletModal } = useWalletModal();
 
-  const { current: now } = useRef(Math.floor(Date.now() / 1000));
-
   const settlableBets = useMemo(
-    () =>
-      betHistory
-        ?.filter(bet => bet.payoutDate < now)
-        .filter(bet => !bet.settled),
+    () => betHistory?.filter(bet => !bet.settled),
     [betHistory]
   );
 

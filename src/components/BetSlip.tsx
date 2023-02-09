@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useBetSlipContext } from "../context/BetSlipContext";
+import React from "react";
+import { useBetSlipContext } from "../providers/BetSlip";
 import classnames from "classnames";
 import { BigNumber, ethers } from "ethers";
 import utils from "../utils";

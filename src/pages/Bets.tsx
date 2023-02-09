@@ -12,7 +12,7 @@ import { ethers } from "ethers";
 import { useBetsStatistics } from "../hooks/stats";
 import { useSubgraphBets } from "../hooks/subgraph";
 
-export const Bets: React.FC = () => {
+const Bets: React.FC = () => {
   const config = useConfig();
   const navigate = useNavigate();
   const { owner: paramsAddress } = useParams();
@@ -142,3 +142,5 @@ export const Bets: React.FC = () => {
     </PageLayout>
   );
 };
+
+export default Bets;

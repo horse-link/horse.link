@@ -3,7 +3,8 @@ import { WagmiProvider } from "./providers/Wagmi";
 import { WalletModalProvider } from "./providers/WalletModal";
 import ApolloProvider from "./providers/Apollo";
 import { ConfigProvider } from "./providers/Config";
-import { BetSlipContextProvider } from "./context/BetSlipContext";
+import { BetSlipContextProvider } from "./providers/BetSlip";
+import { TokenContextProvider } from "./providers/Token";
 
 const App: React.FC = () => (
   <ConfigProvider>
@@ -11,7 +12,9 @@ const App: React.FC = () => (
       <WalletModalProvider>
         <ApolloProvider>
           <BetSlipContextProvider>
-            <Navigation />
+            <TokenContextProvider>
+              <Navigation />
+            </TokenContextProvider>
           </BetSlipContextProvider>
         </ApolloProvider>
       </WalletModalProvider>

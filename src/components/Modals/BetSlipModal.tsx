@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { BaseModal } from "./BaseModal";
-import { useBetSlipContext } from "../../context/BetSlipContext";
+import { useBetSlipContext } from "../../providers/BetSlip";
 import utils from "../../utils";
 import { useConfig } from "../../providers/Config";
 import { BigNumber, ethers } from "ethers";
