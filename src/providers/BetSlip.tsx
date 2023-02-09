@@ -28,8 +28,7 @@ export const BetSlipContext = createContext<BetSlipContextType>({
   addBet: () => {},
   removeBet: () => {},
   clearBets: () => {},
-  placeBets: () => {},
-  openModal: () => {}
+  placeBets: () => {}
 });
 
 export const useBetSlipContext = () => useContext(BetSlipContext);
@@ -45,8 +44,6 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
   const [txLoading, setTxLoading] = useState(false);
   const [hashes, setHashes] = useState<string[]>();
   const [error, setError] = useState<string>();
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // write bet slip to local storage if bets exist
   useEffect(() => {
@@ -182,16 +179,6 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
       });
   }, [config, bets, signer, placeBet]);
 
-  const openModal = useCallback(() => setIsModalOpen(true), [setIsModalOpen]);
-
-  const closeModal = useCallback(() => {
-    setIsModalOpen(false);
-    setTimeout(() => {
-      setHashes(undefined);
-      setError(undefined);
-    }, 300);
-  }, [setIsModalOpen]);
-
   const value = useMemo(
     () => ({
       txLoading,
@@ -201,20 +188,9 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
       addBet,
       removeBet,
       clearBets,
-      placeBets,
-      openModal
+      placeBets
     }),
-    [
-      txLoading,
-      hashes,
-      bets,
-      error,
-      addBet,
-      removeBet,
-      clearBets,
-      placeBets,
-      openModal
-    ]
+    [txLoading, hashes, bets, error, addBet, removeBet, clearBets, placeBets]
   );
 
   return (

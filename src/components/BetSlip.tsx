@@ -8,10 +8,8 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Skeleton from "react-loading-skeleton";
 import { PlaceBetsButton } from "./Buttons";
-import { useERC20Contract } from "../hooks/contracts";
 import { useMarketContract } from "../hooks/contracts";
 import { useSigner } from "wagmi";
-import { USDT } from "../icons";
 
 dayjs.extend(relativeTime);
 
