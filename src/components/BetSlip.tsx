@@ -169,31 +169,26 @@ export const BetSlip: React.FC = () => {
           )}
         </div>
 
-        {bets ? (
+        {bets && slipTotals && (
           <div className="flex flex-col px-4 pt-6 pb-4">
-            {slipTotals ? (
-              <div className="flex items-start justify-between pb-2">
-                <span className="font-bold">Potential Payout: </span>
-                <div>
-                  {Object.entries(slipTotals).map(([symbol, details]) => (
-                    <span className="block" key={symbol}>
-                      {utils.formatting.formatToFourDecimals(
-                        ethers.utils.formatEther(details.payout)
-                      )}
-                      {` ${details.symbol}`}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <Skeleton />
-            )}
-
-            {slipTotals ? (
-              <div className="flex items-center justify-between">
-                <span className="font-bold">Total Stake: </span>
+            <div className="flex items-start justify-between pb-4">
+              <span className="font-bold">Potential Payout: </span>
+              <div>
                 {Object.entries(slipTotals).map(([symbol, details]) => (
-                  <span className="block" key={symbol}>
+                  <span className="block text-right" key={symbol}>
+                    {utils.formatting.formatToFourDecimals(
+                      ethers.utils.formatEther(details.payout)
+                    )}
+                    {` ${details.symbol}`}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className="flex items-start justify-between">
+              <span className="font-bold">Total Stake: </span>
+              <div>
+                {Object.entries(slipTotals).map(([symbol, details]) => (
+                  <span className="block text-right" key={symbol}>
                     {utils.formatting.formatToFourDecimals(
                       ethers.utils.formatEther(details.stake)
                     )}
@@ -201,12 +196,8 @@ export const BetSlip: React.FC = () => {
                   </span>
                 ))}
               </div>
-            ) : (
-              <Skeleton />
-            )}
+            </div>
           </div>
-        ) : (
-          ""
         )}
 
         {bets?.length && (
