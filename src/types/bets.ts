@@ -1,3 +1,4 @@
+import { BigNumber } from "ethers";
 import { EcSignature } from "./general";
 
 export type ScratchedRunner = {
@@ -56,5 +57,14 @@ export type TotalBetsOnPropositions = Record<
   {
     amount: string;
     percentage: number;
+  }
+>;
+
+export type BetTotals = Record<
+  string,
+  {
+    symbol: string;
+    payout: BigNumber;
+    stake: BigNumber;
   }
 >;

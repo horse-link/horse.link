@@ -1,19 +1,90 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useBetSlipContext } from "../providers/BetSlip";
 import classnames from "classnames";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import utils from "../utils";
 import { useConfig } from "../providers/Config";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Skeleton from "react-loading-skeleton";
 import { PlaceBetsButton } from "./Buttons";
+import { useMarketContract } from "../hooks/contracts";
+import { useSigner } from "wagmi";
+import { BetTotals } from "../types/bets";
 
 dayjs.extend(relativeTime);
 
 export const BetSlip: React.FC = () => {
   const config = useConfig();
+  const { data: signer } = useSigner();
   const { bets, removeBet } = useBetSlipContext();
+  const { getPotentialPayout } = useMarketContract();
+  const [slipTotals, setSlipTotals] = useState<BetTotals>();
+
+  useEffect(() => {
+    if (!bets || !signer) return;
+
+    (async () => {
+      const betTotals = await Promise.all(
+        bets.map(async bet => {
+          const payout = await getPotentialPayout(
+            bet.market,
+            BigNumber.from(bet.wager),
+            bet.back,
+            signer
+          );
+
+          return {
+            market: bet.market,
+            payout,
+            stake: BigNumber.from(bet.wager)
+          };
+        })
+      );
+
+      const totalsPerAsset = betTotals.reduce(
+        (previousPayout, currentPayout) => {
+          const vault = utils.config.getVaultFromMarket(
+            currentPayout.market,
+            config
+          );
+          if (!vault)
+            throw new Error(
+              `No vault associated with market, ${currentPayout.market.address}`
+            );
+
+          const name = vault.asset.address;
+          const payoutUnits = ethers.utils.formatUnits(
+            currentPayout.payout,
+            vault.asset.decimals
+          );
+          const parsedPayoutUnits = ethers.utils.parseEther(payoutUnits);
+
+          const stakeUnits = ethers.utils.formatUnits(
+            currentPayout.stake,
+            vault.asset.decimals
+          );
+          const parsedStakedUnits = ethers.utils.parseEther(stakeUnits);
+
+          return {
+            ...previousPayout,
+            [name]: {
+              payout: previousPayout[name]
+                ? previousPayout[name].payout.add(parsedPayoutUnits)
+                : parsedPayoutUnits,
+              symbol: vault.asset.symbol,
+              stake: previousPayout[name]
+                ? previousPayout[name].stake.add(parsedStakedUnits)
+                : parsedStakedUnits
+            }
+          };
+        },
+        {} as NonNullable<typeof slipTotals>
+      );
+
+      setSlipTotals(totalsPerAsset);
+    })();
+  }, [bets, config, signer]);
 
   return (
     <div className="mt-6 w-full shadow-lg lg:sticky lg:top-4 lg:mx-4 lg:mt-0">
@@ -21,7 +92,7 @@ export const BetSlip: React.FC = () => {
         Bet Slip
       </h2>
       <div className="rounded-b-lg bg-white p-2">
-        <div className="rounded-b-lg border-2 border-emerald-500 py-4 px-2">
+        <div className="py-4 px-2">
           {!bets?.length ? (
             <div className="w-full text-center">No Bets</div>
           ) : (
@@ -97,6 +168,47 @@ export const BetSlip: React.FC = () => {
             </div>
           )}
         </div>
+
+        {bets ? (
+          <div className="flex flex-col px-4 pt-6 pb-4">
+            {slipTotals ? (
+              <div className="flex items-start justify-between pb-2">
+                <span className="font-bold">Potential Payout: </span>
+                <div>
+                  {Object.entries(slipTotals).map(([symbol, details]) => (
+                    <span className="block" key={symbol}>
+                      {utils.formatting.formatToFourDecimals(
+                        ethers.utils.formatEther(details.payout)
+                      )}
+                      {` ${details.symbol}`}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <Skeleton />
+            )}
+
+            {slipTotals ? (
+              <div className="flex items-center justify-between">
+                <span className="font-bold">Total Stake: </span>
+                {Object.entries(slipTotals).map(([symbol, details]) => (
+                  <span className="block" key={symbol}>
+                    {utils.formatting.formatToFourDecimals(
+                      ethers.utils.formatEther(details.stake)
+                    )}
+                    {` ${details.symbol}`}
+                  </span>
+                ))}
+              </div>
+            ) : (
+              <Skeleton />
+            )}
+          </div>
+        ) : (
+          ""
+        )}
+
         {bets?.length && (
           <div className="mt-2">
             <PlaceBetsButton />

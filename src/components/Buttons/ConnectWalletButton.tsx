@@ -7,17 +7,11 @@ type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 };
 
 export const ConnectWalletButton: React.FC<Props> = ({ openWalletModal }) => {
-  const { address, isConnected, isConnecting } = useAccount();
+  const { address, isConnected } = useAccount();
   const { disconnect } = useDisconnect();
 
   return (
-    <div
-      className={
-        isConnecting
-          ? "hidden"
-          : "flex items-center justify-center text-sm font-medium"
-      }
-    >
+    <div className="flex items-center justify-center text-sm font-medium">
       {isConnected ? (
         <div className="mt-2 flex flex-col items-center gap-3 sm:mt-0 sm:flex-row">
           <span className="truncate text-gray-500">{address}</span>

@@ -10,12 +10,12 @@ import {
 import { BetSlipContextType, BetSlipEntry } from "../types/context";
 import { useMarketContract } from "../hooks/contracts";
 import { useSigner } from "wagmi";
-import { BetSlipModal } from "../components/Modals";
 import { ethers } from "ethers";
 import utils from "../utils";
 import { useConfig } from "./Config";
 import dayjs from "dayjs";
 import isYesterday from "dayjs/plugin/isYesterday";
+import { BetSlipTxModal } from "../components/Modals";
 
 dayjs.extend(isYesterday);
 
@@ -29,8 +29,7 @@ export const BetSlipContext = createContext<BetSlipContextType>({
   addBet: () => {},
   removeBet: () => {},
   clearBets: () => {},
-  placeBets: () => {},
-  openModal: () => {}
+  placeBets: () => {}
 });
 
 export const useBetSlipContext = () => useContext(BetSlipContext);
@@ -46,7 +45,6 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
   const [txLoading, setTxLoading] = useState(false);
   const [hashes, setHashes] = useState<string[]>();
   const [error, setError] = useState<string>();
-
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // write bet slip to local storage if bets exist
@@ -165,6 +163,7 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
 
         setHashes(filteredHashes);
         clearBets();
+        setIsModalOpen(true);
 
         setTxLoading(false);
       })
@@ -183,15 +182,7 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
       });
   }, [config, bets, signer, placeBet]);
 
-  const openModal = useCallback(() => setIsModalOpen(true), [setIsModalOpen]);
-
-  const closeModal = useCallback(() => {
-    setIsModalOpen(false);
-    setTimeout(() => {
-      setHashes(undefined);
-      setError(undefined);
-    }, 300);
-  }, [setIsModalOpen]);
+  const closeModal = useCallback(() => setIsModalOpen(false), []);
 
   const value = useMemo(
     () => ({
@@ -202,26 +193,15 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
       addBet,
       removeBet,
       clearBets,
-      placeBets,
-      openModal
+      placeBets
     }),
-    [
-      txLoading,
-      hashes,
-      bets,
-      error,
-      addBet,
-      removeBet,
-      clearBets,
-      placeBets,
-      openModal
-    ]
+    [txLoading, hashes, bets, error, addBet, removeBet, clearBets, placeBets]
   );
 
   return (
     <BetSlipContext.Provider value={value}>
       {children}
-      <BetSlipModal isOpen={isModalOpen} onClose={closeModal} />
+      <BetSlipTxModal isOpen={isModalOpen} onClose={closeModal} />
     </BetSlipContext.Provider>
   );
 };

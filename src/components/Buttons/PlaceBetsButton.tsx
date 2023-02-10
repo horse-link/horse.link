@@ -3,17 +3,17 @@ import { BaseButton } from "./BaseButton";
 import { useBetSlipContext } from "../../providers/BetSlip";
 
 export const PlaceBetsButton: React.FC = () => {
-  const { bets, txLoading, openModal } = useBetSlipContext();
+  const { bets, txLoading, placeBets } = useBetSlipContext();
 
   return (
     <BaseButton
       loading={txLoading}
       disabled={!bets || !bets.length || txLoading}
-      onClick={openModal}
+      onClick={placeBets}
       baseStyleOverride
-      className="flex h-full w-full items-center justify-center rounded-lg bg-emerald-500 p-4"
+      className="w-full font-bold text-lg border-2 border-black rounded-lg text-black text-center hover:bg-black hover:text-white py-3"
     >
-      Place Bets
+      BET NOW
     </BaseButton>
   );
 };
