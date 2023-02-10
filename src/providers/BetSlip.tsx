@@ -15,6 +15,7 @@ import utils from "../utils";
 import { useConfig } from "./Config";
 import dayjs from "dayjs";
 import isYesterday from "dayjs/plugin/isYesterday";
+import { BetSlipTxModal } from "../components/Modals";
 
 dayjs.extend(isYesterday);
 
@@ -44,6 +45,7 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
   const [txLoading, setTxLoading] = useState(false);
   const [hashes, setHashes] = useState<string[]>();
   const [error, setError] = useState<string>();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // write bet slip to local storage if bets exist
   useEffect(() => {
@@ -161,6 +163,7 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
 
         setHashes(filteredHashes);
         clearBets();
+        setIsModalOpen(true);
 
         setTxLoading(false);
       })
@@ -179,6 +182,8 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
       });
   }, [config, bets, signer, placeBet]);
 
+  const closeModal = useCallback(() => setIsModalOpen(false), []);
+
   const value = useMemo(
     () => ({
       txLoading,
@@ -194,6 +199,9 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
   );
 
   return (
-    <BetSlipContext.Provider value={value}>{children}</BetSlipContext.Provider>
+    <BetSlipContext.Provider value={value}>
+      {children}
+      <BetSlipTxModal isOpen={isModalOpen} onClose={closeModal} />
+    </BetSlipContext.Provider>
   );
 };

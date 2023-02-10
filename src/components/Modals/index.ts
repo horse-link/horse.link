@@ -7,3 +7,4 @@ export * from "./BaseModal";
 export * from "./FaucetModal";
 export * from "./SettledMarketModal";
 export * from "./TokenModal";
+export * from "./BetSlipTxModal";
