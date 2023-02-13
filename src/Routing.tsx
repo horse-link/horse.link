@@ -1,6 +1,7 @@
 import { lazy } from "react";
 import Dashboard from "./pages/Dashboard";
 import Register from "./pages/Register";
+import Verify from "./pages/Verify";
 import { AppRoutes, NavbarRoutes } from "./types/app";
 
 // lazy load pages
@@ -21,6 +22,10 @@ const Routing: AppRoutes = [
   {
     path: "/Register",
     element: <Register />
+  },
+  {
+    path: "/Verify",
+    element: <Verify />
   },
   {
     path: "/vaults",
