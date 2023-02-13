@@ -23,9 +23,6 @@ const LOCAL_STORAGE_KEY = "horse.link-bet-slip";
 
 export const BetSlipContext = createContext<BetSlipContextType>({
   txLoading: false,
-  hashes: undefined,
-  bets: undefined,
-  error: undefined,
   addBet: () => {},
   removeBet: () => {},
   clearBets: () => {},
@@ -44,7 +41,7 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
   const [bets, setBets] = useState<BetSlipEntry[]>();
   const [txLoading, setTxLoading] = useState(false);
   const [hashes, setHashes] = useState<string[]>();
-  const [error, setError] = useState<string>();
+  const [errors, setErrors] = useState<string[]>();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // write bet slip to local storage if bets exist
@@ -101,7 +98,7 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
 
   const clearBets = useCallback(() => {
     setBets(undefined);
-    setError(undefined);
+    setErrors(undefined);
     localStorage.removeItem(LOCAL_STORAGE_KEY);
   }, [bets]);
 
@@ -127,16 +124,16 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
     [bets]
   );
 
-  const placeBets = useCallback(() => {
+  const placeBets = useCallback(async () => {
     // if there are no bets, or signer, do nothing
     if (!bets?.length || !signer || !config) return;
 
+    // reset state
     setTxLoading(true);
     setHashes(undefined);
 
-    const ERROR_VALUE = "error";
-
-    Promise.all(
+    // settle bets
+    const raw = await Promise.allSettled(
       bets.map(bet => {
         const vault = utils.config.getVaultFromMarket(bet.market, config);
         if (!vault)
@@ -156,30 +153,26 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
           signer
         );
       })
-    )
-      .then(hashes => {
-        const filteredHashes = hashes.filter(hash => hash !== ERROR_VALUE);
-        if (!filteredHashes.length) return setTxLoading(false);
+    );
 
-        setHashes(filteredHashes);
-        clearBets();
-        setIsModalOpen(true);
+    // extract hashes and errors
+    const txs = raw.filter(utils.types.isFulfilled).map(r => r.value);
+    const errors = raw
+      .filter(utils.types.isRejected)
+      .map(r => r.reason as string);
 
-        setTxLoading(false);
-      })
-      .catch((e: any) => {
-        const err = e.reason as string;
-        switch (true) {
-          case err.includes("date"):
-            setError("One or more bets have an invalid date");
-            break;
-          default:
-            setError(err);
-            break;
-        }
+    // set errors
+    setErrors(errors);
 
-        setTxLoading(false);
-      });
+    // set hashes
+    setHashes(txs);
+    clearBets();
+
+    // stop loading
+    setTxLoading(false);
+
+    // open modal
+    setIsModalOpen(true);
   }, [config, bets, signer, placeBet]);
 
   const closeModal = useCallback(() => setIsModalOpen(false), []);
@@ -189,13 +182,13 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
       txLoading,
       hashes,
       bets,
-      error,
+      errors,
       addBet,
       removeBet,
       clearBets,
       placeBets
     }),
-    [txLoading, hashes, bets, error, addBet, removeBet, clearBets, placeBets]
+    [txLoading, hashes, bets, errors, addBet, removeBet, clearBets, placeBets]
   );
 
   return (

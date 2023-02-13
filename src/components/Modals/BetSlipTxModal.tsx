@@ -11,7 +11,8 @@ type Props = {
 };
 
 export const BetSlipTxModal: React.FC<Props> = ({ isOpen, onClose }) => {
-  const { hashes } = useBetSlipContext();
+  const { hashes, errors } = useBetSlipContext();
+  console.log(errors);
 
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}>
