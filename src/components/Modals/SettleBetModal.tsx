@@ -174,7 +174,7 @@ export const SettleBetModal: React.FC<Props> = ({
             {!txHash && !error && (
               <React.Fragment>
                 <button
-                  className="relative top-6 w-full rounded-md border-2 border-black py-2 font-bold transition-colors duration-100 disabled:border-black/50 disabled:bg-white disabled:text-black/50 enabled:hover:bg-black enabled:hover:text-white"
+                  className="relative mt-6 w-full rounded-md border-2 border-black py-2 font-bold transition-colors duration-100 disabled:border-black/50 disabled:bg-white disabled:text-black/50 enabled:hover:bg-black enabled:hover:text-white"
                   onClick={onClickSettleBet}
                   disabled={
                     !signer ||
@@ -187,7 +187,7 @@ export const SettleBetModal: React.FC<Props> = ({
                   {txLoading ? <Loader /> : "SETTLE BET"}
                 </button>
                 {!bet.marketResultAdded && (
-                  <span className="relative top-[1.8rem] mb-10 block text-xs text-black/80">
+                  <span className="relative top-[0.5rem] bottom-[1rem] block text-xs text-black/80">
                     Note: will require two transactions to add market results
                     first
                   </span>
