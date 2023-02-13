@@ -41,7 +41,7 @@ const Register = () => {
           >
             <input
               type="number"
-              placeholder="0"
+              placeholder="Mobile/ Cell"
               value={number}
               onChange={e => setNumber(e.target.value)}
               className="mb-6 w-[20rem] rounded-md border-b-[0.12rem] border-black pl-1 pt-1 transition-colors duration-100 disabled:bg-white disabled:text-black/50 lg:w-[30rem]"
@@ -49,7 +49,7 @@ const Register = () => {
             <h1 className="my-2">Wallet Address</h1>
             <input
               type="number"
-              placeholder="Wallet Address"
+              placeholder="Your Wallet Address"
               value={address}
               onChange={e => setAddress(e.target.value)}
               className="mb-6 w-[20rem] rounded-md border-b-[0.12rem] border-black pl-1 pt-1 transition-colors duration-100 disabled:bg-white disabled:text-black/50 lg:w-[30rem]"
@@ -60,9 +60,8 @@ const Register = () => {
             </BaseButton>
           </form>
           <h1 className="my-5">
-            Invite friends to join and claim more USDT for more chances to win
-            big. The player with the most successful wagers will take home an
-            extra 10K worth of Bitcoin.
+            Invite friends, claim more HL tokens, and win big with 0.2 BTC up
+            for grabs for the top players.
           </h1>
         </div>
       </div>

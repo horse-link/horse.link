@@ -26,9 +26,7 @@ const Verify = () => {
           Enter code recieved via SMS
         </h1>
         <div className="flex w-[20rem] flex-col lg:w-[30rem]">
-          <h1 className="my-4 font-bold">
-            Earn $100 USDT (Goerli) per referal
-          </h1>
+          <h1 className="my-4 font-bold">Earn $100 USDT (Goerli)</h1>
           <form
             onSubmit={e => {
               handleVerify();
@@ -36,7 +34,7 @@ const Verify = () => {
             }}
           >
             <input
-              type="number"
+              type="text"
               placeholder="SMS Verification Code"
               value={verify}
               onChange={e => setVerify(e.target.value)}
@@ -47,9 +45,8 @@ const Verify = () => {
             </BaseButton>
           </form>
           <h1 className="my-5">
-            Invite friends to join and claim more USDT for more chances to win
-            big. The player with the most successful wagers will take home an
-            extra 5k worth of Bitcoin
+            Invite friends, claim more HL tokens, and win big with 0.2 BTC up
+            for grabs for the top players.
           </h1>
         </div>
       </div>
