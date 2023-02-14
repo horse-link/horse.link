@@ -10,12 +10,22 @@ const Tokens = lazy(() => import("./pages/Tokens"));
 const Vaults = lazy(() => import("./pages/Vaults"));
 const Faucet = lazy(() => import("./pages/Faucet"));
 const Results = lazy(() => import("./pages/Results"));
+const Verify = lazy(() => import("./pages/Verify"));
+const Register = lazy(() => import("./pages/Register"));
 
 // app routing
 const Routing: AppRoutes = [
   {
     path: "/dashboard",
     element: <Dashboard />
+  },
+  {
+    path: "/register",
+    element: <Register />
+  },
+  {
+    path: "/verify",
+    element: <Verify />
   },
   {
     path: "/vaults",

@@ -19,6 +19,19 @@ export class Api {
     this.client = utils.general.getAxiosClient();
   }
 
+  public registerUser = async (phoneNumber: string, walletAddress: string) => {
+    const { data } = await this.client.post(`/mobile/register`, {
+      phoneNumber: phoneNumber,
+      walletAddress: walletAddress
+    });
+    return data;
+  };
+
+  public verifyUser = async (verify: string) => {
+    const { data } = await this.client.post(`/mobile/verify`, { code: verify });
+    return data;
+  };
+
   public getConfig = async (): Promise<Config> => {
     const { data } = await this.client.get<Config>("/config");
 
