@@ -29,8 +29,8 @@ const Verify = () => {
           <h1 className="my-4 font-bold">Earn $100 USDT (Goerli)</h1>
           <form
             onSubmit={e => {
-              handleVerify();
               e.preventDefault();
+              handleVerify();
             }}
           >
             <input

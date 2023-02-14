@@ -3,29 +3,50 @@ import { BaseButton } from "../components/Buttons";
 import { RegisterLayoutPage } from "../components/RegisterLayoutPage";
 import api from "../apis/Api";
 import { useNavigate } from "react-router-dom";
+import { Loader } from "../components";
+import { ethers } from "ethers";
 
 const Register = () => {
-  const [number, setNumber] = useState<string>();
-  const [address, setAddress] = useState<string>();
+  const [number, setNumber] = useState("");
+  const [address, setAddress] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async () => {
     if (!number || !address) return;
+    //regex phone validation below
+    if (
+      !RegExp(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/).test(
+        number
+      )
+    )
+      return;
+    if (!ethers.utils.isAddress(address)) return;
+
+    setLoading(true);
     await api.registerUser(number, address);
+
     navigate("/verify", {
       replace: true
     });
+    setLoading(false);
   };
 
   return (
     <RegisterLayoutPage>
       <div className="flex flex-col items-center">
-        <img
-          loading="lazy"
-          alt="Horse"
-          src="/images/horse.png"
-          className="mb-10 h-[5rem] w-[7rem] justify-center"
-        />
+        <span>
+          {loading ? (
+            <Loader size={14} />
+          ) : (
+            <img
+              loading="lazy"
+              alt="Horse"
+              src="/images/horse.png"
+              className="mb-10 h-[5rem] w-[7rem] justify-center"
+            />
+          )}
+        </span>
         <h1 className="text-md mb-5 break-all text-center font-bold lg:w-[40rem] lg:text-3xl">
           Invite Friends, Claim More HL Token, and Win Big with 5k in Bitcoin up
           for Grabs for the Top Players
@@ -35,8 +56,8 @@ const Register = () => {
           <h1 className="my-2">Phone</h1>
           <form
             onSubmit={e => {
-              handleSubmit();
               e.preventDefault();
+              handleSubmit();
             }}
           >
             <input
@@ -48,7 +69,7 @@ const Register = () => {
             />
             <h1 className="my-2">Wallet Address</h1>
             <input
-              type="number"
+              type="text"
               placeholder="Your Wallet Address"
               value={address}
               onChange={e => setAddress(e.target.value)}
