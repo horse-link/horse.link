@@ -59,7 +59,9 @@ describe("detect scratched runners", () => {
   it("should return the correct BetHistory for a scratched runner", () => {
     const mockBet = utils.mocks.getRealExampleMockBet();
     const mockSignedBetData = utils.mocks.getMockSignedBetDataResponse();
+
     const betHistory = utils.bets.getBetHistory(mockBet, mockSignedBetData);
+
     expect(mockSignedBetData?.scratchedRunners?.length).toBeGreaterThan(0);
     expect(betHistory.propositionId).toEqual(
       mockSignedBetData!.scratchedRunners![0].b16propositionId
@@ -68,10 +70,13 @@ describe("detect scratched runners", () => {
     expect(!!betHistory.scratched).toEqual(true);
     expect(betHistory.status).toEqual("SCRATCHED");
   });
+
   it("should return the correct BetHistory for a non-scratched runner", () => {
     const mockBet = utils.mocks.getMockBet();
     const mockSignedBetData = utils.mocks.getMockSignedBetDataResponse();
+
     const betHistory = utils.bets.getBetHistory(mockBet, mockSignedBetData);
+
     expect(mockSignedBetData?.scratchedRunners?.length).toBeGreaterThan(0);
     expect(betHistory.propositionId).not.toBe(
       mockSignedBetData!.scratchedRunners![0].b16propositionId

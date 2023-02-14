@@ -25,24 +25,20 @@ export const getBetStatus = (
   signedBetData: SignedBetDataResponse,
   scratched?: ScratchedRunner
 ): BetStatus => {
-  const hasWinningResult =
-    signedBetData.winningPropositionId || signedBetData.marketResultAdded;
-  switch (true) {
-    case +bet.payoutAt > Math.floor(Date.now() / 1000) && !scratched:
-      return "PENDING";
-    case !hasWinningResult && !scratched && !bet.settled:
-      return "PENDING";
-    case hasWinningResult && !bet.settled:
-      return "RESULTED";
-    case !!scratched && !bet.settled:
-      return "SCRATCHED";
-    case hasWinningResult && bet.settled:
-      return "SETTLED";
-    default:
-      console.error(
-        "Invalid bet status: the bet is settled, but has no result set!"
-      );
-      return "INVALID";
+  // if the bet is scratched
+  if (scratched) return "SCRATCHED";
+
+  // if the bet is settled
+  if (bet.settled) return "SETTLED";
+
+  // if the payout date is in the future
+  if (+bet.payoutAt > Math.floor(Date.now() / 1000)) return "PENDING";
+
+  // if there is a winning proposition id, race is resulted
+  if (signedBetData.winningPropositionId) {
+    return "RESULTED";
+  } else {
+    return "PENDING";
   }
 };
 
@@ -50,9 +46,12 @@ export const getBetHistory = (
   bet: Bet,
   signedBetData: SignedBetDataResponse
 ): BetHistory => {
-  const scratched = signedBetData?.scratchedRunners?.find(scratched => {
-    return scratched.b16propositionId === bet.propositionId;
-  });
+  const scratched = signedBetData?.scratchedRunners?.find(
+    scratched =>
+      scratched.b16propositionId.toLowerCase() ===
+      bet.propositionId.toLowerCase()
+  );
+
   return {
     index: utils.formatting.formatBetId(bet.id),
     marketId: bet.marketId.toLowerCase(),
