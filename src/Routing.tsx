@@ -10,6 +10,7 @@ const Tokens = lazy(() => import("./pages/Tokens"));
 const Vaults = lazy(() => import("./pages/Vaults"));
 const Faucet = lazy(() => import("./pages/Faucet"));
 const Results = lazy(() => import("./pages/Results"));
+const Wallet = lazy(() => import("./pages/Wallet"));
 
 // app routing
 const Routing: AppRoutes = [
@@ -48,6 +49,10 @@ const Routing: AppRoutes = [
   {
     path: "/bets/:owner",
     element: <Bets />
+  },
+  {
+    path: "/wallet",
+    element: <Wallet />
   }
 ];
 
