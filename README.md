@@ -10,6 +10,8 @@ The protocol is designed to be as fair as possible by using a bonding curve to s
 
 The market will find an equilibrium between the depth of the Vault and the size of the bet.
 
+![image](https://user-images.githubusercontent.com/8411406/219231046-c3388f69-f48d-4042-ba0b-bcc0f3dbe685.png)
+
 # How it works
 
 Horse Link’s smart contract guaranteed bets are always placed within the slippage band of the constant product function. Like other AMM protocols based on curve functions, bets based within the range of slippage based on the potential payout will be placed.
