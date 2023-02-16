@@ -9,6 +9,7 @@ import * as id from "./id";
 import * as races from "./races";
 import * as tables from "./tables";
 import * as images from "./images";
+import * as types from "./types";
 
 const utils = {
   general,
@@ -21,7 +22,8 @@ const utils = {
   id,
   races,
   tables,
-  images
+  images,
+  types
 };
 
 export default utils;
