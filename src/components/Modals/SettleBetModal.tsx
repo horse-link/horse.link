@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Loader } from "../";
 import { BaseModal } from ".";
 import { ethers } from "ethers";
@@ -34,8 +34,6 @@ export const SettleBetModal: React.FC<Props> = ({
 
   const { data: signer } = useSigner();
   const { settleBet } = useMarketContract();
-
-  const now = useMemo(() => Math.floor(Date.now() / 1000), []);
 
   // get signed bet
   useEffect(() => {
@@ -88,8 +86,6 @@ export const SettleBetModal: React.FC<Props> = ({
       ? bet.winningPropositionId.toLowerCase() ===
         bet.propositionId.toLowerCase()
       : undefined;
-
-  const isPayable = bet ? now > bet.payoutDate : false;
 
   const onClickSettleBet = async () => {
     if (!bet || !market || !signer || !config) return;
@@ -179,7 +175,7 @@ export const SettleBetModal: React.FC<Props> = ({
                   disabled={
                     !signer ||
                     bet.settled ||
-                    !isPayable ||
+                    bet.status === "PENDING" ||
                     txLoading ||
                     !!txHash
                   }
