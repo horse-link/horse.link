@@ -25,11 +25,11 @@ export const getBetStatus = (
   signedBetData: SignedBetDataResponse,
   scratched?: ScratchedRunner
 ): BetStatus => {
-  // if the bet is scratched
-  if (scratched) return "SCRATCHED";
-
   // if the bet is settled
   if (bet.settled) return "SETTLED";
+
+  // if the bet is scratched
+  if (scratched) return "SCRATCHED";
 
   // if the payout date is in the future
   if (+bet.payoutAt > Math.floor(Date.now() / 1000)) return "PENDING";

@@ -87,6 +87,8 @@ export const SettleBetModal: React.FC<Props> = ({
         bet.propositionId.toLowerCase()
       : undefined;
 
+  const isScratched = bet?.scratched !== undefined;
+
   const onClickSettleBet = async () => {
     if (!bet || !market || !signer || !config) return;
     setTxHash(undefined);
@@ -141,7 +143,7 @@ export const SettleBetModal: React.FC<Props> = ({
               </h3>
             ) : isWinning === false ? (
               <h3 className="font-semibold">
-                Loss:{" "}
+                {isScratched ? "Refund" : "Loss"}:{" "}
                 <span className="font-normal">
                   {ethers.utils.formatEther(bet.amount)} {token?.symbol}
                 </span>
