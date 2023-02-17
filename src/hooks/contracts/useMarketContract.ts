@@ -139,7 +139,7 @@ export const useMarketContract = () => {
           bet.propositionId,
           bet.scratched.signature,
           config,
-          ethers.utils.parseUnits(bet.scratched.odds.toString(), 8),
+          ethers.utils.parseUnits(bet.scratched.odds.toString(), 6),
           ethers.BigNumber.from(bet.scratched.totalOdds)
         )
       )
@@ -150,7 +150,7 @@ export const useMarketContract = () => {
         await marketOracleContract.setScratchedResult(
           bet.marketId,
           bet.propositionId,
-          ethers.utils.parseUnits(bet.scratched.odds.toString(), 8),
+          ethers.utils.parseUnits(bet.scratched.odds.toString(), 6),
           ethers.BigNumber.from(bet.scratched.totalOdds),
           bet.scratched.signature
         )
