@@ -75,17 +75,11 @@ const Dashboard: React.FC = () => {
           <div className="container-fluid overflow-hidden rounded-lg bg-emerald-700 px-4 py-5 shadow sm:p-6">
             <div className="flex flex-wrap justify-between">
               <img
-                loading="lazy"
                 alt="Horse-Link"
-                src="/images/horse-link.png"
+                src="/images/horse-link.webp"
                 className="mt-2 mb-8"
               />
-              <img
-                loading="lazy"
-                alt="Horse"
-                src="/images/horse.png"
-                className="h-20"
-              />
+              <img alt="Horse" src="/images/horse.webp" className="h-20" />
             </div>
             <h2 className="mb-3 text-lg font-medium text-gray-900">
               Horse Link is an Ethereum AMM protocol that allows participants to
