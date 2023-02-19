@@ -93,8 +93,7 @@ const Faucet: React.FC = () => {
       </div>
       <div className="flex flex-wrap gap-3">
         <img
-          loading="lazy"
-          src="/images/goerli-test-network.png"
+          src="/images/goerli-test-network.webp"
           alt="Goerli network option in Metamask Networks tab"
           width="300"
           height="300"
