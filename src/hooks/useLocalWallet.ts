@@ -5,15 +5,16 @@ type LocalWallet = {
   mnemonic: string;
   address: string;
 };
+const LOCAL_WALLET_LS_KEY = "horse.link-local-wallet";
 
 const loadWallet = () => {
-  const raw = localStorage.getItem("local-wallet");
+  const raw = localStorage.getItem(LOCAL_WALLET_LS_KEY);
   if (!raw || raw === "undefined") return;
   return JSON.parse(raw) as LocalWallet;
 };
 
 const saveWallet = (wallet: LocalWallet) => {
-  localStorage.setItem("local-wallet", JSON.stringify(wallet));
+  localStorage.setItem(LOCAL_WALLET_LS_KEY, JSON.stringify(wallet));
 };
 
 const createNewWallet = () => {

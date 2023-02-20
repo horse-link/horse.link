@@ -57,7 +57,7 @@ const Routing: AppRoutes = [
 ];
 
 // custom navbar routing
-export const NavbarRouting: NavbarRoutes = [
+const _NavbarRouting: NavbarRoutes = [
   {
     name: "Dashboard",
     path: "/dashboard"
@@ -79,5 +79,17 @@ export const NavbarRouting: NavbarRoutes = [
     path: "/faucet"
   }
 ];
+
+const injectOptionalNavbarRoute = (nbr: NavbarRoutes) => {
+  if (process.env.VITE_WALLET_NAV_ACTIVE === "true") {
+    nbr.push({
+      name: "Wallet",
+      path: "/wallet"
+    });
+  }
+  return nbr;
+};
+
+export const NavbarRouting = injectOptionalNavbarRoute(_NavbarRouting);
 
 export default Routing;
