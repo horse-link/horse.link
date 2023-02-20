@@ -1,129 +1,148 @@
-import { useCallback, useEffect, useState } from "react";
-import { useAccount, useBalance } from "wagmi";
+import { ethers } from "ethers";
+import { AddressLink, Card, PageLayout } from "../components";
+import { useEffect, useState } from "react";
+import { FaucetBalance } from "../types/faucet";
+import { useConfig } from "../providers/Config";
+import { ERC20__factory } from "../typechain";
+import { useAccount, useBalance, useSigner } from "wagmi";
+import utils from "../utils";
+import React from "react";
+import ClipLoader from "react-spinners/ClipLoader";
+import { ClaimTokensButton } from "../components/Buttons";
+import api from "../apis/Api";
+import { useWalletModal } from "../providers/WalletModal";
 import { FaucetModal } from "../components/Modals";
 import { AiOutlineCopy } from "react-icons/ai";
-import api from "../apis/Api";
-import { useConfig } from "../providers/Config";
-import { useWalletModal } from "../providers/WalletModal";
-import { Loader, PageLayout } from "../components";
-import { ClaimTokensButton } from "../components/Buttons";
 
 const FAUCET_ADDRESS = "0xf919eaf2e37aac718aa19668b9071ee42c02c081";
 
 const Faucet: React.FC = () => {
   const config = useConfig();
+  const { data: signer } = useSigner();
   const { address } = useAccount();
-  const { openWalletModal } = useWalletModal();
-  const { isConnected } = useAccount();
-
-  const [isClaimUsdtLoading, setIsClaimUsdtLoading] = useState(false);
-  const [isClaimDiaLoading, setIsClaimDiaLoading] = useState(false);
-  const [txHash, setTxHash] = useState<string>();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const onClickClaim = useCallback(
-    async (tokenAddress: string, tokenName: string) => {
-      if (!address || isClaimUsdtLoading || isClaimDiaLoading) return;
-      if (tokenName === "Mock USDT") {
-        setIsClaimUsdtLoading(true);
-      }
-      if (tokenName === "Mock DAI") {
-        setIsClaimDiaLoading(true);
-      }
-      try {
-        const res = await api.requestTokenFromFaucet(address, tokenAddress);
-        setTxHash(res.tx);
-        setIsModalOpen(true);
-      } catch (error: any) {
-        alert(error?.message ?? "Something went wrong");
-      }
-      setIsClaimUsdtLoading(false);
-      setIsClaimDiaLoading(false);
-    },
-    [address]
-  );
-
-  const onModalClose = () => {
-    setIsModalOpen(false);
-    setTxHash("");
-  };
-
-  const { data } = useBalance({
+  const { data: ethBalance } = useBalance({
     address: FAUCET_ADDRESS
   });
+  const { openWalletModal } = useWalletModal();
+  const [balances, setBalances] = useState<Array<FaucetBalance>>();
+  const [hash, setHash] = useState<string>();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // fetch balances
   useEffect(() => {
-    if (!isConnected) {
-      openWalletModal();
+    if (!config || !signer || !ethBalance) return;
+
+    Promise.all(
+      config.tokens.map(async t => {
+        const contract = ERC20__factory.connect(t.address, signer);
+        const [balance, decimals, symbol] = await Promise.all([
+          contract.balanceOf(FAUCET_ADDRESS),
+          contract.decimals(),
+          contract.symbol()
+        ]);
+
+        return {
+          name: t.name,
+          amount: balance,
+          symbol,
+          decimals
+        };
+      })
+    )
+      .then(b => {
+        const newBalances = [
+          {
+            name: "ETH",
+            symbol: "ETH",
+            amount: ethBalance.value,
+            decimals: ethBalance.decimals
+          },
+          ...b
+        ];
+
+        setBalances(newBalances);
+      })
+      .catch(console.error);
+  }, [config, signer, ethBalance]);
+
+  const claim = async (tokenAddress: string) => {
+    if (!address) return openWalletModal();
+
+    setHash(undefined);
+
+    try {
+      const res = await api.requestTokenFromFaucet(address, tokenAddress);
+      setHash(res.tx);
+      setIsModalOpen(true);
+    } catch (e) {
+      console.error(e);
     }
-  }, [isConnected]);
+  };
+
+  const closeModal = () => setIsModalOpen(false);
 
   return (
     <PageLayout>
-      {txHash && (
-        <FaucetModal
-          isOpen={isModalOpen}
-          onClose={onModalClose}
-          txHash={txHash}
-        />
-      )}
-      <div className="my-10 w-full rounded-md bg-emerald-700 p-5 text-center">
-        <h1>Welcome to the Horse Link Faucet!</h1>
-        <p>
-          These tokens are to be used to test the beta functionality of the app.
-          Please make sure you are connected to Goerli network. To connect to
-          the Goerli network, select your Metamask extension and click the
-          Network tab at the top. Select the Goerli test network (this will be
-          there by default, otherwise please enable test networks in your
-          Metamask settings).
-        </p>
-        <p>
-          Current ETH balance for the faucet&nbsp;
-          <a
-            href={`${process.env.VITE_SCANNER_URL}/address/${FAUCET_ADDRESS}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="break-all underline"
-          >
-            {FAUCET_ADDRESS}
-          </a>
-        </p>
-        &nbsp;is:&nbsp;
-        {`${data ? `${data.formatted} ${data.symbol}` : <Loader />}`}
-      </div>
-      <div className="flex flex-wrap gap-3">
-        <img
-          src="/images/goerli-test-network.webp"
-          alt="Goerli network option in Metamask Networks tab"
-          width="300"
-          height="300"
-        />
-        <div className="flex w-full flex-col gap-5 md:w-56">
-          {config?.tokens.map(token => (
-            <ClaimTokensButton
-              key={token.name}
-              tokenName={token.name}
-              onClick={() => onClickClaim(token.address, token.name)}
-              isLoading={isClaimUsdtLoading || isClaimDiaLoading || !config}
+      {balances ? (
+        <div className="mb-4 w-full gap-x-1 gap-y-2 lg:gap-x-4 lg:gap-y-4 grid lg:grid-cols-4">
+          {balances?.map(b => (
+            <Card
+              key={b.name}
+              title={b.name}
+              data={`${utils.formatting.formatToFourDecimals(
+                ethers.utils.formatUnits(b.amount, b.decimals)
+              )} ${b.symbol}`}
             />
           ))}
         </div>
-        <div className="mb-5 flex w-full max-w-md flex-col gap-5 md:max-w-2xl">
-          {config?.tokens.map(token => {
-            return (
-              <div className="flex flex-wrap rounded-md bg-gray-100 p-5 px-3 text-xs sm:text-base">
-                {token.name} Address - {token.address}
-                <button
-                  className="flex flex-wrap rounded-xl p-1 hover:bg-emerald-400"
-                  onClick={() => navigator.clipboard.writeText(token.address)}
-                >
-                  <AiOutlineCopy />
-                </button>
-              </div>
-            );
-          })}
+      ) : (
+        <div className="mb-4 w-full">
+          <Card title="Loading faucet balances..." />
         </div>
+      )}
+      <h3 className="mb-3 text-lg font-medium text-gray-900">Faucet</h3>
+      <div className="container-fluid overflow-hidden rounded-lg bg-emerald-700 px-4 py-5 shadow sm:p-6">
+        <h2 className="mb-3 text-lg font-medium text-gray-900">
+          Claim tokens on the Goerli Testnet and start punting!
+        </h2>
+        <p className="my-2 text-xs">
+          You can find the faucet at{" "}
+          {<AddressLink address={FAUCET_ADDRESS} className="underline" />}. This
+          page is used for testing the beta functionality of the web app, and
+          does not have any bearing on real world earnings, winnings, and/or
+          losses; it is purely for testing.
+        </p>
       </div>
+      <div className="mt-4 w-1/2 gap-4 grid grid-cols-6">
+        {config ? (
+          config.tokens.map(t => (
+            <React.Fragment>
+              <div className="w-full flex items-center col-span-2">
+                <ClaimTokensButton
+                  key={t.address}
+                  tokenName={t.name}
+                  onClick={() => claim(t.address)}
+                />
+              </div>
+              <div className="w-full col-span-4">
+                <div className="w-full h-full px-4 bg-white rounded-md flex items-center">
+                  {t.name} address:
+                  <AddressLink address={t.address} className="ml-2 underline" />
+                  <button
+                    className="ml-1 rounded-full p-1 hover:bg-emerald-400"
+                    onClick={() => navigator.clipboard.writeText(t.address)}
+                  >
+                    <AiOutlineCopy />
+                  </button>
+                </div>
+              </div>
+            </React.Fragment>
+          ))
+        ) : (
+          <ClipLoader />
+        )}
+      </div>
+      <FaucetModal isOpen={isModalOpen} onClose={closeModal} txHash={hash} />
     </PageLayout>
   );
 };
