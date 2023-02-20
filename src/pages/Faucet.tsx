@@ -1,12 +1,11 @@
 import { ethers } from "ethers";
 import { AddressLink, Card, PageLayout } from "../components";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaucetBalance } from "../types/faucet";
 import { useConfig } from "../providers/Config";
 import { ERC20__factory } from "../typechain";
 import { useAccount, useBalance, useSigner } from "wagmi";
 import utils from "../utils";
-import React from "react";
 import ClipLoader from "react-spinners/ClipLoader";
 import { ClaimTokensButton } from "../components/Buttons";
 import api from "../apis/Api";
@@ -117,14 +116,19 @@ const Faucet: React.FC = () => {
         {config ? (
           config.tokens.map(t => (
             <React.Fragment>
-              <div className="w-full flex items-center col-span-2">
+              <div
+                className="w-full flex items-center col-span-2"
+                key={`button-${t.address}`}
+              >
                 <ClaimTokensButton
-                  key={t.address}
                   tokenName={t.name}
                   onClick={() => claim(t.address)}
                 />
               </div>
-              <div className="w-full col-span-4">
+              <div
+                className="w-full col-span-4"
+                key={`description-${t.address}`}
+              >
                 <div className="w-full h-full px-4 bg-white rounded-md flex items-center">
                   {t.name} address:
                   <AddressLink address={t.address} className="ml-2 underline" />
