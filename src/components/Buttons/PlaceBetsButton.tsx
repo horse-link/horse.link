@@ -3,16 +3,16 @@ import { BaseButton } from "./BaseButton";
 import { useBetSlipContext } from "../../providers/BetSlip";
 
 export const PlaceBetsButton: React.FC = () => {
-  const { bets, txLoading, placeBets } = useBetSlipContext();
+  const { bets, txLoading, placeBetsInBetSlip } = useBetSlipContext();
 
   return (
     <BaseButton
       loading={txLoading}
       loaderColor="black"
       disabled={!bets || !bets.length || txLoading}
-      onClick={placeBets}
+      onClick={placeBetsInBetSlip}
       baseStyleOverride
-      className="w-full !font-bold text-lg border-2 border-black rounded-lg text-black text-center disabled:hover:bg-white hover:bg-black hover:text-white py-3 !opacity-100"
+      className="w-full rounded-lg border-2 border-black py-3 text-center text-lg !font-bold text-black !opacity-100 hover:bg-black hover:text-white disabled:hover:bg-white"
     >
       BET NOW
     </BaseButton>
