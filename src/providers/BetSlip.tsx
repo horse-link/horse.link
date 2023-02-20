@@ -7,7 +7,7 @@ import {
   useMemo,
   useState
 } from "react";
-import { BetSlipContextType, BetSlipEntry } from "../types/context";
+import { BetSlipContextType, BetSlipEntry, BetEntry } from "../types/context";
 import { useMarketContract } from "../hooks/contracts";
 import { useSigner } from "wagmi";
 import { ethers } from "ethers";
@@ -16,6 +16,7 @@ import { useConfig } from "./Config";
 import dayjs from "dayjs";
 import isYesterday from "dayjs/plugin/isYesterday";
 import { BetSlipTxModal } from "../components/Modals";
+import { Config } from "../types/config";
 
 dayjs.extend(isYesterday);
 
@@ -26,7 +27,8 @@ export const BetSlipContext = createContext<BetSlipContextType>({
   addBet: () => {},
   removeBet: () => {},
   clearBets: () => {},
-  placeBets: () => {}
+  placeBetsInBetSlip: () => {},
+  placeBetImmediately: () => {}
 });
 
 export const useBetSlipContext = () => useContext(BetSlipContext);
@@ -72,7 +74,7 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
   }, []);
 
   const addBet = useCallback(
-    (bet: Omit<BetSlipEntry, "id">) => {
+    (bet: BetEntry) => {
       // if there are no bets, set the bets state to the new bet, id 0
       if (!bets?.length)
         return setBets([
@@ -124,15 +126,11 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
     [bets]
   );
 
-  const placeBets = useCallback(async () => {
-    // if there are no bets, or signer, do nothing
-    if (!bets?.length || !signer || !config) return;
-
-    // reset state
-    setTxLoading(true);
-    setHashes(undefined);
-
-    // settle bets
+  const placeBets = async (
+    bets: BetSlipEntry[] | BetEntry[],
+    signer: ethers.Signer,
+    config: Config
+  ) => {
     const raw = await Promise.allSettled(
       bets.map(bet => {
         const vault = utils.config.getVaultFromMarket(bet.market, config);
@@ -161,6 +159,19 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
       .filter(utils.types.isRejected)
       .map(r => r.reason as string);
 
+    return { txs, errors };
+  };
+
+  const placeBetsInBetSlip = useCallback(async () => {
+    if (!bets?.length || !signer || !config) return;
+
+    // reset state
+    setTxLoading(true);
+    setHashes(undefined);
+
+    // settle bets
+    const { txs, errors } = await placeBets(bets, signer, config);
+
     // set errors
     setErrors(errors);
 
@@ -175,6 +186,32 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
     setIsModalOpen(true);
   }, [config, bets, signer, placeBet]);
 
+  const placeBetImmediately = useCallback(
+    async (bet: BetEntry) => {
+      if (!bet || !signer || !config) return;
+
+      // reset state
+      setTxLoading(true);
+      setHashes(undefined);
+
+      // open modal
+      setIsModalOpen(true);
+
+      // settle bets
+      const { txs, errors } = await placeBets([bet], signer, config);
+
+      // set errors
+      setErrors(errors);
+
+      // set hashes
+      setHashes(txs);
+
+      // stop loading
+      setTxLoading(false);
+    },
+    [config, signer, placeBet]
+  );
+
   const closeModal = useCallback(() => setIsModalOpen(false), []);
 
   const value = useMemo(
@@ -186,9 +223,20 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
       addBet,
       removeBet,
       clearBets,
-      placeBets
+      placeBetsInBetSlip,
+      placeBetImmediately
     }),
-    [txLoading, hashes, bets, errors, addBet, removeBet, clearBets, placeBets]
+    [
+      txLoading,
+      hashes,
+      bets,
+      errors,
+      addBet,
+      removeBet,
+      clearBets,
+      placeBetsInBetSlip,
+      placeBetImmediately
+    ]
   );
 
   return (

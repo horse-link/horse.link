@@ -1,8 +1,9 @@
 import axios, { AxiosInstance } from "axios";
+import constants from "../constants";
 
 export const getAxiosClient = () =>
   axios.create({
-    baseURL: process.env.VITE_API_URL,
+    baseURL: constants.env.API_URL,
     headers: {
       Accept: "application/json"
     }
