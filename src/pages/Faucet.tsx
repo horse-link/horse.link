@@ -4,36 +4,30 @@ import React, { useEffect, useState } from "react";
 import { FaucetBalance } from "../types/faucet";
 import { useConfig } from "../providers/Config";
 import { ERC20__factory } from "../typechain";
-import { useAccount, useBalance, useSigner } from "wagmi";
+import { useBalance, useProvider } from "wagmi";
 import utils from "../utils";
-import ClipLoader from "react-spinners/ClipLoader";
-import { ClaimTokensButton } from "../components/Buttons";
-import api from "../apis/Api";
-import { useWalletModal } from "../providers/WalletModal";
 import { FaucetModal } from "../components/Modals";
-import { AiOutlineCopy } from "react-icons/ai";
+import { FaucetTable } from "../components/Tables";
 
 const FAUCET_ADDRESS = "0xf919eaf2e37aac718aa19668b9071ee42c02c081";
 
 const Faucet: React.FC = () => {
   const config = useConfig();
-  const { data: signer } = useSigner();
-  const { address } = useAccount();
+  const provider = useProvider();
   const { data: ethBalance } = useBalance({
     address: FAUCET_ADDRESS
   });
-  const { openWalletModal } = useWalletModal();
   const [balances, setBalances] = useState<Array<FaucetBalance>>();
   const [hash, setHash] = useState<string>();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // fetch balances
   useEffect(() => {
-    if (!config || !signer || !ethBalance) return;
+    if (!config || !ethBalance) return;
 
     Promise.all(
       config.tokens.map(async t => {
-        const contract = ERC20__factory.connect(t.address, signer);
+        const contract = ERC20__factory.connect(t.address, provider);
         const [balance, decimals, symbol] = await Promise.all([
           contract.balanceOf(FAUCET_ADDRESS),
           contract.decimals(),
@@ -62,21 +56,7 @@ const Faucet: React.FC = () => {
         setBalances(newBalances);
       })
       .catch(console.error);
-  }, [config, signer, ethBalance]);
-
-  const claim = async (tokenAddress: string) => {
-    if (!address) return openWalletModal();
-
-    setHash(undefined);
-
-    try {
-      const res = await api.requestTokenFromFaucet(address, tokenAddress);
-      setHash(res.tx);
-      setIsModalOpen(true);
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  }, [config, provider, ethBalance]);
 
   const closeModal = () => setIsModalOpen(false);
 
@@ -112,39 +92,8 @@ const Faucet: React.FC = () => {
           losses; it is purely for testing.
         </p>
       </div>
-      <div className="mt-4 w-1/2 gap-4 grid grid-cols-6">
-        {config ? (
-          config.tokens.map(t => (
-            <React.Fragment>
-              <div
-                className="w-full flex items-center col-span-2"
-                key={`button-${t.address}`}
-              >
-                <ClaimTokensButton
-                  tokenName={t.name}
-                  onClick={() => claim(t.address)}
-                />
-              </div>
-              <div
-                className="w-full col-span-4"
-                key={`description-${t.address}`}
-              >
-                <div className="w-full h-full px-4 bg-white rounded-md flex items-center">
-                  {t.name} address:
-                  <AddressLink address={t.address} className="ml-2 underline" />
-                  <button
-                    className="ml-1 rounded-full p-1 hover:bg-emerald-400"
-                    onClick={() => navigator.clipboard.writeText(t.address)}
-                  >
-                    <AiOutlineCopy />
-                  </button>
-                </div>
-              </div>
-            </React.Fragment>
-          ))
-        ) : (
-          <ClipLoader />
-        )}
+      <div className="mt-4 w-full">
+        <FaucetTable setHash={setHash} setIsModalOpen={setIsModalOpen} />
       </div>
       <FaucetModal isOpen={isModalOpen} onClose={closeModal} txHash={hash} />
     </PageLayout>

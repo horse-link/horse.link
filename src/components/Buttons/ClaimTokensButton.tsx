@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Loader } from "../";
+import { BaseButton } from "./BaseButton";
 
 type Props = {
   tokenName: string;
@@ -21,11 +21,12 @@ export const ClaimTokensButton: React.FC<Props> = ({ tokenName, onClick }) => {
   };
 
   return (
-    <button
+    <BaseButton
+      title={`Claim ${tokenName}`}
       onClick={click}
-      className="w-full h-16 rounded-md border border-gray-500 bg-gray-100 px-5 shadow-md hover:bg-gray-200"
-    >
-      {loading ? <Loader /> : `Claim ${tokenName}`}
-    </button>
+      className="mr-4 rounded-md border-2 border-black px-4 py-2 font-bold text-black transition-colors duration-100 enabled:hover:bg-black enabled:hover:text-white"
+      baseStyleOverride
+      loading={loading}
+    />
   );
 };
