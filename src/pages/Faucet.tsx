@@ -93,7 +93,11 @@ const Faucet: React.FC = () => {
         </p>
       </div>
       <div className="mt-4 w-full">
-        <FaucetTable setHash={setHash} setIsModalOpen={setIsModalOpen} />
+        <FaucetTable
+          balances={balances}
+          setHash={setHash}
+          setIsModalOpen={setIsModalOpen}
+        />
       </div>
       <FaucetModal isOpen={isModalOpen} onClose={closeModal} txHash={hash} />
     </PageLayout>
