@@ -7,6 +7,7 @@ import { useConfig } from "../providers/Config";
 import { useWalletModal } from "../providers/WalletModal";
 import { Loader, PageLayout } from "../components";
 import { ClaimTokensButton } from "../components/Buttons";
+import constants from "../constants";
 
 const FAUCET_ADDRESS = "0xf919eaf2e37aac718aa19668b9071ee42c02c081";
 
@@ -80,7 +81,7 @@ const Faucet: React.FC = () => {
         <p>
           Current ETH balance for the faucet&nbsp;
           <a
-            href={`${process.env.VITE_SCANNER_URL}/address/${FAUCET_ADDRESS}`}
+            href={`${constants.env.SCANNER_URL}/address/${FAUCET_ADDRESS}`}
             target="_blank"
             rel="noopener noreferrer"
             className="break-all underline"
