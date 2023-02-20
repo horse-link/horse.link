@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import constants from "./constants";
-import Dashboard from "./pages/Dashboard";
+import Home from "./pages/Home";
 import { AppRoutes, NavbarRoutes } from "./types/app";
 
 // lazy load pages
@@ -16,8 +16,8 @@ const Wallet = lazy(() => import("./pages/Wallet"));
 // app routing
 const Routing: AppRoutes = [
   {
-    path: "/dashboard",
-    element: <Dashboard />
+    path: "/",
+    element: <Home />
   },
   {
     path: "/vaults",
@@ -60,8 +60,8 @@ const Routing: AppRoutes = [
 // custom navbar routing
 const _NavbarRouting: NavbarRoutes = [
   {
-    name: "Dashboard",
-    path: "/dashboard"
+    name: "Home",
+    path: "/"
   },
   {
     name: "Vaults",

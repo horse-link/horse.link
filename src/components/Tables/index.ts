@@ -5,4 +5,4 @@ export * from "./ResultsTable";
 export * from "./BetTable";
 export * from "./MarketTable";
 export * from "./VaultListTable";
-export * from "./DashboardTable";
+export * from "./HomeTable";

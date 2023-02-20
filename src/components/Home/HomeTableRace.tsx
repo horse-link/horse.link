@@ -11,7 +11,7 @@ type Props = {
   meet: Meet;
 };
 
-export const DashboardTableRace: React.FC<Props> = ({ race, meet }) => {
+export const HomeTableRace: React.FC<Props> = ({ race, meet }) => {
   const [timeString, setTimeString] = useState(
     utils.formatting.formatTimeToHMS(race.start!, true)
   );

@@ -11,7 +11,7 @@ const Navigation: React.FC = () => (
           <Route path={path} element={element} {...props} key={path} />
         ))}
 
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Suspense>
   </BrowserRouter>

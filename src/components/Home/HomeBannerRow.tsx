@@ -8,7 +8,7 @@ type Props = {
   meet: NextToJump;
 };
 
-export const DashboardBannerRow: React.FC<Props> = ({ meet }) => {
+export const HomeBannerRow: React.FC<Props> = ({ meet }) => {
   const [timeString, setTimeString] = useState(
     utils.formatting.formatTimeToHMS(meet.jumperRaceStartTime)
   );

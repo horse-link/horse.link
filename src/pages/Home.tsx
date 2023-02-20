@@ -4,17 +4,17 @@ import { useAccount } from "wagmi";
 import api from "../apis/Api";
 import { Toggle, PageLayout } from "../components";
 import {
-  DashboardOverallStats,
-  DashboardUserStats,
-  DashboardFilterGroup,
-  DashboardNextToJumpBanner
-} from "../components/Dashboard";
-import { DashboardTable } from "../components/Tables";
+  HomeOverallStats,
+  HomeUserStats,
+  HomeFilterGroup,
+  HomeNextToJumpBanner
+} from "../components/Home";
+import { HomeTable } from "../components/Tables";
 import { useWalletModal } from "../providers/WalletModal";
 import { SignedMeetingsResponse, MeetFilters, Meet } from "../types/meets";
 import constants from "../constants";
 
-const Dashboard: React.FC = () => {
+const Home: React.FC = () => {
   const [response, setResponse] = useState<SignedMeetingsResponse>();
   const [meets, setMeets] = useState<Meet[]>();
   const [myPlayEnabled, setMyPlayEnabled] = useState(false);
@@ -63,13 +63,16 @@ const Dashboard: React.FC = () => {
   }, [myPlayEnabled, isConnected]);
 
   const onMyPlayToggle = () => setMyPlayEnabled(prev => !prev);
+
   const onFilterChange = (option: MeetFilters) => {
     setMeetsFilter(option);
   };
+
   const isLoading = !response;
+
   return (
     <PageLayout>
-      <DashboardNextToJumpBanner />
+      <HomeNextToJumpBanner />
       <div className="grid gap-6">
         <div>
           <div className="container-fluid overflow-hidden rounded-lg bg-emerald-700 px-4 py-5 shadow sm:p-6">
@@ -92,10 +95,10 @@ const Dashboard: React.FC = () => {
               the range of slippage based on the payout will be placed.
             </p>
           </div>
-          {myPlayEnabled ? <DashboardUserStats /> : <DashboardOverallStats />}
+          {myPlayEnabled ? <HomeUserStats /> : <HomeOverallStats />}
         </div>
         <div className="flex w-full justify-between gap-x-3 md:justify-end">
-          <DashboardFilterGroup
+          <HomeFilterGroup
             value={meetsFilter}
             onChange={onFilterChange}
             disabled={isLoading}
@@ -105,7 +108,7 @@ const Dashboard: React.FC = () => {
           <Toggle enabled={myPlayEnabled} onChange={onMyPlayToggle} />
           <div>My Stats</div>
         </div>
-        <DashboardTable meets={meets} />
+        <HomeTable meets={meets} />
         <div className="flex justify-center rounded-lg bg-white px-4 py-5 shadow sm:p-6 lg:mb-10">
           <div className="w-4/5 max-w-2xl">
             <div className="flex flex-col items-center">
@@ -127,4 +130,4 @@ const Dashboard: React.FC = () => {
   );
 };
 
-export default Dashboard;
+export default Home;

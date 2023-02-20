@@ -1,17 +1,18 @@
-import Dashboard from "../pages/Dashboard";
+import React from "react";
+import Home from "../pages/Home";
 import { MemoryRouter } from "react-router-dom";
 import { render, screen, userEvent } from "./componentTestUtils";
 
-const DashboardPage = () => {
+const HomePage: React.FC = () => {
   return (
-    <MemoryRouter initialEntries={[{ pathname: "/dashboard" }]}>
-      <Dashboard />
+    <MemoryRouter initialEntries={[{ pathname: "/" }]}>
+      <Home />
     </MemoryRouter>
   );
 };
 
 it("Dashboard page to show overall stat widgets by default", async () => {
-  render(<DashboardPage />);
+  render(<HomePage />);
   const totalLiquidityElement = screen.getByText("Total Liquidity");
   expect(totalLiquidityElement).toBeDefined();
   const inPlayElement = screen.getByText("In Play");
@@ -21,7 +22,7 @@ it("Dashboard page to show overall stat widgets by default", async () => {
 });
 
 it("Dashboard contain switch", async () => {
-  render(<DashboardPage />);
+  render(<HomePage />);
 
   const toggleElement = screen.getByRole("switch");
   expect(toggleElement).toBeDefined();
@@ -29,7 +30,7 @@ it("Dashboard contain switch", async () => {
 
 it("Show My stats widgets when toggle switch", async () => {
   const user = userEvent.setup();
-  render(<DashboardPage />);
+  render(<HomePage />);
   const toggleElement = screen.getByRole("switch");
   expect(toggleElement).toBeDefined();
 
@@ -45,7 +46,7 @@ it("Show My stats widgets when toggle switch", async () => {
 
 it("Show wallet connect modal when toggle switch without connected wallet", async () => {
   const user = userEvent.setup();
-  render(<DashboardPage />);
+  render(<HomePage />);
   const toggleElement = screen.getByRole("switch");
   expect(toggleElement).toBeDefined();
 
