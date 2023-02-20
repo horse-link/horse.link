@@ -86,7 +86,8 @@ export const useSubgraphBets = (
     `;
 
     ApolloClient.query<BetResponse>({
-      query
+      query,
+      fetchPolicy: "network-only"
     }).then(({ data: { bets } }) => {
       Promise.all(
         bets.map(async bet => {
