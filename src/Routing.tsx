@@ -1,4 +1,5 @@
 import { lazy } from "react";
+import constants from "./constants";
 import Dashboard from "./pages/Dashboard";
 import { AppRoutes, NavbarRoutes } from "./types/app";
 
@@ -81,7 +82,7 @@ const _NavbarRouting: NavbarRoutes = [
 ];
 
 const injectOptionalNavbarRoute = (nbr: NavbarRoutes) => {
-  if (process.env.VITE_WALLET_NAV_ACTIVE === "true") {
+  if (constants.env.WALLET_NAV_ACTIVE === "true") {
     nbr.push({
       name: "Wallet",
       path: "/wallet"
