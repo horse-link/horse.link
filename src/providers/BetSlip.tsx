@@ -177,8 +177,8 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
 
     // set hashes
     setHashes(txs);
-
     clearBets();
+
     // stop loading
     setTxLoading(false);
 
