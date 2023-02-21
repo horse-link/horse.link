@@ -30,6 +30,15 @@ export default ({ mode }: UserConfig) => {
         VITE_API_URL: "/",
         VITE_WALLET_NAV_ACTIVE: "true"
       }
+    },
+    build: {
+      rollupOptions: {
+        output: {
+          entryFileNames: "assets/[name].js",
+          chunkFileNames: "assets/[name].js",
+          assetFileNames: "assets/[name].[ext]"
+        }
+      }
     }
   });
 };
