@@ -64,7 +64,7 @@ export const BetSlipTxModal: React.FC<Props> = ({ isOpen, onClose }) => {
               </li>
             ))}
           </ol>
-          {errors?.length && (
+          {!!errors?.length && (
             <div className="mt-4">
               <h3 className="font-bold">
                 One or more bets produced the following errors:
