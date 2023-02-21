@@ -74,29 +74,19 @@ const Home: React.FC = () => {
     <PageLayout>
       <HomeNextToJumpBanner />
       <div className="grid gap-6">
-        <div>
-          <div className="container-fluid overflow-hidden rounded-lg bg-emerald-700 px-4 py-5 shadow sm:p-6">
-            <div className="flex flex-wrap justify-between">
-              <img
-                alt="Horse-Link"
-                src="/images/horse-link.webp"
-                className="mt-2 mb-8"
-              />
-              <img alt="Horse" src="/images/horse.webp" className="h-20" />
-            </div>
-            <h2 className="mb-3 text-lg font-medium text-gray-900">
-              Horse Link is an Ethereum AMM protocol that allows participants to
-              wager on sports markets using ERC20 tokens.
-            </h2>
-            <p className="my-2 text-xs">
-              Horse Link&apos;s smart contract guaranteed bets are always placed
-              within the slippage band of the constant product function. Like
-              other AMM protocols based on curve functions, bets based within
-              the range of slippage based on the payout will be placed.
-            </p>
-          </div>
-          {myPlayEnabled ? <HomeUserStats /> : <HomeOverallStats />}
+        <div className="flex my-4 w-full lg:w-auto">
+          <img
+            alt="Horse-Link"
+            src="/images/horse-link.webp"
+            className="w-full lg:w-auto lg:h-20 lg:mr-10"
+          />
+          <img
+            alt="Horse"
+            src="/images/horse.webp"
+            className="hidden lg:block lg:h-20"
+          />
         </div>
+        {myPlayEnabled ? <HomeUserStats /> : <HomeOverallStats />}
         <div className="flex w-full justify-between gap-x-3 md:justify-end">
           <HomeFilterGroup
             value={meetsFilter}
