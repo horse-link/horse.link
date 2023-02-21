@@ -49,9 +49,11 @@ Status
 
 ERC4626 Vaults are created to allow users to deposit ERC20 tokens "underlying" into a smart contract and earn dividends on their deposits. Vault operators then allow markets to draw down liqidity from their reserves to fund bets. The Vault operator can also set the percentage of the bet that is distributed to the Vault share holders.
 
+Vaults earn income by lending to the markets.
+
 # Market makers
 
-Market makers can run the the dapp and set their own odds ...
+Market makers can run the the dapp and set their own odds and fees. They can also set the percentage of the bet that is distributed to the Vault share holders.
 
 # The API
 

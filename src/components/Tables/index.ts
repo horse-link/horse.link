@@ -6,3 +6,4 @@ export * from "./BetTable";
 export * from "./MarketTable";
 export * from "./VaultListTable";
 export * from "./HomeTable";
+export * from "./FaucetTable";
