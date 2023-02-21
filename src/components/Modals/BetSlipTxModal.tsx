@@ -18,7 +18,7 @@ export const BetSlipTxModal: React.FC<Props> = ({ isOpen, onClose }) => {
       {!hashes?.length ? (
         !errors?.length ? (
           <div className="w-[75vw] lg:w-[28rem]">
-            <h2 className="text-2xl font-bold">Transactions loading</h2>
+            <h2 className="text-2xl font-bold">Transactions Loading</h2>
             <div className="w-full flex justify-center mt-4">
               <Loader />
             </div>
@@ -64,6 +64,21 @@ export const BetSlipTxModal: React.FC<Props> = ({ isOpen, onClose }) => {
               </li>
             ))}
           </ol>
+          {errors?.length && (
+            <div className="mt-4">
+              <h3 className="font-bold">
+                One or more bets produced the following errors:
+              </h3>
+              <ol className="ml-4 mt-2 list-decimal">
+                {errors.map((err, i) => (
+                  <li key={`${err}-${i}`}>
+                    A bet reject with reason:{" "}
+                    {utils.errors.getMeaningfulMessage(err)}
+                  </li>
+                ))}
+              </ol>
+            </div>
+          )}
         </div>
       )}
     </BaseModal>
