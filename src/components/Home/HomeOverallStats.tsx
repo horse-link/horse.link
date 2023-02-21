@@ -1,9 +1,9 @@
 import { ethers } from "ethers";
-import { Card } from "../";
+import { Card } from "..";
 import { useProtocolStatistics } from "../../hooks/stats";
 import utils from "../../utils";
 
-export const DashboardOverallStats: React.FC = () => {
+export const HomeOverallStats: React.FC = () => {
   const stats = useProtocolStatistics();
 
   const formattedTvl = stats?.tvl

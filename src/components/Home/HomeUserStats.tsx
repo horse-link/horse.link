@@ -1,9 +1,9 @@
 import { ethers } from "ethers";
-import { Card } from "../";
+import { Card } from "..";
 import { useUserStatistics } from "../../hooks/stats";
 import utils from "../../utils";
 
-export const DashboardUserStats: React.FC = () => {
+export const HomeUserStats: React.FC = () => {
   const stats = useUserStatistics();
 
   const formattedDeposits = stats?.totalDeposited

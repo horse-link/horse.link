@@ -14,7 +14,7 @@ type Props = {
   disabled: boolean;
 };
 
-export const DashboardFilterGroup: React.FC<Props> = ({
+export const HomeFilterGroup: React.FC<Props> = ({
   value: currentOption,
   onChange,
   disabled
