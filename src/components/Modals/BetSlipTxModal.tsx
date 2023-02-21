@@ -38,7 +38,7 @@ export const BetSlipTxModal: React.FC<Props> = ({ isOpen, onClose }) => {
                 <ol className="ml-4 mt-2 list-decimal">
                   {errors.map((err, i) => (
                     <li key={`${err}-${i}`}>
-                      A bet reject with reason:{" "}
+                      A bet rejected with reason:{" "}
                       {utils.errors.getMeaningfulMessage(err)}
                     </li>
                   ))}
@@ -72,7 +72,7 @@ export const BetSlipTxModal: React.FC<Props> = ({ isOpen, onClose }) => {
               <ol className="ml-4 mt-2 list-decimal">
                 {errors.map((err, i) => (
                   <li key={`${err}-${i}`}>
-                    A bet reject with reason:{" "}
+                    A bet rejected with reason:{" "}
                     {utils.errors.getMeaningfulMessage(err)}
                   </li>
                 ))}
