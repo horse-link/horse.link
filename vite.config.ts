@@ -2,7 +2,6 @@
 import { defineConfig, loadEnv, UserConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import svgrPlugin from "vite-plugin-svgr";
-import path from "path";
 
 export default ({ mode }: UserConfig) => {
   // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
