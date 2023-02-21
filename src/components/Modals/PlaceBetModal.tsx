@@ -128,6 +128,7 @@ export const PlaceBetModal: React.FC<Props> = ({
     (option?: { betNow: boolean }) => {
       if (!market || !wagerAmount || !runner || !config || !race || !raceNumber)
         return;
+
       const vault = utils.config.getVaultFromMarket(market, config);
       if (!vault)
         throw new Error(
@@ -147,6 +148,7 @@ export const PlaceBetModal: React.FC<Props> = ({
         },
         timestamp: Math.floor(Date.now() / 1000)
       };
+
       if (option?.betNow) {
         placeBetImmediately(betSlip);
       } else {

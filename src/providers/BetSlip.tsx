@@ -100,7 +100,6 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
 
   const clearBets = useCallback(() => {
     setBets(undefined);
-    setErrors(undefined);
     localStorage.removeItem(LOCAL_STORAGE_KEY);
   }, [bets]);
 
@@ -168,6 +167,7 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
     // reset state
     setTxLoading(true);
     setHashes(undefined);
+    setErrors(undefined);
 
     // settle bets
     const { txs, errors } = await placeBets(bets, signer, config);
@@ -193,6 +193,7 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
       // reset state
       setTxLoading(true);
       setHashes(undefined);
+      setErrors(undefined);
 
       // open modal
       setIsModalOpen(true);
