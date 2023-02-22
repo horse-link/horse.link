@@ -96,6 +96,9 @@ export const BetTable: React.FC<Props> = ({
           <Skeleton />
         ),
         classNames: "truncate"
+      },
+      {
+        title: bet?.status ?? <Skeleton />
       }
     ];
   };
@@ -119,6 +122,9 @@ export const BetTable: React.FC<Props> = ({
     },
     {
       title: "Proposition"
+    },
+    {
+      title: "Status"
     }
   ];
 
