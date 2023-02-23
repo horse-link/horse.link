@@ -1,5 +1,5 @@
 import React from "react";
-import { LeaderboardStat } from "../../types/leaderboard";
+import { LeaderboardBalance, LeaderboardStat } from "../../types/leaderboard";
 import { BaseTable } from "./BaseTable";
 import { TableData, TableHeader, TableRow } from "../../types/table";
 import { ethers } from "ethers";
@@ -10,15 +10,23 @@ import { Address } from "wagmi";
 
 type Props = {
   stats?: Array<LeaderboardStat>;
+  balances?: Array<LeaderboardBalance>;
 };
 
-export const LeaderboardTable: React.FC<Props> = ({ stats }) => {
+export const LeaderboardTable: React.FC<Props> = ({ stats, balances }) => {
   const getValues = (stat: LeaderboardStat, index: number): TableData[] => [
     {
       title: index + 1
     },
     {
       title: <AddressLink address={stat.address as Address} />
+    },
+    {
+      title: `${utils.formatting.formatToFourDecimals(
+        balances?.find(
+          bal => bal.address.toLowerCase() === stat.address.toLowerCase()
+        )?.formatted || "0"
+      )} HL`
     },
     {
       title: `${utils.formatting.formatToFourDecimals(
@@ -35,6 +43,9 @@ export const LeaderboardTable: React.FC<Props> = ({ stats }) => {
       title: "Address"
     },
     {
+      title: "Balance"
+    },
+    {
       title: "Earnings"
     }
   ];
@@ -47,11 +58,12 @@ export const LeaderboardTable: React.FC<Props> = ({ stats }) => {
       }))
     }));
 
-  const ROWS: TableRow[] = stats
-    ? stats.map((stat, i) => ({
-        data: getValues(stat, i)
-      }))
-    : blankRows;
+  const ROWS: TableRow[] =
+    stats && balances
+      ? stats.map((stat, i) => ({
+          data: getValues(stat, i)
+        }))
+      : blankRows;
 
   return <BaseTable headers={HEADERS} rows={ROWS} />;
 };

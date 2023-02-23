@@ -1,38 +1,47 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useConfig } from "../../providers/Config";
 import { Bet } from "../../types/subgraph";
 import utils from "../../utils";
 import useSubgraph from "../useSubgraph";
 import { BigNumber, ethers } from "ethers";
-import { LeaderboardStat } from "../../types/leaderboard";
+import { TWENTY_FOUR_HOURS_S } from "../../constants/time";
+import { ERC20__factory } from "../../typechain";
+import { useProvider } from "wagmi";
+import { LeaderboardBalance } from "../../types/leaderboard";
 
 type Response = {
   bets: Array<Bet>;
 };
 
-export const useLeaderboardStatistics = ():
-  | Array<LeaderboardStat>
-  | undefined => {
+export const useLeaderboardStatistics = () => {
   const config = useConfig();
+  const provider = useProvider();
+  const [balances, setBalances] = useState<Array<LeaderboardBalance>>();
+
   const hlToken = config?.tokens.find(t => t.symbol.toLowerCase() === "hl");
 
-  // get bets that were made with horse link token and have been settled
-  // TODO: add date range
+  const { current: now } = useRef(Math.floor(Date.now() / 1000));
+  const { current: oneWeekAgo } = useRef(now - TWENTY_FOUR_HOURS_S * 7);
+
+  // get bets that were made with horse link token and have been settled, within the last week
   const { data, loading } = useSubgraph<Response>(
     utils.queries.getBetsQueryWithoutPagination({
       assetAddress: hlToken?.address.toLowerCase(),
-      settled: true
+      settled: true,
+      createdAt_gte: oneWeekAgo
     })
   );
 
-  // reduce by user
+  // sort the subgraph data
   const sortedData = useMemo(() => {
     if (loading || !data?.bets.length || !hlToken || !config) return;
     const { bets } = data;
 
-    // ETH address
-    // winnings - sum of all payouts MINUS the initial faucet amount which is 1000 tokens (i think)
-
+    // create object that looks like
+    // {
+    //  [address: string]: BigNumber
+    // }
+    // key: user address, value: sum of payouts as a BN
     const reduced = bets.reduce((prevObject, bet) => {
       const prevValue = prevObject[bet.owner] || ethers.constants.Zero;
 
@@ -45,17 +54,46 @@ export const useLeaderboardStatistics = ():
       };
     }, {} as Record<string, BigNumber>);
 
-    // into array
+    // turn object into an array for easy sorting
     const asArray = Object.entries(reduced).reduce(
       (prevArray, [address, value]) => [...prevArray, { address, value }],
       [] as Array<{ address: string; value: BigNumber }>
     );
 
-    // sort array
+    // sort the new array in place, comparison is in essence (a, b) => b - a
     asArray.sort((a, b) => +ethers.utils.formatEther(b.value.sub(a.value)));
 
+    // return the final sorted array
     return asArray;
   }, [data, loading, hlToken, config]);
 
-  return sortedData;
+  // get balances for users
+  useEffect(() => {
+    if (!sortedData?.length || !hlToken) return;
+    const addresses = Object.values(sortedData).map(data => data.address);
+
+    Promise.all(
+      addresses.map(async address => {
+        const tokenContract = ERC20__factory.connect(hlToken.address, provider);
+        const [balance, decimals] = await Promise.all([
+          tokenContract.balanceOf(address),
+          tokenContract.decimals()
+        ]);
+
+        return {
+          address,
+          value: balance,
+          decimals,
+          formatted: ethers.utils.formatUnits(balance, decimals)
+        };
+      })
+    )
+      .then(setBalances)
+      .catch(console.error);
+  }, [sortedData, provider, hlToken]);
+
+  return {
+    stats: sortedData,
+    balances
+  };
 };
