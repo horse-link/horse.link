@@ -108,3 +108,6 @@ export const getMockVaultTableRows = () =>
 
 export const getMockBetHistory = () =>
   Array.from({ length: 5 }, () => undefined);
+
+export const getMockLeaderboardStats = () =>
+  Array.from({ length: 10 }, () => undefined);

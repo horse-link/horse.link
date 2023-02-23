@@ -19,7 +19,7 @@ export const ClaimTokensButton: React.FC<Props> = ({ tokenName, onClick }) => {
     <BaseButton
       title={`Claim ${tokenName}`}
       onClick={click}
-      className="mr-4 rounded-md border-2 border-black px-4 py-2 font-bold text-black transition-colors duration-100 enabled:hover:bg-black enabled:hover:text-white w-full lg:w-1/2"
+      className="mr-4 w-full rounded-md border-2 border-black px-4 py-2 font-bold text-black transition-colors duration-100 enabled:hover:bg-black enabled:hover:text-white lg:w-1/2"
       baseStyleOverride
       loading={loading}
     />

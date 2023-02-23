@@ -7,7 +7,7 @@ import { VaultModalState, VaultTransactionType } from "../types/vaults";
 import { Card, PageLayout } from "../components";
 import utils from "../utils";
 import { ethers } from "ethers";
-import { useVaultStatistics } from "../hooks/stats/useVaultStatistics";
+import { useVaultStatistics } from "../hooks/stats";
 
 const Vaults: React.FC = () => {
   const [modal, setModal] = useState<VaultModalState>();

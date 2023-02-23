@@ -19,7 +19,7 @@ export const BetSlipTxModal: React.FC<Props> = ({ isOpen, onClose }) => {
         !errors?.length ? (
           <div className="w-[75vw] lg:w-[28rem]">
             <h2 className="text-2xl font-bold">Transactions Loading</h2>
-            <div className="w-full flex justify-center mt-4">
+            <div className="mt-4 flex w-full justify-center">
               <Loader />
             </div>
           </div>
@@ -27,7 +27,7 @@ export const BetSlipTxModal: React.FC<Props> = ({ isOpen, onClose }) => {
           <div className="w-[75vw] lg:w-[28rem]">
             <h2 className="text-2xl font-bold">Bet Slip Errors</h2>
             {errors.length === 1 ? (
-              <div className="mt-6 py-4 text-center w-full bg-red-600 text-white rounded-md">
+              <div className="mt-6 w-full rounded-md bg-red-600 py-4 text-center text-white">
                 {utils.errors.getMeaningfulMessage(errors[0])}
               </div>
             ) : (

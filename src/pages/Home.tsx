@@ -74,11 +74,11 @@ const Home: React.FC = () => {
     <PageLayout>
       <HomeNextToJumpBanner />
       <div className="grid gap-6">
-        <div className="flex my-4 w-full lg:w-auto">
+        <div className="my-4 flex w-full lg:w-auto">
           <img
             alt="Horse-Link"
             src="/images/horse-link.webp"
-            className="w-full lg:w-auto lg:h-20 lg:mr-10"
+            className="w-full lg:mr-10 lg:h-20 lg:w-auto"
           />
           <img
             alt="Horse"
