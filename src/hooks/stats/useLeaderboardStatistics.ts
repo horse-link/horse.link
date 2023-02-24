@@ -63,8 +63,8 @@ export const useLeaderboardStatistics = () => {
     // sort the new array in place, comparison is in essence (a, b) => b - a
     asArray.sort((a, b) => +ethers.utils.formatEther(b.value.sub(a.value)));
 
-    // return the final sorted array
-    return asArray;
+    // return top 10 from the final sorted array
+    return asArray.slice(0, 10);
   }, [data, loading, hlToken, config]);
 
   // get balances for users

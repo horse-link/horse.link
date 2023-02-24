@@ -11,16 +11,16 @@ const Leaderboard: React.FC = () => {
   return (
     <PageLayout>
       <div className="flex w-full justify-center">
-        <div className="rounded-md bg-white p-6">
+        <div className="rounded-lg bg-white p-6">
           <h1 className="w-full text-center text-3xl font-bold">Leaderboard</h1>
           <br />
           {stats && balances ? (
             <React.Fragment>
               <div className="mb-2 grid grid-cols-8 gap-x-4 font-semibold">
-                <text className="col-span-1 text-center">Rank</text>
-                <text className="col-span-3 text-center">Address</text>
-                <text className="col-span-2 text-center">Earnings</text>
-                <text className="col-span-2 text-center">Balance</text>
+                <p className="col-span-1 text-center">Rank</p>
+                <p className="col-span-3 text-center">Address</p>
+                <p className="col-span-2 text-center">Earnings</p>
+                <p className="col-span-2 text-center">Balance</p>
               </div>
               <div className="grid grid-cols-8 gap-x-4 gap-y-2">
                 {stats.map((stat, i) => {
@@ -29,23 +29,23 @@ const Leaderboard: React.FC = () => {
                   )!;
 
                   return (
-                    <React.Fragment>
-                      <text className="col-span-1 text-center">{i + 1}</text>
-                      <text className="col-span-3 text-center">
+                    <React.Fragment key={stat.address}>
+                      <p className="col-span-1 text-center">{i + 1}</p>
+                      <p className="col-span-3 truncate text-center">
                         {stat.address}
-                      </text>
-                      <text className="col-span-2 text-center">
+                      </p>
+                      <p className="col-span-2 text-center">
                         {utils.formatting.formatToFourDecimalsRaw(
                           ethers.utils.formatEther(stat.value)
                         )}{" "}
                         HL
-                      </text>
-                      <text className="col-span-2 text-center">
+                      </p>
+                      <p className="col-span-2 text-center">
                         {utils.formatting.formatToFourDecimals(
                           addressBalance.formatted
                         )}{" "}
                         HL
-                      </text>
+                      </p>
                     </React.Fragment>
                   );
                 })}
