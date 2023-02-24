@@ -29,7 +29,7 @@ export const LeaderboardTable: React.FC<Props> = ({ stats, balances }) => {
       )} HL`
     },
     {
-      title: `${utils.formatting.formatToFourDecimals(
+      title: `${utils.formatting.formatToFourDecimalsRaw(
         ethers.utils.formatEther(stat.value)
       )} HL`
     }

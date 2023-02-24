@@ -48,7 +48,7 @@ export const useLeaderboardStatistics = () => {
       return {
         ...prevObject,
         [bet.owner]: ethers.utils
-          .parseEther(bet.payout)
+          .parseEther(ethers.utils.formatEther(bet.payout))
           .mul(bet.didWin ? "1" : "-1")
           .add(prevValue)
       };
