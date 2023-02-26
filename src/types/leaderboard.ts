@@ -11,3 +11,17 @@ export type LeaderboardBalance = {
   decimals: number;
   formatted: string;
 };
+
+export type LeaderboardUserBalance = Pick<LeaderboardBalance, "address"> & {
+  balance: {
+    value: BigNumber;
+    decimals: number;
+    formatted: string;
+  };
+  earnings: {
+    value: BigNumber;
+    decimals: number;
+    formatted: string;
+  };
+  rank: number;
+};
