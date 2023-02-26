@@ -6,8 +6,11 @@ import useSubgraph from "../useSubgraph";
 import { BigNumber, ethers } from "ethers";
 import { TWENTY_FOUR_HOURS_S } from "../../constants/time";
 import { ERC20__factory } from "../../typechain";
-import { useProvider } from "wagmi";
-import { LeaderboardBalance } from "../../types/leaderboard";
+import { useAccount, useProvider } from "wagmi";
+import {
+  LeaderboardBalance,
+  LeaderboardUserBalance
+} from "../../types/leaderboard";
 
 type Response = {
   bets: Array<Bet>;
@@ -16,7 +19,10 @@ type Response = {
 export const useLeaderboardStatistics = () => {
   const config = useConfig();
   const provider = useProvider();
+  const { address: userAddress, isConnected } = useAccount();
+
   const [balances, setBalances] = useState<Array<LeaderboardBalance>>();
+  const [userBalance, setUserBalance] = useState<LeaderboardUserBalance>();
 
   const hlToken = config?.tokens.find(t => t.symbol.toLowerCase() === "hl");
 
@@ -63,8 +69,7 @@ export const useLeaderboardStatistics = () => {
     // sort the new array in place, comparison is in essence (a, b) => b - a
     asArray.sort((a, b) => +ethers.utils.formatEther(b.value.sub(a.value)));
 
-    // return top 10 from the final sorted array
-    return asArray.slice(0, 10);
+    return asArray;
   }, [data, loading, hlToken, config]);
 
   // get balances for users
@@ -92,8 +97,45 @@ export const useLeaderboardStatistics = () => {
       .catch(console.error);
   }, [sortedData, provider, hlToken]);
 
+  // get individual user data
+  useEffect(() => {
+    if (!userAddress || !isConnected || !hlToken || !sortedData) return;
+
+    // get user rank
+    const userData = sortedData.find(
+      data => data.address.toLowerCase() === userAddress.toLowerCase()
+    );
+    // do nothing if the user isn't in the data
+    if (!userData) return;
+    const rank = sortedData.indexOf(userData);
+    // return if the rank cannot be determined
+    if (rank === -1) return;
+
+    const hlContract = ERC20__factory.connect(hlToken.address, provider);
+    Promise.all([hlContract.balanceOf(userAddress), hlContract.decimals()])
+      .then(([balance, decimals]) =>
+        setUserBalance({
+          rank,
+          address: userAddress,
+          earnings: {
+            value: userData.value,
+            decimals,
+            formatted: ethers.utils.formatUnits(userData.value, decimals)
+          },
+          balance: {
+            value: balance,
+            decimals,
+            formatted: ethers.utils.formatUnits(balance, decimals)
+          }
+        })
+      )
+      .catch(console.error);
+  }, [userAddress, isConnected, hlToken, provider, sortedData]);
+
+  // return top 10 from stats array
   return {
-    stats: sortedData,
-    balances
+    stats: sortedData?.slice(0, 10),
+    balances,
+    userStats: userBalance
   };
 };
