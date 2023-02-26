@@ -70,7 +70,9 @@ const Leaderboard: React.FC = () => {
                     <p className="col-span-2 text-center">Balance</p>
                   </div>
                   <div className="grid grid-cols-8 gap-x-4 gap-y-2">
-                    <p className="col-span-1 text-center">{userStats.rank}</p>
+                    <p className="col-span-1 text-center">
+                      {userStats.rank + 1}
+                    </p>
                     <p className="col-span-3 truncate text-center">
                       {userStats.address}
                     </p>
