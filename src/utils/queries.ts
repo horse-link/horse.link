@@ -37,7 +37,7 @@ const getOptionalFilterOptions = (filter?: BetFilterOptions) => {
 
 export const getBetsQuery = (
   filter?: SubgraphFilter,
-  statusFilter?: BetFilterOptions,
+  statusFilter: BetFilterOptions = "ALL_BETS",
   skipMultiplier = 0
 ) => `query GetBets{
   bets(
@@ -46,6 +46,34 @@ export const getBetsQuery = (
     where:{
       ${getFiltersFromObject(filter)}
       ${getOptionalFilterOptions(statusFilter)}
+    }
+    orderBy: createdAt
+    orderDirection: desc
+  ) {
+    id
+    propositionId
+    marketId
+    marketAddress
+    assetAddress
+    amount
+    payout
+    payoutAt
+    owner
+    settled
+    didWin
+    createdAt
+    settledAt
+    createdAtTx
+    settledAtTx
+  }
+}`;
+
+export const getBetsQueryWithoutPagination = (
+  filter?: SubgraphFilter
+) => `query GetBetsWithoutPagination{
+  bets(
+    where: {
+      ${getFiltersFromObject(filter)}
     }
     orderBy: createdAt
     orderDirection: desc

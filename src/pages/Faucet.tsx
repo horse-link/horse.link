@@ -63,7 +63,7 @@ const Faucet: React.FC = () => {
   return (
     <PageLayout>
       {balances ? (
-        <div className="mb-4 w-full gap-x-1 gap-y-2 lg:gap-x-4 lg:gap-y-4 grid lg:grid-cols-4">
+        <div className="mb-4 grid w-full gap-x-1 gap-y-2 lg:grid-cols-4 lg:gap-x-4 lg:gap-y-4">
           {balances?.map(b => (
             <Card
               key={b.name}

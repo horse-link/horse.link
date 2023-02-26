@@ -12,6 +12,7 @@ const Vaults = lazy(() => import("./pages/Vaults"));
 const Faucet = lazy(() => import("./pages/Faucet"));
 const Results = lazy(() => import("./pages/Results"));
 const Wallet = lazy(() => import("./pages/Wallet"));
+const Leaderboard = lazy(() => import("./pages/Leaderboard"));
 
 // app routing
 const Routing: AppRoutes = [
@@ -54,6 +55,10 @@ const Routing: AppRoutes = [
   {
     path: "/wallet",
     element: <Wallet />
+  },
+  {
+    path: "/leaderboard",
+    element: <Leaderboard />
   }
 ];
 
@@ -78,6 +83,10 @@ const _NavbarRouting: NavbarRoutes = [
   {
     name: "Faucet",
     path: "/faucet"
+  },
+  {
+    name: "Leaderboard",
+    path: "/leaderboard"
   }
 ];
 

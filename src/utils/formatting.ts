@@ -12,6 +12,15 @@ export const formatToFourDecimals = (amount: string) => {
   return roundedToFourDecimal;
 };
 
+// returns four decimals without special formatting
+export const formatToFourDecimalsRaw = (amount: string) => {
+  const parsedAmount = parseFloat(amount);
+  // parsedAmount === 0
+  if (!parsedAmount) return "0.0000";
+
+  return parsedAmount.toFixed(4);
+};
+
 export const formatToTwoDecimals = (amount: string) => {
   const parsedAmount = parseFloat(amount);
   const roundedToTwoDecimals = parsedAmount.toFixed(2);
