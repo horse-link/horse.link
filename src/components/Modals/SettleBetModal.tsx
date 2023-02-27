@@ -39,7 +39,7 @@ export const SettleBetModal: React.FC<Props> = ({
 
   // get signed bet
   useEffect(() => {
-    if (!selectedBet) return;
+    if (!selectedBet || !isModalOpen) return;
 
     api
       .getWinningResultSignature(
@@ -61,7 +61,7 @@ export const SettleBetModal: React.FC<Props> = ({
         setBet(formattedBet);
       })
       .catch(console.error);
-  }, [selectedBet]);
+  }, [selectedBet, isModalOpen]);
 
   // clean up
   useEffect(() => {
