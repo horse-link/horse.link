@@ -24,6 +24,7 @@ type AggregatorResponse = {
 export const useSubgraphBets = (
   betFilterOptions: BetFilterOptions,
   marketId?: string,
+  // owner will exist if my bets are enabled
   owner?: string
 ) => {
   const { shouldRefetch, refetch } = useRefetch();
@@ -31,34 +32,53 @@ export const useSubgraphBets = (
   const [skipMultiplier, setSkipMultiplier] = useState(0);
   const [betData, setBetData] = useState<BetHistory[]>();
 
-  // get aggregator data
+  // make constant for if my bets is selected
+  const myBetsSelected = !!owner;
+
+  // get total bets across all users
   const { data: aggregatorData } = useSubgraph<AggregatorResponse>(
     utils.queries.getAggregatorQuery()
   );
 
-  const incrementPage = useCallback(() => {
-    if (!aggregatorData) return;
+  // total bets for given user
+  const { data: userAggregateData } = useSubgraph<BetResponse>(
+    utils.queries.getBetsQueryWithoutPagination({
+      owner: owner?.toLowerCase()
+    })
+  );
 
-    const totalBets = +aggregatorData.aggregator.totalBets;
+  // constant that determines max pages
+  const TOTAL_BETS = useMemo(() => {
+    if (!aggregatorData || !userAggregateData) return;
+
+    const userTotal = userAggregateData.bets.length;
+    const aggregateTotal = +aggregatorData.aggregator.totalBets;
+
+    return myBetsSelected ? userTotal : aggregateTotal;
+  }, [aggregatorData, userAggregateData, myBetsSelected]);
+
+  const incrementPage = useCallback(() => {
+    if (!TOTAL_BETS) return;
+
     const nextMulti = skipMultiplier + 1;
 
     if (
-      totalBets % (nextMulti * constants.subgraph.MAX_BET_ENTITIES) ===
-      totalBets
+      TOTAL_BETS % (nextMulti * constants.subgraph.MAX_BET_ENTITIES) ===
+      TOTAL_BETS
     )
       return;
 
     setSkipMultiplier(nextMulti);
-  }, [aggregatorData, skipMultiplier, setSkipMultiplier]);
+  }, [TOTAL_BETS, skipMultiplier, setSkipMultiplier]);
 
   const decrementPage = useCallback(() => {
-    if (!aggregatorData) return;
+    if (!TOTAL_BETS) return;
 
     const previousMulti = skipMultiplier - 1;
     if (skipMultiplier === 0) return;
 
     setSkipMultiplier(previousMulti);
-  }, [aggregatorData, skipMultiplier, setSkipMultiplier]);
+  }, [TOTAL_BETS, skipMultiplier, setSkipMultiplier]);
 
   // reset page when my bets get toggled
   useEffect(() => {
