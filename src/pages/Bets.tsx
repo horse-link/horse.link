@@ -66,6 +66,7 @@ const Bets: React.FC = () => {
     setBetTableFilter(option);
 
   const isLoading = !betHistory;
+
   return (
     <PageLayout>
       <div className="mb-4 flex w-full flex-col justify-center gap-x-1 gap-y-2 text-left md:flex-row lg:justify-between lg:gap-x-4">
@@ -102,7 +103,7 @@ const Bets: React.FC = () => {
         </div>
         <div className="flex items-center gap-3">
           <Toggle enabled={myBetsEnabled} onChange={onMyBetToggle} />
-          <div className="font-semibold">My Bets</div>
+          <div className="font-semibold">User&apos;s Bets</div>
         </div>
       </div>
       <BetTable
