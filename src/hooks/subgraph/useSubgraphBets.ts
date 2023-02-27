@@ -48,7 +48,7 @@ export const useSubgraphBets = (
   );
 
   // constant that determines max pages
-  const TOTAL_BETS = useMemo(() => {
+  const totalBets = useMemo(() => {
     if (!aggregatorData || !userAggregateData) return;
 
     const userTotal = userAggregateData.bets.length;
@@ -58,27 +58,27 @@ export const useSubgraphBets = (
   }, [aggregatorData, userAggregateData, myBetsSelected]);
 
   const incrementPage = useCallback(() => {
-    if (!TOTAL_BETS) return;
+    if (!totalBets) return;
 
     const nextMulti = skipMultiplier + 1;
 
     if (
-      TOTAL_BETS % (nextMulti * constants.subgraph.MAX_BET_ENTITIES) ===
-      TOTAL_BETS
+      totalBets % (nextMulti * constants.subgraph.MAX_BET_ENTITIES) ===
+      totalBets
     )
       return;
 
     setSkipMultiplier(nextMulti);
-  }, [TOTAL_BETS, skipMultiplier, setSkipMultiplier]);
+  }, [totalBets, skipMultiplier, setSkipMultiplier]);
 
   const decrementPage = useCallback(() => {
-    if (!TOTAL_BETS) return;
+    if (!totalBets) return;
 
     const previousMulti = skipMultiplier - 1;
     if (skipMultiplier === 0) return;
 
     setSkipMultiplier(previousMulti);
-  }, [TOTAL_BETS, skipMultiplier, setSkipMultiplier]);
+  }, [totalBets, skipMultiplier, setSkipMultiplier]);
 
   // reset page when my bets get toggled
   useEffect(() => {
