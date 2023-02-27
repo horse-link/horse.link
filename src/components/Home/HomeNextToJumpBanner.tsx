@@ -1,6 +1,7 @@
 import { useNextToJumpData } from "../../hooks/data";
 import { Loader } from "../Loader";
 import { HomeBannerRow } from ".";
+import utils from "../../utils";
 
 export const HomeNextToJumpBanner: React.FC = () => {
   const { nextMeets } = useNextToJumpData();
@@ -13,7 +14,7 @@ export const HomeNextToJumpBanner: React.FC = () => {
             meet={meet}
             key={
               // no unique key in meet
-              JSON.stringify(meet)
+              utils.keys.generateRandomKey()
             }
           />
         ))
