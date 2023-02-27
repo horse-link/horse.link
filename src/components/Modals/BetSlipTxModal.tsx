@@ -18,7 +18,7 @@ export const BetSlipTxModal: React.FC<Props> = ({ isOpen, onClose }) => {
       {!hashes?.length ? (
         !errors?.length ? (
           <div className="w-[75vw] lg:w-[28rem]">
-            <h2 className="text-2xl font-bold">Transactions Loading</h2>
+            <h2 className="text-2xl font-bold">Transaction Loading</h2>
             <div className="mt-4 flex w-full justify-center">
               <Loader />
             </div>
