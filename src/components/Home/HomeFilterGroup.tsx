@@ -29,7 +29,7 @@ export const HomeFilterGroup: React.FC<Props> = ({
         className={classNames(
           "w-full rounded bg-white text-sm md:w-28 md:text-base ",
           {
-            "bg-indigo-700 text-white":
+            "bg-indigo-600 text-white":
               key.toLowerCase() === currentOption.toLowerCase(),
             "disabled:opacity-75 hover:bg-gray-200":
               key.toLowerCase() !== currentOption.toLowerCase()
