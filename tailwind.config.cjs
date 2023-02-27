@@ -4,10 +4,5 @@ module.exports = {
   theme: {
     extend: {}
   },
-  plugins: [require("tailwind-scrollbar")],
-  safelist: [
-    {
-      pattern: /bg-.*/
-    }
-  ]
+  plugins: [require("tailwind-scrollbar")]
 };
