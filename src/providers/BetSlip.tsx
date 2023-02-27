@@ -17,6 +17,7 @@ import dayjs from "dayjs";
 import isYesterday from "dayjs/plugin/isYesterday";
 import { BetSlipTxModal } from "../components/Modals";
 import { Config } from "../types/config";
+import { ERC20__factory, Market__factory, Vault__factory } from "../typechain";
 
 dayjs.extend(isYesterday);
 
@@ -128,7 +129,8 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
   const placeBets = async (
     bets: BetSlipEntry[] | BetEntry[],
     signer: ethers.Signer,
-    config: Config
+    config: Config,
+    skipAllowanceCheck: boolean
   ) => {
     const raw = await Promise.allSettled(
       bets.map(bet => {
@@ -147,7 +149,8 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
           bet.back,
           // parse wager into BigNumber
           ethers.utils.parseUnits(formattedWager, vault.asset.decimals),
-          signer
+          signer,
+          skipAllowanceCheck
         );
       })
     );
@@ -169,8 +172,80 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
     setHashes(undefined);
     setErrors(undefined);
 
-    // settle bets
-    const { txs, errors } = await placeBets(bets, signer, config);
+    // we want to skip the check in the placeBets function
+    // so we do the allowance checks here first
+
+    // first reduce the bets to the asset addresses
+    const reducedAssets = bets.reduce((prevArray, bet) => {
+      const vault = utils.config.getVaultFromMarket(bet.market, config);
+      if (!vault)
+        throw new Error(
+          `Could not find vault for market ${bet.market.address}`
+        );
+
+      return [...prevArray, vault.asset.address.toLowerCase()];
+    }, [] as Array<string>);
+
+    // then we make a set to remove duplicates
+    const assetAddresses = [...new Set(reducedAssets)];
+
+    // we want to sum all the wagers per address, so that we can check the allowances against the sum
+    const totalWagers = assetAddresses.map(address => {
+      const betsForAddress = bets.filter(bet => {
+        // we can guarantee this exists from before
+        const vault = utils.config.getVaultFromMarket(bet.market, config)!;
+
+        return vault.asset.address.toLowerCase() === address.toLowerCase();
+      });
+
+      return {
+        address,
+        total: betsForAddress.reduce(
+          (sum, bet) => sum.add(bet.wager),
+          ethers.constants.Zero
+        )
+      };
+    });
+
+    // before queuing up the transactions, we want to do the same thing as the assetAddresses
+    // but with the market addresses so we can check the allowances
+    const reducedMarkets = bets.map(bet => bet.market.address.toLowerCase());
+    const marketAddresses = [...new Set(reducedMarkets)];
+
+    // now we can check allowances and queue transactions
+    await Promise.all(
+      marketAddresses.map(async marketAddress => {
+        // generate contracts
+        const marketContract = Market__factory.connect(marketAddress, signer);
+        const vaultAddress = await marketContract.getVaultAddress();
+        const vaultContract = Vault__factory.connect(vaultAddress, signer);
+        const assetAddress = await vaultContract.asset();
+        const assetContract = ERC20__factory.connect(assetAddress, signer);
+
+        // get user allowance
+        const allowance = await assetContract.allowance(
+          await signer.getAddress(),
+          marketAddress
+        );
+
+        // get the total wager that matches the asset address, we can guarantee this exists from before
+        const wager = totalWagers.find(
+          wager => wager.address.toLowerCase() === assetAddress.toLowerCase()
+        )!;
+
+        // check and queue approvals
+        if (allowance.lt(wager.total))
+          await (
+            await assetContract.approve(
+              marketAddress,
+              ethers.constants.MaxUint256
+            )
+          ).wait();
+      })
+    );
+
+    // settle bets, skipping allowance check
+    const { txs, errors } = await placeBets(bets, signer, config, true);
 
     // set errors
     setErrors(errors);
@@ -199,7 +274,7 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
       setIsModalOpen(true);
 
       // settle bets
-      const { txs, errors } = await placeBets([bet], signer, config);
+      const { txs, errors } = await placeBets([bet], signer, config, false);
 
       // set errors
       setErrors(errors);

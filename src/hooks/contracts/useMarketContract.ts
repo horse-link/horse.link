@@ -16,7 +16,8 @@ export const useMarketContract = () => {
     market: MarketInfo,
     back: Back,
     wager: BigNumber,
-    signer: Signer
+    signer: Signer,
+    skipAllowanceCheck?: boolean
   ) => {
     const userAddress = await signer.getAddress();
 
@@ -26,14 +27,19 @@ export const useMarketContract = () => {
     const assetAddress = await vaultContract.asset();
     const erc20Contract = ERC20__factory.connect(assetAddress, signer);
 
-    const userAllowance = await erc20Contract.allowance(
-      userAddress,
-      market.address
-    );
-    if (userAllowance.lt(wager))
-      await (
-        await erc20Contract.approve(market.address, ethers.constants.MaxUint256)
-      ).wait();
+    if (!skipAllowanceCheck) {
+      const userAllowance = await erc20Contract.allowance(
+        userAddress,
+        market.address
+      );
+      if (userAllowance.lt(wager))
+        await (
+          await erc20Contract.approve(
+            market.address,
+            ethers.constants.MaxUint256
+          )
+        ).wait();
+    }
 
     const receipt = await (
       await marketContract.back(
