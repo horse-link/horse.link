@@ -65,7 +65,8 @@ export const VaultListTable: React.FC<Props> = ({ config, setIsModalOpen }) => {
             type={VaultTransactionType.WITHDRAW}
           />
         </React.Fragment>
-      )
+      ),
+      classNames: "text-right"
     }
   ];
 
@@ -84,7 +85,8 @@ export const VaultListTable: React.FC<Props> = ({ config, setIsModalOpen }) => {
       title: "Vault Address"
     },
     {
-      title: "Deposit / Withdraw"
+      title: "Deposit / Withdraw",
+      classNames: "text-right !pr-6"
     }
   ];
 
