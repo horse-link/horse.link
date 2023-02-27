@@ -5,19 +5,15 @@ const WalletPage = () => {
   const { mnemonic, address } = useLocalWallet();
   return (
     <PageLayout>
-      <div className="flex h-full flex-col justify-center">
-        <h1 className="text-2xl font-bold">Wallet</h1>
-        <div className="mt-2 flex justify-center rounded-lg bg-white px-4 py-5 shadow">
-          <div className="w-4/5 max-w-2xl">
-            <div className="flex flex-col">
-              <h2 className="text-lg font-bold">Mnemonic :</h2>
-              <h2>{mnemonic}</h2>
-            </div>
-            <div className="mt-3 flex flex-col">
-              <h2 className="text-lg font-bold">Address :</h2>
-              <h2 className="break-all">{address}</h2>
-            </div>
-          </div>
+      <div className="flex w-full justify-center">
+        <div className="flex w-full flex-col items-center rounded-lg bg-white px-6 py-6 text-lg lg:w-[50vw] lg:px-0">
+          <h1 className="w-full text-center text-3xl font-bold">Wallet</h1>
+          <br />
+          <h2 className="mt-4 font-semibold">Mnemonic</h2>
+          <p>{mnemonic}</p>
+          <br />
+          <h2 className="font-semibold">Address</h2>
+          <p className="max-w-full truncate">{address}</p>
         </div>
       </div>
     </PageLayout>
