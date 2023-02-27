@@ -33,7 +33,9 @@ export const HomeTable: React.FC<Props> = ({ meets }) => {
       classNames: "bg-gray-200"
     },
     ...meet.races.map(race => ({
-      title: <HomeTableRace meet={meet} race={race} />,
+      title: (
+        <HomeTableRace meet={meet} race={race} key={JSON.stringify(race)} />
+      ),
       classNames: "!p-0"
     })),
     ...Array.from({ length: length - meet.races.length }, () => ({
