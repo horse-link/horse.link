@@ -47,6 +47,27 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
   const [errors, setErrors] = useState<string[]>();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // load bets on page load
+  useEffect(() => {
+    const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (!raw || raw === "undefined") return;
+
+    const parsed = JSON.parse(raw);
+    // parse the date which will be the start of the day that the bet slip was created
+    const parsedDate = dayjs(parsed.date).valueOf();
+
+    // get the timestamp for 00:00 today
+    const startOfToday = dayjs().startOf("day").valueOf();
+
+    // if the date of the betslip is before today (i.e. yesterday or before) then clear the slip and cache
+    if (dayjs(parsedDate).isBefore(startOfToday)) {
+      setBets(undefined);
+      return localStorage.removeItem(LOCAL_STORAGE_KEY);
+    }
+
+    setBets(parsed.data);
+  }, []);
+
   // write bet slip to local storage if bets exist
   useEffect(() => {
     if (bets && bets.length)
@@ -54,25 +75,11 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
         LOCAL_STORAGE_KEY,
         JSON.stringify({
           data: bets,
-          createdAt: dayjs()
+          // only log the day
+          date: dayjs().startOf("day").valueOf()
         })
       );
   }, [bets]);
-
-  // load bets on page load
-  useEffect(() => {
-    const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
-    if (!raw || raw === "undefined") return;
-
-    const parsed = JSON.parse(raw);
-
-    if (dayjs(parsed.createdAt).isYesterday()) {
-      setBets(undefined);
-      return localStorage.removeItem(LOCAL_STORAGE_KEY);
-    }
-
-    setBets(parsed.data);
-  }, []);
 
   const addBet = useCallback(
     (bet: BetEntry) => {
