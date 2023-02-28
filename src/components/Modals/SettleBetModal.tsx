@@ -15,6 +15,7 @@ type Props = {
   isModalOpen: boolean;
   setIsModalOpen: (open: boolean) => void;
   selectedBet?: BetHistory;
+  refetch: () => void;
   config?: Config;
 };
 
@@ -22,6 +23,7 @@ export const SettleBetModal: React.FC<Props> = ({
   isModalOpen,
   setIsModalOpen,
   selectedBet,
+  refetch,
   config
 }) => {
   const [txLoading, setTxLoading] = useState(false);
@@ -104,6 +106,7 @@ export const SettleBetModal: React.FC<Props> = ({
       setError(err);
     } finally {
       setTxLoading(false);
+      refetch();
     }
   };
 

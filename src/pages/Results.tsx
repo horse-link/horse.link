@@ -15,7 +15,6 @@ import { useAccount, useSigner } from "wagmi";
 import dayjs from "dayjs";
 import { RaceInfo } from "../types/meets";
 import Skeleton from "react-loading-skeleton";
-import { useBetSlipContext } from "../providers/BetSlip";
 
 const Results: React.FC = () => {
   const [loading, setLoading] = useState(false);
@@ -30,7 +29,6 @@ const Results: React.FC = () => {
   const params = useParams();
   const { isConnected } = useAccount();
   const { data: signer } = useSigner();
-  const { hashes } = useBetSlipContext();
 
   const propositionId = params.propositionId || "";
   const details = utils.markets.getDetailsFromPropositionId(propositionId);
@@ -69,10 +67,6 @@ const Results: React.FC = () => {
     () => setIsSettledMarketModalOpen(false),
     [isSettledMarketModalOpen, setIsSettledMarketModalOpen]
   );
-
-  useEffect(() => {
-    if (hashes && hashes.length > 0) refetch();
-  }, [hashes]);
 
   return (
     <PageLayout>
@@ -131,6 +125,7 @@ const Results: React.FC = () => {
         isModalOpen={isSettleModalOpen}
         setIsModalOpen={setIsSettleModalOpen}
         selectedBet={selectedBet}
+        refetch={refetch}
         config={config}
       />
       <SettledMarketModal
