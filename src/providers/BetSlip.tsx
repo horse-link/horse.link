@@ -29,7 +29,7 @@ export const BetSlipContext = createContext<BetSlipContextType>({
   removeBet: () => {},
   clearBets: () => {},
   placeBetsInBetSlip: () => {},
-  placeBetImmediately: () => {}
+  placeBetImmediately: async () => {}
 });
 
 export const useBetSlipContext = () => useContext(BetSlipContext);
