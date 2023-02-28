@@ -13,6 +13,7 @@ import api from "../../apis/Api";
 import { ethers } from "ethers";
 import constants from "../../constants";
 import useRefetch from "../useRefetch";
+import { useBetSlipContext } from "../../providers/BetSlip";
 
 type BetResponse = {
   bets: Bet[];
@@ -28,6 +29,12 @@ export const useSubgraphBets = (
   owner?: string
 ) => {
   const { shouldRefetch, refetch } = useRefetch();
+  const { hashes } = useBetSlipContext();
+
+  useEffect(() => {
+    if (!hashes?.length) return;
+    refetch();
+  }, [hashes]);
 
   const [skipMultiplier, setSkipMultiplier] = useState(0);
   const [betData, setBetData] = useState<BetHistory[]>();
