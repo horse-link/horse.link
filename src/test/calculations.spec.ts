@@ -28,5 +28,11 @@ describe("Calculation tests", () => {
       (+biggerMargin * 100).toString()
     );
     expect(display).to.equal("129.69");
+
+    // all ones test
+    const onesArray = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0];
+    const onesMargin = utils.races.calculateRaceMargin(onesArray);
+
+    expect((+onesMargin).toFixed(PRECISION)).to.equal("1.000000000");
   });
 });
