@@ -33,7 +33,7 @@ export type BetSlipContextType = {
   removeBet: (id: number) => void;
   clearBets: () => void;
   placeBetsInBetSlip: () => void;
-  placeBetImmediately: (bet: BetEntry) => void;
+  placeBetImmediately: (bet: BetEntry) => Promise<void>;
 };
 
 export type TokenContextType = {

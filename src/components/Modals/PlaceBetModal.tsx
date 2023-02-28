@@ -125,7 +125,7 @@ export const PlaceBetModal: React.FC<Props> = ({
   };
 
   const onClickPlaceBet = useCallback(
-    (option?: { betNow: boolean }) => {
+    async (option?: { betNow: boolean }) => {
       if (!market || !wagerAmount || !runner || !config || !race || !raceNumber)
         return;
 
@@ -150,7 +150,7 @@ export const PlaceBetModal: React.FC<Props> = ({
       };
 
       if (option?.betNow) {
-        placeBetImmediately(betSlip);
+        await placeBetImmediately(betSlip);
       } else {
         addBet(betSlip);
       }
