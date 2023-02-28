@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useRunnersData, useMeetData } from "../hooks/data";
 import { RacesButton } from "../components/Buttons";
@@ -14,6 +14,7 @@ import { useConfig } from "../providers/Config";
 import Skeleton from "react-loading-skeleton";
 import dayjs from "dayjs";
 import utils from "../utils";
+import { useBetSlipContext } from "../providers/BetSlip";
 
 const Races: React.FC = () => {
   const params = useParams();
@@ -27,6 +28,8 @@ const Races: React.FC = () => {
   const [selectedBet, setSelectedBet] = useState<BetHistory>();
   const { race } = useRunnersData(track, raceNumber);
   const config = useConfig();
+
+  const { hashes } = useBetSlipContext();
 
   const { meetDate } = useMemo(() => {
     const meetDate = dayjs().format("DD-MM-YY");
@@ -50,6 +53,10 @@ const Races: React.FC = () => {
 
     return utils.races.calculateRaceMargin(validRunners.map(r => r.odds));
   }, [race]);
+
+  useEffect(() => {
+    if (hashes && hashes.length > 0) refetch();
+  }, [hashes]);
 
   return (
     <PageLayout>
@@ -120,7 +127,6 @@ const Races: React.FC = () => {
         isModalOpen={isSettleModalOpen}
         setIsModalOpen={setIsSettleModalOpen}
         selectedBet={selectedBet}
-        refetch={refetch}
         config={config}
       />
     </PageLayout>
