@@ -38,7 +38,6 @@ export const useSubgraphBets = (
 
   const [skipMultiplier, setSkipMultiplier] = useState(0);
   const [betData, setBetData] = useState<BetHistory[]>();
-  const [totalBets, setTotalBets] = useState<number>();
 
   // make constant for if my bets is selected
   const myBetsSelected = !!owner;
@@ -61,7 +60,7 @@ export const useSubgraphBets = (
   );
 
   // calculate total bets
-  useEffect(() => {
+  const totalBets = useMemo(() => {
     if (!aggregatorData || !userAggregateData || !filteredAggregateData) return;
 
     const userTotal = userAggregateData.bets.length;
@@ -70,19 +69,19 @@ export const useSubgraphBets = (
 
     if (myBetsSelected) {
       if (betFilterOptions === "ALL_BETS") {
-        return setTotalBets(userTotal);
+        return userTotal;
       } else {
         const userFilteredTotal = filteredAggregateData.bets.filter(
           b => b.owner.toLowerCase() === owner.toLowerCase()
         ).length;
-        return setTotalBets(userFilteredTotal);
+        return userFilteredTotal;
       }
     }
 
     if (betFilterOptions === "ALL_BETS") {
-      return setTotalBets(aggregateTotal);
+      return aggregateTotal;
     } else {
-      return setTotalBets(filteredTotal);
+      return filteredTotal;
     }
   }, [
     aggregatorData,
