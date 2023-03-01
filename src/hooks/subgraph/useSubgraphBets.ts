@@ -54,14 +54,42 @@ export const useSubgraphBets = (
     })
   );
 
-  // constant that determines max pages
+  // total bets for given filter option
+  const { data: filteredAggregateData } = useSubgraph<BetResponse>(
+    utils.queries.getBetsQueryWithoutPagination(undefined, betFilterOptions)
+  );
+
+  // calculate total bets
   const totalBets = useMemo(() => {
-    if (!betData || !userAggregateData) return;
+    if (!aggregatorData || !userAggregateData || !filteredAggregateData) return;
 
     const userTotal = userAggregateData.bets.length;
+    const aggregateTotal = +aggregatorData.aggregator.totalBets;
+    const filteredTotal = filteredAggregateData.bets.length;
 
-    return myBetsSelected ? userTotal : betData.length;
-  }, [betData, userAggregateData, myBetsSelected]);
+    if (myBetsSelected) {
+      if (betFilterOptions === "ALL_BETS") {
+        return userTotal;
+      } else {
+        const userFilteredTotal = filteredAggregateData.bets.filter(
+          b => b.owner.toLowerCase() === owner.toLowerCase()
+        ).length;
+        return userFilteredTotal;
+      }
+    }
+
+    if (betFilterOptions === "ALL_BETS") {
+      return aggregateTotal;
+    } else {
+      return filteredTotal;
+    }
+  }, [
+    aggregatorData,
+    userAggregateData,
+    myBetsSelected,
+    filteredAggregateData,
+    owner
+  ]);
 
   const incrementPage = useCallback(() => {
     if (!totalBets) return;
@@ -90,7 +118,7 @@ export const useSubgraphBets = (
   useEffect(() => {
     setSkipMultiplier(0);
     setBetData(undefined);
-  }, [owner]);
+  }, [myBetsSelected]);
 
   // get bet data
   useEffect(() => {
@@ -184,6 +212,7 @@ export const useSubgraphBets = (
     currentPage: skipMultiplier + 1,
     refetch,
     incrementPage,
-    decrementPage
+    decrementPage,
+    setSkipMultiplier
   };
 };

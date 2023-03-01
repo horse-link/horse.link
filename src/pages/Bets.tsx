@@ -49,7 +49,8 @@ const Bets: React.FC = () => {
     currentPage,
     incrementPage,
     decrementPage,
-    refetch
+    refetch,
+    setSkipMultiplier
   } = useSubgraphBets(
     betTableFilter,
     undefined,
@@ -62,8 +63,10 @@ const Bets: React.FC = () => {
 
   const onMyBetToggle = () => setMyBetsEnabled(prev => !prev);
 
-  const onFilterChange = (option: BetFilterOptions) =>
+  const onFilterChange = (option: BetFilterOptions) => {
     setBetTableFilter(option);
+    setSkipMultiplier(0);
+  };
 
   const isLoading = !betHistory;
 

@@ -24,8 +24,7 @@ const getOptionalFilterOptions = (filter?: BetFilterOptions) => {
     case "ALL_BETS":
       return "";
     case "PENDING":
-      // TODO: filter here instead of after formatBetHistory when subgraph is updated with market oracle as data source
-      return "";
+      return `payoutAt_gt: ${Math.floor(Date.now() / 1000)}`;
     case "RESULTED":
       return `settled: false`;
     case "SETTLED":
@@ -69,11 +68,13 @@ export const getBetsQuery = (
 }`;
 
 export const getBetsQueryWithoutPagination = (
-  filter?: SubgraphFilter
+  filter?: SubgraphFilter,
+  statusFilter: BetFilterOptions = "ALL_BETS"
 ) => `query GetBetsWithoutPagination{
   bets(
     where: {
       ${getFiltersFromObject(filter)}
+      ${getOptionalFilterOptions(statusFilter)}
     }
     orderBy: createdAt
     orderDirection: desc

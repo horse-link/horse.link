@@ -38,7 +38,7 @@ export const getBetStatus = (
   if (signedBetData.winningPropositionId) {
     return "RESULTED";
   } else {
-    return "PENDING";
+    return "INVALID";
   }
 };
 
