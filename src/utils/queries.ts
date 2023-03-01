@@ -69,11 +69,13 @@ export const getBetsQuery = (
 }`;
 
 export const getBetsQueryWithoutPagination = (
-  filter?: SubgraphFilter
+  filter?: SubgraphFilter,
+  statusFilter: BetFilterOptions = "ALL_BETS"
 ) => `query GetBetsWithoutPagination{
   bets(
     where: {
       ${getFiltersFromObject(filter)}
+      ${getOptionalFilterOptions(statusFilter)}
     }
     orderBy: createdAt
     orderDirection: desc

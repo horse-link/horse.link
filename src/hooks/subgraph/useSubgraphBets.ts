@@ -38,6 +38,7 @@ export const useSubgraphBets = (
 
   const [skipMultiplier, setSkipMultiplier] = useState(0);
   const [betData, setBetData] = useState<BetHistory[]>();
+  const [totalBets, setTotalBets] = useState<number>();
 
   // make constant for if my bets is selected
   const myBetsSelected = !!owner;
@@ -54,15 +55,42 @@ export const useSubgraphBets = (
     })
   );
 
-  // constant that determines max pages
-  const totalBets = useMemo(() => {
-    if (!aggregatorData || !userAggregateData) return;
+  // total bets for given filter option
+  const { data: filteredAggregateData } = useSubgraph<BetResponse>(
+    utils.queries.getBetsQueryWithoutPagination(undefined, betFilterOptions)
+  );
+
+  // calculate total bets
+  useEffect(() => {
+    if (!aggregatorData || !userAggregateData || !filteredAggregateData) return;
 
     const userTotal = userAggregateData.bets.length;
     const aggregateTotal = +aggregatorData.aggregator.totalBets;
+    const filteredTotal = filteredAggregateData.bets.length;
 
-    return myBetsSelected ? userTotal : aggregateTotal;
-  }, [aggregatorData, userAggregateData, myBetsSelected]);
+    if (myBetsSelected) {
+      if (betFilterOptions === "ALL_BETS") {
+        return setTotalBets(userTotal);
+      } else {
+        const userFilteredTotal = filteredAggregateData.bets.filter(
+          b => b.owner.toLowerCase() === owner.toLowerCase()
+        ).length;
+        return setTotalBets(userFilteredTotal);
+      }
+    }
+
+    if (betFilterOptions === "ALL_BETS") {
+      return setTotalBets(aggregateTotal);
+    } else {
+      return setTotalBets(filteredTotal);
+    }
+  }, [
+    aggregatorData,
+    userAggregateData,
+    myBetsSelected,
+    filteredAggregateData,
+    owner
+  ]);
 
   const incrementPage = useCallback(() => {
     if (!totalBets) return;
