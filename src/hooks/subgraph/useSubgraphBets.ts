@@ -56,12 +56,13 @@ export const useSubgraphBets = (
 
   // constant that determines max pages
   const totalBets = useMemo(() => {
-    if (!betData || !userAggregateData) return;
+    if (!aggregatorData || !userAggregateData) return;
 
     const userTotal = userAggregateData.bets.length;
+    const aggregateTotal = +aggregatorData.aggregator.totalBets;
 
-    return myBetsSelected ? userTotal : betData.length;
-  }, [betData, userAggregateData, myBetsSelected]);
+    return myBetsSelected ? userTotal : aggregateTotal;
+  }, [aggregatorData, userAggregateData, myBetsSelected]);
 
   const incrementPage = useCallback(() => {
     if (!totalBets) return;
@@ -90,7 +91,7 @@ export const useSubgraphBets = (
   useEffect(() => {
     setSkipMultiplier(0);
     setBetData(undefined);
-  }, [owner]);
+  }, [myBetsSelected]);
 
   // get bet data
   useEffect(() => {
@@ -184,6 +185,7 @@ export const useSubgraphBets = (
     currentPage: skipMultiplier + 1,
     refetch,
     incrementPage,
-    decrementPage
+    decrementPage,
+    setSkipMultiplier
   };
 };
