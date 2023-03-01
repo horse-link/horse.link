@@ -56,13 +56,12 @@ export const useSubgraphBets = (
 
   // constant that determines max pages
   const totalBets = useMemo(() => {
-    if (!aggregatorData || !userAggregateData) return;
+    if (!betData || !userAggregateData) return;
 
     const userTotal = userAggregateData.bets.length;
-    const aggregateTotal = +aggregatorData.aggregator.totalBets;
 
-    return myBetsSelected ? userTotal : aggregateTotal;
-  }, [aggregatorData, userAggregateData, myBetsSelected]);
+    return myBetsSelected ? userTotal : betData.length;
+  }, [betData, userAggregateData, myBetsSelected]);
 
   const incrementPage = useCallback(() => {
     if (!totalBets) return;
