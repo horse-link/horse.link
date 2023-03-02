@@ -113,12 +113,12 @@ export const SettleBetModal: React.FC<Props> = ({
   return (
     <BaseModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
       {!bet || !config ? (
-        <div className="p-10">
+        <div className="flex w-full flex-col items-center p-10">
           <Loader />
         </div>
       ) : (
         <React.Fragment>
-          <h2 className="mr-[8vw] mb-6 text-2xl font-bold">
+          <h2 className="mb-6 text-2xl font-bold">
             {utils.formatting.formatFirstLetterCapitalised(bet.status)} Bet
           </h2>
           <div className="flex flex-col">
