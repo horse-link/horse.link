@@ -6,7 +6,7 @@ export const HomeNextToJumpBanner: React.FC = () => {
   const { nextMeets } = useNextToJumpData();
 
   return (
-    <div className="mb-5 flex divide-indigo-800 overflow-auto rounded-lg bg-indigo-600 p-5 text-xs text-white shadow-md lg:divide-x-2">
+    <div className="mb-5 flex divide-indigo-800 overflow-scroll rounded-lg bg-indigo-600 p-5 text-xs text-white shadow-md lg:divide-x-2 ">
       {nextMeets ? (
         nextMeets.map(meet => (
           <HomeBannerRow
