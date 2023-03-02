@@ -115,7 +115,7 @@ export const DepositVaultModal: React.FC<Props> = ({
 
   return (
     <BaseModal isOpen={isModalOpen} onClose={closeModal}>
-      <h2 className="mr-[8vw] mb-6 text-2xl font-bold">Deposit</h2>
+      <h2 className="mb-6 text-2xl font-bold">Deposit</h2>
       <div className="flex flex-col">
         <h3 className="mb-2 font-semibold">
           Name: <span className="font-normal">{vault.name}</span>

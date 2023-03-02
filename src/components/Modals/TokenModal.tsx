@@ -30,11 +30,11 @@ export const TokenModal: React.FC<Props> = ({
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}>
       {tokensLoading || !availableTokens || !availableTokens.length ? (
-        <div className="p-10">
+        <div className="flex w-full flex-col items-center p-10">
           <Loader />
         </div>
       ) : (
-        <div className="w-[95vw] max-w-full lg:max-w-[28rem]">
+        <React.Fragment>
           <h2 className="text-xl font-bold">Select a Token</h2>
           <div className="mt-4 w-full">
             {availableTokens.map(t => (
@@ -58,7 +58,7 @@ export const TokenModal: React.FC<Props> = ({
               </div>
             ))}
           </div>
-        </div>
+        </React.Fragment>
       )}
     </BaseModal>
   );

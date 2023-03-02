@@ -1,13 +1,20 @@
 import { Dialog, Transition } from "@headlessui/react";
 import React, { Fragment } from "react";
+import classNames from "classnames";
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
   children: React.ReactNode;
+  isLarge?: boolean;
 };
 
-export const BaseModal: React.FC<Props> = ({ isOpen, onClose, children }) => (
+export const BaseModal: React.FC<Props> = ({
+  isOpen,
+  onClose,
+  children,
+  isLarge
+}) => (
   <Transition appear show={isOpen} as={Fragment}>
     <Dialog as="div" className="relative z-10" onClose={onClose}>
       <Transition.Child
@@ -42,7 +49,14 @@ export const BaseModal: React.FC<Props> = ({ isOpen, onClose, children }) => (
                   X
                 </button>
               </div>
-              {children}
+              <div
+                className={classNames({
+                  "w-auto max-w-full lg:w-[40rem]": !!isLarge,
+                  "w-[75vw] lg:w-[28rem]": !isLarge
+                })}
+              >
+                {children}
+              </div>
             </Dialog.Panel>
           </Transition.Child>
         </div>

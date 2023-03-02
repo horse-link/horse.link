@@ -226,11 +226,11 @@ export const PlaceBetModal: React.FC<Props> = ({
           <Loader />
         </div>
       ) : (
-        <div className="w-[70vw] lg:w-[28rem]">
+        <React.Fragment>
           <h2 className="font-bold">
             {runner.name ? `${runner.name} (${runner.barrier ?? " "})` : " "}
           </h2>
-          <h2 className="mr-[8vw] mb-6 font-bold">
+          <h2 className="mb-6 font-bold">
             {`Target Odds 
             ${utils.formatting.formatToTwoDecimals(back.odds.toString())}`}
           </h2>
@@ -295,7 +295,7 @@ export const PlaceBetModal: React.FC<Props> = ({
               </button>
             </div>
           </div>
-        </div>
+        </React.Fragment>
       )}
     </BaseModal>
   );
