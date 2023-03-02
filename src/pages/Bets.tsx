@@ -35,7 +35,7 @@ const Bets: React.FC = () => {
   }, [isConnected]);
 
   useEffect(() => {
-    if (!address) return;
+    if (!address || paramsAddress) return;
 
     // if user is logged in navigate to static url
     navigate(`/bets/${address}`, {
