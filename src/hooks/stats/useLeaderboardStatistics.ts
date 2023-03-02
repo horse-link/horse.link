@@ -31,7 +31,7 @@ export const useLeaderboardStatistics = () => {
 
   // get bets that were made with horse link token and have been settled, within the last week
   const { data, loading } = useSubgraph<Response>(
-    utils.queries.getBetsQueryWithoutPagination({
+    utils.queries.getBetsQueryWithoutPagination(now, {
       assetAddress: hlToken?.address.toLowerCase(),
       settled: true,
       createdAt_gte: oneWeekAgo

@@ -19,14 +19,20 @@ const getFiltersFromObject = (filter?: SubgraphFilter) => {
     .join("\n");
 };
 
-const getOptionalFilterOptions = (filter?: BetFilterOptions) => {
+const getOptionalFilterOptions = (now: number, filter?: BetFilterOptions) => {
   switch (filter) {
     case "ALL_BETS":
       return "";
     case "PENDING":
-      return `payoutAt_gt: ${Math.floor(Date.now() / 1000)}`;
+      return `
+        payoutAt_gt: ${now}
+        settled: false
+      `;
     case "RESULTED":
-      return `settled: false`;
+      return `
+        payoutAt_lt: ${now}
+        settled: false
+      `;
     case "SETTLED":
       return `settled: true`;
     default:
@@ -35,6 +41,7 @@ const getOptionalFilterOptions = (filter?: BetFilterOptions) => {
 };
 
 export const getBetsQuery = (
+  now: number,
   filter?: SubgraphFilter,
   statusFilter: BetFilterOptions = "ALL_BETS",
   skipMultiplier = 0
@@ -44,7 +51,7 @@ export const getBetsQuery = (
     skip: ${constants.subgraph.MAX_BET_ENTITIES * skipMultiplier}
     where:{
       ${getFiltersFromObject(filter)}
-      ${getOptionalFilterOptions(statusFilter)}
+      ${getOptionalFilterOptions(now, statusFilter)}
     }
     orderBy: createdAt
     orderDirection: desc
@@ -68,13 +75,15 @@ export const getBetsQuery = (
 }`;
 
 export const getBetsQueryWithoutPagination = (
+  now: number,
   filter?: SubgraphFilter,
   statusFilter: BetFilterOptions = "ALL_BETS"
 ) => `query GetBetsWithoutPagination{
   bets(
+    first: 1000
     where: {
       ${getFiltersFromObject(filter)}
-      ${getOptionalFilterOptions(statusFilter)}
+      ${getOptionalFilterOptions(now, statusFilter)}
     }
     orderBy: createdAt
     orderDirection: desc
@@ -120,6 +129,7 @@ query GetProtocols{
 
 export const getVaultHistoryQuery = (filter?: SubgraphFilter) => `{
   vaultTransactions(
+    first: 1000
     where:{
       ${getFiltersFromObject(filter)}
     }
@@ -137,6 +147,7 @@ export const getVaultHistoryQuery = (filter?: SubgraphFilter) => `{
 
 export const getVaultStatsQuery = (filter?: SubgraphFilter) => `{
   vaultTransactions(
+    first: 1000
     where:{
       ${getFiltersFromObject(filter)}
     }
@@ -154,6 +165,7 @@ export const getVaultStatsQuery = (filter?: SubgraphFilter) => `{
 
 export const getMarketStatsQuery = (filter?: SubgraphFilter) => `{
   bets(
+    first: 1000
     orderBy: amount
     orderDirection: desc
     where: {

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useBetSlipContext } from "../../providers/BetSlip";
 import {
   BetFilterOptions,
@@ -25,6 +25,7 @@ export const useSubgraphBets = (
   owner?: string
 ) => {
   const { shouldRefetch, refetch } = useRefetch();
+  const { current: now } = useRef(Math.floor(Date.now() / 1000));
 
   // refetch when successful transactions are made
   const { hashes } = useBetSlipContext();
@@ -40,6 +41,7 @@ export const useSubgraphBets = (
   // subgraph query
   const { data: rawBets } = useSubgraph<BetResponse>(
     utils.queries.getBetsQueryWithoutPagination(
+      now,
       {
         owner: owner?.toLowerCase()
       },
@@ -89,20 +91,19 @@ export const useSubgraphBets = (
     if (!rawBets) return;
     setBets(undefined);
 
-    const query = gql`
-      ${utils.queries.getBetsQuery(
-        {
-          owner: owner?.toLowerCase(),
-          marketId
-        },
-        filter,
-        skipMultiplier
-      )}
-    `;
+    const query = utils.queries.getBetsQuery(
+      now,
+      {
+        owner: owner?.toLowerCase(),
+        marketId
+      },
+      filter,
+      skipMultiplier
+    );
 
     // query subgraph
     ApolloClient.query<BetResponse>({
-      query,
+      query: gql(query),
       fetchPolicy: "network-only"
     }).then(({ data: { bets } }) => {
       Promise.all(
@@ -114,12 +115,7 @@ export const useSubgraphBets = (
           return utils.bets.getBetHistory(bet, signedData);
         })
       ).then(signedBets => {
-        const filtered = utils.bets.filterBetsByFilterOptions(
-          signedBets,
-          filter
-        );
-
-        if (isActive) setBets(filtered);
+        if (isActive) setBets(signedBets);
       });
     });
 
@@ -127,7 +123,7 @@ export const useSubgraphBets = (
     return () => {
       isActive = false;
     };
-  }, [rawBets, skipMultiplier, filter, marketId, owner, shouldRefetch]);
+  }, [rawBets, skipMultiplier, filter, marketId, owner, shouldRefetch, now]);
 
   // total proposition bets
   const totalBetsOnPropositions = useMemo(() => {
