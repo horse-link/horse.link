@@ -7,6 +7,8 @@ export const getMeaningfulMessage = (error: any) => {
       return "Locked time not passed";
     case stringified.includes("signature"):
       return "Invalid signature";
+    case stringified.includes("date"):
+      return "Invalid time";
     // include other cases that require a more descriptive error message here
   }
 
