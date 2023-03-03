@@ -111,7 +111,11 @@ export const SettleBetModal: React.FC<Props> = ({
   };
 
   return (
-    <BaseModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+    <BaseModal
+      isOpen={isModalOpen}
+      onClose={() => setIsModalOpen(false)}
+      isLarge={!!txHash}
+    >
       {!bet || !config ? (
         <div className="flex w-full flex-col items-center p-10">
           <Loader />
