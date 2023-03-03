@@ -6,7 +6,7 @@ import { ethers } from "ethers";
 import utils from "../utils";
 
 const Leaderboard: React.FC = () => {
-  const { stats, balances, userStats } = useLeaderboardStatistics();
+  const { stats, balances, userStats, loading } = useLeaderboardStatistics();
   // check if the user is in the top ten
   const isUserInTopTen =
     stats && userStats
@@ -21,7 +21,11 @@ const Leaderboard: React.FC = () => {
         <div className="rounded-lg bg-white p-6">
           <h1 className="w-full text-center text-3xl font-bold">Leaderboard</h1>
           <br />
-          {stats && balances ? (
+          {loading ? (
+            <div className="flex w-full justify-center">
+              <ClipLoader />
+            </div>
+          ) : stats && balances ? (
             <React.Fragment>
               <div className="mb-2 grid grid-cols-8 gap-x-4 font-semibold">
                 <p className="col-span-1 text-center">Rank</p>
@@ -93,8 +97,9 @@ const Leaderboard: React.FC = () => {
               )}
             </React.Fragment>
           ) : (
-            <div className="flex w-full justify-center">
-              <ClipLoader />
+            <div className="w-full text-center">
+              There are no settled bets with the Horse Link token made to
+              calculate leaderboard earnings
             </div>
           )}
         </div>
