@@ -19,7 +19,7 @@ export const getMeaningfulMessage = (error: any) => {
     case ethers.errors.INSUFFICIENT_FUNDS:
       return "Insufficient funds";
     case ethers.errors.UNPREDICTABLE_GAS_LIMIT:
-      return "Gas limit unpredictable";
+      return "Invalid transaction";
     default:
       return `Unknown error encountered: ${error}`;
   }
