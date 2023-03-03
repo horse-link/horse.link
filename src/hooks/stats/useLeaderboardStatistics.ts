@@ -136,6 +136,7 @@ export const useLeaderboardStatistics = () => {
   return {
     stats: sortedData?.slice(0, 10),
     balances,
-    userStats: userBalance
+    userStats: userBalance,
+    loading
   };
 };
