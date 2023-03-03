@@ -114,7 +114,7 @@ export const DepositVaultModal: React.FC<Props> = ({
       : false;
 
   return (
-    <BaseModal isOpen={isModalOpen} onClose={closeModal}>
+    <BaseModal isOpen={isModalOpen} onClose={closeModal} isLarge={!!txHash}>
       <h2 className="mb-6 text-2xl font-bold">Deposit</h2>
       <div className="flex flex-col">
         <h3 className="mb-2 font-semibold">
@@ -137,7 +137,7 @@ export const DepositVaultModal: React.FC<Props> = ({
               disabled={txLoading || !userBalance}
             />
             <button
-              className="relative top-6 mb-3 w-full rounded-md border-2 border-black py-2 font-bold transition-colors duration-100 disabled:border-black/50 disabled:bg-white disabled:text-black/50 hover:bg-black hover:text-white"
+              className="relative top-6 mb-3 w-full rounded-md border-2 border-black py-2 font-bold transition-colors duration-100 disabled:border-black/50 disabled:bg-white disabled:text-black/50 enabled:hover:bg-black enabled:hover:text-white"
               onClick={onClickDeposit}
               disabled={
                 !depositAmount ||
