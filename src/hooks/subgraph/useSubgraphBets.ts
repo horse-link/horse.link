@@ -105,18 +105,26 @@ export const useSubgraphBets = (
     ApolloClient.query<BetResponse>({
       query: gql(query),
       fetchPolicy: "network-only"
-    }).then(({ data: { bets } }) => {
-      Promise.all(
-        bets.map(async bet => {
+    }).then(async ({ data: { bets } }) => {
+      const marketIds = bets.map(bet => bet.marketId);
+      const uniqueMarketIds = [...new Set(marketIds)];
+      const signedDataMap = new Map();
+      await Promise.all(
+        uniqueMarketIds.map(async marketId => {
           const signedData = await api.getWinningResultSignature(
-            utils.formatting.parseBytes16String(bet.marketId)
+            utils.formatting.parseBytes16String(marketId)
           );
-
+          signedDataMap.set(marketId, signedData);
+        })
+      );
+      const signedBets = await Promise.all(
+        bets.map(async bet => {
+          const signedData = signedDataMap.get(bet.marketId);
           return utils.bets.getBetHistory(bet, signedData);
         })
-      ).then(signedBets => {
-        if (isActive) setBets(signedBets);
-      });
+      );
+
+      if (isActive) setBets(signedBets);
     });
 
     // cleanup
