@@ -132,11 +132,18 @@ export const useLeaderboardStatistics = () => {
       .catch(console.error);
   }, [userAddress, isConnected, hlToken, provider, sortedData]);
 
+  // loading state
+  const statsLoading = useMemo(() => {
+    if (!sortedData || !balances) return true;
+
+    return false;
+  }, [sortedData, balances]);
+
   // return top 10 from stats array
   return {
     stats: sortedData?.slice(0, 10),
     balances,
     userStats: userBalance,
-    loading
+    loading: statsLoading
   };
 };
