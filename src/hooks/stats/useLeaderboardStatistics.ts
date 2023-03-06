@@ -51,12 +51,16 @@ export const useLeaderboardStatistics = () => {
     const reduced = bets.reduce((prevObject, bet) => {
       const prevValue = prevObject[bet.owner] || ethers.constants.Zero;
 
+      const winChange = ethers.utils.parseEther(
+        ethers.utils.formatEther(bet.payout)
+      );
+      const lossChange = ethers.utils
+        .parseEther(ethers.utils.formatEther(bet.amount))
+        .mul("-1");
+
       return {
         ...prevObject,
-        [bet.owner]: ethers.utils
-          .parseEther(ethers.utils.formatEther(bet.payout))
-          .mul(bet.didWin ? "1" : "-1")
-          .add(prevValue)
+        [bet.owner]: (bet.didWin ? winChange : lossChange).add(prevValue)
       };
     }, {} as Record<string, BigNumber>);
 
