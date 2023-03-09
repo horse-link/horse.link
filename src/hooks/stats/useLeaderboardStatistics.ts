@@ -119,7 +119,7 @@ export const useLeaderboardStatistics = () => {
     Promise.all([hlContract.balanceOf(userAddress), hlContract.decimals()])
       .then(([balance, decimals]) =>
         setUserBalance({
-          rank,
+          rank: rank + 1,
           address: userAddress,
           earnings: {
             value: userData.value,
