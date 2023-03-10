@@ -1,109 +1,43 @@
 import React from "react";
-import { PageLayout } from "../components";
+import { Card, PageLayout } from "../components";
 import { useLeaderboardStatistics } from "../hooks/stats";
-import ClipLoader from "react-spinners/ClipLoader";
-import { ethers } from "ethers";
+import { LeaderboardTable } from "../components/Tables";
+import { useAccount } from "wagmi";
 import utils from "../utils";
+import { ethers } from "ethers";
 
 const Leaderboard: React.FC = () => {
-  const { stats, balances, userStats, loading } = useLeaderboardStatistics();
-  // check if the user is in the top ten
-  const isUserInTopTen =
-    stats && userStats
-      ? !!stats.find(
-          stat => stat.address.toLowerCase() === userStats.address.toLowerCase()
-        )
-      : false;
+  const { stats, balances, userStats } = useLeaderboardStatistics();
+  const { isConnected } = useAccount();
 
   return (
     <PageLayout>
-      <div className="flex w-full justify-center">
-        <div className="rounded-lg bg-white p-6">
-          <h1 className="w-full text-center text-3xl font-bold">Leaderboard</h1>
-          <br />
-          {loading ? (
-            <div className="flex w-full justify-center">
-              <ClipLoader />
-            </div>
-          ) : stats && balances ? (
-            <React.Fragment>
-              <div className="mb-2 grid grid-cols-8 gap-x-4 font-semibold">
-                <p className="col-span-1 text-center">Rank</p>
-                <p className="col-span-3 text-center">Address</p>
-                <p className="col-span-2 text-center">Earnings</p>
-                <p className="col-span-2 text-center">Balance</p>
-              </div>
-              <div className="grid grid-cols-8 gap-x-4 gap-y-2">
-                {stats.map((stat, i) => {
-                  const addressBalance = balances.find(
-                    b => b.address.toLowerCase() === stat.address.toLowerCase()
-                  )!;
-
-                  return (
-                    <React.Fragment key={stat.address}>
-                      <p className="col-span-1 text-center">{i + 1}</p>
-                      <p className="col-span-3 truncate text-center">
-                        {stat.address}
-                      </p>
-                      <p className="col-span-2 text-center">
-                        {utils.formatting.formatToFourDecimalsRaw(
-                          ethers.utils.formatEther(stat.value)
-                        )}{" "}
-                        HL
-                      </p>
-                      <p className="col-span-2 text-center">
-                        {utils.formatting.formatToFourDecimals(
-                          addressBalance.formatted
-                        )}{" "}
-                        HL
-                      </p>
-                    </React.Fragment>
-                  );
-                })}
-              </div>
-              <br />
-              {!isUserInTopTen && userStats && (
-                <React.Fragment>
-                  <h2 className="w-full text-center text-xl font-bold">
-                    Your Rank
-                  </h2>
-                  <div className="mb-2 grid grid-cols-8 gap-x-4 font-semibold">
-                    <p className="col-span-1 text-center">Rank</p>
-                    <p className="col-span-3 text-center">Address</p>
-                    <p className="col-span-2 text-center">Earnings</p>
-                    <p className="col-span-2 text-center">Balance</p>
-                  </div>
-                  <div className="grid grid-cols-8 gap-x-4 gap-y-2">
-                    <p className="col-span-1 text-center">
-                      {userStats.rank + 1}
-                    </p>
-                    <p className="col-span-3 truncate text-center">
-                      {userStats.address}
-                    </p>
-                    <p className="col-span-2 text-center">
-                      {utils.formatting.formatToFourDecimalsRaw(
-                        ethers.utils.formatEther(userStats.earnings.value)
-                      )}{" "}
-                      HL
-                    </p>
-                    <p className="col-span-2 text-center">
-                      {utils.formatting.formatToFourDecimals(
-                        userStats.balance.formatted
-                      )}{" "}
-                      HL
-                    </p>
-                  </div>
-                </React.Fragment>
-              )}
-            </React.Fragment>
-          ) : (
-            <div className="w-full text-center">
-              There are no settled bets with the Horse Link token made to
-              calculate leaderboard earnings
-            </div>
-          )}
+      {isConnected && (
+        <div className="mb-4 flex w-full flex-col justify-center gap-x-1 gap-y-2 text-left md:flex-row lg:justify-between lg:gap-x-4">
+          <Card title="Your Rank" data={userStats?.rank.toString()} />
+          <Card
+            title="Your Earnings"
+            data={
+              userStats?.earnings.value
+                ? `${utils.formatting.formatToFourDecimalsRaw(
+                    ethers.utils.formatEther(userStats.earnings.value)
+                  )} HL`
+                : undefined
+            }
+          />
+          <Card
+            title="Your Balance"
+            data={
+              userStats?.balance.formatted
+                ? `${utils.formatting.formatToFourDecimals(
+                    userStats.balance.formatted
+                  )} HL`
+                : undefined
+            }
+          />
         </div>
-      </div>
+      )}
+      <LeaderboardTable stats={stats} balances={balances} />
     </PageLayout>
   );
 };
