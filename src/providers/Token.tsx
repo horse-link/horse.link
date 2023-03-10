@@ -12,7 +12,8 @@ import { useConfig } from "./Config";
 import { TokenModal } from "../components/Modals";
 import utils from "../utils";
 
-const LOCAL_STORAGE_KEY = "horse.link-token";
+const LOCAL_STORAGE_KEY_PREFERRED_TOKEN_SYMBOL = "horse.link-preferred-token";
+const DEFAULT_TOKEN_SYMBOL = "hl";
 
 export const TokenContext = createContext<TokenContextType>({
   tokensLoading: false,
@@ -35,13 +36,16 @@ export const TokenContextProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     if (!currentToken) return;
 
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(currentToken));
+    localStorage.setItem(
+      LOCAL_STORAGE_KEY_PREFERRED_TOKEN_SYMBOL,
+      JSON.stringify(currentToken)
+    );
   }, [currentToken]);
 
   // load tokens
   useEffect(() => {
     if (!config) return setTokensLoading(true);
-
+    debugger;
     const tokens: Array<Token> = config.tokens.map(t => ({
       address: t.address,
       symbol: t.symbol,
@@ -52,14 +56,19 @@ export const TokenContextProvider: React.FC<{ children: React.ReactNode }> = ({
 
     if (!tokens.length) return setTokensLoading(false);
 
-    // load from local storage
-    const localToken = localStorage.getItem(LOCAL_STORAGE_KEY);
-    let defaultToken = tokens.find(t => t.symbol.toLowerCase() === "hl");
-    if (!!localToken) defaultToken = JSON.parse(localToken);
+    // Use the last used token if it's available, then use the default token, otherwise use the first token
+    const tokenSymbol =
+      localStorage.getItem(LOCAL_STORAGE_KEY_PREFERRED_TOKEN_SYMBOL) ??
+      DEFAULT_TOKEN_SYMBOL;
+    let defaultToken = tokens.find(t => t.symbol.toLowerCase() === tokenSymbol);
+    if (!defaultToken)
+      defaultToken = tokens.find(
+        t => t.symbol.toLowerCase() === DEFAULT_TOKEN_SYMBOL
+      );
+    if (!defaultToken) defaultToken = tokens[0];
 
     setAvailableTokens(tokens);
     setCurrentToken(defaultToken);
-
     setTokensLoading(false);
   }, [config]);
 
