@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import classNames from "classnames";
-import utils from "../utils";
 import { getDurationSplits } from "../utils/time";
 
 dayjs.extend(duration);
@@ -21,14 +20,10 @@ export const Countdown: React.FC<Props> = ({ large, containerStyles }) => {
   // will be either 0 or a timestamp, if 0 we want to return null in our return statement
   const eventTimestamp = +(process.env.VITE_EVENT_TS || "0");
 
-  // we can use this to check if the event is already over by referencing !isEventInFuture, and return null accordingly
-  const isEventInFuture = dayjs(now).isBefore(dayjs(eventTimestamp));
-
   //time until event in seconds
   const timeUntilEvent = dayjs.unix(eventTimestamp).diff(now, "seconds");
 
   //time split into days, hours, minutes, time
-
   const { days, hours, minutes, seconds } = getDurationSplits(timeUntilEvent);
 
   // countdown
@@ -38,7 +33,7 @@ export const Countdown: React.FC<Props> = ({ large, containerStyles }) => {
     // cleanup
     return () => clearInterval(interval);
   }, []);
-  return !eventTimestamp || !isEventInFuture ? null : (
+  return !eventTimestamp ? null : (
     <div
       className={classNames(
         "mt-8 flex w-full flex-col items-center justify-center",

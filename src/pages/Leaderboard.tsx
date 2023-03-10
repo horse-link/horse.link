@@ -5,12 +5,21 @@ import { LeaderboardTable } from "../components/Tables";
 import { useAccount } from "wagmi";
 import utils from "../utils";
 import { ethers } from "ethers";
+import { Countdown } from "../components/Countdown";
+import dayjs from "dayjs";
 
 const Leaderboard: React.FC = () => {
   const { stats, balances, userStats } = useLeaderboardStatistics();
   const { isConnected } = useAccount();
+  const now = Date.now();
+  const eventTimestamp = +(process.env.VITE_EVENT_TS || "0");
+  const isEventInFuture = dayjs(now).isBefore(dayjs.unix(eventTimestamp));
 
-  return (
+  return isEventInFuture ? (
+    <PageLayout>
+      <Countdown large containerStyles="mt-12" />
+    </PageLayout>
+  ) : (
     <PageLayout>
       {isConnected && (
         <div className="mb-4 flex w-full flex-col justify-center gap-x-1 gap-y-2 text-left md:flex-row lg:justify-between lg:gap-x-4">
@@ -37,6 +46,7 @@ const Leaderboard: React.FC = () => {
           />
         </div>
       )}
+      <Countdown large containerStyles="mt-12" />
       <LeaderboardTable stats={stats} balances={balances} />
     </PageLayout>
   );
