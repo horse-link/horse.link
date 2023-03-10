@@ -11,9 +11,14 @@ dayjs.extend(duration);
 type Props = {
   large?: boolean;
   containerStyles?: string;
+  setIsBefore: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const Countdown: React.FC<Props> = ({ large, containerStyles }) => {
+export const Countdown: React.FC<Props> = ({
+  large,
+  containerStyles,
+  setIsBefore
+}) => {
   //FIRST NEED TO DEFINE NOW VIA TIMESTAMP
   const [now, setNow] = useState(Date.now());
 
@@ -28,7 +33,10 @@ export const Countdown: React.FC<Props> = ({ large, containerStyles }) => {
 
   // countdown
   useEffect(() => {
-    const interval = setInterval(() => setNow(Date.now()), 1 * 1000);
+    const interval = setInterval(() => {
+      setNow(Date.now());
+      setIsBefore(dayjs(Date.now()).isBefore(dayjs.unix(eventTimestamp)));
+    }, 1 * 1000);
 
     // cleanup
     return () => clearInterval(interval);

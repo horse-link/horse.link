@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, PageLayout } from "../components";
 import { useLeaderboardStatistics } from "../hooks/stats";
 import { LeaderboardTable } from "../components/Tables";
@@ -13,11 +13,17 @@ const Leaderboard: React.FC = () => {
   const { isConnected } = useAccount();
   const now = Date.now();
   const eventTimestamp = +(process.env.VITE_EVENT_TS || "0");
-  const isEventInFuture = dayjs(now).isBefore(dayjs.unix(eventTimestamp));
+  const [isEventInFuture, setisEventInFuture] = useState(
+    dayjs(now).isBefore(dayjs.unix(eventTimestamp))
+  );
 
   return isEventInFuture ? (
     <PageLayout>
-      <Countdown large containerStyles="mt-12" />
+      <Countdown
+        large
+        containerStyles="mt-12"
+        setIsBefore={setisEventInFuture}
+      />
     </PageLayout>
   ) : (
     <PageLayout>
@@ -46,7 +52,6 @@ const Leaderboard: React.FC = () => {
           />
         </div>
       )}
-      <Countdown large containerStyles="mt-12" />
       <LeaderboardTable stats={stats} balances={balances} />
     </PageLayout>
   );
