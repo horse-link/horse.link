@@ -45,7 +45,6 @@ export const TokenContextProvider: React.FC<{ children: React.ReactNode }> = ({
   // load tokens
   useEffect(() => {
     if (!config) return setTokensLoading(true);
-    debugger;
     const tokens: Array<Token> = config.tokens.map(t => ({
       address: t.address,
       symbol: t.symbol,
