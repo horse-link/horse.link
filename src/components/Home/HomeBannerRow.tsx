@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { NextToJump } from "../../types/meets";
+import { NextToJumpRace } from "../../types/meets";
 import utils from "../../utils";
 import constants from "../../constants";
 
 type Props = {
-  meet: NextToJump;
+  meet: NextToJumpRace;
 };
 
 export const HomeBannerRow: React.FC<Props> = ({ meet }) => {

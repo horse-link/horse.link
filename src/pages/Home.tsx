@@ -76,14 +76,9 @@ const Home: React.FC = () => {
       <div className="grid gap-6">
         <div className="my-4 flex w-full lg:w-auto">
           <img
-            alt="Horse-Link"
-            src="/images/horse-link.webp"
-            className="w-full lg:mr-10 lg:h-20 lg:w-auto"
-          />
-          <img
-            alt="Horse"
-            src="/images/horse.webp"
-            className="hidden lg:block lg:h-20"
+            src="images/Logo.png"
+            alt="Logo"
+            className="-my-16 block w-full drop-shadow-xl lg:-my-20 lg:w-1/3"
           />
         </div>
         {myPlayEnabled ? <HomeUserStats /> : <HomeOverallStats />}

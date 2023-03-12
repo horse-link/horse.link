@@ -15,8 +15,7 @@ export type Runner = {
   signature: EcSignature;
   status: "Open" | "Scratched" | "LateScratched";
 };
-
-export type NextToJump = {
+export type NextToJumpRace = {
   jumperRaceStartTime: string;
   jumperRaceNumber: number;
   meeting: {
@@ -25,6 +24,11 @@ export type NextToJump = {
     raceType: string;
     venueCode: string;
   };
+};
+
+export type NextToJump = {
+  races: NextToJumpRace[];
+  missingLocations: string[];
 };
 
 export type RaceStatus =
