@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
-import duration from "dayjs/plugin/duration";
 import classNames from "classnames";
 import { getDurationSplits } from "../utils/time";
-
-dayjs.extend(duration);
-
-//I want to it display the countdown to set date
+import { ONE_SECOND_MS } from "../constants/time";
 
 type Props = {
   large?: boolean;
@@ -36,7 +32,7 @@ export const Countdown: React.FC<Props> = ({
     const interval = setInterval(() => {
       setNow(Date.now());
       setIsBefore(dayjs(Date.now()).isBefore(dayjs.unix(eventTimestamp)));
-    }, 1 * 1000);
+    }, 1 * ONE_SECOND_MS);
 
     // cleanup
     return () => clearInterval(interval);
@@ -51,7 +47,7 @@ export const Countdown: React.FC<Props> = ({
       )}
     >
       <p
-        className={classNames("font-bold", {
+        className={classNames("text-xl font-bold", {
           "mb-4 text-xl": !large,
           "mb-8 text-xl lg:text-7xl": large
         })}
