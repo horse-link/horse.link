@@ -24,7 +24,8 @@ export const LeaderboardTable: React.FC<Props> = ({ stats, balances }) => {
     index: number
   ): TableData[] => [
     {
-      title: index + 1
+      title: index + 1,
+      classNames: "bg-gray-200"
     },
     {
       title: stat.address
@@ -41,7 +42,8 @@ export const LeaderboardTable: React.FC<Props> = ({ stats, balances }) => {
 
   const HEADERS: TableHeader[] = [
     {
-      title: "Rank"
+      title: "Rank",
+      classNames: "bg-gray-200"
     },
     {
       title: "Address"
