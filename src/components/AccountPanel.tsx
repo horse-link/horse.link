@@ -2,8 +2,15 @@ import React from "react";
 import { useAccount, useDisconnect } from "wagmi";
 import utils from "../utils";
 import { BaseButton, ConnectWalletButton } from "./Buttons";
+import { Listbox } from "@headlessui/react";
+import { useTokenContext } from "../providers/Token";
+import ClipLoader from "react-spinners/ClipLoader";
 
 export const AccountPanel: React.FC = () => {
+  const { currentToken, tokensLoading, availableTokens } = useTokenContext();
+  const tokenContextLoading =
+    tokensLoading || !currentToken || !availableTokens;
+
   const { disconnect } = useDisconnect();
   const account = useAccount();
 
@@ -20,18 +27,38 @@ export const AccountPanel: React.FC = () => {
       </h2>
       {account.isConnected ? (
         <div className="rounded-b-lg bg-white p-2">
-          <div className="flex w-full flex-col items-center">
-            <div className="w-full px-4 py-2">
-              <span className="block text-xl font-bold">Wallet</span>
-              <div className="flex w-full items-center gap-x-4">
-                <Image className="mx-4 my-6 scale-[2]" />
-                <div className="text-ellipsis font-semibold">
-                  {account.address}
+          {tokenContextLoading ? (
+            <div className="flex w-full flex-col items-center">
+              <ClipLoader />
+            </div>
+          ) : (
+            <React.Fragment>
+              <div className="flex w-full flex-col items-center">
+                <div className="w-full px-4 py-2">
+                  <span className="block text-xl font-bold">Wallet</span>
+                  <div className="flex w-full items-center gap-x-4">
+                    <Image className="mx-4 my-6 scale-[2]" />
+                    <div className="text-ellipsis font-semibold">
+                      {account.address}
+                    </div>
+                  </div>
+                  <BaseButton
+                    className="mr-4 w-full rounded-md border-2 border-black px-4 py-2 !font-bold text-black transition-colors duration-100 enabled:hover:bg-black enabled:hover:text-white"
+                    baseStyleOverride
+                    title="CHANGE"
+                  />
+                </div>
+                <div className="w-full px-4 py-2">
+                  <span className="block text-xl font-bold">Token</span>
+                  <Listbox>
+                    <Listbox.Button>{currentToken.name}</Listbox.Button>
+                    <Listbox.Options>help</Listbox.Options>
+                  </Listbox>
                 </div>
               </div>
-            </div>
-          </div>
-          <BaseButton onClick={() => disconnect()}>Disconnect</BaseButton>
+              <BaseButton onClick={() => disconnect()} title="Disconnect" />
+            </React.Fragment>
+          )}
         </div>
       ) : (
         <div className="w-full rounded-b-lg bg-white py-6 text-center">

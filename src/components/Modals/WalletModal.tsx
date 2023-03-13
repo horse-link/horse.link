@@ -60,7 +60,7 @@ export const WalletModal: React.FC<Props> = (props: Props) => {
 
           return (
             <React.Fragment>
-              <div>
+              <div className="w-full">
                 <label
                   className="flex cursor-pointer justify-center"
                   onClick={e => {
@@ -84,7 +84,7 @@ export const WalletModal: React.FC<Props> = (props: Props) => {
                     hidden: isLastElement
                   }
                 )}
-              ></div>
+              />
             </React.Fragment>
           );
         })}
