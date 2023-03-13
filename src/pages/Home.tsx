@@ -4,17 +4,17 @@ import { useAccount } from "wagmi";
 import api from "../apis/Api";
 import { Toggle, PageLayout } from "../components";
 import {
-  DashboardOverallStats,
-  DashboardUserStats,
-  DashboardFilterGroup,
-  DashboardNextToJumpBanner
-} from "../components/Dashboard";
-import { DashboardTable } from "../components/Tables";
+  HomeOverallStats,
+  HomeUserStats,
+  HomeFilterGroup,
+  HomeNextToJumpBanner
+} from "../components/Home";
+import { HomeTable } from "../components/Tables";
 import { useWalletModal } from "../providers/WalletModal";
 import { SignedMeetingsResponse, MeetFilters, Meet } from "../types/meets";
 import constants from "../constants";
 
-const Dashboard: React.FC = () => {
+const Home: React.FC = () => {
   const [response, setResponse] = useState<SignedMeetingsResponse>();
   const [meets, setMeets] = useState<Meet[]>();
   const [myPlayEnabled, setMyPlayEnabled] = useState(false);
@@ -63,45 +63,27 @@ const Dashboard: React.FC = () => {
   }, [myPlayEnabled, isConnected]);
 
   const onMyPlayToggle = () => setMyPlayEnabled(prev => !prev);
+
   const onFilterChange = (option: MeetFilters) => {
     setMeetsFilter(option);
   };
+
   const isLoading = !response;
+
   return (
     <PageLayout>
-      <DashboardNextToJumpBanner />
+      <HomeNextToJumpBanner />
       <div className="grid gap-6">
-        <div>
-          <div className="container-fluid overflow-hidden rounded-lg bg-emerald-700 px-4 py-5 shadow sm:p-6">
-            <div className="flex flex-wrap justify-between">
-              <img
-                loading="lazy"
-                alt="Horse-Link"
-                src="/images/horse-link.png"
-                className="mt-2 mb-8"
-              />
-              <img
-                loading="lazy"
-                alt="Horse"
-                src="/images/horse.png"
-                className="h-20"
-              />
-            </div>
-            <h2 className="mb-3 text-lg font-medium text-gray-900">
-              Horse Link is an Ethereum AMM protocol that allows participants to
-              wager on sports markets using ERC20 tokens.
-            </h2>
-            <p className="my-2 text-xs">
-              Horse Link&apos;s smart contract guaranteed bets are always placed
-              within the slippage band of the constant product function. Like
-              other AMM protocols based on curve functions, bets based within
-              the range of slippage based on the payout will be placed.
-            </p>
-          </div>
-          {myPlayEnabled ? <DashboardUserStats /> : <DashboardOverallStats />}
+        <div className="my-4 flex w-full lg:w-auto">
+          <img
+            src="images/Logo.png"
+            alt="Logo"
+            className="-my-16 block w-full drop-shadow-xl lg:-my-20 lg:w-1/3"
+          />
         </div>
+        {myPlayEnabled ? <HomeUserStats /> : <HomeOverallStats />}
         <div className="flex w-full justify-between gap-x-3 md:justify-end">
-          <DashboardFilterGroup
+          <HomeFilterGroup
             value={meetsFilter}
             onChange={onFilterChange}
             disabled={isLoading}
@@ -111,7 +93,7 @@ const Dashboard: React.FC = () => {
           <Toggle enabled={myPlayEnabled} onChange={onMyPlayToggle} />
           <div>My Stats</div>
         </div>
-        <DashboardTable meets={meets} />
+        <HomeTable meets={meets} />
         <div className="flex justify-center rounded-lg bg-white px-4 py-5 shadow sm:p-6 lg:mb-10">
           <div className="w-4/5 max-w-2xl">
             <div className="flex flex-col items-center">
@@ -133,4 +115,4 @@ const Dashboard: React.FC = () => {
   );
 };
 
-export default Dashboard;
+export default Home;

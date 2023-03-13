@@ -11,18 +11,44 @@ type Props = {
 };
 
 export const BetSlipTxModal: React.FC<Props> = ({ isOpen, onClose }) => {
-  // @ts-ignore
   const { hashes, errors } = useBetSlipContext();
-  // TODO: render errors
 
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}>
       {!hashes?.length ? (
-        <div className="m-10">
-          <Loader />
-        </div>
+        !errors?.length ? (
+          <React.Fragment>
+            <h2 className="text-2xl font-bold">Transaction Loading</h2>
+            <div className="mt-4 flex w-full justify-center">
+              <Loader />
+            </div>
+          </React.Fragment>
+        ) : (
+          <React.Fragment>
+            <h2 className="text-2xl font-bold">Bet Slip Errors</h2>
+            {errors.length === 1 ? (
+              <div className="mt-6 w-full rounded-md bg-red-600 py-4 text-center text-white">
+                {utils.errors.getMeaningfulMessage(errors[0])}
+              </div>
+            ) : (
+              <React.Fragment>
+                <h3 className="mt-2">
+                  Placing your bets returned the following errors:
+                </h3>
+                <ol className="ml-4 mt-2 list-decimal">
+                  {errors.map((err, i) => (
+                    <li key={`${err}-${i}`}>
+                      A bet rejected with reason:{" "}
+                      {utils.errors.getMeaningfulMessage(err)}
+                    </li>
+                  ))}
+                </ol>
+              </React.Fragment>
+            )}
+          </React.Fragment>
+        )
       ) : (
-        <div className="w-[75vw] lg:w-[28rem]">
+        <React.Fragment>
           <h2 className="text-2xl font-bold">Bet Slip Transactions</h2>
           <ol className="ml-4 mt-6 list-decimal">
             {hashes.map(hash => (
@@ -38,7 +64,22 @@ export const BetSlipTxModal: React.FC<Props> = ({ isOpen, onClose }) => {
               </li>
             ))}
           </ol>
-        </div>
+          {!!errors?.length && (
+            <div className="mt-4">
+              <h3 className="font-bold">
+                One or more bets produced the following errors:
+              </h3>
+              <ol className="ml-4 mt-2 list-decimal">
+                {errors.map((err, i) => (
+                  <li key={`${err}-${i}`}>
+                    A bet rejected with reason:{" "}
+                    {utils.errors.getMeaningfulMessage(err)}
+                  </li>
+                ))}
+              </ol>
+            </div>
+          )}
+        </React.Fragment>
       )}
     </BaseModal>
   );

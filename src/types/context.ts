@@ -7,6 +7,8 @@ export type BetSlipErrorEntry = {
   errorMessage: string;
 };
 
+export type BetEntry = Omit<BetSlipEntry, "id">;
+
 export type BetSlipEntry = {
   id: number;
   market: MarketInfo;
@@ -27,10 +29,11 @@ export type BetSlipContextType = {
   hashes?: string[];
   bets?: BetSlipEntry[];
   errors?: string[];
-  addBet: (bet: Omit<BetSlipEntry, "id">) => void;
+  addBet: (bet: BetEntry) => void;
   removeBet: (id: number) => void;
   clearBets: () => void;
-  placeBets: () => void;
+  placeBetsInBetSlip: () => void;
+  placeBetImmediately: (bet: BetEntry) => Promise<void>;
 };
 
 export type TokenContextType = {

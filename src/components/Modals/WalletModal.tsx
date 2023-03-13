@@ -31,7 +31,7 @@ export const WalletModal: React.FC<Props> = (props: Props) => {
 
   return (
     <BaseModal isOpen={isModalOpen} onClose={closeWalletModal}>
-      <div className="text-center sm:w-auto md:w-96">
+      <div className="text-center">
         {currentChain?.name.toLowerCase() !==
           constants.blockchain.GOERLI_NETWORK.name.toLowerCase() &&
           isConnected && (

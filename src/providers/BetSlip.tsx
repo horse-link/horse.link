@@ -7,7 +7,7 @@ import {
   useMemo,
   useState
 } from "react";
-import { BetSlipContextType, BetSlipEntry } from "../types/context";
+import { BetSlipContextType, BetSlipEntry, BetEntry } from "../types/context";
 import { useMarketContract } from "../hooks/contracts";
 import { useSigner } from "wagmi";
 import { ethers } from "ethers";
@@ -16,6 +16,8 @@ import { useConfig } from "./Config";
 import dayjs from "dayjs";
 import isYesterday from "dayjs/plugin/isYesterday";
 import { BetSlipTxModal } from "../components/Modals";
+import { Config } from "../types/config";
+import { ERC20__factory, Market__factory, Vault__factory } from "../typechain";
 
 dayjs.extend(isYesterday);
 
@@ -26,7 +28,8 @@ export const BetSlipContext = createContext<BetSlipContextType>({
   addBet: () => {},
   removeBet: () => {},
   clearBets: () => {},
-  placeBets: () => {}
+  placeBetsInBetSlip: () => {},
+  placeBetImmediately: async () => {}
 });
 
 export const useBetSlipContext = () => useContext(BetSlipContext);
@@ -44,26 +47,20 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
   const [errors, setErrors] = useState<string[]>();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // write bet slip to local storage if bets exist
-  useEffect(() => {
-    if (bets && bets.length)
-      localStorage.setItem(
-        LOCAL_STORAGE_KEY,
-        JSON.stringify({
-          data: bets,
-          createdAt: dayjs()
-        })
-      );
-  }, [bets]);
-
   // load bets on page load
   useEffect(() => {
     const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (!raw || raw === "undefined") return;
 
     const parsed = JSON.parse(raw);
+    // parse the date which will be the start of the day that the bet slip was created
+    const parsedDate = dayjs(parsed.date).valueOf();
 
-    if (dayjs(parsed.createdAt).isYesterday()) {
+    // get the timestamp for 00:00 today
+    const startOfToday = dayjs().startOf("day").valueOf();
+
+    // if the date of the betslip is before today (i.e. yesterday or before) then clear the slip and cache
+    if (dayjs(parsedDate).isBefore(startOfToday)) {
       setBets(undefined);
       return localStorage.removeItem(LOCAL_STORAGE_KEY);
     }
@@ -71,8 +68,21 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
     setBets(parsed.data);
   }, []);
 
+  // write bet slip to local storage if bets exist
+  useEffect(() => {
+    if (bets && bets.length)
+      localStorage.setItem(
+        LOCAL_STORAGE_KEY,
+        JSON.stringify({
+          data: bets,
+          // only log the day
+          date: dayjs().startOf("day").valueOf()
+        })
+      );
+  }, [bets]);
+
   const addBet = useCallback(
-    (bet: Omit<BetSlipEntry, "id">) => {
+    (bet: BetEntry) => {
       // if there are no bets, set the bets state to the new bet, id 0
       if (!bets?.length)
         return setBets([
@@ -98,7 +108,6 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
 
   const clearBets = useCallback(() => {
     setBets(undefined);
-    setErrors(undefined);
     localStorage.removeItem(LOCAL_STORAGE_KEY);
   }, [bets]);
 
@@ -124,15 +133,12 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
     [bets]
   );
 
-  const placeBets = useCallback(async () => {
-    // if there are no bets, or signer, do nothing
-    if (!bets?.length || !signer || !config) return;
-
-    // reset state
-    setTxLoading(true);
-    setHashes(undefined);
-
-    // settle bets
+  const placeBets = async (
+    bets: BetSlipEntry[] | BetEntry[],
+    signer: ethers.Signer,
+    config: Config,
+    skipAllowanceCheck: boolean
+  ) => {
     const raw = await Promise.allSettled(
       bets.map(bet => {
         const vault = utils.config.getVaultFromMarket(bet.market, config);
@@ -150,7 +156,8 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
           bet.back,
           // parse wager into BigNumber
           ethers.utils.parseUnits(formattedWager, vault.asset.decimals),
-          signer
+          signer,
+          skipAllowanceCheck
         );
       })
     );
@@ -160,6 +167,92 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
     const errors = raw
       .filter(utils.types.isRejected)
       .map(r => r.reason as string);
+
+    return { txs, errors };
+  };
+
+  const placeBetsInBetSlip = useCallback(async () => {
+    if (!bets?.length || !signer || !config) return;
+
+    // reset state
+    setTxLoading(true);
+    setHashes(undefined);
+    setErrors(undefined);
+
+    // we want to skip the check in the placeBets function
+    // so we do the allowance checks here first
+
+    // first reduce the bets to the asset addresses
+    const reducedAssets = bets.reduce((prevArray, bet) => {
+      const vault = utils.config.getVaultFromMarket(bet.market, config);
+      if (!vault)
+        throw new Error(
+          `Could not find vault for market ${bet.market.address}`
+        );
+
+      return [...prevArray, vault.asset.address.toLowerCase()];
+    }, [] as Array<string>);
+
+    // then we make a set to remove duplicates
+    const assetAddresses = [...new Set(reducedAssets)];
+
+    // we want to sum all the wagers per address, so that we can check the allowances against the sum
+    const totalWagers = assetAddresses.map(address => {
+      const betsForAddress = bets.filter(bet => {
+        // we can guarantee this exists from before
+        const vault = utils.config.getVaultFromMarket(bet.market, config)!;
+
+        return vault.asset.address.toLowerCase() === address.toLowerCase();
+      });
+
+      return {
+        address,
+        total: betsForAddress.reduce(
+          (sum, bet) => sum.add(bet.wager),
+          ethers.constants.Zero
+        )
+      };
+    });
+
+    // before queuing up the transactions, we want to do the same thing as the assetAddresses
+    // but with the market addresses so we can check the allowances
+    const reducedMarkets = bets.map(bet => bet.market.address.toLowerCase());
+    const marketAddresses = [...new Set(reducedMarkets)];
+
+    // now we can check allowances and queue transactions
+    await Promise.all(
+      marketAddresses.map(async marketAddress => {
+        // generate contracts
+        const marketContract = Market__factory.connect(marketAddress, signer);
+        const vaultAddress = await marketContract.getVaultAddress();
+        const vaultContract = Vault__factory.connect(vaultAddress, signer);
+        const assetAddress = await vaultContract.asset();
+        const assetContract = ERC20__factory.connect(assetAddress, signer);
+
+        // get user allowance
+        const allowance = await assetContract.allowance(
+          await signer.getAddress(),
+          marketAddress
+        );
+
+        // get the total wager that matches the asset address, we can guarantee this exists from before
+        const wager = totalWagers.find(
+          wager => wager.address.toLowerCase() === assetAddress.toLowerCase()
+        )!;
+
+        // check and queue approvals
+        if (allowance.lt(wager.total))
+          await (
+            await assetContract.approve(
+              marketAddress,
+              ethers.constants.MaxUint256
+            )
+          ).wait();
+      })
+    );
+
+    // settle bets, skipping allowance check
+    const { txs, errors } = await placeBets(bets, signer, config, true);
 
     // set errors
     setErrors(errors);
@@ -175,6 +268,33 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
     setIsModalOpen(true);
   }, [config, bets, signer, placeBet]);
 
+  const placeBetImmediately = useCallback(
+    async (bet: BetEntry) => {
+      if (!bet || !signer || !config) return;
+
+      // reset state
+      setTxLoading(true);
+      setHashes(undefined);
+      setErrors(undefined);
+
+      // open modal
+      setIsModalOpen(true);
+
+      // settle bets
+      const { txs, errors } = await placeBets([bet], signer, config, false);
+
+      // set errors
+      setErrors(errors);
+
+      // set hashes
+      setHashes(txs);
+
+      // stop loading
+      setTxLoading(false);
+    },
+    [config, signer, placeBet]
+  );
+
   const closeModal = useCallback(() => setIsModalOpen(false), []);
 
   const value = useMemo(
@@ -186,9 +306,20 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
       addBet,
       removeBet,
       clearBets,
-      placeBets
+      placeBetsInBetSlip,
+      placeBetImmediately
     }),
-    [txLoading, hashes, bets, errors, addBet, removeBet, clearBets, placeBets]
+    [
+      txLoading,
+      hashes,
+      bets,
+      errors,
+      addBet,
+      removeBet,
+      clearBets,
+      placeBetsInBetSlip,
+      placeBetImmediately
+    ]
   );
 
   return (

@@ -35,7 +35,7 @@ const Bets: React.FC = () => {
   }, [isConnected]);
 
   useEffect(() => {
-    if (!address) return;
+    if (!address || paramsAddress) return;
 
     // if user is logged in navigate to static url
     navigate(`/bets/${address}`, {
@@ -49,7 +49,8 @@ const Bets: React.FC = () => {
     currentPage,
     incrementPage,
     decrementPage,
-    refetch
+    refetch,
+    setSkipMultiplier
   } = useSubgraphBets(
     betTableFilter,
     undefined,
@@ -62,10 +63,13 @@ const Bets: React.FC = () => {
 
   const onMyBetToggle = () => setMyBetsEnabled(prev => !prev);
 
-  const onFilterChange = (option: BetFilterOptions) =>
+  const onFilterChange = (option: BetFilterOptions) => {
     setBetTableFilter(option);
+    setSkipMultiplier(0);
+  };
 
   const isLoading = !betHistory;
+
   return (
     <PageLayout>
       <div className="mb-4 flex w-full flex-col justify-center gap-x-1 gap-y-2 text-left md:flex-row lg:justify-between lg:gap-x-4">
@@ -102,7 +106,7 @@ const Bets: React.FC = () => {
         </div>
         <div className="flex items-center gap-3">
           <Toggle enabled={myBetsEnabled} onChange={onMyBetToggle} />
-          <div className="font-semibold">My Bets</div>
+          <div className="font-semibold">User&apos;s Bets</div>
         </div>
       </div>
       <BetTable

@@ -49,15 +49,30 @@ Status
 
 ERC4626 Vaults are created to allow users to deposit ERC20 tokens "underlying" into a smart contract and earn dividends on their deposits. Vault operators then allow markets to draw down liqidity from their reserves to fund bets. The Vault operator can also set the percentage of the bet that is distributed to the Vault share holders.
 
+Vaults earn income by lending to the markets.
+
 # Market makers
 
-Market makers can run the the dapp and set their own odds ...
+Market makers can run the the dapp and set their own odds and fees. They can also set the percentage of the bet that is distributed to the Vault share holders.
 
 # The API
 
 Our own market odds can be found at https://api.horse.link/. These requests are signed by the owner with a UUID as a nonce.
 
 # Contract Addresses
+
+## Arbitrum
+
+Owner: `0x1Ab4C6d9e25Fc65C917aFBEfB4E963C400Fb9814`  
+Horse Link Token `0x06d0164b1bFb040D667a82C64De870dDeac38b86`  
+USDC Vault: `0x58FEa77B43aDC70d8f077598320aF6BE87135768`  
+USDC Market: `0xe8aF6fa3cD01f1F2e460aBB69e054B0eF9e2d07A`  
+fxAUD Vault: `0xb9943E1Eef2AF75a058ABa664846B6F80BDE9EEd`  
+fxAUD Market: `0xDeEE4529E2825bae459e27866f911d188e6b54A0`  
+fxUSD Vault: `0x1ACdD5D0aF0FFd42616ECC1AFf03Ba23824c8CA3`  
+fxUSD Market: `0xb9943E1Eef2AF75a058ABa664846B6F80BDE9EEd`  
+Registry: `0x607105259Bf6c66b0501c8BCD9D574C96088869d`  
+Market Oracle: `0x14478dECfb070329948b7Ed16878F84048680bF9`
 
 ## Goerli
 

@@ -14,7 +14,7 @@ type Props = {
   disabled: boolean;
 };
 
-export const DashboardFilterGroup: React.FC<Props> = ({
+export const HomeFilterGroup: React.FC<Props> = ({
   value: currentOption,
   onChange,
   disabled
@@ -26,15 +26,12 @@ export const DashboardFilterGroup: React.FC<Props> = ({
         onClick={() => {
           onChange(key);
         }}
-        className={classNames(
-          "w-full rounded bg-white text-sm md:w-28 md:text-base ",
-          {
-            "bg-indigo-700 text-white":
-              key.toLowerCase() === currentOption.toLowerCase(),
-            "disabled:opacity-75 hover:bg-gray-200":
-              key.toLowerCase() !== currentOption.toLowerCase()
-          }
-        )}
+        className={classNames("w-full rounded text-sm md:w-28 md:text-base ", {
+          "bg-indigo-600 text-white":
+            key.toLowerCase() === currentOption.toLowerCase(),
+          "bg-white disabled:opacity-75 hover:bg-gray-200":
+            key.toLowerCase() !== currentOption.toLowerCase()
+        })}
         disabled={disabled}
       >
         {text}

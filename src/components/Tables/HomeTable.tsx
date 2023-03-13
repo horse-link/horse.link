@@ -8,7 +8,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import utc from "dayjs/plugin/utc";
 import advancedFormat from "dayjs/plugin/advancedFormat";
-import { DashboardTableRace } from "../Dashboard";
+import { HomeTableRace } from "../Home";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -20,7 +20,7 @@ type Props = {
   meets?: Meet[];
 };
 
-export const DashboardTable: React.FC<Props> = ({ meets }) => {
+export const HomeTable: React.FC<Props> = ({ meets }) => {
   const length = meets
     ? Math.max(...meets.map(m => m.races.length))
     : LOADING_LENGTH;
@@ -33,7 +33,9 @@ export const DashboardTable: React.FC<Props> = ({ meets }) => {
       classNames: "bg-gray-200"
     },
     ...meet.races.map(race => ({
-      title: <DashboardTableRace meet={meet} race={race} />,
+      title: (
+        <HomeTableRace meet={meet} race={race} key={JSON.stringify(race)} />
+      ),
       classNames: "!p-0"
     })),
     ...Array.from({ length: length - meet.races.length }, () => ({

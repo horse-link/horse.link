@@ -12,6 +12,7 @@ import { UserBalance } from "../../types/users";
 import { useBetSlipContext } from "../../providers/BetSlip";
 import { useParams } from "react-router-dom";
 import { useTokenContext } from "../../providers/Token";
+import { BetEntry } from "../../types/context";
 
 type Props = {
   runner?: Runner;
@@ -36,7 +37,7 @@ export const PlaceBetModal: React.FC<Props> = ({
   const { getPotentialPayout } = useMarketContract();
   const { getBalance, getDecimals } = useERC20Contract();
   const { shouldRefetch, refetch: refetchUserBalance } = useRefetch();
-  const { bets, addBet } = useBetSlipContext();
+  const { bets, addBet, placeBetImmediately } = useBetSlipContext();
   const { number: raceNumber } = useParams();
   const { currentToken } = useTokenContext();
 
@@ -123,31 +124,41 @@ export const PlaceBetModal: React.FC<Props> = ({
     setWagerAmount(value);
   };
 
-  const onClickPlaceBet = useCallback(() => {
-    if (!market || !wagerAmount || !runner || !config || !race || !raceNumber)
-      return;
-    const vault = utils.config.getVaultFromMarket(market, config);
-    if (!vault)
-      throw new Error(
-        `Could not find vault associated with market ${market.address}`
-      );
+  const onClickPlaceBet = useCallback(
+    async (option?: { betNow: boolean }) => {
+      if (!market || !wagerAmount || !runner || !config || !race || !raceNumber)
+        return;
 
-    addBet({
-      market,
-      back,
-      wager: ethers.utils
-        .parseUnits(wagerAmount, vault.asset.decimals)
-        .toString(),
-      runner,
-      race: {
-        ...race,
-        raceNumber
-      },
-      timestamp: Math.floor(Date.now() / 1000)
-    });
+      const vault = utils.config.getVaultFromMarket(market, config);
+      if (!vault)
+        throw new Error(
+          `Could not find vault associated with market ${market.address}`
+        );
 
-    setIsModalOpen(false);
-  }, [market, back, wagerAmount, race, raceNumber]);
+      const betSlip: BetEntry = {
+        market,
+        back,
+        wager: ethers.utils
+          .parseUnits(wagerAmount, vault.asset.decimals)
+          .toString(),
+        runner,
+        race: {
+          ...race,
+          raceNumber
+        },
+        timestamp: Math.floor(Date.now() / 1000)
+      };
+
+      if (option?.betNow) {
+        await placeBetImmediately(betSlip);
+      } else {
+        addBet(betSlip);
+      }
+
+      setIsModalOpen(false);
+    },
+    [market, back, wagerAmount, race, raceNumber]
+  );
 
   const isWagerNegative = wagerAmount ? +wagerAmount < 0 : false;
   const isWagerGreaterThanBalance =
@@ -199,6 +210,15 @@ export const PlaceBetModal: React.FC<Props> = ({
     return marketSum.add(userWagerBn).gt(userBalance.value);
   }, [bets, wagerAmount, market, config, userBalance]);
 
+  const shouldDisablePlaceBet =
+    !market ||
+    !wagerAmount ||
+    !signer ||
+    !userBalance ||
+    !+userBalance.formatted ||
+    isWagerNegative ||
+    isWagerGreaterThanBalance ||
+    isWagerPlusBetsExceedingBalance;
   return (
     <BaseModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
       {!config || !runner ? (
@@ -206,11 +226,11 @@ export const PlaceBetModal: React.FC<Props> = ({
           <Loader />
         </div>
       ) : (
-        <div className="w-[70vw] lg:w-[28rem]">
+        <React.Fragment>
           <h2 className="font-bold">
             {runner.name ? `${runner.name} (${runner.barrier ?? " "})` : " "}
           </h2>
-          <h2 className="mr-[8vw] mb-6 font-bold">
+          <h2 className="mb-6 font-bold">
             {`Target Odds 
             ${utils.formatting.formatToTwoDecimals(back.odds.toString())}`}
           </h2>
@@ -257,24 +277,25 @@ export const PlaceBetModal: React.FC<Props> = ({
                 )
               )}
             </span>
-            <button
-              className="relative top-6 mb-8 w-full rounded-md border-2 border-black py-2 font-bold transition-colors duration-100 disabled:border-black/50 disabled:bg-white disabled:text-black/50 hover:bg-black hover:text-white"
-              onClick={onClickPlaceBet}
-              disabled={
-                !market ||
-                !wagerAmount ||
-                !signer ||
-                !userBalance ||
-                !+userBalance.formatted ||
-                isWagerNegative ||
-                isWagerGreaterThanBalance ||
-                isWagerPlusBetsExceedingBalance
-              }
-            >
-              ADD TO BET SLIP
-            </button>
+            <div className="mt-4 mb-2 flex flex-col gap-2">
+              <button
+                className="w-full rounded-md border-2 border-black py-2 font-bold transition-colors duration-100 disabled:border-black/50 disabled:bg-white disabled:text-black/50 hover:bg-black hover:text-white"
+                onClick={() => onClickPlaceBet({ betNow: true })}
+                disabled={shouldDisablePlaceBet}
+              >
+                BET NOW
+              </button>
+              <h3 className="self-center font-semibold">or</h3>
+              <button
+                className="w-full rounded-md border-2 border-black py-2 font-bold transition-colors duration-100 disabled:border-black/50 disabled:bg-white disabled:text-black/50 hover:bg-black hover:text-white"
+                onClick={() => onClickPlaceBet()}
+                disabled={shouldDisablePlaceBet}
+              >
+                ADD TO BET SLIP
+              </button>
+            </div>
           </div>
-        </div>
+        </React.Fragment>
       )}
     </BaseModal>
   );

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Loader } from "../";
 import { BaseModal } from ".";
 import { ethers } from "ethers";
@@ -35,9 +35,11 @@ export const SettleBetModal: React.FC<Props> = ({
   const { data: signer } = useSigner();
   const { settleBet } = useMarketContract();
 
+  const { current: now } = useRef(Math.floor(Date.now() / 1000));
+
   // get signed bet
   useEffect(() => {
-    if (!selectedBet) return;
+    if (!selectedBet || !isModalOpen) return;
 
     api
       .getWinningResultSignature(
@@ -59,7 +61,7 @@ export const SettleBetModal: React.FC<Props> = ({
         setBet(formattedBet);
       })
       .catch(console.error);
-  }, [selectedBet]);
+  }, [selectedBet, isModalOpen]);
 
   // clean up
   useEffect(() => {
@@ -87,6 +89,10 @@ export const SettleBetModal: React.FC<Props> = ({
         bet.propositionId.toLowerCase()
       : undefined;
 
+  const isScratched = bet?.scratched !== undefined;
+
+  const isPastPayoutDate = now > (bet?.payoutDate || 0);
+
   const onClickSettleBet = async () => {
     if (!bet || !market || !signer || !config) return;
     setTxHash(undefined);
@@ -105,14 +111,18 @@ export const SettleBetModal: React.FC<Props> = ({
   };
 
   return (
-    <BaseModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+    <BaseModal
+      isOpen={isModalOpen}
+      onClose={() => setIsModalOpen(false)}
+      isLarge={!!txHash}
+    >
       {!bet || !config ? (
-        <div className="p-10">
+        <div className="flex w-full flex-col items-center p-10">
           <Loader />
         </div>
       ) : (
         <React.Fragment>
-          <h2 className="mr-[8vw] mb-6 text-2xl font-bold">
+          <h2 className="mb-6 text-2xl font-bold">
             {utils.formatting.formatFirstLetterCapitalised(bet.status)} Bet
           </h2>
           <div className="flex flex-col">
@@ -141,7 +151,7 @@ export const SettleBetModal: React.FC<Props> = ({
               </h3>
             ) : isWinning === false ? (
               <h3 className="font-semibold">
-                Loss:{" "}
+                {isScratched ? "Refund" : "Loss"}:{" "}
                 <span className="font-normal">
                   {ethers.utils.formatEther(bet.amount)} {token?.symbol}
                 </span>
@@ -176,6 +186,7 @@ export const SettleBetModal: React.FC<Props> = ({
                     !signer ||
                     bet.settled ||
                     bet.status === "PENDING" ||
+                    !isPastPayoutDate ||
                     txLoading ||
                     !!txHash
                   }

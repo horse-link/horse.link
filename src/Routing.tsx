@@ -1,5 +1,6 @@
 import { lazy } from "react";
-import Dashboard from "./pages/Dashboard";
+import constants from "./constants";
+import Home from "./pages/Home";
 import { AppRoutes, NavbarRoutes } from "./types/app";
 
 // lazy load pages
@@ -10,12 +11,14 @@ const Tokens = lazy(() => import("./pages/Tokens"));
 const Vaults = lazy(() => import("./pages/Vaults"));
 const Faucet = lazy(() => import("./pages/Faucet"));
 const Results = lazy(() => import("./pages/Results"));
+const Wallet = lazy(() => import("./pages/Wallet"));
+const Leaderboard = lazy(() => import("./pages/Leaderboard"));
 
 // app routing
 const Routing: AppRoutes = [
   {
-    path: "/dashboard",
-    element: <Dashboard />
+    path: "/",
+    element: <Home />
   },
   {
     path: "/vaults",
@@ -48,14 +51,22 @@ const Routing: AppRoutes = [
   {
     path: "/bets/:owner",
     element: <Bets />
+  },
+  {
+    path: "/wallet",
+    element: <Wallet />
+  },
+  {
+    path: "/leaderboard",
+    element: <Leaderboard />
   }
 ];
 
 // custom navbar routing
-export const NavbarRouting: NavbarRoutes = [
+const _NavbarRouting: NavbarRoutes = [
   {
-    name: "Dashboard",
-    path: "/dashboard"
+    name: "Home",
+    path: "/"
   },
   {
     name: "Vaults",
@@ -72,7 +83,23 @@ export const NavbarRouting: NavbarRoutes = [
   {
     name: "Faucet",
     path: "/faucet"
+  },
+  {
+    name: "Leaderboard",
+    path: "/leaderboard"
   }
 ];
+
+const injectOptionalNavbarRoute = (nbr: NavbarRoutes) => {
+  if (constants.env.WALLET_NAV_ACTIVE === "true") {
+    nbr.push({
+      name: "Wallet",
+      path: "/wallet"
+    });
+  }
+  return nbr;
+};
+
+export const NavbarRouting = injectOptionalNavbarRoute(_NavbarRouting);
 
 export default Routing;

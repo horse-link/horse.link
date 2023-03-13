@@ -16,7 +16,8 @@ export const useMarketContract = () => {
     market: MarketInfo,
     back: Back,
     wager: BigNumber,
-    signer: Signer
+    signer: Signer,
+    skipAllowanceCheck?: boolean
   ) => {
     const userAddress = await signer.getAddress();
 
@@ -26,14 +27,19 @@ export const useMarketContract = () => {
     const assetAddress = await vaultContract.asset();
     const erc20Contract = ERC20__factory.connect(assetAddress, signer);
 
-    const userAllowance = await erc20Contract.allowance(
-      userAddress,
-      market.address
-    );
-    if (userAllowance.lt(wager))
-      await (
-        await erc20Contract.approve(market.address, ethers.constants.MaxUint256)
-      ).wait();
+    if (!skipAllowanceCheck) {
+      const userAllowance = await erc20Contract.allowance(
+        userAddress,
+        market.address
+      );
+      if (userAllowance.lt(wager))
+        await (
+          await erc20Contract.approve(
+            market.address,
+            ethers.constants.MaxUint256
+          )
+        ).wait();
+    }
 
     const receipt = await (
       await marketContract.back(
@@ -139,7 +145,10 @@ export const useMarketContract = () => {
           bet.propositionId,
           bet.scratched.signature,
           config,
-          ethers.utils.parseUnits(bet.scratched.odds.toString(), 8),
+          ethers.utils.parseUnits(
+            bet.scratched.odds.toString(),
+            constants.contracts.MARKET_ODDS_DECIMALS
+          ),
           ethers.BigNumber.from(bet.scratched.totalOdds)
         )
       )
@@ -150,7 +159,10 @@ export const useMarketContract = () => {
         await marketOracleContract.setScratchedResult(
           bet.marketId,
           bet.propositionId,
-          ethers.utils.parseUnits(bet.scratched.odds.toString(), 8),
+          ethers.utils.parseUnits(
+            bet.scratched.odds.toString(),
+            constants.contracts.MARKET_ODDS_DECIMALS
+          ),
           ethers.BigNumber.from(bet.scratched.totalOdds),
           bet.scratched.signature
         )

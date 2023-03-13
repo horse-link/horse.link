@@ -111,8 +111,8 @@ export const WithdrawVaultModal: React.FC<Props> = ({
       : false;
 
   return (
-    <BaseModal isOpen={isModalOpen} onClose={closeModal}>
-      <h2 className="mr-[8vw] mb-6 text-2xl font-bold">Withdraw</h2>
+    <BaseModal isOpen={isModalOpen} onClose={closeModal} isLarge={!!txHash}>
+      <h2 className="mb-6 text-2xl font-bold">Withdraw</h2>
       <div className="flex flex-col">
         <h3 className="mb-2 font-semibold">
           Name: <span className="font-normal">{vault.name}</span>
@@ -134,7 +134,7 @@ export const WithdrawVaultModal: React.FC<Props> = ({
               disabled={txLoading || !userAssets}
             />
             <button
-              className="relative top-6 mb-3 w-full rounded-md border-2 border-black py-2 font-bold transition-colors duration-100 disabled:border-black/50 disabled:bg-white disabled:text-black/50 hover:bg-black hover:text-white"
+              className="relative top-6 mb-3 w-full rounded-md border-2 border-black py-2 font-bold transition-colors duration-100 disabled:border-black/50 disabled:bg-white disabled:text-black/50 enabled:hover:bg-black enabled:hover:text-white"
               onClick={onClickWithdraw}
               disabled={
                 !withdrawAmount ||

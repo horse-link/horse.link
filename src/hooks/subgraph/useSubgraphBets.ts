@@ -1,45 +1,61 @@
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useBetSlipContext } from "../../providers/BetSlip";
 import {
   BetFilterOptions,
   BetHistory,
   TotalBetsOnPropositions
 } from "../../types/bets";
-import { Aggregator, Bet } from "../../types/subgraph";
-import utils from "../../utils";
+import { Bet } from "../../types/subgraph";
+import useRefetch from "../useRefetch";
 import useSubgraph from "../useSubgraph";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { ApolloClient } from "../../providers/Apollo";
+import utils from "../../utils";
+import constants from "../../constants";
 import { gql } from "@apollo/client";
+import { ApolloClient } from "../../providers/Apollo";
 import api from "../../apis/Api";
 import { ethers } from "ethers";
-import constants from "../../constants";
-import useRefetch from "../useRefetch";
 
 type BetResponse = {
   bets: Bet[];
 };
-type AggregatorResponse = {
-  aggregator: Aggregator;
-};
 
 export const useSubgraphBets = (
-  betFilterOptions: BetFilterOptions,
+  filter: BetFilterOptions,
   marketId?: string,
   owner?: string
 ) => {
   const { shouldRefetch, refetch } = useRefetch();
+  const { current: now } = useRef(Math.floor(Date.now() / 1000));
 
+  // refetch when successful transactions are made
+  const { hashes } = useBetSlipContext();
+  useEffect(() => {
+    if (!hashes?.length) return;
+    refetch();
+  }, [hashes]);
+
+  const [bets, setBets] = useState<Array<BetHistory>>();
   const [skipMultiplier, setSkipMultiplier] = useState(0);
-  const [betData, setBetData] = useState<BetHistory[]>();
+  const userBetsToggled = !!owner;
 
-  // get aggregator data
-  const { data: aggregatorData } = useSubgraph<AggregatorResponse>(
-    utils.queries.getAggregatorQuery()
+  // subgraph query
+  const { data: rawBets } = useSubgraph<BetResponse>(
+    utils.queries.getBetsQueryWithoutPagination(
+      now,
+      {
+        owner: owner?.toLowerCase()
+      },
+      filter
+    )
   );
 
-  const incrementPage = useCallback(() => {
-    if (!aggregatorData) return;
+  // total
+  const totalBets = rawBets?.bets.length;
 
-    const totalBets = +aggregatorData.aggregator.totalBets;
+  // increment skip
+  const incrementPage = () => {
+    if (!totalBets) return;
+
     const nextMulti = skipMultiplier + 1;
 
     if (
@@ -49,79 +65,79 @@ export const useSubgraphBets = (
       return;
 
     setSkipMultiplier(nextMulti);
-  }, [aggregatorData, skipMultiplier, setSkipMultiplier]);
+  };
 
-  const decrementPage = useCallback(() => {
-    if (!aggregatorData) return;
+  // decrement skip
+  const decrementPage = () => {
+    if (!totalBets) return;
 
     const previousMulti = skipMultiplier - 1;
     if (skipMultiplier === 0) return;
 
     setSkipMultiplier(previousMulti);
-  }, [aggregatorData, skipMultiplier, setSkipMultiplier]);
+  };
 
-  // reset page when my bets get toggled
+  // reset page when user's bets toggled
   useEffect(() => {
     setSkipMultiplier(0);
-    setBetData(undefined);
-  }, [owner]);
+    setBets(undefined);
+  }, [userBetsToggled]);
 
-  // get bet data
+  // get bets
   useEffect(() => {
     // https://www.developerway.com/posts/fetching-in-react-lost-promises
     let isActive = true;
 
-    if (!aggregatorData) return;
-    setBetData(undefined);
+    if (!rawBets) return;
+    setBets(undefined);
 
-    const query = gql`
-      ${utils.queries.getBetsQuery(
-        {
-          owner: owner?.toLowerCase(),
-          marketId
-        },
-        betFilterOptions,
-        skipMultiplier
-      )}
-    `;
+    const query = utils.queries.getBetsQuery(
+      now,
+      {
+        owner: owner?.toLowerCase(),
+        marketId
+      },
+      filter,
+      skipMultiplier
+    );
 
+    // query subgraph
     ApolloClient.query<BetResponse>({
-      query
-    }).then(({ data: { bets } }) => {
-      Promise.all(
-        bets.map(async bet => {
+      query: gql(query),
+      fetchPolicy: "network-only"
+    }).then(async ({ data: { bets } }) => {
+      const marketIds = bets.map(bet => bet.marketId);
+      const uniqueMarketIds = [...new Set(marketIds)];
+      const signedDataMap = new Map();
+      await Promise.all(
+        uniqueMarketIds.map(async marketId => {
           const signedData = await api.getWinningResultSignature(
-            utils.formatting.parseBytes16String(bet.marketId)
+            utils.formatting.parseBytes16String(marketId)
           );
-
+          signedDataMap.set(marketId, signedData);
+        })
+      );
+      const signedBets = await Promise.all(
+        bets.map(async bet => {
+          const signedData = signedDataMap.get(bet.marketId);
           return utils.bets.getBetHistory(bet, signedData);
         })
-      ).then(betsWithApiData => {
-        const filteredBets = utils.bets.filterBetsByFilterOptions(
-          betsWithApiData,
-          betFilterOptions
-        );
+      );
 
-        if (isActive) setBetData(filteredBets);
-      });
+      if (isActive) setBets(signedBets);
     });
 
+    // cleanup
     return () => {
       isActive = false;
     };
-  }, [
-    owner,
-    betFilterOptions,
-    marketId,
-    aggregatorData,
-    skipMultiplier,
-    shouldRefetch
-  ]);
+  }, [rawBets, skipMultiplier, filter, marketId, owner, shouldRefetch, now]);
 
+  // total proposition bets
   const totalBetsOnPropositions = useMemo(() => {
-    if (!betData) return;
+    if (!bets) return;
 
-    const totalBets = betData.reduce((prevObject, bet, _, array) => {
+    const totalBets = bets.reduce((prevObject, bet, _, array) => {
       const proposition = utils.formatting.parseBytes16String(
         bet.propositionId
       );
@@ -149,14 +165,15 @@ export const useSubgraphBets = (
     }, {} as TotalBetsOnPropositions);
 
     return totalBets;
-  }, [betData]);
+  }, [bets]);
 
   return {
-    betData,
+    betData: bets,
     totalBetsOnPropositions,
     currentPage: skipMultiplier + 1,
     refetch,
     incrementPage,
-    decrementPage
+    decrementPage,
+    setSkipMultiplier
   };
 };

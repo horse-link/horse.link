@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { NextToJump } from "../../types/meets";
+import { NextToJumpRace } from "../../types/meets";
 import utils from "../../utils";
 import constants from "../../constants";
 
 type Props = {
-  meet: NextToJump;
+  meet: NextToJumpRace;
 };
 
-export const DashboardBannerRow: React.FC<Props> = ({ meet }) => {
+export const HomeBannerRow: React.FC<Props> = ({ meet }) => {
   const [timeString, setTimeString] = useState(
     utils.formatting.formatTimeToHMS(meet.jumperRaceStartTime)
   );
@@ -23,7 +23,7 @@ export const DashboardBannerRow: React.FC<Props> = ({ meet }) => {
 
   return (
     <Link
-      className="flex h-full w-full shrink-0 flex-col p-2 text-center hover:bg-indigo-900 lg:shrink"
+      className="flex h-full w-full shrink-0 flex-col p-2 text-center hover:bg-indigo-700 lg:shrink"
       to={`/races/${meet.meeting.venueCode}/${meet.jumperRaceNumber}`}
     >
       <span className="block">
