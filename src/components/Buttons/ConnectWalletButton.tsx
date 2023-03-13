@@ -1,12 +1,10 @@
 import React from "react";
 import { useAccount, useDisconnect } from "wagmi";
 import { BaseButton } from ".";
+import { useWalletModal } from "../../providers/WalletModal";
 
-type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  openWalletModal: () => void;
-};
-
-export const ConnectWalletButton: React.FC<Props> = ({ openWalletModal }) => {
+export const ConnectWalletButton: React.FC = () => {
+  const { openWalletModal } = useWalletModal();
   const { address, isConnected } = useAccount();
   const { disconnect } = useDisconnect();
 

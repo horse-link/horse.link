@@ -3,14 +3,11 @@ import classnames from "classnames";
 import { Link, useLocation } from "react-router-dom";
 import { Disclosure } from "@headlessui/react";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
-import { ConnectWalletButton } from "./Buttons";
-import { useWalletModal } from "../providers/WalletModal";
 import { NavbarRouting } from "../Routing";
 import { TokenSelector } from "./Navbar/TokenSelector";
 
 export const Navbar: React.FC = () => {
   const { pathname: currentPath } = useLocation();
-  const { openWalletModal } = useWalletModal();
 
   return (
     <Disclosure as="nav" className="border-b border-emerald-200 bg-white">
@@ -56,9 +53,6 @@ export const Navbar: React.FC = () => {
                   )}
                 </Disclosure.Button>
               </div>
-              <div className="hidden sm:flex">
-                <ConnectWalletButton openWalletModal={openWalletModal} />
-              </div>
             </div>
           </div>
 
@@ -87,8 +81,6 @@ export const Navbar: React.FC = () => {
                   </Link>
                 );
               })}
-
-              <ConnectWalletButton openWalletModal={openWalletModal} />
             </div>
           </Disclosure.Panel>
         </React.Fragment>
