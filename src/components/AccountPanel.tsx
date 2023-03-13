@@ -2,14 +2,12 @@ import React from "react";
 import { useAccount, useDisconnect } from "wagmi";
 import utils from "../utils";
 import { BaseButton, ConnectWalletButton } from "./Buttons";
-import { Listbox } from "@headlessui/react";
 import { useTokenContext } from "../providers/Token";
 import ClipLoader from "react-spinners/ClipLoader";
 
 export const AccountPanel: React.FC = () => {
-  const { currentToken, tokensLoading, availableTokens } = useTokenContext();
-  const tokenContextLoading =
-    tokensLoading || !currentToken || !availableTokens;
+  const { currentToken, tokensLoading, openModal } = useTokenContext();
+  const tokenContextLoading = tokensLoading || !currentToken;
 
   const { disconnect } = useDisconnect();
   const account = useAccount();
@@ -28,7 +26,7 @@ export const AccountPanel: React.FC = () => {
       {account.isConnected ? (
         <div className="rounded-b-lg bg-white p-2">
           {tokenContextLoading ? (
-            <div className="flex w-full flex-col items-center">
+            <div className="flex w-full flex-col items-center py-10">
               <ClipLoader />
             </div>
           ) : (
@@ -49,11 +47,25 @@ export const AccountPanel: React.FC = () => {
                   />
                 </div>
                 <div className="w-full px-4 py-2">
-                  <span className="block text-xl font-bold">Token</span>
-                  <Listbox>
-                    <Listbox.Button>{currentToken.name}</Listbox.Button>
-                    <Listbox.Options>help</Listbox.Options>
-                  </Listbox>
+                  <span className="mb-2 block text-xl font-bold">Token</span>
+                  <button
+                    className="flex w-full items-center rounded-md border-2 border-black py-1 px-6 hover:bg-zinc-100"
+                    onClick={openModal}
+                  >
+                    <img
+                      src={currentToken.src}
+                      alt={`${currentToken.symbol} icon`}
+                      className="mr-4 h-[2rem]"
+                    />
+                    <div className="flex flex-col items-start justify-start pt-2">
+                      <span className="block text-lg font-semibold">
+                        {currentToken?.name}
+                      </span>
+                      <span className="relative bottom-2 block text-black/50">
+                        {currentToken.symbol}
+                      </span>
+                    </div>
+                  </button>
                 </div>
               </div>
               <BaseButton onClick={() => disconnect()} title="Disconnect" />
