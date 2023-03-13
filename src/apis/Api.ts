@@ -12,6 +12,7 @@ import { BetHistoryResponse, SignedBetDataResponse } from "../types/bets";
 import { Market, Vault } from "../typechain";
 import { Token } from "graphql";
 import { VaultUserData } from "../types/vaults";
+import { networks } from "../constants/blockchain";
 
 export class Api {
   private client: AxiosInstance;
@@ -219,13 +220,19 @@ export class Api {
   };
 }
 
-/*const api = (chainName: string) {
-  new Api(chainName);
-}*/
-let chainId = window.location.hostname.split(".")[0];
-if (chainId === "localhost") {
-  chainId = "sepolia";
-}
+// Map subdomains to chain names
+type ChainLookup = { [key: string]: string };
+const chainLookup: ChainLookup = {
+  sepolia: "sepolia",
+  tournament: "sepolia",
+  www: "sepolia",
+  alpha: "sepolia",
+  arbitrum: "arbitrum",
+  goerli: "goerli"
+};
+let subDomain = window.location.hostname.split(".")[0];
+let chainName = chainLookup[subDomain] || "sepolia";
+let chainId = networks[chainName].id.toString();
 
 console.log("Using chain: ", chainId);
 const api = new Api(chainId);
