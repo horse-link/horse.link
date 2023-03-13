@@ -1,43 +1,45 @@
 import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
+import duration from "dayjs/plugin/duration";
 import classNames from "classnames";
-import { getDurationSplits } from "../utils/time";
-import { ONE_SECOND_MS } from "../constants/time";
+import utils from "../utils";
+import constants from "../constants";
+
+dayjs.extend(duration);
 
 type Props = {
   large?: boolean;
   containerStyles?: string;
-  setIsBefore: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowLeaderboard: (show: boolean) => void;
 };
 
 export const Countdown: React.FC<Props> = ({
   large,
   containerStyles,
-  setIsBefore
+  setShowLeaderboard
 }) => {
-  //FIRST NEED TO DEFINE NOW VIA TIMESTAMP
   const [now, setNow] = useState(Date.now());
 
-  // will be either 0 or a timestamp, if 0 we want to return null in our return statement
-  const eventTimestamp = +(process.env.VITE_EVENT_TS || "0");
+  const eventTimestamp = +(constants.env.EVENT_TS || "0");
+  const isEventInFuture = dayjs(now).isBefore(dayjs(eventTimestamp));
 
-  //time until event in seconds
-  const timeUntilEvent = dayjs.unix(eventTimestamp).diff(now, "seconds");
+  const timeUntilEvent = dayjs.duration(
+    +dayjs(now).diff(dayjs(eventTimestamp)) * -1
+  );
+  const { days, hours, minutes, seconds } =
+    utils.time.getDurationSplits(timeUntilEvent);
 
-  //time split into days, hours, minutes, time
-  const { days, hours, minutes, seconds } = getDurationSplits(timeUntilEvent);
-
-  // countdown
   useEffect(() => {
-    const interval = setInterval(() => {
-      setNow(Date.now());
-      setIsBefore(dayjs(Date.now()).isBefore(dayjs.unix(eventTimestamp)));
-    }, 1 * ONE_SECOND_MS);
+    const interval = setInterval(
+      () => setNow(Date.now()),
+      1 * constants.time.ONE_SECOND_MS
+    );
 
-    // cleanup
     return () => clearInterval(interval);
   }, []);
-  return !eventTimestamp ? null : (
+  setShowLeaderboard(!isEventInFuture);
+
+  return !eventTimestamp || !isEventInFuture ? null : (
     <div
       className={classNames(
         "mt-8 flex w-full flex-col items-center justify-center",
@@ -48,8 +50,8 @@ export const Countdown: React.FC<Props> = ({
     >
       <p
         className={classNames("text-xl font-bold", {
-          "mb-4 text-xl": !large,
-          "mb-8 text-xl lg:text-7xl": large
+          "mb-4": !large,
+          "mb-8 lg:text-7xl": large
         })}
       >
         Tournament Jumps In:
