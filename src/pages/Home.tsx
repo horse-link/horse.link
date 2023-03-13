@@ -75,11 +75,13 @@ const Home: React.FC = () => {
       <HomeNextToJumpBanner />
       <div className="grid gap-6">
         <div className="my-4 flex w-full lg:w-auto">
-          <img
-            src="images/Logo.png"
-            alt="Logo"
-            className="-my-16 block w-full drop-shadow-xl lg:-my-20 lg:w-1/3"
-          />
+          <div className="w-full rounded-xl bg-white p-2 shadow-xl lg:w-1/3">
+            <img
+              src="images/Logo.png"
+              alt="Logo"
+              className="-my-10 block w-full lg:-my-[5.25rem]"
+            />
+          </div>
         </div>
         {myPlayEnabled ? <HomeUserStats /> : <HomeOverallStats />}
         <div className="flex w-full justify-between gap-x-3 md:justify-end">

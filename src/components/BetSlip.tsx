@@ -87,7 +87,7 @@ export const BetSlip: React.FC = () => {
   }, [bets, config, signer]);
 
   return (
-    <div className="mt-6 w-full shadow-lg lg:sticky lg:top-4 lg:mx-4 lg:mt-0">
+    <div className="mt-6 w-full shadow-lg lg:mx-4">
       <h2 className="w-full rounded-t-lg bg-indigo-600 p-6 text-center text-3xl font-bold text-white">
         Bet Slip
       </h2>
