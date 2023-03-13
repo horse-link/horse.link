@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
 import { useAccount, useConnect, useNetwork, useSwitchNetwork } from "wagmi";
-import { MetaMaskIcon, WalletConnectIcon } from "../../icons";
 import { BaseModal } from ".";
 import constants from "../../constants";
+import utils from "../../utils";
+import classNames from "classnames";
 
 type Props = {
   isModalOpen: boolean;
@@ -29,6 +30,13 @@ export const WalletModal: React.FC<Props> = (props: Props) => {
     }
   }, [isConnected, currentChain, switchNetwork]);
 
+  const connectorsWithIcons = connectors.map(connector => ({
+    connector,
+    icon: utils.images.getConnectorIcon(connector.name)
+  }));
+  // TODO: make this have some cool handling
+  if (!connectorsWithIcons.length) console.error("No connectors");
+
   return (
     <BaseModal isOpen={isModalOpen} onClose={closeWalletModal}>
       <div className="text-center">
@@ -39,40 +47,47 @@ export const WalletModal: React.FC<Props> = (props: Props) => {
               Please connect to Goerli to use Horse Link
             </span>
           )}
-        <div>
-          <label
-            className="flex cursor-pointer justify-center"
-            onClick={e => {
-              e.preventDefault();
-              connect({ connector: connectors[0] });
-            }}
-          >
-            <MetaMaskIcon
-              title="meta-mask-icon"
-              className="h-20 w-20 opacity-100 transition-opacity duration-500 ease-out hover:opacity-40"
-            />
-          </label>
-          <div className="font-bold">METAMASK</div>
-          <div>Connect using your browser.</div>
-        </div>
 
-        <div className="mb-3 border-0 border-b border-solid py-4"></div>
-        <div>
-          <label
-            className="flex cursor-pointer justify-center"
-            onClick={e => {
-              e.preventDefault();
-              connect({ connector: connectors[1] });
-            }}
-          >
-            <WalletConnectIcon
-              title="wallet-connect-icon"
-              className="h-20 w-20 opacity-100 transition-opacity duration-500 ease-out hover:opacity-40"
-            />
-          </label>
-          <div className="font-bold">WALLET CONNECT</div>
-          <div>Connect using your mobile device.</div>
-        </div>
+        {connectorsWithIcons.map(({ connector, icon }, index, array) => {
+          // react components must be upper case :/
+          const Icon = icon;
+          if (!Icon)
+            throw new Error(
+              `Could not find icon for connector ${connector.name}`
+            );
+
+          const isLastElement = array.length - 1 === index;
+
+          return (
+            <React.Fragment>
+              <div>
+                <label
+                  className="flex cursor-pointer justify-center"
+                  onClick={e => {
+                    e.preventDefault();
+                    connect({ connector });
+                  }}
+                >
+                  <Icon
+                    title={`${connector.name}-icon`}
+                    className="h-20 w-20 opacity-100 transition-opacity duration-500 ease-out hover:opacity-40"
+                  />
+                </label>
+                <div className="font-bold">{connector.name.toUpperCase()}</div>
+                <div>Connect using your browser.</div>
+              </div>
+
+              <div
+                className={classNames(
+                  "mb-3 border-0 border-b border-solid py-4",
+                  {
+                    hidden: isLastElement
+                  }
+                )}
+              ></div>
+            </React.Fragment>
+          );
+        })}
       </div>
     </BaseModal>
   );

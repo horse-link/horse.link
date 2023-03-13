@@ -46,7 +46,7 @@ export const TokenContextProvider: React.FC<{ children: React.ReactNode }> = ({
       address: t.address,
       symbol: t.symbol,
       decimals: t.decimals.toString(),
-      src: utils.images.getImageFromSymbol(t.symbol),
+      src: utils.images.getCryptoIcon(t.symbol),
       name: t.name
     }));
 
