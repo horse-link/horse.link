@@ -59,8 +59,8 @@ export const WalletModal: React.FC<Props> = (props: Props) => {
           const isLastElement = array.length - 1 === index;
 
           return (
-            <React.Fragment>
-              <div className="w-full">
+            <React.Fragment key={connector.id}>
+              <div className="w-full" key={connector.id}>
                 <label
                   className="flex cursor-pointer justify-center"
                   onClick={e => {

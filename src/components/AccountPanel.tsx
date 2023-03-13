@@ -1,16 +1,38 @@
-import React from "react";
-import { useAccount, useDisconnect } from "wagmi";
+import React, { useEffect, useState } from "react";
+import { useAccount, useDisconnect, useSigner } from "wagmi";
 import utils from "../utils";
 import { BaseButton, ConnectWalletButton } from "./Buttons";
 import { useTokenContext } from "../providers/Token";
 import ClipLoader from "react-spinners/ClipLoader";
+import { UserBalance } from "../types/users";
+import { useERC20Contract } from "../hooks/contracts";
+import { ethers } from "ethers";
 
 export const AccountPanel: React.FC = () => {
   const { currentToken, tokensLoading, openModal } = useTokenContext();
-  const tokenContextLoading = tokensLoading || !currentToken;
 
   const { disconnect } = useDisconnect();
   const account = useAccount();
+  const { data: signer } = useSigner();
+  const { getBalance } = useERC20Contract();
+  const [userBalance, setUserBalance] = useState<UserBalance>();
+
+  useEffect(() => {
+    if (!currentToken || !signer) return;
+
+    setUserBalance(undefined);
+    getBalance(currentToken.address, signer).then(balance =>
+      setUserBalance({
+        value: balance,
+        decimals: +currentToken.decimals,
+        formatted: utils.formatting.formatToFourDecimals(
+          ethers.utils.formatUnits(balance, currentToken.decimals)
+        )
+      })
+    );
+  }, [currentToken, signer]);
+
+  const panelLoading = tokensLoading || !currentToken || !userBalance;
 
   const Image = utils.images.getConnectorIcon(account.connector?.name || "");
   if (!Image)
@@ -25,7 +47,7 @@ export const AccountPanel: React.FC = () => {
       </h2>
       {account.isConnected ? (
         <div className="rounded-b-lg bg-white p-2">
-          {tokenContextLoading ? (
+          {panelLoading ? (
             <div className="flex w-full flex-col items-center py-10">
               <ClipLoader />
             </div>
@@ -36,7 +58,7 @@ export const AccountPanel: React.FC = () => {
                   <span className="block text-xl font-bold">Wallet</span>
                   <div className="flex w-full items-center gap-x-4">
                     <Image className="mx-4 my-6 scale-[2]" />
-                    <div className="text-ellipsis font-semibold">
+                    <div className="truncate text-ellipsis font-semibold">
                       {account.address}
                     </div>
                   </div>
@@ -59,13 +81,19 @@ export const AccountPanel: React.FC = () => {
                     />
                     <div className="flex flex-col items-start justify-start pt-2">
                       <span className="block text-lg font-semibold">
-                        {currentToken?.name}
+                        {currentToken.name}
                       </span>
                       <span className="relative bottom-2 block text-black/50">
                         {currentToken.symbol}
                       </span>
                     </div>
                   </button>
+                </div>
+                <div className="mb-4 w-full px-4 py-2">
+                  <span className="mb-2 block text-xl font-bold">Balance</span>
+                  <span className="block text-xl font-semibold">
+                    {userBalance.formatted} {currentToken.symbol}
+                  </span>
                 </div>
               </div>
               <BaseButton onClick={() => disconnect()} title="Disconnect" />
