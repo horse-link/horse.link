@@ -11,6 +11,7 @@ import * as tables from "./tables";
 import * as images from "./images";
 import * as types from "./types";
 import * as errors from "./errors";
+import * as time from "./time";
 
 const utils = {
   general,
@@ -25,7 +26,8 @@ const utils = {
   tables,
   images,
   types,
-  errors
+  errors,
+  time
 };
 
 export default utils;
