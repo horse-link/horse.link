@@ -28,7 +28,8 @@ export default ({ mode }: UserConfig) => {
         VITE_ALCHEMY_API_KEY: "mock_key",
         VITE_SCANNER_URL: "https://goerli.etherscan.io",
         VITE_API_URL: "/",
-        VITE_WALLET_NAV_ACTIVE: "true"
+        VITE_WALLET_NAV_ACTIVE: "true",
+        VITE_EVENT_TS: "1679269426000"
       }
     },
     build: {
