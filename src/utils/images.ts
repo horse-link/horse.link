@@ -1,15 +1,13 @@
-import * as Icons from "../icons";
+import { CRYPTO_ICONS, SVG_ICONS } from "../icons";
 
-export const getImageFromSymbol = (symbol: string) => {
-  if (!Object.keys(Icons).includes(symbol)) return;
+export const getCryptoIcon = (symbol: string) =>
+  CRYPTO_ICONS[symbol.toUpperCase()];
 
-  const icons = Object.entries(Icons).reduce(
-    (prev, [key, value]) => ({
-      ...prev,
-      [key as string]: value as string
-    }),
-    {} as Record<string, string>
+export const getConnectorIcon = (name: string) => {
+  const matchingKey = Object.keys(SVG_ICONS).find(key =>
+    key.toLowerCase().includes(name.toLowerCase())
   );
+  if (!matchingKey) return;
 
-  return icons[symbol.toUpperCase()];
+  return SVG_ICONS[matchingKey];
 };

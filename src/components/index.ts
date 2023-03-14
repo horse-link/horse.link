@@ -5,3 +5,4 @@ export * from "./Loader";
 export * from "./Card";
 export * from "./BetSlip";
 export * from "./AddressLink";
+export * from "./AccountPanel";

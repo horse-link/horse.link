@@ -3,14 +3,10 @@ import classnames from "classnames";
 import { Link, useLocation } from "react-router-dom";
 import { Disclosure } from "@headlessui/react";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
-import { ConnectWalletButton } from "./Buttons";
-import { useWalletModal } from "../providers/WalletModal";
 import { NavbarRouting } from "../Routing";
-import { TokenSelector } from "./Navbar/TokenSelector";
 
 export const Navbar: React.FC = () => {
   const { pathname: currentPath } = useLocation();
-  const { openWalletModal } = useWalletModal();
 
   return (
     <Disclosure as="nav" className="border-b border-emerald-200 bg-white">
@@ -20,7 +16,6 @@ export const Navbar: React.FC = () => {
             <div className="flex h-16 justify-between">
               <div className="flex">
                 <div className="hidden sm:-my-px sm:flex sm:space-x-8">
-                  <TokenSelector />
                   {NavbarRouting.map(item => {
                     const active = item.path === currentPath;
 
@@ -56,15 +51,11 @@ export const Navbar: React.FC = () => {
                   )}
                 </Disclosure.Button>
               </div>
-              <div className="hidden sm:flex">
-                <ConnectWalletButton openWalletModal={openWalletModal} />
-              </div>
             </div>
           </div>
 
           <Disclosure.Panel className="sm:hidden">
             <div className="space-y-1 pt-2 pb-3">
-              <TokenSelector />
               {NavbarRouting.map(item => {
                 const active = item.path === currentPath;
 
@@ -87,8 +78,6 @@ export const Navbar: React.FC = () => {
                   </Link>
                 );
               })}
-
-              <ConnectWalletButton openWalletModal={openWalletModal} />
             </div>
           </Disclosure.Panel>
         </React.Fragment>
