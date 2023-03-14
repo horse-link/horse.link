@@ -185,18 +185,22 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
       // place bet
       let tx,
         error: string | undefined = undefined;
-      tx = await placeBet(
-        bet.market,
-        bet.back,
-        BigNumber.from(bet.wager),
-        signer
-      ).catch(err => (error = err));
+      try {
+        tx = await placeBet(
+          bet.market,
+          bet.back,
+          BigNumber.from(bet.wager),
+          signer
+        );
+      } catch (err: any) {
+        error = err as string;
+      }
 
       // set error
-      setErrors(error);
+      setErrors(error ? [error] : undefined);
 
       // set hash
-      setHashes(tx);
+      setHashes(tx ? [tx] : undefined);
 
       // stop loading
       setTxLoading(false);
