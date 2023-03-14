@@ -24,4 +24,4 @@ export type SvgIcon = React.FunctionComponent<
   }
 >;
 
-export type Network = Chain & { unsupported?: boolean | undefined };
+export type Network = Chain & { unsupported?: boolean };
