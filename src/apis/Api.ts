@@ -12,11 +12,13 @@ import { BetHistoryResponse, SignedBetDataResponse } from "../types/bets";
 import { Market, Vault } from "../typechain";
 import { Token } from "graphql";
 import { VaultUserData } from "../types/vaults";
+import { Network } from "../types/general";
 
 export class Api {
   private client: AxiosInstance;
-  constructor() {
-    this.client = utils.general.getAxiosClient();
+
+  constructor(network?: Network) {
+    this.client = utils.general.getAxiosClient(network);
   }
 
   public getConfig = async (): Promise<Config> => {
@@ -185,7 +187,3 @@ export class Api {
     return data;
   };
 }
-
-const api = new Api();
-
-export default api;

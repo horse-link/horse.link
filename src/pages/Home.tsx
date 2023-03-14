@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import { useAccount } from "wagmi";
-import api from "../apis/Api";
 import { Toggle, PageLayout } from "../components";
 import {
   HomeOverallStats,
@@ -13,6 +12,7 @@ import { HomeTable } from "../components/Tables";
 import { useWalletModal } from "../providers/WalletModal";
 import { SignedMeetingsResponse, MeetFilters, Meet } from "../types/meets";
 import constants from "../constants";
+import { useApi } from "../providers/Api";
 
 const Home: React.FC = () => {
   const [response, setResponse] = useState<SignedMeetingsResponse>();
@@ -21,6 +21,8 @@ const Home: React.FC = () => {
   const [meetsFilter, setMeetsFilter] = useState<MeetFilters>("ALL");
   const { openWalletModal } = useWalletModal();
   const { isConnected } = useAccount();
+
+  const api = useApi();
 
   useEffect(() => {
     (async () => {

@@ -1,3 +1,5 @@
+import { Chain } from "wagmi";
+
 export type EcSignature = {
   v: number;
   r: string;
@@ -21,3 +23,5 @@ export type SvgIcon = React.FunctionComponent<
     title?: string | undefined;
   }
 >;
+
+export type Network = Chain & { unsupported?: boolean | undefined };

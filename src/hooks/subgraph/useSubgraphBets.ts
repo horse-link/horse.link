@@ -12,8 +12,8 @@ import utils from "../../utils";
 import constants from "../../constants";
 import { gql } from "@apollo/client";
 import { ApolloClient } from "../../providers/Apollo";
-import api from "../../apis/Api";
 import { ethers } from "ethers";
+import { useApi } from "../../providers/Api";
 
 type BetResponse = {
   bets: Bet[];
@@ -26,6 +26,8 @@ export const useSubgraphBets = (
 ) => {
   const { shouldRefetch, refetch } = useRefetch();
   const { current: now } = useRef(Math.floor(Date.now() / 1000));
+
+  const api = useApi();
 
   // refetch when successful transactions are made
   const { hashes } = useBetSlipContext();
