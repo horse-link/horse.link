@@ -4,7 +4,6 @@ import { Bet } from "../../types/subgraph";
 import utils from "../../utils";
 import useSubgraph from "../useSubgraph";
 import { BigNumber, ethers } from "ethers";
-import { TWENTY_FOUR_HOURS_S } from "../../constants/time";
 import { ERC20__factory } from "../../typechain";
 import { useAccount, useProvider } from "wagmi";
 import {
