@@ -7,11 +7,11 @@ import { AddressLink } from "../AddressLink";
 import { ClaimTokensButton } from "../Buttons";
 import { useAccount } from "wagmi";
 import { useWalletModal } from "../../providers/WalletModal";
-import api from "../../apis/Api";
 import { BaseTable } from "./BaseTable";
 import utils from "../../utils";
 import { ethers } from "ethers";
 import { FaucetBalance } from "../../types/faucet";
+import { useApi } from "../../providers/Api";
 
 type Props = {
   balances?: Array<FaucetBalance>;
@@ -27,6 +27,8 @@ export const FaucetTable: React.FC<Props> = ({
   const config = useConfig();
   const { address } = useAccount();
   const { openWalletModal } = useWalletModal();
+
+  const api = useApi();
 
   const claim = async (tokenAddress: string) => {
     if (!address) return openWalletModal();
