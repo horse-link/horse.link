@@ -55,7 +55,15 @@ export const TokenContextProvider: React.FC<{ children: React.ReactNode }> = ({
     // load from local storage
     const localToken = localStorage.getItem(LOCAL_STORAGE_KEY);
     let defaultToken = tokens.find(t => t.symbol.toLowerCase() === "hl");
-    if (!!localToken) defaultToken = JSON.parse(localToken);
+    if (!!localToken) {
+      const parsedToken = JSON.parse(localToken) as Token;
+
+      // check if network switched
+      const networkCheck = tokens.find(
+        t => t.address.toLowerCase() === parsedToken.address.toLowerCase()
+      );
+      if (!!networkCheck) defaultToken = parsedToken;
+    }
 
     setAvailableTokens(tokens);
     setCurrentToken(defaultToken);

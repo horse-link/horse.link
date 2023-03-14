@@ -71,7 +71,7 @@ export const AccountPanel: React.FC = () => {
                         <p key={chain.id} className="whitespace-nowrap">
                           <button
                             onClick={() => switchNetwork?.(chain.id)}
-                            className="w-full py-2 px-6 hover:bg-gray-100"
+                            className="w-full rounded-md py-2 px-6 hover:bg-gray-100"
                           >
                             {chain.name}
                           </button>

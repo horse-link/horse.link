@@ -14,7 +14,7 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     api.getConfig().then(setConfig);
-  }, []);
+  }, [api]);
 
   return (
     <ConfigContext.Provider value={config}>{children}</ConfigContext.Provider>
