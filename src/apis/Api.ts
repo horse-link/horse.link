@@ -1,4 +1,4 @@
-import { AxiosInstance } from "axios";
+import axios, { AxiosInstance } from "axios";
 import { ethers } from "ethers";
 import utils from "../utils";
 import { Config } from "../types/config";
@@ -13,13 +13,23 @@ import { Market, Vault } from "../typechain";
 import { Token } from "graphql";
 import { VaultUserData } from "../types/vaults";
 import { Network } from "../types/general";
+import constants from "../constants";
 
 export class Api {
-  private client: AxiosInstance;
+  public client: AxiosInstance;
 
-  constructor(network?: Network) {
-    this.client = utils.general.getAxiosClient(network);
+  constructor(network: Network) {
+    this.client = this.createAxiosClient(network);
   }
+
+  private createAxiosClient = (network: Network) =>
+    axios.create({
+      baseURL: constants.env.API_URL,
+      headers: {
+        Accept: "application/json",
+        "chain-id": network.id
+      }
+    });
 
   public getConfig = async (): Promise<Config> => {
     const { data } = await this.client.get<Config>("/config");

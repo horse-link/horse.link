@@ -1,14 +1,11 @@
 import swr from "swr";
 import utils from "../utils";
 import constants from "../constants";
-import { useNetwork } from "wagmi";
+import { useApi } from "../providers/Api";
 
 const useSwr = <T>(url: string, interval = constants.time.ONE_SECOND_MS) => {
-  const { chain: network } = useNetwork();
-  const isOurApi = url.startsWith("/");
-
-  const client = utils.general.getAxiosClient(isOurApi ? network : undefined);
-  const fetcher = utils.general.getAxiosFetcher(client);
+  const api = useApi();
+  const fetcher = utils.general.getAxiosFetcher(api.client);
 
   const { data, error } = swr<T>(url, fetcher, {
     // refresh data interval
