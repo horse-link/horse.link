@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { useAccount, useConnect, useNetwork, useSwitchNetwork } from "wagmi";
+import React from "react";
+import { useAccount, useConnect, useNetwork } from "wagmi";
 import { BaseModal } from ".";
 import constants from "../../constants";
 import utils from "../../utils";
@@ -15,20 +15,6 @@ export const WalletModal: React.FC<Props> = (props: Props) => {
   const { isConnected } = useAccount();
   const { connect, connectors } = useConnect();
   const { chain: currentChain } = useNetwork();
-  const { switchNetwork } = useSwitchNetwork();
-
-  useEffect(() => {
-    if (!isConnected || !currentChain || !switchNetwork) return;
-
-    if (
-      currentChain.name.toLowerCase() !==
-      constants.blockchain.GOERLI_NETWORK.name.toLowerCase()
-    ) {
-      switchNetwork(constants.blockchain.GOERLI_NETWORK.id);
-    } else {
-      closeWalletModal();
-    }
-  }, [isConnected, currentChain, switchNetwork]);
 
   const connectorsWithIcons = connectors.map(connector => ({
     connector,
