@@ -68,14 +68,18 @@ export const AccountPanel: React.FC = () => {
                   >
                     <Listbox.Options className="absolute mt-12 mr-20 w-fit rounded-md bg-white p-2 font-semibold text-black shadow-xl">
                       {chains.map(chain => (
-                        <p key={chain.id} className="whitespace-nowrap">
+                        <Listbox.Option
+                          key={chain.id}
+                          value={chain.id}
+                          className="whitespace-nowrap"
+                        >
                           <button
                             onClick={() => switchNetwork?.(chain.id)}
                             className="w-full rounded-md py-2 px-6 hover:bg-gray-100"
                           >
                             {chain.name}
                           </button>
-                        </p>
+                        </Listbox.Option>
                       ))}
                     </Listbox.Options>
                   </Transition>
