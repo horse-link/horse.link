@@ -10,6 +10,7 @@ import {
   LeaderboardBalance,
   LeaderboardUserBalance
 } from "../../types/leaderboard";
+import { ONE_SECOND_MS } from "../../constants/time";
 
 type Response = {
   bets: Array<Bet>;
@@ -32,7 +33,7 @@ export const useLeaderboardStatistics = () => {
     utils.queries.getBetsQueryWithoutPagination(now, {
       assetAddress: hlToken?.address.toLowerCase(),
       settled: true,
-      createdAt_gte: Math.floor(+process.env.VITE_EVENT_TS! / 1000)
+      createdAt_gte: Math.floor(+process.env.VITE_EVENT_TS! / ONE_SECOND_MS)
     })
   );
 
