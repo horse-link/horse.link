@@ -22,29 +22,34 @@ export const VaultListTable: React.FC<Props> = ({ config, setIsModalOpen }) => {
   const { openWalletModal } = useWalletModal();
   const { data: signer } = useSigner();
   const [shares, setShares] = useState<Record<`0x${string}`, BigNumber>>();
-  // const [assets, setassets] = useState<Record<string, BigNumber>>();
+  const [assets, setAssets] = useState<Record<`0x${string}`, BigNumber>>();
   //const [percentage, setPercentage] = useState<Record<string, BigNumber>>();
 
-  const { getIndividualShareTotal } = useVaultContract();
+  const { getIndividualShareTotal, getIndividualAssetTotal } =
+    useVaultContract();
 
   useEffect(() => {
     if (!isConnected || !config || !signer) return;
     (async () => {
-      const record: Record<`0x${string}`, BigNumber> = {};
+      const shareRecord: Record<`0x${string}`, BigNumber> = {};
+      const assetRecord: Record<`0x${string}`, BigNumber> = {};
 
       await Promise.all(
         config.vaults.map(async (vault: VaultInfo) => {
           const shareTotal = await getIndividualShareTotal(vault, signer);
           const vaultAddress = vault.address;
-          record[vaultAddress] = shareTotal;
+          const assetTotal = await getIndividualAssetTotal(vault, signer);
+          shareRecord[vaultAddress] = shareTotal;
+          assetRecord[vaultAddress] = assetTotal;
         })
       );
 
-      setShares(record);
+      setShares(shareRecord);
+      setAssets(assetRecord);
     })();
-  }, []);
+  }, [config, isConnected]);
   const getVaultListData = (vault: VaultInfo): TableData[] => {
-    return shares
+    return shares && assets
       ? [
           {
             title: vault.name,
@@ -62,6 +67,14 @@ export const VaultListTable: React.FC<Props> = ({ config, setIsModalOpen }) => {
             title: `${utils.formatting.formatToFourDecimals(
               ethers.utils.formatUnits(
                 shares[vault.address],
+                vault.asset.decimals
+              )
+            )}`
+          },
+          {
+            title: `${utils.formatting.formatToFourDecimals(
+              ethers.utils.formatUnits(
+                assets[vault.address],
                 vault.asset.decimals
               )
             )}`
@@ -171,6 +184,9 @@ export const VaultListTable: React.FC<Props> = ({ config, setIsModalOpen }) => {
     },
     {
       title: "My Shares"
+    },
+    {
+      title: "My Value"
     },
     {
       title: "Vault Address"
