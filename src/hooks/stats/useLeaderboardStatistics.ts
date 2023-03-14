@@ -27,7 +27,6 @@ export const useLeaderboardStatistics = () => {
   const hlToken = config?.tokens.find(t => t.symbol.toLowerCase() === "hl");
 
   const { current: now } = useRef(Math.floor(Date.now() / 1000));
-  //const { current: oneWeekAgo } = useRef(now - TWENTY_FOUR_HOURS_S * 7);
 
   // get bets that were made with horse link token and have been settled, within the last week
   const { data, loading } = useSubgraph<Response>(
