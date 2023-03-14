@@ -7,10 +7,12 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { UserBalance } from "../types/users";
 import { useERC20Contract } from "../hooks/contracts";
 import { ethers } from "ethers";
+import { useWalletModal } from "../providers/WalletModal";
 
 export const AccountPanel: React.FC = () => {
   const { currentToken, tokensLoading, openModal } = useTokenContext();
 
+  const { openWalletModal } = useWalletModal();
   const { disconnect } = useDisconnect();
   const account = useAccount();
   const { data: signer } = useSigner();
@@ -66,6 +68,7 @@ export const AccountPanel: React.FC = () => {
                     className="mr-4 w-full rounded-md border-2 border-black px-4 py-2 !font-bold text-black transition-colors duration-100 enabled:hover:bg-black enabled:hover:text-white"
                     baseStyleOverride
                     title="CHANGE"
+                    onClick={openWalletModal}
                   />
                 </div>
                 <div className="w-full px-4 py-2">
