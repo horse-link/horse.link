@@ -26,6 +26,6 @@ it("Should show wallet connect modal when click Connect Wallet button", async ()
 
   const metamaskElement = await screen.findByText("METAMASK");
   expect(metamaskElement).toBeDefined();
-  const walletConnectElement = await screen.findByText("WALLET CONNECT");
+  const walletConnectElement = await screen.findByText("WALLETCONNECT");
   expect(walletConnectElement).toBeDefined();
 });

@@ -15,3 +15,9 @@ export type Signature = {
   messageHash: string;
   signature: string;
 };
+
+export type SvgIcon = React.FunctionComponent<
+  React.SVGProps<SVGSVGElement> & {
+    title?: string | undefined;
+  }
+>;
