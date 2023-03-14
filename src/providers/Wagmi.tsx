@@ -6,7 +6,7 @@ import { alchemyProvider } from "wagmi/providers/alchemy";
 import constants from "../constants";
 
 const { chains, provider, webSocketProvider } = configureChains(
-  [chain.goerli, chain.sepolia, chain.arbitrum],
+  [chain.goerli, chain.sepolia],
   [
     alchemyProvider({
       apiKey: constants.env.ALCHEMY_KEY
