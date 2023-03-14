@@ -90,8 +90,10 @@ export const useMarketContract = () => {
           )
           .map(d => ({
             ...d.back,
-            propositionId: d.back.proposition_id,
-            marketId: d.back.market_id,
+            propositionId: utils.formatting.formatBytes16String(
+              d.back.proposition_id
+            ),
+            marketId: utils.formatting.formatBytes16String(d.back.market_id),
             wager: d.wager
           }));
 
