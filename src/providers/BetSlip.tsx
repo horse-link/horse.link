@@ -146,7 +146,7 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
         bets.map(bet => ({
           market: bet.market,
           back: bet.back,
-          wager: BigNumber.from(bet.wager)
+          wager: bet.wager
         }))
       ))
     ]);

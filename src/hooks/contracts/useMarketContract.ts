@@ -17,7 +17,7 @@ export const useMarketContract = () => {
     data: Array<{
       back: Back;
       market: MarketInfo;
-      wager: BigNumber;
+      wager: string;
     }>,
     skipAllowanceCheck?: boolean
   ) => {
@@ -29,9 +29,15 @@ export const useMarketContract = () => {
       const assetAddresses = await Promise.all(
         data.map(async d => {
           const vault = Vault__factory.connect(d.market.vaultAddress, signer);
+          const [assetAddress, decimals] = await Promise.all([
+            vault.asset(),
+            vault.decimals()
+          ]);
+
           return {
             marketAddress: d.market.address,
-            assetAddress: await vault.asset()
+            assetAddress,
+            decimals
           };
         })
       );
@@ -39,12 +45,13 @@ export const useMarketContract = () => {
 
       // get allowances
       const allowances = await Promise.all(
-        assetSet.map(async ({ assetAddress, marketAddress }) => {
+        assetSet.map(async ({ assetAddress, marketAddress, decimals }) => {
           const contract = ERC20__factory.connect(assetAddress, signer);
           return {
             marketAddress,
             assetAddress,
-            allowance: await contract.allowance(userAddress, marketAddress)
+            allowance: await contract.allowance(userAddress, marketAddress),
+            decimals
           };
         })
       );
@@ -60,14 +67,20 @@ export const useMarketContract = () => {
       ];
 
       // find which need to be increased
-      const toProcess = allowances.filter(({ marketAddress, allowance }) => {
-        const matchingWager = wagers.find(
-          w => w.marketAddress.toLowerCase() === marketAddress.toLowerCase()
-        );
-        if (!matchingWager) return false;
+      const toProcess = allowances.filter(
+        ({ marketAddress, allowance, decimals }) => {
+          const matchingWager = wagers.find(
+            w => w.marketAddress.toLowerCase() === marketAddress.toLowerCase()
+          );
+          if (!matchingWager) return false;
+          const wagerBn = ethers.utils.parseUnits(
+            matchingWager.wager,
+            decimals
+          );
 
-        return matchingWager.wager.lt(allowance);
-      });
+          return wagerBn.lt(allowance);
+        }
+      );
 
       // trigger allowances
       await Promise.all(
@@ -84,6 +97,9 @@ export const useMarketContract = () => {
     const receipts = await Promise.all(
       markets.map(async m => {
         const contract = Market__factory.connect(m.address, signer);
+        const vault = Vault__factory.connect(m.vaultAddress, signer);
+        const decimals = await vault.decimals();
+
         const backs = data
           .filter(
             d => d.market.address.toLowerCase() === m.address.toLowerCase()
@@ -94,7 +110,7 @@ export const useMarketContract = () => {
               d.back.proposition_id
             ),
             marketId: utils.formatting.formatBytes16String(d.back.market_id),
-            wager: d.wager
+            wager: ethers.utils.parseUnits(d.wager, decimals)
           }));
 
         return (await contract.multiBack(backs)).wait();
