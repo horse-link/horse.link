@@ -193,7 +193,7 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
       ).catch(err => (error = err));
 
       // set error
-      setErrors(errors);
+      setErrors(error);
 
       // set hash
       setHashes(tx);
