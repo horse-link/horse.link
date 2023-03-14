@@ -10,14 +10,12 @@ import {
 import { BetSlipContextType, BetSlipEntry, BetEntry } from "../types/context";
 import { useMarketContract } from "../hooks/contracts";
 import { useSigner } from "wagmi";
-import { ethers } from "ethers";
-import utils from "../utils";
 import { useConfig } from "./Config";
 import dayjs from "dayjs";
 import isYesterday from "dayjs/plugin/isYesterday";
 import { BetSlipTxModal } from "../components/Modals";
-import { Config } from "../types/config";
-import { ERC20__factory, Market__factory, Vault__factory } from "../typechain";
+import { BigNumber } from "ethers";
+import utils from "../utils";
 
 dayjs.extend(isYesterday);
 
@@ -38,7 +36,7 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
   children
 }) => {
   const { data: signer } = useSigner();
-  const { placeBet } = useMarketContract();
+  const { placeBet, placeMultipleBets } = useMarketContract();
   const config = useConfig();
 
   const [bets, setBets] = useState<BetSlipEntry[]>();
@@ -133,44 +131,6 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
     [bets]
   );
 
-  const placeBets = async (
-    bets: BetSlipEntry[] | BetEntry[],
-    signer: ethers.Signer,
-    config: Config,
-    skipAllowanceCheck: boolean
-  ) => {
-    const raw = await Promise.allSettled(
-      bets.map(bet => {
-        const vault = utils.config.getVaultFromMarket(bet.market, config);
-        if (!vault)
-          throw new Error(
-            `Could not find vault associated with market, ${bet.market.address}`
-          );
-        const formattedWager = ethers.utils.formatUnits(
-          bet.wager,
-          vault.asset.decimals
-        );
-
-        return placeBet(
-          bet.market,
-          bet.back,
-          // parse wager into BigNumber
-          ethers.utils.parseUnits(formattedWager, vault.asset.decimals),
-          signer,
-          skipAllowanceCheck
-        );
-      })
-    );
-
-    // extract hashes and errors
-    const txs = raw.filter(utils.types.isFulfilled).map(r => r.value);
-    const errors = raw
-      .filter(utils.types.isRejected)
-      .map(r => r.reason as string);
-
-    return { txs, errors };
-  };
-
   const placeBetsInBetSlip = useCallback(async () => {
     if (!bets?.length || !signer || !config) return;
 
@@ -179,80 +139,22 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
     setHashes(undefined);
     setErrors(undefined);
 
-    // we want to skip the check in the placeBets function
-    // so we do the allowance checks here first
+    // place bets
+    const raw = await Promise.allSettled([
+      ...(await placeMultipleBets(
+        signer,
+        bets.map(bet => ({
+          market: bet.market,
+          back: bet.back,
+          wager: BigNumber.from(bet.wager)
+        }))
+      ))
+    ]);
 
-    // first reduce the bets to the asset addresses
-    const reducedAssets = bets.reduce((prevArray, bet) => {
-      const vault = utils.config.getVaultFromMarket(bet.market, config);
-      if (!vault)
-        throw new Error(
-          `Could not find vault for market ${bet.market.address}`
-        );
-
-      return [...prevArray, vault.asset.address.toLowerCase()];
-    }, [] as Array<string>);
-
-    // then we make a set to remove duplicates
-    const assetAddresses = [...new Set(reducedAssets)];
-
-    // we want to sum all the wagers per address, so that we can check the allowances against the sum
-    const totalWagers = assetAddresses.map(address => {
-      const betsForAddress = bets.filter(bet => {
-        // we can guarantee this exists from before
-        const vault = utils.config.getVaultFromMarket(bet.market, config)!;
-
-        return vault.asset.address.toLowerCase() === address.toLowerCase();
-      });
-
-      return {
-        address,
-        total: betsForAddress.reduce(
-          (sum, bet) => sum.add(bet.wager),
-          ethers.constants.Zero
-        )
-      };
-    });
-
-    // before queuing up the transactions, we want to do the same thing as the assetAddresses
-    // but with the market addresses so we can check the allowances
-    const reducedMarkets = bets.map(bet => bet.market.address.toLowerCase());
-    const marketAddresses = [...new Set(reducedMarkets)];
-
-    // now we can check allowances and queue transactions
-    await Promise.all(
-      marketAddresses.map(async marketAddress => {
-        // generate contracts
-        const marketContract = Market__factory.connect(marketAddress, signer);
-        const vaultAddress = await marketContract.getVaultAddress();
-        const vaultContract = Vault__factory.connect(vaultAddress, signer);
-        const assetAddress = await vaultContract.asset();
-        const assetContract = ERC20__factory.connect(assetAddress, signer);
-
-        // get user allowance
-        const allowance = await assetContract.allowance(
-          await signer.getAddress(),
-          marketAddress
-        );
-
-        // get the total wager that matches the asset address, we can guarantee this exists from before
-        const wager = totalWagers.find(
-          wager => wager.address.toLowerCase() === assetAddress.toLowerCase()
-        )!;
-
-        // check and queue approvals
-        if (allowance.lt(wager.total))
-          await (
-            await assetContract.approve(
-              marketAddress,
-              ethers.constants.MaxUint256
-            )
-          ).wait();
-      })
-    );
-
-    // settle bets, skipping allowance check
-    const { txs, errors } = await placeBets(bets, signer, config, true);
+    const txs = raw.filter(utils.types.isFulfilled).map(r => r.value);
+    const errors = raw
+      .filter(utils.types.isRejected)
+      .map(r => r.reason as string);
 
     // set errors
     setErrors(errors);
@@ -280,14 +182,21 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
       // open modal
       setIsModalOpen(true);
 
-      // settle bets
-      const { txs, errors } = await placeBets([bet], signer, config, false);
+      // place bet
+      let tx,
+        error: string | undefined = undefined;
+      tx = await placeBet(
+        bet.market,
+        bet.back,
+        BigNumber.from(bet.wager),
+        signer
+      ).catch(err => (error = err));
 
-      // set errors
+      // set error
       setErrors(errors);
 
-      // set hashes
-      setHashes(txs);
+      // set hash
+      setHashes(tx);
 
       // stop loading
       setTxLoading(false);
