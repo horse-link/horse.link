@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAccount, useDisconnect, useSigner } from "wagmi";
 import utils from "../utils";
-import { BaseButton, ConnectWalletButton } from "./Buttons";
+import { BaseButton } from "./Buttons";
 import { useTokenContext } from "../providers/Token";
 import ClipLoader from "react-spinners/ClipLoader";
 import { UserBalance } from "../types/users";
@@ -104,8 +104,8 @@ export const AccountPanel: React.FC = () => {
           )}
         </div>
       ) : (
-        <div className="w-full rounded-b-lg bg-white py-6 text-center">
-          <ConnectWalletButton />
+        <div className="w-full rounded-b-lg bg-white py-6 px-6 text-center">
+          <BaseButton title="Connect your Wallet" onClick={openWalletModal} />
         </div>
       )}
     </div>
