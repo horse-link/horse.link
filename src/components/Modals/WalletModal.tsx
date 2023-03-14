@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useAccount, useConnect, useNetwork, useSwitchNetwork } from "wagmi";
 import { MetaMaskIcon, WalletConnectIcon } from "../../icons";
 import { BaseModal } from ".";
-import constants from "../../constants";
+import api from "../../apis/Api";
 
 type Props = {
   isModalOpen: boolean;
@@ -19,26 +19,21 @@ export const WalletModal: React.FC<Props> = (props: Props) => {
   useEffect(() => {
     if (!isConnected || !currentChain || !switchNetwork) return;
 
-    /*if (
-      currentChain.name.toLowerCase() !==
-      constants.blockchain.GOERLI_NETWORK.name.toLowerCase()
-    ) {
-      switchNetwork(constants.blockchain.GOERLI_NETWORK.id);
+    if (currentChain.id !== api.chainDetails.id) {
+      switchNetwork(api.chainDetails.id);
     } else {
       closeWalletModal();
-    }*/
+    }
   }, [isConnected, currentChain, switchNetwork]);
 
   return (
     <BaseModal isOpen={isModalOpen} onClose={closeWalletModal}>
       <div className="text-center">
-        {currentChain?.name.toLowerCase() !==
-          constants.blockchain.GOERLI_NETWORK.name.toLowerCase() &&
-          isConnected && (
-            <span className="mb-4 block font-semibold text-red-600">
-              Please connect to Goerli to use Horse Link
-            </span>
-          )}
+        {currentChain?.id !== api.chainDetails.id && isConnected && (
+          <span className="mb-4 block font-semibold text-red-600">
+            Please connect to {api.chainDetails.name} to use Horse Link
+          </span>
+        )}
         <div>
           <label
             className="flex cursor-pointer justify-center"

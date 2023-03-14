@@ -12,24 +12,29 @@ import { BetHistoryResponse, SignedBetDataResponse } from "../types/bets";
 import { Market, Vault } from "../typechain";
 import { Token } from "graphql";
 import { VaultUserData } from "../types/vaults";
-import { networks } from "../constants/blockchain";
+import { getNetwork, NetworkDetails } from "../constants/blockchain";
 
 export class Api {
   private client: AxiosInstance;
-  private chainName: string;
+  private _chainDetails: NetworkDetails;
 
   constructor(defaultChainName: string) {
     this.client = utils.general.getAxiosClient();
-    this.chainName = defaultChainName;
+    this._chainDetails = getNetwork(defaultChainName);
   }
 
-  public setChainName(chainName: string) {
-    this.chainName = chainName;
+  //Getter for chainId
+  public get chainDetails() {
+    return this._chainDetails;
+  }
+
+  public set chain(chainName: string) {
+    this._chainDetails = getNetwork(chainName);
   }
 
   private headers() {
     return {
-      "chain-id": this.chainName
+      "chain-id": this.chainDetails.id
     };
   }
 
@@ -220,21 +225,11 @@ export class Api {
   };
 }
 
-// Map subdomains to chain names
-type ChainLookup = { [key: string]: string };
-const chainLookup: ChainLookup = {
-  sepolia: "sepolia",
-  tournament: "sepolia",
-  www: "sepolia",
-  alpha: "sepolia",
-  arbitrum: "arbitrum",
-  goerli: "goerli"
-};
-let subDomain = window.location.hostname.split(".")[0];
-let chainName = chainLookup[subDomain] || "sepolia";
-let chainId = networks[chainName].id.toString();
+const DEFAULT_NETWORK = "goerli";
+const networkParam =
+  new URLSearchParams(window.location.search).get("network") ?? DEFAULT_NETWORK;
 
-console.log("Using chain: ", chainId);
-const api = new Api(chainId);
+console.log("Setting default chain: ", networkParam);
+const api = new Api(networkParam);
 
 export default api;
