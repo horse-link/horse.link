@@ -34,7 +34,7 @@ export const WalletModal: React.FC<Props> = (props: Props) => {
     connector,
     icon: utils.images.getConnectorIcon(connector.name)
   }));
-  // TODO: make this have some cool handling
+  // TODO: make this have some cool handling when a decision is made on what the specified behaviour should be
   if (!connectorsWithIcons.length) console.error("No connectors");
 
   return (
