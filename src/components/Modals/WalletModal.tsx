@@ -74,7 +74,13 @@ export const WalletModal: React.FC<Props> = (props: Props) => {
                   />
                 </label>
                 <div className="font-bold">{connector.name.toUpperCase()}</div>
-                <div>Connect using your browser.</div>
+                <div>
+                  Connect using your{" "}
+                  {connector.name.toLowerCase().includes("walletconnect")
+                    ? "mobile device"
+                    : "browser"}
+                  .
+                </div>
               </div>
 
               <div
