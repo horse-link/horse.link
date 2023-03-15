@@ -104,24 +104,21 @@ export const useMarketContract = () => {
           .filter(
             d => d.market.address.toLowerCase() === m.address.toLowerCase()
           )
-          .map(d => {
-            debugger;
-            return {
-              nonce: d.back.nonce,
-              propositionId: utils.formatting.formatBytes16String(
-                d.back.proposition_id
-              ),
-              marketId: utils.formatting.formatBytes16String(d.back.market_id),
-              wager: d.wager,
-              odds: ethers.utils.parseUnits(
-                d.back.odds.toString(),
-                constants.contracts.MARKET_ODDS_DECIMALS
-              ),
-              close: d.back.close,
-              end: d.back.end,
-              signature: d.back.signature
-            };
-          });
+          .map(d => ({
+            nonce: d.back.nonce,
+            propositionId: utils.formatting.formatBytes16String(
+              d.back.proposition_id
+            ),
+            marketId: utils.formatting.formatBytes16String(d.back.market_id),
+            wager: d.wager,
+            odds: ethers.utils.parseUnits(
+              d.back.odds.toString(),
+              constants.contracts.MARKET_ODDS_DECIMALS
+            ),
+            close: d.back.close,
+            end: d.back.end,
+            signature: d.back.signature
+          }));
 
         return (await contract.multiBack(backs)).wait();
       })
