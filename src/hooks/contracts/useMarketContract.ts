@@ -12,6 +12,119 @@ import { BetHistory } from "../../types/bets";
 import constants from "../../constants";
 
 export const useMarketContract = () => {
+  const placeMultipleBets = async (
+    signer: Signer,
+    data: Array<{
+      back: Back;
+      market: MarketInfo;
+      wager: string;
+    }>,
+    skipAllowanceCheck?: boolean
+  ) => {
+    const userAddress = await signer.getAddress();
+    const markets = [...new Set(data.map(d => d.market))];
+
+    // do allowance checks
+    if (!skipAllowanceCheck) {
+      const assetAddresses = await Promise.all(
+        data.map(async d => {
+          const vault = Vault__factory.connect(d.market.vaultAddress, signer);
+          const [assetAddress, decimals] = await Promise.all([
+            vault.asset(),
+            vault.decimals()
+          ]);
+
+          return {
+            marketAddress: d.market.address,
+            assetAddress,
+            decimals
+          };
+        })
+      );
+      const assetSet = [...new Set(assetAddresses)];
+
+      // get allowances
+      const allowances = await Promise.all(
+        assetSet.map(async ({ assetAddress, marketAddress, decimals }) => {
+          const contract = ERC20__factory.connect(assetAddress, signer);
+          return {
+            marketAddress,
+            assetAddress,
+            allowance: await contract.allowance(userAddress, marketAddress),
+            decimals
+          };
+        })
+      );
+
+      // get wagers
+      const wagers = [
+        ...new Set(
+          data.map(d => ({
+            marketAddress: d.market.address,
+            wager: d.wager
+          }))
+        )
+      ];
+
+      // find which need to be increased
+      const toProcess = allowances.filter(
+        ({ marketAddress, allowance, decimals }) => {
+          const matchingWager = wagers.find(
+            w => w.marketAddress.toLowerCase() === marketAddress.toLowerCase()
+          );
+          if (!matchingWager) return false;
+          const wagerBn = ethers.utils.parseUnits(
+            matchingWager.wager,
+            decimals
+          );
+
+          return wagerBn.lt(allowance);
+        }
+      );
+
+      // trigger allowances
+      await Promise.all(
+        toProcess.map(async p => {
+          const erc20 = ERC20__factory.connect(p.assetAddress, signer);
+
+          return (
+            await erc20.approve(p.marketAddress, ethers.constants.MaxUint256)
+          ).wait();
+        })
+      );
+    }
+
+    const receipts = await Promise.all(
+      markets.map(async m => {
+        const contract = Market__factory.connect(m.address, signer);
+
+        const backs = data
+          .filter(
+            d => d.market.address.toLowerCase() === m.address.toLowerCase()
+          )
+          .map(d => ({
+            nonce: d.back.nonce,
+            propositionId: utils.formatting.formatBytes16String(
+              d.back.proposition_id
+            ),
+            marketId: utils.formatting.formatBytes16String(d.back.market_id),
+            wager: d.wager,
+            odds: ethers.utils.parseUnits(
+              d.back.odds.toString(),
+              constants.contracts.MARKET_ODDS_DECIMALS
+            ),
+            close: d.back.close,
+            end: d.back.end,
+            signature: d.back.signature
+          }));
+
+        return (await contract.multiBack(backs)).wait();
+      })
+    );
+
+    return receipts.map(r => r.transactionHash);
+  };
+
   const placeBet = async (
     market: MarketInfo,
     back: Back,
@@ -42,19 +155,21 @@ export const useMarketContract = () => {
     }
 
     const receipt = await (
-      await marketContract.back(
-        back.nonce,
-        utils.formatting.formatBytes16String(back.proposition_id),
-        utils.formatting.formatBytes16String(back.market_id),
+      await marketContract.back({
+        nonce: back.nonce,
+        propositionId: utils.formatting.formatBytes16String(
+          back.proposition_id
+        ),
+        marketId: utils.formatting.formatBytes16String(back.market_id),
         wager,
-        ethers.utils.parseUnits(
+        odds: ethers.utils.parseUnits(
           back.odds.toString(),
           constants.contracts.MARKET_ODDS_DECIMALS
         ),
-        back.close,
-        back.end,
-        back.signature
-      )
+        close: back.close,
+        end: back.end,
+        signature: back.signature
+      })
     ).wait();
 
     return receipt.transactionHash;
@@ -198,6 +313,7 @@ export const useMarketContract = () => {
     placeBet,
     settleBet,
     getPotentialPayout,
-    setResult
+    setResult,
+    placeMultipleBets
   };
 };
