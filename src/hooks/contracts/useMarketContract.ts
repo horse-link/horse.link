@@ -97,8 +97,6 @@ export const useMarketContract = () => {
     const receipts = await Promise.all(
       markets.map(async m => {
         const contract = Market__factory.connect(m.address, signer);
-        //const vault = Vault__factory.connect(m.vaultAddress, signer);
-        //const decimals = await vault.decimals();
 
         const backs = data
           .filter(
