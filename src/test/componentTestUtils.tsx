@@ -1,5 +1,5 @@
 import { render } from "@testing-library/react";
-import ApolloClientProvider from "../providers/Apollo";
+import { ApolloProvider } from "../providers/Apollo";
 import { WalletModalProvider } from "../providers/WalletModal";
 import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
@@ -28,7 +28,7 @@ const BaseProviders = ({ children }: { children: React.ReactNode }) => {
   return (
     <WagmiConfig client={wagmiClient}>
       <WalletModalProvider>
-        <ApolloClientProvider>{children}</ApolloClientProvider>
+        <ApolloProvider>{children}</ApolloProvider>
       </WalletModalProvider>
     </WagmiConfig>
   );
