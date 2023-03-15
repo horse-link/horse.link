@@ -14,6 +14,16 @@ const Leaderboard: React.FC = () => {
 
   const userHasNoStats = isConnected && !userStats;
 
+  const earnings = userStats?.earnings.value
+    ? `${utils.formatting.formatToFourDecimalsRaw(
+        ethers.utils.formatEther(userStats.earnings.value)
+      )} HL`
+    : undefined;
+
+  const balance = userStats?.balance.formatted
+    ? `${utils.formatting.formatToFourDecimals(userStats.balance.formatted)} HL`
+    : undefined;
+
   return (
     <PageLayout>
       {showLeaderboard ? (
@@ -26,27 +36,11 @@ const Leaderboard: React.FC = () => {
               />
               <Card
                 title="Your Earnings"
-                data={
-                  userHasNoStats
-                    ? "0"
-                    : userStats?.earnings.value
-                    ? `${utils.formatting.formatToFourDecimalsRaw(
-                        ethers.utils.formatEther(userStats.earnings.value)
-                      )} HL`
-                    : undefined
-                }
+                data={userHasNoStats ? "0" : earnings}
               />
               <Card
                 title="Your Balance"
-                data={
-                  userHasNoStats
-                    ? "0"
-                    : userStats?.balance.formatted
-                    ? `${utils.formatting.formatToFourDecimals(
-                        userStats.balance.formatted
-                      )} HL`
-                    : undefined
-                }
+                data={userHasNoStats ? "0" : balance}
               />
             </div>
           )}
