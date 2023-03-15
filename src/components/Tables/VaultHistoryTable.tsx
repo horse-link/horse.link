@@ -9,7 +9,7 @@ import { ethers } from "ethers";
 import Skeleton from "react-loading-skeleton";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import constants from "../../constants";
+import { useScannerUrl } from "../../hooks/useScannerUrl";
 
 dayjs.extend(relativeTime);
 
@@ -24,6 +24,8 @@ type Props = {
 };
 
 export const VaultHistoryTable: React.FC<Props> = ({ history, config }) => {
+  const scanner = useScannerUrl();
+
   const getHistoryData = (vault?: FormattedVaultTransaction): TableData[] => {
     const formattedTxType = vault && txTypeMap.get(vault.type);
     const details =
@@ -56,7 +58,7 @@ export const VaultHistoryTable: React.FC<Props> = ({ history, config }) => {
       {
         title: vault ? (
           <a
-            href={`${constants.env.SCANNER_URL}/tx/${vault.id.toLowerCase()}`}
+            href={`${scanner}/tx/${vault.id.toLowerCase()}`}
             target="_blank"
             rel="noreferrer noopener"
             className="hyperlink truncate"

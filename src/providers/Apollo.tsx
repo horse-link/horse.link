@@ -26,7 +26,7 @@ export const ApolloProvider: React.FC<{ children: React.ReactNode }> = ({
   const network = useNetwork();
   const rawSuffix = network.chain?.name.toLowerCase() || chain.goerli.name;
   // strip out extra words
-  const suffix = rawSuffix.split(" ")[0];
+  const suffix = rawSuffix.split(" ")[0].toLowerCase();
 
   const client = useMemo(
     () =>
