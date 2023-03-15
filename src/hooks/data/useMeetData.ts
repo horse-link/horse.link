@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import api from "../../apis/Api";
 import { MeetInfo } from "../../types/meets";
+import { useApi } from "../../providers/Api";
 
 export const useMeetData = (locationCode: string) => {
   const [results, setResults] = useState<MeetInfo>();
+  const api = useApi();
 
   useEffect(() => {
     api.getMeeting(locationCode).then(setResults);

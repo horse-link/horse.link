@@ -214,60 +214,67 @@
   {
     "inputs": [
       {
-        "internalType": "bytes16",
-        "name": "nonce",
-        "type": "bytes16"
-      },
-      {
-        "internalType": "bytes16",
-        "name": "propositionId",
-        "type": "bytes16"
-      },
-      {
-        "internalType": "bytes16",
-        "name": "marketId",
-        "type": "bytes16"
-      },
-      {
-        "internalType": "uint256",
-        "name": "wager",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "odds",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "close",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "end",
-        "type": "uint256"
-      },
-      {
         "components": [
           {
-            "internalType": "uint8",
-            "name": "v",
-            "type": "uint8"
+            "internalType": "bytes16",
+            "name": "nonce",
+            "type": "bytes16"
           },
           {
-            "internalType": "bytes32",
-            "name": "r",
-            "type": "bytes32"
+            "internalType": "bytes16",
+            "name": "propositionId",
+            "type": "bytes16"
           },
           {
-            "internalType": "bytes32",
-            "name": "s",
-            "type": "bytes32"
+            "internalType": "bytes16",
+            "name": "marketId",
+            "type": "bytes16"
+          },
+          {
+            "internalType": "uint256",
+            "name": "wager",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "odds",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "close",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "end",
+            "type": "uint256"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint8",
+                "name": "v",
+                "type": "uint8"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "r",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "s",
+                "type": "bytes32"
+              }
+            ],
+            "internalType": "struct SignatureLib.Signature",
+            "name": "signature",
+            "type": "tuple"
           }
         ],
-        "internalType": "struct SignatureLib.Signature",
-        "name": "signature",
+        "internalType": "struct IMarket.Back",
+        "name": "backData",
         "type": "tuple"
       }
     ],
@@ -652,6 +659,84 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes16",
+            "name": "nonce",
+            "type": "bytes16"
+          },
+          {
+            "internalType": "bytes16",
+            "name": "propositionId",
+            "type": "bytes16"
+          },
+          {
+            "internalType": "bytes16",
+            "name": "marketId",
+            "type": "bytes16"
+          },
+          {
+            "internalType": "uint256",
+            "name": "wager",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "odds",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "close",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "end",
+            "type": "uint256"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint8",
+                "name": "v",
+                "type": "uint8"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "r",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "s",
+                "type": "bytes32"
+              }
+            ],
+            "internalType": "struct SignatureLib.Signature",
+            "name": "signature",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct IMarket.Back[]",
+        "name": "backArray",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "multiBack",
+    "outputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

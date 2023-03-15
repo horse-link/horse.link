@@ -8,8 +8,8 @@ import { useSigner } from "wagmi";
 import utils from "../../utils";
 import { BetHistory } from "../../types/bets";
 import { Config } from "../../types/config";
-import api from "../../apis/Api";
 import dayjs from "dayjs";
+import { useApi } from "../../providers/Api";
 
 type Props = {
   isModalOpen: boolean;
@@ -36,6 +36,8 @@ export const SettleBetModal: React.FC<Props> = ({
   const { settleBet } = useMarketContract();
 
   const { current: now } = useRef(Math.floor(Date.now() / 1000));
+
+  const api = useApi();
 
   // get signed bet
   useEffect(() => {

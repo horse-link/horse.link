@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import api from "../apis/Api";
 import { Config } from "../types/config";
+import { useApi } from "./Api";
 
 export const ConfigContext = createContext<Config | undefined>(undefined);
 
@@ -10,10 +10,11 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({
   children
 }) => {
   const [config, setConfig] = useState<Config>();
+  const api = useApi();
 
   useEffect(() => {
     api.getConfig().then(setConfig);
-  }, []);
+  }, [api]);
 
   return (
     <ConfigContext.Provider value={config}>{children}</ConfigContext.Provider>
