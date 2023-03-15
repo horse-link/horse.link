@@ -56,7 +56,6 @@ export const useVaultContract = () => {
     const userAddress = await signer.getAddress();
     const vaultContract = Vault__factory.connect(vault.address, signer);
     const shares = await vaultContract.balanceOf(userAddress);
-    console.log(shares);
     return shares;
   };
 
@@ -68,12 +67,18 @@ export const useVaultContract = () => {
 
     return assets;
   };
+  const getSupplyTotal = async (vault: VaultInfo, signer: Signer) => {
+    const vaultContract = Vault__factory.connect(vault.address, signer);
+    const supply = await vaultContract.totalSupply();
+    return supply;
+  };
 
   return {
     deposit,
     totalAssetsLocked,
     withdraw,
     getIndividualShareTotal,
-    getIndividualAssetTotal
+    getIndividualAssetTotal,
+    getSupplyTotal
   };
 };
