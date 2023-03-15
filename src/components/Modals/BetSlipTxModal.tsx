@@ -2,8 +2,8 @@ import React from "react";
 import { useBetSlipContext } from "../../providers/BetSlip";
 import { BaseModal } from "./BaseModal";
 import { Loader } from "../Loader";
-import constants from "../../constants";
 import utils from "../../utils";
+import { useScannerUrl } from "../../hooks/useScannerUrl";
 
 type Props = {
   isOpen: boolean;
@@ -12,6 +12,7 @@ type Props = {
 
 export const BetSlipTxModal: React.FC<Props> = ({ isOpen, onClose }) => {
   const { hashes, errors } = useBetSlipContext();
+  const scanner = useScannerUrl();
 
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}>
@@ -54,7 +55,7 @@ export const BetSlipTxModal: React.FC<Props> = ({ isOpen, onClose }) => {
             {hashes.map(hash => (
               <li key={hash}>
                 <a
-                  href={`${constants.env.SCANNER_URL}/tx/${hash}`}
+                  href={`${scanner}/tx/${hash}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hyperlink underline underline-offset-2"
