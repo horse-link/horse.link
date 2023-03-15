@@ -76,13 +76,6 @@ const Home: React.FC = () => {
     <PageLayout>
       <HomeNextToJumpBanner />
       <div className="grid gap-6">
-        <div className="my-4 flex w-full lg:w-auto">
-          <img
-            src="images/Logo.png"
-            alt="Logo"
-            className="-my-16 block w-full drop-shadow-xl lg:-my-20 lg:w-1/3"
-          />
-        </div>
         {myPlayEnabled ? <HomeUserStats /> : <HomeOverallStats />}
         <div className="flex w-full justify-between gap-x-3 md:justify-end">
           <HomeFilterGroup
