@@ -132,6 +132,11 @@ export type Back = {
   signature: EcSignature;
 };
 
+// Same as Back but with a wager attribute
+export type BackParams = Back & {
+  wager: string;
+};
+
 export type WinningHorse = {
   runner: string;
   number: number;
