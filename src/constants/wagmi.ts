@@ -16,8 +16,8 @@ export class HorseLinkWalletConnector extends Connector<
   Options,
   ethers.Signer
 > {
-  readonly id = "hlWallet";
-  readonly name = "HL Wallet";
+  readonly id = "horselinkwallet";
+  readonly name = "HorseLink Wallet";
   readonly ready = true;
 
   // user wallet and network setter
