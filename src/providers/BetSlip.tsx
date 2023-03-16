@@ -193,10 +193,9 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
           signer
         );
       } catch (err: any) {
+        console.error(err);
         error = err as string;
       }
-      // TODO: why is local wallet not sending TX
-      console.log(error);
 
       // set error
       setErrors(error ? [error] : undefined);
