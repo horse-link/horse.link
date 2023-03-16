@@ -4,6 +4,7 @@ import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import constants from "../constants";
+import { HorseLinkWalletConnector } from "../constants/wagmi";
 
 const { chains, provider, webSocketProvider } = configureChains(
   [chain.goerli, chain.arbitrum],
@@ -23,6 +24,16 @@ const client = createClient({
       chains,
       options: {
         qrcode: true
+      }
+    }),
+    new HorseLinkWalletConnector({
+      chains,
+      options: {
+        network: {
+          name: chain.goerli.name,
+          chainId: chain.goerli.id
+        },
+        apiKey: constants.env.ALCHEMY_KEY
       }
     })
   ],

@@ -75,10 +75,10 @@ export class HorseLinkWalletConnector extends Connector<
       id = chain.id;
     }
 
-    const account: any = undefined; // replace with local wallet
+    const account = ethers.utils.getAddress((await provider.listAccounts())[0]);
 
     return {
-      account: account.address,
+      account,
       chain: { id, unsupported: this.isChainUnsupported(id) },
       provider: this.#provider
     };
