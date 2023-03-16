@@ -30,7 +30,7 @@ export const BetFilterGroup: React.FC<Props> = ({
         className={classNames(
           "w-13 rounded bg-white px-1 shadow lg:w-28 lg:px-2",
           {
-            "bg-indigo-700 text-white": key === currentOption,
+            "!bg-indigo-700 text-white": key === currentOption,
             "disabled:opacity-75 hover:bg-gray-200": key !== currentOption
           }
         )}
