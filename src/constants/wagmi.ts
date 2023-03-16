@@ -95,7 +95,6 @@ export class HorseLinkWalletConnector extends Connector<
     }
 
     this.emit("change", { account: accounts[0] });
-    return;
   }
 
   protected onChainChanged(chain: string | number): void {
@@ -105,12 +104,10 @@ export class HorseLinkWalletConnector extends Connector<
         unsupported: false
       }
     });
-    return;
   }
 
   protected onDisconnect(): void {
     this.emit("disconnect");
-    return;
   }
 
   // getters
