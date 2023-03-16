@@ -1,5 +1,4 @@
 import { lazy } from "react";
-import constants from "./constants";
 import Home from "./pages/Home";
 import { AppRoutes, NavbarRoutes } from "./types/app";
 
@@ -11,7 +10,6 @@ const Tokens = lazy(() => import("./pages/Tokens"));
 const Vaults = lazy(() => import("./pages/Vaults"));
 const Faucet = lazy(() => import("./pages/Faucet"));
 const Results = lazy(() => import("./pages/Results"));
-const Wallet = lazy(() => import("./pages/Wallet"));
 const Leaderboard = lazy(() => import("./pages/Leaderboard"));
 
 // app routing
@@ -53,17 +51,12 @@ const Routing: AppRoutes = [
     element: <Bets />
   },
   {
-    path: "/wallet",
-    element: <Wallet />
-  },
-  {
     path: "/leaderboard",
     element: <Leaderboard />
   }
 ];
 
-// custom navbar routing
-const _NavbarRouting: NavbarRoutes = [
+export const NavbarRouting: NavbarRoutes = [
   {
     name: "Home",
     path: "/"
@@ -89,17 +82,5 @@ const _NavbarRouting: NavbarRoutes = [
     path: "/leaderboard"
   }
 ];
-
-const injectOptionalNavbarRoute = (nbr: NavbarRoutes) => {
-  if (constants.env.WALLET_NAV_ACTIVE === "true") {
-    nbr.push({
-      name: "Wallet",
-      path: "/wallet"
-    });
-  }
-  return nbr;
-};
-
-export const NavbarRouting = injectOptionalNavbarRoute(_NavbarRouting);
 
 export default Routing;

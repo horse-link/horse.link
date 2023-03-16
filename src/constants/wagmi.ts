@@ -32,14 +32,14 @@ type Options = {
 export class HorseLinkWalletConnector extends Connector<
   providers.AlchemyProvider,
   Options,
-  providers.JsonRpcSigner
+  ethers.Signer
 > {
   readonly id = "hlWallet";
   readonly name = "HL Wallet";
   readonly ready = true;
 
-  // fallbacks, ETH mainnet for now
-  readonly fallbackChainId = 1;
+  // fallbacks, assigned in constructor
+  private fallbackChainId: number = 0;
   readonly fallbackChain = {
     id: this.fallbackChainId,
     get name() {
@@ -52,47 +52,74 @@ export class HorseLinkWalletConnector extends Connector<
     rpcUrls: { default: "", public: "" }
   };
 
-  #provider?: providers.AlchemyProvider;
+  // user wallet
+  #wallet?: ethers.Wallet;
 
-  constructor({ chains, options }: { chains?: Chain[]; options: Options }) {
+  constructor({
+    chains,
+    options
+  }: {
+    chains?: Array<Chain>;
+    options: Options;
+  }) {
+    if (!chains?.length) throw new Error("Cannot initialise without chains");
+
     super({
       chains,
       options
     });
+
+    this.fallbackChainId = chains[0].id;
+
+    const { network, apiKey } = options;
+    const provider = new providers.AlchemyProvider(network, apiKey);
+
+    const wallet = ethers.Wallet.createRandom();
+    const providedWallet = new ethers.Wallet(wallet.privateKey, provider);
+
+    // assign wallet
+    this.#wallet = providedWallet;
   }
 
   // core
-  async connect({ chainId }: { chainId?: number } = {}) {
-    const provider = await this.getProvider();
+  async connect(
+    { chainId }: { chainId?: number } = { chainId: this.fallbackChain.id }
+  ) {
+    try {
+      const provider = await this.getProvider();
 
-    provider.on("accountsChanged", this.onAccountsChanged);
-    provider.on("chainChanged", this.onChainChanged);
-    provider.on("disconnect", this.onDisconnect);
+      provider.on("accountsChanged", this.onAccountsChanged);
+      provider.on("chainChanged", this.onChainChanged);
+      provider.on("disconnect", this.onDisconnect);
 
-    let id = await this.getChainId();
-    if (chainId && id !== chainId) {
-      const chain = await this.switchChain(chainId);
-      id = chain.id;
+      let id = await this.getChainId();
+      if (chainId && id !== chainId) {
+        const chain = await this.switchChain(chainId);
+        id = chain.id;
+      }
+
+      const account = await this.getAccount();
+
+      return {
+        account,
+        chain: { id, unsupported: this.isChainUnsupported(id) },
+        provider
+      };
+    } catch (e) {
+      console.log(e);
+      throw e;
     }
-
-    const account = ethers.utils.getAddress((await provider.listAccounts())[0]);
-
-    return {
-      account,
-      chain: { id, unsupported: this.isChainUnsupported(id) },
-      provider: this.#provider
-    };
   }
 
   async disconnect() {
-    if (!this.#provider) return;
+    if (!this.#wallet) return;
 
     const provider = await this.getProvider();
     provider.removeListener("accountsChanged", this.onAccountsChanged);
     provider.removeListener("chainChanged", this.onChainChanged);
     provider.removeListener("disconnect", this.onDisconnect);
 
-    this.#provider = undefined;
+    this.#wallet = undefined;
   }
 
   async switchChain(chainId: number): Promise<Chain> {
@@ -164,9 +191,8 @@ export class HorseLinkWalletConnector extends Connector<
 
   // getters
   async getAccount() {
-    const provider = await this.getProvider();
-    const accounts = await provider.listAccounts();
-    return ethers.utils.getAddress(accounts[0]);
+    const wallet = await this.getWallet();
+    return ethers.utils.getAddress(wallet.address);
   }
 
   async getChainId(): Promise<number> {
@@ -174,14 +200,21 @@ export class HorseLinkWalletConnector extends Connector<
     return provider.network.chainId;
   }
 
-  async getProvider() {
-    const { network, apiKey } = super.options;
-    return this.#provider || new providers.AlchemyProvider(network, apiKey);
+  getWallet() {
+    if (!this.#wallet)
+      throw new Error("The user wallet has not been generated yet");
+
+    return this.#wallet;
   }
 
-  async getSigner(): Promise<ethers.providers.JsonRpcSigner> {
-    const provider = await this.getProvider();
-    return provider.getSigner();
+  async getProvider() {
+    const wallet = this.getWallet();
+    return wallet.provider as providers.AlchemyProvider;
+  }
+
+  // required by class extension
+  async getSigner() {
+    return this.getWallet();
   }
 
   // utils
