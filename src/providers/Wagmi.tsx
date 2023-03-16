@@ -5,24 +5,24 @@ import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import constants from "../constants";
 import { HorseLinkWalletConnector } from "../constants/wagmi";
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import { useLocalWallet } from "../hooks/useLocalWallet";
 
 export const WagmiProvider: React.FC<{ children: React.ReactNode }> = ({
   children
 }) => {
-  const { chains, provider, webSocketProvider } = useMemo(
-    () =>
-      configureChains(
-        [chain.goerli, chain.arbitrum],
-        [
-          alchemyProvider({
-            apiKey: constants.env.ALCHEMY_KEY
-          }),
-          publicProvider()
-        ]
-      ),
-    [constants]
+  const {
+    current: { chains, provider, webSocketProvider }
+  } = useRef(
+    configureChains(
+      [chain.goerli, chain.arbitrum],
+      [
+        alchemyProvider({
+          apiKey: constants.env.ALCHEMY_KEY
+        }),
+        publicProvider()
+      ]
+    )
   );
 
   const { wallet, switchNetwork } = useLocalWallet(chains);
@@ -50,7 +50,7 @@ export const WagmiProvider: React.FC<{ children: React.ReactNode }> = ({
         provider,
         webSocketProvider
       }),
-    [constants, chain, provider, webSocketProvider]
+    [wallet]
   );
 
   return <WagmiConfig client={client}>{children}</WagmiConfig>;

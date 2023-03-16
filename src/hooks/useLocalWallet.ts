@@ -3,11 +3,14 @@ import { useMemo, useState } from "react";
 import utils from "../utils";
 import constants from "../constants";
 import { Chain } from "wagmi";
+import { useWagmiNetworkRefetch } from "../providers/WagmiNetworkRefetch";
 
 const LS_PRIVATE_KEY = "horse.link-wallet-key";
 const LS_CHAIN_KEY = "horse.link-wallet-chain";
 
 export const useLocalWallet = (chains: Array<Chain>) => {
+  const { setChain } = useWagmiNetworkRefetch();
+
   // get keys
   const localKey = localStorage.getItem(LS_PRIVATE_KEY);
   const [chainId, setChainId] = useState(
@@ -57,6 +60,8 @@ export const useLocalWallet = (chains: Array<Chain>) => {
 
     setChainId(newId);
     localStorage.setItem(LS_CHAIN_KEY, newId);
+
+    setChain(+newId);
 
     return utils.formatting.formatChain(newChain);
   };

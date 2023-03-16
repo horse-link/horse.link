@@ -21,7 +21,7 @@ export class HorseLinkWalletConnector extends Connector<
   readonly ready = true;
 
   // user wallet and network setter
-  private _wallet?: ethers.Wallet;
+  private _wallet: ethers.Wallet;
   private _switchNetwork: (id: number) => Chain;
 
   constructor({
@@ -51,12 +51,7 @@ export class HorseLinkWalletConnector extends Connector<
       provider.on("chainChanged", this.onChainChanged);
       provider.on("disconnect", this.onDisconnect);
 
-      let id = await this.getChainId();
-      console.log(id);
-      if (chainId && id !== chainId) {
-        const chain = await this.switchChain(id);
-        id = chain.id;
-      }
+      const id = chainId || (await this.getChainId());
 
       const account = await this.getAccount();
 
@@ -78,8 +73,6 @@ export class HorseLinkWalletConnector extends Connector<
     provider.removeListener("accountsChanged", this.onAccountsChanged);
     provider.removeListener("chainChanged", this.onChainChanged);
     provider.removeListener("disconnect", this.onDisconnect);
-
-    this._wallet = undefined;
   }
 
   async switchChain(chainId: number): Promise<Chain> {
@@ -87,6 +80,10 @@ export class HorseLinkWalletConnector extends Connector<
       throw new Error(`Chain ${chainId} is unsupported`);
 
     const newChain = this._switchNetwork(chainId);
+
+    const provider = await this.getProvider();
+    provider.emit("chainChanged", [newChain.id]);
+
     return newChain;
   }
 
@@ -102,12 +99,10 @@ export class HorseLinkWalletConnector extends Connector<
   }
 
   protected onChainChanged(chain: string | number): void {
-    console.log(chain);
-    const unsupported = this.isChainUnsupported(+chain);
     this.emit("change", {
       chain: {
         id: +chain,
-        unsupported
+        unsupported: false
       }
     });
     return;
