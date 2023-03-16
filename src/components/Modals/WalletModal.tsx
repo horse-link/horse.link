@@ -1,7 +1,6 @@
 import React from "react";
-import { useAccount, useConnect, useNetwork } from "wagmi";
+import { useConnect } from "wagmi";
 import { BaseModal } from ".";
-import constants from "../../constants";
 import utils from "../../utils";
 import classNames from "classnames";
 
@@ -12,9 +11,7 @@ type Props = {
 
 export const WalletModal: React.FC<Props> = (props: Props) => {
   const { isModalOpen, closeWalletModal } = props;
-  const { isConnected } = useAccount();
   const { connect, connectors } = useConnect();
-  const { chain: currentChain } = useNetwork();
 
   const connectorsWithIcons = connectors.map(connector => ({
     connector,
@@ -26,14 +23,6 @@ export const WalletModal: React.FC<Props> = (props: Props) => {
   return (
     <BaseModal isOpen={isModalOpen} onClose={closeWalletModal}>
       <div className="text-center">
-        {currentChain?.name.toLowerCase() !==
-          constants.blockchain.GOERLI_NETWORK.name.toLowerCase() &&
-          isConnected && (
-            <span className="mb-4 block font-semibold text-red-600">
-              Please connect to Goerli to use Horse Link
-            </span>
-          )}
-
         {connectorsWithIcons.map(({ connector, icon }, index, array) => {
           // react components must be upper case :/
           const Icon = icon;

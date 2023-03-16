@@ -4,13 +4,13 @@ import { Bet } from "../../types/subgraph";
 import utils from "../../utils";
 import useSubgraph from "../useSubgraph";
 import { BigNumber, ethers } from "ethers";
-import { TWENTY_FOUR_HOURS_S } from "../../constants/time";
 import { ERC20__factory } from "../../typechain";
 import { useAccount, useProvider } from "wagmi";
 import {
   LeaderboardBalance,
   LeaderboardUserBalance
 } from "../../types/leaderboard";
+import constants from "../../constants";
 
 type Response = {
   bets: Array<Bet>;
@@ -27,14 +27,13 @@ export const useLeaderboardStatistics = () => {
   const hlToken = config?.tokens.find(t => t.symbol.toLowerCase() === "hl");
 
   const { current: now } = useRef(Math.floor(Date.now() / 1000));
-  const { current: oneWeekAgo } = useRef(now - TWENTY_FOUR_HOURS_S * 7);
 
   // get bets that were made with horse link token and have been settled, within the last week
   const { data, loading } = useSubgraph<Response>(
     utils.queries.getBetsQueryWithoutPagination(now, {
       assetAddress: hlToken?.address.toLowerCase(),
       settled: true,
-      createdAt_gte: oneWeekAgo
+      createdAt_gte: Math.floor(+constants.env.EVENT_TS / 1000)
     })
   );
 

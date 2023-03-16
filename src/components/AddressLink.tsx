@@ -1,7 +1,7 @@
 import { Address } from "wagmi";
-import constants from "../constants";
 import utils from "../utils";
 import classNames from "classnames";
+import { useScannerUrl } from "../hooks/useScannerUrl";
 
 type Props = {
   address: Address;
@@ -13,16 +13,20 @@ export const AddressLink: React.FC<Props> = ({
   address,
   isTruncated,
   className
-}) => (
-  <a
-    href={`${constants.env.SCANNER_URL}/address/${address}`}
-    target="_blank"
-    rel="noreferrer noopener"
-    className={classNames({
-      hyperlink: !className,
-      [className!]: !!className
-    })}
-  >
-    {isTruncated ? utils.formatting.shortenAddress(address) : address}
-  </a>
-);
+}) => {
+  const scanner = useScannerUrl();
+
+  return (
+    <a
+      href={`${scanner}/address/${address}`}
+      target="_blank"
+      rel="noreferrer noopener"
+      className={classNames({
+        hyperlink: !className,
+        [className!]: !!className
+      })}
+    >
+      {isTruncated ? utils.formatting.shortenAddress(address) : address}
+    </a>
+  );
+};
