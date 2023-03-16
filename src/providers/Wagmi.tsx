@@ -6,6 +6,7 @@ import { alchemyProvider } from "wagmi/providers/alchemy";
 import constants from "../constants";
 import { HorseLinkWalletConnector } from "../constants/wagmi";
 import { useMemo } from "react";
+import { useLocalWallet } from "../hooks/useLocalWallet";
 
 export const WagmiProvider: React.FC<{ children: React.ReactNode }> = ({
   children
@@ -24,6 +25,8 @@ export const WagmiProvider: React.FC<{ children: React.ReactNode }> = ({
     [constants]
   );
 
+  const { wallet, switchNetwork } = useLocalWallet(chains);
+
   const client = useMemo(
     () =>
       createClient({
@@ -39,12 +42,8 @@ export const WagmiProvider: React.FC<{ children: React.ReactNode }> = ({
           new HorseLinkWalletConnector({
             chains,
             options: {
-              network: {
-                ...chains[0],
-                name: chains[0].name.toLowerCase(),
-                chainId: chains[0].id
-              },
-              apiKey: constants.env.ALCHEMY_KEY
+              wallet,
+              switchNetwork
             }
           })
         ],

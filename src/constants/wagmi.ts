@@ -1,32 +1,14 @@
 import { ethers, providers } from "ethers";
-import {
-  AddChainError,
-  Chain,
-  ChainNotConfiguredError,
-  Connector,
-  ProviderRpcError,
-  SwitchChainError,
-  UserRejectedRequestError,
-  chain
-} from "wagmi";
+import { Chain, Connector, chain } from "wagmi";
 
 // documentation:
 // https://wagmi.sh/examples/custom-connector
 // https://github.com/wagmi-dev/references/blob/9cb0535077504c27626b2e4bc32dc983d63a56ba/packages/connectors/src/coinbaseWallet.ts
 // https://github.com/wagmi-dev/references/blob/9cb0535077504c27626b2e4bc32dc983d63a56ba/packages/connectors/src/walletConnect.ts
 
-// node_modules/@ethersproject/networks/src.ts/types.ts/Networkish
-type EthersNetwork = {
-  name: string;
-  chainId: number;
-  ensAddress?: string;
-  _defaultProvider?: (providers: any, options?: any) => any;
-};
-
-// node_modules/@ethersproject/providers/src.ts/url-json-rpc-provider.ts:53
 type Options = {
-  network?: EthersNetwork | string | number;
-  apiKey?: any;
+  wallet: ethers.Wallet;
+  switchNetwork: (id: number) => Chain;
 };
 
 export class HorseLinkWalletConnector extends Connector<
@@ -38,22 +20,9 @@ export class HorseLinkWalletConnector extends Connector<
   readonly name = "HL Wallet";
   readonly ready = true;
 
-  // fallbacks, assigned in constructor
-  private fallbackChainId: number = 0;
-  readonly fallbackChain = {
-    id: this.fallbackChainId,
-    get name() {
-      return `Chain ${this.id}`;
-    },
-    get network() {
-      return this.id.toString();
-    },
-    nativeCurrency: { name: "Ether", decimals: 18, symbol: "ETH" },
-    rpcUrls: { default: "", public: "" }
-  };
-
-  // user wallet
-  #wallet?: ethers.Wallet;
+  // user wallet and network setter
+  private _wallet?: ethers.Wallet;
+  private _switchNetwork: (id: number) => Chain;
 
   constructor({
     chains,
@@ -69,22 +38,12 @@ export class HorseLinkWalletConnector extends Connector<
       options
     });
 
-    this.fallbackChainId = chains[0].id;
-
-    const { network, apiKey } = options;
-    const provider = new providers.AlchemyProvider(network, apiKey);
-
-    const wallet = ethers.Wallet.createRandom();
-    const providedWallet = new ethers.Wallet(wallet.privateKey, provider);
-
-    // assign wallet
-    this.#wallet = providedWallet;
+    this._wallet = options.wallet;
+    this._switchNetwork = options.switchNetwork;
   }
 
   // core
-  async connect(
-    { chainId }: { chainId?: number } = { chainId: this.fallbackChain.id }
-  ) {
+  async connect({ chainId }: { chainId?: number } = {}) {
     try {
       const provider = await this.getProvider();
 
@@ -93,8 +52,9 @@ export class HorseLinkWalletConnector extends Connector<
       provider.on("disconnect", this.onDisconnect);
 
       let id = await this.getChainId();
+      console.log(id);
       if (chainId && id !== chainId) {
-        const chain = await this.switchChain(chainId);
+        const chain = await this.switchChain(id);
         id = chain.id;
       }
 
@@ -112,54 +72,22 @@ export class HorseLinkWalletConnector extends Connector<
   }
 
   async disconnect() {
-    if (!this.#wallet) return;
+    if (!this._wallet) return;
 
     const provider = await this.getProvider();
     provider.removeListener("accountsChanged", this.onAccountsChanged);
     provider.removeListener("chainChanged", this.onChainChanged);
     provider.removeListener("disconnect", this.onDisconnect);
 
-    this.#wallet = undefined;
+    this._wallet = undefined;
   }
 
   async switchChain(chainId: number): Promise<Chain> {
-    const provider = await this.getProvider();
-    const id = ethers.utils.hexValue(chainId);
+    if (this.isChainUnsupported(chainId))
+      throw new Error(`Chain ${chainId} is unsupported`);
 
-    try {
-      await provider.send("wallet_switchEthereumChain", [{ chainId: id }]);
-      return (
-        this.chains.find(chain => chain.id === chainId) || this.fallbackChain
-      );
-    } catch (e) {
-      const chain = this.chains.find(chain => chain.id === chainId);
-      if (!chain)
-        throw new ChainNotConfiguredError({ chainId, connectorId: this.id });
-
-      // indicates chain is not added to provider
-      if ((e as ProviderRpcError).code === 4902) {
-        try {
-          const newChainToAdd = {
-            chainId: id,
-            chainName: chain.name,
-            nativeCurrency: chain.nativeCurrency,
-            rpcUrls: [chain.rpcUrls.public || ""],
-            blockExplorerUrls: this.getBlockExplorerUrls(chain)
-          };
-          await provider.send("wallet_addEthereumChain", [newChainToAdd]);
-
-          return chain;
-        } catch (addError) {
-          if (this.isUserRejectedRequestError(addError))
-            throw new UserRejectedRequestError(addError);
-          throw new AddChainError();
-        }
-      }
-
-      if (this.isUserRejectedRequestError(e))
-        throw new UserRejectedRequestError(e);
-      throw new SwitchChainError(e);
-    }
+    const newChain = this._switchNetwork(chainId);
+    return newChain;
   }
 
   // event listeners
@@ -174,6 +102,7 @@ export class HorseLinkWalletConnector extends Connector<
   }
 
   protected onChainChanged(chain: string | number): void {
+    console.log(chain);
     const unsupported = this.isChainUnsupported(+chain);
     this.emit("change", {
       chain: {
@@ -201,10 +130,10 @@ export class HorseLinkWalletConnector extends Connector<
   }
 
   getWallet() {
-    if (!this.#wallet)
+    if (!this._wallet)
       throw new Error("The user wallet has not been generated yet");
 
-    return this.#wallet;
+    return this._wallet;
   }
 
   async getProvider() {
