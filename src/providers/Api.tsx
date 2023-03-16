@@ -11,12 +11,12 @@ export const useApi = () => useContext(ApiContext);
 export const ApiProvider: React.FC<{ children: React.ReactNode }> = ({
   children
 }) => {
-  const { chainId } = useWagmiNetworkRefetch();
+  const { globalChainId } = useWagmiNetworkRefetch();
   const { chains } = useNetwork();
 
   const newChain = useMemo(
-    () => chains.find(chain => chain.id === chainId),
-    [chains, chainId]
+    () => chains.find(chain => chain.id === globalChainId),
+    [chains, globalChainId]
   );
 
   const value = useMemo(() => new Api(newChain || chain.goerli), [newChain]);

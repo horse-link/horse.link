@@ -2,8 +2,8 @@ import { createContext, useContext, useMemo, useRef, useState } from "react";
 import { chain } from "wagmi";
 
 export const WagmiNetworkRefetchContext = createContext({
-  setChain: (_: number) => {},
-  chainId: chain.goerli.id
+  setGlobalChain: (_: number) => {},
+  globalChainId: chain.goerli.id
 });
 
 export const useWagmiNetworkRefetch = () =>
@@ -12,16 +12,18 @@ export const useWagmiNetworkRefetch = () =>
 export const WagmiNetworkRefetchProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
-  const [chainId, setChainId] = useState(chain.goerli.id);
+  const [globalChainId, setGlobalChainId] = useState(chain.goerli.id);
 
-  const { current: setChain } = useRef((id: number) => setChainId(id));
+  const { current: setGlobalChain } = useRef((id: number) =>
+    setGlobalChainId(id)
+  );
 
   const value = useMemo(
     () => ({
-      setChain,
-      chainId
+      setGlobalChain,
+      globalChainId
     }),
-    [setChain, chainId]
+    [setGlobalChain, globalChainId]
   );
 
   return (

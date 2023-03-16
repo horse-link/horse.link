@@ -9,7 +9,7 @@ const LS_PRIVATE_KEY = "horse.link-wallet-key";
 const LS_CHAIN_KEY = "horse.link-wallet-chain";
 
 export const useLocalWallet = (chains: Array<Chain>) => {
-  const { setChain } = useWagmiNetworkRefetch();
+  const { setGlobalChain } = useWagmiNetworkRefetch();
 
   // get keys
   const localKey = localStorage.getItem(LS_PRIVATE_KEY);
@@ -36,8 +36,11 @@ export const useLocalWallet = (chains: Array<Chain>) => {
 
   const wallet = useMemo(() => {
     if (!localKey) {
-      const wallet = ethers.Wallet.createRandom();
-      const generatedWallet = new ethers.Wallet(wallet.privateKey, provider);
+      const randomWallet = ethers.Wallet.createRandom();
+      const generatedWallet = new ethers.Wallet(
+        randomWallet.privateKey,
+        provider
+      );
 
       const encrypted = utils.general.encryptString(
         generatedWallet.privateKey,
@@ -61,7 +64,8 @@ export const useLocalWallet = (chains: Array<Chain>) => {
     setChainId(newId);
     localStorage.setItem(LS_CHAIN_KEY, newId);
 
-    setChain(+newId);
+    // global refetch trigger
+    setGlobalChain(+newId);
 
     return utils.formatting.formatChain(newChain);
   };
