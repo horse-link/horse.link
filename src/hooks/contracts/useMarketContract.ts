@@ -12,7 +12,6 @@ import utils from "../../utils";
 import { Back, BackParams } from "../../types/meets";
 import { BetHistory } from "../../types/bets";
 import constants from "../../constants";
-import { MARKET_ODDS_DECIMALS } from "../../constants/contracts";
 
 export const useMarketContract = () => {
   const placeMultipleBets = async (
