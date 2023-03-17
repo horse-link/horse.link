@@ -56,7 +56,7 @@ export const useVaultContract = () => {
     const userAddress = await signer.getAddress();
     const vaultContract = Vault__factory.connect(vault.address, signer);
     const shares = await vaultContract.balanceOf(userAddress);
-    return shares;
+    return shares.mul(100);
   };
 
   const getIndividualAssetTotal = async (vault: VaultInfo, signer: Signer) => {

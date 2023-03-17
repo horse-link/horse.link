@@ -42,11 +42,14 @@ export const VaultListTable: React.FC<Props> = ({ config, setIsModalOpen }) => {
 
       await Promise.all(
         config.vaults.map(async (vault: VaultInfo) => {
-          const shareTotal = await getIndividualShareTotal(vault, signer);
-          const assetTotal = await getIndividualAssetTotal(vault, signer);
-          const totalSupply = await getSupplyTotal(vault, signer);
+          const [shareTotal, assetTotal, totalSupply] = await Promise.all([
+            getIndividualShareTotal(vault, signer),
+            getIndividualAssetTotal(vault, signer),
+            getSupplyTotal(vault, signer)
+          ]);
+
           const percentageTotal = ethers.utils.formatUnits(
-            shareTotal.mul(100).mul(100).div(totalSupply), //the second multiplication is the precision
+            shareTotal.mul(100).div(totalSupply),
             2
           );
 
