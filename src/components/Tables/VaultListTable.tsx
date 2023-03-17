@@ -10,7 +10,7 @@ import {
 import { Address, useAccount, useSigner } from "wagmi";
 import { useWalletModal } from "../../providers/WalletModal";
 import utils from "../../utils";
-import { BigNumber, ethers } from "ethers";
+import { ethers } from "ethers";
 import { VaultActionButton } from "../Buttons";
 import Skeleton from "react-loading-skeleton";
 import { useVaultContract } from "../../hooks/contracts";
@@ -25,7 +25,7 @@ export const VaultListTable: React.FC<Props> = ({ config, setIsModalOpen }) => {
   const { isConnected } = useAccount();
   const { openWalletModal } = useWalletModal();
   const { data: signer } = useSigner();
-  const [userData, setUserData] = useState<Record<string, VaultUserData>>();
+  const [userData, setUserData] = useState<Record<Address, VaultUserData>>();
   const scanner = useScannerUrl();
 
   const { getIndividualShareTotal, getIndividualAssetTotal, getSupplyTotal } =
@@ -38,7 +38,7 @@ export const VaultListTable: React.FC<Props> = ({ config, setIsModalOpen }) => {
       return;
     }
     (async () => {
-      const individualRecords: Record<string, VaultUserData> = {};
+      const individualRecords: Record<Address, VaultUserData> = {};
 
       await Promise.all(
         config.vaults.map(async (vault: VaultInfo) => {
@@ -51,7 +51,10 @@ export const VaultListTable: React.FC<Props> = ({ config, setIsModalOpen }) => {
           );
 
           individualRecords[vault.address] = {
-            percentage: percentageTotal,
+            percentage:
+              +percentageTotal > 0 && +percentageTotal < 1
+                ? `<1`
+                : percentageTotal,
             userShareBalance: shareTotal,
             userAssetBalance: assetTotal
           };
@@ -99,16 +102,7 @@ export const VaultListTable: React.FC<Props> = ({ config, setIsModalOpen }) => {
       )
     },
     {
-      title: userData ? (
-        `${
-          +userData[vault.address].percentage < 1 &&
-          +userData[vault.address].percentage > 0
-            ? `<1`
-            : userData[vault.address].percentage
-        }%`
-      ) : (
-        <Skeleton />
-      )
+      title: userData ? `${userData[vault.address].percentage}%` : <Skeleton />
     },
     {
       title: (
