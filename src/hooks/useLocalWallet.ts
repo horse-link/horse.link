@@ -1,41 +1,77 @@
 import { ethers } from "ethers";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
+import utils from "../utils";
+import constants from "../constants";
+import { Chain } from "wagmi";
+import { useWagmiNetworkRefetch } from "../providers/WagmiNetworkRefetch";
 
-type LocalWallet = {
-  mnemonic: string;
-  address: string;
-};
-const LOCAL_WALLET_LS_KEY = "horse.link-local-wallet";
+const LS_PRIVATE_KEY = "horse.link-wallet-key";
+const LS_CHAIN_KEY = "horse.link-wallet-chain";
 
-const loadWallet = () => {
-  const raw = localStorage.getItem(LOCAL_WALLET_LS_KEY);
-  if (!raw || raw === "undefined") return;
-  return JSON.parse(raw) as LocalWallet;
-};
+export const useLocalWallet = (chains: Array<Chain>) => {
+  const { setGlobalChain } = useWagmiNetworkRefetch();
 
-const saveWallet = (wallet: LocalWallet) => {
-  localStorage.setItem(LOCAL_WALLET_LS_KEY, JSON.stringify(wallet));
-};
+  // get keys
+  const localKey = localStorage.getItem(LS_PRIVATE_KEY);
+  const [chainId, setChainId] = useState(
+    localStorage.getItem(LS_CHAIN_KEY) ?? chains[0].id.toString()
+  );
 
-const createNewWallet = () => {
-  const wallet = ethers.Wallet.createRandom();
-  const mnemonic = wallet.mnemonic.phrase;
-  const address = wallet.address;
-  return { mnemonic, address };
-};
+  const provider = useMemo(() => {
+    const chain = chains.find(chain => chain.id === +chainId);
+    if (!chain) throw new Error(`Could not find chain with id ${chainId}`);
 
-export const useLocalWallet = () => {
-  const [mnemonic, setMnemonic] = useState<string>();
-  const [address, setAddress] = useState<string>();
+    const { name, id } = utils.formatting.formatChain(chain);
 
-  useEffect(() => {
-    let wallet = loadWallet();
-    if (!wallet) {
-      wallet = createNewWallet();
-      saveWallet(wallet);
+    const alchemyProvider = new ethers.providers.AlchemyProvider(
+      {
+        name,
+        chainId: id
+      },
+      constants.env.ALCHEMY_KEY
+    );
+
+    return alchemyProvider;
+  }, [chainId, chains]);
+
+  const wallet = useMemo(() => {
+    if (!localKey) {
+      const randomWallet = ethers.Wallet.createRandom();
+      const generatedWallet = new ethers.Wallet(
+        randomWallet.privateKey,
+        provider
+      );
+
+      const encrypted = utils.general.encryptString(
+        generatedWallet.privateKey,
+        constants.env.SALT
+      );
+      localStorage.setItem(LS_PRIVATE_KEY, encrypted);
+
+      return generatedWallet;
     }
-    setMnemonic(wallet.mnemonic);
-    setAddress(wallet.address);
-  }, []);
-  return { mnemonic, address };
+
+    const decrypted = utils.general.decryptString(localKey, constants.env.SALT);
+    return new ethers.Wallet(decrypted, provider);
+  }, [localKey, provider]);
+
+  const switchNetwork = (id: number): Chain => {
+    const newChain = chains.find(chain => chain.id === id);
+    if (!newChain) throw new Error(`No chain found for id ${id}`);
+
+    const newId = newChain.id.toString();
+
+    setChainId(newId);
+    localStorage.setItem(LS_CHAIN_KEY, newId);
+
+    // global refetch trigger
+    setGlobalChain(+newId);
+
+    return utils.formatting.formatChain(newChain);
+  };
+
+  return {
+    wallet,
+    switchNetwork
+  };
 };
