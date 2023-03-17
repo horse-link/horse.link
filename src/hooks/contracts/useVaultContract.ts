@@ -52,10 +52,33 @@ export const useVaultContract = () => {
 
     return receipt.transactionHash;
   };
+  const getIndividualShareTotal = async (vault: VaultInfo, signer: Signer) => {
+    const userAddress = await signer.getAddress();
+    const vaultContract = Vault__factory.connect(vault.address, signer);
+    const shares = await vaultContract.balanceOf(userAddress);
+    return shares.mul(100);
+  };
+
+  const getIndividualAssetTotal = async (vault: VaultInfo, signer: Signer) => {
+    const userAddress = await signer.getAddress();
+    const vaultContract = Vault__factory.connect(vault.address, signer);
+    const shares = await vaultContract.balanceOf(userAddress);
+    const assets = await vaultContract.convertToAssets(shares);
+
+    return assets;
+  };
+  const getSupplyTotal = async (vault: VaultInfo, signer: Signer) => {
+    const vaultContract = Vault__factory.connect(vault.address, signer);
+    const supply = await vaultContract.totalSupply();
+    return supply;
+  };
 
   return {
     deposit,
     totalAssetsLocked,
-    withdraw
+    withdraw,
+    getIndividualShareTotal,
+    getIndividualAssetTotal,
+    getSupplyTotal
   };
 };

@@ -1,3 +1,4 @@
+import { BigNumber } from "ethers";
 import { VaultInfo } from "./config";
 
 export type Vault = {
@@ -8,10 +9,9 @@ export type Vault = {
 };
 
 export type VaultUserData = {
-  vaultBalance: string;
-  userBalance: string;
-  performance: string;
-  asset: string;
+  percentage: string;
+  userShareBalance: BigNumber;
+  userAssetBalance: BigNumber;
 };
 
 export enum VaultTransactionType {
