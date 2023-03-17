@@ -23,10 +23,8 @@ export const useMarketContract = () => {
   ) => {
     const userAddress = await signer.getAddress();
     const marketAddresses = [...new Set(data.map(d => d.market.address))];
-    const marketMultiBetInfoList: MarketMultiBetInfo[] = [];
     const marketLookup: { [marketAddress: string]: MarketMultiBetInfo } = {};
-
-    await Promise.all(
+    const marketMultiBetInfoList: MarketMultiBetInfo[] = await Promise.all(
       marketAddresses.map(async marketAddress => {
         const marketContract = Market__factory.connect(marketAddress, signer);
         const vaultAddress = await marketContract.getVaultAddress();
@@ -61,7 +59,7 @@ export const useMarketContract = () => {
           backs
         };
         marketLookup[marketAddress] = info;
-        marketMultiBetInfoList.push(info);
+        return info;
       })
     );
 
