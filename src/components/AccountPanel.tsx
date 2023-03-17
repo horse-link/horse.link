@@ -22,6 +22,12 @@ export const AccountPanel: React.FC = () => {
   const { switchNetwork } = useSwitchNetwork();
 
   useEffect(() => {
+    // If the current chain is not in the supported list,
+    if (chain && chains && switchNetwork) {
+      if (!chains.find(c => c.id === chain.id)) {
+        switchNetwork(chains[0].id);
+      }
+    }
     if (!currentToken || !signer) return;
 
     setUserBalance(undefined);
@@ -34,7 +40,7 @@ export const AccountPanel: React.FC = () => {
         )
       })
     );
-  }, [currentToken, signer]);
+  }, [currentToken, signer, chain]);
 
   const panelLoading = tokensLoading || !currentToken || !userBalance;
 
