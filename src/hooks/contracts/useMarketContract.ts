@@ -1,7 +1,5 @@
 import {
-  ERC20,
   ERC20__factory,
-  Market,
   MarketOracle__factory,
   Market__factory,
   Vault__factory
@@ -10,7 +8,7 @@ import { BigNumber, ethers, Signer } from "ethers";
 import { Config, MarketInfo } from "../../types/config";
 import utils from "../../utils";
 import { Back, BackParams } from "../../types/meets";
-import { BetHistory } from "../../types/bets";
+import { BetHistory, MarketMultiBetInfo } from "../../types/bets";
 import constants from "../../constants";
 
 export const useMarketContract = () => {
@@ -24,55 +22,48 @@ export const useMarketContract = () => {
     skipAllowanceCheck?: boolean
   ) => {
     const userAddress = await signer.getAddress();
-
-    type MarketMultiBetInfo = {
-      tokenContract: ERC20;
-      marketContract: Market;
-      assetAddress: string;
-      allowance: BigNumber;
-      totalWagers: BigNumber;
-      backs: BackParams[];
-    };
-
     const marketAddresses = [...new Set(data.map(d => d.market.address))];
     const marketMultiBetInfoList: MarketMultiBetInfo[] = [];
     const marketLookup: { [marketAddress: string]: MarketMultiBetInfo } = {};
-    for (const marketAddress of marketAddresses) {
-      const marketContract = Market__factory.connect(marketAddress, signer);
-      const vaultAddress = await marketContract.getVaultAddress();
-      const vaultContract = Vault__factory.connect(vaultAddress, signer);
-      const assetAddress = await vaultContract.asset();
-      const tokenContract = ERC20__factory.connect(assetAddress, signer);
-      const allowance = await tokenContract.allowance(
-        userAddress,
-        marketAddress
-      );
-      const decimals = await vaultContract.decimals();
-      const totalWagers = data
-        .filter(
-          d => d.market.address.toLowerCase() === marketAddress.toLowerCase()
-        )
-        .reduce((acc, curr) => {
-          return acc.add(ethers.utils.parseUnits(curr.wager, decimals));
-        }, BigNumber.from(0));
-      const backs = data
-        .filter(
-          d => d.market.address.toLowerCase() === marketAddress.toLowerCase()
-        )
-        .map(d => {
-          return { ...d.back, wager: d.wager };
-        });
-      const info: MarketMultiBetInfo = {
-        marketContract,
-        tokenContract,
-        assetAddress,
-        allowance,
-        totalWagers,
-        backs
-      };
-      marketLookup[marketAddress] = info;
-      marketMultiBetInfoList.push(info);
-    }
+
+    await Promise.all(
+      marketAddresses.map(async marketAddress => {
+        const marketContract = Market__factory.connect(marketAddress, signer);
+        const vaultAddress = await marketContract.getVaultAddress();
+        const vaultContract = Vault__factory.connect(vaultAddress, signer);
+        const assetAddress = await vaultContract.asset();
+        const tokenContract = ERC20__factory.connect(assetAddress, signer);
+        const allowance = await tokenContract.allowance(
+          userAddress,
+          marketAddress
+        );
+        const decimals = await vaultContract.decimals();
+        const totalWagers = data
+          .filter(
+            d => d.market.address.toLowerCase() === marketAddress.toLowerCase()
+          )
+          .reduce((acc, curr) => {
+            return acc.add(ethers.utils.parseUnits(curr.wager, decimals));
+          }, BigNumber.from(0));
+        const backs = data
+          .filter(
+            d => d.market.address.toLowerCase() === marketAddress.toLowerCase()
+          )
+          .map(d => {
+            return { ...d.back, wager: d.wager };
+          });
+        const info: MarketMultiBetInfo = {
+          marketContract,
+          tokenContract,
+          assetAddress,
+          allowance,
+          totalWagers,
+          backs
+        };
+        marketLookup[marketAddress] = info;
+        marketMultiBetInfoList.push(info);
+      })
+    );
 
     // find which need to be increased
     const toProcess = marketMultiBetInfoList.filter(a =>
@@ -94,31 +85,33 @@ export const useMarketContract = () => {
     }
 
     // place bets
-    const receipts: ethers.ContractReceipt[] = [];
-    for (const marketMultiBetInfo of marketMultiBetInfoList) {
-      const backStructs = marketMultiBetInfo.backs.map(back => {
-        return {
-          nonce: back.nonce,
-          propositionId: utils.formatting.formatBytes16String(
-            back.proposition_id
-          ),
-          marketId: utils.formatting.formatBytes16String(back.market_id),
-          wager: back.wager,
-          odds: ethers.utils.parseUnits(
-            back.odds.toString(),
-            constants.contracts.MARKET_ODDS_DECIMALS
-          ),
-          close: back.close,
-          end: back.end,
-          signature: back.signature
-        };
-      });
-      const tx = await marketMultiBetInfo.marketContract.multiBack(backStructs);
-      const receipt = await tx.wait();
-      receipts.push(receipt);
-    }
-
-    return receipts.map(r => r.transactionHash);
+    const transactionHashList = await Promise.all(
+      marketMultiBetInfoList.map(async marketMultiBetInfo => {
+        const backStructs = marketMultiBetInfo.backs.map((back: BackParams) => {
+          return {
+            nonce: back.nonce,
+            propositionId: utils.formatting.formatBytes16String(
+              back.proposition_id
+            ),
+            marketId: utils.formatting.formatBytes16String(back.market_id),
+            wager: back.wager,
+            odds: ethers.utils.parseUnits(
+              back.odds.toString(),
+              constants.contracts.MARKET_ODDS_DECIMALS
+            ),
+            close: back.close,
+            end: back.end,
+            signature: back.signature
+          };
+        });
+        const tx = await marketMultiBetInfo.marketContract.multiBack(
+          backStructs
+        );
+        const receipt = await tx.wait();
+        return receipt.transactionHash;
+      })
+    );
+    return transactionHashList;
   };
 
   const placeBet = async (
