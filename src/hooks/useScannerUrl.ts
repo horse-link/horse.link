@@ -1,4 +1,4 @@
-import { chain, useNetwork } from "wagmi";
+import { useNetwork } from "wagmi";
 
 const SCANNER_MAP: Map<string, string> = new Map([
   ["goerli", "https://goerli.etherscan.io"],
