@@ -6,23 +6,26 @@ import { ConfigProvider } from "./providers/Config";
 import { BetSlipContextProvider } from "./providers/BetSlip";
 import { TokenContextProvider } from "./providers/Token";
 import { ApiProvider } from "./providers/Api";
+import { WagmiNetworkRefetchProvider } from "./providers/WagmiNetworkRefetch";
 
 const App: React.FC = () => (
-  <WagmiProvider>
-    <ApiProvider>
-      <ConfigProvider>
-        <WalletModalProvider>
-          <ApolloProvider>
-            <BetSlipContextProvider>
-              <TokenContextProvider>
-                <Navigation />
-              </TokenContextProvider>
-            </BetSlipContextProvider>
-          </ApolloProvider>
-        </WalletModalProvider>
-      </ConfigProvider>
-    </ApiProvider>
-  </WagmiProvider>
+  <WagmiNetworkRefetchProvider>
+    <WagmiProvider>
+      <ApiProvider>
+        <ConfigProvider>
+          <WalletModalProvider>
+            <ApolloProvider>
+              <BetSlipContextProvider>
+                <TokenContextProvider>
+                  <Navigation />
+                </TokenContextProvider>
+              </BetSlipContextProvider>
+            </ApolloProvider>
+          </WalletModalProvider>
+        </ConfigProvider>
+      </ApiProvider>
+    </WagmiProvider>
+  </WagmiNetworkRefetchProvider>
 );
 
 export default App;

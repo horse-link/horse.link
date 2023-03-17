@@ -26,11 +26,6 @@ export const WalletModal: React.FC<Props> = (props: Props) => {
         {connectorsWithIcons.map(({ connector, icon }, index, array) => {
           // react components must be upper case :/
           const Icon = icon;
-          if (!Icon)
-            throw new Error(
-              `Could not find icon for connector ${connector.name}`
-            );
-
           const isLastElement = array.length - 1 === index;
 
           return (
@@ -41,12 +36,17 @@ export const WalletModal: React.FC<Props> = (props: Props) => {
                   onClick={e => {
                     e.preventDefault();
                     connect({ connector });
+                    closeWalletModal();
                   }}
                 >
-                  <Icon
-                    title={`${connector.name}-icon`}
-                    className="h-20 w-20 opacity-100 transition-opacity duration-500 ease-out hover:opacity-40"
-                  />
+                  {Icon ? (
+                    <Icon
+                      title={`${connector.name}-icon`}
+                      className="h-20 w-20 opacity-100 transition-opacity duration-500 ease-out hover:opacity-40"
+                    />
+                  ) : (
+                    connector.name.toUpperCase()
+                  )}
                 </label>
                 <div className="font-bold">{connector.name.toUpperCase()}</div>
                 <div>

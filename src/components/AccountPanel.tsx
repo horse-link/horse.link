@@ -45,10 +45,6 @@ export const AccountPanel: React.FC = () => {
   const panelLoading = tokensLoading || !currentToken || !userBalance;
 
   const Image = utils.images.getConnectorIcon(account.connector?.name || "");
-  if (!Image)
-    throw new Error(
-      `Could not find icon for connector ${account.connector?.name}`
-    );
 
   return (
     <div className="mt-6 w-full shadow-lg lg:mx-4 lg:mt-0">
@@ -110,7 +106,7 @@ export const AccountPanel: React.FC = () => {
               <div className="w-full px-4 py-2">
                 <span className="block text-xl font-bold">Wallet</span>
                 <div className="flex w-full items-center gap-x-4">
-                  <Image className="mx-4 my-6 scale-[2]" />
+                  {Image && <Image className="mx-4 my-6 scale-[2]" />}
                   <div className="truncate text-ellipsis font-semibold">
                     {account.address}
                   </div>

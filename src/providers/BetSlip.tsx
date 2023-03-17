@@ -193,6 +193,7 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
           signer
         );
       } catch (err: any) {
+        console.error(err);
         error = err as string;
       }
 
