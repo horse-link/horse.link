@@ -2,14 +2,17 @@ import React, { useEffect, useState } from "react";
 import { BaseTable } from ".";
 import { TableData, TableHeader, TableRow } from "../../types/table";
 import { Config, VaultInfo } from "../../types/config";
-import { VaultModalState, VaultTransactionType } from "../../types/vaults";
+import {
+  VaultModalState,
+  VaultTransactionType,
+  VaultUserData
+} from "../../types/vaults";
 import { Address, useAccount, useSigner } from "wagmi";
 import { useWalletModal } from "../../providers/WalletModal";
 import utils from "../../utils";
 import { BigNumber, ethers } from "ethers";
 import { VaultActionButton } from "../Buttons";
 import Skeleton from "react-loading-skeleton";
-import constants from "../../constants";
 import { useVaultContract } from "../../hooks/contracts";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
 
@@ -22,9 +25,7 @@ export const VaultListTable: React.FC<Props> = ({ config, setIsModalOpen }) => {
   const { isConnected } = useAccount();
   const { openWalletModal } = useWalletModal();
   const { data: signer } = useSigner();
-  const [shares, setShares] = useState<Record<Address, BigNumber>>();
-  const [assets, setAssets] = useState<Record<Address, BigNumber>>();
-  const [percentage, setPercentage] = useState<Record<string, string>>();
+  const [userData, setUserData] = useState<Record<string, VaultUserData>>();
   const scanner = useScannerUrl();
 
   const { getIndividualShareTotal, getIndividualAssetTotal, getSupplyTotal } =
@@ -32,37 +33,31 @@ export const VaultListTable: React.FC<Props> = ({ config, setIsModalOpen }) => {
 
   useEffect(() => {
     if (!isConnected || !config || !signer) {
-      //If user is disconnected we don't show any stats
-      setAssets(undefined);
-      setShares(undefined);
-      setPercentage(undefined);
+      //If a user is disconnected we show the skeleton
+      setUserData(undefined);
       return;
     }
     (async () => {
-      const shareRecord: Record<Address, BigNumber> = {};
-      const assetRecord: Record<Address, BigNumber> = {};
-      const percentageRecord: Record<Address, string> = {};
+      const individualRecords: Record<string, VaultUserData> = {};
 
       await Promise.all(
         config.vaults.map(async (vault: VaultInfo) => {
           const shareTotal = await getIndividualShareTotal(vault, signer);
-          console.log(shareTotal);
-          const vaultAddress = vault.address;
           const assetTotal = await getIndividualAssetTotal(vault, signer);
           const totalSupply = await getSupplyTotal(vault, signer);
           const percentageTotal = ethers.utils.formatUnits(
             shareTotal.mul(100).mul(100).div(totalSupply), //the second multiplication is the precision
             2
           );
-          shareRecord[vaultAddress] = shareTotal;
-          assetRecord[vaultAddress] = assetTotal;
-          percentageRecord[vaultAddress] = percentageTotal;
+
+          individualRecords[vault.address] = {
+            percentage: percentageTotal,
+            userShareBalance: shareTotal,
+            userAssetBalance: assetTotal
+          };
         })
       );
-
-      setShares(shareRecord);
-      setAssets(assetRecord);
-      setPercentage(percentageRecord);
+      setUserData(individualRecords);
     })();
   }, [config, isConnected, signer]);
 
@@ -80,29 +75,36 @@ export const VaultListTable: React.FC<Props> = ({ config, setIsModalOpen }) => {
       )}`
     },
     {
-      title: shares ? (
+      title: userData ? (
         `${utils.formatting.formatToFourDecimals(
-          ethers.utils.formatUnits(shares[vault.address], vault.asset.decimals)
+          ethers.utils.formatUnits(
+            userData[vault.address].userShareBalance,
+            vault.asset.decimals
+          )
         )}`
       ) : (
         <Skeleton />
       )
     },
     {
-      title: assets ? (
+      title: userData ? (
         `$${utils.formatting.formatToFourDecimals(
-          ethers.utils.formatUnits(assets[vault.address], vault.asset.decimals)
+          ethers.utils.formatUnits(
+            userData[vault.address].userAssetBalance,
+            vault.asset.decimals
+          )
         )}`
       ) : (
         <Skeleton />
       )
     },
     {
-      title: percentage ? (
+      title: userData ? (
         `${
-          +percentage[vault.address] < 1 && +percentage[vault.address] > 0
+          +userData[vault.address].percentage < 1 &&
+          +userData[vault.address].percentage > 0
             ? `<1`
-            : percentage[vault.address]
+            : userData[vault.address].percentage
         }%`
       ) : (
         <Skeleton />
