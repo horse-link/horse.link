@@ -1,5 +1,8 @@
 import { BigNumber } from "ethers";
+import { ERC20, Market } from "../typechain";
 import { EcSignature } from "./general";
+
+import { BackParams } from "./meets";
 
 export type ScratchedRunner = {
   b16propositionId: string;
@@ -68,3 +71,13 @@ export type BetTotals = Record<
     stake: BigNumber;
   }
 >;
+
+// All info needed to process a multibet
+export type MarketMultiBetInfo = {
+  tokenContract: ERC20;
+  marketContract: Market;
+  assetAddress: string;
+  allowance: BigNumber;
+  totalWagers: BigNumber;
+  backs: BackParams[];
+};

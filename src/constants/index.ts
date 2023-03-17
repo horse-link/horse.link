@@ -4,6 +4,7 @@ import * as env from "./env";
 import * as locations from "./locations";
 import * as contracts from "./contracts";
 import * as subgraph from "./subgraph";
+import * as wagmi from "./wagmi";
 
 const constants = {
   blockchain,
@@ -11,7 +12,8 @@ const constants = {
   env,
   locations,
   contracts,
-  subgraph
+  subgraph,
+  wagmi
 };
 
 export default constants;

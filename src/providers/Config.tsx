@@ -13,6 +13,7 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({
   const api = useApi();
 
   useEffect(() => {
+    setConfig(undefined);
     api.getConfig().then(setConfig);
   }, [api]);
 

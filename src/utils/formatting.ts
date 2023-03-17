@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import { ethers } from "ethers";
 import { MeetInfo } from "../types/meets";
 import { BetId } from "../types/subgraph";
+import { Chain } from "wagmi";
 
 export const formatToFourDecimals = (amount: string) => {
   const parsedAmount = parseFloat(amount);
@@ -164,3 +165,9 @@ export const formatOrdinals = (n: number) => {
   const suffix = suffixes.get(rule);
   return `${n}${suffix}`;
 };
+
+export const formatChain = (chain: Chain): Chain => ({
+  ...chain,
+  // take out spaces and capitals
+  name: chain.name.split(" ")[0].toLowerCase()
+});

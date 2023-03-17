@@ -1,14 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BaseTable } from ".";
 import { TableData, TableHeader, TableRow } from "../../types/table";
 import { Config, VaultInfo } from "../../types/config";
-import { VaultModalState, VaultTransactionType } from "../../types/vaults";
-import { useAccount } from "wagmi";
+import {
+  VaultModalState,
+  VaultTransactionType,
+  VaultUserData
+} from "../../types/vaults";
+import { Address, useAccount, useSigner } from "wagmi";
 import { useWalletModal } from "../../providers/WalletModal";
 import utils from "../../utils";
 import { ethers } from "ethers";
 import { VaultActionButton } from "../Buttons";
 import Skeleton from "react-loading-skeleton";
+import { useVaultContract } from "../../hooks/contracts";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
 
 type Props = {
@@ -19,7 +24,48 @@ type Props = {
 export const VaultListTable: React.FC<Props> = ({ config, setIsModalOpen }) => {
   const { isConnected } = useAccount();
   const { openWalletModal } = useWalletModal();
+  const { data: signer } = useSigner();
+  const [userData, setUserData] = useState<Record<Address, VaultUserData>>();
   const scanner = useScannerUrl();
+
+  const { getIndividualShareTotal, getIndividualAssetTotal, getSupplyTotal } =
+    useVaultContract();
+
+  useEffect(() => {
+    if (!isConnected || !config || !signer) {
+      //If a user is disconnected we show the skeleton
+      setUserData(undefined);
+      return;
+    }
+    (async () => {
+      const individualRecords: Record<Address, VaultUserData> = {};
+
+      await Promise.all(
+        config.vaults.map(async (vault: VaultInfo) => {
+          const [shareTotal, assetTotal, totalSupply] = await Promise.all([
+            getIndividualShareTotal(vault, signer),
+            getIndividualAssetTotal(vault, signer),
+            getSupplyTotal(vault, signer)
+          ]);
+
+          const percentageTotal = ethers.utils.formatUnits(
+            shareTotal.mul(100).div(totalSupply),
+            2
+          );
+
+          individualRecords[vault.address] = {
+            percentage:
+              +percentageTotal > 0 && +percentageTotal < 1
+                ? `<1`
+                : percentageTotal,
+            userShareBalance: shareTotal,
+            userAssetBalance: assetTotal
+          };
+        })
+      );
+      setUserData(individualRecords);
+    })();
+  }, [config, isConnected, signer]);
 
   const getVaultListData = (vault: VaultInfo): TableData[] => [
     {
@@ -33,6 +79,33 @@ export const VaultListTable: React.FC<Props> = ({ config, setIsModalOpen }) => {
       title: `$${utils.formatting.formatToFourDecimals(
         ethers.utils.formatUnits(vault.totalAssets, vault.asset.decimals)
       )}`
+    },
+    {
+      title: userData ? (
+        `${utils.formatting.formatToFourDecimals(
+          ethers.utils.formatUnits(
+            userData[vault.address].userShareBalance,
+            vault.asset.decimals
+          )
+        )}`
+      ) : (
+        <Skeleton />
+      )
+    },
+    {
+      title: userData ? (
+        `$${utils.formatting.formatToFourDecimals(
+          ethers.utils.formatUnits(
+            userData[vault.address].userAssetBalance,
+            vault.asset.decimals
+          )
+        )}`
+      ) : (
+        <Skeleton />
+      )
+    },
+    {
+      title: userData ? `${userData[vault.address].percentage}%` : <Skeleton />
     },
     {
       title: (
@@ -81,6 +154,15 @@ export const VaultListTable: React.FC<Props> = ({ config, setIsModalOpen }) => {
     },
     {
       title: "TVL"
+    },
+    {
+      title: "My Shares"
+    },
+    {
+      title: "My Value"
+    },
+    {
+      title: "My Percentage"
     },
     {
       title: "Vault Address"

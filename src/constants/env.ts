@@ -9,5 +9,5 @@ const getEnvVariable = (name: EnvVariable) => {
 export const API_URL = getEnvVariable("VITE_API_URL");
 export const ALCHEMY_KEY = getEnvVariable("VITE_ALCHEMY_API_KEY");
 export const SUBGRAPH_URL = getEnvVariable("VITE_SUBGRAPH_URL");
-export const WALLET_NAV_ACTIVE = getEnvVariable("VITE_WALLET_NAV_ACTIVE");
 export const EVENT_TS = getEnvVariable("VITE_EVENT_TS");
+export const SALT = getEnvVariable("VITE_SALT");
