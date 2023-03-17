@@ -132,6 +132,12 @@ export type Back = {
   signature: EcSignature;
 };
 
+// The parameters for a call to back() on the Market contract.
+// Same as Back but with a wager attribute
+export type BackParams = Back & {
+  wager: string;
+};
+
 export type WinningHorse = {
   runner: string;
   number: number;
