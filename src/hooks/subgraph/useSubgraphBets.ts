@@ -126,7 +126,7 @@ export const useSubgraphBets = (
         })
       );
       try {
-        let signedBets = (
+        const signedBets = (
           await Promise.all(
             bets
               .filter(bet => !!bet)
