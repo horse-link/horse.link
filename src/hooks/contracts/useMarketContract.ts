@@ -142,21 +142,27 @@ export const useMarketContract = () => {
     }
 
     const receipt = await (
-      await marketContract.back({
-        nonce: back.nonce,
-        propositionId: utils.formatting.formatBytes16String(
-          back.proposition_id
-        ),
-        marketId: utils.formatting.formatBytes16String(back.market_id),
-        wager,
-        odds: ethers.utils.parseUnits(
-          back.odds.toString(),
-          constants.contracts.MARKET_ODDS_DECIMALS
-        ),
-        close: back.close,
-        end: back.end,
-        signature: back.signature
-      })
+      await marketContract.back(
+        {
+          nonce: back.nonce,
+          propositionId: utils.formatting.formatBytes16String(
+            back.proposition_id
+          ),
+          marketId: utils.formatting.formatBytes16String(back.market_id),
+          wager,
+          odds: ethers.utils.parseUnits(
+            back.odds.toString(),
+            constants.contracts.MARKET_ODDS_DECIMALS
+          ),
+          close: back.close,
+          end: back.end,
+          signature: back.signature
+        },
+        {
+          // transactions take approx 425,000 gas which is ~$100 on testnet
+          gasLimit: 450000
+        }
+      )
     ).wait();
 
     return receipt.transactionHash;
