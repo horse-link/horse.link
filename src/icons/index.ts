@@ -1,10 +1,10 @@
 import { ReactComponent as MetaMaskIcon } from "./metamask.svg";
-import { ReactComponent as WalletConnectIcon } from "./walletConnect.svg";
+import { ReactComponent as WalletConnectLegacyIcon } from "./walletConnectLegacy.svg";
 import { ReactComponent as HorseLinkIcon } from "./horselink.svg";
 
 export const SVG_ICONS: Record<string, SvgIcon> = {
   MetaMask: MetaMaskIcon,
-  WalletConnect: WalletConnectIcon,
+  WalletConnectLegacy: WalletConnectLegacyIcon,
   HorseLink: HorseLinkIcon
 };
 

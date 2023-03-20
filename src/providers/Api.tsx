@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useMemo } from "react";
 import { Api } from "../apis/Api";
-import { chain, useNetwork } from "wagmi";
+import { useNetwork } from "wagmi";
 import { useNetworkToggle } from "./NetworkToggle";
+import * as chain from "@wagmi/chains";
 
 // use placeholder default chain -- has no effect
 export const ApiContext = createContext(new Api(chain.goerli));
