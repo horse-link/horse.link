@@ -1,9 +1,10 @@
 import { render } from "@testing-library/react";
 import { ApolloProvider } from "../providers/Apollo";
 import { WalletModalProvider } from "../providers/WalletModal";
-import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
+import { configureChains, createClient, WagmiConfig } from "wagmi";
+import * as chain from "@wagmi/chains";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
-import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
+import { WalletConnectLegacyConnector } from "wagmi/connectors/walletConnectLegacy";
 import { publicProvider } from "wagmi/providers/public";
 
 const { chains, provider } = configureChains(
@@ -14,7 +15,7 @@ const { chains, provider } = configureChains(
 const wagmiClient = createClient({
   connectors: [
     new MetaMaskConnector({ chains }),
-    new WalletConnectConnector({
+    new WalletConnectLegacyConnector({
       chains,
       options: {
         qrcode: true

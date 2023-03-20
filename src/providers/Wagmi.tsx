@@ -1,7 +1,8 @@
-import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
+import { configureChains, createClient, WagmiConfig } from "wagmi";
+import * as chain from "@wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
-import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
+import { WalletConnectLegacyConnector } from "wagmi/connectors/walletConnectLegacy";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import constants from "../constants";
 import { useMemo, useRef } from "react";
@@ -32,7 +33,7 @@ export const WagmiProvider: React.FC<{ children: React.ReactNode }> = ({
         autoConnect: true,
         connectors: [
           new MetaMaskConnector({ chains }),
-          new WalletConnectConnector({
+          new WalletConnectLegacyConnector({
             chains,
             options: {
               qrcode: true
