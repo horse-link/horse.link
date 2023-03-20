@@ -1,24 +1,31 @@
 import Navigation from "./Navigation";
-import { GlobalErrorProvider } from "./providers/GlobalError";
 import { WagmiProvider } from "./providers/Wagmi";
 import { WalletModalProvider } from "./providers/WalletModal";
-import ApolloProvider from "./providers/Apollo";
+import { ApolloProvider } from "./providers/Apollo";
 import { ConfigProvider } from "./providers/Config";
+import { BetSlipContextProvider } from "./providers/BetSlip";
+import { TokenContextProvider } from "./providers/Token";
+import { ApiProvider } from "./providers/Api";
+import { WagmiNetworkRefetchProvider } from "./providers/WagmiNetworkRefetch";
 
-const App = () => {
-  return (
-    <ConfigProvider>
-      <GlobalErrorProvider>
-        <WagmiProvider>
+const App: React.FC = () => (
+  <WagmiNetworkRefetchProvider>
+    <WagmiProvider>
+      <ApiProvider>
+        <ConfigProvider>
           <WalletModalProvider>
             <ApolloProvider>
-              <Navigation />
+              <BetSlipContextProvider>
+                <TokenContextProvider>
+                  <Navigation />
+                </TokenContextProvider>
+              </BetSlipContextProvider>
             </ApolloProvider>
           </WalletModalProvider>
-        </WagmiProvider>
-      </GlobalErrorProvider>
-    </ConfigProvider>
-  );
-};
+        </ConfigProvider>
+      </ApiProvider>
+    </WagmiProvider>
+  </WagmiNetworkRefetchProvider>
+);
 
 export default App;

@@ -1,32 +1,63 @@
 import axios, { AxiosInstance } from "axios";
-import { BigNumberish, ethers } from "ethers";
+import { ethers } from "ethers";
+import utils from "../utils";
+import { Config } from "../types/config";
 import {
-  BetHistoryResponse,
-  EcSignature,
-  Market,
+  MeetInfo,
+  MeetResults,
   Runner,
-  SignedBetDataResponse,
-  SignedMeetingsResponse,
-  Token,
-  Vault,
-  VaultUserData
-} from "../types/index";
-import { isUsdt } from "../utils/config";
+  SignedMeetingsResponse
+} from "../types/meets";
+import { BetHistoryResponse, SignedBetDataResponse } from "../types/bets";
+import { Market, Vault } from "../typechain";
+import { Token } from "graphql";
+import { VaultUserData } from "../types/vaults";
+import { Network } from "../types/general";
+import constants from "../constants";
 
 export class Api {
-  private client: AxiosInstance;
-  constructor() {
-    this.client = axios.create({
-      baseURL: process.env.REACT_APP_API_URL || "https://api.horse.link",
+  public client: AxiosInstance;
+
+  constructor(network: Network) {
+    this.client = this.createAxiosClient(network);
+  }
+
+  private createAxiosClient = (network: Network) =>
+    axios.create({
+      baseURL: constants.env.API_URL,
       headers: {
-        Accept: "application/json"
+        Accept: "application/json",
+        "chain-id": network.id
       }
     });
-  }
+
+  public getConfig = async (): Promise<Config> => {
+    const { data } = await this.client.get<Config>("/config");
+
+    return data;
+  };
 
   public getMeetings = async (): Promise<SignedMeetingsResponse> => {
     const { data } = await this.client.get<SignedMeetingsResponse>("/meetings");
 
+    return data;
+  };
+
+  // Get all the races for a given meeting
+  public getMeeting = async (locationCode: string): Promise<MeetInfo> => {
+    const { data } = await this.client.get<MeetInfo>(
+      `/meetings/${locationCode}`
+    );
+
+    return data;
+  };
+
+  public getRaceResult = async (
+    propositionId: string
+  ): Promise<MeetResults> => {
+    const { data } = await this.client.get<MeetResults>(
+      `/meetings/results/${propositionId}`
+    );
     return data;
   };
 
@@ -41,14 +72,11 @@ export class Api {
     return data;
   };
 
-  public requestSignedBetData = async (
+  public getWinningResultSignature = async (
     marketId: string,
-    propositionId: string
+    sign: boolean = false
   ): Promise<SignedBetDataResponse> => {
-    const { data } = await this.client.post("/bets/sign", {
-      marketId,
-      propositionId
-    });
+    const { data } = await this.client.get(`/bets/${marketId}?sign=${sign}`);
 
     return data;
   };
@@ -61,37 +89,18 @@ export class Api {
     return data;
   };
 
-  public requestBackingSign = async (
-    nonce: string,
-    propositionId: string,
-    marketId: string,
-    wager: BigNumberish,
-    odds: BigNumberish,
-    close: BigNumberish,
-    end: BigNumberish
-  ): Promise<{ signature: EcSignature }> => {
-    const { data } = await this.client.post(`/backing-sign`, {
-      nonce,
-      propositionId,
-      marketId,
-      wager,
-      odds,
-      close,
-      end
-    });
-
-    return data;
-  };
-
   public requestTokenFromFaucet = async (
     userAddress: string,
     tokenAddress: string
   ): Promise<{ tx: string }> => {
+    const config = await this.getConfig();
+    const amount = utils.config.isUsdt(tokenAddress, config)
+      ? ethers.utils.parseUnits("100", 6)
+      : ethers.utils.parseUnits("100");
+
     const { data } = await this.client.post(`/faucet`, {
       to: userAddress,
-      amount: isUsdt(tokenAddress)
-        ? ethers.utils.parseUnits("10", 6).toString()
-        : ethers.utils.formatEther(10),
+      amount: amount.toString(),
       address: tokenAddress
     });
 
@@ -188,7 +197,3 @@ export class Api {
     return data;
   };
 }
-
-const api = new Api();
-
-export default api;

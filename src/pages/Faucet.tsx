@@ -1,0 +1,107 @@
+import { ethers } from "ethers";
+import { AddressLink, Card, PageLayout } from "../components";
+import React, { useEffect, useState } from "react";
+import { FaucetBalance } from "../types/faucet";
+import { useConfig } from "../providers/Config";
+import { ERC20__factory } from "../typechain";
+import { useBalance, useProvider } from "wagmi";
+import utils from "../utils";
+import { FaucetModal } from "../components/Modals";
+import { FaucetTable } from "../components/Tables";
+
+const FAUCET_ADDRESS = "0xf919eaf2e37aac718aa19668b9071ee42c02c081";
+
+const Faucet: React.FC = () => {
+  const config = useConfig();
+  const provider = useProvider();
+  const { data: ethBalance } = useBalance({
+    address: FAUCET_ADDRESS
+  });
+  const [balances, setBalances] = useState<Array<FaucetBalance>>();
+  const [hash, setHash] = useState<string>();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // fetch balances
+  useEffect(() => {
+    if (!config || !ethBalance) return;
+
+    Promise.all(
+      config.tokens.map(async t => {
+        const contract = ERC20__factory.connect(t.address, provider);
+        const [balance, decimals, symbol] = await Promise.all([
+          contract.balanceOf(FAUCET_ADDRESS),
+          contract.decimals(),
+          contract.symbol()
+        ]);
+
+        return {
+          name: t.name,
+          amount: balance,
+          symbol,
+          decimals
+        };
+      })
+    )
+      .then(b => {
+        const newBalances = [
+          {
+            name: "ETH",
+            symbol: "ETH",
+            amount: ethBalance.value,
+            decimals: ethBalance.decimals
+          },
+          ...b
+        ];
+
+        setBalances(newBalances);
+      })
+      .catch(console.error);
+  }, [config, provider, ethBalance]);
+
+  const closeModal = () => setIsModalOpen(false);
+
+  return (
+    <PageLayout>
+      {balances ? (
+        <div className="mb-4 grid w-full gap-x-1 gap-y-2 lg:grid-cols-4 lg:gap-x-4 lg:gap-y-4">
+          {balances?.map(b => (
+            <Card
+              key={b.name}
+              title={b.name}
+              data={`${utils.formatting.formatToFourDecimals(
+                ethers.utils.formatUnits(b.amount, b.decimals)
+              )} ${b.symbol}`}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="mb-4 w-full">
+          <Card title="Loading faucet balances..." />
+        </div>
+      )}
+      <h3 className="mb-3 text-lg font-medium text-gray-900">Faucet</h3>
+      <div className="container-fluid overflow-hidden rounded-lg bg-emerald-700 px-4 py-5 shadow sm:p-6">
+        <h2 className="mb-3 text-lg font-medium text-gray-900">
+          Claim tokens on the Goerli Testnet and start punting!
+        </h2>
+        <p className="my-2 text-xs">
+          You can find the faucet at{" "}
+          {<AddressLink address={FAUCET_ADDRESS} className="underline" />}. This
+          page is used for testing the beta functionality of the web app, and
+          does not have any bearing on real world earnings, winnings, and/or
+          losses; it is purely for testing.
+        </p>
+      </div>
+      <div className="mt-4 w-full">
+        <FaucetTable
+          balances={balances}
+          setHash={setHash}
+          setIsModalOpen={setIsModalOpen}
+        />
+      </div>
+      <FaucetModal isOpen={isModalOpen} onClose={closeModal} txHash={hash} />
+    </PageLayout>
+  );
+};
+
+export default Faucet;

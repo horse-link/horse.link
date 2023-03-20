@@ -1,16 +1,8 @@
+/** @type {import('tailwindcss').Config} */
 module.exports = {
-  purge: [],
-  purge: ["./src/**/*.{js,jsx,ts,tsx}", "./public/index.html"],
-  darkMode: false, // or 'media' or 'class'
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {
-      spacing: {
-        152: "38rem"
-      }
-    }
-  },
-  variants: {
     extend: {}
   },
-  plugins: [require("@tailwindcss/forms")]
+  plugins: [require("tailwind-scrollbar")]
 };
