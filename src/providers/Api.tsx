@@ -14,7 +14,7 @@ export const ApiContext = createContext<ApiContextType>({
 // most common use case
 export const useApi = () => useContext(ApiContext).api;
 
-// force new chain
+// expanded context
 export const useApiWithForce = () => useContext(ApiContext);
 
 export const ApiProvider: React.FC<{ children: React.ReactNode }> = ({
