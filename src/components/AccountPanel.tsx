@@ -9,10 +9,14 @@ import { useERC20Contract } from "../hooks/contracts";
 import { ethers } from "ethers";
 import { useWalletModal } from "../providers/WalletModal";
 import { Listbox, Transition } from "@headlessui/react";
-import { useLocalNetworkContext } from "../providers/LocalNetwork";
+import { useApiWithForce } from "../providers/Api";
+import { Network } from "../types/general";
+import { useApolloWithForce } from "../providers/Apollo";
 
 export const AccountPanel: React.FC = () => {
   const { currentToken, tokensLoading, openModal } = useTokenContext();
+  const { forceNewChain: forceApi } = useApiWithForce();
+  const { forceNewChain: forceApollo } = useApolloWithForce();
 
   const { openWalletModal } = useWalletModal();
   const account = useAccount();
@@ -21,7 +25,6 @@ export const AccountPanel: React.FC = () => {
   const [userBalance, setUserBalance] = useState<UserBalance>();
   const { chain, chains } = useNetwork();
   const { switchNetwork } = useSwitchNetwork();
-  const { setGlobalId } = useLocalNetworkContext();
 
   useEffect(() => {
     // If the current chain is not in the supported list,
@@ -47,6 +50,12 @@ export const AccountPanel: React.FC = () => {
   const panelLoading = tokensLoading || !currentToken || !userBalance;
 
   const Image = utils.images.getConnectorIcon(account.connector?.name || "");
+
+  const switchNetworkWithForce = (chain: Network) => {
+    switchNetwork?.(chain.id);
+    forceApi(chain);
+    forceApollo(chain);
+  };
 
   return (
     <div className="mt-6 w-full shadow-lg lg:mx-4 lg:mt-0">
@@ -78,13 +87,7 @@ export const AccountPanel: React.FC = () => {
                           className="whitespace-nowrap"
                         >
                           <button
-                            onClick={() => {
-                              if (!switchNetwork) {
-                                setGlobalId(chain.id);
-                              } else {
-                                switchNetwork(chain.id);
-                              }
-                            }}
+                            onClick={() => switchNetworkWithForce(chain)}
                             className="w-full rounded-md py-2 px-6 hover:bg-gray-100"
                           >
                             {chain.name}

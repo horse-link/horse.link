@@ -1,6 +1,7 @@
 import { ethers, providers } from "ethers";
 import { Chain, Connector } from "wagmi";
 import { Address, normalizeChainId } from "@wagmi/core";
+import { Network } from "../types/general";
 
 // documentation:
 // https://wagmi.sh/examples/custom-connector
@@ -9,6 +10,7 @@ import { Address, normalizeChainId } from "@wagmi/core";
 
 type Options = {
   wallet: ethers.Wallet;
+  setChain: (chain: Network) => void;
 };
 
 export const LOCAL_WALLET_ID = "horselinkwallet";
@@ -26,6 +28,7 @@ export class HorseLinkWalletConnector extends Connector<
   private _wallet: ethers.Wallet;
 
   private _chains: Array<Chain>;
+  private _setChain: (chain: Network) => void;
 
   constructor({
     chains,
@@ -42,6 +45,7 @@ export class HorseLinkWalletConnector extends Connector<
     });
 
     this._wallet = options.wallet;
+    this._setChain = options.setChain;
 
     this._chains = chains;
   }
@@ -76,6 +80,15 @@ export class HorseLinkWalletConnector extends Connector<
     provider.removeListener("accountsChanged", this.onAccountsChanged);
     provider.removeListener("chainChanged", this.onChainChanged);
     provider.removeListener("disconnect", this.onDisconnect);
+  }
+
+  async switchChain(chainId: number): Promise<Chain> {
+    const newChain = this._chains.find(c => c.id === chainId);
+    if (!newChain) throw new Error(`No chain for id ${chainId}`);
+
+    this._setChain(newChain);
+
+    return newChain;
   }
 
   // utils

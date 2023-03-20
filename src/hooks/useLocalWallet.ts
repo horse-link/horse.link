@@ -1,14 +1,13 @@
 import { ethers } from "ethers";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import utils from "../utils";
 import constants from "../constants";
 import { Network } from "../types/general";
-import { useLocalNetworkContext } from "../providers/LocalNetwork";
 
 const LS_PRIVATE_KEY = "horse.link-wallet-key";
 
 export const useLocalWallet = (chains: Array<Network>) => {
-  const { globalId } = useLocalNetworkContext();
+  const [chain, setChain] = useState<Network>(constants.blockchain.CHAINS[0]);
 
   // get keys
   const localKey = localStorage.getItem(LS_PRIVATE_KEY);
@@ -31,7 +30,7 @@ export const useLocalWallet = (chains: Array<Network>) => {
   );
 
   const wallet = useMemo(() => {
-    const provider = providers.find(p => p._network.chainId === globalId);
+    const provider = providers.find(p => p._network.chainId === chain.id);
     if (!provider) throw new Error(`No provider available`);
 
     if (!localKey) {
@@ -52,9 +51,10 @@ export const useLocalWallet = (chains: Array<Network>) => {
 
     const decrypted = utils.general.decryptString(localKey, constants.env.SALT);
     return new ethers.Wallet(decrypted, provider);
-  }, [localKey, providers, globalId]);
+  }, [localKey, providers, chain]);
 
   return {
-    wallet
+    wallet,
+    setChain
   };
 };
