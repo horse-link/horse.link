@@ -9,24 +9,27 @@ import { useERC20Contract } from "../hooks/contracts";
 import { ethers } from "ethers";
 import { useWalletModal } from "../providers/WalletModal";
 import { Listbox, Transition } from "@headlessui/react";
-import { useNetworkToggle } from "../providers/NetworkToggle";
+import { useApiWithForce } from "../providers/Api";
+import { Network } from "../types/general";
+import { useApolloWithForce } from "../providers/Apollo";
 
 export const AccountPanel: React.FC = () => {
   const { currentToken, tokensLoading, openModal } = useTokenContext();
+  const { forceNewChain: forceApi } = useApiWithForce();
+  const { forceNewChain: forceApollo } = useApolloWithForce();
 
   const { openWalletModal } = useWalletModal();
   const account = useAccount();
   const { data: signer } = useSigner();
   const { getBalance } = useERC20Contract();
   const [userBalance, setUserBalance] = useState<UserBalance>();
-  const { chains } = useNetwork();
+  const { chain, chains } = useNetwork();
   const { switchNetwork } = useSwitchNetwork();
-  const selectedNetwork = useNetworkToggle();
 
   useEffect(() => {
     // If the current chain is not in the supported list,
-    if (selectedNetwork && switchNetwork) {
-      if (!chains.find(c => c.id === selectedNetwork.id)) {
+    if (chain && switchNetwork) {
+      if (!chains.find(c => c.id === chain.id)) {
         switchNetwork(chains[0].id);
       }
     }
@@ -42,11 +45,17 @@ export const AccountPanel: React.FC = () => {
         )
       })
     );
-  }, [currentToken, signer, selectedNetwork]);
+  }, [currentToken, signer, chain]);
 
   const panelLoading = tokensLoading || !currentToken || !userBalance;
 
   const Image = utils.images.getConnectorIcon(account.connector?.name || "");
+
+  const switchNetworkWithForce = (chain: Network) => {
+    switchNetwork?.(chain.id);
+    forceApi(chain);
+    forceApollo(chain);
+  };
 
   return (
     <div className="mt-6 w-full shadow-lg lg:mx-4 lg:mt-0">
@@ -58,7 +67,7 @@ export const AccountPanel: React.FC = () => {
               {({ open }) => (
                 <React.Fragment>
                   <Listbox.Button className="rounded-md bg-indigo-700 px-4 py-2 font-semibold">
-                    {selectedNetwork?.name || "Network"}
+                    {chain?.name || "Network"}
                   </Listbox.Button>
                   <Transition
                     show={open}
@@ -78,7 +87,7 @@ export const AccountPanel: React.FC = () => {
                           className="whitespace-nowrap"
                         >
                           <button
-                            onClick={() => switchNetwork?.(chain.id)}
+                            onClick={() => switchNetworkWithForce(chain)}
                             className="w-full rounded-md py-2 px-6 hover:bg-gray-100"
                           >
                             {chain.name}

@@ -1,47 +1,53 @@
-import {
-  ApolloClient,
-  HttpLink,
-  InMemoryCache,
-  NormalizedCacheObject
-} from "@apollo/client";
-import React, { createContext, useContext, useMemo } from "react";
+import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
+import React, { createContext, useContext, useMemo, useState } from "react";
 import constants from "../constants";
 import { useNetwork } from "wagmi";
-import { useNetworkToggle } from "./NetworkToggle";
+import { ApolloContextType } from "../types/context";
+import { Network } from "../types/general";
 
-const ApolloContext = createContext<ApolloClient<NormalizedCacheObject>>(
-  new ApolloClient({
+const ApolloContext = createContext<ApolloContextType>({
+  client: new ApolloClient({
     link: new HttpLink({
       uri: constants.env.SUBGRAPH_URL,
       fetch
     }),
     cache: new InMemoryCache()
-  })
-);
+  }),
+  forceNewChain: () => {}
+});
 
-export const useApolloContext = () => useContext(ApolloContext);
+// most common use case
+export const useApolloContext = () => useContext(ApolloContext).client;
+
+// expanded context
+export const useApolloWithForce = () => useContext(ApolloContext);
 
 export const ApolloProvider: React.FC<{ children: React.ReactNode }> = ({
   children
 }) => {
-  const { chains } = useNetwork();
-  const selectedChain = useNetworkToggle();
+  const { chain: currentChain } = useNetwork();
+  const [chain, setChain] = useState(currentChain);
 
   const rawSuffix =
-    selectedChain?.name.toLowerCase() || chains[0].name.toLowerCase();
+    chain?.name.toLowerCase() ||
+    constants.blockchain.CHAINS[0].name.toLowerCase();
   // strip out extra words
   const suffix = rawSuffix.split(" ")[0].toLowerCase();
 
+  const forceNewChain = (newChain: Network) => setChain(newChain);
+
   const client = useMemo(
-    () =>
-      new ApolloClient({
+    () => ({
+      client: new ApolloClient({
         link: new HttpLink({
           uri: `${constants.env.SUBGRAPH_URL}-${suffix}`,
           fetch
         }),
         cache: new InMemoryCache()
       }),
-    [suffix]
+      forceNewChain
+    }),
+    [suffix, forceNewChain]
   );
 
   return (

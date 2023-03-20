@@ -1,6 +1,9 @@
 import { MarketInfo } from "./config";
 import { Back, RaceData, Runner } from "./meets";
 import { Token } from "./tokens";
+import { Api } from "../apis/Api";
+import { Network } from "./general";
+import { ApolloClient, NormalizedCacheObject } from "@apollo/client";
 
 export type BetSlipErrorEntry = {
   bet: Omit<BetSlipEntry, "id">;
@@ -44,7 +47,12 @@ export type TokenContextType = {
   openModal: () => void;
 };
 
-export type WagmiNetworkRefetchContextType = {
-  setGlobalChain: (id: number) => void;
-  globalChainId?: number;
+export type ApiContextType = {
+  api: Api;
+  forceNewChain: (newChain: Network) => void;
+};
+
+export type ApolloContextType = {
+  client: ApolloClient<NormalizedCacheObject>;
+  forceNewChain: (newChain: Network) => void;
 };

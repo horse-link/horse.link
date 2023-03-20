@@ -1,5 +1,7 @@
 import { ethers, providers } from "ethers";
 import { Chain, Connector } from "wagmi";
+import { Address, normalizeChainId } from "@wagmi/core";
+import { Network } from "../types/general";
 
 // documentation:
 // https://wagmi.sh/examples/custom-connector
@@ -8,7 +10,7 @@ import { Chain, Connector } from "wagmi";
 
 type Options = {
   wallet: ethers.Wallet;
-  switchNetwork: (id: number) => Chain;
+  setChain: (chain: Network) => void;
 };
 
 export const LOCAL_WALLET_ID = "horselinkwallet";
@@ -24,9 +26,9 @@ export class HorseLinkWalletConnector extends Connector<
 
   // user wallet and network setter
   private _wallet: ethers.Wallet;
-  private _switchNetwork: (id: number) => Chain;
 
   private _chains: Array<Chain>;
+  private _setChain: (chain: Network) => void;
 
   constructor({
     chains,
@@ -43,8 +45,9 @@ export class HorseLinkWalletConnector extends Connector<
     });
 
     this._wallet = options.wallet;
+    this._setChain = options.setChain;
+
     this._chains = chains;
-    this._switchNetwork = options.switchNetwork;
   }
 
   // core
@@ -57,7 +60,6 @@ export class HorseLinkWalletConnector extends Connector<
       provider.on("disconnect", this.onDisconnect);
 
       const id = chainId || (await this.getChainId());
-
       const account = await this.getAccount();
 
       return {
@@ -81,31 +83,43 @@ export class HorseLinkWalletConnector extends Connector<
   }
 
   async switchChain(chainId: number): Promise<Chain> {
-    if (this.isChainUnsupported(chainId))
-      throw new Error(`Chain ${chainId} is unsupported`);
+    const newChain = this._chains.find(c => c.id === chainId);
+    if (!newChain) throw new Error(`No chain for id ${chainId}`);
 
-    const newChain = this._switchNetwork(chainId);
-
-    const provider = await this.getProvider();
-    provider.emit("chainChanged", [newChain.id]);
+    this._setChain(newChain);
 
     return newChain;
   }
 
+  // utils
+  isChainUnsupported(chainId: number): boolean {
+    return !this._chains.map(c => c.id).includes(chainId);
+  }
+
+  async isAuthorized(): Promise<boolean> {
+    try {
+      const account = await this.getAccount();
+      return !!account;
+    } catch {
+      return false;
+    }
+  }
+
   // event listeners
-  protected onAccountsChanged(accounts: `0x${string}`[]): void {
+  protected onAccountsChanged(accounts: Array<Address>): void {
     if (!accounts.length) {
       this.emit("disconnect");
       return;
     }
 
-    this.emit("change", { account: accounts[0] });
+    this.emit("change", { account: ethers.utils.getAddress(accounts[0]) });
   }
 
   protected onChainChanged(chain: string | number): void {
+    const id = normalizeChainId(chain);
     this.emit("change", {
       chain: {
-        id: +chain,
+        id,
         unsupported: false
       }
     });
@@ -141,23 +155,5 @@ export class HorseLinkWalletConnector extends Connector<
   // required by class extension
   async getSigner() {
     return this.getWallet();
-  }
-
-  // utils
-  isChainUnsupported(chainId: number): boolean {
-    return !this._chains.map(c => c.id).includes(chainId);
-  }
-
-  isUserRejectedRequestError(e: unknown) {
-    return /(user rejected)/i.test((e as Error).message);
-  }
-
-  async isAuthorized(): Promise<boolean> {
-    try {
-      const account = await this.getAccount();
-      return !!account;
-    } catch {
-      return false;
-    }
   }
 }
