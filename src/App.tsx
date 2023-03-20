@@ -7,23 +7,26 @@ import { BetSlipContextProvider } from "./providers/BetSlip";
 import { TokenContextProvider } from "./providers/Token";
 import { ApiProvider } from "./providers/Api";
 import { WagmiNetworkRefetchProvider } from "./providers/WagmiNetworkRefetch";
+import { NetworkToggleProvider } from "./providers/NetworkToggle";
 
 const App: React.FC = () => (
   <WagmiNetworkRefetchProvider>
     <WagmiProvider>
-      <ApiProvider>
-        <ConfigProvider>
-          <WalletModalProvider>
+      <NetworkToggleProvider>
+        <ApiProvider>
+          <ConfigProvider>
             <ApolloProvider>
-              <BetSlipContextProvider>
-                <TokenContextProvider>
-                  <Navigation />
-                </TokenContextProvider>
-              </BetSlipContextProvider>
+              <WalletModalProvider>
+                <BetSlipContextProvider>
+                  <TokenContextProvider>
+                    <Navigation />
+                  </TokenContextProvider>
+                </BetSlipContextProvider>
+              </WalletModalProvider>
             </ApolloProvider>
-          </WalletModalProvider>
-        </ConfigProvider>
-      </ApiProvider>
+          </ConfigProvider>
+        </ApiProvider>
+      </NetworkToggleProvider>
     </WagmiProvider>
   </WagmiNetworkRefetchProvider>
 );

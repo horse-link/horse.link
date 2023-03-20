@@ -9,6 +9,7 @@ import { useERC20Contract } from "../hooks/contracts";
 import { ethers } from "ethers";
 import { useWalletModal } from "../providers/WalletModal";
 import { Listbox, Transition } from "@headlessui/react";
+import { useNetworkToggle } from "../providers/NetworkToggle";
 
 export const AccountPanel: React.FC = () => {
   const { currentToken, tokensLoading, openModal } = useTokenContext();
@@ -18,13 +19,14 @@ export const AccountPanel: React.FC = () => {
   const { data: signer } = useSigner();
   const { getBalance } = useERC20Contract();
   const [userBalance, setUserBalance] = useState<UserBalance>();
-  const { chains, chain } = useNetwork();
+  const { chains } = useNetwork();
   const { switchNetwork } = useSwitchNetwork();
+  const selectedNetwork = useNetworkToggle();
 
   useEffect(() => {
     // If the current chain is not in the supported list,
-    if (chain && chains && switchNetwork) {
-      if (!chains.find(c => c.id === chain.id)) {
+    if (selectedNetwork && switchNetwork) {
+      if (!chains.find(c => c.id === selectedNetwork.id)) {
         switchNetwork(chains[0].id);
       }
     }
@@ -40,7 +42,7 @@ export const AccountPanel: React.FC = () => {
         )
       })
     );
-  }, [currentToken, signer, chain]);
+  }, [currentToken, signer, selectedNetwork]);
 
   const panelLoading = tokensLoading || !currentToken || !userBalance;
 
@@ -56,7 +58,7 @@ export const AccountPanel: React.FC = () => {
               {({ open }) => (
                 <React.Fragment>
                   <Listbox.Button className="rounded-md bg-indigo-700 px-4 py-2 font-semibold">
-                    {chain?.name || "Network"}
+                    {selectedNetwork?.name || "Network"}
                   </Listbox.Button>
                   <Transition
                     show={open}
@@ -107,7 +109,7 @@ export const AccountPanel: React.FC = () => {
                 <span className="block text-xl font-bold">Wallet</span>
                 <div className="flex w-full items-center gap-x-4">
                   {Image && <Image className="mx-4 my-6 scale-[2]" />}
-                  <div className="truncate text-ellipsis font-semibold">
+                  <div className="truncate font-semibold">
                     {account.address}
                   </div>
                 </div>

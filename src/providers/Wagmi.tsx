@@ -4,9 +4,8 @@ import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import constants from "../constants";
-import { HorseLinkWalletConnector } from "../constants/wagmi";
 import { useMemo, useRef } from "react";
-import { useLocalWallet } from "../hooks/useLocalWallet";
+import { useHorseLinkConnector } from "../hooks/useHorseLinkConnector";
 
 export const WagmiProvider: React.FC<{ children: React.ReactNode }> = ({
   children
@@ -25,7 +24,7 @@ export const WagmiProvider: React.FC<{ children: React.ReactNode }> = ({
     )
   );
 
-  const { wallet, switchNetwork } = useLocalWallet(chains);
+  const HorseLinkConnector = useHorseLinkConnector(chains);
 
   const client = useMemo(
     () =>
@@ -39,18 +38,12 @@ export const WagmiProvider: React.FC<{ children: React.ReactNode }> = ({
               qrcode: true
             }
           }),
-          new HorseLinkWalletConnector({
-            chains,
-            options: {
-              wallet,
-              switchNetwork
-            }
-          })
+          HorseLinkConnector
         ],
         provider,
         webSocketProvider
       }),
-    [wallet]
+    [HorseLinkConnector]
   );
 
   return <WagmiConfig client={client}>{children}</WagmiConfig>;
