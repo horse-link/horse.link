@@ -1,15 +1,9 @@
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState
-} from "react";
+import React, { createContext, useContext, useMemo } from "react";
 import { Api } from "../apis/Api";
 import { chain, useNetwork } from "wagmi";
-import { useWagmiNetworkRefetch } from "./WagmiNetworkRefetch";
+import { useNetworkToggle } from "./NetworkToggle";
 
-// goerli default for now
+// use placeholder default chain -- has no effect
 export const ApiContext = createContext(new Api(chain.goerli));
 
 export const useApi = () => useContext(ApiContext);
@@ -17,18 +11,11 @@ export const useApi = () => useContext(ApiContext);
 export const ApiProvider: React.FC<{ children: React.ReactNode }> = ({
   children
 }) => {
-  const { globalChainId } = useWagmiNetworkRefetch();
-  const { chain: currentChain, chains } = useNetwork();
-  const globalChain = useMemo(
-    () => chains.find(c => c.id === globalChainId),
-    [globalChainId]
-  );
-
-  const [selectedChain, setSelectedChain] = useState(currentChain);
-  useEffect(() => globalChain && setSelectedChain(globalChain), [globalChain]);
+  const { chains } = useNetwork();
+  const selectedChain = useNetworkToggle();
 
   const value = useMemo(
-    () => new Api(selectedChain || chain.goerli),
+    () => new Api(selectedChain || chains[0]),
     [selectedChain]
   );
 

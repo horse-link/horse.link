@@ -4,16 +4,10 @@ import {
   InMemoryCache,
   NormalizedCacheObject
 } from "@apollo/client";
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState
-} from "react";
+import React, { createContext, useContext, useMemo } from "react";
 import constants from "../constants";
-import { chain, useNetwork } from "wagmi";
-import { useWagmiNetworkRefetch } from "./WagmiNetworkRefetch";
+import { useNetwork } from "wagmi";
+import { useNetworkToggle } from "./NetworkToggle";
 
 const ApolloContext = createContext<ApolloClient<NormalizedCacheObject>>(
   new ApolloClient({
@@ -30,17 +24,11 @@ export const useApolloContext = () => useContext(ApolloContext);
 export const ApolloProvider: React.FC<{ children: React.ReactNode }> = ({
   children
 }) => {
-  const { globalChainId } = useWagmiNetworkRefetch();
-  const { chain: currentChain, chains } = useNetwork();
-  const globalChain = useMemo(
-    () => chains.find(c => c.id === globalChainId),
-    [globalChainId]
-  );
+  const { chains } = useNetwork();
+  const selectedChain = useNetworkToggle();
 
-  const [selectedChain, setSelectedChain] = useState(currentChain);
-  useEffect(() => globalChain && setSelectedChain(globalChain), [globalChain]);
-
-  const rawSuffix = selectedChain?.name.toLowerCase() || chain.goerli.name;
+  const rawSuffix =
+    selectedChain?.name.toLowerCase() || chains[0].name.toLowerCase();
   // strip out extra words
   const suffix = rawSuffix.split(" ")[0].toLowerCase();
 

@@ -1,5 +1,5 @@
 import { ethers, providers } from "ethers";
-import { Chain, Connector, chain } from "wagmi";
+import { Chain, Connector } from "wagmi";
 
 // documentation:
 // https://wagmi.sh/examples/custom-connector
@@ -11,18 +11,22 @@ type Options = {
   switchNetwork: (id: number) => Chain;
 };
 
+export const LOCAL_WALLET_ID = "horselinkwallet";
+
 export class HorseLinkWalletConnector extends Connector<
   providers.AlchemyProvider,
   Options,
   ethers.Signer
 > {
-  readonly id = "horselinkwallet";
+  readonly id = LOCAL_WALLET_ID;
   readonly name = "HorseLink Wallet";
   readonly ready = true;
 
   // user wallet and network setter
   private _wallet: ethers.Wallet;
   private _switchNetwork: (id: number) => Chain;
+
+  private _chains: Array<Chain>;
 
   constructor({
     chains,
@@ -39,6 +43,7 @@ export class HorseLinkWalletConnector extends Connector<
     });
 
     this._wallet = options.wallet;
+    this._chains = chains;
     this._switchNetwork = options.switchNetwork;
   }
 
@@ -140,8 +145,7 @@ export class HorseLinkWalletConnector extends Connector<
 
   // utils
   isChainUnsupported(chainId: number): boolean {
-    const supportedNetworks = [chain.arbitrum.id, chain.goerli.id];
-    return !supportedNetworks.includes(chainId);
+    return !this._chains.map(c => c.id).includes(chainId);
   }
 
   isUserRejectedRequestError(e: unknown) {
