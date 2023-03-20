@@ -12,24 +12,27 @@ export const useLocalWallet = (chains: Array<Network>) => {
   // get keys
   const localKey = localStorage.getItem(LS_PRIVATE_KEY);
 
-  const provider = useMemo(() => {
-    const newChain = chains.find(c => c.id === +chain.id);
-    if (!newChain) throw new Error(`Could not find chain with id ${chain.id}`);
+  // provider array
+  const providers = useMemo(
+    () =>
+      chains.map(c => {
+        const { name, id } = utils.formatting.formatChain(c);
 
-    const { name, id } = utils.formatting.formatChain(newChain);
-
-    const alchemyProvider = new ethers.providers.AlchemyProvider(
-      {
-        name,
-        chainId: id
-      },
-      constants.env.ALCHEMY_KEY
-    );
-
-    return alchemyProvider;
-  }, [chain, chains]);
+        return new ethers.providers.AlchemyProvider(
+          {
+            name,
+            chainId: id
+          },
+          constants.env.ALCHEMY_KEY
+        );
+      }),
+    [chains]
+  );
 
   const wallet = useMemo(() => {
+    const provider = providers.find(p => p._network.chainId === chain.id);
+    if (!provider) throw new Error(`No provider available`);
+
     if (!localKey) {
       const randomWallet = ethers.Wallet.createRandom();
       const generatedWallet = new ethers.Wallet(
@@ -48,7 +51,7 @@ export const useLocalWallet = (chains: Array<Network>) => {
 
     const decrypted = utils.general.decryptString(localKey, constants.env.SALT);
     return new ethers.Wallet(decrypted, provider);
-  }, [localKey, provider]);
+  }, [localKey, providers, chain]);
 
   return {
     wallet,

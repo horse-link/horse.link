@@ -82,16 +82,12 @@ export class HorseLinkWalletConnector extends Connector<
   }
 
   async switchChain(chainId: number): Promise<Chain> {
-    if (this.isChainUnsupported(chainId))
-      throw new Error(`Chain ${chainId} is unsupported`);
-
     const newChain = this._chains.find(c => c.id === chainId);
-    if (!newChain) throw new Error(`Could not find chain ${chainId}`);
+    if (!newChain) throw new Error(`Could not find chain with id ${chainId}`);
+    this._setChain(newChain);
 
     const provider = await this.getProvider();
-    provider.emit("chainChanged", [newChain.id]);
-
-    this._setChain(newChain);
+    provider.emit("chainChanged", newChain.id);
 
     return newChain;
   }
@@ -99,10 +95,6 @@ export class HorseLinkWalletConnector extends Connector<
   // utils
   isChainUnsupported(chainId: number): boolean {
     return !this._chains.map(c => c.id).includes(chainId);
-  }
-
-  isUserRejectedRequestError(e: unknown) {
-    return /(user rejected)/i.test((e as Error).message);
   }
 
   async isAuthorized(): Promise<boolean> {
@@ -126,11 +118,10 @@ export class HorseLinkWalletConnector extends Connector<
 
   protected onChainChanged(chain: string | number): void {
     const id = normalizeChainId(chain);
-    const unsupported = this.isChainUnsupported(id);
     this.emit("change", {
       chain: {
         id,
-        unsupported
+        unsupported: false
       }
     });
   }
