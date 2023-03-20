@@ -7,7 +7,6 @@ import {
 import React, { createContext, useContext, useMemo } from "react";
 import constants from "../constants";
 import { useNetwork } from "wagmi";
-import { useNetworkToggle } from "./NetworkToggle";
 
 const ApolloContext = createContext<ApolloClient<NormalizedCacheObject>>(
   new ApolloClient({
@@ -24,11 +23,9 @@ export const useApolloContext = () => useContext(ApolloContext);
 export const ApolloProvider: React.FC<{ children: React.ReactNode }> = ({
   children
 }) => {
-  const { chains } = useNetwork();
-  const selectedChain = useNetworkToggle();
+  const { chains, chain } = useNetwork();
 
-  const rawSuffix =
-    selectedChain?.name.toLowerCase() || chains[0].name.toLowerCase();
+  const rawSuffix = chain?.name.toLowerCase() || chains[0].name.toLowerCase();
   // strip out extra words
   const suffix = rawSuffix.split(" ")[0].toLowerCase();
 
