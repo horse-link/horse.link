@@ -133,10 +133,7 @@ export const useSubgraphBets = (
               .map(async bet => {
                 const signedData = signedDataMap.get(bet.marketId);
                 try {
-                  const result = await utils.bets.getBetHistory(
-                    bet,
-                    signedData
-                  );
+                  const result = utils.bets.getBetHistory(bet, signedData);
                   return result;
                 } catch (e) {
                   console.warn(
