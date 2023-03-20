@@ -9,6 +9,7 @@ import { useERC20Contract } from "../hooks/contracts";
 import { ethers } from "ethers";
 import { useWalletModal } from "../providers/WalletModal";
 import { Listbox, Transition } from "@headlessui/react";
+import { useLocalNetworkContext } from "../providers/LocalNetwork";
 
 export const AccountPanel: React.FC = () => {
   const { currentToken, tokensLoading, openModal } = useTokenContext();
@@ -20,6 +21,7 @@ export const AccountPanel: React.FC = () => {
   const [userBalance, setUserBalance] = useState<UserBalance>();
   const { chain, chains } = useNetwork();
   const { switchNetwork } = useSwitchNetwork();
+  const { setGlobalId } = useLocalNetworkContext();
 
   useEffect(() => {
     // If the current chain is not in the supported list,
@@ -76,7 +78,13 @@ export const AccountPanel: React.FC = () => {
                           className="whitespace-nowrap"
                         >
                           <button
-                            onClick={() => switchNetwork?.(chain.id)}
+                            onClick={() => {
+                              if (!switchNetwork) {
+                                setGlobalId(chain.id);
+                              } else {
+                                switchNetwork(chain.id);
+                              }
+                            }}
                             className="w-full rounded-md py-2 px-6 hover:bg-gray-100"
                           >
                             {chain.name}

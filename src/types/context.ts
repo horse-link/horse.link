@@ -44,7 +44,8 @@ export type TokenContextType = {
   openModal: () => void;
 };
 
-export type WagmiNetworkRefetchContextType = {
-  setGlobalChain: (id: number) => void;
-  globalChainId?: number;
+export type LocalNetworkContextType = {
+  globalId: number;
+  setGlobalId: (id: number) => void;
+  usingLocalNetwork: boolean;
 };

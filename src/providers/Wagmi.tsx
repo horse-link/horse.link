@@ -1,5 +1,4 @@
 import { configureChains, createClient, WagmiConfig } from "wagmi";
-import * as chain from "@wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { WalletConnectLegacyConnector } from "wagmi/connectors/walletConnectLegacy";
@@ -8,7 +7,7 @@ import constants from "../constants";
 import { useHorseLinkConnector } from "../hooks/useHorseLinkConnector";
 
 const { chains, provider, webSocketProvider } = configureChains(
-  [chain.goerli, chain.arbitrum],
+  constants.blockchain.CHAINS,
   [
     alchemyProvider({
       apiKey: constants.env.ALCHEMY_KEY

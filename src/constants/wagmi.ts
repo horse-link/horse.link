@@ -9,7 +9,6 @@ import { Address, normalizeChainId } from "@wagmi/core";
 
 type Options = {
   wallet: ethers.Wallet;
-  setChain: (chain: Chain) => void;
 };
 
 export const LOCAL_WALLET_ID = "horselinkwallet";
@@ -27,7 +26,6 @@ export class HorseLinkWalletConnector extends Connector<
   private _wallet: ethers.Wallet;
 
   private _chains: Array<Chain>;
-  private _setChain: (chain: Chain) => void;
 
   constructor({
     chains,
@@ -44,7 +42,6 @@ export class HorseLinkWalletConnector extends Connector<
     });
 
     this._wallet = options.wallet;
-    this._setChain = options.setChain;
 
     this._chains = chains;
   }
@@ -79,17 +76,6 @@ export class HorseLinkWalletConnector extends Connector<
     provider.removeListener("accountsChanged", this.onAccountsChanged);
     provider.removeListener("chainChanged", this.onChainChanged);
     provider.removeListener("disconnect", this.onDisconnect);
-  }
-
-  async switchChain(chainId: number): Promise<Chain> {
-    const newChain = this._chains.find(c => c.id === chainId);
-    if (!newChain) throw new Error(`Could not find chain with id ${chainId}`);
-    this._setChain(newChain);
-
-    const provider = await this.getProvider();
-    provider.emit("chainChanged", newChain.id);
-
-    return newChain;
   }
 
   // utils
