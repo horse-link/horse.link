@@ -79,7 +79,7 @@ export const LeaderboardTable: React.FC<Props> = ({ stats, balances }) => {
         })
       : blankRows;
 
-  if (!balances?.length)
+  if (balances && !balances.length)
     return (
       <div className="flex h-full w-full flex-col items-center justify-center">
         <p className="text-2xl font-bold">
