@@ -39,7 +39,9 @@ export const useLeaderboardStatistics = () => {
 
   // sort the subgraph data
   const sortedData = useMemo(() => {
-    if (loading || !hlToken || !config || !data?.bets.length) return;
+    if (loading || !hlToken || !config) return;
+    if (!data?.bets.length) return [];
+
     const { bets } = data;
 
     // create object that looks like
@@ -137,10 +139,12 @@ export const useLeaderboardStatistics = () => {
 
   // loading state
   const statsLoading = useMemo(() => {
-    if (!sortedData || !balances) return true;
+    if (loading) return true;
+
+    if (!sortedData || !balances) return false;
 
     return false;
-  }, [sortedData, balances]);
+  }, [loading]);
 
   // return top 10 from stats array
   return {

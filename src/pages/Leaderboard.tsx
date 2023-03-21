@@ -8,7 +8,7 @@ import { ethers } from "ethers";
 import { Countdown } from "../components/Countdown";
 
 const Leaderboard: React.FC = () => {
-  const { stats, balances, userStats } = useLeaderboardStatistics();
+  const { stats, balances, userStats, loading } = useLeaderboardStatistics();
   const { isConnected } = useAccount();
   const [showLeaderboard, setShowLeaderboard] = useState(false);
 
@@ -44,7 +44,11 @@ const Leaderboard: React.FC = () => {
               />
             </div>
           )}
-          <LeaderboardTable stats={stats} balances={balances} />
+          <LeaderboardTable
+            stats={stats}
+            balances={balances}
+            loading={loading}
+          />
         </React.Fragment>
       ) : (
         <Countdown

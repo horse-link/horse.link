@@ -12,9 +12,14 @@ type Props = {
     value: BigNumber;
   }>;
   balances?: Array<LeaderboardBalance>;
+  loading: boolean;
 };
 
-export const LeaderboardTable: React.FC<Props> = ({ stats, balances }) => {
+export const LeaderboardTable: React.FC<Props> = ({
+  stats,
+  balances,
+  loading
+}) => {
   const getLeaderboardData = (
     stat: {
       address: string;
@@ -79,7 +84,10 @@ export const LeaderboardTable: React.FC<Props> = ({ stats, balances }) => {
         })
       : blankRows;
 
-  if (balances && !balances.length)
+  if (loading)
+    return <BaseTable title="Leaderboard" headers={HEADERS} rows={blankRows} />;
+
+  if (!stats?.length)
     return (
       <div className="flex h-full w-full flex-col items-center justify-center">
         <p className="text-2xl font-bold">
