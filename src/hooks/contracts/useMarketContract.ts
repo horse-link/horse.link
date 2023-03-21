@@ -72,10 +72,22 @@ export const useMarketContract = () => {
     if (!skipAllowanceCheck) {
       await Promise.all(
         toProcess.map(async (p: MarketMultiBetInfo) => {
+          const [gasLimit, gasPrice] = await Promise.all([
+            p.tokenContract.estimateGas.approve(
+              p.marketContract.address,
+              ethers.constants.MaxUint256
+            ),
+            signer.getGasPrice()
+          ]);
+
           return (
             await p.tokenContract.approve(
               p.marketContract.address,
-              ethers.constants.MaxUint256
+              ethers.constants.MaxUint256,
+              {
+                gasLimit,
+                gasPrice
+              }
             )
           ).wait();
         })
@@ -142,13 +154,26 @@ export const useMarketContract = () => {
         userAddress,
         market.address
       );
-      if (userAllowance.lt(wager))
+      if (userAllowance.lt(wager)) {
+        const [gasLimit, gasPrice] = await Promise.all([
+          erc20Contract.estimateGas.approve(
+            market.address,
+            ethers.constants.MaxUint256
+          ),
+          signer.getGasPrice()
+        ]);
+
         await (
           await erc20Contract.approve(
             market.address,
-            ethers.constants.MaxUint256
+            ethers.constants.MaxUint256,
+            {
+              gasLimit,
+              gasPrice
+            }
           )
         ).wait();
+      }
     }
 
     const backData = {
@@ -207,12 +232,25 @@ export const useMarketContract = () => {
       )
         throw new Error("Signature invalid");
 
+      const [gasLimit, gasPrice] = await Promise.all([
+        marketOracleContract.estimateGas.setResult(
+          bet.marketId,
+          bet.winningPropositionId,
+          bet.marketOracleResultSig
+        ),
+        signer.getGasPrice()
+      ]);
+
       // tx can fail if the result is already set
       await (
         await marketOracleContract.setResult(
           bet.marketId,
           bet.winningPropositionId,
-          bet.marketOracleResultSig
+          bet.marketOracleResultSig,
+          {
+            gasLimit,
+            gasPrice
+          }
         )
       ).wait();
     } catch (err: any) {
@@ -250,14 +288,28 @@ export const useMarketContract = () => {
         !bet.marketResultAdded &&
         bet.winningPropositionId &&
         bet.marketOracleResultSig
-      )
+      ) {
+        const [gasLimit, gasPrice] = await Promise.all([
+          marketOracleContract.estimateGas.setResult(
+            bet.marketId,
+            bet.winningPropositionId,
+            bet.marketOracleResultSig
+          ),
+          signer.getGasPrice()
+        ]);
+
         await (
           await marketOracleContract.setResult(
             bet.marketId,
             bet.winningPropositionId,
-            bet.marketOracleResultSig
+            bet.marketOracleResultSig,
+            {
+              gasLimit,
+              gasPrice
+            }
           )
         ).wait();
+      }
     } else if (bet.scratched && bet.scratched.signature) {
       if (
         !utils.bets.recoverSigSigner(
@@ -274,6 +326,20 @@ export const useMarketContract = () => {
       )
         throw new Error("Signature invalid");
 
+      const [gasLimit, gasPrice] = await Promise.all([
+        marketOracleContract.estimateGas.setScratchedResult(
+          bet.marketId,
+          bet.propositionId,
+          ethers.utils.parseUnits(
+            bet.scratched.odds.toString(),
+            constants.contracts.MARKET_ODDS_DECIMALS
+          ),
+          ethers.BigNumber.from(bet.scratched.totalOdds),
+          bet.scratched.signature
+        ),
+        signer.getGasPrice()
+      ]);
+
       // tx can fail if the result is already set
       await (
         await marketOracleContract.setScratchedResult(
@@ -284,12 +350,26 @@ export const useMarketContract = () => {
             constants.contracts.MARKET_ODDS_DECIMALS
           ),
           ethers.BigNumber.from(bet.scratched.totalOdds),
-          bet.scratched.signature
+          bet.scratched.signature,
+          {
+            gasLimit,
+            gasPrice
+          }
         )
       ).wait();
     }
 
-    const receipt = await (await marketContract.settle(bet.index)).wait();
+    const [gasLimit, gasPrice] = await Promise.all([
+      marketContract.estimateGas.settle(bet.index),
+      signer.getGasPrice()
+    ]);
+
+    const receipt = await (
+      await marketContract.settle(bet.index, {
+        gasLimit,
+        gasPrice
+      })
+    ).wait();
 
     return receipt.transactionHash;
   };

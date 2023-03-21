@@ -17,13 +17,37 @@ export const useVaultContract = () => {
       userAddress,
       vault.address
     );
-    if (userAllowance.lt(amount))
+    if (userAllowance.lt(amount)) {
+      const [gasLimit, gasPrice] = await Promise.all([
+        erc20Contract.estimateGas.approve(
+          vault.address,
+          ethers.constants.MaxUint256
+        ),
+        signer.getGasPrice()
+      ]);
+
       await (
-        await erc20Contract.approve(vault.address, ethers.constants.MaxUint256)
+        await erc20Contract.approve(
+          vault.address,
+          ethers.constants.MaxUint256,
+          {
+            gasLimit,
+            gasPrice
+          }
+        )
       ).wait();
+    }
+
+    const [gasLimit, gasPrice] = await Promise.all([
+      vaultContract.estimateGas.deposit(amount, userAddress),
+      signer.getGasPrice()
+    ]);
 
     const receipt = await (
-      await vaultContract.deposit(amount, userAddress)
+      await vaultContract.deposit(amount, userAddress, {
+        gasLimit,
+        gasPrice
+      })
     ).wait();
 
     return receipt.transactionHash;
@@ -46,8 +70,16 @@ export const useVaultContract = () => {
 
     const vaultContract = Vault__factory.connect(vault.address, signer);
 
+    const [gasLimit, gasPrice] = await Promise.all([
+      vaultContract.estimateGas.withdraw(amount, userAddress, userAddress),
+      signer.getGasPrice()
+    ]);
+
     const receipt = await (
-      await vaultContract.withdraw(amount, userAddress, userAddress)
+      await vaultContract.withdraw(amount, userAddress, userAddress, {
+        gasLimit,
+        gasPrice
+      })
     ).wait();
 
     return receipt.transactionHash;
