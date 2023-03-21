@@ -44,7 +44,7 @@ const Leaderboard: React.FC = () => {
               />
             </div>
           )}
-          <LeaderboardTable stats={stats} balances={balances ?? []} />
+          <LeaderboardTable stats={stats} balances={balances} />
         </React.Fragment>
       ) : (
         <Countdown

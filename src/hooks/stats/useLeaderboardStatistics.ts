@@ -29,18 +29,18 @@ export const useLeaderboardStatistics = () => {
   const { current: now } = useRef(Math.floor(Date.now() / 1000));
 
   // get bets that were made with horse link token and have been settled, within the last week
-  let { data, loading } = useSubgraph<Response>(
+  const { data, loading } = useSubgraph<Response>(
     utils.queries.getBetsQueryWithoutPagination(now, {
       assetAddress: hlToken?.address.toLowerCase(),
       settled: true,
       createdAt_gte: Math.floor(+constants.env.EVENT_TS / 1000)
     })
   );
-  const bets = data ? data.bets : [];
 
   // sort the subgraph data
   const sortedData = useMemo(() => {
-    if (loading || !hlToken || !config) return;
+    if (loading || !hlToken || !config || !data?.bets.length) return;
+    const { bets } = data;
 
     // create object that looks like
     // {
