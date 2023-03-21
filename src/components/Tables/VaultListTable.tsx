@@ -49,7 +49,7 @@ export const VaultListTable: React.FC<Props> = ({ config, setIsModalOpen }) => {
           ]);
 
           const percentageTotal = ethers.utils.formatUnits(
-            shareTotal.mul(100).div(totalSupply),
+            shareTotal.mul(100).div(totalSupply.add(1)),
             2
           );
 
