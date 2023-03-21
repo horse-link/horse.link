@@ -46,7 +46,7 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // force new signer
-  const forceNewSigner = async (signer: Signer) => {
+  const forceNewSigner = (signer: Signer) => {
     setSigner(signer);
   };
 
