@@ -1,6 +1,10 @@
 import { MarketInfo } from "./config";
 import { Back, RaceData, Runner } from "./meets";
 import { Token } from "./tokens";
+import { Api } from "../apis/Api";
+import { Network } from "./general";
+import { ApolloClient, NormalizedCacheObject } from "@apollo/client";
+import { Signer } from "ethers";
 
 export type BetSlipErrorEntry = {
   bet: Omit<BetSlipEntry, "id">;
@@ -34,6 +38,7 @@ export type BetSlipContextType = {
   clearBets: () => void;
   placeBetsInBetSlip: () => void;
   placeBetImmediately: (bet: BetEntry) => Promise<void>;
+  forceNewSigner: (signer: Signer) => void;
 };
 
 export type TokenContextType = {
@@ -42,4 +47,14 @@ export type TokenContextType = {
   tokensLoading: boolean;
   changeToken: (to: Token) => void;
   openModal: () => void;
+};
+
+export type ApiContextType = {
+  api: Api;
+  forceNewChain: (newChain: Network) => void;
+};
+
+export type ApolloContextType = {
+  client: ApolloClient<NormalizedCacheObject>;
+  forceNewChain: (newChain: Network) => void;
 };

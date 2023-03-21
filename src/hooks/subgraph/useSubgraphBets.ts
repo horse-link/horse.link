@@ -115,20 +115,45 @@ export const useSubgraphBets = (
       const signedDataMap = new Map();
       await Promise.all(
         uniqueMarketIds.map(async marketId => {
-          const signedData = await api.getWinningResultSignature(
-            utils.formatting.parseBytes16String(marketId)
-          );
-          signedDataMap.set(marketId, signedData);
+          try {
+            const signedData = await api.getWinningResultSignature(
+              utils.formatting.parseBytes16String(marketId)
+            );
+            signedDataMap.set(marketId, signedData);
+          } catch (e) {
+            console.warn("Error getting result signature:", e);
+          }
         })
       );
-      const signedBets = await Promise.all(
-        bets.map(async bet => {
-          const signedData = signedDataMap.get(bet.marketId);
-          return utils.bets.getBetHistory(bet, signedData);
-        })
-      );
+      try {
+        const signedBets = (
+          await Promise.all(
+            bets
+              .filter(bet => !!bet)
+              .map(async bet => {
+                const signedData = signedDataMap.get(bet.marketId);
+                try {
+                  const result = utils.bets.getBetHistory(bet, signedData);
+                  return result;
+                } catch (e) {
+                  console.warn(
+                    `Error getting bet history for ${JSON.stringify(
+                      bet,
+                      null,
+                      2
+                    )}:`,
+                    e
+                  );
+                  return undefined;
+                }
+              })
+          )
+        ).filter(bet => !!bet) as BetHistory[];
 
-      if (isActive) setBets(signedBets);
+        if (isActive) setBets(signedBets);
+      } catch (e) {
+        console.warn("Error getting bet history:", e);
+      }
     });
 
     // cleanup

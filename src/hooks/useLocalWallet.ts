@@ -2,39 +2,37 @@ import { ethers } from "ethers";
 import { useMemo, useState } from "react";
 import utils from "../utils";
 import constants from "../constants";
-import { Chain } from "wagmi";
-import { useWagmiNetworkRefetch } from "../providers/WagmiNetworkRefetch";
+import { Network } from "../types/general";
 
-const LS_PRIVATE_KEY = "horse.link-wallet-key";
-const LS_CHAIN_KEY = "horse.link-wallet-chain";
+export const LS_PRIVATE_KEY = "horse.link-wallet-key";
 
-export const useLocalWallet = (chains: Array<Chain>) => {
-  const { setGlobalChain } = useWagmiNetworkRefetch();
+export const useLocalWallet = (chains: Array<Network>) => {
+  const [chain, setChain] = useState<Network>(constants.blockchain.CHAINS[0]);
 
   // get keys
   const localKey = localStorage.getItem(LS_PRIVATE_KEY);
-  const [chainId, setChainId] = useState(
-    localStorage.getItem(LS_CHAIN_KEY) ?? chains[0].id.toString()
+
+  // provider array
+  const providers = useMemo(
+    () =>
+      chains.map(c => {
+        const { name, id } = utils.formatting.formatChain(c);
+
+        return new ethers.providers.AlchemyProvider(
+          {
+            name,
+            chainId: id
+          },
+          constants.env.ALCHEMY_KEY
+        );
+      }),
+    [chains]
   );
 
-  const provider = useMemo(() => {
-    const chain = chains.find(chain => chain.id === +chainId);
-    if (!chain) throw new Error(`Could not find chain with id ${chainId}`);
-
-    const { name, id } = utils.formatting.formatChain(chain);
-
-    const alchemyProvider = new ethers.providers.AlchemyProvider(
-      {
-        name,
-        chainId: id
-      },
-      constants.env.ALCHEMY_KEY
-    );
-
-    return alchemyProvider;
-  }, [chainId, chains]);
-
   const wallet = useMemo(() => {
+    const provider = providers.find(p => p._network.chainId === chain.id);
+    if (!provider) throw new Error(`No provider available`);
+
     if (!localKey) {
       const randomWallet = ethers.Wallet.createRandom();
       const generatedWallet = new ethers.Wallet(
@@ -53,25 +51,10 @@ export const useLocalWallet = (chains: Array<Chain>) => {
 
     const decrypted = utils.general.decryptString(localKey, constants.env.SALT);
     return new ethers.Wallet(decrypted, provider);
-  }, [localKey, provider]);
-
-  const switchNetwork = (id: number): Chain => {
-    const newChain = chains.find(chain => chain.id === id);
-    if (!newChain) throw new Error(`No chain found for id ${id}`);
-
-    const newId = newChain.id.toString();
-
-    setChainId(newId);
-    localStorage.setItem(LS_CHAIN_KEY, newId);
-
-    // global refetch trigger
-    setGlobalChain(+newId);
-
-    return utils.formatting.formatChain(newChain);
-  };
+  }, [localKey, providers, chain]);
 
   return {
     wallet,
-    switchNetwork
+    setChain
   };
 };

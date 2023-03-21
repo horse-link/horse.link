@@ -17,9 +17,15 @@ dayjs.extend(relativeTime);
 export const BetSlip: React.FC = () => {
   const config = useConfig();
   const { data: signer } = useSigner();
-  const { bets, removeBet } = useBetSlipContext();
+  const { bets, removeBet, forceNewSigner } = useBetSlipContext();
   const { getPotentialPayout } = useMarketContract();
   const [slipTotals, setSlipTotals] = useState<BetTotals>();
+
+  useEffect(() => {
+    if (!signer) return;
+
+    forceNewSigner(signer);
+  }, [signer]);
 
   useEffect(() => {
     if (!bets || !signer) return;

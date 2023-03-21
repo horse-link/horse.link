@@ -39,7 +39,7 @@ export const useLeaderboardStatistics = () => {
 
   // sort the subgraph data
   const sortedData = useMemo(() => {
-    if (loading || !data?.bets.length || !hlToken || !config) return;
+    if (loading || !hlToken || !config || !data?.bets.length) return;
     const { bets } = data;
 
     // create object that looks like

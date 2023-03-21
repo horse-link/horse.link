@@ -1,3 +1,4 @@
+import * as chain from "@wagmi/chains";
 import { ethers } from "ethers";
 
 export const BYTES_16_ZERO = "0x00000000000000000000000000000000";
@@ -8,3 +9,5 @@ export const GOERLI_NETWORK = {
   name: "Goerli",
   id: 5
 };
+
+export const CHAINS = [chain.goerli, chain.arbitrum];

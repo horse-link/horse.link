@@ -35,9 +35,11 @@ export const Countdown: React.FC<Props> = ({
       1 * constants.time.ONE_SECOND_MS
     );
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      setShowLeaderboard(!isEventInFuture);
+    };
   }, []);
-  setShowLeaderboard(!isEventInFuture);
 
   return !eventTimestamp || !isEventInFuture ? null : (
     <div

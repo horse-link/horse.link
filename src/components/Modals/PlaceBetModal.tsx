@@ -37,9 +37,16 @@ export const PlaceBetModal: React.FC<Props> = ({
   const { getPotentialPayout } = useMarketContract();
   const { getBalance, getDecimals } = useERC20Contract();
   const { shouldRefetch, refetch: refetchUserBalance } = useRefetch();
-  const { bets, addBet, placeBetImmediately } = useBetSlipContext();
+  const { bets, addBet, placeBetImmediately, forceNewSigner } =
+    useBetSlipContext();
   const { number: raceNumber } = useParams();
   const { currentToken } = useTokenContext();
+
+  useEffect(() => {
+    if (!signer) return;
+
+    forceNewSigner(signer);
+  }, [signer]);
 
   const market = useMemo(() => {
     if (!config || !currentToken) return;

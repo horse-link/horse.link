@@ -79,5 +79,14 @@ export const LeaderboardTable: React.FC<Props> = ({ stats, balances }) => {
         })
       : blankRows;
 
+  if (balances && !balances.length)
+    return (
+      <div className="flex h-full w-full flex-col items-center justify-center">
+        <p className="text-2xl font-bold">
+          No contenders have joined the leaderboard yet.
+        </p>
+      </div>
+    );
+
   return <BaseTable title="Leaderboard" headers={HEADERS} rows={ROWS} />;
 };
