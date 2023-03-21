@@ -1,40 +1,41 @@
-import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
-
+import { configureChains, createClient, WagmiConfig } from "wagmi";
 import { publicProvider } from "wagmi/providers/public";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
-import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
+import { WalletConnectLegacyConnector } from "wagmi/connectors/walletConnectLegacy";
 import { alchemyProvider } from "wagmi/providers/alchemy";
-
-const alchemyApiKey = process.env.REACT_APP_ALCHEMY_API_KEY;
-if (!alchemyApiKey) throw new Error("REACT_APP_ALCHEMY_API_KEY is not defined");
+import constants from "../constants";
+import { useHorseLinkConnector } from "../hooks/useHorseLinkConnector";
 
 const { chains, provider, webSocketProvider } = configureChains(
-  [chain.goerli],
+  constants.blockchain.CHAINS,
   [
     alchemyProvider({
-      apiKey: alchemyApiKey
+      apiKey: constants.env.ALCHEMY_KEY
     }),
     publicProvider()
   ]
 );
 
-const client = createClient({
-  autoConnect: true,
-  connectors: [
-    new MetaMaskConnector({ chains }),
-    new WalletConnectConnector({
-      chains,
-      options: {
-        qrcode: true
-      }
-    })
-  ],
-  provider,
-  webSocketProvider
-});
-
 export const WagmiProvider: React.FC<{ children: React.ReactNode }> = ({
   children
 }) => {
+  const HorseLinkWallet = useHorseLinkConnector(chains);
+
+  const client = createClient({
+    autoConnect: true,
+    connectors: [
+      new MetaMaskConnector({ chains }),
+      new WalletConnectLegacyConnector({
+        chains,
+        options: {
+          qrcode: true
+        }
+      }),
+      HorseLinkWallet
+    ],
+    provider,
+    webSocketProvider
+  });
+
   return <WagmiConfig client={client}>{children}</WagmiConfig>;
 };

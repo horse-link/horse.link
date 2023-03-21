@@ -1,10 +1,13 @@
 import { gql, useQuery } from "@apollo/client";
+import { useApolloContext } from "../providers/Apollo";
 
-const useSubgraph = <T>(query: string, pollInterval?: number) => {
+const useSubgraph = <T>(query: string) => {
+  const client = useApolloContext();
+
   const gqlQuery = gql(query);
 
   const { loading, error, data, refetch } = useQuery<T>(gqlQuery, {
-    pollInterval
+    client
   });
 
   return {
