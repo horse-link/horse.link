@@ -9,12 +9,11 @@ import {
 } from "react";
 import { BetSlipContextType, BetSlipEntry, BetEntry } from "../types/context";
 import { useMarketContract } from "../hooks/contracts";
-import { useSigner } from "wagmi";
 import { useConfig } from "./Config";
 import dayjs from "dayjs";
 import isYesterday from "dayjs/plugin/isYesterday";
 import { BetSlipTxModal } from "../components/Modals";
-import { BigNumber } from "ethers";
+import { BigNumber, Signer } from "ethers";
 import utils from "../utils";
 
 dayjs.extend(isYesterday);
@@ -27,7 +26,8 @@ export const BetSlipContext = createContext<BetSlipContextType>({
   removeBet: () => {},
   clearBets: () => {},
   placeBetsInBetSlip: () => {},
-  placeBetImmediately: async () => {}
+  placeBetImmediately: async () => {},
+  forceNewSigner: () => {}
 });
 
 export const useBetSlipContext = () => useContext(BetSlipContext);
@@ -35,15 +35,20 @@ export const useBetSlipContext = () => useContext(BetSlipContext);
 export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
   children
 }) => {
-  const { data: signer } = useSigner();
   const { placeBet, placeMultipleBets } = useMarketContract();
   const config = useConfig();
 
+  const [signer, setSigner] = useState<Signer>();
   const [bets, setBets] = useState<BetSlipEntry[]>();
   const [txLoading, setTxLoading] = useState(false);
   const [hashes, setHashes] = useState<string[]>();
   const [errors, setErrors] = useState<string[]>();
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // force new signer
+  const forceNewSigner = (signer: Signer) => {
+    setSigner(signer);
+  };
 
   // load bets on page load
   useEffect(() => {
@@ -221,7 +226,8 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
       removeBet,
       clearBets,
       placeBetsInBetSlip,
-      placeBetImmediately
+      placeBetImmediately,
+      forceNewSigner
     }),
     [
       txLoading,
@@ -232,7 +238,8 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
       removeBet,
       clearBets,
       placeBetsInBetSlip,
-      placeBetImmediately
+      placeBetImmediately,
+      forceNewSigner
     ]
   );
 
