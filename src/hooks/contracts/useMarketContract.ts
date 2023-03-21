@@ -102,8 +102,18 @@ export const useMarketContract = () => {
             signature: back.signature
           };
         });
+
+        const [gasLimit, gasPrice] = await Promise.all([
+          marketMultiBetInfo.marketContract.estimateGas.multiBack(backStructs),
+          signer.getGasPrice()
+        ]);
+
         const tx = await marketMultiBetInfo.marketContract.multiBack(
-          backStructs
+          backStructs,
+          {
+            gasLimit,
+            gasPrice
+          }
         );
         const receipt = await tx.wait();
         return receipt.transactionHash;
@@ -141,21 +151,29 @@ export const useMarketContract = () => {
         ).wait();
     }
 
+    const backData = {
+      nonce: back.nonce,
+      propositionId: utils.formatting.formatBytes16String(back.proposition_id),
+      marketId: utils.formatting.formatBytes16String(back.market_id),
+      wager,
+      odds: ethers.utils.parseUnits(
+        back.odds.toString(),
+        constants.contracts.MARKET_ODDS_DECIMALS
+      ),
+      close: back.close,
+      end: back.end,
+      signature: back.signature
+    };
+
+    const [gasLimit, gasPrice] = await Promise.all([
+      marketContract.estimateGas.back(backData),
+      signer.getGasPrice()
+    ]);
+
     const receipt = await (
-      await marketContract.back({
-        nonce: back.nonce,
-        propositionId: utils.formatting.formatBytes16String(
-          back.proposition_id
-        ),
-        marketId: utils.formatting.formatBytes16String(back.market_id),
-        wager,
-        odds: ethers.utils.parseUnits(
-          back.odds.toString(),
-          constants.contracts.MARKET_ODDS_DECIMALS
-        ),
-        close: back.close,
-        end: back.end,
-        signature: back.signature
+      await marketContract.back(backData, {
+        gasLimit,
+        gasPrice
       })
     ).wait();
 

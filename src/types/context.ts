@@ -4,6 +4,7 @@ import { Token } from "./tokens";
 import { Api } from "../apis/Api";
 import { Network } from "./general";
 import { ApolloClient, NormalizedCacheObject } from "@apollo/client";
+import { Signer } from "ethers";
 
 export type BetSlipErrorEntry = {
   bet: Omit<BetSlipEntry, "id">;
@@ -37,6 +38,7 @@ export type BetSlipContextType = {
   clearBets: () => void;
   placeBetsInBetSlip: () => void;
   placeBetImmediately: (bet: BetEntry) => Promise<void>;
+  forceNewSigner: (signer: Signer) => Promise<void>;
 };
 
 export type TokenContextType = {
