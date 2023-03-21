@@ -62,6 +62,17 @@ export const LeaderboardTable: React.FC<Props> = ({ stats, balances }) => {
     }))
   }));
 
+  if (balances && balances.length == 0) {
+    // Return message that there are no balances
+    return (
+      <div className="flex h-full w-full flex-col items-center justify-center">
+        <p className="text-2xl font-bold">
+          No contenders have joined the leaderboard yet.
+        </p>
+      </div>
+    );
+  }
+
   const ROWS: TableRow[] =
     stats && balances
       ? stats.map((stat, i) => {
