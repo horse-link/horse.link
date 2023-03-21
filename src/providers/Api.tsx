@@ -8,6 +8,7 @@ import { ApiContextType } from "../types/context";
 // use placeholder default chain -- has no effect
 export const ApiContext = createContext<ApiContextType>({
   api: new Api(constants.blockchain.CHAINS[0]),
+  chain: constants.blockchain.CHAINS[0],
   forceNewChain: () => {}
 });
 
@@ -28,6 +29,7 @@ export const ApiProvider: React.FC<{ children: React.ReactNode }> = ({
   const value = useMemo(
     () => ({
       api: new Api(chain || constants.blockchain.CHAINS[0]),
+      chain,
       forceNewChain
     }),
     [chain, forceNewChain]

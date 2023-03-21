@@ -9,8 +9,10 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import Skeleton from "react-loading-skeleton";
 import { PlaceBetsButton } from "./Buttons";
 import { useMarketContract } from "../hooks/contracts";
-import { useSigner } from "wagmi";
+import { useNetwork, useSigner } from "wagmi";
 import { BetTotals } from "../types/bets";
+import { useApolloWithForce } from "../providers/Apollo";
+import { useApiWithForce } from "../providers/Api";
 
 dayjs.extend(relativeTime);
 
@@ -20,6 +22,21 @@ export const BetSlip: React.FC = () => {
   const { bets, removeBet, forceNewSigner } = useBetSlipContext();
   const { getPotentialPayout } = useMarketContract();
   const [slipTotals, setSlipTotals] = useState<BetTotals>();
+
+  const { chain: currentChain } = useNetwork();
+  const { chain: apolloChain, forceNewChain: forceApolloChain } =
+    useApolloWithForce();
+  const { chain: apiChain, forceNewChain: forceApiChain } = useApiWithForce();
+
+  // chain check logic
+  useEffect(() => {
+    if (!currentChain || !apolloChain || !apiChain) return;
+
+    if (currentChain.id !== apolloChain.id || currentChain.id !== apiChain.id) {
+      forceApiChain(currentChain);
+      forceApolloChain(currentChain);
+    }
+  }, [currentChain, apolloChain, apiChain]);
 
   useEffect(() => {
     if (!signer) return;
