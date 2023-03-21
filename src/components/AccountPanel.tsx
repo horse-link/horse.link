@@ -154,7 +154,9 @@ export const AccountPanel: React.FC = () => {
                         )}
                       </button>
                     </div>
-                    {showPrivateKey && <p className="truncate">{privateKey}</p>}
+                    {showPrivateKey && (
+                      <p className="break-all">{privateKey}</p>
+                    )}
                   </div>
                 )}
                 <BaseButton
