@@ -82,8 +82,13 @@ export const useVaultStatistics = () => {
     (async () => {
       const assets = await Promise.all(
         config.vaults.map(async v => {
-          const balance = await totalAssetsLocked(v, provider);
-          return ethers.utils.formatUnits(balance, v.asset.decimals);
+          try {
+            const balance = await totalAssetsLocked(v, provider);
+            return ethers.utils.formatUnits(balance, v.asset.decimals);
+          } catch (e) {
+            console.log(e);
+            return "0";
+          }
         })
       );
       const exposure = assets.reduce(
