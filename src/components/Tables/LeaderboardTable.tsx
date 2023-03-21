@@ -84,17 +84,19 @@ export const LeaderboardTable: React.FC<Props> = ({
         })
       : blankRows;
 
-  if (loading)
-    return <BaseTable title="Leaderboard" headers={HEADERS} rows={blankRows} />;
-
-  if (!stats?.length)
-    return (
-      <div className="flex h-full w-full flex-col items-center justify-center">
-        <p className="text-2xl font-bold">
-          No contenders have joined the leaderboard yet.
-        </p>
-      </div>
-    );
-
-  return <BaseTable title="Leaderboard" headers={HEADERS} rows={ROWS} />;
+  return (
+    <React.Fragment>
+      {loading ? (
+        <BaseTable title="Leaderboard" headers={HEADERS} rows={blankRows} />
+      ) : !stats?.length ? (
+        <div className="flex h-full w-full flex-col items-center justify-center">
+          <p className="text-2xl font-bold">
+            No contenders have joined the leaderboard yet.
+          </p>
+        </div>
+      ) : (
+        <BaseTable title="Leaderboard" headers={HEADERS} rows={ROWS} />
+      )}
+    </React.Fragment>
+  );
 };
