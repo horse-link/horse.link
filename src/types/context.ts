@@ -51,10 +51,12 @@ export type TokenContextType = {
 
 export type ApiContextType = {
   api: Api;
+  chain?: Network;
   forceNewChain: (newChain: Network) => void;
 };
 
 export type ApolloContextType = {
   client: ApolloClient<NormalizedCacheObject>;
+  chain?: Network;
   forceNewChain: (newChain: Network) => void;
 };

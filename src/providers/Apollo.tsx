@@ -13,6 +13,7 @@ const ApolloContext = createContext<ApolloContextType>({
     }),
     cache: new InMemoryCache()
   }),
+  chain: constants.blockchain.CHAINS[0],
   forceNewChain: () => {}
 });
 
@@ -45,9 +46,10 @@ export const ApolloProvider: React.FC<{ children: React.ReactNode }> = ({
         }),
         cache: new InMemoryCache()
       }),
+      chain,
       forceNewChain
     }),
-    [suffix, forceNewChain]
+    [suffix, chain, forceNewChain]
   );
 
   return (
