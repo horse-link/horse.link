@@ -12,6 +12,10 @@ import { Listbox, Transition } from "@headlessui/react";
 import { useApiWithForce } from "../providers/Api";
 import { Network } from "../types/general";
 import { useApolloWithForce } from "../providers/Apollo";
+import { LS_PRIVATE_KEY } from "../hooks/useLocalWallet";
+import constants from "../constants";
+import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
+import { LOCAL_WALLET_ID } from "../constants/wagmi";
 
 export const AccountPanel: React.FC = () => {
   const { currentToken, tokensLoading, openModal } = useTokenContext();
@@ -20,11 +24,27 @@ export const AccountPanel: React.FC = () => {
 
   const { openWalletModal } = useWalletModal();
   const account = useAccount();
+  const isLocalWallet = account.connector?.id === LOCAL_WALLET_ID;
+
   const { data: signer } = useSigner();
   const { getBalance } = useERC20Contract();
   const [userBalance, setUserBalance] = useState<UserBalance>();
   const { chain, chains } = useNetwork();
   const { switchNetwork } = useSwitchNetwork();
+
+  const [privateKey, setPrivateKey] = useState<string>();
+  const [showPrivateKey, setShowPrivateKey] = useState(false);
+
+  // get private key
+  useEffect(() => {
+    const localKey = localStorage.getItem(LS_PRIVATE_KEY);
+    if (!localKey) return setPrivateKey(undefined);
+
+    const decrypted = utils.general.decryptString(localKey, constants.env.SALT);
+    setPrivateKey(decrypted);
+  }, []);
+
+  const togglePrivateKey = () => setShowPrivateKey(prev => !prev);
 
   useEffect(() => {
     // If the current chain is not in the supported list,
@@ -122,6 +142,21 @@ export const AccountPanel: React.FC = () => {
                     {account.address}
                   </div>
                 </div>
+                {isLocalWallet && (
+                  <div className="mb-2 w-full">
+                    <div className="flex w-full items-center gap-x-2">
+                      <span className="block font-semibold">Private Key</span>
+                      <button onClick={togglePrivateKey}>
+                        {showPrivateKey ? (
+                          <AiFillEye size={20} />
+                        ) : (
+                          <AiFillEyeInvisible size={20} />
+                        )}
+                      </button>
+                    </div>
+                    {showPrivateKey && <p className="truncate">{privateKey}</p>}
+                  </div>
+                )}
                 <BaseButton
                   className="mr-4 w-full rounded-md border-2 border-black px-4 py-2 !font-bold text-black transition-colors duration-100 enabled:hover:bg-black enabled:hover:text-white"
                   baseStyleOverride

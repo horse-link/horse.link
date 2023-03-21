@@ -4,7 +4,7 @@ import utils from "../utils";
 import constants from "../constants";
 import { Network } from "../types/general";
 
-const LS_PRIVATE_KEY = "horse.link-wallet-key";
+export const LS_PRIVATE_KEY = "horse.link-wallet-key";
 
 export const useLocalWallet = (chains: Array<Network>) => {
   const [chain, setChain] = useState<Network>(constants.blockchain.CHAINS[0]);
