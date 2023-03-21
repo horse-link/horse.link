@@ -9,21 +9,46 @@ import { useERC20Contract } from "../hooks/contracts";
 import { ethers } from "ethers";
 import { useWalletModal } from "../providers/WalletModal";
 import { Listbox, Transition } from "@headlessui/react";
+import { useApiWithForce } from "../providers/Api";
+import { Network } from "../types/general";
+import { useApolloWithForce } from "../providers/Apollo";
+import { LS_PRIVATE_KEY } from "../hooks/useLocalWallet";
+import constants from "../constants";
+import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
+import { LOCAL_WALLET_ID } from "../constants/wagmi";
 
 export const AccountPanel: React.FC = () => {
   const { currentToken, tokensLoading, openModal } = useTokenContext();
+  const { forceNewChain: forceApi } = useApiWithForce();
+  const { forceNewChain: forceApollo } = useApolloWithForce();
 
   const { openWalletModal } = useWalletModal();
   const account = useAccount();
+  const isLocalWallet = account.connector?.id === LOCAL_WALLET_ID;
+
   const { data: signer } = useSigner();
   const { getBalance } = useERC20Contract();
   const [userBalance, setUserBalance] = useState<UserBalance>();
-  const { chains, chain } = useNetwork();
+  const { chain, chains } = useNetwork();
   const { switchNetwork } = useSwitchNetwork();
+
+  const [privateKey, setPrivateKey] = useState<string>();
+  const [showPrivateKey, setShowPrivateKey] = useState(false);
+
+  // get private key
+  useEffect(() => {
+    const localKey = localStorage.getItem(LS_PRIVATE_KEY);
+    if (!localKey) return setPrivateKey(undefined);
+
+    const decrypted = utils.general.decryptString(localKey, constants.env.SALT);
+    setPrivateKey(decrypted);
+  }, []);
+
+  const togglePrivateKey = () => setShowPrivateKey(prev => !prev);
 
   useEffect(() => {
     // If the current chain is not in the supported list,
-    if (chain && chains && switchNetwork) {
+    if (chain && switchNetwork) {
       if (!chains.find(c => c.id === chain.id)) {
         switchNetwork(chains[0].id);
       }
@@ -45,6 +70,12 @@ export const AccountPanel: React.FC = () => {
   const panelLoading = tokensLoading || !currentToken || !userBalance;
 
   const Image = utils.images.getConnectorIcon(account.connector?.name || "");
+
+  const switchNetworkWithForce = (chain: Network) => {
+    switchNetwork?.(chain.id);
+    forceApi(chain);
+    forceApollo(chain);
+  };
 
   return (
     <div className="mt-6 w-full shadow-lg lg:mx-4 lg:mt-0">
@@ -76,7 +107,7 @@ export const AccountPanel: React.FC = () => {
                           className="whitespace-nowrap"
                         >
                           <button
-                            onClick={() => switchNetwork?.(chain.id)}
+                            onClick={() => switchNetworkWithForce(chain)}
                             className="w-full rounded-md py-2 px-6 hover:bg-gray-100"
                           >
                             {chain.name}
@@ -107,10 +138,25 @@ export const AccountPanel: React.FC = () => {
                 <span className="block text-xl font-bold">Wallet</span>
                 <div className="flex w-full items-center gap-x-4">
                   {Image && <Image className="mx-4 my-6 scale-[2]" />}
-                  <div className="truncate text-ellipsis font-semibold">
+                  <div className="truncate font-semibold">
                     {account.address}
                   </div>
                 </div>
+                {isLocalWallet && (
+                  <div className="mb-2 w-full">
+                    <div className="flex w-full items-center gap-x-2">
+                      <span className="block font-semibold">Private Key</span>
+                      <button onClick={togglePrivateKey}>
+                        {showPrivateKey ? (
+                          <AiFillEye size={20} />
+                        ) : (
+                          <AiFillEyeInvisible size={20} />
+                        )}
+                      </button>
+                    </div>
+                    {showPrivateKey && <p className="truncate">{privateKey}</p>}
+                  </div>
+                )}
                 <BaseButton
                   className="mr-4 w-full rounded-md border-2 border-black px-4 py-2 !font-bold text-black transition-colors duration-100 enabled:hover:bg-black enabled:hover:text-white"
                   baseStyleOverride

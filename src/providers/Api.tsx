@@ -1,35 +1,36 @@
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState
-} from "react";
+import React, { createContext, useContext, useMemo, useState } from "react";
 import { Api } from "../apis/Api";
-import { chain, useNetwork } from "wagmi";
-import { useWagmiNetworkRefetch } from "./WagmiNetworkRefetch";
+import { useNetwork } from "wagmi";
+import constants from "../constants";
+import { Network } from "../types/general";
+import { ApiContextType } from "../types/context";
 
-// goerli default for now
-export const ApiContext = createContext(new Api(chain.goerli));
+// use placeholder default chain -- has no effect
+export const ApiContext = createContext<ApiContextType>({
+  api: new Api(constants.blockchain.CHAINS[0]),
+  forceNewChain: () => {}
+});
 
-export const useApi = () => useContext(ApiContext);
+// most common use case
+export const useApi = () => useContext(ApiContext).api;
+
+// expanded context
+export const useApiWithForce = () => useContext(ApiContext);
 
 export const ApiProvider: React.FC<{ children: React.ReactNode }> = ({
   children
 }) => {
-  const { globalChainId } = useWagmiNetworkRefetch();
-  const { chain: currentChain, chains } = useNetwork();
-  const globalChain = useMemo(
-    () => chains.find(c => c.id === globalChainId),
-    [globalChainId]
-  );
+  const { chain: currentChain } = useNetwork();
+  const [chain, setChain] = useState(currentChain);
 
-  const [selectedChain, setSelectedChain] = useState(currentChain);
-  useEffect(() => globalChain && setSelectedChain(globalChain), [globalChain]);
+  const forceNewChain = (newChain: Network) => setChain(newChain);
 
   const value = useMemo(
-    () => new Api(selectedChain || chain.goerli),
-    [selectedChain]
+    () => ({
+      api: new Api(chain || constants.blockchain.CHAINS[0]),
+      forceNewChain
+    }),
+    [chain, forceNewChain]
   );
 
   return <ApiContext.Provider value={value}>{children}</ApiContext.Provider>;
