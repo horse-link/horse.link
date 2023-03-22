@@ -8,3 +8,4 @@ export * from "./FaucetModal";
 export * from "./SettledMarketModal";
 export * from "./TokenModal";
 export * from "./BetSlipTxModal";
+export * from "./QrCodeModal";
