@@ -55,8 +55,6 @@ const Leaderboard: React.FC = () => {
     ? `${utils.formatting.formatToFourDecimals(userStats.balance.formatted)} HL`
     : undefined;
 
-  console.log("isConnected", isConnected);
-
   return (
     <PageLayout>
       {!isEventInFuture ? (
