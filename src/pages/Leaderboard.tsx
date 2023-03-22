@@ -5,7 +5,6 @@ import { LeaderboardTable } from "../components/Tables";
 import { useAccount } from "wagmi";
 import utils from "../utils";
 import { ethers } from "ethers";
-import { Countdown } from "../components/Countdown";
 import constants from "../constants";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
@@ -57,37 +56,22 @@ const Leaderboard: React.FC = () => {
 
   return (
     <PageLayout>
-      {!isEventInFuture ? (
-        <React.Fragment>
-          {isConnected && (
-            <div className="mb-4 flex w-full flex-col justify-center gap-x-1 gap-y-2 text-left md:flex-row lg:justify-between lg:gap-x-4">
-              <Card
-                title="Your Rank"
-                data={userHasNoStats ? "N/A" : userStats?.rank.toString()}
-              />
-              <Card
-                title="Your Earnings"
-                data={userHasNoStats ? "0" : earnings}
-              />
-              <Card
-                title="Your Balance"
-                data={userHasNoStats ? "0" : balance}
-              />
-            </div>
-          )}
-          <LeaderboardTable
-            stats={stats}
-            balances={balances}
-            loading={loading}
-          />
-        </React.Fragment>
-      ) : (
-        <Countdown
-          eventTimestamp={eventTimestamp}
-          now={now}
-          isEventInFuture={isEventInFuture}
-        />
-      )}
+      <React.Fragment>
+        {isConnected && (
+          <div className="mb-4 flex w-full flex-col justify-center gap-x-1 gap-y-2 text-left md:flex-row lg:justify-between lg:gap-x-4">
+            <Card
+              title="Your Rank"
+              data={userHasNoStats ? "N/A" : userStats?.rank.toString()}
+            />
+            <Card
+              title="Your Earnings"
+              data={userHasNoStats ? "0" : earnings}
+            />
+            <Card title="Your Balance" data={userHasNoStats ? "0" : balance} />
+          </div>
+        )}
+        <LeaderboardTable stats={stats} balances={balances} loading={loading} />
+      </React.Fragment>
     </PageLayout>
   );
 };
