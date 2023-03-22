@@ -104,7 +104,8 @@ export const useLeaderboardStatistics = () => {
 
   // get individual user data
   useEffect(() => {
-    if (!userAddress || !isConnected || !hlToken || !sortedData) return;
+    if (!userAddress || !isConnected || !hlToken || !sortedData)
+      return setUserBalance(undefined);
 
     // get user rank
     const userData = sortedData.find(
