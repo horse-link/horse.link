@@ -18,8 +18,8 @@ export const QrCodeModal: React.FC<Props> = ({ showModal, onClose }) => {
       <div className="mt-6 mb-4 flex items-center justify-center">
         {address ? (
           <QRCode
-            bgColor="#fffaf6"
-            fgColor="#0e0e0e"
+            bgColor="#ffffff"
+            fgColor="#000000"
             level="H"
             size={280}
             value={address}
