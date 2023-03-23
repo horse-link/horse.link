@@ -10,4 +10,4 @@ export const GOERLI_NETWORK = {
   id: 5
 };
 
-export const CHAINS = [chain.goerli, chain.arbitrum];
+export const CHAINS = [chain.arbitrum, chain.goerli];
