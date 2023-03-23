@@ -11,11 +11,11 @@ type Props = {
 };
 
 export const BaseTable: React.FC<Props> = props => {
-  const { headers, rows, tableStyles, title } = props;
+  const { headers, rows, tableStyles, title, leftColumnSticky } = props;
 
   const headerStyles =
-    "px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase whitespace-nowrap";
-  const cellStyles = "px-2 py-4 whitespace-nowrap";
+    "px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase whitespace-nowrap z-10";
+  const cellStyles = "px-2 py-4 whitespace-nowrap z-10";
 
   const createHeaderKey = (i: number) => `header-${i}`;
   const createRowKey = (i: number) => `row-${i}`;
@@ -23,7 +23,7 @@ export const BaseTable: React.FC<Props> = props => {
 
   return (
     <div
-      className={classNames("flex w-full flex-col overflow-x-auto", {
+      className={classNames("flex w-full flex-col overflow-x-hidden", {
         [tableStyles!]: !!tableStyles
       })}
     >
@@ -32,56 +32,58 @@ export const BaseTable: React.FC<Props> = props => {
           {title}
         </h3>
       )}
-      <div className="w-full overflow-x-scroll">
-        <table className="w-full divide-y divide-gray-200 overflow-x-auto">
-          <thead className="bg-gray-50">
-            <tr>
-              {headers.map((header, i, a) => (
-                <th
-                  key={createHeaderKey(i)}
-                  scope="col"
-                  className={classNames(headerStyles, {
-                    [header.classNames!]: !!header.classNames,
-                    "rounded-tl-lg": i === 0,
-                    "rounded-tr-lg": i === a.length - 1
+      <table className="block w-full divide-y divide-gray-200 overflow-x-scroll lg:table">
+        <thead className="bg-gray-50">
+          <tr>
+            {headers.map((header, i, a) => (
+              <th
+                key={createHeaderKey(i)}
+                scope="col"
+                className={classNames(headerStyles, {
+                  [header.classNames!]: !!header.classNames,
+                  "lg:rounded-tl-lg": i === 0,
+                  "lg:rounded-tr-lg": i === a.length - 1,
+                  "sticky left-0 right-0 top-0 bottom-0 !z-50":
+                    !!leftColumnSticky && i === 0
+                })}
+              >
+                {header.title}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-gray-200 bg-white">
+          {rows.map(({ data, row }, rowIndex, rowArray) => (
+            <tr
+              key={createRowKey(rowIndex)}
+              className={classNames({
+                [row?.classNames!]: !!row?.classNames
+              })}
+              role="row"
+              {...row?.props}
+            >
+              {data.map((d, i, a) => (
+                <td
+                  key={createDataKey(i)}
+                  className={classNames(cellStyles, {
+                    [d.classNames!]: !!d.classNames,
+                    "lg:rounded-bl-lg":
+                      i === 0 && rowIndex === rowArray.length - 1,
+                    "lg:rounded-br-lg":
+                      i === a.length - 1 && rowIndex === rowArray.length - 1,
+                    "sticky left-0 right-0 top-0 bottom-0 !z-50":
+                      !!leftColumnSticky && i === 0
                   })}
+                  role="cell"
+                  {...d.props}
                 >
-                  {header.title}
-                </th>
+                  {d.title}
+                </td>
               ))}
             </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200 bg-white">
-            {rows.map(({ data, row }, rowIndex, rowArray) => (
-              <tr
-                key={createRowKey(rowIndex)}
-                className={classNames({
-                  [row?.classNames!]: !!row?.classNames
-                })}
-                role="row"
-                {...row?.props}
-              >
-                {data.map((d, i, a) => (
-                  <td
-                    key={createDataKey(i)}
-                    className={classNames(cellStyles, {
-                      [d.classNames!]: !!d.classNames,
-                      "rounded-bl-lg":
-                        i === 0 && rowIndex === rowArray.length - 1,
-                      "rounded-br-lg":
-                        i === a.length - 1 && rowIndex === rowArray.length - 1
-                    })}
-                    role="cell"
-                    {...d.props}
-                  >
-                    {d.title}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
