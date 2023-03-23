@@ -137,7 +137,7 @@ export const AccountPanel: React.FC = () => {
           <div className="rounded-b-lg bg-white p-2">
             {panelLoading ? (
               <div className="flex w-full flex-col items-center py-10">
-                {chain && chain.unsupported ? (
+                {chain?.unsupported ? (
                   <div className="w-full px-6">
                     <p className="w-full rounded-md bg-indigo-600 py-2 text-center font-semibold text-white">
                       Chain Unsupported, connect to a different network
