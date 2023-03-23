@@ -4,9 +4,24 @@ import { Link, useLocation } from "react-router-dom";
 import { Disclosure } from "@headlessui/react";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import { NavbarRouting } from "../Routing";
+import { useNetwork } from "wagmi";
+import { goerli } from "@wagmi/chains";
 
 export const Navbar: React.FC = () => {
   const { pathname: currentPath } = useLocation();
+  const { chain } = useNetwork();
+  const isGoerli = chain?.id === goerli.id;
+
+  const Routes = NavbarRouting.filter(r => {
+    if (!isGoerli) {
+      const withoutLeaderboard = !r.path.includes("leaderboard");
+      const withoutFaucet = !r.path.includes("faucet");
+
+      return withoutLeaderboard && withoutFaucet;
+    }
+
+    return true;
+  });
 
   return (
     <Disclosure as="nav" className="border-b border-emerald-200 bg-white">
@@ -16,7 +31,7 @@ export const Navbar: React.FC = () => {
             <div className="flex h-16 justify-between">
               <div className="flex">
                 <div className="hidden sm:-my-px sm:flex sm:space-x-8">
-                  {NavbarRouting.map(item => {
+                  {Routes.map(item => {
                     const active = item.path === currentPath;
 
                     return (
@@ -56,7 +71,7 @@ export const Navbar: React.FC = () => {
 
           <Disclosure.Panel className="sm:hidden">
             <div className="space-y-1 pt-2 pb-3">
-              {NavbarRouting.map(item => {
+              {Routes.map(item => {
                 const active = item.path === currentPath;
 
                 return (
