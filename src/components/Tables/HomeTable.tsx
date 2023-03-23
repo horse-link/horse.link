@@ -73,6 +73,7 @@ export const HomeTable: React.FC<Props> = ({ meets }) => {
       tableStyles="-mt-12"
       headers={HEADERS}
       rows={ROWS}
+      leftColumnSticky
     />
   );
 };
