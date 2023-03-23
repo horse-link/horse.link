@@ -91,9 +91,11 @@ export const AccountPanel: React.FC = () => {
               <Listbox>
                 {({ open }) => (
                   <React.Fragment>
-                    <Listbox.Button className="rounded-md bg-indigo-700 px-4 py-2 font-semibold">
-                      {chain?.name || "Network"}
-                    </Listbox.Button>
+                    {chain && !chain.unsupported && (
+                      <Listbox.Button className="rounded-md bg-indigo-700 px-4 py-2 font-semibold">
+                        {chain.name}
+                      </Listbox.Button>
+                    )}
                     <Transition
                       show={open}
                       as={React.Fragment}
@@ -135,7 +137,15 @@ export const AccountPanel: React.FC = () => {
           <div className="rounded-b-lg bg-white p-2">
             {panelLoading ? (
               <div className="flex w-full flex-col items-center py-10">
-                <ClipLoader />
+                {chain?.unsupported ? (
+                  <div className="w-full px-6">
+                    <p className="w-full rounded-md bg-indigo-600 py-2 text-center font-semibold text-white">
+                      Chain Unsupported, connect to a different network
+                    </p>
+                  </div>
+                ) : (
+                  <ClipLoader />
+                )}
               </div>
             ) : (
               <div className="flex w-full flex-col items-center">
