@@ -91,9 +91,9 @@ export const AccountPanel: React.FC = () => {
               <Listbox>
                 {({ open }) => (
                   <React.Fragment>
-                    {!chain?.unsupported && (
+                    {chain && !chain.unsupported && (
                       <Listbox.Button className="rounded-md bg-indigo-700 px-4 py-2 font-semibold">
-                        {chain?.name}
+                        {chain.name}
                       </Listbox.Button>
                     )}
                     <Transition
