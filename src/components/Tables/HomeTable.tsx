@@ -30,7 +30,8 @@ export const HomeTable: React.FC<Props> = ({ meets }) => {
   const getDashboardData = (meet: Meet): TableData[] => [
     {
       title: `${meet.name} (${meet.location})`,
-      classNames: "bg-gray-200"
+      classNames:
+        "bg-gray-200 text-xs !whitespace-normal lg:whitespace-nowrap lg:text-base"
     },
     ...meet.races.map(race => ({
       title: (
