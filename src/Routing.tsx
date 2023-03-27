@@ -11,6 +11,7 @@ const Vaults = lazy(() => import("./pages/Vaults"));
 const Faucet = lazy(() => import("./pages/Faucet"));
 const Results = lazy(() => import("./pages/Results"));
 const Leaderboard = lazy(() => import("./pages/Leaderboard"));
+const UnsupportedNetwork = lazy(() => import("./pages/UnsupportedNetwork"));
 
 // app routing
 const Routing: AppRoutes = [
@@ -53,6 +54,10 @@ const Routing: AppRoutes = [
   {
     path: "/leaderboard",
     element: <Leaderboard />
+  },
+  {
+    path: "/unsupported",
+    element: <UnsupportedNetwork />
   }
 ];
 

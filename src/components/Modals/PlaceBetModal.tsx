@@ -156,13 +156,13 @@ export const PlaceBetModal: React.FC<Props> = ({
         timestamp: Math.floor(Date.now() / 1000)
       };
 
+      setIsModalOpen(false);
+
       if (option?.betNow) {
         await placeBetImmediately(betSlip);
       } else {
         addBet(betSlip);
       }
-
-      setIsModalOpen(false);
     },
     [market, back, wagerAmount, race, raceNumber]
   );
