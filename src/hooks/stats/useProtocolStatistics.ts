@@ -19,11 +19,11 @@ export const useProtocolStatistics = () => {
     const protocol = data.protocol;
 
     return {
-      id: protocol.id,
-      inPlay: BigNumber.from(protocol.inPlay),
-      tvl: BigNumber.from(protocol.currentTvl),
-      performance: +protocol.performance,
-      lastUpdate: +protocol.lastUpdate
+      id: protocol?.id ?? "none",
+      inPlay: BigNumber.from(protocol?.inPlay ?? 0),
+      tvl: BigNumber.from(protocol?.currentTvl ?? 0),
+      performance: +protocol?.performance ?? 100,
+      lastUpdate: +protocol?.lastUpdate ?? 0
     };
   }, [data, loading]);
 
