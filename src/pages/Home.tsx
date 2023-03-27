@@ -75,7 +75,7 @@ const Home: React.FC = () => {
   return (
     <PageLayout>
       <HomeNextToJumpBanner />
-      <div className="grid gap-6">
+      <div className="grid w-full gap-6">
         {myPlayEnabled ? <HomeUserStats /> : <HomeOverallStats />}
         <div className="flex w-full justify-between gap-x-3 md:justify-end">
           <HomeFilterGroup

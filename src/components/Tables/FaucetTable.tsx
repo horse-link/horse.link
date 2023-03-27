@@ -51,8 +51,6 @@ export const FaucetTable: React.FC<Props> = ({
     const tokenBalance = amounts.find(
       amount => amount.symbol.toLowerCase() === token.symbol.toLowerCase()
     );
-    if (!tokenBalance)
-      throw new Error("Could not find balance for given token");
 
     return [
       {
@@ -64,7 +62,10 @@ export const FaucetTable: React.FC<Props> = ({
       },
       {
         title: `${utils.formatting.formatToFourDecimals(
-          ethers.utils.formatUnits(tokenBalance.amount, tokenBalance.decimals)
+          ethers.utils.formatUnits(
+            tokenBalance?.amount || ethers.constants.Zero,
+            tokenBalance?.decimals
+          )
         )} ${token.symbol}`
       },
       {
