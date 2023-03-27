@@ -1,0 +1,163 @@
+alerts:
+  - rule: DEPLOYMENT_FAILED
+  - rule: DEPLOYMENT_LIVE
+  - rule: DOMAIN_FAILED
+  - rule: DOMAIN_LIVE
+databases:
+  - cluster_name: db-redis-syd1-25631
+    engine: REDIS
+    name: db-redis-syd1-25631
+    production: true
+    version: "7"
+domains:
+  - domain: alpha.horse.link
+    type: PRIMARY
+name: horse-link-au
+region: syd
+services:
+  - alerts:
+      - operator: GREATER_THAN
+        rule: RESTART_COUNT
+        value: 1
+        window: FIVE_MINUTES
+    dockerfile_path: Dockerfile
+    envs:
+      - key: NODE_ENV
+        scope: RUN_AND_BUILD_TIME
+        value: production
+      - key: TZ
+        scope: RUN_AND_BUILD_TIME
+        value: Australia/Brisbane
+      - key: PRIVATE_KEY
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:yta1fcq31BorQ8On4kQ2OHFVAtuZ6ei0:9/1zTS5LXhAMwIl7c5RNPlyVovLqageyvuuedBvKWtc2dyxfqxn1R2IBWYkDh659VWUN4LRpVJwfktblclgQEIxOfGNJARoS0Trrz2NyE1C4RA==]
+      - key: PRIVATE_KEY_GOERLI
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:riOQSkKg94XsOJXUXl8Lh6BVNzSh6CgD:m/1WVpjtKK4KP6RoAYpOmGNZqB8C7Dvga8kxbC+lzpuA3v8GrAglRKf6Rjd7qqEw06hr58TC/VQ2OjQGrkLs1llcNL5jvLCr+mKkCShxKGGc+w==]
+      - key: PRIVATE_KEY_ARBITRUM
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:GQ4mBNfmuKrr9y3aeMxaR5P8FArRcr9c:FLVqFgRsvRExvS8yb80GTsEvtp/Y5Be0HCi6S3o4AsCv4iWulNa141OqNoF79+bl1q/abST39GtSML7wtTE+zEfDM/HjihJGCcMTDJYD3eJ9Jg==]
+      - key: PROVIDER_URL_ARBITRUM
+        scope: RUN_AND_BUILD_TIME
+        value: https://arbitrum-mainnet.infura.io/v3/0c1875a2978649b584bb88f94509bdfa
+      - key: PROVIDER_URL_ARBITRUMGOERLI
+        scope: RUN_AND_BUILD_TIME
+        value: https://arbitrum-goerli.infura.io/v3/0c1875a2978649b584bb88f94509bdfa
+      - key: PROVIDER_URL_SEPOLIA
+        scope: RUN_AND_BUILD_TIME
+        value: https://sepolia.infura.io/v3/0c1875a2978649b584bb88f94509bdfa
+      - key: PROVIDER_URL_GOERLI
+        scope: RUN_AND_BUILD_TIME
+        value: https://goerli.infura.io/v3/0c1875a2978649b584bb88f94509bdfa
+      - key: OWNER
+        scope: RUN_AND_BUILD_TIME
+        value: 0x155c21c846b68121ca59879B3CCB5194F5Ae115E
+      - key: REGISTRY_CONTRACT
+        scope: RUN_AND_BUILD_TIME
+        value: 0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44
+      - key: REDIS_URL
+        scope: RUN_AND_BUILD_TIME
+        value: rediss://default:AVNS_UeoUo9p18wxjLj6DyMT@db-redis-syd1-25631-do-user-7279278-0.b.db.ondigitalocean.com:25061
+      - key: FAUCET_PRIVATE_KEY
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:+M0jyQVmpSJFFk/Zb39W0JiNyZtBPg2n:Xuq/0hBJLyPBcXRFDTYPW/VhdA1tV5kluAQTXXHONbd0CCQwW/G+dD1MDo1wpA3K6DvvPQ9ogI0XDQsTnCg6Tmm66/0VjNZM4AoFAyMELYFlgA==]
+      - key: FAUCET_ADDRESS
+        scope: RUN_AND_BUILD_TIME
+        value: 0xF919eaF2E37aAC718Aa19668b9071ee42c02c081
+      - key: MARKET_PRIVATE_KEY
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:jRVMBYDBzRmJhKN3gJADF9IyxTUCd/YJ:7/fhIyUzVeJD4qgtMs8JyCN0e1RbOG/PgKeeWKXVqr70iS1AWR+pLWG2p4d+GROOxL/zLBwiikmDSo9nCQjLl6M0C0JSfYVfMzXvNoC0Sy1RpDRivx8=]
+      - key: VERIFICATION_SALT
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:hidJ1+jHLvMjJAmnFP6hhwKRfzBh8lZz:poHkbruQm0DCXMrMZ+NTizNqSBs=]
+      - key: VERIFICATION_SECRET
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:82l8ziRBXgjPTkoG7gm56OPKN6ssN2SG:l9bTDo9600whjRPZgu8lJZMIMKPMwA==]
+      - key: WEB_BASE_URL
+        scope: RUN_AND_BUILD_TIME
+        value: https://alpha.horse.link
+      - key: MESSAGEBIRD_ACCESS_KEY
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:W2XNejbOwBuhGX5lJjcdMLjdS/mDtpqj:cIU72MMYMwfHTJ0UO3rBksvsw7lqoKZRx1FuIqX1Yp2MCUZiXk6UX/Q=]
+      - key: SUPABASE_URL
+        scope: RUN_AND_BUILD_TIME
+        value: https://rgjuwipwsmbszhogklbg.supabase.co
+      - key: SUPABASE_KEY
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:m69KXwppoYhCEdJXz/oW2yv414RBuBdm:gEunPOc5E+c182HvnfPswZHLuepIEkV5NSEX90EyHOYi2JFRc6L1FZ/W5i2frmtkxiz7PmPw4ZHR2jcyIvn43mTot5LRRy6TjShRk483ox9zc59KWhHr0m2V1gDmRpjzaSMNKX7jbImUXHrWheXh/wZ7y//n/RWtkvuo5DAKwmtuHy+HzC969uW87A1XEasbuMIuDI7UgZwfhfJgWkgunDVSgRgk+S9qvuYQhoSJ/wqj0z2AaA5VCk0sAPOPD2tMyJeVn6bkeXpMrLvSzkLkHisJFICa6Sasv0R41CckiEc=]
+    github:
+      branch: main
+      deploy_on_push: true
+      repo: horse-link/api.horse.link
+    http_port: 3003
+    instance_count: 1
+    instance_size_slug: professional-m
+    name: horse-link-api
+    routes:
+      - path: /api
+    run_command: yarn start
+    source_dir: /
+  - environment_slug: node-js
+    envs:
+      - key: ALCHEMY_KEY
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:kx2v2R001xVHwIBQBiFk5WfYIcaXOetb:7jxRnJOlBA6JDwJAq2uNzSooYWSdWtmoRd+48BMjHRhPzGkktM5BIfaMkEcKIeOB]
+      - key: NETWORK
+        scope: RUN_AND_BUILD_TIME
+        value: goerli
+      - key: DATABASE_URL
+        scope: RUN_TIME
+        value: ${db-redis-syd1-25631.DATABASE_URL}
+    github:
+      branch: development
+      deploy_on_push: true
+      repo: horse-link/nft-image-service
+    http_port: 3000
+    instance_count: 1
+    instance_size_slug: professional-xs
+    name: nft-image-service
+    routes:
+      - path: /nft
+    run_command: yarn start
+    source_dir: /
+static_sites:
+  - build_command: |-
+      yarn lint
+      yarn build
+    catchall_document: index.html
+    environment_slug: node-js
+    envs:
+      - key: VITE_API_URL
+        scope: BUILD_TIME
+        value: https://alpha.horse.link/api
+      - key: VITE_ALCHEMY_API_KEY
+        scope: BUILD_TIME
+        type: SECRET
+        value: EV[1:UmGlclnN8vTpUGo5I0KNrPATKccOHu27:qY8kJRr1MZNhxtchwBGPeR84vHDYjRFMOLrUezYb9jzAgTzeUlmdsd4kauwZ0aMb]
+      - key: VITE_SUBGRAPH_URL
+        scope: BUILD_TIME
+        value: https://api.thegraph.com/subgraphs/name/horse-link/hl-protocol
+      - key: VITE_EVENT_TS
+        scope: BUILD_TIME
+        value: "1681616504930"
+      - key: VITE_SALT
+        scope: BUILD_TIME
+        value: horselink
+    github:
+      branch: main
+      deploy_on_push: true
+      repo: horse-link/horse.link
+    name: horse-link-app
+    routes:
+      - path: /
+    source_dir: /
