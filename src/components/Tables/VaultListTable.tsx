@@ -10,11 +10,12 @@ import {
 import { Address, useAccount, useSigner } from "wagmi";
 import { useWalletModal } from "../../providers/WalletModal";
 import utils from "../../utils";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { VaultActionButton } from "../Buttons";
 import Skeleton from "react-loading-skeleton";
 import { useVaultContract } from "../../hooks/contracts";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
+import { useApi } from "../../providers/Api";
 
 type Props = {
   config?: Config;
@@ -31,6 +32,9 @@ export const VaultListTable: React.FC<Props> = ({ config, setIsModalOpen }) => {
   const { getIndividualShareTotal, getIndividualAssetTotal, getSupplyTotal } =
     useVaultContract();
 
+  // Use API
+  const api = useApi();
+
   useEffect(() => {
     if (!isConnected || !config || !signer) {
       //If a user is disconnected we show the skeleton
@@ -40,13 +44,15 @@ export const VaultListTable: React.FC<Props> = ({ config, setIsModalOpen }) => {
     (async () => {
       const individualRecords: Record<Address, VaultUserData> = {};
 
-      await Promise.all(
+      config.vaults = await Promise.all(
         config.vaults.map(async (vault: VaultInfo) => {
-          const [shareTotal, assetTotal, totalSupply] = await Promise.all([
-            getIndividualShareTotal(vault, signer),
-            getIndividualAssetTotal(vault, signer),
-            getSupplyTotal(vault, signer)
-          ]);
+          const [shareTotal, assetTotal, totalSupply, vaultDetail] =
+            await Promise.all([
+              getIndividualShareTotal(vault, signer),
+              getIndividualAssetTotal(vault, signer),
+              getSupplyTotal(vault, signer),
+              api.getVaultDetail(vault.address)
+            ]);
 
           const percentageTotal = ethers.utils.formatUnits(
             shareTotal.mul(100).div(totalSupply.add(1)),
@@ -61,6 +67,13 @@ export const VaultListTable: React.FC<Props> = ({ config, setIsModalOpen }) => {
             userShareBalance: shareTotal,
             userAssetBalance: assetTotal
           };
+          const result: VaultInfo = {
+            ...vault,
+            totalAssets: BigNumber.from(vaultDetail.totalAssets),
+            totalSupply: BigNumber.from(vaultDetail.totalSupply),
+            totalAssetsLocked: BigNumber.from(vaultDetail.totalAssetsLocked)
+          };
+          return result;
         })
       );
       setUserData(individualRecords);
@@ -77,7 +90,12 @@ export const VaultListTable: React.FC<Props> = ({ config, setIsModalOpen }) => {
     },
     {
       title: `$${utils.formatting.formatToFourDecimals(
-        ethers.utils.formatUnits(vault.totalAssets, vault.asset.decimals)
+        ethers.utils.formatUnits(
+          BigNumber.from(vault.totalAssets).add(
+            BigNumber.from(vault.totalAssetsLocked)
+          ),
+          vault.asset.decimals
+        )
       )}`
     },
     {

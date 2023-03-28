@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 import { ethers } from "ethers";
 import utils from "../utils";
-import { Config } from "../types/config";
+import { Config, VaultInfo } from "../types/config";
 import {
   MeetInfo,
   MeetResults,
@@ -137,9 +137,9 @@ export class Api {
     return data;
   };
 
-  public getVaultDetail = async (vaultAddress: string): Promise<Vault> => {
+  public getVaultDetail = async (vaultAddress: string): Promise<VaultInfo> => {
     const { data } = await this.client.get(`/vaults/${vaultAddress}`);
-    return data;
+    return data as VaultInfo;
   };
 
   public getVaultToken = async (vaultAddress: string): Promise<Token> => {
