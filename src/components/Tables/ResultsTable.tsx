@@ -34,7 +34,7 @@ export const ResultsTable: React.FC<Props> = ({ results }) => {
       title: "Runner"
     },
     {
-      title: "Rider Number"
+      title: "Number"
     },
     {
       title: "Rider"
