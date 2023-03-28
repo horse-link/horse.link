@@ -46,8 +46,6 @@ export const PageLayout: React.FC<Props> = ({ children }) => {
       });
   }, [chain]);
 
-  console.log(isConnected);
-
   return (
     <div className="min-h-screen bg-emerald-500">
       <Navbar />
