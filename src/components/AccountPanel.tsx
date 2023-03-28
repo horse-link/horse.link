@@ -51,12 +51,6 @@ export const AccountPanel: React.FC = () => {
   const togglePrivateKey = () => setShowPrivateKey(prev => !prev);
 
   useEffect(() => {
-    // If the current chain is not in the supported list,
-    if (chain && switchNetwork) {
-      if (!chains.find(c => c.id === chain.id)) {
-        switchNetwork(chains[0].id);
-      }
-    }
     if (!currentToken || !signer) return;
 
     setUserBalance(undefined);
@@ -69,7 +63,7 @@ export const AccountPanel: React.FC = () => {
         )
       })
     );
-  }, [currentToken, signer, chain]);
+  }, [currentToken, signer]);
 
   const panelLoading = tokensLoading || !currentToken || !userBalance;
 
