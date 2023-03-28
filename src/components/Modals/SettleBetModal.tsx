@@ -125,7 +125,8 @@ export const SettleBetModal: React.FC<Props> = ({
       ) : (
         <React.Fragment>
           <h2 className="mb-6 text-2xl font-bold">
-            {utils.formatting.formatFirstLetterCapitalised(bet.status)} Bet
+            {utils.formatting.formatFirstLetterCapitalised(bet.status)} Bet #
+            {bet.index}
           </h2>
           <div className="flex flex-col">
             <h3 className="mb-2 font-semibold">
