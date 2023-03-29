@@ -36,6 +36,9 @@ export type VaultInfo = {
   totalAssets: BigNumber;
   totalSupply: BigNumber;
   totalAssetsLocked: BigNumber;
+  userAssetTotal: BigNumber;
+  userShareTotal: BigNumber;
+  userSharePercentage: string;
 };
 
 export type Config = {

@@ -139,6 +139,7 @@ export class Api {
 
   public getVaultDetail = async (vaultAddress: string): Promise<VaultInfo> => {
     const { data } = await this.client.get(`/vaults/${vaultAddress}`);
+    data.address = vaultAddress;
     return data as VaultInfo;
   };
 
