@@ -54,7 +54,7 @@ const Bets: React.FC = () => {
   } = useSubgraphBets(
     betTableFilter,
     undefined,
-    myBetsEnabled ? paramsAddress : undefined
+    myBetsEnabled ? undefined : paramsAddress
   );
 
   useEffect(() => {
@@ -106,7 +106,7 @@ const Bets: React.FC = () => {
         </div>
         <div className="flex items-center gap-3">
           <Toggle enabled={myBetsEnabled} onChange={onMyBetToggle} />
-          <div className="font-semibold">User&apos;s Bets</div>
+          <div className="font-semibold">All Bets</div>
         </div>
       </div>
       <BetTable
