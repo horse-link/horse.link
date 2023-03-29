@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { BaseTable } from ".";
 import { TableData, TableHeader, TableRow } from "../../types/table";
 import { Config, VaultInfo } from "../../types/config";
@@ -20,9 +20,20 @@ type Props = {
 export const VaultListTable: React.FC<Props> = ({ config, setIsModalOpen }) => {
   const { isConnected } = useAccount();
   const { openWalletModal } = useWalletModal();
-  const { data: signer } = useSigner();
+  const [signer, setSigner] = useState<Signer>();
+  useSigner({
+    onSuccess: signerResult => {
+      setSigner(signerResult as Signer);
+    }
+  });
   const scanner = useScannerUrl();
-  const vaultAddresses = (config?.vaults ?? []).map(vault => vault.address);
+
+  const vaultAddresses = useMemo(() => {
+    if (!config) return;
+
+    return config.vaults.map(v => v.address);
+  }, [config]);
+
   const { getVaultInfoList } = useVaultInfoList(
     vaultAddresses,
     signer as Signer
@@ -38,7 +49,7 @@ export const VaultListTable: React.FC<Props> = ({ config, setIsModalOpen }) => {
       const vaultInfoListData = await getVaultInfoList();
       setVaultInfoList(vaultInfoListData);
     })();
-  }, [config, isConnected, signer]);
+  }, [config, isConnected, signer, vaultAddresses]);
 
   const getVaultListData = (vault: VaultInfo): TableData[] => {
     if (!vaultInfoList.length) {

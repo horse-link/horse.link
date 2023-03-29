@@ -3,14 +3,19 @@ import { useApi } from "../providers/Api";
 import { VaultInfo } from "../types/config";
 import { useVaultContract } from "../hooks/contracts";
 
-export const useVaultInfoList = (vaultAddresses: string[], signer?: Signer) => {
+export const useVaultInfoList = (
+  vaultAddresses?: string[],
+  signer?: Signer
+) => {
   const api = useApi();
   const { getIndividualAssetTotal, getIndividualShareTotal } =
     useVaultContract();
 
   const getVaultInfoList = async (): Promise<VaultInfo[]> => {
     const vaultInfoList = await Promise.all(
-      vaultAddresses.map(vaultAddress => api.getVaultDetail(vaultAddress))
+      (vaultAddresses ?? []).map(vaultAddress =>
+        api.getVaultDetail(vaultAddress)
+      )
     );
     const basicInfo = vaultInfoList.map(vaultInfo => {
       return {
