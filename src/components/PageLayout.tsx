@@ -14,7 +14,8 @@ type Props = {
 export const PageLayout: React.FC<Props> = ({ children }) => {
   const { closeWalletModal, isWalletModalOpen } = useWalletModal();
   const navigate = useNavigate();
-  const { isChainUnsupported } = useWalletOverrides();
+  const { isChainUnsupported, forceNewNetwork, isLocalWallet } =
+    useWalletOverrides();
 
   useEffect(() => {
     if (isChainUnsupported === undefined) return;
@@ -34,7 +35,10 @@ export const PageLayout: React.FC<Props> = ({ children }) => {
             <div className="lg:col-span-4">{children}</div>
             <div className="lg:col-span-1">
               <div className="lg:sticky lg:top-4">
-                <AccountPanel />
+                <AccountPanel
+                  forceNewNetwork={forceNewNetwork}
+                  isLocalWallet={isLocalWallet}
+                />
                 <BetSlip />
               </div>
             </div>

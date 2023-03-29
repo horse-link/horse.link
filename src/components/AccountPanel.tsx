@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useAccount, useNetwork, useSigner } from "wagmi";
+import { Chain, useAccount, useNetwork, useSigner } from "wagmi";
 import utils from "../utils";
 import { BaseButton } from "./Buttons";
 import { useTokenContext } from "../providers/Token";
@@ -13,11 +13,17 @@ import { LS_PRIVATE_KEY } from "../hooks/useLocalWallet";
 import constants from "../constants";
 import { AiFillEyeInvisible, AiFillEye, AiOutlineQrcode } from "react-icons/ai";
 import { QrCodeModal } from "./Modals";
-import { useWalletOverrides } from "../hooks/useWalletOverrides";
 
-export const AccountPanel: React.FC = () => {
+type Props = {
+  forceNewNetwork: (chain: Chain) => void;
+  isLocalWallet: boolean;
+};
+
+export const AccountPanel: React.FC<Props> = ({
+  forceNewNetwork,
+  isLocalWallet
+}) => {
   const { currentToken, tokensLoading, openModal } = useTokenContext();
-  const { forceNewNetwork, isLocalWallet } = useWalletOverrides();
 
   const { openWalletModal } = useWalletModal();
   const account = useAccount();
