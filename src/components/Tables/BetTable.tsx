@@ -150,7 +150,7 @@ export const BetTable: React.FC<Props> = ({
   );
 
   const TERNARY_ROWS =
-    allBetsEnabled && paramsAddressExists
+    !allBetsEnabled && !paramsAddressExists
       ? utils.tables.getBlankRow(
           "Connect your wallet or add an address to the URL",
           HEADERS.length
