@@ -15,7 +15,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
 
 type Props = {
-  myBetsEnabled: boolean;
+  allBetsEnabled: boolean;
   paramsAddressExists: boolean;
   betHistory?: BetHistory[];
   config?: Config;
@@ -24,7 +24,7 @@ type Props = {
 };
 
 export const BetTable: React.FC<Props> = ({
-  myBetsEnabled,
+  allBetsEnabled,
   paramsAddressExists,
   betHistory,
   config,
@@ -150,7 +150,7 @@ export const BetTable: React.FC<Props> = ({
   );
 
   const TERNARY_ROWS =
-    myBetsEnabled && !paramsAddressExists
+    allBetsEnabled && !paramsAddressExists
       ? utils.tables.getBlankRow(
           "Connect your wallet or add an address to the URL",
           HEADERS.length
