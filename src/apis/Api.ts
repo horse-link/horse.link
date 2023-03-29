@@ -9,7 +9,7 @@ import {
   SignedMeetingsResponse
 } from "../types/meets";
 import { BetHistoryResponse, SignedBetDataResponse } from "../types/bets";
-import { Market, Vault } from "../typechain";
+import { Market } from "../typechain";
 import { Token } from "graphql";
 import { VaultUserData } from "../types/vaults";
 import { Network } from "../types/general";
