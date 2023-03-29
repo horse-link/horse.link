@@ -61,6 +61,7 @@
     "@typescript-eslint/parser": "^5.37.0",
     "autoprefixer": "^10.4.13",
     "cross-fetch": "^3.1.5",
+    "eslint": "^8.37.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.2.1",
@@ -84,7 +85,8 @@
     "test": "vitest",
     "prepare": "husky install",
     "format-staged": "pretty-quick --staged",
-    "lint": "prettier -w src",
+    "format": "prettier -w src",
+    "lint": "eslint --ext .js,.jsx,.ts,.tsx src",
     "postinstall": "yarn typechain",
     "typechain": "typechain --target ethers-v5 ./src/abis/*.json --out-dir ./src/typechain"
   },
