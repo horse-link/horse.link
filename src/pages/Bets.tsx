@@ -20,7 +20,7 @@ const Bets: React.FC = () => {
 
   const { totalWinningBets, totalWinningVolume, largestWinningBet } =
     useBetsStatistics();
-  const [myBetsEnabled, setMyBetsEnabled] = useState(true);
+  const [allBetsEnabled, setAllBetsEnabled] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBet, setSelectedBet] = useState<BetHistory>();
   const [betTableFilter, setBetTableFilter] =
@@ -41,7 +41,7 @@ const Bets: React.FC = () => {
     navigate(`/bets/${address}`, {
       replace: true
     });
-    setMyBetsEnabled(true);
+    setAllBetsEnabled(true);
   }, [address]);
 
   const {
@@ -54,14 +54,14 @@ const Bets: React.FC = () => {
   } = useSubgraphBets(
     betTableFilter,
     undefined,
-    myBetsEnabled ? paramsAddress : undefined
+    allBetsEnabled ? undefined : paramsAddress
   );
 
   useEffect(() => {
-    setMyBetsEnabled(!!paramsAddress);
+    setAllBetsEnabled(!!paramsAddress);
   }, [paramsAddress]);
 
-  const onMyBetToggle = () => setMyBetsEnabled(prev => !prev);
+  const onMyBetToggle = () => setAllBetsEnabled(prev => !prev);
 
   const onFilterChange = (option: BetFilterOptions) => {
     setBetTableFilter(option);
@@ -105,12 +105,12 @@ const Bets: React.FC = () => {
           />
         </div>
         <div className="flex items-center gap-3">
-          <Toggle enabled={myBetsEnabled} onChange={onMyBetToggle} />
-          <div className="font-semibold">User&apos;s Bets</div>
+          <Toggle enabled={allBetsEnabled} onChange={onMyBetToggle} />
+          <div className="font-semibold">All Bets</div>
         </div>
       </div>
       <BetTable
-        myBetsEnabled={myBetsEnabled}
+        allBetsEnabled={allBetsEnabled}
         paramsAddressExists={!!paramsAddress}
         betHistory={betHistory}
         config={config}
