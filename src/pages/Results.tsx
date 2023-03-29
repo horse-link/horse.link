@@ -101,7 +101,7 @@ const Results: React.FC = () => {
         <h1 className="mt-4 text-2xl font-bold">History</h1>
         <BetTable
           paramsAddressExists={false}
-          allBetsEnabled={false}
+          allBetsEnabled={true}
           betHistory={betHistory}
           config={config}
           setSelectedBet={setSelectedBet}
