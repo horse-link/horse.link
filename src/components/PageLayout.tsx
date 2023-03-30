@@ -1,11 +1,11 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { WalletModal } from "./Modals";
 import { useWalletModal } from "../providers/WalletModal";
 import { BetSlip } from "./BetSlip";
 import { Navbar } from "./Navbar";
 import { AccountPanel } from "./AccountPanel";
-import { useAccount, useConnect, useNetwork } from "wagmi";
 import { useNavigate } from "react-router";
+import { useWalletOverrides } from "../hooks/useWalletOverrides";
 
 type Props = {
   children: React.ReactNode;
@@ -13,38 +13,18 @@ type Props = {
 
 export const PageLayout: React.FC<Props> = ({ children }) => {
   const { closeWalletModal, isWalletModalOpen } = useWalletModal();
-  const { chain } = useNetwork();
   const navigate = useNavigate();
-  const { connect, connectors } = useConnect();
-  const { connector, isConnected } = useAccount();
-
-  // last known values
-  const [lastConnector, setLastConnector] = useState(
-    connector || connectors[0]
-  );
-  useEffect(() => {
-    if (!connector) return;
-
-    setLastConnector(connector);
-  }, [connector]);
-
-  // attempt reconnect
-  useLayoutEffect(() => {
-    if (isConnected) return;
-
-    connect({
-      connector: lastConnector
-    });
-  }, [isConnected]);
+  const { isChainUnsupported, forceNewNetwork, isLocalWallet } =
+    useWalletOverrides();
 
   useEffect(() => {
-    if (!chain) return;
+    if (isChainUnsupported === undefined) return;
 
-    if (chain.unsupported)
+    if (isChainUnsupported)
       navigate("/unsupported", {
         replace: true
       });
-  }, [chain]);
+  }, [isChainUnsupported]);
 
   return (
     <div className="min-h-screen bg-emerald-500">
@@ -55,7 +35,10 @@ export const PageLayout: React.FC<Props> = ({ children }) => {
             <div className="lg:col-span-4">{children}</div>
             <div className="lg:col-span-1">
               <div className="lg:sticky lg:top-4">
-                <AccountPanel />
+                <AccountPanel
+                  forceNewNetwork={forceNewNetwork}
+                  isLocalWallet={isLocalWallet}
+                />
                 <BetSlip />
               </div>
             </div>

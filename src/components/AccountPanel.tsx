@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useAccount, useNetwork, useSigner, useSwitchNetwork } from "wagmi";
+import { Chain, useAccount, useNetwork, useSigner } from "wagmi";
 import utils from "../utils";
 import { BaseButton } from "./Buttons";
 import { useTokenContext } from "../providers/Token";
@@ -9,30 +9,29 @@ import { useERC20Contract } from "../hooks/contracts";
 import { ethers } from "ethers";
 import { useWalletModal } from "../providers/WalletModal";
 import { Listbox, Transition } from "@headlessui/react";
-import { useApiWithForce } from "../providers/Api";
-import { Network } from "../types/general";
-import { useApolloWithForce } from "../providers/Apollo";
 import { LS_PRIVATE_KEY } from "../hooks/useLocalWallet";
 import constants from "../constants";
 import { AiFillEyeInvisible, AiFillEye, AiOutlineQrcode } from "react-icons/ai";
-import { LOCAL_WALLET_ID } from "../constants/wagmi";
 import { QrCodeModal } from "./Modals";
 
-export const AccountPanel: React.FC = () => {
+type Props = {
+  forceNewNetwork: (chain: Chain) => void;
+  isLocalWallet: boolean;
+};
+
+export const AccountPanel: React.FC<Props> = ({
+  forceNewNetwork,
+  isLocalWallet
+}) => {
   const { currentToken, tokensLoading, openModal } = useTokenContext();
-  const { forceNewChain: forceApi } = useApiWithForce();
-  const { forceNewChain: forceApollo } = useApolloWithForce();
 
   const { openWalletModal } = useWalletModal();
   const account = useAccount();
-  const isLocalWallet = account.connector?.id === LOCAL_WALLET_ID;
 
   const { data: signer } = useSigner();
   const { getBalance } = useERC20Contract();
   const [userBalance, setUserBalance] = useState<UserBalance>();
   const { chain, chains } = useNetwork();
-  const { switchNetwork } = useSwitchNetwork();
-
   const [showQrCodeModal, setQrCodeModal] = useState(false);
   const closeQrCodeModal = () => setQrCodeModal(false);
 
@@ -69,12 +68,6 @@ export const AccountPanel: React.FC = () => {
 
   const Image = utils.images.getConnectorIcon(account.connector?.name || "");
 
-  const switchNetworkWithForce = (chain: Network) => {
-    switchNetwork?.(chain.id);
-    forceApi(chain);
-    forceApollo(chain);
-  };
-
   return (
     <React.Fragment>
       <div className="mt-6 w-full shadow-lg lg:mx-4 lg:mt-0">
@@ -108,7 +101,7 @@ export const AccountPanel: React.FC = () => {
                             className="whitespace-nowrap"
                           >
                             <button
-                              onClick={() => switchNetworkWithForce(chain)}
+                              onClick={() => forceNewNetwork(chain)}
                               className="w-full rounded-md py-2 px-6 hover:bg-gray-100"
                             >
                               {chain.name}
