@@ -22,11 +22,12 @@ type Props = {
 export const VaultListTable: React.FC<Props> = ({ config, setIsModalOpen }) => {
   const { isConnected } = useAccount();
   const { openWalletModal } = useWalletModal();
-  const [signer, setSigner] = useState<Signer>();
+
   const api = useApi();
   const { getIndividualAssetTotal, getIndividualShareTotal } =
     useVaultContract();
 
+  const [signer, setSigner] = useState<Signer>();
   useSigner({
     onSuccess: signerResult => {
       setSigner(signerResult ?? undefined);
@@ -39,11 +40,6 @@ export const VaultListTable: React.FC<Props> = ({ config, setIsModalOpen }) => {
 
     return config.vaults.map(v => v.address);
   }, [config]);
-
-  /*const { getVaultInfoList } = useVaultInfoList(
-    vaultAddresses,
-    signer
-  );*/
 
   const [vaultInfoList, setVaultInfoList] = useState<VaultInfo[]>([]);
 
