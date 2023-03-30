@@ -141,7 +141,7 @@ export class Api {
     const { data } = await this.client.get<VaultInfo>(
       `/vaults/${vaultAddress}`
     );
-    return data as VaultInfo;
+    return data;
   };
 
   public getVaultToken = async (vaultAddress: string): Promise<Token> => {
