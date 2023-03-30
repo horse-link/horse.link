@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { PageLayout } from "../components";
-import { useNetwork } from "wagmi";
 import { useNavigate } from "react-router";
+import { useNetwork } from "wagmi";
 
 const UnsupportedNetwork: React.FC = () => {
-  const { chain } = useNetwork();
   const navigate = useNavigate();
+  const { chain } = useNetwork();
 
   useEffect(() => {
     if (!chain) return;

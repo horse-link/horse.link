@@ -11,6 +11,8 @@ import { LOCAL_WALLET_ID } from "../constants/wagmi";
 import { useApiWithForce } from "../providers/Api";
 import { useApolloWithForce } from "../providers/Apollo";
 import { Network } from "../types/general";
+import { useLocation } from "react-router-dom";
+import { arbitrum } from "@wagmi/chains";
 
 // beware all ye whom enter
 // here lie the dreaded overrides
@@ -23,6 +25,7 @@ export const useWalletOverrides = () => {
   const { switchNetwork } = useSwitchNetwork();
   const { forceNewChain: forceApi } = useApiWithForce();
   const { forceNewChain: forceApollo } = useApolloWithForce();
+  const { pathname } = useLocation();
 
   const [lastKnownChain, setLastKnownChain] = useState<Network>(
     chain || chains[0]
@@ -35,6 +38,9 @@ export const useWalletOverrides = () => {
   const isLocalWallet = lastKnownConnector.id === LOCAL_WALLET_ID;
   // undefined = loading, boolean = value
   const isChainUnsupported = lastKnownChain.unsupported;
+
+  // unsupported page check
+  const isUnsupportedPage = pathname === "/unsupported";
 
   const forceNewNetwork = (chain: Chain) => {
     switchNetwork?.(chain.id);
@@ -64,6 +70,15 @@ export const useWalletOverrides = () => {
   useEffect(() => {
     if (isConnected) return;
 
+    // unsupported page override
+    if (isUnsupportedPage) {
+      connect({
+        chainId: arbitrum.id,
+        connector: lastKnownConnector
+      });
+      return;
+    }
+
     connect({
       chainId: lastKnownChain.id,
       connector: lastKnownConnector
@@ -73,7 +88,8 @@ export const useWalletOverrides = () => {
   useEffect(() => {
     if (
       lastKnownConnector.id === previousConnector.current?.id ||
-      !previousChain.current
+      !previousChain.current ||
+      isUnsupportedPage
     )
       return;
 
@@ -85,6 +101,7 @@ export const useWalletOverrides = () => {
     lastKnownConnector,
     isLocalWallet,
     forceNewNetwork,
-    isChainUnsupported
+    isChainUnsupported,
+    isUnsupportedPage
   };
 };
