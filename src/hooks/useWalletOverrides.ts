@@ -49,7 +49,7 @@ export const useWalletOverrides = () => {
       previousChain.current = prev;
       return chain;
     });
-  }, [chain]);
+  }, [chain, lastKnownConnector]);
 
   useEffect(() => {
     if (!connector) return;
@@ -76,8 +76,6 @@ export const useWalletOverrides = () => {
       !previousChain.current
     )
       return;
-
-    // TODO: check if the new network is the same as the old
 
     forceNewNetwork(previousChain.current);
   }, [lastKnownConnector]);
