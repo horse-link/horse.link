@@ -26,9 +26,7 @@ export const HomeBannerRow: React.FC<Props> = ({ meet }) => {
       className="flex h-full w-full shrink-0 flex-col p-2 text-center hover:bg-indigo-700 lg:shrink"
       to={`/races/${meet.meeting.venueCode}/${meet.jumperRaceNumber}`}
     >
-      <span className="block">
-        {`${meet.meeting.jumperMeetingName} (${meet.meeting.location}) - R${meet.jumperRaceNumber}`}
-      </span>
+      <span className="block">{`${meet.meeting.jumperMeetingName} (${meet.meeting.location}) - R${meet.jumperRaceNumber}`}</span>
       <span className="block font-semibold">{` ${timeString}`}</span>
     </Link>
   );
