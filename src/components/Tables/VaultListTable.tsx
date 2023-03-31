@@ -40,45 +40,43 @@ export const VaultListTable: React.FC<Props> = ({ config, setIsModalOpen }) => {
     if (!isConnected || !config || !vaultAddresses) return;
 
     setVaultInfoList(undefined);
-    Promise.all(vaultAddresses.map(v => api.getVaultDetail(v))).then(
-      infoList => {
-        const formatted = infoList.map(i => ({
-          ...i,
-          totalSupply: ethers.BigNumber.from(i.totalSupply),
-          totalAssets: ethers.BigNumber.from(i.totalAssets),
-          performance: ethers.BigNumber.from(i.performance)
-        }));
+    Promise.all(vaultAddresses.map(api.getVaultDetail)).then(infoList => {
+      const formatted = infoList.map(i => ({
+        ...i,
+        totalSupply: ethers.BigNumber.from(i.totalSupply),
+        totalAssets: ethers.BigNumber.from(i.totalAssets),
+        performance: ethers.BigNumber.from(i.performance)
+      }));
 
-        if (!signer) return setVaultInfoList(formatted);
+      if (!signer) return setVaultInfoList(formatted);
 
-        // add user data
-        Promise.all(
-          formatted.map(async info => {
-            const [userAssetTotal, userShareTotal] = await Promise.all([
-              getIndividualAssetTotal(info, signer),
-              getIndividualShareTotal(info, signer)
-            ]);
+      // add user data
+      Promise.all(
+        formatted.map(async info => {
+          const [userAssetTotal, userShareTotal] = await Promise.all([
+            getIndividualAssetTotal(info, signer),
+            getIndividualShareTotal(info, signer)
+          ]);
 
-            const percentageTotal = ethers.utils.formatUnits(
-              userShareTotal.mul("100").div(info.totalSupply.add("1")),
-              2
-            );
+          const percentageTotal = ethers.utils.formatUnits(
+            userShareTotal.mul("100").div(info.totalSupply.add("1")),
+            2
+          );
 
-            const userSharePercentage =
-              +percentageTotal > 0 && +percentageTotal < 1
-                ? `<1`
-                : percentageTotal;
+          const userSharePercentage =
+            +percentageTotal > 0 && +percentageTotal < 1
+              ? `<1`
+              : percentageTotal;
 
-            return {
-              ...info,
-              userAssetTotal,
-              userShareTotal,
-              userSharePercentage
-            };
-          })
-        ).then(setVaultInfoList);
-      }
-    );
+          return {
+            ...info,
+            userAssetTotal,
+            userShareTotal,
+            userSharePercentage
+          };
+        })
+      ).then(setVaultInfoList);
+    });
   }, [config, isConnected, signer, vaultAddresses]);
 
   const getVaultListData = (vault: VaultInfo): TableData[] => {
