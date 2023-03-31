@@ -57,10 +57,6 @@ const Bets: React.FC = () => {
     allBetsEnabled ? undefined : paramsAddress
   );
 
-  useEffect(() => {
-    setAllBetsEnabled(!!paramsAddress);
-  }, [paramsAddress]);
-
   const onMyBetToggle = () => setAllBetsEnabled(prev => !prev);
 
   const onFilterChange = (option: BetFilterOptions) => {
