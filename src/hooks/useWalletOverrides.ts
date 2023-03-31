@@ -37,7 +37,7 @@ export const useWalletOverrides = () => {
   const previousConnector = useRef<Connector>();
   const isLocalWallet = lastKnownConnector.id === LOCAL_WALLET_ID;
   // undefined = loading, boolean = value
-  const isChainUnsupported = lastKnownChain.unsupported;
+  const isChainUnsupported = lastKnownChain?.unsupported || false;
 
   // unsupported page check
   const isUnsupportedPage = pathname === "/unsupported";

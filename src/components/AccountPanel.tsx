@@ -13,6 +13,7 @@ import { LS_PRIVATE_KEY } from "../hooks/useLocalWallet";
 import constants from "../constants";
 import { AiFillEyeInvisible, AiFillEye, AiOutlineQrcode } from "react-icons/ai";
 import { QrCodeModal } from "./Modals";
+import { useConfig } from "../providers/Config";
 
 type Props = {
   forceNewNetwork: (chain: Chain) => void;
@@ -27,6 +28,7 @@ export const AccountPanel: React.FC<Props> = ({
 
   const { openWalletModal } = useWalletModal();
   const account = useAccount();
+  const config = useConfig();
 
   const { data: signer } = useSigner();
   const { getBalance } = useERC20Contract();
@@ -62,7 +64,7 @@ export const AccountPanel: React.FC<Props> = ({
         )
       })
     );
-  }, [currentToken, signer]);
+  }, [currentToken, signer, config]);
 
   const panelLoading = tokensLoading || !currentToken || !userBalance;
 
