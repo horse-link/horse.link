@@ -27,7 +27,8 @@ export const HomeBannerRow: React.FC<Props> = ({ meet }) => {
       to={`/races/${meet.meeting.venueCode}/${meet.jumperRaceNumber}`}
     >
       <span className="block">
-        {`${meet.meeting.jumperMeetingName} (${meet.meeting.location}) - R${meet.jumperRaceNumber}`}
+        {meet.meeting.jumperMeetingName} ({meet.meeting.location}) - R
+        {meet.jumperRaceNumber}
       </span>
       <span className="block font-semibold">{` ${timeString}`}</span>
     </Link>
