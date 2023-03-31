@@ -50,7 +50,7 @@ export const useWalletOverrides = () => {
   }, [chain]);
 
   useEffect(() => {
-    if (!chain) return;
+    if (!chain || !isError) return;
 
     networkIntent.current = chain;
   }, [isError]);
