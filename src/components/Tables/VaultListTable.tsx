@@ -4,10 +4,9 @@ import { TableData, TableHeader, TableRow } from "../../types/table";
 import { Config, VaultInfo } from "../../types/config";
 import { VaultModalState, VaultTransactionType } from "../../types/vaults";
 import { useAccount, useSigner } from "wagmi";
-import { BigNumber } from "ethers";
 import { useWalletModal } from "../../providers/WalletModal";
 import utils from "../../utils";
-import { ethers, Signer } from "ethers";
+import { ethers } from "ethers";
 import { VaultActionButton } from "../Buttons";
 import Skeleton from "react-loading-skeleton";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
@@ -26,13 +25,7 @@ export const VaultListTable: React.FC<Props> = ({ config, setIsModalOpen }) => {
   const api = useApi();
   const { getIndividualAssetTotal, getIndividualShareTotal } =
     useVaultContract();
-
-  const [signer, setSigner] = useState<Signer>();
-  useSigner({
-    onSuccess: signerResult => {
-      setSigner(signerResult ?? undefined);
-    }
-  });
+  const { data: signer } = useSigner();
   const scanner = useScannerUrl();
 
   const vaultAddresses = useMemo(() => {
@@ -41,70 +34,58 @@ export const VaultListTable: React.FC<Props> = ({ config, setIsModalOpen }) => {
     return config.vaults.map(v => v.address);
   }, [config]);
 
-  const [vaultInfoList, setVaultInfoList] = useState<VaultInfo[]>([]);
+  const [vaultInfoList, setVaultInfoList] = useState<VaultInfo[]>();
 
   useEffect(() => {
-    if (!isConnected || !config || !signer || !vaultAddresses) {
-      return;
-    }
-    getVaultInfoList().then(vaultInfoListData => {
-      setVaultInfoList(vaultInfoListData);
-    });
+    if (!isConnected || !config || !vaultAddresses) return;
+
+    setVaultInfoList(undefined);
+    Promise.all(vaultAddresses.map(v => api.getVaultDetail(v))).then(
+      infoList => {
+        const formatted = infoList.map(i => ({
+          ...i,
+          totalSupply: ethers.BigNumber.from(i.totalSupply),
+          totalAssets: ethers.BigNumber.from(i.totalAssets),
+          performance: ethers.BigNumber.from(i.performance)
+        }));
+
+        if (!signer) return setVaultInfoList(formatted);
+
+        // add user data
+        Promise.all(
+          formatted.map(async info => {
+            const [userAssetTotal, userShareTotal] = await Promise.all([
+              getIndividualAssetTotal(info, signer),
+              getIndividualShareTotal(info, signer)
+            ]);
+
+            const percentageTotal = ethers.utils.formatUnits(
+              userShareTotal.mul("100").div(info.totalSupply.add("1")),
+              2
+            );
+
+            const userSharePercentage =
+              +percentageTotal > 0 && +percentageTotal < 1
+                ? `<1`
+                : percentageTotal;
+
+            return {
+              ...info,
+              userAssetTotal,
+              userShareTotal,
+              userSharePercentage
+            };
+          })
+        ).then(setVaultInfoList);
+      }
+    );
   }, [config, isConnected, signer, vaultAddresses]);
 
-  const getVaultInfoList = async (): Promise<VaultInfo[]> => {
-    const vaultInfoList = await Promise.all(
-      (vaultAddresses ?? []).map(vaultAddress =>
-        api.getVaultDetail(vaultAddress)
-      )
-    );
-    const basicInfo = vaultInfoList.map(vaultInfo => {
-      return {
-        ...vaultInfo,
-        performance: BigNumber.from(vaultInfo.performance),
-        totalAssetsLocked: BigNumber.from(vaultInfo.totalAssetsLocked),
-        totalSupply: BigNumber.from(vaultInfo.totalSupply),
-        totalAssets: BigNumber.from(vaultInfo.totalAssets)
-      };
-    });
-    // Now add user specific data
-    if (signer) {
-      return Promise.all(
-        basicInfo.map(async vaultInfo => {
-          const userAssetTotal = await getIndividualAssetTotal(
-            vaultInfo,
-            signer
-          );
-          const userShareTotal = await getIndividualShareTotal(
-            vaultInfo,
-            signer
-          );
-          const percentageTotal = ethers.utils.formatUnits(
-            userShareTotal?.mul(100).div(vaultInfo.totalSupply.add(1)),
-            2
-          );
-
-          const userSharePercentage =
-            +percentageTotal > 0 && +percentageTotal < 1
-              ? `<1`
-              : percentageTotal;
-          return {
-            ...vaultInfo,
-            userAssetTotal,
-            userShareTotal,
-            userSharePercentage
-          };
-        })
-      );
-    }
-
-    return basicInfo;
-  };
-
   const getVaultListData = (vault: VaultInfo): TableData[] => {
-    if (!vaultInfoList.length) {
+    if (!vaultInfoList?.length) {
       return [];
     }
+
     return [
       {
         title: vault.name,
@@ -213,11 +194,10 @@ export const VaultListTable: React.FC<Props> = ({ config, setIsModalOpen }) => {
     }
   ];
 
-  const ROWS: TableRow[] = vaultInfoList.length
-    ? vaultInfoList.map(vaultInfo => ({
-        data: getVaultListData(vaultInfo)
-      }))
-    : utils.tables.getBlankRow(<Skeleton />, HEADERS.length, 0);
+  const ROWS: TableRow[] =
+    vaultInfoList?.map(vaultInfo => ({
+      data: getVaultListData(vaultInfo)
+    })) || utils.tables.getBlankRow(<Skeleton />, HEADERS.length, 0);
 
   return (
     <BaseTable title="Vaults / Liquidity Pools" headers={HEADERS} rows={ROWS} />

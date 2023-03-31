@@ -63,7 +63,7 @@ const Vaults: React.FC = () => {
         />
       </div>
       <VaultListTable setIsModalOpen={setModal} config={config} />
-      <VaultHistoryTable history={vaultHistory} config={config} />
+      <VaultHistoryTable history={vaultHistory} />
       {modal?.type === VaultTransactionType.DEPOSIT && (
         <DepositVaultModal
           isModalOpen={!!modal}
