@@ -186,7 +186,7 @@ export const SettleBetModal: React.FC<Props> = ({
             )}
             {isSettled && (
               <h3 className="mt-2 font-semibold">
-                Transaction:{" "}
+                Tx Hash:{" "}
                 <a
                   href={`${scanner}/tx/${bet.tx}`}
                   target="_blank"
