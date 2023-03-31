@@ -193,7 +193,7 @@ export const SettleBetModal: React.FC<Props> = ({
                   rel="noreferrer noopener"
                   className="hyperlink underline"
                 >
-                  {utils.formatting.shortenHash(bet.tx)}
+                  {utils.formatting.shortenHash(bet.settledAtTx ?? "")}
                 </a>
               </h3>
             )}
