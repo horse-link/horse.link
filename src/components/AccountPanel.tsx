@@ -207,7 +207,7 @@ export const AccountPanel: React.FC<Props> = ({
           </div>
         ) : (
           <div className="w-full rounded-b-lg bg-white py-6 px-6 text-center">
-            <BaseButton title="Connect your Wallet" onClick={openWalletModal} />
+            <ClipLoader />
           </div>
         )}
       </div>

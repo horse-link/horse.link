@@ -69,7 +69,7 @@ export const useWalletOverrides = () => {
 
   // reconnect
   useEffect(() => {
-    if (isConnected) return;
+    if (isConnected || isLocalWallet) return;
 
     // unsupported page override
     if (isUnsupportedPage) {
