@@ -188,12 +188,12 @@ export const SettleBetModal: React.FC<Props> = ({
               <h3 className="mt-2 font-semibold">
                 Tx Hash:{" "}
                 <a
-                  href={`${scanner}/tx/${bet.tx}`}
+                  href={`${scanner}/tx/${bet.settledAtTx}`}
                   target="_blank"
                   rel="noreferrer noopener"
                   className="hyperlink underline"
                 >
-                  {utils.formatting.shortenHash(bet.tx)}
+                  {utils.formatting.shortenHash(bet.settledAtTx ?? "")}
                 </a>
               </h3>
             )}

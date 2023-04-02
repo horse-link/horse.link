@@ -68,6 +68,7 @@ export const getBetHistory = (
     tx: bet.createdAtTx.toLowerCase(),
     blockNumber: +bet.createdAt,
     settledAt: bet.settled ? +bet.settledAt : undefined,
+    settledAtTx: bet.settled ? bet.settledAtTx.toLowerCase() : undefined,
     marketOracleResultSig: signedBetData.marketOracleResultSig,
     scratched: scratched,
     status: getBetStatus(bet, signedBetData, scratched)
