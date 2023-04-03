@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Chain,
   useAccount,
@@ -42,7 +42,7 @@ export const useWalletOverrides = () => {
   // network intent
   const networkIntent = useRef<Chain>(constants.blockchain.CHAINS[0]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!chain || isLocalWallet || chain.id !== networkIntent.current.id)
       return;
 
@@ -81,8 +81,9 @@ export const useWalletOverrides = () => {
     }
 
     connect({
-      chainId: networkIntent.current.id,
-      connector: lastKnownConnector
+      chainId: arbitrum.id,
+      // last connector is HL connector
+      connector: connectors.at(-1)
     });
   }, [isConnected]);
 
