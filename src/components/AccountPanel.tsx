@@ -14,6 +14,7 @@ import constants from "../constants";
 import { AiFillEyeInvisible, AiFillEye, AiOutlineQrcode } from "react-icons/ai";
 import { QrCodeModal } from "./Modals";
 import { useConfig } from "../providers/Config";
+import { useBetSlipContext } from "../providers/BetSlip";
 
 type Props = {
   forceNewNetwork: (chain: Chain) => void;
@@ -25,6 +26,7 @@ export const AccountPanel: React.FC<Props> = ({
   isLocalWallet
 }) => {
   const { currentToken, tokensLoading, openModal } = useTokenContext();
+  const { hashes } = useBetSlipContext();
 
   const { openWalletModal } = useWalletModal();
   const account = useAccount();
@@ -64,7 +66,7 @@ export const AccountPanel: React.FC<Props> = ({
         )
       })
     );
-  }, [currentToken, signer, config]);
+  }, [currentToken, signer, config, hashes]);
 
   const panelLoading = tokensLoading || !currentToken || !userBalance;
 
