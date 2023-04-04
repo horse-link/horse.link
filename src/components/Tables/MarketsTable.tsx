@@ -5,13 +5,13 @@ import { Config, MarketInfo } from "../../types/config";
 import utils from "../../utils";
 import Skeleton from "react-loading-skeleton";
 import { ethers } from "ethers";
-import { AddressLink } from "../../components";
+import { AddressLink } from "..";
 
 type Props = {
   config?: Config;
 };
 
-export const MarketTable: React.FC<Props> = ({ config }) => {
+export const MarketsTable: React.FC<Props> = ({ config }) => {
   const getMarketData = (market: MarketInfo): TableData[] => {
     const vault = utils.config.getVault(market.vaultAddress, config);
 
