@@ -88,7 +88,7 @@ export const useWalletOverrides = () => {
   }, [isConnected]);
 
   useEffect(() => {
-    if (isUnsupportedPage) return;
+    if (isUnsupportedPage || isConnected) return;
 
     forceNewNetwork(networkIntent.current);
   }, [lastKnownConnector]);
