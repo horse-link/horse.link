@@ -4,6 +4,7 @@ import { Config } from "../../types/config";
 import { BetHistory } from "../../types/bets";
 import { Signer } from "ethers";
 import { useWalletModal } from "../../providers/WalletModal";
+import classnames from "classnames";
 import { MarketOracle__factory, Market__factory } from "../../typechain";
 
 type Props = {
@@ -96,13 +97,18 @@ export const SettleRaceButton: React.FC<Props> = props => {
 
   return (
     <BaseButton
-      className="!text-md !w-auto !px-6 !py-3"
+      className={classnames(
+        "w-full rounded-lg border-2 !border-black py-3 text-center text-lg !font-bold text-black",
+        {
+          "hover:bg-white hover:text-black": !settlableBets?.length
+        }
+      )}
       loading={!config || !settlableBets || loading}
       loaderSize={20}
       onClick={settleRace}
       disabled={!settlableBets?.length}
     >
-      Settle Race
+      SETTLE RACE
     </BaseButton>
   );
 };

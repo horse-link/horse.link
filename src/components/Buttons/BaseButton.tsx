@@ -24,7 +24,7 @@ export const BaseButton: React.FC<Props> = props => {
 
   const baseButtonStyles =
     "w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm " +
-    "bg-indigo-600 hover:bg-indigo-700 focus:outline-none";
+    "bg-white hover:bg-black hover:text-white focus:outline-none";
 
   return (
     <button
