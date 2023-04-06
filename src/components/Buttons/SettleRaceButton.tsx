@@ -98,10 +98,7 @@ export const SettleRaceButton: React.FC<Props> = props => {
   return (
     <BaseButton
       className={classnames(
-        "w-full rounded-lg border-2 !border-black py-3 text-center text-lg !font-bold text-black",
-        {
-          "hover:bg-white hover:text-black": !settlableBets?.length
-        }
+        "w-full rounded-lg py-3 text-center text-lg !font-bold text-black"
       )}
       loading={!config || !settlableBets || loading}
       loaderSize={20}

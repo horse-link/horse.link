@@ -23,13 +23,13 @@ export const BaseButton: React.FC<Props> = props => {
   } = props;
 
   const baseButtonStyles =
-    "w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm " +
-    "bg-white hover:bg-black hover:text-white focus:outline-none";
+    "w-full flex justify-center py-2 px-4 border-black border-2 rounded-md shadow-sm " +
+    "bg-white hover:bg-black hover:text-white focus:outline-none hover:border-black";
 
   return (
     <button
       className={classnames("text-sm font-medium text-white", className, {
-        "opacity-50": disabled,
+        "border-gray-400 text-gray-400": disabled,
         [baseButtonStyles]: !baseStyleOverride
       })}
       disabled={loading || disabled}
