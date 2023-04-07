@@ -171,7 +171,7 @@ export const AccountPanel: React.FC<Props> = ({
                     </div>
                   )}
                   <BaseButton
-                    className="mr-4 w-full rounded-md border-black px-4 py-2 !font-bold text-black transition-colors duration-100 enabled:hover:bg-black enabled:hover:text-white"
+                    className="mr-4 w-full rounded-md border-2 border-black px-4 py-2 !font-bold text-black transition-colors duration-100 enabled:hover:bg-black enabled:hover:text-white"
                     baseStyleOverride
                     title="CHANGE"
                     onClick={openWalletModal}
