@@ -1,7 +1,6 @@
 import React from "react";
 import { BaseTable } from ".";
 import { FormattedVaultTransaction } from "../../types/subgraph";
-import { Config } from "../../types/config";
 import { TableData, TableHeader, TableRow } from "../../types/table";
 import utils from "../../utils";
 import { VaultTransactionType } from "../../types/vaults";
@@ -10,6 +9,7 @@ import Skeleton from "react-loading-skeleton";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
+import { useConfig } from "../../providers/Config";
 
 dayjs.extend(relativeTime);
 
@@ -20,16 +20,15 @@ const txTypeMap = new Map([
 
 type Props = {
   history?: FormattedVaultTransaction[];
-  config?: Config;
 };
 
-export const VaultHistoryTable: React.FC<Props> = ({ history, config }) => {
+export const VaultHistoryTable: React.FC<Props> = ({ history }) => {
+  const config = useConfig();
   const scanner = useScannerUrl();
 
   const getHistoryData = (vault?: FormattedVaultTransaction): TableData[] => {
     const formattedTxType = vault && txTypeMap.get(vault.type);
-    const details =
-      vault && config && utils.config.getVault(vault.vaultAddress, config);
+    const details = vault && utils.config.getVault(vault.vaultAddress, config);
 
     return [
       {
@@ -53,7 +52,7 @@ export const VaultHistoryTable: React.FC<Props> = ({ history, config }) => {
         )
       },
       {
-        title: details ? details.name : <Skeleton />
+        title: details?.name || <Skeleton />
       },
       {
         title: vault ? (

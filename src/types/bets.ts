@@ -49,6 +49,7 @@ export type BetHistory = {
   tx: string;
   blockNumber: number;
   settledAt?: number;
+  settledAtTx?: string;
   winningPropositionId?: string;
   marketOracleResultSig?: EcSignature;
   scratched?: ScratchedRunner;

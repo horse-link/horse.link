@@ -1,0 +1,94 @@
+alerts:
+  - rule: DEPLOYMENT_FAILED
+  - rule: DOMAIN_FAILED
+domains:
+  - domain: dev.horse.link
+    type: PRIMARY
+    zone: horse.link
+name: horse-link-dev-au
+region: syd
+services:
+  - dockerfile_path: Dockerfile
+    envs:
+      - key: PRIVATE_KEY_GOERLI
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:1Sv2T++U14jMxMl6GW84rBbuE3QJ0qKW:asXIsQ4CXUvZclUEW3xQmPl4y2YlMBwoOApOvtxMHc/3r9ZeStdjuctgp+a+XVr9dZ7qXyGpvEEHsmX0+jvEs2o1TmgaxU2h8zvkdlfsABXAgg==]
+      - key: PRIVATE_KEY_ARBITRUM
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:yG6QtAD3Zkpym9qr2medQcsHT4Ll08n2:iXlYkZ7VWfOYhNjWe5WWfDxyqC1sSUworoz2l5On7fRgw3VBkxLZI92ynxjbzpNyyX8NgUOzfvmq9nWAokC6kqrZ8v/dflPwLSu+i57utxz34A==]
+      - key: PROVIDER_URL_ARBITRUM
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:LQNBNV533OCKc7vCbPyXcN1qpBoCmjFC:v93fN1X+2WsZTX8AUoM7blUmbhYHHkE1NlvVlp5IfnUmAOXqtxN4P6D2Rvm4qoZ7c2dwZWsXX7OFB0reNzn6zpYrGyXE6z4pShuBiWZSv+qtQrFmDXY=]
+      - key: PROVIDER_URL_GOERLI
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:0alTb4wLbCxuyzVOlWB2/2RgEXFkOZzZ:pMguNKex+IgSZpTcgB+DNJDMXZ63Lra0VF+wwzIqP3pGzxBYfn0fKadnyAfeX4sqThyzh+6TY/lYTjwJHcba1w/HDALDYwLP/GaRSg==]
+      - key: VERIFICATION_SALT
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:GnWOBmUHNgN4cHzHCnmsRVHYVRds6KXq:LIBA5ek/VAYLEbo7yQoK00aLWfMMxg==]
+      - key: VERIFICATION_SECRET
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:wGgAB6jmWrSTPYySOg8NwL2jAi02fGK0:kNyVLsoS+eBNEXsoKsv5miFT+mIMKs1Xtg==]
+      - key: MESSAGEBIRD_ACCESS_KEY
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:EY6ADwOLYOZOdmZYy0ts91/aatbB5ejc:PHkdo3jmtx/d+/LSbqde5AFRxS1Zo4L9ur78VOap+sPe4/1ttpuqElU=]
+      - key: SUPABASE_DEV_KEY
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:/d+dajPDLmirKHwlDkyg8XJsCEBBjiUk:ZEJkTiAQdCg1bdtQdfidVJ8QW0kZ/zTzU0iK0E0PxmVfjMyuI5byVxZ7eZNrbsZwAIhYYt0tghjSIBY2dOkIAoDhk0KnjMGtnUturjyfXmncWDCer33MA0/IaGerdxJCLlXU0kmDvRU6Havs2Ww9hJYCEkpIJIiPB8v1fQtBxzVks7PTjAR2Viq3VerI/GQ7l50rXbFXIvTnIl7jb12A0hufD0MoCSMa/9jWSAgqh53reHwC5TvLMu6qnxh7YJuyNvZgDSavdAJSawGmE7m1+pWvCW+UqKkXk8s/Gsg49i8=]
+      - key: NODE_ENV
+        scope: RUN_AND_BUILD_TIME
+        value: development
+      - key: REDIS_URL
+        scope: RUN_AND_BUILD_TIME
+        value: none
+    github:
+      branch: development
+      deploy_on_push: true
+      repo: horse-link/api.horse.link
+    http_port: 3003
+    instance_count: 1
+    instance_size_slug: basic-xs
+    name: api-horse-link
+    routes:
+      - path: /api
+    source_dir: /
+  - build_command: yarn build
+    environment_slug: node-js
+    envs:
+      - key: VITE_SUBGRAPH_URL
+        scope: RUN_AND_BUILD_TIME
+        value: https://api.thegraph.com/subgraphs/name/horse-link/hl-protocol-dev
+      - key: VITE_SALT
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:8gvYoCN8Z8asySppatMI8+7mbGGCT1FA:4sNZg2LeZuMd/39t4V09jegJwO7DGnxqMw==]
+      - key: VITE_API_URL
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:R77lKXUWEEK2h1JIzi/C8a5LackeyEYQ:ga3uHELjNgzaNeckc2zbki/nHWLq4OT1IA/gCgX+I7LSTWM3qiHStXlf]
+      - key: VITE_ALCHEMY_API_KEY
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:oDLTrNyXgEePdhYtptndNpGEZGbwEyy9:gJd4ttJb6B6EQnhSI2zAxzHgc+8BFIi4+jdWFFsp9g47L3Tknc8Lo+mGtzPfnQFY]
+      - key: VITE_EVENT_TS
+        scope: RUN_AND_BUILD_TIME
+        value: "0"
+    github:
+      branch: development
+      deploy_on_push: true
+      repo: horse-link/horse.link
+    http_port: 3000
+    instance_count: 1
+    instance_size_slug: basic-xxs
+    name: horse-link
+    routes:
+      - path: /
+    run_command: yarn dev --host
+    source_dir: /

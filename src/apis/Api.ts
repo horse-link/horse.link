@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 import { ethers } from "ethers";
 import utils from "../utils";
-import { Config } from "../types/config";
+import { Config, VaultInfo } from "../types/config";
 import {
   MeetInfo,
   MeetResults,
@@ -9,7 +9,7 @@ import {
   SignedMeetingsResponse
 } from "../types/meets";
 import { BetHistoryResponse, SignedBetDataResponse } from "../types/bets";
-import { Market, Vault } from "../typechain";
+import { Market } from "../typechain";
 import { Token } from "graphql";
 import { VaultUserData } from "../types/vaults";
 import { Network } from "../types/general";
@@ -123,27 +123,31 @@ export class Api {
   };
 
   public getMarketAddresses = async (): Promise<string[]> => {
-    const { data } = await this.client.get("/markets/");
+    const { data } = await this.client.get<string[]>("/markets/");
     return data;
   };
 
   public getMarketDetail = async (marketAddress: string): Promise<Market> => {
-    const { data } = await this.client.get(`/markets/${marketAddress}`);
+    const { data } = await this.client.get<Market>(`/markets/${marketAddress}`);
     return data;
   };
 
   public getVaultAddresses = async (): Promise<string[]> => {
-    const { data } = await this.client.get("/vaults/");
+    const { data } = await this.client.get<string[]>("/vaults/");
     return data;
   };
 
-  public getVaultDetail = async (vaultAddress: string): Promise<Vault> => {
-    const { data } = await this.client.get(`/vaults/${vaultAddress}`);
+  public getVaultDetail = async (vaultAddress: string): Promise<VaultInfo> => {
+    const { data } = await this.client.get<VaultInfo>(
+      `/vaults/${vaultAddress}`
+    );
     return data;
   };
 
   public getVaultToken = async (vaultAddress: string): Promise<Token> => {
-    const { data } = await this.client.get(`/vaults/${vaultAddress}/token`);
+    const { data } = await this.client.get<Token>(
+      `/vaults/${vaultAddress}/token`
+    );
     return data;
   };
 

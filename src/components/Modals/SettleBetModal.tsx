@@ -10,6 +10,7 @@ import { BetHistory } from "../../types/bets";
 import { Config } from "../../types/config";
 import dayjs from "dayjs";
 import { useApi } from "../../providers/Api";
+import { useScannerUrl } from "../../hooks/useScannerUrl";
 
 type Props = {
   isModalOpen: boolean;
@@ -38,6 +39,7 @@ export const SettleBetModal: React.FC<Props> = ({
   const { current: now } = useRef(Math.floor(Date.now() / 1000));
 
   const api = useApi();
+  const scanner = useScannerUrl();
 
   // get signed bet
   useEffect(() => {
@@ -95,6 +97,8 @@ export const SettleBetModal: React.FC<Props> = ({
 
   const isPastPayoutDate = now > (bet?.payoutDate || 0);
 
+  const isSettled = bet?.settled || bet?.status === "SETTLED";
+
   const onClickSettleBet = async () => {
     if (!bet || !market || !signer || !config) return;
     setTxHash(undefined);
@@ -125,7 +129,8 @@ export const SettleBetModal: React.FC<Props> = ({
       ) : (
         <React.Fragment>
           <h2 className="mb-6 text-2xl font-bold">
-            {utils.formatting.formatFirstLetterCapitalised(bet.status)} Bet
+            {utils.formatting.formatFirstLetterCapitalised(bet.status)} Bet #
+            {bet.index}
           </h2>
           <div className="flex flex-col">
             <h3 className="mb-2 font-semibold">
@@ -177,6 +182,19 @@ export const SettleBetModal: React.FC<Props> = ({
                     {token?.symbol}
                   </span>
                 </h3>
+              </h3>
+            )}
+            {isSettled && (
+              <h3 className="mt-2 font-semibold">
+                Tx Hash:{" "}
+                <a
+                  href={`${scanner}/tx/${bet.settledAtTx}`}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="hyperlink underline"
+                >
+                  {utils.formatting.shortenHash(bet.settledAtTx ?? "")}
+                </a>
               </h3>
             )}
             {!txHash && !error && (

@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 import utils from "../utils";
 import { useConfig } from "../providers/Config";
 import { PageLayout, Card } from "../components";
-import { MarketTable } from "../components/Tables";
+import { MarketsTable } from "../components/Tables";
 
 const Markets: React.FC = () => {
   const config = useConfig();
@@ -32,7 +32,7 @@ const Markets: React.FC = () => {
           }
         />
       </div>
-      <MarketTable config={config} />
+      <MarketsTable config={config} />
     </PageLayout>
   );
 };

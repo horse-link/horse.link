@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { VaultHistoryTable, VaultListTable } from "../components/Tables";
+import { VaultHistoryTable, VaultsTable } from "../components/Tables";
 import { useSubgraphVaults } from "../hooks/subgraph";
 import { useConfig } from "../providers/Config";
 import { DepositVaultModal, WithdrawVaultModal } from "../components/Modals";
@@ -62,8 +62,8 @@ const Vaults: React.FC = () => {
           }
         />
       </div>
-      <VaultListTable setIsModalOpen={setModal} config={config} />
-      <VaultHistoryTable history={vaultHistory} config={config} />
+      <VaultsTable setIsModalOpen={setModal} config={config} />
+      <VaultHistoryTable history={vaultHistory} />
       {modal?.type === VaultTransactionType.DEPOSIT && (
         <DepositVaultModal
           isModalOpen={!!modal}
