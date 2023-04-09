@@ -11,6 +11,14 @@ type Props = {
   meet: Meet;
 };
 
+enum Status {
+  Interim = "Interim",
+  Abandoned = "Abandoned",
+  Closed = "Closed",
+  Normal = "Normal",
+  Paying = "Paying"
+}
+
 export const HomeTableRace: React.FC<Props> = ({ race, meet }) => {
   const [timeString, setTimeString] = useState(
     utils.formatting.formatTimeToHMS(race.start!, true)
@@ -29,15 +37,16 @@ export const HomeTableRace: React.FC<Props> = ({ race, meet }) => {
     <Link
       className={classnames({
         "!cursor-default":
-          race.status === "Interim" ||
-          race.status === "Abandoned" ||
-          race.status === "Closed" ||
-          (race.status === "Normal" && isAfterClosingTime)
+          race.status === Status.Interim ||
+          race.status === Status.Abandoned ||
+          race.status === Status.Closed ||
+          (race.status === Status.Normal && isAfterClosingTime)
       })}
       to={
-        race.status === "Normal" && !isAfterClosingTime
+        race.status === Status.Normal ||
+        (race.status === Status.Closed && !isAfterClosingTime)
           ? `/races/${meet.id}/${race.number}`
-          : race.status === "Paying"
+          : race.status === Status.Paying
           ? `/results/${utils.markets.getPropositionIdFromRaceMeet(race, meet)}`
           : // race status in any other condition other than normal or paying
             ""
@@ -45,17 +54,17 @@ export const HomeTableRace: React.FC<Props> = ({ race, meet }) => {
     >
       <div
         className={classnames("whitespace-nowrap px-3 py-4 text-sm", {
-          "bg-gray-400 hover:bg-gray-500": race.status === "Paying",
-          "bg-black text-white": race.status === "Abandoned",
-          "bg-emerald-400": race.status === "Interim",
-          "hover:bg-gray-200": race.status === "Normal"
+          "bg-gray-400 hover:bg-gray-500": race.status === Status.Paying,
+          "bg-black text-white": race.status === Status.Abandoned,
+          "bg-emerald-400": race.status === Status.Interim,
+          "hover:bg-gray-200": race.status === Status.Normal
         })}
       >
         {dayjs.utc(race.start).local().format("H:mm")}
         <p>
-          {race.status == "Paying"
+          {race.status == Status.Paying
             ? race.results?.join(" ")
-            : race.status == "Abandoned"
+            : race.status == Status.Abandoned
             ? "ABND"
             : isAfterClosingTime
             ? "CLSD"
