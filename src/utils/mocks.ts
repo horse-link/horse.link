@@ -2,6 +2,7 @@ import { ethers } from "ethers";
 import { Bet, FormattedUser } from "../types/subgraph";
 import { Back, Meet, Race } from "../types/meets";
 import { SignedBetDataResponse } from "../types/bets";
+import { RaceStatus } from "../constants/status";
 
 export const getMockBet = (): Bet => ({
   id: `BET_${ethers.constants.AddressZero}_0`,
@@ -90,7 +91,7 @@ export const getMockRaces = (length?: number): Race[] =>
   Array.from({ length: length ?? 15 }, (_, i) => ({
     number: i,
     name: "",
-    status: "Normal",
+    status: RaceStatus.Normal,
     results: [9, 1, 2, 7]
   }));
 
