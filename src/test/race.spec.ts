@@ -5,7 +5,7 @@ import { RaceStatus } from "../constants/status";
 import dayjs from "dayjs";
 
 describe("Race utils tests", () => {
-  const now = dayjs("2023-01-01");
+  const now = dayjs("2023-01-01 10:00:00");
 
   it("Should create a link for normal race", () => {
     const mockRace: Race = {
@@ -70,16 +70,17 @@ describe("Race utils tests", () => {
     expect(result).to.equal(expected);
   });
 
-  it("Should create cell text for normal race", () => {
+  it("Should create cell text with mins for normal race", () => {
     const mockRace: Race = {
       number: 2,
       name: "Mock Race 2",
       status: RaceStatus.Normal,
-      close: "2023-01-01T00:00:00.000Z"
+      start: "2023-01-01 10:55:00",
+      close: "2023-01-01 10:50:00"
     };
 
     const result = createCellText(mockRace, now);
-    const expected = "CLSD";
+    const expected = "55m";
 
     expect(result).to.equal(expected);
   });
@@ -88,7 +89,8 @@ describe("Race utils tests", () => {
     const mockRace: Race = {
       number: 2,
       name: "Mock Race 2",
-      status: RaceStatus.Closed
+      status: RaceStatus.Closed,
+      close: "2023-01-01 09:55:00"
     };
 
     const result = createCellText(mockRace, now);
@@ -114,11 +116,12 @@ describe("Race utils tests", () => {
     const mockRace: Race = {
       number: 2,
       name: "Mock Race 2",
-      status: RaceStatus.Paying
+      status: RaceStatus.Paying,
+      results: [1, 2, 3]
     };
 
     const result = createCellText(mockRace, now);
-    const expected = "1, 2, 3";
+    const expected = "1 2 3";
 
     expect(result).to.equal(expected);
   });
