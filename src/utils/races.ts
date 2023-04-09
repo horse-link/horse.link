@@ -4,6 +4,7 @@ import constants from "../constants";
 import { Race, Meet } from "../types/meets";
 import { RaceStatus } from "../constants/status";
 import utils from "../utils";
+import dayjs, { Dayjs } from "dayjs";
 
 export const isScratchedRunner = (runner: Runner) =>
   ["LateScratched", "Scratched"].includes(runner.status);
@@ -30,17 +31,28 @@ export const calculateRaceMargin = (odds: number[]) => {
   return ethers.utils.formatEther(summed);
 };
 
-export const createRacingLink = (
-  race: Race,
-  meet: Meet,
-  isAfterClosingTime: boolean
-) => {
-  return (race.status === RaceStatus.Normal ||
-    race.status === RaceStatus.Closed) &&
-    !isAfterClosingTime
+export const createRacingLink = (race: Race, meet: Meet) => {
+  return race.status === RaceStatus.Normal || race.status === RaceStatus.Closed
     ? `/races/${meet.id}/${race.number}`
     : race.status === RaceStatus.Paying
     ? `/results/${utils.markets.getPropositionIdFromRaceMeet(race, meet)}`
     : // race status in any other condition other than normal or paying
       "";
+};
+
+export const createCellText = (race: Race, now: Dayjs) => {
+  const isAfterClosingTime = now.isAfter(dayjs(race.close));
+  const timeString = utils.formatting.formatTimeToHMSFromNow(
+    now,
+    race.start!,
+    true
+  );
+
+  return race.status == RaceStatus.Paying
+    ? race.results?.join(" ")
+    : race.status == RaceStatus.Abandoned
+    ? "ABND"
+    : isAfterClosingTime
+    ? "CLSD"
+    : timeString;
 };

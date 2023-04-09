@@ -1,31 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Meet, Race } from "../../types/meets";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import classnames from "classnames";
 import { Link } from "react-router-dom";
-import utils from "../../utils";
-import constants from "../../constants";
 import { RaceStatus } from "../../constants/status";
+import { createCellText, createRacingLink } from "../../utils/races";
 
 type Props = {
   race: Race;
   meet: Meet;
+  now: Dayjs;
 };
 
-export const HomeTableRace: React.FC<Props> = ({ race, meet }) => {
-  const [timeString, setTimeString] = useState(
-    utils.formatting.formatTimeToHMS(race.start!, true)
-  );
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTimeString(utils.formatting.formatTimeToHMS(race.start!, true));
-    }, constants.time.ONE_SECOND_MS);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const isAfterClosingTime = dayjs().isAfter(dayjs(race.close));
+export const HomeTableRace: React.FC<Props> = ({ race, meet, now }) => {
   return (
     <Link
       className={classnames({
@@ -33,18 +20,9 @@ export const HomeTableRace: React.FC<Props> = ({ race, meet }) => {
           race.status === RaceStatus.Interim ||
           race.status === RaceStatus.Abandoned ||
           race.status === RaceStatus.Closed ||
-          (race.status === RaceStatus.Normal && isAfterClosingTime)
+          race.status === RaceStatus.Normal
       })}
-      to={
-        (race.status === RaceStatus.Normal ||
-          race.status === RaceStatus.Closed) &&
-        !isAfterClosingTime
-          ? `/races/${meet.id}/${race.number}`
-          : race.status === RaceStatus.Paying
-          ? `/results/${utils.markets.getPropositionIdFromRaceMeet(race, meet)}`
-          : // race status in any other condition other than normal or paying
-            ""
-      }
+      to={createRacingLink(race, meet)}
     >
       <div
         className={classnames("whitespace-nowrap px-3 py-4 text-sm", {
@@ -55,15 +33,7 @@ export const HomeTableRace: React.FC<Props> = ({ race, meet }) => {
         })}
       >
         {dayjs.utc(race.start).local().format("H:mm")}
-        <p>
-          {race.status == RaceStatus.Paying
-            ? race.results?.join(" ")
-            : race.status == RaceStatus.Abandoned
-            ? "ABND"
-            : isAfterClosingTime
-            ? "CLSD"
-            : timeString}
-        </p>
+        <p>{createCellText(race, now)}</p>
       </div>
     </Link>
   );

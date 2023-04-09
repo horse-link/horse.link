@@ -92,8 +92,19 @@ export const parseBytes16String = (bytes: ethers.BytesLike) => {
 export const formatFirstLetterCapitalised = (string: string) =>
   `${string.charAt(0).toUpperCase()}${string.slice(1).toLowerCase()}`;
 
+// Deprecated
 export const formatTimeToHMS = (time: string, shortForm?: boolean) => {
   const now = dayjs();
+
+  // time is less than 5 mins
+  return formatTimeToHMSFromNow(now, time, shortForm);
+};
+
+export const formatTimeToHMSFromNow = (
+  now: dayjs.Dayjs,
+  time: string,
+  shortForm?: boolean
+) => {
   const date = dayjs(time);
 
   const isNegative = now > date;
