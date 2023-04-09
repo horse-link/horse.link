@@ -1,36 +1,15 @@
 import { expect } from "chai";
-import { createRacingLink } from "../utils/races";
+import { createCellText, createRacingLink } from "../utils/races";
 import { Meet, Race } from "../types/meets";
 import { RaceStatus } from "../constants/status";
 
 describe("Race utils tests", () => {
-  it("Should return correct link for race", () => {
-    // export type Race = {
-    //   number: number;
-    //   name: string;
-    //   start?: string;
-    //   start_unix?: number;
-    //   end?: string;
-    //   end_unix?: number;
-    //   close?: string;
-    //   close_unix?: number;
-    //   status: RaceStatus;
-    //   results?: number[];
-    // };
-
+  it("Should create a link before closing time", () => {
     const mockRace: Race = {
-      number: 1,
-      name: "Mock Race 1",
+      number: 2,
+      name: "Mock Race 2",
       status: RaceStatus.Normal
     };
-
-    // export type Meet = {
-    //   id: string;
-    //   name: string;
-    //   location: string;
-    //   date: string;
-    //   races: Race[];
-    // };
 
     const mockMeet: Meet = {
       id: "1",
@@ -40,8 +19,34 @@ describe("Race utils tests", () => {
       races: [mockRace]
     };
 
-    const result = createRacingLink(mockRace, mockMeet, true);
-    const expected = "";
+    const result = createRacingLink(mockRace, mockMeet, false);
+    const expected = "/races/1/2";
+
+    expect(result).to.equal(expected);
+  });
+
+  it("Should create closed text", () => {
+    const mockRace: Race = {
+      number: 2,
+      name: "Mock Race 2",
+      status: RaceStatus.Normal
+    };
+
+    const result = createCellText(mockRace, true);
+    const expected = "CLSD";
+
+    expect(result).to.equal(expected);
+  });
+
+  it("Should create abandoned text", () => {
+    const mockRace: Race = {
+      number: 2,
+      name: "Mock Race 2",
+      status: RaceStatus.Abandoned
+    };
+
+    const result = createCellText(mockRace, true);
+    const expected = "ABND";
 
     expect(result).to.equal(expected);
   });

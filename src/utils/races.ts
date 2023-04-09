@@ -44,3 +44,15 @@ export const createRacingLink = (
     : // race status in any other condition other than normal or paying
       "";
 };
+
+export const createCellText = (race: Race, isAfterClosingTime: boolean) => {
+  const timeString = utils.formatting.formatTimeToHMS(race.start!, true);
+
+  return race.status == RaceStatus.Paying
+    ? race.results?.join(" ")
+    : race.status == RaceStatus.Abandoned
+    ? "ABND"
+    : isAfterClosingTime
+    ? "CLSD"
+    : timeString;
+};
