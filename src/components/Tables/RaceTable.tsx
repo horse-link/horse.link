@@ -15,13 +15,15 @@ type Props = {
   totalBetsOnPropositions?: TotalBetsOnPropositions;
   setSelectedRunner: (runner?: Runner) => void;
   setIsModalOpen: (open: boolean) => void;
+  closed: boolean;
 };
 
 export const RaceTable: React.FC<Props> = ({
   runners,
   totalBetsOnPropositions,
   setSelectedRunner,
-  setIsModalOpen
+  setIsModalOpen,
+  closed
 }) => {
   const { isConnected } = useAccount();
   const { openWalletModal } = useWalletModal();
@@ -42,6 +44,11 @@ export const RaceTable: React.FC<Props> = ({
   const isScratchedDataStyles = (isScratched: boolean) =>
     classnames({
       "line-through": isScratched
+    });
+
+  const isClosedRowStyles = (isClosed: boolean) =>
+    classnames({
+      "cursor-pointer hover:bg-gray-100": !isClosed
     });
 
   const openDialog = () => {
@@ -148,7 +155,7 @@ export const RaceTable: React.FC<Props> = ({
   const OPEN_BET_ROWS: TableRow[] = openBetRunners.map(runner => ({
     data: getRunnerData(false, runner),
     row: {
-      classNames: isScratchedRowStyles(false),
+      classNames: isClosedRowStyles(false),
       props: {
         onClick: () => onClickRunner(runner)
       }
@@ -158,7 +165,7 @@ export const RaceTable: React.FC<Props> = ({
   const SCRATCHED_BET_ROWS: TableRow[] = scratchedRunners.map(runner => ({
     data: getRunnerData(true, runner),
     row: {
-      classNames: isScratchedRowStyles(true)
+      classNames: isScratchedRowStyles(closed)
     }
   }));
 

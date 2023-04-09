@@ -1,11 +1,42 @@
 import { expect } from "chai";
-import { createCellText, createRacingLink } from "../utils/races";
-import { Meet, Race } from "../types/meets";
+import {
+  createCellText,
+  createRacingLink,
+  isScratchedRunner
+} from "../utils/races";
+import { Meet, Race, Runner } from "../types/meets";
 import { RaceStatus } from "../constants/status";
 import dayjs from "dayjs";
 
 describe("Race utils tests", () => {
   const now = dayjs("2023-01-01 10:00:00");
+
+  it("Should return true for scratched runner", () => {
+    const mockRunner: Runner = {
+      name: "Mock Runner 1",
+      number: 1,
+      nonce: "1",
+      market_id: "1",
+      close: 0,
+      end: 0,
+      odds: 0,
+      handicapWeight: 0,
+      last5Starts: "x1111",
+      proposition_id: "1",
+      barrier: 1,
+      signature: {
+        r: "1",
+        s: "1",
+        v: 1
+      },
+      status: "Scratched"
+    };
+
+    const result = isScratchedRunner(mockRunner);
+    const expected = true;
+
+    expect(result).to.equal(expected);
+  });
 
   it("Should create a link for normal race", () => {
     const mockRace: Race = {

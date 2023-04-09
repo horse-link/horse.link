@@ -51,6 +51,12 @@ const Races: React.FC = () => {
     return utils.races.calculateRaceMargin(validRunners.map(r => r.odds));
   }, [race]);
 
+  const closed = false;
+
+  // const isClosed = useMemo(() => {
+  //   return false;
+  // )}
+
   return (
     <PageLayout>
       <PlaceBetModal
@@ -103,6 +109,7 @@ const Races: React.FC = () => {
           setSelectedRunner={setSelectedRunner}
           setIsModalOpen={setIsModalOpen}
           totalBetsOnPropositions={totalBetsOnPropositions}
+          closed={closed}
         />
       </div>
       <div className="flex flex-col gap-6">
