@@ -1,6 +1,9 @@
 import { Runner } from "../types/meets";
 import { ethers } from "ethers";
 import constants from "../constants";
+import { Race, Meet } from "../types/meets";
+import { RaceStatus } from "../constants/status";
+import utils from "../utils";
 
 export const isScratchedRunner = (runner: Runner) =>
   ["LateScratched", "Scratched"].includes(runner.status);
@@ -25,4 +28,19 @@ export const calculateRaceMargin = (odds: number[]) => {
   );
 
   return ethers.utils.formatEther(summed);
+};
+
+export const createRacingLink = (
+  race: Race,
+  meet: Meet,
+  isAfterClosingTime: boolean
+) => {
+  return (race.status === RaceStatus.Normal ||
+    race.status === RaceStatus.Closed) &&
+    !isAfterClosingTime
+    ? `/races/${meet.id}/${race.number}`
+    : race.status === RaceStatus.Paying
+    ? `/results/${utils.markets.getPropositionIdFromRaceMeet(race, meet)}`
+    : // race status in any other condition other than normal or paying
+      "";
 };
