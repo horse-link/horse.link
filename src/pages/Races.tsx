@@ -32,6 +32,7 @@ const Races: React.FC = () => {
     const meetDate = dayjs().format("DD-MM-YY");
     return { config, meetDate };
   }, []);
+
   const marketId = makeMarketId(new Date(), track, raceNumber.toString());
   const b16MarketId = formatBytes16String(marketId);
 
@@ -51,11 +52,8 @@ const Races: React.FC = () => {
     return utils.races.calculateRaceMargin(validRunners.map(r => r.odds));
   }, [race]);
 
-  const closed = false;
-
-  // const isClosed = useMemo(() => {
-  //   return false;
-  // )}
+  const now = new dayjs.Dayjs();
+  const closed = now.isAfter(dayjs(race?.raceData.close));
 
   return (
     <PageLayout>

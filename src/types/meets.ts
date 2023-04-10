@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { RaceStatus } from "../constants/status";
 import { EcSignature, SignedResponse } from "./general";
 
@@ -52,6 +53,9 @@ export type RaceData = {
     distance: number;
     class: string;
     hasOdds: boolean;
+    start: dayjs.Dayjs;
+    close: number;
+    end: number;
   };
   track: {
     name: string;
@@ -67,6 +71,9 @@ export type SignedRunnersResponse = {
       distance: number;
       class: string;
       hasOdds: boolean;
+      start: dayjs.Dayjs;
+      close: number;
+      end: number;
     };
     track: {
       name: string;

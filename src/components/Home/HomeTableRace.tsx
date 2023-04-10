@@ -16,9 +16,7 @@ export const HomeTableRace: React.FC<Props> = ({ race, meet, now }) => {
   return (
     <Link
       className={classnames({
-        "!cursor-default":
-          race.status === RaceStatus.Interim ||
-          race.status === RaceStatus.Abandoned
+        "!cursor-default": race.status === RaceStatus.Abandoned
       })}
       to={createRacingLink(race, meet)}
     >
