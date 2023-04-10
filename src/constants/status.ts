@@ -1,7 +1,7 @@
 export const enum RaceStatus {
-  Interim = "Interim",
-  Abandoned = "Abandoned",
-  Closed = "Closed",
-  Normal = "Normal",
-  Paying = "Paying"
+  INTERIM = "Interim",
+  ABANDONED = "Abandoned",
+  CLOSED = "Closed",
+  NORMAL = "Normal",
+  PAYING = "Paying"
 }

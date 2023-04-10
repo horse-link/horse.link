@@ -31,7 +31,7 @@ export const calculateRaceMargin = (odds: number[]) => {
 };
 
 export const createRacingLink = (race: Race, meet: Meet) =>
-  race.status !== RaceStatus.Paying
+  race.status !== RaceStatus.PAYING
     ? `/races/${meet.id}/${race.number}`
     : `/results/${utils.markets.getPropositionIdFromRaceMeet(race, meet)}`;
 
@@ -43,9 +43,9 @@ export const createCellText = (race: Race, now: Dayjs) => {
     true
   );
 
-  return race.status == RaceStatus.Paying
+  return race.status == RaceStatus.PAYING
     ? race.results?.join(" ")
-    : race.status === RaceStatus.Abandoned
+    : race.status === RaceStatus.ABANDONED
     ? "ABND"
     : isAfterClosingTime
     ? "CLSD"

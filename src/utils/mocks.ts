@@ -91,7 +91,7 @@ export const getMockRaces = (length?: number): Race[] =>
   Array.from({ length: length ?? 15 }, (_, i) => ({
     number: i,
     name: "",
-    status: RaceStatus.Normal,
+    status: RaceStatus.NORMAL,
     results: [9, 1, 2, 7]
   }));
 

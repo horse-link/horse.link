@@ -42,7 +42,7 @@ describe("Race utils tests", () => {
     const mockRace: Race = {
       number: 2,
       name: "Mock Race 2",
-      status: RaceStatus.Normal
+      status: RaceStatus.NORMAL
     };
 
     const mockMeet: Meet = {
@@ -63,7 +63,7 @@ describe("Race utils tests", () => {
     const mockRace: Race = {
       number: 2,
       name: "Mock Race 2",
-      status: RaceStatus.Closed
+      status: RaceStatus.CLOSED
     };
 
     const mockMeet: Meet = {
@@ -84,7 +84,7 @@ describe("Race utils tests", () => {
     const mockRace: Race = {
       number: 2,
       name: "Mock Race 2",
-      status: RaceStatus.Paying
+      status: RaceStatus.PAYING
     };
 
     const mockMeet: Meet = {
@@ -105,7 +105,7 @@ describe("Race utils tests", () => {
     const mockRace: Race = {
       number: 2,
       name: "Mock Race 2",
-      status: RaceStatus.Normal,
+      status: RaceStatus.NORMAL,
       start: "2023-01-01 10:55:00",
       close: "2023-01-01 10:50:00"
     };
@@ -120,7 +120,7 @@ describe("Race utils tests", () => {
     const mockRace: Race = {
       number: 2,
       name: "Mock Race 2",
-      status: RaceStatus.Closed,
+      status: RaceStatus.CLOSED,
       close: "2023-01-01 09:55:00"
     };
 
@@ -134,7 +134,7 @@ describe("Race utils tests", () => {
     const mockRace: Race = {
       number: 2,
       name: "Mock Race 2",
-      status: RaceStatus.Abandoned
+      status: RaceStatus.ABANDONED
     };
 
     const result = createCellText(mockRace, now);
@@ -147,7 +147,7 @@ describe("Race utils tests", () => {
     const mockRace: Race = {
       number: 2,
       name: "Mock Race 2",
-      status: RaceStatus.Paying,
+      status: RaceStatus.PAYING,
       results: [1, 2, 3]
     };
 

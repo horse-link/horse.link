@@ -19,13 +19,13 @@ export const RacesButton: React.FC<Props> = ({ meetRaces, params }) => {
           <Link
             className={classNames({
               "!cursor-default":
-                race.raceStatus === RaceStatus.Interim ||
-                race.raceStatus === RaceStatus.Abandoned
+                race.raceStatus === RaceStatus.INTERIM ||
+                race.raceStatus === RaceStatus.ABANDONED
             })}
             to={
-              race.raceStatus === RaceStatus.Normal
+              race.raceStatus === RaceStatus.NORMAL
                 ? `/races/${params.track || ""}/${race.raceNumber}`
-                : race.raceStatus === RaceStatus.Paying
+                : race.raceStatus === RaceStatus.PAYING
                 ? `/results/${dayjs().format("YYYY-MM-DD")}_${params.track}_${
                     race.raceNumber
                   }_W1`
@@ -38,15 +38,15 @@ export const RacesButton: React.FC<Props> = ({ meetRaces, params }) => {
                 "-p-3 mt- mr-1 h-11 w-11 whitespace-nowrap rounded-full pt-3 text-sm",
                 {
                   "bg-gray-400 hover:bg-gray-500":
-                    race.raceStatus === RaceStatus.Paying &&
+                    race.raceStatus === RaceStatus.PAYING &&
                     race.raceNumber.toString() != params.number,
                   "bg-black text-white hover:bg-gray-100":
-                    race.raceStatus === RaceStatus.Abandoned,
-                  "bg-emerald-200 ": race.raceStatus === RaceStatus.Interim,
+                    race.raceStatus === RaceStatus.ABANDONED,
+                  "bg-emerald-200 ": race.raceStatus === RaceStatus.INTERIM,
                   "bg-emerald-400 hover:bg-gray-200":
-                    race.raceStatus === RaceStatus.Normal &&
+                    race.raceStatus === RaceStatus.NORMAL &&
                     race.raceNumber.toString() != params.number,
-                  "bg-emerald-400": race.raceStatus === RaceStatus.Closed,
+                  "bg-emerald-400": race.raceStatus === RaceStatus.CLOSED,
                   "bg-white": race.raceNumber.toString() == params.number
                 }
               )}

@@ -16,16 +16,16 @@ export const HomeTableRace: React.FC<Props> = ({ race, meet, now }) => {
   return (
     <Link
       className={classnames({
-        "!cursor-default": race.status === RaceStatus.Abandoned
+        "!cursor-default": race.status === RaceStatus.ABANDONED
       })}
       to={utils.races.createRacingLink(race, meet)}
     >
       <div
         className={classnames("whitespace-nowrap px-3 py-4 text-sm", {
-          "bg-gray-400 hover:bg-gray-500": race.status === RaceStatus.Paying,
-          "bg-black text-white": race.status === RaceStatus.Abandoned,
-          "bg-emerald-400": race.status === RaceStatus.Interim,
-          "hover:bg-gray-200": race.status === RaceStatus.Normal
+          "bg-gray-400 hover:bg-gray-500": race.status === RaceStatus.PAYING,
+          "bg-black text-white": race.status === RaceStatus.ABANDONED,
+          "bg-emerald-400": race.status === RaceStatus.INTERIM,
+          "hover:bg-gray-200": race.status === RaceStatus.NORMAL
         })}
       >
         {dayjs.utc(race.start).local().format("H:mm")}
