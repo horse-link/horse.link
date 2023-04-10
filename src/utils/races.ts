@@ -1,7 +1,6 @@
-import { Runner } from "../types/meets";
+import { Race, Runner, Meet } from "../types/meets";
 import { ethers } from "ethers";
 import constants from "../constants";
-import { Race, Meet } from "../types/meets";
 import { RaceStatus } from "../constants/status";
 import utils from "../utils";
 import dayjs, { Dayjs } from "dayjs";
@@ -46,7 +45,7 @@ export const createCellText = (race: Race, now: Dayjs) => {
 
   return race.status == RaceStatus.Paying
     ? race.results?.join(" ")
-    : race.status == RaceStatus.Abandoned
+    : race.status === RaceStatus.Abandoned
     ? "ABND"
     : isAfterClosingTime
     ? "CLSD"
