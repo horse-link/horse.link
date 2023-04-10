@@ -31,11 +31,10 @@ export const calculateRaceMargin = (odds: number[]) => {
   return ethers.utils.formatEther(summed);
 };
 
-export const createRacingLink = (race: Race, meet: Meet) => {
-  return race.status !== RaceStatus.Paying
+export const createRacingLink = (race: Race, meet: Meet) =>
+  race.status !== RaceStatus.Paying
     ? `/races/${meet.id}/${race.number}`
     : `/results/${utils.markets.getPropositionIdFromRaceMeet(race, meet)}`;
-};
 
 export const createCellText = (race: Race, now: Dayjs) => {
   const isAfterClosingTime = now.isAfter(dayjs(race.close));
