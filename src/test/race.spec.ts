@@ -80,7 +80,7 @@ describe("Race utils tests", () => {
     expect(result).to.equal(expected);
   });
 
-  it("Should still create a link for paying race", () => {
+  it("Should create a link for paying race", () => {
     const mockRace: Race = {
       number: 2,
       name: "Mock Race 2",

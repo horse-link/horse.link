@@ -32,12 +32,9 @@ export const calculateRaceMargin = (odds: number[]) => {
 };
 
 export const createRacingLink = (race: Race, meet: Meet) => {
-  return race.status === RaceStatus.Normal || race.status === RaceStatus.Closed
+  return race.status !== RaceStatus.Paying
     ? `/races/${meet.id}/${race.number}`
-    : race.status === RaceStatus.Paying
-    ? `/results/${utils.markets.getPropositionIdFromRaceMeet(race, meet)}`
-    : // race status in any other condition other than normal or paying
-      "";
+    : `/results/${utils.markets.getPropositionIdFromRaceMeet(race, meet)}`;
 };
 
 export const createCellText = (race: Race, now: Dayjs) => {
