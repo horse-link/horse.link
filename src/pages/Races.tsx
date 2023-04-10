@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useRunnersData, useMeetData } from "../hooks/data";
 import { RacesButton } from "../components/Buttons";
@@ -52,7 +52,7 @@ const Races: React.FC = () => {
     return utils.races.calculateRaceMargin(validRunners.map(r => r.odds));
   }, [race]);
 
-  const now = dayjs();
+  const { current: now } = useRef(dayjs());
   const closed = now.isAfter(dayjs(race?.raceData.close));
 
   return (

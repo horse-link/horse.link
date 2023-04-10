@@ -155,7 +155,7 @@ export const RaceTable: React.FC<Props> = ({
   const OPEN_BET_ROWS: TableRow[] = openBetRunners.map(runner => ({
     data: getRunnerData(false, runner),
     row: {
-      classNames: isClosedRowStyles(false),
+      classNames: isClosedRowStyles(closed),
       props: {
         onClick: () => onClickRunner(runner)
       }
