@@ -4,7 +4,7 @@ import dayjs, { Dayjs } from "dayjs";
 import classnames from "classnames";
 import { Link } from "react-router-dom";
 import { RaceStatus } from "../../constants/status";
-import { createCellText, createRacingLink } from "../../utils/races";
+import utils from "../../utils/";
 
 type Props = {
   race: Race;
@@ -18,7 +18,7 @@ export const HomeTableRace: React.FC<Props> = ({ race, meet, now }) => {
       className={classnames({
         "!cursor-default": race.status === RaceStatus.Abandoned
       })}
-      to={createRacingLink(race, meet)}
+      to={utils.races.createRacingLink(race, meet)}
     >
       <div
         className={classnames("whitespace-nowrap px-3 py-4 text-sm", {
@@ -29,7 +29,7 @@ export const HomeTableRace: React.FC<Props> = ({ race, meet, now }) => {
         })}
       >
         {dayjs.utc(race.start).local().format("H:mm")}
-        <p>{createCellText(race, now)}</p>
+        <p>{utils.races.createCellText(race, now)}</p>
       </div>
     </Link>
   );
