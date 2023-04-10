@@ -9,6 +9,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import utc from "dayjs/plugin/utc";
 import advancedFormat from "dayjs/plugin/advancedFormat";
 import { HomeTableRace } from "../Home";
+import constants from "../../constants";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -28,11 +29,10 @@ export const HomeTable: React.FC<Props> = ({ meets }) => {
   const title = dayjs(Date.now()).format("dddd Do MMMM");
 
   const [time, setTime] = useState(dayjs());
-
   useEffect(() => {
     const interval = setInterval(() => {
       setTime(dayjs());
-    });
+    }, constants.time.ONE_SECOND_MS);
 
     return () => clearInterval(interval);
   }, []);
