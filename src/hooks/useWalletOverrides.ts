@@ -12,6 +12,7 @@ import { useApolloWithForce } from "../providers/Apollo";
 import { useLocation } from "react-router-dom";
 import { arbitrum } from "@wagmi/chains";
 import constants from "../constants";
+import { useFirstRender } from "./useFirstRender";
 
 // beware all ye whom enter
 // here lie the dreaded overrides
@@ -25,6 +26,7 @@ export const useWalletOverrides = () => {
   const { forceNewChain: forceApi } = useApiWithForce();
   const { forceNewChain: forceApollo } = useApolloWithForce();
   const { pathname } = useLocation();
+  const isFirstRender = useFirstRender();
 
   const isLocalWallet = connector?.id === LOCAL_WALLET_ID;
   const isChainUnsupported = chain?.unsupported || false;
@@ -88,7 +90,7 @@ export const useWalletOverrides = () => {
   }, [isConnected]);
 
   useEffect(() => {
-    if (isUnsupportedPage || isConnected) return;
+    if (isUnsupportedPage || isFirstRender) return;
 
     forceNewNetwork(networkIntent.current);
   }, [lastKnownConnector]);
