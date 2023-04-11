@@ -1,5 +1,5 @@
 import { MemoryRouter } from "react-router-dom";
-import { render, screen, userEvent } from "./componentTestUtils";
+import { render, screen } from "./componentTestUtils";
 import { PageLayout } from "../components";
 
 const TestPageLayout = () => {
