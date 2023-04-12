@@ -41,7 +41,7 @@ export const RaceTable: React.FC<Props> = ({
       "line-through": isScratched
     });
 
-  const generateRowStyles = (scratched: boolean, closed: boolean) =>
+  const generateRowStyles = (scratched: boolean) =>
     classnames({
       "bg-gray-200 cursor-default": scratched || closed,
       "cursor-pointer hover:bg-gray-100": !scratched && !closed
@@ -151,7 +151,7 @@ export const RaceTable: React.FC<Props> = ({
   const OPEN_BET_ROWS: TableRow[] = openBetRunners.map(runner => ({
     data: getRunnerData(false, runner),
     row: {
-      classNames: generateRowStyles(false, closed),
+      classNames: generateRowStyles(false),
       props: {
         onClick: () => onClickRunner(runner)
       }
@@ -161,7 +161,7 @@ export const RaceTable: React.FC<Props> = ({
   const SCRATCHED_BET_ROWS: TableRow[] = scratchedRunners.map(runner => ({
     data: getRunnerData(true, runner),
     row: {
-      classNames: generateRowStyles(true, false)
+      classNames: generateRowStyles(true)
     }
   }));
 
