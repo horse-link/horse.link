@@ -29,3 +29,16 @@ it("Should contain Account title", async () => {
 //   // const walletConnectElement = await screen.findByText("WALLETCONNECT");
 //   // expect(walletConnectElement).toBeDefined();
 // });
+
+it("Should contain Account Panel", async () => {
+  render(<TestPageLayout />);
+  const accountPanelElement = screen.getByText("Account");
+  expect(accountPanelElement).toBeDefined();
+});
+
+it("Should contain Bet Slip", async () => {
+  render(<TestPageLayout />);
+  const betSlipElement = screen.getByText("Bet Slip");
+  expect(betSlipElement).toBeDefined();
+});
+

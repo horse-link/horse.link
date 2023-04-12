@@ -5,15 +5,27 @@ import { server } from "./mocks/server";
 global.fetch = fetch;
 global.IntersectionObserver = class {
   observe() {
-    return;
+    // do nothing
   }
   unobserve() {
-    return;
+    // do nothing
   }
   disconnect() {
-    return;
+    // do nothing
   }
 } as any;
+
+global.ResizeObserver = class {
+  observe() {
+    // do nothing
+  }
+  unobserve() {
+    // do nothing
+  }
+  disconnect() {
+    // do nothing
+  }
+};
 
 beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
 afterAll(() => server.close());
