@@ -24,7 +24,7 @@ export const useWalletOverrides = () => {
   const { chain } = useNetwork();
   const { connectors, connect } = useConnect();
   const { connector, isConnected } = useAccount();
-  const { switchNetwork } = useSwitchNetwork();
+  const { switchNetwork, isError } = useSwitchNetwork();
   const { forceNewChain: forceApi } = useApiWithForce();
   const { forceNewChain: forceApollo } = useApolloWithForce();
   const { pathname } = useLocation();
@@ -104,6 +104,13 @@ export const useWalletOverrides = () => {
     // while loading we store the old intent
     storeIntent.current = networkIntent.current;
   }, [isLoading]);
+
+  // if the user rejects the chain switch
+  useEffect(() => {
+    if (!isError || !chain) return;
+
+    networkIntent.current = chain;
+  }, [isError]);
 
   return {
     isLocalWallet,
