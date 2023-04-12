@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useRunnersData, useMeetData } from "../hooks/data";
 import { RacesButton } from "../components/Buttons";
@@ -14,6 +14,7 @@ import { useConfig } from "../providers/Config";
 import Skeleton from "react-loading-skeleton";
 import dayjs from "dayjs";
 import utils from "../utils";
+import constants from "../constants";
 
 const Races: React.FC = () => {
   const params = useParams();
@@ -52,8 +53,16 @@ const Races: React.FC = () => {
     return utils.races.calculateRaceMargin(validRunners.map(r => r.odds));
   }, [race]);
 
-  const { current: now } = useRef(dayjs().unix());
-  const closed = now > (race?.raceData.close || 0);
+  const [time, setTime] = useState(dayjs());
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTime(dayjs());
+    }, constants.time.ONE_SECOND_MS);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const closed = time.unix() > (race?.raceData.close || 0);
 
   return (
     <PageLayout>
