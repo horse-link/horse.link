@@ -29,7 +29,8 @@ export const BaseButton: React.FC<Props> = props => {
   return (
     <button
       className={classnames("text-sm font-medium text-white", className, {
-        "border-gray-400 text-gray-400": disabled,
+        "border-gray-400 bg-gray-400 hover:border-gray-400 hover:bg-gray-400 hover:text-black":
+          disabled,
         [baseButtonStyles]: !baseStyleOverride
       })}
       disabled={loading || disabled}
