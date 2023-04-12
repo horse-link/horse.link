@@ -58,7 +58,7 @@ export const TokenContextProvider: React.FC<{ children: React.ReactNode }> = ({
     // load from local storage
     const localToken = localStorage.getItem(LOCAL_STORAGE_KEY);
 
-    // if it's not in the list of tokens, use the default
+    // if it's not in the list of tokens, use the default;
     if (!!localToken) {
       const parsedToken = JSON.parse(localToken) as Token;
       if (tokens.find(t => t.address === parsedToken.symbol)) {
