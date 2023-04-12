@@ -38,7 +38,7 @@ export const RaceTable: React.FC<Props> = ({
 
   const isScratchedRowStyles = (isScratched: boolean) =>
     classnames({
-      "cursor-pointer hover:bg-gray-100": !isScratched
+      "bg-gray-100": isScratched
     });
 
   const isScratchedDataStyles = (isScratched: boolean) =>
@@ -48,7 +48,7 @@ export const RaceTable: React.FC<Props> = ({
 
   const isClosedRowStyles = (isClosed: boolean) =>
     classnames({
-      "cursor-pointer hover:bg-gray-100": !isClosed
+      "bg-gray-100": isClosed
     });
 
   const openDialog = () => {
@@ -57,7 +57,7 @@ export const RaceTable: React.FC<Props> = ({
   };
 
   const onClickRunner = (runner?: Runner) => {
-    if (!runner) return;
+    if (!runner || closed) return;
     setSelectedRunner(runner);
     openDialog();
   };

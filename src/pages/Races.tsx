@@ -52,8 +52,8 @@ const Races: React.FC = () => {
     return utils.races.calculateRaceMargin(validRunners.map(r => r.odds));
   }, [race]);
 
-  const { current: now } = useRef(dayjs());
-  const closed = now.isAfter(dayjs(race?.raceData.close));
+  const { current: now } = useRef(dayjs().unix());
+  const closed = now > (race?.raceData.close || 0);
 
   return (
     <PageLayout>
