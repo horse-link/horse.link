@@ -5,12 +5,14 @@ import { RacesButton } from "../components/Buttons";
 import { RaceTable, BetTable } from "../components/Tables";
 import { PlaceBetModal, SettleBetModal } from "../components/Modals";
 import { Runner } from "../types/meets";
-import { PageLayout } from "../components";
+import { PageLayout, Toggle } from "../components";
 import { useSubgraphBets } from "../hooks/subgraph";
 import { BetHistory } from "../types/bets";
 import { makeMarketId } from "../utils/markets";
 import { formatBytes16String } from "../utils/formatting";
 import { useConfig } from "../providers/Config";
+import { useAccount } from "wagmi";
+
 import Skeleton from "react-loading-skeleton";
 import dayjs from "dayjs";
 import utils from "../utils";
@@ -26,22 +28,28 @@ const Races: React.FC = () => {
   const [isSettleModalOpen, setIsSettleModalOpen] = useState(false);
   const [selectedRunner, setSelectedRunner] = useState<Runner>();
   const [selectedBet, setSelectedBet] = useState<BetHistory>();
+  const [allBetsEnabled, setAllBetsEnabled] = useState(true);
   const { race } = useRunnersData(track, raceNumber);
+  const { address } = useAccount();
   const config = useConfig();
 
   const { meetDate } = useMemo(() => {
     const meetDate = dayjs().format("DD-MM-YY");
     return { config, meetDate };
   }, []);
+  const onMyBetToggle = () => setAllBetsEnabled(prev => !prev);
 
   const marketId = makeMarketId(new Date(), track, raceNumber.toString());
   const b16MarketId = formatBytes16String(marketId);
-
   const {
     betData: betHistory,
     totalBetsOnPropositions,
     refetch
-  } = useSubgraphBets("ALL_BETS", b16MarketId);
+  } = useSubgraphBets(
+    "ALL_BETS",
+    b16MarketId,
+    allBetsEnabled ? undefined : address
+  );
 
   const margin = useMemo(() => {
     if (!race || !race.runners.length) return;
@@ -120,10 +128,16 @@ const Races: React.FC = () => {
         />
       </div>
       <div className="flex flex-col gap-6">
-        <h1 className="mt-4 text-2xl font-bold">History</h1>
+        <div className="flex items-baseline justify-between">
+          <h1 className="mt-4 text-2xl font-bold">History</h1>
+          <div className="flex items-center gap-3">
+            <Toggle enabled={allBetsEnabled} onChange={onMyBetToggle} />
+            <div className="font-semibold">All Bets</div>
+          </div>
+        </div>
         <BetTable
-          paramsAddressExists={false}
-          allBetsEnabled={true}
+          paramsAddressExists={true}
+          allBetsEnabled={allBetsEnabled}
           betHistory={betHistory}
           config={config}
           setSelectedBet={setSelectedBet}
