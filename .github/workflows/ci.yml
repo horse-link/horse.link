@@ -18,6 +18,5 @@ jobs:
           node-version: 16
           cache: "yarn"
       - run: yarn install --frozen-lockfile
-      # re-enable when tests are fixed
-      # - run: yarn test
+      - run: yarn test
       - run: yarn build
