@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BaseTable } from ".";
 import { TableData, TableHeader, TableRow } from "../../types/table";
 import { Meet } from "../../types/meets";
@@ -9,6 +9,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import utc from "dayjs/plugin/utc";
 import advancedFormat from "dayjs/plugin/advancedFormat";
 import { HomeTableRace } from "../Home";
+import constants from "../../constants";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -27,6 +28,15 @@ export const HomeTable: React.FC<Props> = ({ meets }) => {
 
   const title = dayjs(Date.now()).format("dddd Do MMMM");
 
+  const [time, setTime] = useState(dayjs());
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTime(dayjs());
+    }, constants.time.ONE_SECOND_MS);
+
+    return () => clearInterval(interval);
+  }, []);
+
   const getDashboardData = (meet: Meet): TableData[] => [
     {
       title: `${meet.name} (${meet.location})`,
@@ -35,7 +45,12 @@ export const HomeTable: React.FC<Props> = ({ meets }) => {
     },
     ...meet.races.map(race => ({
       title: (
-        <HomeTableRace meet={meet} race={race} key={JSON.stringify(race)} />
+        <HomeTableRace
+          meet={meet}
+          race={race}
+          key={JSON.stringify(race)}
+          now={time}
+        />
       ),
       classNames: "!p-0"
     })),

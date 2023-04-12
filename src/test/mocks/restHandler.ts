@@ -1,5 +1,6 @@
 import { rest } from "msw";
 import { SignedMeetingsResponse } from "../../types/meets";
+import { RaceStatus } from "../../constants/status";
 
 export const restHandler = [
   rest.get("/meetings", (_, res, ctx) => {
@@ -25,7 +26,7 @@ export const restHandler = [
                 end_unix: 1668658920,
                 close: "2022-11-17T04:18:00.000Z",
                 close_unix: 1668658680,
-                status: "Paying",
+                status: RaceStatus.PAYING,
                 results: [1, 5, 4, 2]
               },
               {
@@ -37,7 +38,7 @@ export const restHandler = [
                 end_unix: 1668661020,
                 close: "2022-11-17T04:53:00.000Z",
                 close_unix: 1668660780,
-                status: "Paying",
+                status: RaceStatus.PAYING,
                 results: [1, 2, 3, 4]
               },
               {
@@ -49,7 +50,7 @@ export const restHandler = [
                 end_unix: 1668663240,
                 close: "2022-11-17T05:30:00.000Z",
                 close_unix: 1668663000,
-                status: "Normal",
+                status: RaceStatus.NORMAL,
                 results: []
               },
               {
@@ -61,7 +62,7 @@ export const restHandler = [
                 end_unix: 1668665640,
                 close: "2022-11-17T06:10:00.000Z",
                 close_unix: 1668665400,
-                status: "Normal",
+                status: RaceStatus.NORMAL,
                 results: []
               },
               {
@@ -73,7 +74,7 @@ export const restHandler = [
                 end_unix: 1668668040,
                 close: "2022-11-17T06:50:00.000Z",
                 close_unix: 1668667800,
-                status: "Normal",
+                status: RaceStatus.NORMAL,
                 results: []
               },
               {
@@ -85,7 +86,7 @@ export const restHandler = [
                 end_unix: 1668670440,
                 close: "2022-11-17T07:30:00.000Z",
                 close_unix: 1668670200,
-                status: "Normal",
+                status: RaceStatus.NORMAL,
                 results: []
               },
               {
@@ -97,7 +98,7 @@ export const restHandler = [
                 end_unix: 1668672540,
                 close: "2022-11-17T08:05:00.000Z",
                 close_unix: 1668672300,
-                status: "Normal",
+                status: RaceStatus.NORMAL,
                 results: []
               },
               {
@@ -109,7 +110,7 @@ export const restHandler = [
                 end_unix: 1668674700,
                 close: "2022-11-17T08:41:00.000Z",
                 close_unix: 1668674460,
-                status: "Normal",
+                status: RaceStatus.NORMAL,
                 results: []
               }
             ]
@@ -129,7 +130,7 @@ export const restHandler = [
                 end_unix: 1668654000,
                 close: "2022-11-17T02:56:00.000Z",
                 close_unix: 1668653760,
-                status: "Paying",
+                status: RaceStatus.PAYING,
                 results: [6, 3, 8, 5]
               },
               {
@@ -141,7 +142,7 @@ export const restHandler = [
                 end_unix: 1668656100,
                 close: "2022-11-17T03:31:00.000Z",
                 close_unix: 1668655860,
-                status: "Paying",
+                status: RaceStatus.PAYING,
                 results: [1, 4, 8, 3]
               },
               {
@@ -153,7 +154,7 @@ export const restHandler = [
                 end_unix: 1668658200,
                 close: "2022-11-17T04:06:00.000Z",
                 close_unix: 1668657960,
-                status: "Paying",
+                status: RaceStatus.PAYING,
                 results: [9, 6, 7, 3]
               },
               {
@@ -165,7 +166,7 @@ export const restHandler = [
                 end_unix: 1668660300,
                 close: "2022-11-17T04:41:00.000Z",
                 close_unix: 1668660060,
-                status: "Paying",
+                status: RaceStatus.PAYING,
                 results: [8, 12, 1, 11]
               },
               {
@@ -177,7 +178,7 @@ export const restHandler = [
                 end_unix: 1668662400,
                 close: "2022-11-17T05:16:00.000Z",
                 close_unix: 1668662160,
-                status: "Normal",
+                status: RaceStatus.NORMAL,
                 results: []
               },
               {
@@ -189,7 +190,7 @@ export const restHandler = [
                 end_unix: 1668664800,
                 close: "2022-11-17T05:56:00.000Z",
                 close_unix: 1668664560,
-                status: "Normal",
+                status: RaceStatus.NORMAL,
                 results: []
               },
               {
@@ -201,7 +202,7 @@ export const restHandler = [
                 end_unix: 1668667200,
                 close: "2022-11-17T06:36:00.000Z",
                 close_unix: 1668666960,
-                status: "Normal",
+                status: RaceStatus.NORMAL,
                 results: []
               },
               {
@@ -213,7 +214,7 @@ export const restHandler = [
                 end_unix: 1668669600,
                 close: "2022-11-17T07:16:00.000Z",
                 close_unix: 1668669360,
-                status: "Normal",
+                status: RaceStatus.NORMAL,
                 results: []
               }
             ]
@@ -233,7 +234,7 @@ export const restHandler = [
                 end_unix: 1668655500,
                 close: "2022-11-17T03:21:00.000Z",
                 close_unix: 1668655260,
-                status: "Paying",
+                status: RaceStatus.PAYING,
                 results: [1, 8, 11, 2]
               },
               {
@@ -245,7 +246,7 @@ export const restHandler = [
                 end_unix: 1668657600,
                 close: "2022-11-17T03:56:00.000Z",
                 close_unix: 1668657360,
-                status: "Paying",
+                status: RaceStatus.PAYING,
                 results: [5, 12, 4, 3]
               },
               {
@@ -257,7 +258,7 @@ export const restHandler = [
                 end_unix: 1668659700,
                 close: "2022-11-17T04:31:00.000Z",
                 close_unix: 1668659460,
-                status: "Paying",
+                status: RaceStatus.PAYING,
                 results: [7, 13, 3, 14]
               },
               {
@@ -269,7 +270,7 @@ export const restHandler = [
                 end_unix: 1668661800,
                 close: "2022-11-17T05:06:00.000Z",
                 close_unix: 1668661560,
-                status: "Interim",
+                status: RaceStatus.INTERIM,
                 results: [2, 5, 1, 7]
               },
               {
@@ -281,7 +282,7 @@ export const restHandler = [
                 end_unix: 1668664200,
                 close: "2022-11-17T05:46:00.000Z",
                 close_unix: 1668663960,
-                status: "Normal",
+                status: RaceStatus.NORMAL,
                 results: []
               },
               {
@@ -293,7 +294,7 @@ export const restHandler = [
                 end_unix: 1668666600,
                 close: "2022-11-17T06:26:00.000Z",
                 close_unix: 1668666360,
-                status: "Normal",
+                status: RaceStatus.NORMAL,
                 results: []
               },
               {
@@ -305,7 +306,7 @@ export const restHandler = [
                 end_unix: 1668669000,
                 close: "2022-11-17T07:06:00.000Z",
                 close_unix: 1668668760,
-                status: "Normal",
+                status: RaceStatus.NORMAL,
                 results: []
               },
               {
@@ -317,7 +318,7 @@ export const restHandler = [
                 end_unix: 1668671400,
                 close: "2022-11-17T07:46:00.000Z",
                 close_unix: 1668671160,
-                status: "Normal",
+                status: RaceStatus.NORMAL,
                 results: []
               }
             ]
