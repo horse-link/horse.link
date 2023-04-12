@@ -36,19 +36,15 @@ export const RaceTable: React.FC<Props> = ({
     runners?.filter(utils.races.isScratchedRunner) ??
     utils.mocks.getMockRunners();
 
-  const isScratchedRowStyles = (isScratched: boolean) =>
-    classnames({
-      "cursor-pointer hover:bg-gray-100": !isScratched
-    });
-
   const isScratchedDataStyles = (isScratched: boolean) =>
     classnames({
       "line-through": isScratched
     });
 
-  const isClosedRowStyles = (isClosed: boolean) =>
+  const generateRowStyles = (scratched: boolean) =>
     classnames({
-      "cursor-pointer hover:bg-gray-100": !isClosed
+      "bg-gray-200 cursor-default": scratched || closed,
+      "cursor-pointer hover:bg-gray-100": !scratched && !closed
     });
 
   const openDialog = () => {
@@ -57,7 +53,7 @@ export const RaceTable: React.FC<Props> = ({
   };
 
   const onClickRunner = (runner?: Runner) => {
-    if (!runner) return;
+    if (!runner || closed) return;
     setSelectedRunner(runner);
     openDialog();
   };
@@ -155,7 +151,7 @@ export const RaceTable: React.FC<Props> = ({
   const OPEN_BET_ROWS: TableRow[] = openBetRunners.map(runner => ({
     data: getRunnerData(false, runner),
     row: {
-      classNames: isClosedRowStyles(closed),
+      classNames: generateRowStyles(false),
       props: {
         onClick: () => onClickRunner(runner)
       }
@@ -165,7 +161,7 @@ export const RaceTable: React.FC<Props> = ({
   const SCRATCHED_BET_ROWS: TableRow[] = scratchedRunners.map(runner => ({
     data: getRunnerData(true, runner),
     row: {
-      classNames: isScratchedRowStyles(closed)
+      classNames: generateRowStyles(true)
     }
   }));
 
