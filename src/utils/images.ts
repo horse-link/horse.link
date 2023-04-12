@@ -1,7 +1,8 @@
 import { CRYPTO_ICONS, SVG_ICONS } from "../icons";
 
-export const getCryptoIcon = (symbol: string) =>
-  CRYPTO_ICONS[symbol.toUpperCase()];
+export const getCryptoIcon = (symbol: string) => {
+  return CRYPTO_ICONS[symbol.toUpperCase()] ?? CRYPTO_ICONS.DEFAULT;
+};
 
 export const getConnectorIcon = (name: string) => {
   const firstWordOfName = name.split(" ")[0].toLowerCase();

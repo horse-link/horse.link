@@ -17,6 +17,7 @@ import { default as USDC } from "./USDC.png";
 import { default as USDT } from "./tether.png";
 import { default as DAI } from "./dai.png";
 import { default as HL } from "./hl.png";
+import { default as DEFAULT } from "./default.svg";
 import { SvgIcon } from "../types/general";
 
 export const CRYPTO_ICONS: Record<string, string> = {
@@ -25,5 +26,6 @@ export const CRYPTO_ICONS: Record<string, string> = {
   USDC,
   USDT,
   DAI,
-  HL
+  HL,
+  DEFAULT
 };
