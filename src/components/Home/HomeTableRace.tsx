@@ -1,66 +1,35 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Meet, Race } from "../../types/meets";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import classnames from "classnames";
 import { Link } from "react-router-dom";
-import utils from "../../utils";
-import constants from "../../constants";
+import { RaceStatus } from "../../constants/status";
+import utils from "../../utils/";
 
 type Props = {
   race: Race;
   meet: Meet;
+  now: Dayjs;
 };
 
-export const HomeTableRace: React.FC<Props> = ({ race, meet }) => {
-  const [timeString, setTimeString] = useState(
-    utils.formatting.formatTimeToHMS(race.start!, true)
-  );
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTimeString(utils.formatting.formatTimeToHMS(race.start!, true));
-    }, constants.time.ONE_SECOND_MS);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const isAfterClosingTime = dayjs().isAfter(dayjs(race.close));
+export const HomeTableRace: React.FC<Props> = ({ race, meet, now }) => {
   return (
     <Link
       className={classnames({
-        "!cursor-default":
-          race.status === "Interim" ||
-          race.status === "Abandoned" ||
-          race.status === "Closed" ||
-          (race.status === "Normal" && isAfterClosingTime)
+        "!cursor-default": race.status === RaceStatus.ABANDONED
       })}
-      to={
-        race.status === "Normal" && !isAfterClosingTime
-          ? `/races/${meet.id}/${race.number}`
-          : race.status === "Paying"
-          ? `/results/${utils.markets.getPropositionIdFromRaceMeet(race, meet)}`
-          : // race status in any other condition other than normal or paying
-            ""
-      }
+      to={utils.races.createRacingLink(race, meet)}
     >
       <div
         className={classnames("whitespace-nowrap px-3 py-4 text-sm", {
-          "bg-gray-400 hover:bg-gray-500": race.status === "Paying",
-          "bg-black text-white": race.status === "Abandoned",
-          "bg-emerald-400": race.status === "Interim",
-          "hover:bg-gray-200": race.status === "Normal"
+          "bg-gray-400 hover:bg-gray-500": race.status === RaceStatus.PAYING,
+          "bg-black text-white": race.status === RaceStatus.ABANDONED,
+          "bg-emerald-400": race.status === RaceStatus.INTERIM,
+          "hover:bg-gray-200": race.status === RaceStatus.NORMAL
         })}
       >
         {dayjs.utc(race.start).local().format("H:mm")}
-        <p>
-          {race.status == "Paying"
-            ? race.results?.join(" ")
-            : race.status == "Abandoned"
-            ? "ABND"
-            : isAfterClosingTime
-            ? "CLSD"
-            : timeString}
-        </p>
+        <p>{utils.races.createCellText(race, now)}</p>
       </div>
     </Link>
   );

@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+import { RaceStatus } from "../constants/status";
 import { EcSignature, SignedResponse } from "./general";
 
 export type Runner = {
@@ -15,6 +17,7 @@ export type Runner = {
   signature: EcSignature;
   status: "Open" | "Scratched" | "LateScratched";
 };
+
 export type NextToJumpRace = {
   jumperRaceStartTime: string;
   jumperRaceNumber: number;
@@ -30,13 +33,6 @@ export type NextToJump = {
   races: NextToJumpRace[];
   missingLocations: string[];
 };
-
-export type RaceStatus =
-  | "Abandoned"
-  | "Interim"
-  | "Normal"
-  | "Paying"
-  | "Closed";
 
 export type Race = {
   number: number;
@@ -57,6 +53,9 @@ export type RaceData = {
     distance: number;
     class: string;
     hasOdds: boolean;
+    start: dayjs.Dayjs;
+    close: number;
+    end: number;
   };
   track: {
     name: string;
@@ -72,6 +71,9 @@ export type SignedRunnersResponse = {
       distance: number;
       class: string;
       hasOdds: boolean;
+      start: dayjs.Dayjs;
+      close: number;
+      end: number;
     };
     track: {
       name: string;

@@ -37,6 +37,7 @@ const RaceTableComponent = ({ runners }: Props) => {
       runners={runners}
       setSelectedRunner={() => {}}
       setIsModalOpen={() => {}}
+      closed={false}
     />
   );
 };
