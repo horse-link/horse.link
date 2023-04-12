@@ -1,4 +1,3 @@
-import { ethers } from "ethers";
 import { Card } from "..";
 import { useProtocolStatistics } from "../../hooks/stats";
 import utils from "../../utils";
@@ -7,15 +6,11 @@ export const HomeOverallStats: React.FC = () => {
   const stats = useProtocolStatistics();
 
   const formattedTvl = stats?.tvl
-    ? `$${utils.formatting.formatNumberWithCommas(
-        ethers.utils.formatEther(stats.tvl)
-      )}`
+    ? `$${utils.formatting.formatNumberWithCommas(stats.tvl.toString())}`
     : undefined;
 
   const formattedInplay = stats?.inPlay
-    ? `$${utils.formatting.formatNumberWithCommas(
-        ethers.utils.formatEther(stats.inPlay)
-      )}`
+    ? `$${utils.formatting.formatNumberWithCommas(stats.inPlay.toString())}`
     : undefined;
 
   const formattedPerformace = stats?.performance

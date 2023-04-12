@@ -132,6 +132,21 @@ export class Api {
     return data;
   };
 
+  public getPrototcolStats = async (): Promise<FormattedProtocol> => {
+    const [totalInPlay, totalLiquidity, totalPerformance] = await Promise.all([
+      this.getTotalInPlay(),
+      this.getTotalLiquidity(),
+      this.getTotalPerformance()
+    ]);
+    return {
+      id: "protocol",
+      inPlay: totalInPlay.total,
+      tvl: totalLiquidity.assets,
+      performance: totalPerformance.performance,
+      lastUpdate: new Date().getTime()
+    };
+  };
+
   public getVaultAddresses = async (): Promise<string[]> => {
     const { data } = await this.client.get<string[]>("/vaults/");
     return data;

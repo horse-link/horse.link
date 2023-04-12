@@ -48,8 +48,8 @@ export type Protocol = {
 };
 
 export type FormattedProtocol = Pick<Protocol, "id"> & {
-  inPlay: BigNumber;
-  tvl: BigNumber;
+  inPlay: number;
+  tvl: number;
   performance: number;
   lastUpdate: number;
 };
