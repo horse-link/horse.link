@@ -14,7 +14,6 @@ import { Token } from "graphql";
 import { VaultUserData } from "../types/vaults";
 import { Network } from "../types/general";
 import constants from "../constants";
-import { FormattedProtocol } from "../types/subgraph";
 
 export class Api {
   public client: AxiosInstance;
@@ -133,14 +132,15 @@ export class Api {
     return data;
   };
 
-  public getPrototcolStats = async (): Promise<FormattedProtocol> => {
+  public getPrototcolStats = async () => {
     const [totalInPlay, totalLiquidity, totalPerformance] = await Promise.all([
       this.getTotalInPlay(),
       this.getTotalLiquidity(),
       this.getTotalPerformance()
     ]);
+
     return {
-      id: "protocol",
+      id: "protocol" as const,
       inPlay: totalInPlay.total,
       tvl: totalLiquidity.assets,
       performance: totalPerformance.performance,

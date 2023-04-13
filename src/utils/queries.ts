@@ -1,4 +1,3 @@
-import { ethers } from "ethers";
 import { BetFilterOptions } from "../types/bets";
 import { SubgraphFilter } from "../types/subgraph";
 import constants from "../constants";
@@ -19,6 +18,7 @@ const getFiltersFromObject = (filter?: SubgraphFilter) => {
     .join("\n");
 };
 
+// TODO: fix
 const getOptionalFilterOptions = (now: number, filter?: BetFilterOptions) => {
   switch (filter) {
     case "ALL_BETS":
@@ -57,20 +57,19 @@ export const getBetsQuery = (
     orderDirection: desc
   ) {
     id
-    propositionId
+    asset
+    payoutAt
+    market
     marketId
-    marketAddress
-    assetAddress
+    propositionId
     amount
     payout
-    payoutAt
     owner
-    settled
-    didWin
     createdAt
+    settled
+    result
+    recipient
     settledAt
-    createdAtTx
-    settledAtTx
   }
 }`;
 
@@ -89,113 +88,54 @@ export const getBetsQueryWithoutPagination = (
     orderDirection: desc
   ) {
     id
-    propositionId
+    asset
+    payoutAt
+    market
     marketId
-    marketAddress
-    assetAddress
+    propositionId
     amount
     payout
-    payoutAt
     owner
-    settled
-    didWin
     createdAt
+    settled
+    result
+    recipient
     settledAt
-    createdAtTx
-    settledAtTx
   }
 }`;
 
-export const getAggregatorQuery = () => `{
-  aggregator(id: "aggregator") {
-    id
-    totalBets
-    totalMarkets
-    totalVaults
-  }
-}`;
-
-export const getProtocolStatsQuery = () => `
-query GetProtocols{
-  protocol(id: "protocol") {
-    id
-    inPlay
-    initialTvl
-    currentTvl
-    performance
-    lastUpdate
-  }
-}`;
-
-export const getVaultHistoryQuery = (filter?: SubgraphFilter) => `{
-  vaultTransactions(
+export const getVaultStatsQuery = (
+  filter?: SubgraphFilter
+) => `query GetVaultStats{
+  deposits(
     first: 1000
-    where:{
-      ${getFiltersFromObject(filter)}
-    }
-    orderBy: timestamp
-    orderDirection: desc
-  ) {
-    id
-    type
-    vaultAddress
-    userAddress
-    amount
-    timestamp
-  }
-}`;
-
-export const getVaultStatsQuery = (filter?: SubgraphFilter) => `{
-  vaultTransactions(
-    first: 1000
-    where:{
-      ${getFiltersFromObject(filter)}
-    }
-    orderBy: timestamp
-    orderDirection: desc
-  ) {
-    id
-    type
-    vaultAddress
-    userAddress
-    amount
-    timestamp
-  }
-}`;
-
-export const getMarketStatsQuery = (filter?: SubgraphFilter) => `{
-  bets(
-    first: 1000
-    orderBy: amount
-    orderDirection: desc
     where: {
       ${getFiltersFromObject(filter)}
     }
+    orderBy: createdAt
+    orderDirection: desc
   ) {
     id
-    propositionId
-    marketId
-    marketAddress
-    amount
-    payout
+    sender
     owner
-    settled
-    didWin
+    assets
+    shares
     createdAt
-    settledAt
-    createdAtTx
-    settledAtTx
   }
-}`;
-
-export const getUserStatsQuery = (address?: string) => `{
-  user(id: "${
-    address ? address.toLowerCase() : ethers.constants.AddressZero
-  }") {
+  withdraws(
+    first: 1000
+    where: {
+      ${getFiltersFromObject(filter)}
+    }
+    orderBy: createdAt
+    orderDirection: desc
+  ) {
     id
-    totalDeposited
-    inPlay
-    pnl
-    lastUpdate
+    sender
+    receiver
+    owner
+    assets
+    shares
+    createdAt
   }
 }`;

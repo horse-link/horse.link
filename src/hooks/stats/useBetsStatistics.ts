@@ -1,6 +1,6 @@
 import { BigNumber, ethers } from "ethers";
-import { useMemo } from "react";
-import { Bet } from "../../types/subgraph";
+import { useMemo, useRef } from "react";
+import { Bet, BetResult } from "../../types/subgraph";
 import useSubgraph from "../useSubgraph";
 import utils from "../../utils";
 import constants from "../../constants";
@@ -10,18 +10,17 @@ type Response = {
 };
 
 export const useBetsStatistics = () => {
-  const yesterdayFilter = useMemo(
-    () =>
-      Math.floor(
-        Date.now() / constants.time.ONE_SECOND_MS -
-          constants.time.TWENTY_FOUR_HOURS_S
-      ),
-    []
+  const { current: now } = useRef(
+    Math.floor(Date.now() / constants.time.ONE_SECOND_MS)
   );
+  const { current: yesterdayFilter } = useRef(
+    now - constants.time.TWENTY_FOUR_HOURS_S
+  );
+
   const { data, loading } = useSubgraph<Response>(
-    utils.queries.getMarketStatsQuery({
+    utils.queries.getBetsQueryWithoutPagination(now, {
       settledAt_gte: yesterdayFilter,
-      didWin: true
+      result: BetResult.WINNER
     })
   );
 

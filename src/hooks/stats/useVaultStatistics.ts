@@ -1,15 +1,16 @@
 import { BigNumber, ethers } from "ethers";
 import { useEffect, useMemo, useState } from "react";
-import { VaultTransaction } from "../../types/subgraph";
 import useSubgraph from "../useSubgraph";
 import utils from "../../utils";
 import { useVaultContract } from "../contracts";
 import { useConfig } from "../../providers/Config";
 import { useProvider } from "wagmi";
 import constants from "../../constants";
+import { Deposit, Withdraw } from "../../types/subgraph";
 
 type Response = {
-  vaultTransactions: VaultTransaction[];
+  deposits: Array<Deposit>;
+  withdraws: Array<Withdraw>;
 };
 
 export const useVaultStatistics = () => {
@@ -27,42 +28,30 @@ export const useVaultStatistics = () => {
   // This is the last 24 hours of data
   const { data, loading } = useSubgraph<Response>(
     utils.queries.getVaultStatsQuery({
-      timestamp_gte: yesterdayFilter
+      createdAt_gte: yesterdayFilter
     })
   );
 
   const vaultsTransactionData = useMemo(() => {
     if (loading || !data) return;
 
-    return data.vaultTransactions;
+    return data;
   }, [data, loading]);
 
   const totalVaultDeposits = useMemo(() => {
     if (!vaultsTransactionData) return;
-    const vaultDeposits = vaultsTransactionData.filter(
-      vaultsTransaction => vaultsTransaction.type === "deposit"
-    );
-    const amountBigNumbers = vaultDeposits.map(vaultsTransaction =>
-      BigNumber.from(vaultsTransaction.amount)
-    );
 
-    return amountBigNumbers.reduce(
-      (sum, value) => sum.add(value),
+    return vaultsTransactionData.deposits.reduce(
+      (sum, curr) => sum.add(curr.assets),
       ethers.constants.Zero
     );
   }, [vaultsTransactionData]);
 
   const totalVaultWithdrawals = useMemo(() => {
     if (!vaultsTransactionData) return;
-    const vaultWithdrawals = vaultsTransactionData.filter(
-      vaultsTransaction => vaultsTransaction.type === "withdraw"
-    );
-    const amountBigNumbers = vaultWithdrawals.map(vaultsTransaction =>
-      BigNumber.from(vaultsTransaction.amount)
-    );
 
-    return amountBigNumbers.reduce(
-      (sum, value) => sum.add(value),
+    return vaultsTransactionData.withdraws.reduce(
+      (sum, curr) => sum.add(curr.assets),
       ethers.constants.Zero
     );
   }, [vaultsTransactionData]);
@@ -71,6 +60,7 @@ export const useVaultStatistics = () => {
     if (!vaultsTransactionData) return;
     if (!totalVaultDeposits || !totalVaultWithdrawals)
       return ethers.constants.Zero;
+
     return totalVaultDeposits.add(totalVaultWithdrawals);
   }, [vaultsTransactionData, totalVaultDeposits, totalVaultWithdrawals]);
 

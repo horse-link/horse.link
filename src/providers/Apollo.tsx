@@ -41,7 +41,7 @@ export const ApolloProvider: React.FC<{ children: React.ReactNode }> = ({
     () => ({
       client: new ApolloClient({
         link: new HttpLink({
-          uri: `${constants.env.SUBGRAPH_URL}-${suffix}`,
+          uri: `${constants.env.SUBGRAPH_URL}-${suffix}-test`,
           fetch
         }),
         cache: new InMemoryCache()

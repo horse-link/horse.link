@@ -80,7 +80,7 @@ export const SettleBetModal: React.FC<Props> = ({
   }, [isModalOpen]);
 
   const market = config?.markets.find(
-    m => m.address.toLowerCase() === bet?.marketAddress.toLowerCase()
+    m => m.address.toLowerCase() === bet?.market.toLowerCase()
   );
 
   const token = config?.tokens.find(

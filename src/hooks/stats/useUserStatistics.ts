@@ -1,34 +1,18 @@
 import { BigNumber } from "ethers";
-import { useMemo } from "react";
-import { useAccount } from "wagmi";
-import { FormattedUser, User } from "../../types/subgraph";
-import useSubgraph from "../useSubgraph";
-import utils from "../../utils";
-
-type Response = {
-  user: User;
-};
+import { useState } from "react";
+// import { useAccount } from "wagmi";
 
 export const useUserStatistics = () => {
-  const { address } = useAccount();
-  const { data, loading } = useSubgraph<Response>(
-    utils.queries.getUserStatsQuery(address)
-  );
+  // const { address } = useAccount();
+  const [userStats] = useState<{
+    // setResult
+    totalDeposited: BigNumber;
+    inPlay: BigNumber;
+    pnl: BigNumber;
+    lastUpdate: number;
+  }>();
 
-  const formattedUserStats = useMemo<FormattedUser | undefined>(() => {
-    if (loading || !data || !address) return;
-    if (!data.user) return utils.mocks.getMockUser();
+  // TODO
 
-    const user = data.user;
-
-    return {
-      id: user.id,
-      totalDeposited: BigNumber.from(user.totalDeposited),
-      inPlay: BigNumber.from(user.inPlay),
-      pnl: BigNumber.from(user.pnl),
-      lastUpdate: +user.lastUpdate
-    };
-  }, [data, loading]);
-
-  return formattedUserStats;
+  return userStats;
 };

@@ -75,9 +75,7 @@ export const SettleRaceButton: React.FC<Props> = props => {
           // market will always match a marketAddress
           (
             await markets
-              .find(
-                m => m.address.toLowerCase() === bet.marketAddress.toLowerCase()
-              )!
+              .find(m => m.address.toLowerCase() === bet.market.toLowerCase())!
               .settle(bet.index)
           ).wait()
         )

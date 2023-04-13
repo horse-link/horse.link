@@ -37,7 +37,7 @@ export type BetHistoryResponse = {
 export type BetHistory = {
   index: number;
   marketId: string;
-  marketAddress: string;
+  market: string;
   assetAddress: string;
   propositionId: string;
   marketResultAdded: boolean;
@@ -46,7 +46,7 @@ export type BetHistory = {
   amount: string;
   payout: string;
   payoutDate: number;
-  tx: string;
+  // tx: string;
   blockNumber: number;
   settledAt?: number;
   settledAtTx?: string;
