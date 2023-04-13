@@ -54,10 +54,10 @@ export const getBetHistory = (
 
   return {
     index: utils.formatting.formatBetId(bet.id),
-    marketId: bet.marketId.toLowerCase(),
+    marketId: bet.marketId.toUpperCase(),
     market: bet.market.toLowerCase(),
     assetAddress: bet.asset.toLowerCase(),
-    propositionId: bet.propositionId.toLowerCase(),
+    propositionId: bet.propositionId.toUpperCase(),
     winningPropositionId: signedBetData.winningPropositionId,
     marketResultAdded: signedBetData.marketResultAdded,
     settled: bet.settled,
@@ -67,7 +67,6 @@ export const getBetHistory = (
     payout: bet.payout.toString(),
     blockNumber: +bet.createdAt,
     settledAt: bet.settled ? +bet.settledAt : undefined,
-    // settledAtTx: bet.settled ? bet.settledAtTx.toLowerCase() : undefined,
     marketOracleResultSig: signedBetData.marketOracleResultSig,
     scratched: scratched,
     status: getBetStatus(bet, signedBetData, scratched)

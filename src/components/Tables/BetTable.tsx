@@ -55,21 +55,14 @@ export const BetTable: React.FC<Props> = ({
       }`;
 
     const winningPropositionId =
-      bet &&
-      utils.id.getPropositionFromId(
-        utils.formatting.parseBytes16String(bet.propositionId)
-      );
+      bet && utils.id.getPropositionFromId(bet.propositionId);
     const isWinning =
       bet && bet.winningPropositionId
         ? bet.winningPropositionId.toLowerCase() ===
           bet.propositionId.toLowerCase()
         : undefined;
 
-    const raceDetails =
-      bet &&
-      utils.id.getMarketDetailsFromId(
-        utils.formatting.parseBytes16String(bet.marketId)
-      );
+    const raceDetails = bet && utils.id.getMarketDetailsFromId(bet.marketId);
 
     return [
       {

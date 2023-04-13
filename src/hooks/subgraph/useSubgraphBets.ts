@@ -116,9 +116,7 @@ export const useSubgraphBets = (
       await Promise.all(
         uniqueMarketIds.map(async marketId => {
           try {
-            const signedData = await api.getWinningResultSignature(
-              utils.formatting.parseBytes16String(marketId)
-            );
+            const signedData = await api.getWinningResultSignature(marketId);
             signedDataMap.set(marketId, signedData);
           } catch (e) {
             console.warn("Error getting result signature:", e);
@@ -167,12 +165,8 @@ export const useSubgraphBets = (
     if (!bets) return;
 
     const totalBets = bets.reduce((prevObject, bet, _, array) => {
-      const proposition = utils.formatting.parseBytes16String(
-        bet.propositionId
-      );
-
       const amount = ethers.utils
-        .parseEther(prevObject[proposition]?.amount || "0")
+        .parseEther(prevObject[bet.propositionId]?.amount || "0")
         .add(ethers.utils.parseEther(bet.amount));
 
       const totalBetValue = array.reduce(
@@ -186,7 +180,7 @@ export const useSubgraphBets = (
 
       return {
         ...prevObject,
-        [proposition]: {
+        [bet.propositionId]: {
           amount: ethers.utils.formatEther(amount),
           percentage: +ethers.utils.formatEther(proportion) * 100
         }
