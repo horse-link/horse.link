@@ -9,8 +9,9 @@ const getFiltersFromObject = (filter?: SubgraphFilter) => {
     .map(([key, value]) => {
       // if value is undefined
       if (typeof value === "undefined") return "";
-      // if value is boolean
-      if (typeof value === "boolean") return `${key}: ${value}`;
+      // if value is boolean or number
+      if (typeof value === "boolean" || typeof value === "number")
+        return `${key}: ${value}`;
 
       // type is string
       return `${key}: "${value}"`;
@@ -104,9 +105,9 @@ export const getBetsQueryWithoutPagination = (
   }
 }`;
 
-export const getVaultStatsQuery = (
+export const getDepositsWithoutPagination = (
   filter?: SubgraphFilter
-) => `query GetVaultStats{
+) => `query getDeposits{
   deposits(
     first: 1000
     where: {
@@ -122,6 +123,11 @@ export const getVaultStatsQuery = (
     shares
     createdAt
   }
+}`;
+
+export const getWithdrawsWithoutPagination = (
+  filter?: SubgraphFilter
+) => `query getWithdraws{
   withdraws(
     first: 1000
     where: {

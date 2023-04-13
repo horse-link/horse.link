@@ -6,7 +6,7 @@ import utils from "../../utils";
 import constants from "../../constants";
 
 type Response = {
-  bets: Bet[];
+  bets: Array<Bet>;
 };
 
 export const useBetsStatistics = () => {

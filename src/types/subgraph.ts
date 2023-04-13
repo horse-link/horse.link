@@ -14,7 +14,11 @@ export type Subgraphable<T extends string> =
 export type SubgraphKeys =
   | Subgraphable<keyof Aggregator>
   | Subgraphable<keyof Registry>
-  | Subgraphable<keyof Bet>;
+  | Subgraphable<keyof Bet>
+  | Subgraphable<keyof Deposit>
+  | Subgraphable<keyof Withdraw>
+  | Subgraphable<keyof Borrow>
+  | Subgraphable<keyof Repay>;
 
 export type SubgraphFilter = Partial<Record<SubgraphKeys, SubgraphValues>>;
 

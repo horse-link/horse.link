@@ -8,8 +8,11 @@ import { useProvider } from "wagmi";
 import constants from "../../constants";
 import { Deposit, Withdraw } from "../../types/subgraph";
 
-type Response = {
+type DepositsResponse = {
   deposits: Array<Deposit>;
+};
+
+type WithdrawResponse = {
   withdraws: Array<Withdraw>;
 };
 
@@ -26,17 +29,28 @@ export const useVaultStatistics = () => {
     []
   );
   // This is the last 24 hours of data
-  const { data, loading } = useSubgraph<Response>(
-    utils.queries.getVaultStatsQuery({
-      createdAt_gte: yesterdayFilter
-    })
-  );
+  const { data: depositData, loading: depositLoading } =
+    useSubgraph<DepositsResponse>(
+      utils.queries.getDepositsWithoutPagination({
+        createdAt_gte: yesterdayFilter
+      })
+    );
+  const { data: withdrawData, loading: withdrawLoading } =
+    useSubgraph<WithdrawResponse>(
+      utils.queries.getWithdrawsWithoutPagination({
+        createdAt_gte: yesterdayFilter
+      })
+    );
 
   const vaultsTransactionData = useMemo(() => {
-    if (loading || !data) return;
+    if (depositLoading || !depositData || withdrawLoading || !withdrawData)
+      return;
 
-    return data;
-  }, [data, loading]);
+    return {
+      deposits: depositData.deposits,
+      withdraws: withdrawData.withdraws
+    };
+  }, [depositData, depositLoading, withdrawData, withdrawLoading]);
 
   const totalVaultDeposits = useMemo(() => {
     if (!vaultsTransactionData) return;
