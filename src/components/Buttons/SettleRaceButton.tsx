@@ -2,7 +2,7 @@ import React, { useCallback, useMemo } from "react";
 import { BaseButton } from ".";
 import { Config } from "../../types/config";
 import { BetHistory } from "../../types/bets";
-import { Signer } from "ethers";
+import { ContractReceipt, Signer } from "ethers";
 import { useWalletModal } from "../../providers/WalletModal";
 import classnames from "classnames";
 import { MarketOracle__factory, Market__factory } from "../../typechain";
@@ -70,18 +70,20 @@ export const SettleRaceButton: React.FC<Props> = props => {
         console.error(err);
       }
       // settle all bets for respective market
-      const txs = await Promise.all(
-        settlableBets.map(async bet =>
-          // market will always match a marketAddress
-          (
-            await markets
-              .find(
-                m => m.address.toLowerCase() === bet.marketAddress.toLowerCase()
-              )!
-              .settle(bet.index)
-          ).wait()
-        )
-      );
+
+      const txs: ContractReceipt[] = [];
+      for (const bet of settlableBets) {
+        // market will always match a marketAddress
+        const tx = await (
+          await markets
+            .find(
+              m => m.address.toLowerCase() === bet.marketAddress.toLowerCase()
+            )!
+            .settle(bet.index)
+        ).wait();
+        txs.push(tx);
+      }
+
       // get hashes from transactions
       const hashes = txs.map(tx => tx.transactionHash);
       // set hashes and show success modal
