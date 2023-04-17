@@ -105,7 +105,7 @@ export const VaultsTable: React.FC<Props> = ({ config, setIsModalOpen }) => {
         )
       },
       {
-        title: vault ? (
+        title: vault?.userShareTotal ? (
           `${utils.formatting.formatToFourDecimals(
             ethers.utils.formatUnits(vault.userShareTotal, vault.asset.decimals)
           )}`
@@ -114,7 +114,7 @@ export const VaultsTable: React.FC<Props> = ({ config, setIsModalOpen }) => {
         )
       },
       {
-        title: vault ? (
+        title: vault?.userAssetTotal ? (
           `$${utils.formatting.formatToFourDecimals(
             ethers.utils.formatUnits(vault.userAssetTotal, vault.asset.decimals)
           )}`
