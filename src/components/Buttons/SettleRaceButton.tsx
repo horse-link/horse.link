@@ -61,7 +61,15 @@ export const SettleRaceButton: React.FC<Props> = props => {
         settlableBets[0];
       // add result
       const result = await oracleContract.getResult(marketId);
-      if (result.winningPropositionId === BYTES_16_ZERO) {
+
+      if (result.winningPropositionId !== BYTES_16_ZERO) {
+        throw new Error("This race does not have a result yet");
+      }
+
+      if (
+        result.winningPropositionId === BYTES_16_ZERO &&
+        marketOracleResultSig
+      ) {
         // If result is not set, set it
         await oracleContract.setResult(
           marketId,
@@ -69,6 +77,7 @@ export const SettleRaceButton: React.FC<Props> = props => {
           marketOracleResultSig!
         );
       }
+
       // settle all bets for respective market
       const txs: ContractReceipt[] = [];
       for (const bet of settlableBets) {
