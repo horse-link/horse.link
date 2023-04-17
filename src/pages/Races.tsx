@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useRunnersData, useMeetData } from "../hooks/data";
 import { RacesButton } from "../components/Buttons";
