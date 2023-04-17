@@ -19,7 +19,8 @@ export const getMockBet = (): Bet => ({
   createdAt: "0",
   settledAt: "0",
   createdAtTx: ethers.constants.AddressZero,
-  settledAtTx: ethers.constants.AddressZero
+  settledAtTx: ethers.constants.AddressZero,
+  refunded: false
 });
 
 export const getRealExampleMockBet = (): Bet => ({
@@ -38,7 +39,8 @@ export const getRealExampleMockBet = (): Bet => ({
   propositionId: "0x30313933383943425930315730370000",
   settled: false,
   settledAt: "0",
-  settledAtTx: ""
+  settledAtTx: "",
+  refunded: false
 });
 
 export const getMockSignedBetDataResponse = (): SignedBetDataResponse => ({
