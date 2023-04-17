@@ -394,11 +394,33 @@ export const useMarketContract = () => {
     return payout;
   };
 
+  const refundBet = async (
+    market: MarketInfo,
+    bet: BetHistory,
+    signer: Signer
+  ) => {
+    const marketContract = Market__factory.connect(market.address, signer);
+
+    const [gasLimit, gasPrice] = await Promise.all([
+      marketContract.estimateGas.refund(bet.index),
+      signer.getGasPrice()
+    ]);
+    const receipt = await (
+      await marketContract.refund(bet.index, {
+        gasLimit,
+        gasPrice
+      })
+    ).wait();
+
+    return receipt.transactionHash;
+  };
+
   return {
     placeBet,
     settleBet,
     getPotentialPayout,
     setResult,
-    placeMultipleBets
+    placeMultipleBets,
+    refundBet
   };
 };
