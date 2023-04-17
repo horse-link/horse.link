@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useRef } from "react";
 import { BaseButton } from ".";
 import { Config } from "../../types/config";
 import { BetHistory } from "../../types/bets";
@@ -33,9 +33,13 @@ export const SettleRaceButton: React.FC<Props> = props => {
     refetch
   } = props;
   const { openWalletModal } = useWalletModal();
+  const { current: now } = useRef(Math.floor(Date.now() / 1000));
 
   const settlableBets = useMemo(
-    () => betHistory?.filter(bet => !bet.settled),
+    () =>
+      betHistory?.filter(bet => {
+        return !bet.settled && bet.payoutDate < now;
+      }),
     [betHistory]
   );
 
@@ -46,6 +50,7 @@ export const SettleRaceButton: React.FC<Props> = props => {
     setIsSettledMarketModalOpen(false);
     setSettleHashes(undefined);
     setLoading(true);
+    console.log(`Settling ${settlableBets.length} bets`);
     try {
       // connect to markets
       const markets = config.markets.map(m =>
@@ -101,6 +106,7 @@ export const SettleRaceButton: React.FC<Props> = props => {
     } catch (err: any) {
       console.error(err);
     } finally {
+      console.log("Finished settling bets");
       setLoading(false);
       refetch();
     }
