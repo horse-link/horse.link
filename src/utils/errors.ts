@@ -1,10 +1,10 @@
 import { ethers } from "ethers";
 
 enum ContractError {
-  BackInvalidDate = "_back: Invalid date",
+  BackInvalidDate = "back: Invalid date",
   BackInvalidSignature = "back: Invalid signature",
   BackOracleAlreadySet = "back: Oracle result already set for this market",
-  BackPayoutDateNotReached = "_payout: Payout date not reached",
+  BackPayoutDateNotReached = "payout: Payout date not reached",
   BetAlreadySettled = "Bet has already settled",
   OracleCheckResultNotSet = "checkResult: Invalid propositionId",
   OracleGetResultNotSet = "getResult: Invalid propositionId",
@@ -14,8 +14,8 @@ enum ContractError {
   OracleSetScratchedResultAlreadySet = "setScratchedResult: Result already set",
   OracleSetScratchedResultInvalidPropositionId = "setScratchedResult: Invalid propositionId",
   OracleSetScratchedResultInvalidSignature = "setScratchedResult: Invalid signature",
-  VaultTransferLockedTimeNotPassed = "_transfer: Locked time not passed",
-  VaultWithdrawLockedTimeNotPassed = "_withdraw: Locked time not passed"
+  VaultTransferLockedTimeNotPassed = "transfer: Locked time not passed",
+  VaultWithdrawLockedTimeNotPassed = "withdraw: Locked time not passed"
 }
 
 const contractErrorLookup: Record<ContractError, string> = {
@@ -24,11 +24,15 @@ const contractErrorLookup: Record<ContractError, string> = {
     "We weren't able to verify your bet. Please refresh the page and try again. If the issue persists, please contact us.",
   [ContractError.BackOracleAlreadySet]:
     "Someone else has already registered the result for this race. Please try again.",
+  [ContractError.BackPayoutDateNotReached]:
+    "This race is not paying out yet. Please wait.",
   [ContractError.BetAlreadySettled]: "No worries! The bet has already settled.",
   [ContractError.OracleCheckResultNotSet]:
     "The result for this race has not been registered yet.",
   [ContractError.OracleGetResultNotSet]:
     "The result for this race has not been registered yet.",
+  [ContractError.OracleSetResultAlreadySet]:
+    "The result has already been set for this race.",
   [ContractError.OracleSetResultInvalidPropositionId]:
     "Something went wrong while registering the result for this race. Please refresh the page and try again. If the issue persists, please contact us.",
   [ContractError.OracleSetResultInvalidSignature]:
