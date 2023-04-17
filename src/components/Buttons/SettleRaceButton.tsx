@@ -6,6 +6,7 @@ import { ContractReceipt, Signer } from "ethers";
 import { useWalletModal } from "../../providers/WalletModal";
 import classnames from "classnames";
 import { MarketOracle__factory, Market__factory } from "../../typechain";
+import { BYTES_16_ZERO } from "../../constants/blockchain";
 
 type Props = {
   betHistory?: BetHistory[];
@@ -59,21 +60,20 @@ export const SettleRaceButton: React.FC<Props> = props => {
       const { marketId, winningPropositionId, marketOracleResultSig } =
         settlableBets[0];
       // add result
-      try {
+      const result = await oracleContract.getResult(marketId);
+      if (result.winningPropositionId === BYTES_16_ZERO) {
+        // If result is not set, set it
         await oracleContract.setResult(
           marketId,
           winningPropositionId!,
           marketOracleResultSig!
         );
-      } catch (err: any) {
-        // fails if result is already set
-        console.error(err);
       }
       // settle all bets for respective market
-
       const txs: ContractReceipt[] = [];
       for (const bet of settlableBets) {
         // market will always match a marketAddress
+        console.log("Settling bet", bet.index);
         const tx = await (
           await markets
             .find(

@@ -114,16 +114,22 @@ export const useSubgraphBets = (
       const uniqueMarketIds = [...new Set(marketIds)];
       const signedDataMap = new Map();
       await Promise.all(
-        uniqueMarketIds.map(async marketId => {
-          try {
-            const signedData = await api.getWinningResultSignature(
-              utils.formatting.parseBytes16String(marketId)
-            );
-            signedDataMap.set(marketId, signedData);
-          } catch (e) {
-            console.warn("Error getting result signature:", e);
-          }
-        })
+        uniqueMarketIds
+          .filter(m => !!m)
+          .map(async marketId => {
+            if (marketId === undefined) {
+              return;
+            }
+            console.log("marketId", marketId);
+            try {
+              const signedData = await api.getWinningResultSignature(
+                utils.formatting.parseBytes16String(marketId)
+              );
+              signedDataMap.set(marketId, signedData);
+            } catch (e) {
+              console.warn("Error getting result signature:", e);
+            }
+          })
       );
       try {
         const signedBets = (
