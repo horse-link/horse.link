@@ -329,5 +329,29 @@ export const restHandler = [
         "0xef6c9df42e2ad94d3457ebe70f19ea708cf76425991116ce630ca50fcd1683a343cb25d941550728fb98c7606344e4d2964699baa931a11e26ce3da27fc340071b"
     };
     return res(ctx.json(meetingsDataMock));
+  }),
+
+  rest.get("/inplay", (_, res, ctx) => {
+    return res(
+      ctx.json({
+        performance: 74000000000016210000
+      })
+    );
+  }),
+
+  rest.get("/vaults/liquidity", (_, res, ctx) => {
+    return res(
+      ctx.json({
+        assets: 200000237950000000131250000
+      })
+    );
+  }),
+
+  rest.get("/vaults/performance", (_, res, ctx) => {
+    return res(
+      ctx.json({
+        performance: 200.00023795000000013125
+      })
+    );
   })
 ];
