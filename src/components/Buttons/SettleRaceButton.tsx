@@ -33,6 +33,7 @@ export const SettleRaceButton: React.FC<Props> = props => {
   } = props;
   const { openWalletModal } = useWalletModal();
 
+  // Get list of bets that are not settled
   const settlableBets = useMemo(
     () => betHistory?.filter(bet => !bet.settled),
     [betHistory]
