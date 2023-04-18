@@ -218,44 +218,40 @@ export const useMarketContract = () => {
       signer
     );
 
-    try {
-      if (!bet.winningPropositionId || !bet.marketOracleResultSig)
-        throw new Error("No winningPropositionId or marketOracleResultSig");
+    if (!bet.winningPropositionId || !bet.marketOracleResultSig)
+      throw new Error("No winningPropositionId or marketOracleResultSig");
 
-      if (
-        !utils.bets.recoverSigSigner(
-          bet.marketId,
-          bet.winningPropositionId,
-          bet.marketOracleResultSig,
-          config
-        )
+    if (
+      !utils.bets.recoverSigSigner(
+        bet.marketId,
+        bet.winningPropositionId,
+        bet.marketOracleResultSig,
+        config
       )
-        throw new Error("Signature invalid");
+    )
+      throw new Error("Signature invalid");
 
-      const [gasLimit, gasPrice] = await Promise.all([
-        marketOracleContract.estimateGas.setResult(
-          bet.marketId,
-          bet.winningPropositionId,
-          bet.marketOracleResultSig
-        ),
-        signer.getGasPrice()
-      ]);
+    const [gasLimit, gasPrice] = await Promise.all([
+      marketOracleContract.estimateGas.setResult(
+        bet.marketId,
+        bet.winningPropositionId,
+        bet.marketOracleResultSig
+      ),
+      signer.getGasPrice()
+    ]);
 
-      // tx can fail if the result is already set
-      await (
-        await marketOracleContract.setResult(
-          bet.marketId,
-          bet.winningPropositionId,
-          bet.marketOracleResultSig,
-          {
-            gasLimit,
-            gasPrice
-          }
-        )
-      ).wait();
-    } catch (err: any) {
-      console.error(err);
-    }
+    // tx can fail if the result is already set
+    await (
+      await marketOracleContract.setResult(
+        bet.marketId,
+        bet.winningPropositionId,
+        bet.marketOracleResultSig,
+        {
+          gasLimit,
+          gasPrice
+        }
+      )
+    ).wait();
   };
 
   const settleBet = async (

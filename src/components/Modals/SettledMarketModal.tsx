@@ -19,7 +19,7 @@ export const SettledMarketModal: React.FC<Props> = ({
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}>
       <h2 className="text-2xl font-bold">Settled Race</h2>
-      <h3 className="mt-4 font-semibold">Transactions:</h3>
+      <h3 className="mt-4 font-semibold">Transaction(s)</h3>
       <ol className="ml-4 list-decimal">
         {hashes?.map(hash => (
           <li key={hash}>
