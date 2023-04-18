@@ -62,8 +62,6 @@ export const SettleRaceButton: React.FC<Props> = props => {
       // add result
       const result = await oracleContract.getResult(marketId);
 
-      debugger;
-
       if (result.winningPropositionId === BYTES_16_ZERO) {
         if (!marketOracleResultSig) {
           throw new Error(

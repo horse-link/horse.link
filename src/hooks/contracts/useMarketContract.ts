@@ -141,7 +141,6 @@ export const useMarketContract = () => {
     signer: Signer,
     skipAllowanceCheck?: boolean
   ) => {
-    debugger;
     const userAddress = await signer.getAddress();
 
     const marketContract = Market__factory.connect(market.address, signer);
