@@ -54,7 +54,6 @@ export const SettleRaceButton: React.FC<Props> = props => {
     setLoading(true);
     console.log(`Settling ${settlableBets.length} bets`);
     try {
-      debugger;
       // connect to oracle
       const oracleContract = MarketOracle__factory.connect(
         config.addresses.marketOracle,
