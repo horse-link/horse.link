@@ -63,7 +63,7 @@ const Home: React.FC = () => {
       <div className="grid w-full gap-6">
         <HomeOverallStats />
         <HomeNextToJumpBanner />
-        <div className="flex w-full justify-between gap-x-3 md:justify-end">
+        <div className="flex w-full justify-end">
           <HomeFilterGroup
             value={meetsFilter}
             onChange={onFilterChange}

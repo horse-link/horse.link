@@ -7,7 +7,7 @@ type Props = {
 };
 
 export const NewTable: React.FC<Props> = ({ headers, rows }) => (
-  <div className="table border border-hl-border">
+  <table className="block w-full border border-hl-border">
     <thead className="flex justify-evenly bg-hl-background-secondary px-4">
       {headers.map(h => (
         <th className="block w-full">{h}</th>
@@ -22,5 +22,5 @@ export const NewTable: React.FC<Props> = ({ headers, rows }) => (
         </tr>
       ))}
     </tbody>
-  </div>
+  </table>
 );

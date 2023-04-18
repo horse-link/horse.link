@@ -8,3 +8,4 @@ export * from "./AddressLink";
 export * from "./AccountPanel";
 export * from "./Countdown";
 export * from "./Navbar";
+export * from "./NewAccountPanel";

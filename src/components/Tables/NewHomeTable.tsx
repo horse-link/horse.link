@@ -53,7 +53,6 @@ export const NewHomeTable: React.FC<Props> = ({ meets }) => {
     )),
     ...Array.from({ length: totalRaces - meet.races.length }, () => <div />)
   ]);
-  console.log(rows);
 
   return <NewTable headers={headers} rows={rows} />;
 };
