@@ -5,6 +5,7 @@ import { Navbar } from "./Navbar";
 import { useNavigate } from "react-router";
 import { useWalletOverrides } from "../hooks/useWalletOverrides";
 import { NewAccountPanel } from "./NewAccountPanel";
+import { NewBetSlip } from "./NewBetSlip";
 
 type Props = {
   children: React.ReactNode;
@@ -31,12 +32,12 @@ export const PageLayout: React.FC<Props> = ({ children }) => {
       <main className="grid w-full grid-cols-5 p-4">
         <div className="col-span-4">{children}</div>
         <div className="col-span-1 px-4">
-          <div className="sticky top-4">
+          <div className="sticky top-4 flex w-full flex-col gap-y-6">
             <NewAccountPanel
               forceNewNetwork={forceNewNetwork}
               isLocalWallet={isLocalWallet}
             />
-            {/* Bet Slip */}
+            <NewBetSlip />
           </div>
         </div>
       </main>

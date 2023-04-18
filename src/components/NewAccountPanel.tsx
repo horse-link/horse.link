@@ -74,7 +74,7 @@ export const NewAccountPanel: React.FC<Props> = ({
         <Card
           title="Network"
           data={
-            <Listbox>
+            <Listbox as={React.Fragment}>
               <Listbox.Button className="w-full">
                 <NewButton
                   big
@@ -112,19 +112,23 @@ export const NewAccountPanel: React.FC<Props> = ({
               <p className="mb-6 truncate border border-hl-border p-2">
                 {account.address}
               </p>
-              <h3 className="mb-2">PRIVATE KEY</h3>
-              <button
-                className="mb-6 w-full truncate border border-hl-border p-2"
-                onClick={togglePrivateKey}
-              >
-                {showPrivateKey ? (
-                  privateKey
-                ) : (
-                  <div className="flex w-full justify-center">
-                    <AiFillEyeInvisible size={20} />
-                  </div>
-                )}
-              </button>
+              {isLocalWallet && (
+                <React.Fragment>
+                  <h3 className="mb-2">PRIVATE KEY</h3>
+                  <button
+                    className="mb-6 w-full truncate border border-hl-border p-2"
+                    onClick={togglePrivateKey}
+                  >
+                    {showPrivateKey ? (
+                      privateKey
+                    ) : (
+                      <div className="flex w-full justify-center">
+                        <AiFillEyeInvisible size={20} />
+                      </div>
+                    )}
+                  </button>
+                </React.Fragment>
+              )}
               <div className="w-full font-black">
                 <NewButton big text="change wallet" onClick={openWalletModal} />
               </div>
@@ -153,7 +157,7 @@ export const NewAccountPanel: React.FC<Props> = ({
           title="Balance"
           data={
             userBalance && currentToken
-              ? `${userBalance.formatted}${currentToken.symbol}`
+              ? `${userBalance.formatted} ${currentToken.symbol}`
               : undefined
           }
         />
