@@ -25,7 +25,7 @@ export const NewAccountPanel: React.FC<Props> = ({
   forceNewNetwork,
   isLocalWallet
 }) => {
-  const { currentToken, tokensLoading, openModal } = useTokenContext();
+  const { currentToken, openModal } = useTokenContext();
   const { hashes } = useBetSlipContext();
 
   const { openWalletModal } = useWalletModal();
@@ -67,8 +67,6 @@ export const NewAccountPanel: React.FC<Props> = ({
       })
     );
   }, [currentToken, signer, config, hashes]);
-
-  const panelLoading = tokensLoading || !currentToken || !userBalance;
 
   return (
     <React.Fragment>
@@ -131,6 +129,32 @@ export const NewAccountPanel: React.FC<Props> = ({
                 <NewButton big text="change wallet" onClick={openWalletModal} />
               </div>
             </div>
+          }
+        />
+        <Card
+          title="Token"
+          data={
+            <button
+              className="flex w-full items-center border border-hl-border py-3 px-4"
+              onClick={openModal}
+            >
+              <img
+                src={currentToken?.src || "/images/horse.webp"}
+                alt="HorseLink logo"
+                className="max-w-[2rem]"
+              />
+              <div className="w-full text-center text-base font-normal">
+                {currentToken?.name || "Token"}
+              </div>
+            </button>
+          }
+        />
+        <Card
+          title="Balance"
+          data={
+            userBalance && currentToken
+              ? `${userBalance.formatted}${currentToken.symbol}`
+              : undefined
           }
         />
       </div>
