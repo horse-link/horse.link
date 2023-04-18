@@ -9,6 +9,7 @@ import { MarketOracle__factory, Market__factory } from "../../typechain";
 import { BYTES_16_ZERO } from "../../constants/blockchain";
 import { useMarketContract } from "../../hooks/contracts";
 
+//Props
 type Props = {
   betHistory?: BetHistory[];
   loading: boolean;
@@ -37,6 +38,7 @@ export const SettleRaceButton: React.FC<Props> = props => {
   const { current: now } = useRef(Math.floor(Date.now() / 1000));
   const { setResult } = useMarketContract();
 
+  // Get list of bets that are not settled
   const settlableBets = useMemo(
     () =>
       betHistory?.filter(bet => {
