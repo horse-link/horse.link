@@ -27,7 +27,7 @@ export const PageLayout: React.FC<Props> = ({ children }) => {
   }, [isChainUnsupported]);
 
   return (
-    <div className="min-h-screen w-screen bg-hl-background">
+    <div className="min-h-screen w-screen bg-hl-background text-hl-primary">
       <Navbar />
       <main className="py-4">
         <div className="max-w-9xl mx-auto px-4 pt-1 sm:px-6 lg:grid lg:grid-cols-5 lg:px-9">

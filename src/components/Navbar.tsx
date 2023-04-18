@@ -30,7 +30,7 @@ export const Navbar: React.FC = () => {
         <Link
           key={r.path}
           to={r.path}
-          className={classNames({
+          className={classNames("text-sm", {
             "underline decoration-hl-secondary underline-offset-4":
               r.path === currentPath
           })}
