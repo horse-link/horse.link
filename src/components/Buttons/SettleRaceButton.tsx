@@ -7,6 +7,7 @@ import { useWalletModal } from "../../providers/WalletModal";
 import classnames from "classnames";
 import { MarketOracle__factory, Market__factory } from "../../typechain";
 
+//Props
 type Props = {
   betHistory?: BetHistory[];
   loading: boolean;
