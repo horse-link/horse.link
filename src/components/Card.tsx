@@ -3,7 +3,7 @@ import { Loader } from ".";
 
 type Props = {
   title: string;
-  data?: string;
+  data?: React.ReactNode;
 };
 
 export const Card: React.FC<Props> = ({ title, data }) => (

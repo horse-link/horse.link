@@ -11,18 +11,19 @@ import { useTokenContext } from "../providers/Token";
 import { UserBalance } from "../types/users";
 import constants from "../constants";
 import { Card } from "./Card";
+import { NewButton } from "./Buttons";
+import { AiFillEye, AiFillEyeInvisible, AiOutlineQrcode } from "react-icons/ai";
+import { QrCodeModal } from "./Modals";
 
 type Props = {
   forceNewNetwork: (chain: Chain) => void;
   isLocalWallet: boolean;
 };
 
-export const NewAccountPanel: React.FC<Props> = (
-  {
-    // forceNewNetwork,
-    // isLocalWallet
-  }
-) => {
+export const NewAccountPanel: React.FC<Props> = ({
+  forceNewNetwork,
+  isLocalWallet
+}) => {
   const { currentToken, tokensLoading, openModal } = useTokenContext();
   const { hashes } = useBetSlipContext();
 
@@ -33,7 +34,7 @@ export const NewAccountPanel: React.FC<Props> = (
   const { data: signer } = useSigner();
   const { getBalance } = useERC20Contract();
   const [userBalance, setUserBalance] = useState<UserBalance>();
-  // const { chain, chains } = useNetwork();
+  const { chain, chains } = useNetwork();
   const [showQrCodeModal, setQrCodeModal] = useState(false);
   const closeQrCodeModal = () => setQrCodeModal(false);
 
@@ -72,7 +73,53 @@ export const NewAccountPanel: React.FC<Props> = (
 
   return (
     <React.Fragment>
-      <Card title="Network" />
+      <div className="flex w-full flex-col gap-y-6">
+        <Card
+          title="Network"
+          data={
+            <NewButton
+              big
+              text={chain?.name || "Please connect"}
+              onClick={() => {}}
+            />
+          }
+        />
+        <Card
+          title="Account"
+          data={
+            <div className="w-full text-base font-normal">
+              <div className="mb-2 flex items-center gap-x-2">
+                <h3>WALLET ADDRESS</h3>
+                {isLocalWallet && (
+                  <button onClick={() => setQrCodeModal(true)}>
+                    <AiOutlineQrcode className="mr-2 h-[2rem] w-[2rem]" />
+                  </button>
+                )}
+              </div>
+              <p className="mb-6 truncate border border-hl-border p-2">
+                {account.address}
+              </p>
+              <h3 className="mb-2">PRIVATE KEY</h3>
+              <button
+                className="mb-6 w-full truncate border border-hl-border p-2"
+                onClick={togglePrivateKey}
+              >
+                {showPrivateKey ? (
+                  privateKey
+                ) : (
+                  <div className="flex w-full justify-center">
+                    <AiFillEyeInvisible size={20} />
+                  </div>
+                )}
+              </button>
+              <div className="w-full font-black">
+                <NewButton big text="change wallet" onClick={openWalletModal} />
+              </div>
+            </div>
+          }
+        />
+      </div>
+      <QrCodeModal showModal={showQrCodeModal} onClose={closeQrCodeModal} />
     </React.Fragment>
   );
 };

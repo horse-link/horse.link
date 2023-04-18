@@ -19,7 +19,7 @@ export const HomeFilterGroup: React.FC<Props> = ({
   onChange,
   disabled
 }) => (
-  <React.Fragment>
+  <div className="flex gap-x-4">
     {[...options].map(([key, text]) => (
       <NewButton
         text={text}
@@ -29,5 +29,5 @@ export const HomeFilterGroup: React.FC<Props> = ({
         active={currentOption === key}
       />
     ))}
-  </React.Fragment>
+  </div>
 );
