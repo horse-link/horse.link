@@ -35,16 +35,24 @@ export const NewHomeTable: React.FC<Props> = ({ meets }) => {
       LOCATION
     </div>,
     ...Array.from({ length: totalRaces }, (_, i) => (
-      <div className="w-full py-4 text-right text-hl-secondary">R{i + 1}</div>
+      <div
+        className="w-full py-4 text-right text-hl-secondary"
+        key={`hometable-race-${i}`}
+      >
+        R{i + 1}
+      </div>
     ))
   ];
 
   const rows = meets.map(meet => [
-    <div className="w-full py-4 text-left font-basement font-black text-white">
+    <div
+      className="w-full py-4 text-left font-basement font-black text-white"
+      key={meet.id}
+    >
       {meet.name} ({meet.location})
     </div>,
     ...meet.races.map(race => (
-      <div className="h-full w-full">
+      <div className="h-full w-full" key={JSON.stringify(race)}>
         <Link
           to={utils.races.createRacingLink(race, meet)}
           // TODO: fix hovering
@@ -54,7 +62,9 @@ export const NewHomeTable: React.FC<Props> = ({ meets }) => {
         </Link>
       </div>
     )),
-    ...Array.from({ length: totalRaces - meet.races.length }, () => <div />)
+    ...Array.from({ length: totalRaces - meet.races.length }, (_, i) => (
+      <div key={`hometable-blank-${i}`} />
+    ))
   ]);
 
   return <NewTable headers={headers} rows={rows} />;

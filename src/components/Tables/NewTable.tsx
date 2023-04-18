@@ -10,14 +10,18 @@ export const NewTable: React.FC<Props> = ({ headers, rows }) => (
   <table className="block w-full border border-hl-border">
     <thead className="flex justify-evenly bg-hl-background-secondary px-4">
       {headers.map(h => (
-        <th className="block w-full">{h}</th>
+        <th className="block w-full" key={JSON.stringify(h)}>
+          {h}
+        </th>
       ))}
     </thead>
     <tbody className="flex flex-col divide-y divide-hl-border px-4">
       {rows.map(row => (
-        <tr className="flex w-full justify-evenly">
+        <tr className="flex w-full justify-evenly" key={JSON.stringify(row)}>
           {row.map(r => (
-            <td className="block w-full">{r}</td>
+            <td className="block w-full" key={JSON.stringify(r)}>
+              {r}
+            </td>
           ))}
         </tr>
       ))}

@@ -118,7 +118,10 @@ export const NewBetSlip: React.FC = () => {
               const vault = utils.config.getVaultFromMarket(bet.market, config);
 
               return (
-                <div className="flex w-full items-center border-b border-hl-border px-3 py-2">
+                <div
+                  className="flex w-full items-center border-b border-hl-border px-3 py-2"
+                  key={`bet-${bet.id}`}
+                >
                   <div className="flex w-full items-center gap-x-6">
                     <div className="bg-hl-primary px-3 py-1 text-xl font-bold text-hl-secondary">
                       {i + 1}
