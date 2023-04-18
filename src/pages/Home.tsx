@@ -10,6 +10,7 @@ import { SignedMeetingsResponse, MeetFilters, Meet } from "../types/meets";
 import constants from "../constants";
 import { useApi } from "../providers/Api";
 import { NewHomeTable } from "../components/Tables/NewHomeTable";
+import { NewButton } from "../components/Buttons";
 
 const Home: React.FC = () => {
   const [response, setResponse] = useState<SignedMeetingsResponse>();
@@ -63,7 +64,8 @@ const Home: React.FC = () => {
       <div className="grid w-full gap-6">
         <HomeOverallStats />
         <HomeNextToJumpBanner />
-        <div className="relative z-50 flex w-full justify-end">
+        <div className="flex w-full justify-between">
+          <NewButton text="today" onClick={() => {}} disabled />
           <HomeFilterGroup
             value={meetsFilter}
             onChange={onFilterChange}

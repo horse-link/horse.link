@@ -8,7 +8,7 @@ module.exports = {
       fontFamily: {
         sans: ["'JetBrains Mono'", ...defaultTheme.fontFamily.sans],
         basement: [
-          "'Basement Grotesk'",
+          "Basement Grotesk",
           "'JetBrains Mono'",
           ...defaultTheme.fontFamily.sans
         ]

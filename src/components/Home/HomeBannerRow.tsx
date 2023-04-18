@@ -31,8 +31,8 @@ export const HomeBannerRow: React.FC<Props> = ({ meet }) => {
         className="max-w-[4rem]"
       />
       <div className="w-full">
-        <dt className="font-basement font-bold">
-          {meet.meeting.location} ({meet.meeting.jumperMeetingName})
+        <dt className="font-basement">
+          {meet.meeting.location} ({meet.meeting.venueCode})
         </dt>
         <dd className="flex gap-x-4 text-sm font-normal">
           <p className="text-hl-tertiary">RACE {meet.jumperRaceNumber}</p>

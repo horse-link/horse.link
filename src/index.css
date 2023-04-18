@@ -17,6 +17,6 @@ body {
 @layer base {
   @font-face {
     font-family: "Basement Grotesk";
-    src: url("/fonts/Basement Grotesk.otf") format("otf");
+    src: url("/fonts/Basement Grotesk.otf");
   }
 }

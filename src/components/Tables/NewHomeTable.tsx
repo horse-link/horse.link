@@ -46,11 +46,15 @@ export const NewHomeTable: React.FC<Props> = ({ meets }) => {
   ];
 
   const rows = meets.map(meet => [
-    <div
-      className="w-full py-4 text-left font-basement font-black text-white"
-      key={meet.id}
-    >
-      {meet.name} ({meet.location})
+    <div key={meet.id} className="flex max-w-[6rem] items-center gap-x-4">
+      <img
+        src="/images/horse.webp"
+        alt="HorseLink logo"
+        className="max-w-[4rem]"
+      />
+      <div className="w-full py-4 text-left font-basement text-sm font-black text-white">
+        {meet.name} ({meet.location})
+      </div>
     </div>,
     ...meet.races.map(race => (
       <div
@@ -70,5 +74,5 @@ export const NewHomeTable: React.FC<Props> = ({ meets }) => {
     ))
   ]);
 
-  return <NewTable headers={headers} rows={rows} title="today" />;
+  return <NewTable headers={headers} rows={rows} />;
 };

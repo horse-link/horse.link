@@ -110,7 +110,7 @@ export const NewBetSlip: React.FC = () => {
     <Card
       title="Bet Slip"
       data={
-        <div className="w-full text-base font-normal">
+        <div className="w-full font-sans text-base font-normal">
           {!bets?.length || !config ? (
             <div className="w-full text-center">No bets!</div>
           ) : (
@@ -168,8 +168,10 @@ export const NewBetSlip: React.FC = () => {
             {bets && slipTotals && (
               <React.Fragment>
                 <div className="flex items-start justify-between pb-4">
-                  <span className="font-bold">Potential Payout: </span>
-                  <div>
+                  <span className="font-basement font-bold">
+                    POTENTIAL PAYOUT:{" "}
+                  </span>
+                  <div className="text-hl-secondary">
                     {Object.entries(slipTotals).map(([symbol, details]) => (
                       <span className="block text-right" key={symbol}>
                         {utils.formatting.formatToFourDecimals(
@@ -181,8 +183,8 @@ export const NewBetSlip: React.FC = () => {
                   </div>
                 </div>
                 <div className="flex items-start justify-between">
-                  <span className="font-bold">Total Stake: </span>
-                  <div>
+                  <span className="font-basement font-bold">TOTAL STAKE: </span>
+                  <div className="text-hl-secondary">
                     {Object.entries(slipTotals).map(([symbol, details]) => (
                       <span className="block text-right" key={symbol}>
                         {utils.formatting.formatToFourDecimals(

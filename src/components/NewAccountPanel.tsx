@@ -75,14 +75,14 @@ export const NewAccountPanel: React.FC<Props> = ({
           title="Network"
           data={
             <Listbox as={React.Fragment}>
-              <Listbox.Button className="w-full">
+              <Listbox.Button className="w-full font-sans">
                 <NewButton
                   big
                   text={chain?.name || "Please connect"}
                   onClick={() => {}}
                 />
               </Listbox.Button>
-              <Listbox.Options className="pt-2 text-base font-normal">
+              <Listbox.Options className="pt-2 font-sans text-base font-normal">
                 {chains.map(chain => (
                   <Listbox.Option key={chain.id} value={chain.id}>
                     <button
@@ -100,7 +100,7 @@ export const NewAccountPanel: React.FC<Props> = ({
         <Card
           title="Account"
           data={
-            <div className="w-full text-base font-normal">
+            <div className="w-full font-sans text-base font-normal">
               <div className="mb-2 flex items-center gap-x-2">
                 <h3>WALLET ADDRESS</h3>
                 {isLocalWallet && (
@@ -139,7 +139,7 @@ export const NewAccountPanel: React.FC<Props> = ({
           title="Token"
           data={
             <button
-              className="flex w-full items-center border border-hl-border py-3 px-4"
+              className="flex w-full items-center border border-hl-border py-3 px-4 font-sans"
               onClick={openModal}
             >
               <img
