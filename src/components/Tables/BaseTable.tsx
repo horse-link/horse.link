@@ -5,7 +5,7 @@ import classNames from "classnames";
 type Props = {
   headers: TableHeader[];
   rows: TableRow[];
-  title?: string;
+  title?: React.ReactNode;
   tableStyles?: string;
   leftColumnSticky?: boolean;
 };

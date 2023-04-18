@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
-import { useAccount } from "wagmi";
-import { Toggle, PageLayout } from "../components";
+import { PageLayout } from "../components";
 import {
   HomeOverallStats,
-  HomeUserStats,
+  // HomeUserStats,
   HomeFilterGroup,
   HomeNextToJumpBanner
 } from "../components/Home";
 import { HomeTable } from "../components/Tables";
-import { useWalletModal } from "../providers/WalletModal";
 import { SignedMeetingsResponse, MeetFilters, Meet } from "../types/meets";
 import constants from "../constants";
 import { useApi } from "../providers/Api";
@@ -17,10 +15,7 @@ import { useApi } from "../providers/Api";
 const Home: React.FC = () => {
   const [response, setResponse] = useState<SignedMeetingsResponse>();
   const [meets, setMeets] = useState<Meet[]>();
-  const [myPlayEnabled, setMyPlayEnabled] = useState(false);
   const [meetsFilter, setMeetsFilter] = useState<MeetFilters>("ALL");
-  const { openWalletModal } = useWalletModal();
-  const { isConnected } = useAccount();
 
   const api = useApi();
 
@@ -58,14 +53,6 @@ const Home: React.FC = () => {
     }
   }, [response, meetsFilter]);
 
-  useEffect(() => {
-    if (myPlayEnabled && !isConnected) {
-      openWalletModal();
-    }
-  }, [myPlayEnabled, isConnected]);
-
-  const onMyPlayToggle = () => setMyPlayEnabled(prev => !prev);
-
   const onFilterChange = (option: MeetFilters) => {
     setMeetsFilter(option);
   };
@@ -75,7 +62,7 @@ const Home: React.FC = () => {
   return (
     <PageLayout>
       <div className="grid w-full gap-6">
-        {myPlayEnabled ? <HomeUserStats /> : <HomeOverallStats />}
+        <HomeOverallStats />
         <HomeNextToJumpBanner />
         <div className="flex w-full justify-between gap-x-3 md:justify-end">
           <HomeFilterGroup
@@ -83,10 +70,6 @@ const Home: React.FC = () => {
             onChange={onFilterChange}
             disabled={isLoading}
           />
-        </div>
-        <div className="flex gap-3 self-end justify-self-end">
-          <Toggle enabled={myPlayEnabled} onChange={onMyPlayToggle} />
-          <div>My Stats</div>
         </div>
         <HomeTable meets={meets} />
         <div className="flex justify-center rounded-lg bg-white px-4 py-5 shadow sm:p-6 lg:mb-10">
