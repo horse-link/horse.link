@@ -6,9 +6,7 @@ import utils from "../../utils";
 import dayjs from "dayjs";
 import constants from "../../constants";
 import utc from "dayjs/plugin/utc";
-// import classNames from "classnames";
 
-// TODO: use for text coloring
 dayjs.extend(utc);
 
 type Props = {
@@ -31,7 +29,10 @@ export const NewHomeTable: React.FC<Props> = ({ meets }) => {
   );
 
   const headers = [
-    <div className="w-full py-4 text-left font-basement font-black text-white">
+    <div
+      className="w-full py-4 text-left font-basement font-black text-white"
+      key={`hometable-race-location`}
+    >
       LOCATION
     </div>,
     ...Array.from({ length: totalRaces }, (_, i) => (
@@ -52,11 +53,13 @@ export const NewHomeTable: React.FC<Props> = ({ meets }) => {
       {meet.name} ({meet.location})
     </div>,
     ...meet.races.map(race => (
-      <div className="h-full w-full" key={JSON.stringify(race)}>
+      <div
+        className="flex h-full w-full justify-end"
+        key={JSON.stringify(race)}
+      >
         <Link
           to={utils.races.createRacingLink(race, meet)}
-          // TODO: fix hovering
-          className="flex h-full w-full items-center justify-end text-hl-tertiary hover:bg-hl-primary hover:text-hl-secondary"
+          className="relative left-[1rem] flex h-full w-fit items-center justify-end px-4 text-hl-tertiary hover:bg-hl-primary hover:text-hl-secondary"
         >
           {utils.races.createCellText(race, time)}
         </Link>
@@ -67,5 +70,5 @@ export const NewHomeTable: React.FC<Props> = ({ meets }) => {
     ))
   ]);
 
-  return <NewTable headers={headers} rows={rows} />;
+  return <NewTable headers={headers} rows={rows} title="today" />;
 };
