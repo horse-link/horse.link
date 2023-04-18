@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useRunnersData, useMeetData } from "../hooks/data";
 import { RacesButton } from "../components/Buttons";
@@ -11,6 +11,7 @@ import { BetHistory } from "../types/bets";
 import { makeMarketId } from "../utils/markets";
 import { formatBytes16String } from "../utils/formatting";
 import { useConfig } from "../providers/Config";
+import constants from "../constants";
 import { useAccount } from "wagmi";
 
 import Skeleton from "react-loading-skeleton";
@@ -28,6 +29,7 @@ const Races: React.FC = () => {
   const [selectedRunner, setSelectedRunner] = useState<Runner>();
   const [selectedBet, setSelectedBet] = useState<BetHistory>();
   const [allBetsEnabled, setAllBetsEnabled] = useState(true);
+  const [closed, setClosed] = useState(false);
   const { race } = useRunnersData(track, raceNumber);
   const { address } = useAccount();
   const config = useConfig();
@@ -60,8 +62,13 @@ const Races: React.FC = () => {
     return utils.races.calculateRaceMargin(validRunners.map(r => r.odds));
   }, [race]);
 
-  const { current: now } = useRef(dayjs().unix());
-  const closed = now > (race?.raceData.close || 0);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setClosed(dayjs().unix() > (race?.raceData.close || 0));
+    }, constants.time.ONE_SECOND_MS);
+
+    return () => clearInterval(interval);
+  });
 
   return (
     <PageLayout>
