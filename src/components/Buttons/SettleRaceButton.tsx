@@ -7,6 +7,7 @@ import { useWalletModal } from "../../providers/WalletModal";
 import classnames from "classnames";
 import { MarketOracle__factory, Market__factory } from "../../typechain";
 import { BYTES_16_ZERO } from "../../constants/blockchain";
+import { useMarketContract } from "../../hooks/contracts";
 
 type Props = {
   betHistory?: BetHistory[];
@@ -34,6 +35,7 @@ export const SettleRaceButton: React.FC<Props> = props => {
   } = props;
   const { openWalletModal } = useWalletModal();
   const { current: now } = useRef(Math.floor(Date.now() / 1000));
+  const { setResult } = useMarketContract();
 
   const settlableBets = useMemo(
     () =>
@@ -52,31 +54,35 @@ export const SettleRaceButton: React.FC<Props> = props => {
     setLoading(true);
     console.log(`Settling ${settlableBets.length} bets`);
     try {
+      debugger;
       // connect to oracle
       const oracleContract = MarketOracle__factory.connect(
         config.addresses.marketOracle,
         signer
       );
       // get winning data (all bets should have data and have the same data)
-      const { marketId, marketOracleResultSig } = settlableBets[0];
+      const { marketId, marketOracleResultSig, winningPropositionId } =
+        settlableBets[0];
+
       // add result
       const result = await oracleContract.getResult(marketId);
 
-      debugger;
-
-      if (result.winningPropositionId === BYTES_16_ZERO) {
+      if (
+        result.winningPropositionId === BYTES_16_ZERO &&
+        winningPropositionId
+      ) {
         if (!marketOracleResultSig) {
           throw new Error(
             "Something went wrong trying to register the result for this race. Please refresh the page and try again."
           );
         }
-
-        // If result is not set, set it
+        console.log("Setting result");
         await oracleContract.setResult(
           marketId,
-          result.winningPropositionId!,
+          winningPropositionId,
           marketOracleResultSig!
         );
+        console.log("Set result");
       }
 
       const marketContractAddresses = new Set(

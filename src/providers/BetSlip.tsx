@@ -177,7 +177,6 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
 
   const placeBetImmediately = useCallback(
     async (bet: BetEntry) => {
-      debugger;
       if (!bet || !signer || !config) return;
 
       // reset state
