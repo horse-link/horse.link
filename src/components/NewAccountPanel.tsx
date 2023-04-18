@@ -12,8 +12,9 @@ import { UserBalance } from "../types/users";
 import constants from "../constants";
 import { Card } from "./Card";
 import { NewButton } from "./Buttons";
-import { AiFillEye, AiFillEyeInvisible, AiOutlineQrcode } from "react-icons/ai";
+import { AiFillEyeInvisible, AiOutlineQrcode } from "react-icons/ai";
 import { QrCodeModal } from "./Modals";
+import { Listbox } from "@headlessui/react";
 
 type Props = {
   forceNewNetwork: (chain: Chain) => void;
@@ -77,11 +78,27 @@ export const NewAccountPanel: React.FC<Props> = ({
         <Card
           title="Network"
           data={
-            <NewButton
-              big
-              text={chain?.name || "Please connect"}
-              onClick={() => {}}
-            />
+            <Listbox>
+              <Listbox.Button className="w-full">
+                <NewButton
+                  big
+                  text={chain?.name || "Please connect"}
+                  onClick={() => {}}
+                />
+              </Listbox.Button>
+              <Listbox.Options className="pt-2 text-base font-normal">
+                {chains.map(chain => (
+                  <Listbox.Option key={chain.id} value={chain.id}>
+                    <button
+                      onClick={() => forceNewNetwork(chain)}
+                      className="mt-2 w-full text-center"
+                    >
+                      {chain.name}
+                    </button>
+                  </Listbox.Option>
+                ))}
+              </Listbox.Options>
+            </Listbox>
           }
         />
         <Card
