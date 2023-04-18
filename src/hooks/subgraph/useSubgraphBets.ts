@@ -120,7 +120,6 @@ export const useSubgraphBets = (
             if (marketId === undefined) {
               return;
             }
-            console.log("marketId", marketId);
             try {
               const signedData = await api.getWinningResultSignature(
                 utils.formatting.parseBytes16String(marketId)

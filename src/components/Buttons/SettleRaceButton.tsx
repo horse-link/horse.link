@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useRef } from "react";
 import { BaseButton } from ".";
 import { Config } from "../../types/config";
 import { BetHistory } from "../../types/bets";
-import { ContractReceipt, Signer } from "ethers";
+import { ContractReceipt, ContractTransaction, Signer } from "ethers";
 import { useWalletModal } from "../../providers/WalletModal";
 import classnames from "classnames";
 import { MarketOracle__factory, Market__factory } from "../../typechain";
@@ -52,56 +52,49 @@ export const SettleRaceButton: React.FC<Props> = props => {
     setLoading(true);
     console.log(`Settling ${settlableBets.length} bets`);
     try {
-      // connect to markets
-      const markets = config.markets.map(m =>
-        Market__factory.connect(m.address, signer)
-      );
       // connect to oracle
       const oracleContract = MarketOracle__factory.connect(
         config.addresses.marketOracle,
         signer
       );
       // get winning data (all bets should have data and have the same data)
-      const { marketId, winningPropositionId, marketOracleResultSig } =
-        settlableBets[0];
+      const { marketId, marketOracleResultSig } = settlableBets[0];
       // add result
       const result = await oracleContract.getResult(marketId);
 
-      if (result.winningPropositionId !== BYTES_16_ZERO) {
-        throw new Error("This race does not have a result yet");
-      }
+      debugger;
 
-      if (
-        result.winningPropositionId === BYTES_16_ZERO &&
-        marketOracleResultSig
-      ) {
+      if (result.winningPropositionId === BYTES_16_ZERO) {
+        if (!marketOracleResultSig) {
+          throw new Error(
+            "Something went wrong trying to register the result for this race. Please refresh the page and try again."
+          );
+        }
+
         // If result is not set, set it
         await oracleContract.setResult(
           marketId,
-          winningPropositionId!,
+          result.winningPropositionId!,
           marketOracleResultSig!
         );
       }
 
-      // settle all bets for respective market
-      const txs: ContractReceipt[] = [];
-      for (const bet of settlableBets) {
-        // market will always match a marketAddress
-        console.log("Settling bet", bet.index);
-        const tx = await (
-          await markets
-            .find(
-              m => m.address.toLowerCase() === bet.marketAddress.toLowerCase()
-            )!
-            .settle(bet.index)
-        ).wait();
+      const marketContractAddresses = new Set(
+        settlableBets.map(bet => bet.marketAddress)
+      );
+      const txs: ContractTransaction[] = [];
+      for (const marketAddress of marketContractAddresses) {
+        const marketContract = Market__factory.connect(marketAddress, signer);
+        const tx = await marketContract.settleMarket(marketId);
         txs.push(tx);
       }
+      await Promise.all(txs.map(tx => tx.wait()));
 
       // get hashes from transactions
-      const hashes = txs.map(tx => tx.transactionHash);
+      const hashes = txs.map(tx => tx.hash);
       // set hashes and show success modal
       setSettleHashes(hashes);
+
       setIsSettledMarketModalOpen(true);
     } catch (err: any) {
       console.error(err);
