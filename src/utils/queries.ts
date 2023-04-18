@@ -145,3 +145,36 @@ export const getWithdrawsWithoutPagination = (
     createdAt
   }
 }`;
+
+export const getVaultHistory = () => `query getVaultHistory{
+  withdraws{
+    id
+    sender
+    receiver
+    owner
+    assets
+    shares
+    createdAt
+  }
+  deposits{
+    id
+    sender
+    owner
+    assets
+    shares
+    createdAt
+  }
+  borrows{
+    id
+    betId
+    amount
+    createdAt
+  }
+  repays{
+    id
+    vault
+    amount
+    createdAt
+  }
+}
+`;

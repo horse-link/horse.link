@@ -1,17 +1,18 @@
-// import { BigNumber } from "ethers";
-// import { useEffect, useMemo } from "react";
-// import useSubgraph from "../useSubgraph";
-// import utils from "../../utils";
-// import constants from "../../constants";
-// import { Deposit, Withdraw } from "../../types/subgraph";
+import { Deposit, Withdraw, Borrow, Repay } from "../../types/subgraph";
+import utils from "../../utils";
+import useSubgraph from "../useSubgraph";
 
-// type Response = {
-//   deposits: Array<Deposit>;
-//   withdraws: Array<Withdraw>;
-// };
+type Response = {
+  deposits: Array<Deposit>;
+  withdraws: Array<Withdraw>;
+  borrows: Array<Borrow>;
+  repays: Array<Repay>;
+};
 
-export const useSubgraphVaults = () => {
-  // vaultAddress?: string
-  // fix for 618
-  // TODO
+export const useSubgraphVaults = (vaultAddress: string) => {
+  const { data, loading } = useSubgraph<Response>(
+    utils.queries.getVaultHistory()
+  );
+
+  console.log({ data });
 };
