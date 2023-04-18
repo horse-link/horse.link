@@ -70,8 +70,6 @@ export const NewAccountPanel: React.FC<Props> = ({
 
   const panelLoading = tokensLoading || !currentToken || !userBalance;
 
-  const Image = utils.images.getConnectorIcon(account.connector?.name || "");
-
   return (
     <React.Fragment>
       <div className="flex w-full flex-col gap-y-6">
