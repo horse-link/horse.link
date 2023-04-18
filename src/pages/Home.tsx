@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Skeleton from "react-loading-skeleton";
 import { PageLayout } from "../components";
 import {
   HomeOverallStats,
@@ -7,10 +6,10 @@ import {
   HomeFilterGroup,
   HomeNextToJumpBanner
 } from "../components/Home";
-import { HomeTable } from "../components/Tables";
 import { SignedMeetingsResponse, MeetFilters, Meet } from "../types/meets";
 import constants from "../constants";
 import { useApi } from "../providers/Api";
+import { NewHomeTable } from "../components/Tables/NewHomeTable";
 
 const Home: React.FC = () => {
   const [response, setResponse] = useState<SignedMeetingsResponse>();
@@ -71,23 +70,7 @@ const Home: React.FC = () => {
             disabled={isLoading}
           />
         </div>
-        <HomeTable meets={meets} />
-        <div className="flex justify-center rounded-lg bg-white px-4 py-5 shadow sm:p-6 lg:mb-10">
-          <div className="w-4/5 max-w-2xl">
-            <div className="flex flex-col items-center">
-              <h2 className="text-lg">Signature :</h2>
-              <h2 className="break-all">
-                {response?.signature || <Skeleton width={"25em"} count={2} />}
-              </h2>
-            </div>
-            <div className="mt-3 flex flex-col items-center">
-              <h2 className="text-lg">Owner Address :</h2>
-              <h2 className="break-all">
-                {response?.owner || <Skeleton width={"25em"} />}
-              </h2>
-            </div>
-          </div>
-        </div>
+        {meets && <NewHomeTable meets={meets} />}
       </div>
     </PageLayout>
   );

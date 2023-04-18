@@ -8,3 +8,4 @@ export * from "./VaultsTable";
 export * from "./HomeTable";
 export * from "./FaucetTable";
 export * from "./LeaderboardTable";
+export * from "./NewTable";
