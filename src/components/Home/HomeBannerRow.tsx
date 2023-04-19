@@ -3,11 +3,14 @@ import { Link } from "react-router-dom";
 import { NextToJumpRace } from "../../types/meets";
 import utils from "../../utils";
 import constants from "../../constants";
+import classNames from "classnames";
+
 type Props = {
   meet: NextToJumpRace;
+  index: number;
 };
 
-export const HomeBannerRow: React.FC<Props> = ({ meet }) => {
+export const HomeBannerRow: React.FC<Props> = ({ meet, index }) => {
   const [timeString, setTimeString] = useState(
     utils.formatting.formatTimeToHMS(meet.jumperRaceStartTime)
   );
@@ -22,7 +25,12 @@ export const HomeBannerRow: React.FC<Props> = ({ meet }) => {
 
   return (
     <Link
-      className="flex w-full shrink items-center gap-x-2 rounded-lg border border-hl-border px-4 py-8"
+      className={classNames(
+        "flex w-full shrink items-center gap-x-2 rounded-lg border border-hl-border px-4 py-8",
+        {
+          "hidden 3xl:flex": index != 0
+        }
+      )}
       to={`/races/${meet.meeting.venueCode}/${meet.jumperRaceNumber}`}
     >
       <img

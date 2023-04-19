@@ -20,6 +20,9 @@ module.exports = {
         "hl-tertiary": "#b1b1b1",
         "hl-background-secondary": "#151515",
         "hl-border": "#3b3b3b"
+      },
+      screens: {
+        "3xl": "1900px"
       }
     }
   },
