@@ -163,16 +163,30 @@ export const NewBetTable: React.FC<Props> = ({
 
   const notAllBetsAndNoParamAddress = [
     [
-      <div />,
-      <div className="py-4">
+      <div key="bettable-notall-blank" />,
+      <div className="py-4" key="bettable-notall-message">
         Connect your wallet or add an address to the URL
       </div>
     ]
   ];
 
-  const noBets = [[<div />, <div className="py-4">No bets!</div>]];
+  const noBets = [
+    [
+      <div key="bettable-nobets-blank" />,
+      <div className="py-4" key="bettable-nobets-message">
+        No bets!
+      </div>
+    ]
+  ];
 
-  const loading = [[<div />, <div className="py-4">Loading...</div>]];
+  const loading = [
+    [
+      <div key="bettable-loading-blank" />,
+      <div className="py-4" key="bettable-loading-message">
+        Loading...
+      </div>
+    ]
+  ];
 
   return (
     <NewTable
