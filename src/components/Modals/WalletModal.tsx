@@ -13,6 +13,7 @@ type Props = {
 export const WalletModal: React.FC<Props> = (props: Props) => {
   const { isModalOpen, closeWalletModal, setLoading } = props;
   const { connect, connectors, isLoading } = useConnect();
+  // hours spent debugging "set state during render": 1
   setLoading(isLoading);
 
   const connectorsWithIcons = connectors.map(connector => ({
