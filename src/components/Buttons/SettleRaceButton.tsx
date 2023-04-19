@@ -2,12 +2,11 @@ import React, { useCallback, useMemo, useRef } from "react";
 import { BaseButton } from ".";
 import { Config } from "../../types/config";
 import { BetHistory } from "../../types/bets";
-import { ContractReceipt, ContractTransaction, Signer } from "ethers";
+import { ContractTransaction, Signer } from "ethers";
 import { useWalletModal } from "../../providers/WalletModal";
 import classnames from "classnames";
 import { MarketOracle__factory, Market__factory } from "../../typechain";
 import { BYTES_16_ZERO } from "../../constants/blockchain";
-import { useMarketContract } from "../../hooks/contracts";
 
 //Props
 type Props = {
@@ -36,7 +35,6 @@ export const SettleRaceButton: React.FC<Props> = props => {
   } = props;
   const { openWalletModal } = useWalletModal();
   const { current: now } = useRef(Math.floor(Date.now() / 1000));
-  const { setResult } = useMarketContract();
 
   // Get list of bets that are not settled
   const settlableBets = useMemo(
