@@ -9,7 +9,7 @@ import {
 import { SignedMeetingsResponse, MeetFilters, Meet } from "../types/meets";
 import constants from "../constants";
 import { useApi } from "../providers/Api";
-import { NewHomeTable } from "../components/Tables/NewHomeTable";
+import { NewHomeTable } from "../components/Tables";
 import { NewButton } from "../components/Buttons";
 
 const Home: React.FC = () => {

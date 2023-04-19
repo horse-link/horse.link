@@ -30,7 +30,7 @@ export const NewHomeTable: React.FC<Props> = ({ meets }) => {
 
   const headers = [
     <div
-      className="w-full py-4 text-left font-basement font-black text-white"
+      className="w-full py-4 text-left font-black text-white"
       key={`hometable-race-location`}
     >
       LOCATION
@@ -74,5 +74,11 @@ export const NewHomeTable: React.FC<Props> = ({ meets }) => {
     ))
   ]);
 
-  return <NewTable headers={headers} rows={rows} />;
+  return (
+    <NewTable
+      headers={headers}
+      headerStyles="font-basement tracking-wider"
+      rows={rows}
+    />
+  );
 };

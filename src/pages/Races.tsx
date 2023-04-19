@@ -2,17 +2,16 @@ import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useRunnersData, useMeetData } from "../hooks/data";
 import { RacesButton } from "../components/Buttons";
-import { RaceTable, BetTable } from "../components/Tables";
+import { BetTable, NewRaceTable } from "../components/Tables";
 import { PlaceBetModal, SettleBetModal } from "../components/Modals";
 import { Runner } from "../types/meets";
-import { PageLayout, Toggle } from "../components";
+import { PageLayout } from "../components";
 import { useSubgraphBets } from "../hooks/subgraph";
 import { BetHistory } from "../types/bets";
 import { makeMarketId } from "../utils/markets";
 import { formatBytes16String } from "../utils/formatting";
 import { useConfig } from "../providers/Config";
 import constants from "../constants";
-import { useAccount } from "wagmi";
 
 import Skeleton from "react-loading-skeleton";
 import dayjs from "dayjs";
@@ -28,17 +27,14 @@ const Races: React.FC = () => {
   const [isSettleModalOpen, setIsSettleModalOpen] = useState(false);
   const [selectedRunner, setSelectedRunner] = useState<Runner>();
   const [selectedBet, setSelectedBet] = useState<BetHistory>();
-  const [allBetsEnabled, setAllBetsEnabled] = useState(true);
   const [closed, setClosed] = useState(false);
   const { race } = useRunnersData(track, raceNumber);
-  const { address } = useAccount();
   const config = useConfig();
 
   const { meetDate } = useMemo(() => {
     const meetDate = dayjs().format("DD-MM-YY");
     return { config, meetDate };
   }, []);
-  const onMyBetToggle = () => setAllBetsEnabled(prev => !prev);
 
   const marketId = makeMarketId(new Date(), track, raceNumber.toString());
   const b16MarketId = formatBytes16String(marketId);
@@ -46,11 +42,7 @@ const Races: React.FC = () => {
     betData: betHistory,
     totalBetsOnPropositions,
     refetch
-  } = useSubgraphBets(
-    "ALL_BETS",
-    b16MarketId,
-    allBetsEnabled ? undefined : address
-  );
+  } = useSubgraphBets("ALL_BETS", b16MarketId);
 
   const margin = useMemo(() => {
     if (!race || !race.runners.length) return;
@@ -82,7 +74,7 @@ const Races: React.FC = () => {
         <div className="flex gap-2">
           <RacesButton params={params} meetRaces={meetRaces?.raceInfo} />
         </div>
-        <div className="justify-around gap-2 rounded-lg border-b border-gray-200 bg-white p-2 text-center shadow lg:flex lg:text-sm">
+        <div className="flex justify-between border border-hl-border bg-hl-background-secondary px-4 py-3 font-basement text-sm tracking-wider text-hl-primary">
           <h1>{race ? race.raceData.name : <Skeleton width={200} />}</h1>
           <h1>
             {race ? (
@@ -117,7 +109,7 @@ const Races: React.FC = () => {
             )}
           </h2>
         </div>
-        <RaceTable
+        <NewRaceTable
           runners={race?.runners}
           setSelectedRunner={setSelectedRunner}
           setIsModalOpen={setIsModalOpen}
@@ -126,16 +118,9 @@ const Races: React.FC = () => {
         />
       </div>
       <div className="flex flex-col gap-6">
-        <div className="flex items-baseline justify-between">
-          <h1 className="mt-4 text-2xl font-bold">History</h1>
-          <div className="flex items-center gap-3">
-            <Toggle enabled={allBetsEnabled} onChange={onMyBetToggle} />
-            <div className="font-semibold">All Bets</div>
-          </div>
-        </div>
         <BetTable
           paramsAddressExists={true}
-          allBetsEnabled={allBetsEnabled}
+          allBetsEnabled={false}
           betHistory={betHistory}
           config={config}
           setSelectedBet={setSelectedBet}
