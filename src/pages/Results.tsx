@@ -10,18 +10,12 @@ import { formatBytes16String } from "../utils/formatting";
 import { useConfig } from "../providers/Config";
 import utils from "../utils";
 import { useSubgraphBets } from "../hooks/subgraph";
-import {
-  // SettleRaceButton,
-  RacesButton,
-  NewButton
-} from "../components/Buttons";
-// import { useAccount, useSigner } from "wagmi";
+import { RacesButton, NewButton } from "../components/Buttons";
 import dayjs from "dayjs";
 import { RaceInfo } from "../types/meets";
 
 const Results: React.FC = () => {
-  // const [loading, setLoading] = useState(false);
-  const [settleHashes] = useState<string[]>(); // setSettleHashes
+  const [settleHashes] = useState<string[]>();
   const [isSettledMarketModalOpen, setIsSettledMarketModalOpen] =
     useState(false);
   const [thisRace, setThisRace] = useState<RaceInfo>();
@@ -30,8 +24,6 @@ const Results: React.FC = () => {
 
   const config = useConfig();
   const params = useParams();
-  // const { isConnected } = useAccount();
-  // const { data: signer } = useSigner();
 
   const propositionId = params.propositionId || "";
   const details = utils.markets.getDetailsFromPropositionId(propositionId);
@@ -112,19 +104,6 @@ const Results: React.FC = () => {
           setIsModalOpen={setIsSettleModalOpen}
         />
       </div>
-      {/* <div className="mt-4 flex w-full justify-end">
-        <SettleRaceButton
-          betHistory={betHistory}
-          loading={loading}
-          isConnected={isConnected}
-          config={config}
-          signer={signer}
-          setIsSettledMarketModalOpen={setIsSettledMarketModalOpen}
-          setSettleHashes={setSettleHashes}
-          setLoading={setLoading}
-          refetch={refetch}
-        />
-      </div> */}
       <SettleBetModal
         isModalOpen={isSettleModalOpen}
         setIsModalOpen={setIsSettleModalOpen}
