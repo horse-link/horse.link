@@ -14,6 +14,7 @@ import { useParams } from "react-router-dom";
 import { useTokenContext } from "../../providers/Token";
 import { BetEntry } from "../../types/context";
 import { NewButton } from "../Buttons";
+import classNames from "classnames";
 
 type Props = {
   runner?: Runner;
@@ -238,7 +239,11 @@ export const PlaceBetModal: React.FC<Props> = ({
         </div>
       ) : (
         <div className="p-6">
-          <h2 className="font-basement text-5xl tracking-wider">
+          <h2
+            className={classNames("font-basement text-5xl tracking-wider", {
+              "break-words": runner.name.length > 10
+            })}
+          >
             {runner.name} {runner.number}
           </h2>
 
