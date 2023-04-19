@@ -272,23 +272,23 @@ export const PlaceBetModal: React.FC<Props> = ({
             </div>
           </div>
 
-          {/* <span className="block font-semibold text-red-500">
+          <span className="block font-semibold text-red-500">
             {isWagerNegative ? (
-              <span className="mt-1 block">
+              <span className="my-6 block">
                 Wager amount cannot be negative.
               </span>
             ) : isWagerPlusBetsExceedingBalance ? (
-              <span className="mt-1 block">
+              <span className="my-6 block">
                 Current bets plus wager cannot exceed balance.
               </span>
             ) : (
               isWagerGreaterThanBalance && (
-                <span className="mt-1 block">
+                <span className="my-6 block">
                   Wager amount cannot be greater than token balance.
                 </span>
               )
             )}
-          </span> */}
+          </span>
 
           <div className="mt-4 mb-2 flex flex-col gap-2">
             <NewButton
@@ -296,12 +296,14 @@ export const PlaceBetModal: React.FC<Props> = ({
               text="bet now"
               onClick={() => onClickPlaceBet({ betNow: true })}
               active={false}
+              disabled={shouldDisablePlaceBet}
             />
             <span className=" blockself-center font-semibold">or</span>
             <NewButton
               big
               text="add to bet slip"
               onClick={() => onClickPlaceBet()}
+              disabled={shouldDisablePlaceBet}
             />
           </div>
         </div>
