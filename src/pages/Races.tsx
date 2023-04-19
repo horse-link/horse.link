@@ -62,12 +62,6 @@ const Races: React.FC = () => {
 
   return (
     <PageLayout>
-      <PlaceBetModal
-        runner={selectedRunner}
-        race={race}
-        isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
-      />
       <div className="flex flex-col gap-6">
         <div className="flex gap-2">
           <RacesButton params={params} meetRaces={meetRaces?.raceInfo} />
@@ -118,13 +112,19 @@ const Races: React.FC = () => {
       <div className="mt-4">
         <NewBetTable
           paramsAddressExists={true}
-          allBetsEnabled={false}
+          allBetsEnabled={true}
           betHistory={betHistory}
           config={config}
           setSelectedBet={setSelectedBet}
           setIsModalOpen={setIsSettleModalOpen}
         />
       </div>
+      <PlaceBetModal
+        runner={selectedRunner}
+        race={race}
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+      />
       <SettleBetModal
         isModalOpen={isSettleModalOpen}
         setIsModalOpen={setIsSettleModalOpen}
