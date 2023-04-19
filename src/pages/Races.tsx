@@ -1,19 +1,17 @@
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useRunnersData, useMeetData } from "../hooks/data";
 import { NewButton, RacesButton } from "../components/Buttons";
 import { NewBetTable, NewRaceTable } from "../components/Tables";
 import { PlaceBetModal, SettleBetModal } from "../components/Modals";
 import { Runner } from "../types/meets";
-import { PageLayout } from "../components";
+import { Loader, PageLayout } from "../components";
 import { useSubgraphBets } from "../hooks/subgraph";
 import { BetHistory } from "../types/bets";
 import { makeMarketId } from "../utils/markets";
 import { formatBytes16String } from "../utils/formatting";
 import { useConfig } from "../providers/Config";
 import constants from "../constants";
-
-import Skeleton from "react-loading-skeleton";
 import dayjs from "dayjs";
 import utils from "../utils";
 
@@ -75,39 +73,36 @@ const Races: React.FC = () => {
           <RacesButton params={params} meetRaces={meetRaces?.raceInfo} />
         </div>
         <div className="flex justify-between border border-hl-border bg-hl-background-secondary px-4 py-3 font-basement text-sm tracking-wider text-hl-primary">
-          <h1>{race ? race.raceData.name : <Skeleton width={200} />}</h1>
-          <h2>
-            {race ? (
-              `${race.track.name} - (${race.track.code})`
-            ) : (
-              <Skeleton width={150} />
-            )}
-          </h2>
-          <h2>{meetDate}</h2>
-          <h2>
-            {race ? `${race.raceData.distance}m` : <Skeleton width={50} />}
-          </h2>
-          <h2>Race #: {raceNumber}</h2>
-          <h2>Class: {race ? race.raceData.class : <Skeleton width={30} />}</h2>
-          <h2>
-            Margin:{" "}
-            {margin ? (
-              `${utils.formatting.formatToTwoDecimals(
-                (+margin * 100).toString()
-              )}%`
-            ) : (
-              <Skeleton width={50} />
-            )}
-          </h2>
-          <h2>
-            {!meetRaces ? (
-              <Skeleton />
-            ) : !utils.formatting.formatTrackCondition(meetRaces) ? null : (
-              `${utils.formatting.formatTrackCondition(meetRaces)}, ${
-                meetRaces.weatherCondition
-              }`
-            )}
-          </h2>
+          {!race || !margin || !meetRaces ? (
+            <div className="flex w-full justify-center py-2">
+              <Loader />
+            </div>
+          ) : (
+            <React.Fragment>
+              <h1>{race.raceData.name}</h1>
+              <h2>
+                {race.track.name} ({race.track.code})
+              </h2>
+              <h2>{meetDate}</h2>
+              <h2>{race.raceData.distance}</h2>
+              <h2>Race #: {raceNumber}</h2>
+              <h2>Class: {race.raceData.class}</h2>
+              <h2>
+                Margin:{" "}
+                {utils.formatting.formatToTwoDecimals(
+                  (+margin * 100).toString()
+                )}
+                %
+              </h2>
+              <h2>
+                {!utils.formatting.formatTrackCondition(meetRaces)
+                  ? null
+                  : `${utils.formatting.formatTrackCondition(meetRaces)}, ${
+                      meetRaces.weatherCondition
+                    }`}
+              </h2>
+            </React.Fragment>
+          )}
         </div>
         <NewRaceTable
           runners={race?.runners}
