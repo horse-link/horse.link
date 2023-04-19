@@ -35,7 +35,6 @@ export const NewRaceTable: React.FC<Props> = ({
     "Weight",
     "Win",
     "Backed",
-    "Status",
     "Proposition"
   ].map((text, i) => (
     <div
@@ -80,7 +79,9 @@ export const NewRaceTable: React.FC<Props> = ({
                 }-${key.toString()}-${i}`}
                 onClick={() => onClickRunner(runner)}
               >
-                {runner[key].toString()}
+                {key === "odds"
+                  ? utils.formatting.formatToTwoDecimals(runner[key].toString())
+                  : runner[key].toString()}
               </div>
             )),
             <div
@@ -89,13 +90,6 @@ export const NewRaceTable: React.FC<Props> = ({
               onClick={() => onClickRunner(runner)}
             >
               {utils.formatting.formatToFourDecimals(formattedBacked)}
-            </div>,
-            <div
-              className={style}
-              key={`runnertable-${runner.proposition_id}-${i}`}
-              onClick={() => onClickRunner(runner)}
-            >
-              {runner.status}
             </div>,
             <div
               className={classNames(style, "text-hl-secondary")}

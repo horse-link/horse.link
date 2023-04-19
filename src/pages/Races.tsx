@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useRunnersData, useMeetData } from "../hooks/data";
-import { RacesButton } from "../components/Buttons";
-import { BetTable, NewRaceTable } from "../components/Tables";
+import { NewButton, RacesButton } from "../components/Buttons";
+import { NewBetTable, NewRaceTable } from "../components/Tables";
 import { PlaceBetModal, SettleBetModal } from "../components/Modals";
 import { Runner } from "../types/meets";
 import { PageLayout } from "../components";
@@ -76,20 +76,20 @@ const Races: React.FC = () => {
         </div>
         <div className="flex justify-between border border-hl-border bg-hl-background-secondary px-4 py-3 font-basement text-sm tracking-wider text-hl-primary">
           <h1>{race ? race.raceData.name : <Skeleton width={200} />}</h1>
-          <h1>
+          <h2>
             {race ? (
               `${race.track.name} - (${race.track.code})`
             ) : (
               <Skeleton width={150} />
             )}
-          </h1>
-          <h1>{meetDate}</h1>
-          <h1>
+          </h2>
+          <h2>{meetDate}</h2>
+          <h2>
             {race ? `${race.raceData.distance}m` : <Skeleton width={50} />}
-          </h1>
-          <h1>Race #: {raceNumber}</h1>
-          <h1>Class: {race ? race.raceData.class : <Skeleton width={30} />}</h1>
-          <h1>
+          </h2>
+          <h2>Race #: {raceNumber}</h2>
+          <h2>Class: {race ? race.raceData.class : <Skeleton width={30} />}</h2>
+          <h2>
             Margin:{" "}
             {margin ? (
               `${utils.formatting.formatToTwoDecimals(
@@ -98,7 +98,7 @@ const Races: React.FC = () => {
             ) : (
               <Skeleton width={50} />
             )}
-          </h1>
+          </h2>
           <h2>
             {!meetRaces ? (
               <Skeleton />
@@ -117,8 +117,11 @@ const Races: React.FC = () => {
           closed={closed}
         />
       </div>
-      <div className="flex flex-col gap-6">
-        <BetTable
+      <div className="mt-10">
+        <NewButton text="history" onClick={() => {}} disabled active={false} />
+      </div>
+      <div className="mt-4">
+        <NewBetTable
           paramsAddressExists={true}
           allBetsEnabled={false}
           betHistory={betHistory}

@@ -11,3 +11,4 @@ export * from "./LeaderboardTable";
 export * from "./NewTable";
 export * from "./NewRaceTable";
 export * from "./NewHomeTable";
+export * from "./NewBetTable";
