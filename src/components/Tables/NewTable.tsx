@@ -37,7 +37,10 @@ export const NewTable: React.FC<Props> = ({
           key={`table-rows-${i}`}
         >
           {row.map((r, i) => (
-            <td className="block w-full" key={`table-row-data-${i}`}>
+            <td
+              className={classNames("block w-full")}
+              key={`table-row-data-${i}`}
+            >
               {r}
             </td>
           ))}

@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useAccount } from "wagmi";
 import { Toggle, PageLayout, Card } from "../components";
 import { BetFilterGroup } from "../components/Bets";
-import { BetTable } from "../components/Tables";
+import { NewBetTable } from "../components/Tables";
 import { SettleBetModal } from "../components/Modals";
 import { BetFilterOptions, BetHistory } from "../types/bets";
 import { useConfig } from "../providers/Config";
@@ -105,7 +105,7 @@ const Bets: React.FC = () => {
           <div className="font-semibold">All Bets</div>
         </div>
       </div>
-      <BetTable
+      <NewBetTable
         allBetsEnabled={allBetsEnabled}
         paramsAddressExists={!!paramsAddress}
         betHistory={betHistory}

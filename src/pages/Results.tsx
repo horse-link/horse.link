@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Loader, PageLayout, Toggle } from "../components";
-import { BetTable, ResultsTable } from "../components/Tables";
+import { NewBetTable, ResultsTable } from "../components/Tables";
 import { SettleBetModal, SettledMarketModal } from "../components/Modals";
 import { useMeetData, useResultsData } from "../hooks/data";
 import { BetHistory } from "../types/bets";
@@ -110,7 +110,7 @@ const Results: React.FC = () => {
             <div className="font-semibold">All Bets</div>
           </div>
         </div>
-        <BetTable
+        <NewBetTable
           paramsAddressExists={true}
           allBetsEnabled={allBetsEnabled}
           betHistory={betHistory}

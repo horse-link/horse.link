@@ -46,7 +46,8 @@ export const NewBetTable: React.FC<Props> = ({
     "Time",
     "Race",
     "Proposition",
-    "Status"
+    "Status",
+    "Result"
   ].map((text, i) => (
     <div
       key={`racetable-${text}-${i}`}
@@ -105,7 +106,10 @@ export const NewBetTable: React.FC<Props> = ({
             </div>,
             <div
               key={`racetable-bet-${bet.index}-${i}-punter`}
-              className={style}
+              className={classNames(
+                style,
+                "max-w-[20ch] truncate text-hl-secondary"
+              )}
               onClick={() => onClickBet(bet)}
             >
               {bet.punter}
@@ -126,7 +130,7 @@ export const NewBetTable: React.FC<Props> = ({
             </div>,
             <div
               key={`racetable-bet-${bet.index}-${i}-date`}
-              className={style}
+              className={classNames(style, "text-hl-secondary")}
               onClick={() => onClickBet(bet)}
             >
               {raceDetails.date} {raceDetails.location} Race{" "}
@@ -168,6 +172,8 @@ export const NewBetTable: React.FC<Props> = ({
 
   const noBets = [[<div />, <div className="py-4">No bets!</div>]];
 
+  const loading = [[<div />, <div className="py-4">Loading...</div>]];
+
   return (
     <NewTable
       headers={headers}
@@ -175,7 +181,9 @@ export const NewBetTable: React.FC<Props> = ({
       rows={
         !allBetsEnabled && !paramsAddressExists
           ? notAllBetsAndNoParamAddress
-          : !betHistory?.length
+          : !betHistory
+          ? loading
+          : !betHistory.length
           ? noBets
           : rows
       }
