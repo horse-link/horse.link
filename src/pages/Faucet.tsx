@@ -7,7 +7,7 @@ import { ERC20__factory } from "../typechain";
 import { useBalance, useProvider } from "wagmi";
 import utils from "../utils";
 import { FaucetModal } from "../components/Modals";
-import { FaucetTable } from "../components/Tables";
+import { NewFaucetTable } from "../components/Tables";
 
 const FAUCET_ADDRESS = "0xf919eaf2e37aac718aa19668b9071ee42c02c081";
 
@@ -79,9 +79,8 @@ const Faucet: React.FC = () => {
           <Card title="Loading faucet balances..." />
         </div>
       )}
-      <h3 className="mb-3 text-lg font-medium text-gray-900">Faucet</h3>
-      <div className="container-fluid overflow-hidden rounded-lg bg-emerald-700 px-4 py-5 shadow sm:p-6">
-        <h2 className="mb-3 text-lg font-medium text-gray-900">
+      <div className="w-full border border-hl-border p-6 text-hl-primary">
+        <h2 className="mb-3">
           Claim tokens on the Goerli Testnet and start punting!
         </h2>
         <p className="my-2 text-xs">
@@ -93,7 +92,7 @@ const Faucet: React.FC = () => {
         </p>
       </div>
       <div className="mt-4 w-full">
-        <FaucetTable
+        <NewFaucetTable
           balances={balances}
           setHash={setHash}
           setIsModalOpen={setIsModalOpen}

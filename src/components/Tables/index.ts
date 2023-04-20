@@ -16,3 +16,4 @@ export * from "./NewResultsTable";
 export * from "./NewVaultsTable";
 export * from "./NewVaultHistoryTable";
 export * from "./NewMarketTable";
+export * from "./NewFaucetTable";
