@@ -123,12 +123,12 @@ export const NewVaultsTable: React.FC<Props> = ({ setIsModalOpen }) => {
     ? vaultInfoList.map((vault, i) => {
         const style = "w-full text-left py-4";
 
-        const tvl = utils.formatting.formatToFourDecimals(
+        const tvl = `${utils.formatting.formatToFourDecimals(
           ethers.utils.formatUnits(
             vault.totalAssets.add(vault.totalAssetsLocked),
             vault.asset.decimals
           )
-        );
+        )} ${vault.asset.symbol}`;
 
         const myShares = utils.formatting.formatToFourDecimals(
           vault.userShareTotal
@@ -187,7 +187,7 @@ export const NewVaultsTable: React.FC<Props> = ({ setIsModalOpen }) => {
           </div>,
           <div
             key={`vaultstable-${VaultTransactionType.DEPOSIT}-${i}`}
-            className="flex h-full w-full items-center px-2"
+            className="relative right-2 flex h-full w-full items-center px-2"
           >
             <NewButton
               text="deposit"
@@ -203,7 +203,7 @@ export const NewVaultsTable: React.FC<Props> = ({ setIsModalOpen }) => {
           </div>,
           <div
             key={`vaultstable-${VaultTransactionType.WITHDRAW}-${i}`}
-            className="flex h-full w-full items-center px-2"
+            className="relative right-2 flex h-full w-full items-center px-2"
           >
             <NewButton
               text="withdraw"
