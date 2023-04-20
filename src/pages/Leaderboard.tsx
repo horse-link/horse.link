@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Card, PageLayout } from "../components";
 import { useLeaderboardStatistics } from "../hooks/stats";
-import { LeaderboardTable } from "../components/Tables";
+import { NewLeaderboardTable } from "../components/Tables";
 import { useAccount } from "wagmi";
 import utils from "../utils";
 import { ethers } from "ethers";
@@ -75,7 +75,7 @@ const Leaderboard: React.FC = () => {
               />
             </div>
           )}
-          <LeaderboardTable
+          <NewLeaderboardTable
             stats={stats}
             balances={balances}
             loading={loading}
