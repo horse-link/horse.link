@@ -14,7 +14,7 @@ type Props = {
 export const PageLayout: React.FC<Props> = ({ children }) => {
   const { closeWalletModal, isWalletModalOpen } = useWalletModal();
   const navigate = useNavigate();
-  const { isChainUnsupported, forceNewNetwork, isLocalWallet } =
+  const { isChainUnsupported, forceNewNetwork, isLocalWallet, setLoading } =
     useWalletOverrides();
 
   useEffect(() => {
@@ -46,6 +46,7 @@ export const PageLayout: React.FC<Props> = ({ children }) => {
           <WalletModal
             isModalOpen={isWalletModalOpen}
             closeWalletModal={closeWalletModal}
+            setLoading={setLoading}
           />
         </main>
       </div>

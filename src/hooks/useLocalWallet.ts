@@ -3,11 +3,21 @@ import { useMemo, useState } from "react";
 import utils from "../utils";
 import constants from "../constants";
 import { Network } from "../types/general";
+import { Chain } from "wagmi";
 
 export const LS_PRIVATE_KEY = "horse.link-wallet-key";
+export const LAST_KNOWN_LS_KEY = "horse.link-network-id";
 
 export const useLocalWallet = (chains: Array<Network>) => {
-  const [chain, setChain] = useState<Network>(constants.blockchain.CHAINS[0]);
+  // was there a last known chain
+  const lastKnown = localStorage.getItem(LAST_KNOWN_LS_KEY);
+  const lastKnownChain: Chain | undefined = lastKnown
+    ? constants.blockchain.CHAINS.find(c => c.id === +lastKnown)
+    : undefined;
+
+  const [chain, setChain] = useState<Network>(
+    lastKnownChain || constants.blockchain.CHAINS[0]
+  );
 
   // get keys
   const localKey = localStorage.getItem(LS_PRIVATE_KEY);

@@ -59,6 +59,11 @@ export const BetTable: React.FC<Props> = ({
       utils.id.getPropositionFromId(
         utils.formatting.parseBytes16String(bet.propositionId)
       );
+    const isWinning =
+      bet && bet.winningPropositionId
+        ? bet.winningPropositionId.toLowerCase() ===
+          bet.propositionId.toLowerCase()
+        : undefined;
 
     const raceDetails =
       bet &&
@@ -99,6 +104,9 @@ export const BetTable: React.FC<Props> = ({
       },
       {
         title: bet?.status ?? <Skeleton />
+      },
+      {
+        title: isWinning ? `WON` : isWinning === undefined ? `IN PLAY` : `LOST`
       }
     ];
   };
@@ -125,6 +133,9 @@ export const BetTable: React.FC<Props> = ({
     },
     {
       title: "Status"
+    },
+    {
+      title: "Result"
     }
   ];
 

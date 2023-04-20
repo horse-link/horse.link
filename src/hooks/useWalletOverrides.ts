@@ -12,6 +12,9 @@ import { useApolloWithForce } from "../providers/Apollo";
 import { useLocation } from "react-router-dom";
 import { arbitrum } from "@wagmi/chains";
 import constants from "../constants";
+import { useFirstRender } from "./useFirstRender";
+import { CHAINS } from "../constants/blockchain";
+import { LAST_KNOWN_LS_KEY } from "./useLocalWallet";
 
 // beware all ye whom enter
 // here lie the dreaded overrides
@@ -25,79 +28,95 @@ export const useWalletOverrides = () => {
   const { forceNewChain: forceApi } = useApiWithForce();
   const { forceNewChain: forceApollo } = useApolloWithForce();
   const { pathname } = useLocation();
+  const isFirstRender = useFirstRender();
 
   const isLocalWallet = connector?.id === LOCAL_WALLET_ID;
   const isChainUnsupported = chain?.unsupported || false;
   const isUnsupportedPage = pathname === "/unsupported";
 
-  const [lastKnownConnector, setLastKnownConnector] = useState(
-    connector || connectors[0]
-  );
-  useEffect(() => {
-    if (!connector) return;
-
-    setLastKnownConnector(connector);
-  }, [connector]);
+  const [isLoading, setLoading] = useState(false);
 
   // network intent
   const networkIntent = useRef<Chain>(constants.blockchain.CHAINS[0]);
 
-  useEffect(() => {
-    if (!chain || isLocalWallet || chain.id !== networkIntent.current.id)
-      return;
-
-    networkIntent.current = chain;
-  }, [chain]);
-
-  useEffect(() => {
-    if (!chain || !isError) return;
-
-    networkIntent.current = chain;
-  }, [isError]);
-
   const forceNewNetwork = (chain: Chain) => {
+    if (isUnsupportedPage || isLoading) return;
+
     try {
       networkIntent.current = chain;
+
+      // write to LS
+      localStorage.setItem(LAST_KNOWN_LS_KEY, chain.id.toString());
+
       switchNetwork?.(chain.id);
       forceApi(chain);
       forceApollo(chain);
     } catch (e) {
       console.error(e);
+
       networkIntent.current = constants.blockchain.CHAINS[0];
+      localStorage.setItem(LOCAL_WALLET_ID, arbitrum.id.toString());
     }
   };
 
-  // reconnect
+  // run on page load
   useEffect(() => {
-    if (isConnected || isLocalWallet) return;
+    // was there a last known chain
+    const lastKnown = localStorage.getItem(LAST_KNOWN_LS_KEY);
+    if (!lastKnown) return;
+    const chain = CHAINS.find(c => c.id === +lastKnown);
+    if (!chain) return;
 
-    // unsupported page override
-    if (isUnsupportedPage) {
-      connect({
-        chainId: arbitrum.id,
-        connector: lastKnownConnector
-      });
-      return;
-    }
+    forceNewNetwork(chain);
+  }, []);
 
+  // if the user ever disconnects
+  useEffect(() => {
+    if (!!isConnected) return;
+
+    const localConnector = connectors.find(c => c.id === LOCAL_WALLET_ID);
+    forceNewNetwork(arbitrum);
     connect({
-      chainId: arbitrum.id,
-      // last connector is HL connector
-      connector: connectors.at(-1)
+      connector: localConnector
     });
   }, [isConnected]);
 
+  // if the chain switches
   useEffect(() => {
-    if (isUnsupportedPage || isConnected) return;
+    if (!chain) return;
 
-    forceNewNetwork(networkIntent.current);
-  }, [lastKnownConnector]);
+    networkIntent.current = chain;
+  }, [chain]);
+
+  // if the user switches connectors
+  const storeIntent = useRef<Chain>(networkIntent.current);
+  useEffect(() => {
+    if (isFirstRender) return;
+
+    if (!isLoading) {
+      // while not loading (finished loading, we check to see what the current chain vs old intent is)
+      if (storeIntent.current.id !== chain?.id)
+        forceNewNetwork(storeIntent.current);
+
+      return;
+    }
+
+    // while loading we store the old intent
+    storeIntent.current = networkIntent.current;
+  }, [isLoading]);
+
+  // if the user rejects the chain switch
+  useEffect(() => {
+    if (!isError || !chain) return;
+
+    networkIntent.current = chain;
+  }, [isError]);
 
   return {
-    lastKnownConnector,
     isLocalWallet,
     forceNewNetwork,
     isChainUnsupported,
-    isUnsupportedPage
+    isUnsupportedPage,
+    setLoading
   };
 };
