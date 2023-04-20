@@ -6,7 +6,9 @@ import { useNetwork } from "wagmi";
 import { goerli } from "@wagmi/chains";
 
 export const Navbar: React.FC = () => {
-  const { pathname: currentPath } = useLocation();
+  const { pathname } = useLocation();
+  const currentPath = pathname.split("/", 2).join("/");
+
   const { chain } = useNetwork();
   const isGoerli = chain?.id === goerli.id;
 
