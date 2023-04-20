@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NewVaultsTable, VaultHistoryTable } from "../components/Tables";
+import { NewVaultHistoryTable, NewVaultsTable } from "../components/Tables";
 import { useSubgraphVaults } from "../hooks/subgraph";
 import { DepositVaultModal, WithdrawVaultModal } from "../components/Modals";
 import { VaultModalState, VaultTransactionType } from "../types/vaults";
@@ -76,7 +76,7 @@ const Vaults: React.FC = () => {
         <NewButton text="history" onClick={() => {}} disabled active={false} />
       </div>
       <div className="mt-4">
-        <VaultHistoryTable history={vaultHistory} />
+        <NewVaultHistoryTable history={vaultHistory} />
       </div>
       {modal &&
         (modal.type === VaultTransactionType.DEPOSIT ? (
