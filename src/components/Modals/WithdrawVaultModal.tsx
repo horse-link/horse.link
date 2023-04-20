@@ -75,6 +75,8 @@ export const WithdrawVaultModal: React.FC<Props> = ({
     event.preventDefault();
     const value = event.currentTarget.value;
 
+    if (!RegExp(/^\d*$/).test(value)) return;
+
     if (value.includes(".")) {
       const decimals = value.split(".")[1];
       if (decimals.length > userAssets.decimals) {
@@ -110,6 +112,15 @@ export const WithdrawVaultModal: React.FC<Props> = ({
       ? +withdrawAmount > +userAssets.formatted
       : false;
 
+  const shouldDisableButton =
+    !withdrawAmount ||
+    !signer ||
+    !userAssets ||
+    +userAssets.formatted === 0 ||
+    txLoading ||
+    isWithdrawNegative ||
+    isWithdrawGreaterThanAssets;
+
   return (
     <BaseModal isOpen={isModalOpen} onClose={closeModal} isLarge={!!txHash}>
       <h2 className="mb-6 text-2xl font-bold">Withdraw</h2>
@@ -136,15 +147,7 @@ export const WithdrawVaultModal: React.FC<Props> = ({
             <button
               className="relative top-6 mb-3 w-full rounded-md border-2 border-black py-2 font-bold transition-colors duration-100 disabled:border-black/50 disabled:bg-white disabled:text-black/50 enabled:hover:bg-black enabled:hover:text-white"
               onClick={onClickWithdraw}
-              disabled={
-                !withdrawAmount ||
-                !signer ||
-                !userAssets ||
-                +userAssets.formatted === 0 ||
-                txLoading ||
-                isWithdrawNegative ||
-                isWithdrawGreaterThanAssets
-              }
+              disabled={shouldDisableButton}
             >
               {txLoading ? <Loader /> : `WITHDRAW ${vault.asset.symbol}`}
             </button>
