@@ -210,8 +210,8 @@ export const SettleBetModal: React.FC<Props> = ({
                   disabled={
                     !signer ||
                     bet.settled ||
-                    bet.status === "PENDING" ||
-                    !isPastPayoutDate ||
+                    (bet.status !== "RESULTED" && bet.status !== "SCRATCHED") ||
+                    (bet.status === "RESULTED" && !isPastPayoutDate) ||
                     txLoading ||
                     !!txHash
                   }
