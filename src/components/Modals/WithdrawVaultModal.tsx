@@ -9,6 +9,7 @@ import { useVaultContract } from "../../hooks/contracts";
 import { Vault__factory } from "../../typechain";
 import useRefetch from "../../hooks/useRefetch";
 import { UserBalance } from "../../types/users";
+import { NewButton } from "../Buttons";
 
 type Props = {
   isModalOpen: boolean;
@@ -123,45 +124,54 @@ export const WithdrawVaultModal: React.FC<Props> = ({
 
   return (
     <BaseModal isOpen={isModalOpen} onClose={closeModal} isLarge={!!txHash}>
-      <h2 className="mb-6 text-2xl font-bold">Withdraw</h2>
-      <div className="flex flex-col">
-        <h3 className="mb-2 font-semibold">
-          Name: <span className="font-normal">{vault.name}</span>
-        </h3>
-        <h3 className="mb-2 font-semibold">
-          Available:{" "}
-          <span className="font-normal">
-            {userAssets?.formatted || <Loader size={14} />}
-          </span>
-        </h3>
-        {!txHash && !error && (
-          <React.Fragment>
-            <h3 className="font-semibold">Withdraw Amount</h3>
-            <input
-              type="number"
-              placeholder="0"
-              onChange={changeWithdrawAmount}
-              className="mb-6 border-b-[0.12rem] border-black pl-1 pt-1 transition-colors duration-100 disabled:bg-white disabled:text-black/50"
-              disabled={txLoading || !userAssets}
-            />
-            <button
-              className="relative top-6 mb-3 w-full rounded-md border-2 border-black py-2 font-bold transition-colors duration-100 disabled:border-black/50 disabled:bg-white disabled:text-black/50 enabled:hover:bg-black enabled:hover:text-white"
-              onClick={onClickWithdraw}
-              disabled={shouldDisableButton}
-            >
-              {txLoading ? <Loader /> : `WITHDRAW ${vault.asset.symbol}`}
-            </button>
-            <br />
-          </React.Fragment>
-        )}
-        {txHash && (
-          <Web3SuccessHandler
-            hash={txHash}
-            message="Your withdrawal has been placed, click here to view the transaction"
-          />
-        )}
-        {error && <Web3ErrorHandler error={error} />}
-      </div>
+      {!userAssets ? (
+        <div className="p-10">
+          <Loader />
+        </div>
+      ) : (
+        <div className="p-6">
+          <h2 className="font-basement text-5xl tracking-wider">WITHDRAW</h2>
+
+          <div className="mt-8 flex w-full flex-col items-center">
+            <div className="grid w-full grid-cols-2 grid-rows-3">
+              <h3 className="text-left text-hl-secondary">Name:</h3>
+              <p className="text-left text-hl-tertiary">{vault.name}</p>
+              <h3 className="text-left text-hl-secondary">Available:</h3>
+              <p className="text-left text-hl-tertiary">
+                {userAssets.formatted}
+              </p>
+              <div className="flex items-center">
+                <h3 className="text-left text-hl-secondary">
+                  Withdraw amount:
+                </h3>
+              </div>
+              <input
+                placeholder="0"
+                value={withdrawAmount}
+                onChange={changeWithdrawAmount}
+                className="border border-hl-border bg-hl-background p-2 text-hl-primary !outline-none !ring-0"
+              />
+            </div>
+            {!txHash && !error && (
+              <div className="mt-8 mb-2 flex w-full flex-col">
+                <NewButton
+                  text={`Withdraw ${vault.asset.symbol}`}
+                  onClick={onClickWithdraw}
+                  disabled={shouldDisableButton}
+                  big
+                />
+              </div>
+            )}
+            {txHash && (
+              <Web3SuccessHandler
+                hash={txHash}
+                message="Your deposit has been placed, click here to view the transaction"
+              />
+            )}
+            {error && <Web3ErrorHandler error={error} />}
+          </div>
+        </div>
+      )}
     </BaseModal>
   );
 };
