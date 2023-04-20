@@ -13,3 +13,4 @@ export * from "./NewRaceTable";
 export * from "./NewHomeTable";
 export * from "./NewBetTable";
 export * from "./NewResultsTable";
+export * from "./NewVaultsTable";
