@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { NewTable } from "./NewTable";
-import { VaultModalState } from "../../types/vaults";
+import { VaultModalState, VaultTransactionType } from "../../types/vaults";
 import { useConfig } from "../../providers/Config";
 import { useAccount, useSigner } from "wagmi";
 import { useWalletModal } from "../../providers/WalletModal";
@@ -10,6 +10,8 @@ import { useScannerUrl } from "../../hooks/useScannerUrl";
 import { ethers } from "ethers";
 import { VaultInfo } from "../../types/config";
 import classNames from "classnames";
+import utils from "../../utils";
+import { NewButton } from "../Buttons";
 
 type Props = {
   setIsModalOpen: (state: VaultModalState) => void;
@@ -33,6 +35,22 @@ export const NewVaultsTable: React.FC<Props> = ({ setIsModalOpen }) => {
   }, [config]);
 
   const [vaultInfoList, setVaultInfoList] = useState<Array<VaultInfo>>();
+
+  const openModal = ({
+    type,
+    vault
+  }: {
+    type: VaultTransactionType;
+    vault: VaultInfo;
+  }) => {
+    if (isConnected)
+      return setIsModalOpen({
+        type,
+        vault
+      });
+
+    return openWalletModal();
+  };
 
   useEffect(() => {
     if (!isConnected || !config || !vaultAddresses) return;
@@ -105,7 +123,101 @@ export const NewVaultsTable: React.FC<Props> = ({ setIsModalOpen }) => {
     ? vaultInfoList.map((vault, i) => {
         const style = "w-full text-left py-4";
 
-        return [];
+        const tvl = utils.formatting.formatToFourDecimals(
+          ethers.utils.formatUnits(
+            vault.totalAssets.add(vault.totalAssetsLocked),
+            vault.asset.decimals
+          )
+        );
+
+        const myShares = utils.formatting.formatToFourDecimals(
+          vault.userShareTotal
+            ? ethers.utils.formatUnits(
+                vault.userShareTotal,
+                vault.asset.decimals
+              )
+            : "0"
+        );
+
+        const myValue = utils.formatting.formatToFourDecimals(
+          vault.userAssetTotal
+            ? ethers.utils.formatUnits(
+                vault.userAssetTotal,
+                vault.asset.decimals
+              )
+            : "0"
+        );
+
+        const myPercentage = vault.userSharePercentage
+          ? `${vault.userSharePercentage}%`
+          : "0%";
+
+        const data = [
+          vault.name,
+          vault.asset.symbol,
+          tvl,
+          myShares,
+          myValue,
+          myPercentage
+        ];
+
+        return [
+          ...data.map((text, i) => (
+            <div
+              key={`vaultstable-rows-${text}-${i}`}
+              className={classNames(style, {
+                "!text-hl-secondary": [1, 5].includes(i)
+              })}
+            >
+              {text}
+            </div>
+          )),
+          <div
+            className="flex h-full w-full items-center truncate"
+            key={`vaultstable-${vault.address}-${i}`}
+          >
+            <a
+              href={`${scanner}/address/${vault.address}`}
+              target="_blank"
+              rel="noreferrer noopener"
+              className={classNames(style, "max-w-[20ch] truncate")}
+            >
+              {vault.address}
+            </a>
+          </div>,
+          <div
+            key={`vaultstable-${VaultTransactionType.DEPOSIT}-${i}`}
+            className="flex h-full w-full items-center px-2"
+          >
+            <NewButton
+              text="deposit"
+              onClick={() =>
+                openModal({
+                  type: VaultTransactionType.DEPOSIT,
+                  vault
+                })
+              }
+              active
+              big
+            />
+          </div>,
+          <div
+            key={`vaultstable-${VaultTransactionType.WITHDRAW}-${i}`}
+            className="flex h-full w-full items-center px-2"
+          >
+            <NewButton
+              text="withdraw"
+              onClick={() =>
+                openModal({
+                  type: VaultTransactionType.WITHDRAW,
+                  vault
+                })
+              }
+              active={false}
+              big
+            />
+          </div>
+        ];
       })
     : [];
 
