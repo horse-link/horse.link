@@ -65,7 +65,6 @@ const Results: React.FC = () => {
     b16MarketId,
     allBetsEnabled ? undefined : address
   );
-
   const results = useResultsData(propositionId);
 
   const closeSettledMarketModal = useCallback(
