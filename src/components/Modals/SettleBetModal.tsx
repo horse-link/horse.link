@@ -34,7 +34,7 @@ export const SettleBetModal: React.FC<Props> = ({
   const [bet, setBet] = useState<BetHistory>();
 
   const { data: signer } = useSigner();
-  const { settleBet } = useMarketContract();
+  const { settleBet, refundBet } = useMarketContract();
 
   const { current: now } = useRef(Math.floor(Date.now() / 1000));
 
@@ -97,7 +97,7 @@ export const SettleBetModal: React.FC<Props> = ({
 
   const isPastPayoutDate = now > (bet?.payoutDate || 0);
 
-  const isSettled = bet?.settled || bet?.status === "SETTLED";
+  const isSettled = bet?.settled;
 
   const onClickSettleBet = async () => {
     if (!bet || !market || !signer || !config) return;
@@ -106,7 +106,12 @@ export const SettleBetModal: React.FC<Props> = ({
 
     try {
       setTxLoading(true);
-      const tx = await settleBet(market, bet, signer, config);
+      let tx: string;
+      if (isScratched) {
+        tx = await refundBet(market, bet, signer);
+      } else {
+        tx = await settleBet(market, bet, signer, config);
+      }
       setTxHash(tx);
     } catch (err: any) {
       setError(err);
@@ -205,13 +210,19 @@ export const SettleBetModal: React.FC<Props> = ({
                   disabled={
                     !signer ||
                     bet.settled ||
-                    bet.status === "PENDING" ||
-                    !isPastPayoutDate ||
+                    (bet.status !== "RESULTED" && bet.status !== "SCRATCHED") ||
+                    (bet.status === "RESULTED" && !isPastPayoutDate) ||
                     txLoading ||
                     !!txHash
                   }
                 >
-                  {txLoading ? <Loader /> : "SETTLE BET"}
+                  {txLoading ? (
+                    <Loader />
+                  ) : isScratched ? (
+                    "REFUND BET"
+                  ) : (
+                    "SETTLE BET"
+                  )}
                 </button>
                 {!bet.marketResultAdded && (
                   <span className="relative mt-2 block text-xs text-black/80">
