@@ -72,7 +72,7 @@ const Home: React.FC = () => {
             disabled={isLoading}
           />
         </div>
-        {meets && <NewHomeTable meets={meets} />}
+        <NewHomeTable meets={meets} />
       </div>
     </PageLayout>
   );

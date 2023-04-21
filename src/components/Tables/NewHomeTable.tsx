@@ -10,7 +10,7 @@ import utc from "dayjs/plugin/utc";
 dayjs.extend(utc);
 
 type Props = {
-  meets: Array<Meet>;
+  meets?: Array<Meet>;
 };
 
 export const NewHomeTable: React.FC<Props> = ({ meets }) => {
@@ -23,10 +23,12 @@ export const NewHomeTable: React.FC<Props> = ({ meets }) => {
     return () => clearInterval(interval);
   }, []);
 
-  const totalRaces = meets.reduce(
-    (prev, cur) => (cur.races.length > prev ? cur.races.length : prev),
-    0
-  );
+  const totalRaces = meets
+    ? meets.reduce(
+        (prev, cur) => (cur.races.length > prev ? cur.races.length : prev),
+        0
+      )
+    : 0;
 
   const headers = [
     <div
@@ -45,40 +47,51 @@ export const NewHomeTable: React.FC<Props> = ({ meets }) => {
     ))
   ];
 
-  const rows = meets.map(meet => [
-    <div key={meet.id} className="flex max-w-[6rem] items-center gap-x-4">
-      <img
-        src="/images/horse.webp"
-        alt="HorseLink logo"
-        className="max-w-[4rem]"
-      />
-      <div className="w-full py-4 text-left font-basement text-sm font-black text-white">
-        {meet.name} ({meet.location})
+  const rows = meets
+    ? meets.map(meet => [
+        <div key={meet.id} className="flex max-w-[6rem] items-center gap-x-4">
+          <img
+            src="/images/horse.webp"
+            alt="HorseLink logo"
+            className="max-w-[4rem]"
+          />
+          <div className="w-full py-4 text-left font-basement text-sm font-black text-white">
+            {meet.name} ({meet.location})
+          </div>
+        </div>,
+        ...meet.races.map(race => (
+          <div
+            className="flex h-full w-full justify-end"
+            key={JSON.stringify(race)}
+          >
+            <Link
+              to={utils.races.createRacingLink(race, meet)}
+              className="relative left-[1rem] flex h-full w-fit items-center justify-end px-4 text-hl-tertiary hover:bg-hl-primary hover:text-hl-secondary"
+            >
+              {utils.races.createCellText(race, time)}
+            </Link>
+          </div>
+        )),
+        ...Array.from({ length: totalRaces - meet.races.length }, (_, i) => (
+          <div key={`hometable-blank-${i}`} />
+        ))
+      ])
+    : [];
+
+  const loading = [
+    [
+      <div key="bettable-loading-blank" />,
+      <div className="py-4" key="bettable-loading-message">
+        Loading...
       </div>
-    </div>,
-    ...meet.races.map(race => (
-      <div
-        className="flex h-full w-full justify-end"
-        key={JSON.stringify(race)}
-      >
-        <Link
-          to={utils.races.createRacingLink(race, meet)}
-          className="relative left-[1rem] flex h-full w-fit items-center justify-end px-4 text-hl-tertiary hover:bg-hl-primary hover:text-hl-secondary"
-        >
-          {utils.races.createCellText(race, time)}
-        </Link>
-      </div>
-    )),
-    ...Array.from({ length: totalRaces - meet.races.length }, (_, i) => (
-      <div key={`hometable-blank-${i}`} />
-    ))
-  ]);
+    ]
+  ];
 
   return (
     <NewTable
       headers={headers}
       headerStyles="font-basement tracking-wider"
-      rows={rows}
+      rows={!meets ? loading : rows}
     />
   );
 };
