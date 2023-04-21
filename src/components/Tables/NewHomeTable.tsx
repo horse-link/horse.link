@@ -80,8 +80,8 @@ export const NewHomeTable: React.FC<Props> = ({ meets }) => {
 
   const loading = [
     [
-      <div key="bettable-loading-blank" />,
-      <div className="py-4" key="bettable-loading-message">
+      <div key="hometable-loading-blank" />,
+      <div className="py-4" key="hometable-loading-message">
         Loading...
       </div>
     ]
