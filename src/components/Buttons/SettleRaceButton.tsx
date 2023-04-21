@@ -1,10 +1,9 @@
 import React, { useCallback, useMemo, useRef } from "react";
-import { BaseButton } from ".";
+import { NewButton } from ".";
 import { Config } from "../../types/config";
 import { BetHistory } from "../../types/bets";
 import { ContractTransaction, Signer } from "ethers";
 import { useWalletModal } from "../../providers/WalletModal";
-import classnames from "classnames";
 import { MarketOracle__factory, Market__factory } from "../../typechain";
 import { BYTES_16_ZERO } from "../../constants/blockchain";
 
@@ -52,7 +51,7 @@ export const SettleRaceButton: React.FC<Props> = props => {
     setIsSettledMarketModalOpen(false);
     setSettleHashes(undefined);
     setLoading(true);
-    console.log(`Settling ${settlableBets.length} bets`);
+
     try {
       // connect to oracle
       const oracleContract = MarketOracle__factory.connect(
@@ -75,13 +74,11 @@ export const SettleRaceButton: React.FC<Props> = props => {
             "Something went wrong trying to register the result for this race. Please refresh the page and try again."
           );
         }
-        console.log("Setting result");
         await oracleContract.setResult(
           marketId,
           winningPropositionId,
           marketOracleResultSig!
         );
-        console.log("Set result");
       }
 
       const marketContractAddresses = new Set(
@@ -104,23 +101,19 @@ export const SettleRaceButton: React.FC<Props> = props => {
     } catch (err: any) {
       console.error(err);
     } finally {
-      console.log("Finished settling bets");
       setLoading(false);
       refetch();
     }
   }, [props, settlableBets]);
 
+  const buttonLoading = !config || loading;
+
   return (
-    <BaseButton
-      className={classnames(
-        "w-full rounded-lg py-3 text-center text-lg !font-bold text-black"
-      )}
-      loading={!config || !settlableBets || loading}
-      loaderSize={20}
+    <NewButton
+      disabled={!settlableBets?.length || buttonLoading}
       onClick={settleRace}
-      disabled={!settlableBets?.length}
-    >
-      SETTLE RACE
-    </BaseButton>
+      text={buttonLoading ? "loading..." : "settle race"}
+      active={!buttonLoading && !!settlableBets?.length}
+    />
   );
 };
