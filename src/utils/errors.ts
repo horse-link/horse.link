@@ -59,8 +59,7 @@ const ethersErrorLookup: Record<ethers.errors, string> = {
     "It looks like you rejected the transaction. Please try again.",
   [ethers.errors.NETWORK_ERROR]:
     "We're having trouble connecting to the network. Please check your internet connection and try again.",
-  [ethers.errors.INSUFFICIENT_FUNDS]:
-    "You don't have enough 'gas' to send this transaction. You can get some more through the faucet.",
+  [ethers.errors.INSUFFICIENT_FUNDS]: "Insufficient gas to place/settle bet.",
   [ethers.errors.UNPREDICTABLE_GAS_LIMIT]: DEFAULT_BLOCKCHAIN_ERROR,
   [ethers.errors.CALL_EXCEPTION]: DEFAULT_BLOCKCHAIN_ERROR,
   [ethers.errors.SERVER_ERROR]: DEFAULT_BLOCKCHAIN_ERROR,
