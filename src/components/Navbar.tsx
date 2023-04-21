@@ -25,7 +25,7 @@ export const Navbar: React.FC = () => {
 
   return (
     <div className="flex w-full items-center gap-x-20 bg-hl-background-secondary px-10 py-6 text-hl-tertiary">
-      <h2 className="font-basement text-3xl font-black">
+      <h2 className="font-basement text-3xl font-black text-hl-primary">
         <span className="text-hl-secondary">HORSE</span>LINK
       </h2>
       {Routes.map(r => (

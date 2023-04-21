@@ -41,4 +41,3 @@ it("Should contain Bet Slip", async () => {
   const betSlipElement = screen.getByText("Bet Slip");
   expect(betSlipElement).toBeDefined();
 });
-

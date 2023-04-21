@@ -18,5 +18,9 @@ export const HomeNextToJumpBanner: React.FC = () => {
         />
       ))}
     </div>
-  ) : null;
+  ) : (
+    <div className="w-full rounded-xl border border-hl-border py-4 text-center">
+      loading...
+    </div>
+  );
 };

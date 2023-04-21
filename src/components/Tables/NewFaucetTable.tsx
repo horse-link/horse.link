@@ -115,11 +115,20 @@ export const NewFaucetTable: React.FC<Props> = ({
         })
       : [];
 
+  const loading = [
+    [
+      <div key="faucettable-loading-blank" />,
+      <div className="py-4" key="faucettable-loading-message">
+        Loading...
+      </div>
+    ]
+  ];
+
   return (
     <NewTable
       headers={headers}
       headerStyles="font-basement tracking-wider"
-      rows={rows}
+      rows={!config || !balances ? loading : rows}
     />
   );
 };

@@ -221,11 +221,20 @@ export const NewVaultsTable: React.FC<Props> = ({ setIsModalOpen }) => {
       })
     : [];
 
+  const loading = [
+    [
+      <div key="vaultstable-loading-blank" />,
+      <div className="py-4" key="vaultstable-loading-message">
+        Loading...
+      </div>
+    ]
+  ];
+
   return (
     <NewTable
       headers={headers}
       headerStyles="font-basement tracking-wider"
-      rows={rows}
+      rows={!vaultInfoList?.length ? loading : rows}
     />
   );
 };

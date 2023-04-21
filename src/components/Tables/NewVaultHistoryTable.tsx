@@ -90,11 +90,20 @@ export const NewVaultHistoryTable: React.FC<Props> = ({ history }) => {
         })
       : [];
 
+  const loading = [
+    [
+      <div key="vaultshistorytable-loading-blank" />,
+      <div className="py-4" key="vaultshistorytable-loading-message">
+        Loading...
+      </div>
+    ]
+  ];
+
   return (
     <NewTable
       headers={headers}
       headerStyles="font-basement tracking-wider"
-      rows={rows}
+      rows={!history || !config ? loading : rows}
     />
   );
 };

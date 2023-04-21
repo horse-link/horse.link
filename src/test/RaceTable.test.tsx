@@ -1,4 +1,4 @@
-import { RaceTable } from "../components/Tables";
+import { NewRaceTable } from "../components/Tables";
 import { Runner } from "../types/meets";
 import { render, screen } from "./componentTestUtils";
 
@@ -33,7 +33,7 @@ type Props = {
 };
 const RaceTableComponent = ({ runners }: Props) => {
   return (
-    <RaceTable
+    <NewRaceTable
       runners={runners}
       setSelectedRunner={() => {}}
       setIsModalOpen={() => {}}
