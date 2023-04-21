@@ -94,12 +94,12 @@ export const NewBetTable: React.FC<Props> = ({
               utils.formatting.parseBytes16String(bet.marketId)
             );
 
-          const style = "w-full text-left py-4";
+          const style = "w-full text-left py-4 text-hl-tertiary";
 
           return [
             <div
               key={`racetable-bet-${bet.index}-${i}-index`}
-              className={style}
+              className={classNames(style, "font-basement")}
               onClick={() => onClickBet(bet)}
             >
               {bet.index}
@@ -108,7 +108,7 @@ export const NewBetTable: React.FC<Props> = ({
               key={`racetable-bet-${bet.index}-${i}-punter`}
               className={classNames(
                 style,
-                "max-w-[20ch] truncate text-hl-secondary"
+                "max-w-[20ch] truncate !text-hl-secondary"
               )}
               onClick={() => onClickBet(bet)}
             >
@@ -130,7 +130,7 @@ export const NewBetTable: React.FC<Props> = ({
             </div>,
             <div
               key={`racetable-bet-${bet.index}-${i}-date`}
-              className={classNames(style, "text-hl-secondary")}
+              className={classNames(style, "!text-hl-secondary")}
               onClick={() => onClickBet(bet)}
             >
               {raceDetails.date} {raceDetails.location} Race{" "}

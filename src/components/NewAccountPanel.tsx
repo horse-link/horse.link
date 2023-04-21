@@ -75,25 +75,33 @@ export const NewAccountPanel: React.FC<Props> = ({
           title="Network"
           data={
             <Listbox as={React.Fragment}>
-              <Listbox.Button className="w-full font-sans">
-                <NewButton
-                  big
-                  text={chain?.name || "Please connect"}
-                  onClick={() => {}}
-                />
-              </Listbox.Button>
-              <Listbox.Options className="pt-2 font-sans text-base font-normal">
-                {chains.map(chain => (
-                  <Listbox.Option key={chain.id} value={chain.id}>
-                    <button
-                      onClick={() => forceNewNetwork(chain)}
-                      className="mt-2 w-full text-center"
-                    >
-                      {chain.name}
-                    </button>
-                  </Listbox.Option>
-                ))}
-              </Listbox.Options>
+              {({ open }) => (
+                <React.Fragment>
+                  <Listbox.Button className="w-full font-sans">
+                    <NewButton
+                      big
+                      text={chain?.name || "Please connect"}
+                      onClick={() => {}}
+                      dropdown
+                      dropdownOpen={open}
+                    />
+                  </Listbox.Button>
+                  <Listbox.Options className="pt-2 font-sans text-base font-normal">
+                    {[
+                      ...chains.filter(c => (chain ? c.id !== chain.id : true))
+                    ].map(chain => (
+                      <Listbox.Option key={chain.id} value={chain.id}>
+                        <button
+                          onClick={() => forceNewNetwork(chain)}
+                          className="w-full py-2 text-center hover:bg-hl-primary hover:text-hl-secondary"
+                        >
+                          {chain.name}
+                        </button>
+                      </Listbox.Option>
+                    ))}
+                  </Listbox.Options>
+                </React.Fragment>
+              )}
             </Listbox>
           }
         />

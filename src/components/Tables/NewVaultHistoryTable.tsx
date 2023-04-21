@@ -47,12 +47,8 @@ export const NewVaultHistoryTable: React.FC<Props> = ({ history }) => {
           const style = "w-full text-left py-4";
 
           const formattedTxType = txTypeMap.get(vault.type);
-          if (!formattedTxType)
-            throw new Error(`Cannot get type for vault ${vault.id}`);
 
           const details = utils.config.getVault(vault.vaultAddress, config);
-          if (!details)
-            throw new Error(`Cannot get details for vault ${vault.id}`);
 
           const amount = utils.formatting.formatToFourDecimals(
             ethers.utils.formatEther(vault.amount)
@@ -60,7 +56,12 @@ export const NewVaultHistoryTable: React.FC<Props> = ({ history }) => {
 
           const time = dayjs.unix(vault.timestamp).fromNow();
 
-          const data = [formattedTxType, amount, time, details.name];
+          const data = [
+            formattedTxType,
+            amount,
+            time,
+            details?.name || `${vault.vaultAddress.slice(0, 20)}...`
+          ];
 
           return [
             ...data.map((text, i) => (

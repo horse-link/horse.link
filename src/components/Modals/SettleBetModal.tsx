@@ -11,6 +11,7 @@ import { Config } from "../../types/config";
 import dayjs from "dayjs";
 import { useApi } from "../../providers/Api";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
+import { NewButton } from "../Buttons";
 
 type Props = {
   isModalOpen: boolean;
@@ -127,121 +128,109 @@ export const SettleBetModal: React.FC<Props> = ({
       onClose={() => setIsModalOpen(false)}
       isLarge={!!txHash}
     >
-      {!bet || !config ? (
-        <div className="flex w-full flex-col items-center p-10">
+      {!bet || !config || !market || !token ? (
+        <div className="p-10">
           <Loader />
         </div>
-      ) : (
-        <React.Fragment>
-          <h2 className="mb-6 text-2xl font-bold">
+      ) : isSettled ? (
+        <div className="p-6">
+          <h2 className="font-basement text-5xl tracking-wider">
             {utils.formatting.formatFirstLetterCapitalised(bet.status)} Bet #
             {bet.index}
           </h2>
-          <div className="flex flex-col">
-            <h3 className="mb-2 font-semibold">
-              Placed:{" "}
-              <span className="font-normal">
+
+          <p className="mt-2 font-semibold">
+            Tx Hash:{" "}
+            <a
+              href={`${scanner}/tx/${bet.settledAtTx}`}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="underline"
+            >
+              {utils.formatting.shortenHash(
+                bet.settledAtTx || ethers.constants.HashZero
+              )}
+            </a>
+          </p>
+        </div>
+      ) : txHash ? (
+        <Web3SuccessHandler
+          hash={txHash}
+          message="Your settlement has been placed, click here to view the transaction"
+        />
+      ) : error ? (
+        <Web3ErrorHandler error={error} />
+      ) : (
+        <div className="p-6">
+          <h2 className="font-basement text-5xl tracking-wider">
+            {utils.formatting.formatFirstLetterCapitalised(bet.status)} Bet #
+            {bet.index}
+          </h2>
+
+          <div className="mt-8 flex w-full flex-col items-center">
+            <div className="grid w-full grid-cols-2">
+              <h3 className="text-left text-hl-secondary">Placed:</h3>
+              <p className="text-left text-hl-tertiary">
                 {dayjs.unix(bet.blockNumber).format("dddd Do MMMM")}
-              </span>
-            </h3>
-            <h3 className="mb-2 font-semibold">
-              Market:{" "}
-              <span className="font-normal">
-                {market ? (
-                  utils.config.getVaultNameFromMarket(market.address, config)
-                ) : (
-                  <Loader size={14} />
-                )}
-              </span>
-            </h3>
-            {isWinning === true ? (
-              <h3 className="font-semibold">
-                Win:{" "}
-                <span className="font-normal">
-                  {ethers.utils.formatEther(bet.payout)} {token?.symbol}
-                </span>
-              </h3>
-            ) : isWinning === false ? (
-              <h3 className="font-semibold">
-                {isScratched ? "Refund" : "Loss"}:{" "}
-                <span className="font-normal">
-                  {ethers.utils.formatEther(bet.amount)} {token?.symbol}
-                </span>
-              </h3>
-            ) : (
-              <h3 className="font-semibold">
-                Bet:{" "}
-                <span className="font-normal">
-                  {ethers.utils.formatEther(bet.amount)} {token?.symbol}
-                </span>
-                <h3 className="mt-2 font-semibold">
-                  Potential Payout:{" "}
-                  <span className="font-normal">
-                    {bet.payout ? (
-                      utils.formatting.formatToFourDecimals(
-                        ethers.utils.formatEther(bet.payout)
-                      )
-                    ) : (
-                      <Loader size={14} />
-                    )}{" "}
-                    {token?.symbol}
-                  </span>
-                </h3>
-              </h3>
-            )}
-            {isSettled && (
-              <h3 className="mt-2 font-semibold">
-                Tx Hash:{" "}
-                <a
-                  href={`${scanner}/tx/${bet.settledAtTx}`}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="hyperlink underline"
-                >
-                  {utils.formatting.shortenHash(bet.settledAtTx ?? "")}
-                </a>
-              </h3>
-            )}
-            {!txHash && !error && (
-              <React.Fragment>
-                <button
-                  className="relative mt-6 w-full rounded-md border-2 border-black py-2 font-bold transition-colors duration-100 disabled:border-black/50 disabled:bg-white disabled:text-black/50 enabled:hover:bg-black enabled:hover:text-white"
-                  onClick={onClickSettleBet}
-                  disabled={
-                    !signer ||
-                    bet.settled ||
-                    (bet.status !== "RESULTED" && bet.status !== "SCRATCHED") ||
-                    (bet.status === "RESULTED" && !isPastPayoutDate) ||
-                    txLoading ||
-                    !!txHash
-                  }
-                >
-                  {txLoading ? (
-                    <Loader />
-                  ) : isScratched ? (
-                    "REFUND BET"
-                  ) : (
-                    "SETTLE BET"
-                  )}
-                </button>
-                {!bet.marketResultAdded && (
-                  <span className="relative mt-2 block text-xs text-black/80">
-                    Note: will require two transactions to add market results
-                    first
-                  </span>
-                )}
-                <br />
-              </React.Fragment>
-            )}
-            {txHash && (
-              <Web3SuccessHandler
-                hash={txHash}
-                message="Your settlement has been placed, click here to view the transaction"
-              />
-            )}
-            {error && <Web3ErrorHandler error={error} />}
+              </p>
+              <h3 className="text-left text-hl-secondary">Market:</h3>
+              <p className="text-left text-hl-tertiary">
+                {utils.config.getVaultNameFromMarket(market.address, config)}
+              </p>
+              {isWinning === true ? (
+                <React.Fragment>
+                  <h3 className="text-left text-hl-secondary">Win:</h3>
+                  <p className="text-left text-hl-tertiary">
+                    {ethers.utils.formatEther(bet.payout)} {token?.symbol}
+                  </p>
+                </React.Fragment>
+              ) : isWinning === false ? (
+                <React.Fragment>
+                  <h3 className="text-left text-hl-secondary">
+                    {isScratched ? "Refund" : "Loss"}
+                  </h3>
+                  <p className="text-left text-hl-tertiary">
+                    {ethers.utils.formatEther(bet.payout)} {token.symbol}
+                  </p>
+                </React.Fragment>
+              ) : (
+                <React.Fragment>
+                  <h3 className="text-left text-hl-secondary">Bet:</h3>
+                  <p className="text-left text-hl-tertiary">
+                    {ethers.utils.formatEther(bet.amount)} {token.symbol}
+                  </p>
+                  <h3 className="text-left text-hl-secondary">
+                    Potential Payout:
+                  </h3>
+                  <p className="text-left text-hl-tertiary">
+                    {utils.formatting.formatToFourDecimals(
+                      ethers.utils.formatEther(bet.payout)
+                    )}
+                  </p>
+                </React.Fragment>
+              )}
+            </div>
           </div>
-        </React.Fragment>
+          <div className="mt-6">
+            <NewButton
+              text={txLoading ? "loading..." : "SETTLE BET"}
+              onClick={onClickSettleBet}
+              disabled={
+                !signer ||
+                bet.settled ||
+                bet.status === "PENDING" ||
+                !isPastPayoutDate ||
+                txLoading ||
+                !!txHash
+              }
+            />
+            {!bet.marketResultAdded && (
+              <p className="my-2 text-xs">
+                Note: will require two transactions to add market results first
+              </p>
+            )}
+          </div>
+        </div>
       )}
     </BaseModal>
   );
