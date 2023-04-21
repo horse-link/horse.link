@@ -6,6 +6,8 @@ import utils from "../../utils";
 import dayjs from "dayjs";
 import constants from "../../constants";
 import utc from "dayjs/plugin/utc";
+import classNames from "classnames";
+import { RaceStatus } from "../../constants/status";
 
 dayjs.extend(utc);
 
@@ -32,14 +34,14 @@ export const NewHomeTable: React.FC<Props> = ({ meets }) => {
 
   const headers = [
     <div
-      className="w-full py-4 text-left font-black text-white"
+      className="w-[220px] py-4 text-left font-black text-white"
       key={`hometable-race-location`}
     >
       LOCATION
     </div>,
     ...Array.from({ length: totalRaces }, (_, i) => (
       <div
-        className="w-full py-4 text-right text-hl-secondary"
+        className={classNames("w-full py-4 text-center text-hl-secondary")}
         key={`hometable-race-${i}`}
       >
         R{i + 1}
@@ -49,7 +51,7 @@ export const NewHomeTable: React.FC<Props> = ({ meets }) => {
 
   const rows = meets
     ? meets.map(meet => [
-        <div key={meet.id} className="flex max-w-[6rem] items-center gap-x-4">
+        <div key={meet.id} className="flex w-[220px] items-center gap-x-4">
           <img
             src="/images/horse.webp"
             alt="HorseLink logo"
@@ -59,21 +61,39 @@ export const NewHomeTable: React.FC<Props> = ({ meets }) => {
             {meet.name} ({meet.location})
           </div>
         </div>,
-        ...meet.races.map(race => (
-          <div
-            className="flex h-full w-full justify-end"
-            key={JSON.stringify(race)}
-          >
-            <Link
-              to={utils.races.createRacingLink(race, meet)}
-              className="relative left-[1rem] flex h-full w-full items-center justify-end px-4 text-hl-tertiary hover:bg-hl-primary hover:text-hl-secondary"
+        ...meet.races.map(race => {
+          const text = utils.races.createCellText(race, time);
+
+          return (
+            <div
+              className={classNames("flex h-full w-full justify-center")}
+              key={JSON.stringify(race)}
             >
-              {utils.races.createCellText(race, time)}
-            </Link>
-          </div>
-        )),
+              <Link
+                to={utils.races.createRacingLink(race, meet)}
+                className={classNames(
+                  "flex h-full w-full items-center justify-center px-4 text-hl-tertiary",
+                  {
+                    "bg-hl-primary text-hl-background":
+                      race.status === RaceStatus.PAYING,
+                    "bg-hl-secondary text-hl-background":
+                      race.status === RaceStatus.CLOSED || text === "CLSD",
+                    "hover:bg-hl-primary hover:text-hl-secondary": ![
+                      RaceStatus.CLOSED,
+                      RaceStatus.PAYING
+                    ].includes(race.status)
+                  }
+                )}
+              >
+                {text}
+              </Link>
+            </div>
+          );
+        }),
         ...Array.from({ length: totalRaces - meet.races.length }, (_, i) => (
-          <div key={`hometable-blank-${i}`} />
+          <div key={`hometable-blank-${i}`} className="w-full">
+            <br />
+          </div>
         ))
       ])
     : [];
