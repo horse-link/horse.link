@@ -66,7 +66,7 @@ export const NewHomeTable: React.FC<Props> = ({ meets }) => {
           >
             <Link
               to={utils.races.createRacingLink(race, meet)}
-              className="relative left-[1rem] flex h-full w-fit items-center justify-end px-4 text-hl-tertiary hover:bg-hl-primary hover:text-hl-secondary"
+              className="relative left-[1rem] flex h-full w-full items-center justify-end px-4 text-hl-tertiary hover:bg-hl-primary hover:text-hl-secondary"
             >
               {utils.races.createCellText(race, time)}
             </Link>
