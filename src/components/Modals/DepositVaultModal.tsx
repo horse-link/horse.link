@@ -162,6 +162,7 @@ export const DepositVaultModal: React.FC<Props> = ({
                   onClick={onClickDeposit}
                   disabled={shouldDisableButton}
                   big
+                  white
                 />
               </div>
             )}

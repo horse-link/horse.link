@@ -9,6 +9,7 @@ type Props = {
   big?: boolean;
   dropdown?: boolean;
   dropdownOpen?: boolean;
+  white?: boolean;
 };
 
 export const NewButton: React.FC<Props> = ({
@@ -18,11 +19,13 @@ export const NewButton: React.FC<Props> = ({
   active = true,
   big = false,
   dropdown = false,
-  dropdownOpen = false
+  dropdownOpen = false,
+  white = false
 }) => (
   <button
     className={classNames({
-      "bg-hl-secondary text-hl-background": active,
+      "bg-hl-secondary text-hl-background": active && !white,
+      "bg-hl-primary text-hl-background": active && white,
       "border border-hl-tertiary text-hl-tertiary": !active,
       "px-8 text-sm": !big,
       "w-full py-2 text-base": big

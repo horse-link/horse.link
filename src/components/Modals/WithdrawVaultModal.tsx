@@ -159,6 +159,7 @@ export const WithdrawVaultModal: React.FC<Props> = ({
                   onClick={onClickWithdraw}
                   disabled={shouldDisableButton}
                   big
+                  white
                 />
               </div>
             )}
