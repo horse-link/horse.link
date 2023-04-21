@@ -3,12 +3,14 @@ import { Link } from "react-router-dom";
 import { NextToJumpRace } from "../../types/meets";
 import utils from "../../utils";
 import constants from "../../constants";
+import classNames from "classnames";
 
 type Props = {
   meet: NextToJumpRace;
+  index: number;
 };
 
-export const HomeBannerRow: React.FC<Props> = ({ meet }) => {
+export const HomeBannerRow: React.FC<Props> = ({ meet, index }) => {
   const [timeString, setTimeString] = useState(
     utils.formatting.formatTimeToHMS(meet.jumperRaceStartTime)
   );
@@ -23,14 +25,28 @@ export const HomeBannerRow: React.FC<Props> = ({ meet }) => {
 
   return (
     <Link
-      className="flex h-full w-full shrink-0 flex-col p-2 text-center hover:bg-indigo-700 lg:shrink"
+      className={classNames(
+        "flex w-full shrink items-center gap-x-2 rounded-lg border border-hl-border px-4 py-8",
+        {
+          "hidden 3xl:flex": index != 0
+        }
+      )}
       to={`/races/${meet.meeting.venueCode}/${meet.jumperRaceNumber}`}
     >
-      <span className="block">
-        {meet.meeting.jumperMeetingName} ({meet.meeting.location}) - R
-        {meet.jumperRaceNumber}
-      </span>
-      <span className="block font-semibold">{` ${timeString}`}</span>
+      <img
+        src="/images/horse.webp"
+        alt="HorseLink logo"
+        className="max-w-[4rem]"
+      />
+      <div className="w-full">
+        <dt className="font-basement">
+          {meet.meeting.location} ({meet.meeting.venueCode})
+        </dt>
+        <dd className="flex gap-x-4 text-sm font-normal">
+          <p className="text-hl-tertiary">RACE {meet.jumperRaceNumber}</p>
+          <p className="text-hl-secondary">{timeString}</p>
+        </dd>
+      </div>
     </Link>
   );
 };

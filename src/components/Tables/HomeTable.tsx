@@ -10,6 +10,7 @@ import utc from "dayjs/plugin/utc";
 import advancedFormat from "dayjs/plugin/advancedFormat";
 import { HomeTableRace } from "../Home";
 import constants from "../../constants";
+import { NewButton } from "../Buttons";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -25,8 +26,6 @@ export const HomeTable: React.FC<Props> = ({ meets }) => {
   const length = meets
     ? Math.max(...meets.map(m => m.races.length))
     : LOADING_LENGTH;
-
-  const title = dayjs(Date.now()).format("dddd Do MMMM");
 
   const [time, setTime] = useState(dayjs());
   useEffect(() => {
@@ -85,7 +84,7 @@ export const HomeTable: React.FC<Props> = ({ meets }) => {
 
   return (
     <BaseTable
-      title={title}
+      title={<NewButton text="Today" onClick={() => {}} />}
       tableStyles="-mt-12"
       headers={HEADERS}
       rows={ROWS}

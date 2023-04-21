@@ -44,7 +44,7 @@ export const createCellText = (race: Race, now: Dayjs) => {
   );
 
   return race.status == RaceStatus.PAYING
-    ? race.results?.join(" ")
+    ? race.results?.join(",")
     : race.status === RaceStatus.ABANDONED
     ? "ABND"
     : isAfterClosingTime

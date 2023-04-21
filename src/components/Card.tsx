@@ -3,14 +3,16 @@ import { Loader } from ".";
 
 type Props = {
   title: string;
-  data?: string;
+  data?: React.ReactNode;
 };
 
 export const Card: React.FC<Props> = ({ title, data }) => (
-  <div className="w-full overflow-hidden rounded-lg bg-white px-2 py-1 shadow sm:p-6">
-    <dt className="font-medium text-gray-500 ">{title}</dt>
-    <dd className="mt-1 font-semibold text-gray-900 lg:text-3xl">
-      {data || <Loader />}
+  <div className="w-full rounded-b-lg border border-hl-border text-white">
+    <dt className="w-full border-b border-hl-border bg-hl-background-secondary px-4 py-2">
+      {title}
+    </dt>
+    <dd className="w-full p-4 font-basement text-5xl font-black">
+      {data || <Loader color="white" />}
     </dd>
   </div>
 );

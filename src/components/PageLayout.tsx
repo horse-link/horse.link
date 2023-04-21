@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { WalletModal } from "./Modals";
 import { useWalletModal } from "../providers/WalletModal";
-import { BetSlip } from "./BetSlip";
 import { Navbar } from "./Navbar";
-import { AccountPanel } from "./AccountPanel";
 import { useNavigate } from "react-router";
 import { useWalletOverrides } from "../hooks/useWalletOverrides";
+import { NewAccountPanel } from "./NewAccountPanel";
+import { NewBetSlip } from "./NewBetSlip";
 
 type Props = {
   children: React.ReactNode;
@@ -27,29 +27,25 @@ export const PageLayout: React.FC<Props> = ({ children }) => {
   }, [isChainUnsupported]);
 
   return (
-    <div className="min-h-screen bg-emerald-500">
+    <div className="min-h-screen w-screen bg-hl-background text-hl-primary">
       <Navbar />
-      <div className="py-4">
-        <main>
-          <div className="max-w-9xl mx-auto px-4 pt-1 sm:px-6 lg:grid lg:grid-cols-5 lg:px-9">
-            <div className="lg:col-span-4">{children}</div>
-            <div className="lg:col-span-1">
-              <div className="lg:sticky lg:top-4">
-                <AccountPanel
-                  forceNewNetwork={forceNewNetwork}
-                  isLocalWallet={isLocalWallet}
-                />
-                <BetSlip />
-              </div>
-            </div>
+      <main className="w-full grid-cols-5 p-4 3xl:grid">
+        <div className="col-span-4">{children}</div>
+        <div className="col-span-1 px-4">
+          <div className="sticky top-4 mt-6 flex w-full flex-col gap-y-6 3xl:mt-0">
+            <NewAccountPanel
+              forceNewNetwork={forceNewNetwork}
+              isLocalWallet={isLocalWallet}
+            />
+            <NewBetSlip />
           </div>
-          <WalletModal
-            isModalOpen={isWalletModalOpen}
-            closeWalletModal={closeWalletModal}
-            setLoading={setLoading}
-          />
-        </main>
-      </div>
+        </div>
+      </main>
+      <WalletModal
+        isModalOpen={isWalletModalOpen}
+        closeWalletModal={closeWalletModal}
+        setLoading={setLoading}
+      />
     </div>
   );
 };
