@@ -7,6 +7,8 @@ type Props = {
   disabled?: boolean;
   active?: boolean;
   big?: boolean;
+  dropdown?: boolean;
+  dropdownOpen?: boolean;
 };
 
 export const NewButton: React.FC<Props> = ({
@@ -14,7 +16,9 @@ export const NewButton: React.FC<Props> = ({
   onClick,
   disabled,
   active = true,
-  big = false
+  big = false,
+  dropdown = false,
+  dropdownOpen = false
 }) => (
   <button
     className={classNames({
@@ -26,6 +30,22 @@ export const NewButton: React.FC<Props> = ({
     onClick={onClick}
     disabled={disabled}
   >
-    {text.toUpperCase()}
+    {dropdown ? (
+      <div className="flex w-full justify-between">
+        <div className="w-full" />
+        <span className="block w-full text-center">{text.toUpperCase()}</span>
+        <div className="flex w-full justify-end">
+          <span
+            className={classNames("relative -left-4 block", {
+              "rotate-180": dropdownOpen
+            })}
+          >
+            V
+          </span>
+        </div>
+      </div>
+    ) : (
+      text.toUpperCase()
+    )}
   </button>
 );
