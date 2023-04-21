@@ -1,6 +1,6 @@
 import React from "react";
-import classNames from "classnames";
 import { BetFilterOptions } from "../../types/bets";
+import { NewButton } from "../Buttons";
 
 const options: Map<BetFilterOptions, string> = new Map([
   ["ALL_BETS", "All Bets"],
@@ -22,22 +22,13 @@ export const BetFilterGroup: React.FC<Props> = ({
 }) => (
   <div className="flex flex-wrap gap-3">
     {[...options].map(([key, text]) => (
-      <button
+      <NewButton
+        text={text}
         key={key}
-        onClick={() => {
-          onChange(key);
-        }}
-        className={classNames(
-          "w-13 rounded bg-white px-1 shadow lg:w-28 lg:px-2",
-          {
-            "!bg-indigo-700 text-white": key === currentOption,
-            "disabled:opacity-75 hover:bg-gray-200": key !== currentOption
-          }
-        )}
+        onClick={() => onChange(key)}
         disabled={disabled}
-      >
-        {text}
-      </button>
+        active={key === currentOption}
+      />
     ))}
   </div>
 );

@@ -26,7 +26,7 @@ export const HomeBannerRow: React.FC<Props> = ({ meet, index }) => {
   return (
     <Link
       className={classNames(
-        "flex w-full shrink items-center gap-x-2 rounded-lg border border-hl-border px-4 py-8",
+        "flex w-full shrink items-center gap-x-2 rounded-lg border border-hl-border px-4 py-8 3xl:w-fit 3xl:max-w-[16%]",
         {
           "hidden 3xl:flex": index != 0
         }

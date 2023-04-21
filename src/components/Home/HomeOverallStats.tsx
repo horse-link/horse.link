@@ -21,7 +21,7 @@ export const HomeOverallStats: React.FC = () => {
       : undefined;
 
   return (
-    <dl className="grid grid-cols-1 gap-x-12 sm:grid-cols-3">
+    <dl className="flex w-full justify-between gap-x-6">
       <Card title="Total Liquidity" data={formattedTvl} />
       <Card title="In Play" data={formattedInplay} />
       <Card title="Performance" data={formattedPerformace} />
