@@ -76,7 +76,7 @@ export const WithdrawVaultModal: React.FC<Props> = ({
     event.preventDefault();
     const value = event.currentTarget.value;
 
-    if (!RegExp(/^\d*$/).test(value)) return;
+    if (!RegExp(/^[(\d|.)]*$/).test(value)) return;
 
     if (value.includes(".")) {
       const decimals = value.split(".")[1];
