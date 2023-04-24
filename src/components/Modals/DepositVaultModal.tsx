@@ -144,9 +144,7 @@ export const DepositVaultModal: React.FC<Props> = ({
                 {userBalance.formatted}
               </p>
               <div className="flex items-center">
-                <h3 className="text-left text-hl-secondary">
-                  Withdraw amount:
-                </h3>
+                <h3 className="text-left text-hl-secondary">Deposit amount:</h3>
               </div>
               <input
                 placeholder="0"

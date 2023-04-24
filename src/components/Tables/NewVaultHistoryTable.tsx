@@ -30,7 +30,7 @@ export const NewVaultHistoryTable: React.FC<Props> = ({ history }) => {
       <div
         key={`vaulthistorytable-${text}-${i}`}
         className={classNames(
-          "w-full py-4 text-left font-semibold text-hl-primary",
+          "w-full py-4 text-left text-xs font-semibold text-hl-primary xl:text-base",
           {
             "!text-hl-secondary": i === 1
           }
@@ -44,7 +44,7 @@ export const NewVaultHistoryTable: React.FC<Props> = ({ history }) => {
   const rows =
     history && config
       ? history.map((vault, i) => {
-          const style = "w-full text-left py-4";
+          const style = "w-full text-left py-4 text-xs xl:text-base";
 
           const formattedTxType = txTypeMap.get(vault.type);
 
@@ -82,7 +82,10 @@ export const NewVaultHistoryTable: React.FC<Props> = ({ history }) => {
                 href={`${scanner}/tx/${vault.id.toLowerCase()}`}
                 target="_blank"
                 rel="noreferrer noopener"
-                className={classNames(style, "max-w-[20ch] truncate")}
+                className={classNames(
+                  style,
+                  "max-w-[10ch] truncate xl:max-w-[20ch]"
+                )}
               >
                 {vault.id}
               </a>

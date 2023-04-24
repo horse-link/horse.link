@@ -62,7 +62,10 @@ export const NewMarketTable: React.FC = () => {
               href={`${scanner}/address/${market.address}`}
               target="_blank"
               rel="noreferrer noopener"
-              className={classNames(style, "max-w-[20ch] truncate")}
+              className={classNames(
+                style,
+                "max-w-[10ch] truncate xl:max-w-[20ch]"
+              )}
             >
               {market.address}
             </a>
@@ -75,7 +78,10 @@ export const NewMarketTable: React.FC = () => {
               href={`${scanner}/address/${market.vaultAddress}`}
               target="_blank"
               rel="noreferrer noopener"
-              className={classNames(style, "max-w-[20ch] truncate")}
+              className={classNames(
+                style,
+                "max-w-[10ch] truncate xl:max-w-[20ch]"
+              )}
             >
               {market.vaultAddress}
             </a>

@@ -95,7 +95,7 @@ export const NewFaucetTable: React.FC<Props> = ({
                 rel="noreferrer noopener"
                 className={classNames(
                   style,
-                  "max-w-[20ch] truncate text-hl-secondary"
+                  "max-w-[10ch] truncate text-hl-secondary xl:max-w-[20ch]"
                 )}
               >
                 {token.address}

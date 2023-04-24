@@ -109,7 +109,7 @@ export const NewVaultsTable: React.FC<Props> = ({ setIsModalOpen }) => {
     <div
       key={`vaultstable-${text}-${i}`}
       className={classNames(
-        "w-full py-4 text-left font-semibold text-hl-primary",
+        "w-full py-4 text-left text-xs font-semibold text-hl-primary xl:text-base",
         {
           "!text-hl-secondary": [1, 5].includes(i)
         }
@@ -121,7 +121,7 @@ export const NewVaultsTable: React.FC<Props> = ({ setIsModalOpen }) => {
 
   const rows = vaultInfoList?.length
     ? vaultInfoList.map((vault, i) => {
-        const style = "w-full text-left py-4";
+        const style = "w-full text-left py-4 text-xs xl:text-base";
 
         const tvl = `${utils.formatting.formatToFourDecimals(
           ethers.utils.formatUnits(
@@ -180,7 +180,10 @@ export const NewVaultsTable: React.FC<Props> = ({ setIsModalOpen }) => {
               href={`${scanner}/address/${vault.address}`}
               target="_blank"
               rel="noreferrer noopener"
-              className={classNames(style, "max-w-[20ch] truncate")}
+              className={classNames(
+                style,
+                "max-w-[10ch] truncate xl:max-w-[20ch]"
+              )}
             >
               {vault.address}
             </a>

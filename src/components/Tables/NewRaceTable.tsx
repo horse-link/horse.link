@@ -30,7 +30,7 @@ export const NewRaceTable: React.FC<Props> = ({
 
   const headers = [
     "#",
-    "Runner (Barrier)",
+    "Runner",
     "Form",
     "Weight",
     "Win",

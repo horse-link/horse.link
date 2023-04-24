@@ -52,7 +52,7 @@ export const NewBetTable: React.FC<Props> = ({
     <div
       key={`racetable-${text}-${i}`}
       className={classNames(
-        "w-full py-4 text-left font-semibold text-hl-primary",
+        "w-full py-4 text-left text-xs font-semibold text-hl-primary xl:text-base",
         {
           "!text-hl-secondary": [1, 4].includes(i)
         }
@@ -94,7 +94,8 @@ export const NewBetTable: React.FC<Props> = ({
               utils.formatting.parseBytes16String(bet.marketId)
             );
 
-          const style = "w-full text-left py-4 text-hl-tertiary";
+          const style =
+            "w-full text-left py-4 text-hl-tertiary text-xs xl:text-base";
 
           return [
             <div
@@ -108,7 +109,7 @@ export const NewBetTable: React.FC<Props> = ({
               key={`racetable-bet-${bet.index}-${i}-punter`}
               className={classNames(
                 style,
-                "max-w-[20ch] truncate !text-hl-secondary"
+                "max-w-[10ch] truncate !text-hl-secondary xl:max-w-[20ch]"
               )}
               onClick={() => onClickBet(bet)}
             >

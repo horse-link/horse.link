@@ -75,24 +75,28 @@ const Results: React.FC = () => {
         <div className="flex gap-2">
           <RacesButton params={raceParams} meetRaces={meetRaces?.raceInfo} />
         </div>
-        <div className="flex justify-between border border-hl-border bg-hl-background-secondary px-4 py-3 font-basement text-sm tracking-wider text-hl-primary">
+        <div className="flex flex-col justify-between border border-hl-border bg-hl-background-secondary px-4 py-3 font-basement text-sm tracking-wider text-hl-primary xl:flex-row">
           {!thisRace ? (
             <div className="flex w-full justify-center py-2">
               <Loader />
             </div>
           ) : (
             <React.Fragment>
-              <h1>{thisRace.raceName}</h1>
-              <h2>
+              <h1 className="text-center">{thisRace.raceName}</h1>
+              <h2 className="text-center">
                 Track:{" "}
                 {results
                   ? `${results.track.name} - (${results.track.code})`
                   : details.track}
               </h2>
-              <h2>Race #: {thisRace.raceNumber}</h2>
-              <h2>Date: {date}</h2>
-              <h2>Distance: {thisRace.raceDistance}m</h2>
-              <h2>Class: {thisRace.raceClassConditions}</h2>
+              <h2 className="text-center">Race #: {thisRace.raceNumber}</h2>
+              <h2 className="text-center">Date: {date}</h2>
+              <h2 className="text-center">
+                Distance: {thisRace.raceDistance}m
+              </h2>
+              <h2 className="text-center">
+                Class: {thisRace.raceClassConditions}
+              </h2>
             </React.Fragment>
           )}
         </div>
