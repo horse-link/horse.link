@@ -66,11 +66,13 @@ const Home: React.FC = () => {
         <HomeNextToJumpBanner />
         <div className="flex w-full justify-between">
           <NewButton text="today" onClick={() => {}} disabled />
-          <HomeFilterGroup
-            value={meetsFilter}
-            onChange={onFilterChange}
-            disabled={isLoading}
-          />
+          <div className="hidden lg:block">
+            <HomeFilterGroup
+              value={meetsFilter}
+              onChange={onFilterChange}
+              disabled={isLoading}
+            />
+          </div>
         </div>
         <NewHomeTable meets={meets} />
       </div>
