@@ -63,9 +63,7 @@ const Races: React.FC = () => {
   return (
     <PageLayout>
       <div className="flex flex-col gap-6">
-        <div className="flex gap-2">
-          <RacesButton params={params} meetRaces={meetRaces?.raceInfo} />
-        </div>
+        <RacesButton params={params} meetRaces={meetRaces?.raceInfo} />
         <div className="flex justify-between border border-hl-border bg-hl-background-secondary px-4 py-3 font-basement text-sm tracking-wider text-hl-primary">
           {!race || !margin || !meetRaces ? (
             <div className="flex w-full justify-center py-2">

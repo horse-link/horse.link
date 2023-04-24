@@ -25,7 +25,7 @@ export const HomeBannerRow: React.FC<Props> = ({ meet }) => {
   return (
     <Link
       className={classNames(
-        "flex w-fit items-center gap-x-2 rounded-lg border border-hl-border px-4 py-8 2xl:max-w-[16%]"
+        "flex w-[49%] items-center gap-x-2 rounded-lg border border-hl-border px-4 py-8 xl:w-fit 2xl:max-w-[16%]"
       )}
       to={`/races/${meet.meeting.venueCode}/${meet.jumperRaceNumber}`}
     >

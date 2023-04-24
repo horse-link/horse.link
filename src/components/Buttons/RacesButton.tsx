@@ -15,7 +15,7 @@ export const RacesButton: React.FC<Props> = ({ meetRaces, params }) => {
   const currentRace = Number(params.number) || 0;
 
   return params && meetRaces ? (
-    <div className="flex gap-x-2">
+    <div className="flex flex-wrap gap-2">
       {meetRaces.map(race => (
         <NewButton
           key={`race${race.raceNumber}`}

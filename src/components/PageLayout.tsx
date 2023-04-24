@@ -29,10 +29,10 @@ export const PageLayout: React.FC<Props> = ({ children }) => {
   return (
     <div className="min-h-screen w-screen bg-hl-background text-hl-primary">
       <Navbar />
-      <main className="w-full grid-cols-5 p-4 xl:grid">
+      <main className="grid w-full grid-cols-5 p-4">
         <div className="col-span-4">{children}</div>
         <div className="col-span-1 px-4">
-          <div className="sticky top-4 mt-6 flex w-full flex-col gap-y-6 xl:mt-0">
+          <div className="sticky top-4 flex w-full flex-col gap-y-6">
             <NewAccountPanel
               forceNewNetwork={forceNewNetwork}
               isLocalWallet={isLocalWallet}
