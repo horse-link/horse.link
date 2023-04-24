@@ -73,7 +73,7 @@ export const NewHomeTable: React.FC<Props> = ({ meets }) => {
               <Link
                 to={utils.races.createRacingLink(race, meet)}
                 className={classNames(
-                  "flex h-full w-full items-center justify-center break-words text-hl-tertiary",
+                  "flex h-full w-full items-center justify-center break-words text-center text-hl-tertiary",
                   {
                     "bg-hl-primary text-hl-background":
                       race.status === RaceStatus.PAYING,
