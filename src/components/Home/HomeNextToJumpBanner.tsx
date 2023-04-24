@@ -7,10 +7,9 @@ export const HomeNextToJumpBanner: React.FC = () => {
 
   return nextMeets ? (
     <div className="flex w-full flex-wrap justify-between gap-y-4 font-semibold">
-      {nextMeets.map((meet, i) => (
+      {nextMeets.map(meet => (
         <HomeBannerRow
           meet={meet}
-          index={i}
           key={
             // no unique key in meet
             JSON.stringify(meet)
