@@ -8,6 +8,7 @@ import constants from "../../constants";
 import utc from "dayjs/plugin/utc";
 import classNames from "classnames";
 import { RaceStatus } from "../../constants/status";
+import { Loader } from "../Loader";
 
 dayjs.extend(utc);
 
@@ -108,10 +109,44 @@ export const NewHomeTable: React.FC<Props> = ({ meets }) => {
   ];
 
   return (
-    <NewTable
-      headers={headers}
-      headerStyles="font-basement tracking-wider"
-      rows={!meets ? loading : rows}
-    />
+    <React.Fragment>
+      {/* non-mobile */}
+      <div className="hidden lg:block">
+        <NewTable
+          headers={headers}
+          headerStyles="font-basement tracking-wider"
+          rows={!meets ? loading : rows}
+        />
+      </div>
+
+      {/* mobile */}
+      <div className="block lg:hidden">
+        {!meets ? (
+          <div className="flex w-full justify-center py-10">
+            <Loader />
+          </div>
+        ) : (
+          <div className="flex w-full flex-col items-center">
+            {meets.map(meet => {
+              const race = meet.races[0];
+              const text = utils.races.createCellText(race, time);
+
+              return (
+                <div
+                  key={JSON.stringify(race)}
+                  className="flex w-full items-center justify-between border-t border-hl-border py-2"
+                >
+                  <h2 className="w-full font-basement text-hl-secondary">
+                    R{race.number}
+                  </h2>
+                  <p className="w-full"></p>
+                  <p className="w-full text-right text-hl-secondary">{text}</p>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </React.Fragment>
   );
 };

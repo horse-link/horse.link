@@ -7,9 +7,10 @@ import classNames from "classnames";
 
 type Props = {
   meet: NextToJumpRace;
+  index: number;
 };
 
-export const HomeBannerRow: React.FC<Props> = ({ meet }) => {
+export const HomeBannerRow: React.FC<Props> = ({ meet, index }) => {
   const [timeString, setTimeString] = useState(
     utils.formatting.formatTimeToHMS(meet.jumperRaceStartTime)
   );
@@ -25,7 +26,10 @@ export const HomeBannerRow: React.FC<Props> = ({ meet }) => {
   return (
     <Link
       className={classNames(
-        "flex w-[49%] items-center gap-x-2 rounded-lg border border-hl-border px-4 py-8 xl:w-fit 2xl:max-w-[16%]"
+        "flex w-full items-center gap-x-2 rounded-lg border border-hl-border px-4 py-8 lg:w-[49%] xl:w-fit 2xl:max-w-[16%]",
+        {
+          "hidden lg:flex": index > 0
+        }
       )}
       to={`/races/${meet.meeting.venueCode}/${meet.jumperRaceNumber}`}
     >

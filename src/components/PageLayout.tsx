@@ -6,6 +6,7 @@ import { useNavigate } from "react-router";
 import { useWalletOverrides } from "../hooks/useWalletOverrides";
 import { NewAccountPanel } from "./NewAccountPanel";
 import { NewBetSlip } from "./NewBetSlip";
+import { MobileNavbar } from "./MobileNavbar";
 
 type Props = {
   children: React.ReactNode;
@@ -28,10 +29,19 @@ export const PageLayout: React.FC<Props> = ({ children }) => {
 
   return (
     <div className="min-h-screen w-screen bg-hl-background text-hl-primary">
-      <Navbar />
-      <main className="grid w-full grid-cols-5 p-4">
+      {/* non-mobile navbar */}
+      <div className="hidden w-full lg:block">
+        <Navbar />
+      </div>
+
+      {/* mobile navbar */}
+      <div className="block w-full lg:hidden">
+        <MobileNavbar />
+      </div>
+
+      <main className="w-full grid-cols-5 p-4 lg:grid">
         <div className="col-span-4">{children}</div>
-        <div className="col-span-1 px-4">
+        <div className="col-span-1 hidden px-4 lg:block">
           <div className="sticky top-4 flex w-full flex-col gap-y-6">
             <NewAccountPanel
               forceNewNetwork={forceNewNetwork}
