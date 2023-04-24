@@ -58,9 +58,9 @@ export const NewHomeTable: React.FC<Props> = ({ meets }) => {
             alt="HorseLink logo"
             className="max-w-[4rem]"
           />
-          <div className="w-full py-4 text-left font-basement text-sm font-black text-white">
+          <p className="w-full py-4 text-left font-basement text-sm font-black text-white">
             {meet.name} ({meet.location})
-          </div>
+          </p>
         </div>,
         ...meet.races.map(race => {
           const text = utils.races.createCellText(race, time);
@@ -136,11 +136,20 @@ export const NewHomeTable: React.FC<Props> = ({ meets }) => {
                   key={JSON.stringify(race)}
                   className="flex w-full items-center justify-between border-t border-hl-border py-2"
                 >
-                  <h2 className="w-full font-basement text-hl-secondary">
+                  <h2 className="font-basement text-hl-secondary">
                     R{race.number}
                   </h2>
-                  <p className="w-full"></p>
-                  <p className="w-full text-right text-hl-secondary">{text}</p>
+                  <div className="flex w-full items-center justify-center gap-x-2">
+                    <img
+                      src="/images/horse.webp"
+                      alt="HorseLink logo"
+                      className="max-w-[4rem]"
+                    />
+                    <p className="font-basement text-sm font-black text-white">
+                      {meet.name} ({meet.location})
+                    </p>
+                  </div>
+                  <p className="text-right text-hl-secondary">{text}</p>
                 </div>
               );
             })}
