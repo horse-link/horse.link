@@ -119,15 +119,15 @@ export const NewBetSlip: React.FC = () => {
 
               return (
                 <div
-                  className="flex w-full items-center border-b border-hl-border px-3 py-2"
+                  className="flex w-full flex-col items-center border-b border-hl-border px-3 py-2 3xl:flex-row"
                   key={`bet-${bet.id}`}
                 >
                   <div className="flex w-full items-center gap-x-6">
-                    <div className="bg-hl-primary px-3 py-1 text-xl font-bold text-hl-secondary">
+                    <div className="hidden bg-hl-primary px-3 py-1 text-xl font-bold text-hl-secondary 3xl:block">
                       {i + 1}
                     </div>
-                    <div className="w-full">
-                      <p className="font-basement font-black">
+                    <div className="flex w-full flex-col items-center 3xl:block">
+                      <p className="text-center font-basement font-black 3xl:text-left">
                         {bet.runner.name}
                       </p>
                       <p className="text-hl-tertiary">
@@ -141,8 +141,8 @@ export const NewBetSlip: React.FC = () => {
                       </p>
                     </div>
                   </div>
-                  <div className="flex w-full items-center justify-end gap-x-4">
-                    <div className="w-full text-right">
+                  <div className="mt-2 flex w-full flex-col items-center gap-x-4 gap-y-2 3xl:mt-0 3xl:flex-row 3xl:justify-end 3xl:gap-y-0">
+                    <div className="w-full text-center 3xl:text-right">
                       <p>
                         {bet.race.track.name} {bet.race.raceNumber}
                       </p>

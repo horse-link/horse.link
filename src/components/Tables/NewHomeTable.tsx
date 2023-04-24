@@ -8,6 +8,7 @@ import constants from "../../constants";
 import utc from "dayjs/plugin/utc";
 import classNames from "classnames";
 import { RaceStatus } from "../../constants/status";
+import { Loader } from "../Loader";
 
 dayjs.extend(utc);
 
@@ -57,9 +58,9 @@ export const NewHomeTable: React.FC<Props> = ({ meets }) => {
             alt="HorseLink logo"
             className="max-w-[4rem]"
           />
-          <div className="w-full py-4 text-left font-basement text-sm font-black text-white">
+          <p className="w-full py-4 text-left font-basement text-sm font-black text-white">
             {meet.name} ({meet.location})
-          </div>
+          </p>
         </div>,
         ...meet.races.map(race => {
           const text = utils.races.createCellText(race, time);
@@ -72,7 +73,7 @@ export const NewHomeTable: React.FC<Props> = ({ meets }) => {
               <Link
                 to={utils.races.createRacingLink(race, meet)}
                 className={classNames(
-                  "flex h-full w-full items-center justify-center px-4 text-hl-tertiary",
+                  "flex h-full w-full items-center justify-center break-words text-center text-hl-tertiary",
                   {
                     "bg-hl-primary text-hl-background":
                       race.status === RaceStatus.PAYING,
@@ -108,10 +109,53 @@ export const NewHomeTable: React.FC<Props> = ({ meets }) => {
   ];
 
   return (
-    <NewTable
-      headers={headers}
-      headerStyles="font-basement tracking-wider"
-      rows={!meets ? loading : rows}
-    />
+    <React.Fragment>
+      {/* non-mobile */}
+      <div className="hidden lg:block">
+        <NewTable
+          headers={headers}
+          headerStyles="font-basement tracking-wider"
+          rows={!meets ? loading : rows}
+        />
+      </div>
+
+      {/* mobile */}
+      <div className="block lg:hidden">
+        {!meets ? (
+          <div className="flex w-full justify-center py-10">
+            <Loader />
+          </div>
+        ) : (
+          <div className="flex w-full flex-col items-center">
+            {meets.map(meet => {
+              const race = meet.races[0];
+              const text = utils.races.createCellText(race, time);
+
+              return (
+                <div
+                  key={JSON.stringify(race)}
+                  className="flex w-full items-center justify-between border-t border-hl-border py-2"
+                >
+                  <h2 className="font-basement text-hl-secondary">
+                    R{race.number}
+                  </h2>
+                  <div className="flex w-full items-center justify-center gap-x-2">
+                    <img
+                      src="/images/horse.webp"
+                      alt="HorseLink logo"
+                      className="max-w-[4rem]"
+                    />
+                    <p className="font-basement text-sm font-black text-white">
+                      {meet.name} ({meet.location})
+                    </p>
+                  </div>
+                  <p className="text-right text-hl-secondary">{text}</p>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </React.Fragment>
   );
 };
