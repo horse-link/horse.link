@@ -27,8 +27,8 @@ export const NewButton: React.FC<Props> = ({
       "bg-hl-secondary text-hl-background": active && !white,
       "bg-hl-primary text-hl-background": active && white,
       "border border-hl-tertiary text-hl-tertiary": !active,
-      "px-8 text-sm": !big,
-      "w-full py-2 text-base": big
+      "px-8 text-xs xl:text-sm": !big,
+      "w-full py-2 text-sm xl:text-base": big
     })}
     onClick={onClick}
     disabled={disabled}
