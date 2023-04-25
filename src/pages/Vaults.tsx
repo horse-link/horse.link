@@ -23,7 +23,7 @@ const Vaults: React.FC = () => {
 
   return (
     <PageLayout>
-      <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-4">
         <Card
           title="24H Vault Volume"
           data={
