@@ -31,6 +31,7 @@ const Markets: React.FC = () => {
         />
       </div>
       <NewMarketTable />
+      <div className="block py-10 lg:hidden" />
     </PageLayout>
   );
 };

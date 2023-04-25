@@ -92,6 +92,7 @@ const Vaults: React.FC = () => {
             vault={modal.vault}
           />
         ))}
+      <div className="block py-10 lg:hidden" />
     </PageLayout>
   );
 };

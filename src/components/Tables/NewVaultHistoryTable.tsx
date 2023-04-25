@@ -9,6 +9,7 @@ import utils from "../../utils";
 import { ethers } from "ethers";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { Loader } from "../Loader";
 
 dayjs.extend(relativeTime);
 
@@ -104,10 +105,30 @@ export const NewVaultHistoryTable: React.FC<Props> = ({ history }) => {
   ];
 
   return (
-    <NewTable
-      headers={headers}
-      headerStyles="font-basement tracking-wider"
-      rows={!history || !config ? loading : rows}
-    />
+    <React.Fragment>
+      {/* non-mobile */}
+      <div className="hidden lg:block">
+        <NewTable
+          headers={headers}
+          headerStyles="font-basement tracking-wider"
+          rows={!history || !config ? loading : rows}
+        />
+      </div>
+
+      {/* mobile */}
+      <div className="block lg:hidden">
+        {!history || !config ? (
+          <div className="flex w-full justify-center py-10">
+            <Loader />
+          </div>
+        ) : (
+          <div className="flex w-full flex-col items-center">
+            {history.map(history => {
+              return <div>{history.vaultAddress}</div>;
+            })}
+          </div>
+        )}
+      </div>
+    </React.Fragment>
   );
 };
