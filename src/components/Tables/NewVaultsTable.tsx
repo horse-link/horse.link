@@ -12,6 +12,7 @@ import { VaultInfo } from "../../types/config";
 import classNames from "classnames";
 import utils from "../../utils";
 import { NewButton } from "../Buttons";
+import { Loader } from "../Loader";
 
 type Props = {
   setIsModalOpen: (state: VaultModalState) => void;
@@ -234,10 +235,79 @@ export const NewVaultsTable: React.FC<Props> = ({ setIsModalOpen }) => {
   ];
 
   return (
-    <NewTable
-      headers={headers}
-      headerStyles="font-basement tracking-wider"
-      rows={!vaultInfoList?.length ? loading : rows}
-    />
+    <React.Fragment>
+      {/* non-mobile */}
+      <div className="hidden lg:block">
+        <NewTable
+          headers={headers}
+          headerStyles="font-basement tracking-wider"
+          rows={!vaultInfoList?.length ? loading : rows}
+        />
+      </div>
+
+      {/* mobile */}
+      <div className="block lg:hidden">
+        {!vaultInfoList?.length ? (
+          <div className="flex w-full justify-center py-10">
+            <Loader />
+          </div>
+        ) : (
+          <div className="flex w-full flex-col items-center">
+            {vaultInfoList.map(vault => {
+              const tvl = `${utils.formatting.formatToFourDecimals(
+                ethers.utils.formatUnits(
+                  vault.totalAssets.add(vault.totalAssetsLocked),
+                  vault.asset.decimals
+                )
+              )} ${vault.asset.symbol}`;
+
+              return (
+                <div
+                  key={vault.address}
+                  className="flex w-full flex-col items-center gap-y-2 border-t border-hl-border py-2 text-center"
+                >
+                  <h2 className="font-basement tracking-wider text-hl-secondary">
+                    {vault.name}
+                  </h2>
+                  <p>{tvl}</p>
+                  <a
+                    href={`${scanner}/address/${vault.address}`}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="w-full max-w-full truncate"
+                  >
+                    {vault.address}
+                  </a>
+                  <div className="flex w-full items-center gap-x-2">
+                    <NewButton
+                      text="deposit"
+                      onClick={() =>
+                        openModal({
+                          type: VaultTransactionType.DEPOSIT,
+                          vault
+                        })
+                      }
+                      active
+                      big
+                    />
+                    <NewButton
+                      text="withdraw"
+                      onClick={() =>
+                        openModal({
+                          type: VaultTransactionType.WITHDRAW,
+                          vault
+                        })
+                      }
+                      active={false}
+                      big
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </React.Fragment>
   );
 };
