@@ -131,6 +131,13 @@ export const DepositVaultModal: React.FC<Props> = ({
         <div className="p-10">
           <Loader />
         </div>
+      ) : txHash ? (
+        <Web3SuccessHandler
+          hash={txHash}
+          message="Your deposit has been placed, click here to view the transaction"
+        />
+      ) : error ? (
+        <Web3ErrorHandler error={error} />
       ) : (
         <div className="p-6">
           <h2 className="font-basement text-5xl tracking-wider">DEPOSIT</h2>
@@ -153,24 +160,15 @@ export const DepositVaultModal: React.FC<Props> = ({
                 className="border border-hl-border bg-hl-background p-2 text-hl-primary !outline-none !ring-0"
               />
             </div>
-            {!txHash && !error && (
-              <div className="mt-8 mb-2 flex w-full flex-col">
-                <NewButton
-                  text={`Deposit ${vault.asset.symbol}`}
-                  onClick={onClickDeposit}
-                  disabled={shouldDisableButton}
-                  big
-                  white
-                />
-              </div>
-            )}
-            {txHash && (
-              <Web3SuccessHandler
-                hash={txHash}
-                message="Your deposit has been placed, click here to view the transaction"
+            <div className="mt-8 mb-2 flex w-full flex-col">
+              <NewButton
+                text={`Deposit ${vault.asset.symbol}`}
+                onClick={onClickDeposit}
+                disabled={shouldDisableButton}
+                big
+                white
               />
-            )}
-            {error && <Web3ErrorHandler error={error} />}
+            </div>
           </div>
         </div>
       )}
