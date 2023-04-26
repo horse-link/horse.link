@@ -203,7 +203,7 @@ export const SettleBetModal: React.FC<Props> = ({
                     {ethers.utils.formatEther(bet.amount)} {token.symbol}
                   </p>
                   <h3 className="text-left text-hl-secondary">
-                    Potential Payout:
+                    {isScratched ? "Refunded:" : "Potential Payout:"}
                   </h3>
                   <p className="text-left text-hl-tertiary">
                     {utils.formatting.formatToFourDecimals(
@@ -229,7 +229,7 @@ export const SettleBetModal: React.FC<Props> = ({
               big
             />
             {!bet.marketResultAdded && (
-              <p className="my-2 text-xs">
+              <p className="my-2 text-xs text-hl-primary">
                 Note: will require two transactions to add market results first
               </p>
             )}
