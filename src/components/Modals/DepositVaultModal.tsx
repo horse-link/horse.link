@@ -140,7 +140,9 @@ export const DepositVaultModal: React.FC<Props> = ({
         <Web3ErrorHandler error={error} />
       ) : (
         <div className="p-6">
-          <h2 className="font-basement text-5xl tracking-wider">DEPOSIT</h2>
+          <h2 className="font-basement text-3xl tracking-wider lg:text-5xl">
+            DEPOSIT
+          </h2>
 
           <div className="mt-8 flex w-full flex-col items-center">
             <div className="grid w-full grid-cols-2 grid-rows-3">
