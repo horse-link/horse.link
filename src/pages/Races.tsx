@@ -117,6 +117,7 @@ const Races: React.FC = () => {
           setIsModalOpen={setIsSettleModalOpen}
         />
       </div>
+      <div className="block py-10 lg:hidden" />
       <PlaceBetModal
         runner={selectedRunner}
         race={race}
