@@ -287,10 +287,9 @@ export const NewBetTable: React.FC<Props> = ({
                   </h2>
                   <p>
                     {raceDetails.date} {raceDetails.location} Race{" "}
-                    {raceDetails.raceNumber}
+                    {raceDetails.raceNumber} Horse {winningPropositionId}
                   </p>
-                  <p>{winningPropositionId}</p>
-                  <p>{formattedAmount}</p>
+                  <p className="text-hl-secondary">{formattedAmount}</p>
                   <a
                     href={`${scanner}/address/${bet.punter}`}
                     target="_blank"

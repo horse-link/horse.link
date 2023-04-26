@@ -126,6 +126,7 @@ const Bets: React.FC = () => {
           />
         </div>
       </div>
+      <div className="block py-10 lg:hidden" />
       <SettleBetModal
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
