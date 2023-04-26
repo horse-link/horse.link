@@ -165,6 +165,7 @@ export const DepositVaultModal: React.FC<Props> = ({
                 text={`Deposit ${vault.asset.symbol}`}
                 onClick={onClickDeposit}
                 disabled={shouldDisableButton}
+                active={!shouldDisableButton}
                 big
                 white
               />

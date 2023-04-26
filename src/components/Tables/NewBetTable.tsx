@@ -271,7 +271,7 @@ export const NewBetTable: React.FC<Props> = ({
 
               return (
                 <div
-                  key={bet.tx}
+                  key={JSON.stringify(bet)}
                   className="flex w-full flex-col items-center gap-y-2 border-t border-hl-border py-2 text-center"
                   onClick={() => onClickBet(bet)}
                 >

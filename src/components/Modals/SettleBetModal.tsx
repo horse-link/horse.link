@@ -8,10 +8,13 @@ import { useSigner } from "wagmi";
 import utils from "../../utils";
 import { BetHistory } from "../../types/bets";
 import { Config } from "../../types/config";
-import dayjs from "dayjs";
 import { useApi } from "../../providers/Api";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
 import { NewButton } from "../Buttons";
+import dayjs from "dayjs";
+import advancedFormat from "dayjs/plugin/advancedFormat";
+
+dayjs.extend(advancedFormat);
 
 type Props = {
   isModalOpen: boolean;
@@ -223,6 +226,7 @@ export const SettleBetModal: React.FC<Props> = ({
                 txLoading ||
                 !!txHash
               }
+              big
             />
             {!bet.marketResultAdded && (
               <p className="my-2 text-xs">
