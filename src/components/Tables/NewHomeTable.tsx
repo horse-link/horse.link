@@ -148,7 +148,7 @@ export const NewHomeTable: React.FC<Props> = ({ meets }) => {
                             to={utils.races.createRacingLink(race, meet)}
                             className="flex w-full items-center justify-between border-t border-hl-border py-2"
                           >
-                            <h3 className="font-basement text-hl-secondary">
+                            <h3 className="mr-6 font-basement text-hl-secondary">
                               R{race.number}
                             </h3>
                             <div className="flex w-full items-center justify-center gap-x-2">
@@ -157,11 +157,11 @@ export const NewHomeTable: React.FC<Props> = ({ meets }) => {
                                 alt="HorseLink logo"
                                 className="max-w-[4rem]"
                               />
-                              <p className="font-basement text-sm font-black text-white">
-                                {meet.name} ({meet.location})
+                              <p className="text-sm font-black text-white">
+                                {race.name}
                               </p>
                             </div>
-                            <p className="text-right text-hl-secondary">
+                            <p className="ml-6 whitespace-nowrap text-right text-hl-secondary">
                               {text}
                             </p>
                           </Link>
