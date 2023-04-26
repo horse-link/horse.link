@@ -75,11 +75,11 @@ export const NewHomeTable: React.FC<Props> = ({ meets }) => {
                 className={classNames(
                   "flex h-full w-full items-center justify-center break-words text-center text-hl-tertiary",
                   {
-                    "bg-hl-primary text-hl-background":
+                    "!bg-hl-primary !text-hl-background":
                       race.status === RaceStatus.PAYING,
-                    "bg-hl-secondary text-hl-background":
+                    "!bg-hl-secondary !text-hl-background":
                       race.status === RaceStatus.CLOSED || text === "CLSD",
-                    "hover:bg-hl-primary hover:text-hl-secondary": ![
+                    "hover:!bg-hl-primary hover:!text-hl-secondary": ![
                       RaceStatus.CLOSED,
                       RaceStatus.PAYING
                     ].includes(race.status)
