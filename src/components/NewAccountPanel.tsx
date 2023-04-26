@@ -122,7 +122,15 @@ export const NewAccountPanel: React.FC<Props> = ({
               </p>
               {isLocalWallet && (
                 <React.Fragment>
-                  <h3 className="mb-2">PRIVATE KEY</h3>
+                  <div className="mb-2 flex w-full items-center justify-between">
+                    <h3>PRIVATE KEY</h3>
+                    <NewButton
+                      text="COPY"
+                      onClick={() =>
+                        navigator.clipboard.writeText(privateKey || "")
+                      }
+                    />
+                  </div>
                   <button
                     className="mb-6 w-full truncate border border-hl-border p-2"
                     onClick={togglePrivateKey}
