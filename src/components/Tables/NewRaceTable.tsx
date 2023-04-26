@@ -1,6 +1,6 @@
 import React from "react";
 import { TotalBetsOnPropositions } from "../../types/bets";
-import { Runner } from "../../types/meets";
+import { Runner, RunnerStatus } from "../../types/meets";
 import { NewTable } from "./NewTable";
 import classNames from "classnames";
 import { ethers } from "ethers";
@@ -22,6 +22,8 @@ export const NewRaceTable: React.FC<Props> = ({
   setIsModalOpen,
   closed
 }) => {
+  const scratchingArray: Array<RunnerStatus> = ["Scratched", "LateScratched"];
+
   const onClickRunner = (runner: Runner) => {
     if (closed) return;
 
@@ -58,7 +60,7 @@ export const NewRaceTable: React.FC<Props> = ({
       : "0.0000";
 
     const style = classNames("w-full text-left py-4", {
-      "line-through": runner.status !== "Open"
+      "line-through": scratchingArray.includes(runner.status)
     });
 
     return [
@@ -100,8 +102,12 @@ export const NewRaceTable: React.FC<Props> = ({
 
   const rows = runners
     ? [
-        ...runners.filter(r => r.status === "Open").map(runnerMapping),
-        ...runners.filter(r => r.status !== "Open").map(runnerMapping)
+        ...runners
+          .filter(r => !scratchingArray.includes(r.status))
+          .map(runnerMapping),
+        ...runners
+          .filter(r => scratchingArray.includes(r.status))
+          .map(runnerMapping)
       ]
     : [];
 
@@ -120,7 +126,7 @@ export const NewRaceTable: React.FC<Props> = ({
       className={classNames(
         "flex w-full flex-col items-center gap-y-2 border-t border-hl-border py-2 text-center",
         {
-          "line-through": runner.status !== "Open"
+          "line-through": scratchingArray.includes(runner.status)
         }
       )}
       onClick={() => onClickRunner(runner)}
@@ -161,8 +167,12 @@ export const NewRaceTable: React.FC<Props> = ({
           </div>
         ) : (
           <div className="flex w-full flex-col items-center">
-            {runners.filter(r => r.status === "Open").map(mapMobileRunner)}
-            {runners.filter(r => r.status !== "Open").map(mapMobileRunner)}
+            {runners
+              .filter(r => !scratchingArray.includes(r.status))
+              .map(mapMobileRunner)}
+            {runners
+              .filter(r => scratchingArray.includes(r.status))
+              .map(mapMobileRunner)}
           </div>
         )}
       </div>
