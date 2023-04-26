@@ -156,7 +156,7 @@ export const NewBetTable: React.FC<Props> = ({
               className={style}
               onClick={() => onClickBet(bet)}
             >
-              {bet.status === "REFUNDED"
+              {bet.status === "REFUNDED" || bet.status === "SCRATCHED"
                 ? "SCRATCHED"
                 : isWinning
                 ? "WON"
