@@ -9,6 +9,8 @@ import utils from "../../utils";
 import { ethers } from "ethers";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { Loader } from "../Loader";
+import { useScannerUrl } from "../../hooks/useScannerUrl";
 
 dayjs.extend(relativeTime);
 
@@ -31,6 +33,7 @@ export const NewBetTable: React.FC<Props> = ({
 }) => {
   const { isConnected } = useAccount();
   const { openWalletModal } = useWalletModal();
+  const scanner = useScannerUrl();
 
   const onClickBet = (bet?: BetHistory) => {
     if (!bet) return;
@@ -156,7 +159,13 @@ export const NewBetTable: React.FC<Props> = ({
               className={style}
               onClick={() => onClickBet(bet)}
             >
-              {isWinning ? "WON" : isWinning === undefined ? "IN PLAY" : "LOST"}
+              {bet.status === "REFUNDED" || bet.status === "SCRATCHED"
+                ? "SCRATCHED"
+                : isWinning
+                ? "WON"
+                : isWinning === undefined
+                ? "IN PLAY"
+                : "LOST"}
             </div>
           ];
         })
@@ -190,21 +199,120 @@ export const NewBetTable: React.FC<Props> = ({
   ];
 
   return (
-    <NewTable
-      headers={headers}
-      headerStyles="font-basement tracking-wider"
-      rows={
-        !allBetsEnabled && !paramsAddressExists
-          ? notAllBetsAndNoParamAddress
-          : !betHistory
-          ? loading
-          : !betHistory.length
-          ? noBets
-          : rows
-      }
-      rowStyles={classNames({
-        "hover:bg-hl-primary cursor-pointer hover:!text-hl-secondary": !closed
-      })}
-    />
+    <React.Fragment>
+      {/* non-mobile */}
+      <div className="hidden lg:block">
+        <NewTable
+          headers={headers}
+          headerStyles="font-basement tracking-wider"
+          rows={
+            !allBetsEnabled && !paramsAddressExists
+              ? notAllBetsAndNoParamAddress
+              : !betHistory
+              ? loading
+              : !betHistory.length
+              ? noBets
+              : rows
+          }
+          rowStyles={classNames({
+            "hover:bg-hl-primary cursor-pointer hover:!text-hl-secondary":
+              !closed
+          })}
+        />
+      </div>
+
+      {/* mobile */}
+      <div className="block lg:hidden">
+        {!allBetsEnabled && !paramsAddressExists ? (
+          <div className="flex w-full flex-col items-center gap-y-2 border-t border-hl-border py-2 text-center">
+            Connect your wallet or add an address to the URL
+          </div>
+        ) : !betHistory || !config ? (
+          <div className="flex w-full justify-center py-10">
+            <Loader />
+          </div>
+        ) : !betHistory.length ? (
+          <div className="flex w-full flex-col items-center gap-y-2 border-t border-hl-border py-2 text-center">
+            No bets!
+          </div>
+        ) : (
+          <div className="flex w-full flex-col items-center">
+            {betHistory.map(bet => {
+              const formattedAmount =
+                config &&
+                bet &&
+                `${utils.formatting.formatToFourDecimals(
+                  ethers.utils.formatEther(bet.amount)
+                )} ${
+                  config.tokens.find(
+                    token =>
+                      token.address.toLowerCase() ===
+                      bet.assetAddress.toLowerCase()
+                  )?.symbol
+                }`;
+
+              const winningPropositionId =
+                bet &&
+                utils.id.getPropositionFromId(
+                  utils.formatting.parseBytes16String(bet.propositionId)
+                );
+
+              const isWinning =
+                bet && bet.winningPropositionId
+                  ? bet.winningPropositionId.toLowerCase() ===
+                    bet.propositionId.toLowerCase()
+                  : undefined;
+
+              const raceDetails =
+                bet &&
+                utils.id.getMarketDetailsFromId(
+                  utils.formatting.parseBytes16String(bet.marketId)
+                );
+
+              return (
+                <div
+                  key={bet.tx}
+                  className="flex w-full flex-col items-center gap-y-2 border-t border-hl-border py-2 text-center"
+                  onClick={() => onClickBet(bet)}
+                >
+                  <h2 className="font-basement tracking-wider text-hl-secondary">
+                    {bet.index}{" "}
+                    {bet.status === "REFUNDED" || bet.status === "SCRATCHED"
+                      ? "SCRATCHED"
+                      : isWinning
+                      ? "WON"
+                      : isWinning === undefined
+                      ? "IN PLAY"
+                      : "LOST"}
+                  </h2>
+                  <p>
+                    {raceDetails.date} {raceDetails.location} Race{" "}
+                    {raceDetails.raceNumber}
+                  </p>
+                  <p>{winningPropositionId}</p>
+                  <p>{formattedAmount}</p>
+                  <a
+                    href={`${scanner}/address/${bet.punter}`}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="w-full max-w-full truncate"
+                  >
+                    Punter: {bet.punter}
+                  </a>
+                  <a
+                    href={`${scanner}/tx/${bet.tx}`}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="w-full max-w-full truncate"
+                  >
+                    TxID: {bet.tx}
+                  </a>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </React.Fragment>
   );
 };

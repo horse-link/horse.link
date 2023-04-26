@@ -5,6 +5,7 @@ import classNames from "classnames";
 import utils from "../../utils";
 import { ethers } from "ethers";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
+import { Loader } from "../Loader";
 
 export const NewMarketTable: React.FC = () => {
   const config = useConfig();
@@ -91,10 +92,69 @@ export const NewMarketTable: React.FC = () => {
     : [];
 
   return (
-    <NewTable
-      headers={headers}
-      headerStyles="font-basement tracking-wider"
-      rows={rows}
-    />
+    <React.Fragment>
+      {/* non-mobile */}
+      <div className="hidden lg:block">
+        <NewTable
+          headers={headers}
+          headerStyles="font-basement tracking-wider"
+          rows={rows}
+        />
+      </div>
+
+      {/* mobile */}
+      <div className="block lg:hidden">
+        {!config ? (
+          <div className="flex w-full justify-center py-10">
+            <Loader />
+          </div>
+        ) : (
+          <div className="flex w-full flex-col items-center">
+            {config.markets.map(market => {
+              const vault = utils.config.getVault(market.vaultAddress, config);
+              if (!vault)
+                throw new Error(
+                  `Could not find vault for market ${market.address}`
+                );
+
+              const totalInPlay = `${utils.formatting.formatToFourDecimals(
+                ethers.utils.formatUnits(
+                  market.totalInPlay,
+                  vault.asset.decimals
+                )
+              )} ${vault.asset.symbol}`;
+
+              return (
+                <div
+                  key={market.address}
+                  className="flex w-full flex-col items-center gap-y-2 border-t border-hl-border py-2 text-center"
+                >
+                  <h2 className="font-basement tracking-wider text-hl-secondary">
+                    {vault.name}
+                  </h2>
+                  <p>{totalInPlay}</p>
+                  <a
+                    href={`${scanner}/address/${market.address}`}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="w-full max-w-full truncate"
+                  >
+                    Market: {market.address}
+                  </a>
+                  <a
+                    href={`${scanner}/address/${market.vaultAddress}`}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="w-full max-w-full truncate"
+                  >
+                    Vault: {market.vaultAddress}
+                  </a>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </React.Fragment>
   );
 };

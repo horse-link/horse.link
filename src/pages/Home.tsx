@@ -75,6 +75,7 @@ const Home: React.FC = () => {
           </div>
         </div>
         <NewHomeTable meets={meets} />
+        <div className="block py-10 lg:hidden" />
       </div>
     </PageLayout>
   );

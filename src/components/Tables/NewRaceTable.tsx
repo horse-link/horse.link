@@ -5,6 +5,7 @@ import { NewTable } from "./NewTable";
 import classNames from "classnames";
 import { ethers } from "ethers";
 import utils from "../../utils";
+import { Loader } from "../Loader";
 
 type Props = {
   runners?: Array<Runner>;
@@ -114,13 +115,50 @@ export const NewRaceTable: React.FC<Props> = ({
   ];
 
   return (
-    <NewTable
-      headers={headers}
-      headerStyles="font-basement tracking-wider"
-      rows={!runners?.length ? loading : rows}
-      rowStyles={classNames({
-        "hover:bg-hl-primary cursor-pointer hover:!text-hl-secondary": !closed
-      })}
-    />
+    <React.Fragment>
+      {/* non-mobile */}
+      <div className="hidden lg:block">
+        <NewTable
+          headers={headers}
+          headerStyles="font-basement tracking-wider"
+          rows={!runners?.length ? loading : rows}
+          rowStyles={classNames({
+            "hover:bg-hl-primary cursor-pointer hover:!text-hl-secondary":
+              !closed
+          })}
+        />
+      </div>
+
+      {/* mobile */}
+      <div className="block lg:hidden">
+        {!runners?.length ? (
+          <div className="flex w-full justify-center py-10">
+            <Loader />
+          </div>
+        ) : (
+          <div className="flex w-full flex-col items-center">
+            {runners.map(runner => (
+              <div
+                key={JSON.stringify(runner)}
+                className="flex w-full flex-col items-center gap-y-2 border-t border-hl-border py-2 text-center"
+                onClick={() => onClickRunner(runner)}
+              >
+                <h2 className="font-basement tracking-wider text-hl-secondary">
+                  {runner.name} ({runner.number})
+                </h2>
+                <div className="flex w-full items-center justify-center gap-x-8">
+                  <p>Form: {runner.last5Starts}</p>
+                  <p>Weight: {runner.handicapWeight}</p>
+                </div>
+                <p className="text-hl-secondary">
+                  Win:{" "}
+                  {utils.formatting.formatToTwoDecimals(runner.odds.toString())}
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </React.Fragment>
   );
 };

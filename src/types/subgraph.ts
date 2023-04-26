@@ -85,7 +85,6 @@ export type Bet = {
   settledAt: string;
   createdAtTx: string;
   settledAtTx: string;
-  refunded: boolean;
 };
 
 export type FormattedBet = Pick<

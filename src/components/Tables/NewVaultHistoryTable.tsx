@@ -9,6 +9,7 @@ import utils from "../../utils";
 import { ethers } from "ethers";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { Loader } from "../Loader";
 
 dayjs.extend(relativeTime);
 
@@ -104,10 +105,66 @@ export const NewVaultHistoryTable: React.FC<Props> = ({ history }) => {
   ];
 
   return (
-    <NewTable
-      headers={headers}
-      headerStyles="font-basement tracking-wider"
-      rows={!history || !config ? loading : rows}
-    />
+    <React.Fragment>
+      {/* non-mobile */}
+      <div className="hidden lg:block">
+        <NewTable
+          headers={headers}
+          headerStyles="font-basement tracking-wider"
+          rows={!history || !config ? loading : rows}
+        />
+      </div>
+
+      {/* mobile */}
+      <div className="block lg:hidden">
+        {!history || !config ? (
+          <div className="flex w-full justify-center py-10">
+            <Loader />
+          </div>
+        ) : (
+          <div className="flex w-full flex-col items-center">
+            {history.map(vault => {
+              const formattedTxType = txTypeMap.get(vault.type);
+
+              const details = utils.config.getVault(vault.vaultAddress, config);
+
+              const amount = utils.formatting.formatToFourDecimals(
+                ethers.utils.formatUnits(vault.amount, details?.asset.decimals)
+              );
+
+              return (
+                <div
+                  key={vault.id}
+                  className="flex w-full flex-col items-center gap-y-2 border-t border-hl-border py-2 text-center"
+                >
+                  <h2 className="font-basement tracking-wider text-hl-secondary">
+                    {formattedTxType}
+                  </h2>
+                  <p>
+                    {amount} {details?.asset.symbol}
+                  </p>
+                  <a
+                    href={`${scanner}/address/${vault.vaultAddress}`}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="w-full max-w-full truncate"
+                  >
+                    Vault: {vault.vaultAddress}
+                  </a>
+                  <a
+                    href={`${scanner}/tx/${vault.id}`}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="w-full max-w-full truncate"
+                  >
+                    TxID: {vault.id}
+                  </a>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </React.Fragment>
   );
 };

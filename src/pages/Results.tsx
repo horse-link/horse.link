@@ -128,6 +128,7 @@ const Results: React.FC = () => {
           refetch={refetch}
         />
       </div>
+      <div className="block py-10 lg:hidden" />
       <SettleBetModal
         isModalOpen={isSettleModalOpen}
         setIsModalOpen={setIsSettleModalOpen}

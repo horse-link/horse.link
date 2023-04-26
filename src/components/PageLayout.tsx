@@ -69,7 +69,7 @@ export const PageLayout: React.FC<Props> = ({ children }) => {
         leaveFrom="right-[0%] opacity-100"
         leaveTo="right-[100%] opacity-0"
       >
-        <Transition.Child className="fixed top-0 block h-screen w-screen overflow-y-scroll bg-hl-background p-4 lg:hidden">
+        <Transition.Child className="fixed top-0 block h-screen w-screen overflow-y-scroll bg-hl-background p-4 pb-24 lg:hidden">
           <div className="flex min-h-full w-full flex-col items-center gap-y-6">
             <NewAccountPanel
               forceNewNetwork={forceNewNetwork}
