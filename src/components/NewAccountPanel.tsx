@@ -176,7 +176,6 @@ export const NewAccountPanel: React.FC<Props> = ({
               ? `${userBalance.formatted} ${currentToken.symbol}`
               : undefined
           }
-          breakAll
         />
       </div>
       <QrCodeModal showModal={showQrCodeModal} onClose={closeQrCodeModal} />

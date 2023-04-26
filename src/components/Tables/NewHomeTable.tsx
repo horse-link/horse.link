@@ -57,9 +57,9 @@ export const NewHomeTable: React.FC<Props> = ({ meets }) => {
           <img
             src="/images/horse.webp"
             alt="HorseLink logo"
-            className="max-w-[4rem]"
+            className="max-w-[3rem]"
           />
-          <p className="w-full py-4 text-left font-basement text-sm font-black text-white">
+          <p className="w-full py-4 text-left font-basement text-sm font-black tracking-wider text-white">
             {meet.name} ({meet.location})
           </p>
         </div>,

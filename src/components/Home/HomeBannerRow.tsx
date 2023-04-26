@@ -26,9 +26,10 @@ export const HomeBannerRow: React.FC<Props> = ({ meet, index }) => {
   return (
     <Link
       className={classNames(
-        "flex w-full items-center gap-x-2 rounded-lg border border-hl-border px-4 py-8 lg:w-[49%] xl:w-fit 2xl:max-w-[16%]",
+        "flex w-fit shrink grow items-center gap-x-2 rounded-lg border border-hl-border px-4 py-8",
         {
-          "hidden lg:flex": index > 0
+          "hidden lg:flex": index > 0,
+          "!hidden 3xl:!flex": index > 3
         }
       )}
       to={`/races/${meet.meeting.venueCode}/${meet.jumperRaceNumber}`}
@@ -36,13 +37,13 @@ export const HomeBannerRow: React.FC<Props> = ({ meet, index }) => {
       <img
         src="/images/horse.webp"
         alt="HorseLink logo"
-        className="max-w-[4rem]"
+        className="max-w-[3rem]"
       />
-      <div className="w-full">
-        <dt className="font-basement">
+      <div className="w-full text-xs">
+        <dt className="break-words font-basement tracking-wider">
           {meet.meeting.location} ({meet.meeting.venueCode})
         </dt>
-        <dd className="flex gap-x-4 text-sm font-normal">
+        <dd className="flex gap-x-4 font-normal">
           <p className="text-hl-tertiary">RACE {meet.jumperRaceNumber}</p>
           <p className="text-hl-secondary">{timeString}</p>
         </dd>
