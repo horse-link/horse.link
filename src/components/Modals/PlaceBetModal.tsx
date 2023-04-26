@@ -221,6 +221,10 @@ export const PlaceBetModal: React.FC<Props> = ({
     return marketSum.add(userWagerBn).gt(userBalance.value);
   }, [bets, wagerAmount, market, config, userBalance]);
 
+  const isScratched = runner
+    ? utils.races.isScratchedRunner(runner)
+    : undefined;
+
   const shouldDisablePlaceBet =
     !market ||
     !wagerAmount ||
@@ -244,7 +248,7 @@ export const PlaceBetModal: React.FC<Props> = ({
               "break-words": runner.name.length > 10
             })}
           >
-            {runner.name} {runner.number}
+            {runner.name} ({runner.number})
           </h2>
 
           <div className="mt-8 flex w-full flex-col items-center gap-y-4 divide-y divide-hl-border">
@@ -261,6 +265,7 @@ export const PlaceBetModal: React.FC<Props> = ({
                 value={wagerAmount}
                 onChange={changeWagerAmount}
                 className="border border-hl-border bg-hl-background p-2 text-hl-primary !outline-none !ring-0"
+                disabled={isScratched === true}
               />
             </div>
             <div className="grid w-full grid-cols-2 grid-rows-2 gap-y-4 pt-4">
@@ -300,15 +305,16 @@ export const PlaceBetModal: React.FC<Props> = ({
               big
               text="bet now"
               onClick={() => onClickPlaceBet({ betNow: true })}
-              active={false}
-              disabled={shouldDisablePlaceBet}
+              disabled={shouldDisablePlaceBet || isScratched === true}
+              active={!shouldDisablePlaceBet && isScratched !== true}
             />
             <span className=" blockself-center font-semibold">or</span>
             <NewButton
               big
               text="add to bet slip"
               onClick={() => onClickPlaceBet()}
-              disabled={shouldDisablePlaceBet}
+              disabled={shouldDisablePlaceBet || isScratched === true}
+              active={!shouldDisablePlaceBet && isScratched !== true}
             />
           </div>
         </div>

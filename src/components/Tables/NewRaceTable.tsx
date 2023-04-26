@@ -58,7 +58,7 @@ export const NewRaceTable: React.FC<Props> = ({
       : "0.0000";
 
     const style = classNames("w-full text-left py-4", {
-      "line-through": runner.status != "Open"
+      "line-through": runner.status !== "Open"
     });
 
     return [
@@ -101,7 +101,7 @@ export const NewRaceTable: React.FC<Props> = ({
   const rows = runners
     ? [
         ...runners.filter(r => r.status === "Open").map(runnerMapping),
-        ...runners.filter(r => r.status != "Open").map(runnerMapping)
+        ...runners.filter(r => r.status !== "Open").map(runnerMapping)
       ]
     : [];
 
@@ -113,6 +113,30 @@ export const NewRaceTable: React.FC<Props> = ({
       </div>
     ]
   ];
+
+  const mapMobileRunner = (runner: Runner) => (
+    <div
+      key={JSON.stringify(runner)}
+      className={classNames(
+        "flex w-full flex-col items-center gap-y-2 border-t border-hl-border py-2 text-center",
+        {
+          "line-through": runner.status !== "Open"
+        }
+      )}
+      onClick={() => onClickRunner(runner)}
+    >
+      <h2 className="font-basement tracking-wider text-hl-secondary">
+        {runner.name} ({runner.number})
+      </h2>
+      <div className="flex w-full items-center justify-center gap-x-8">
+        <p>Form: {runner.last5Starts}</p>
+        <p>Weight: {runner.handicapWeight}</p>
+      </div>
+      <p className="text-hl-secondary">
+        Win: {utils.formatting.formatToTwoDecimals(runner.odds.toString())}
+      </p>
+    </div>
+  );
 
   return (
     <React.Fragment>
@@ -137,25 +161,8 @@ export const NewRaceTable: React.FC<Props> = ({
           </div>
         ) : (
           <div className="flex w-full flex-col items-center">
-            {runners.map(runner => (
-              <div
-                key={JSON.stringify(runner)}
-                className="flex w-full flex-col items-center gap-y-2 border-t border-hl-border py-2 text-center"
-                onClick={() => onClickRunner(runner)}
-              >
-                <h2 className="font-basement tracking-wider text-hl-secondary">
-                  {runner.name} ({runner.number})
-                </h2>
-                <div className="flex w-full items-center justify-center gap-x-8">
-                  <p>Form: {runner.last5Starts}</p>
-                  <p>Weight: {runner.handicapWeight}</p>
-                </div>
-                <p className="text-hl-secondary">
-                  Win:{" "}
-                  {utils.formatting.formatToTwoDecimals(runner.odds.toString())}
-                </p>
-              </div>
-            ))}
+            {runners.filter(r => r.status === "Open").map(mapMobileRunner)}
+            {runners.filter(r => r.status !== "Open").map(mapMobileRunner)}
           </div>
         )}
       </div>
