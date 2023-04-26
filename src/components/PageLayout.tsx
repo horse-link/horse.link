@@ -41,11 +41,12 @@ export const PageLayout: React.FC<Props> = ({ children }) => {
         </div>
 
         {/* mobile navbar */}
-        <div className="block w-full lg:hidden">
-          <MobileNavbar />
+        <div className="fixed top-0 z-50 block w-full lg:hidden">
+          <MobileNavbar toggleBetsPage={toggleBetsPage} />
         </div>
 
         <main className="w-full grid-cols-5 p-4 lg:grid">
+          <div className="block pt-16 lg:hidden" />
           <div className="col-span-4">{children}</div>
           <div className="col-span-1 hidden px-4 lg:block">
             <div className="sticky top-4 flex w-full flex-col gap-y-6">
@@ -70,7 +71,7 @@ export const PageLayout: React.FC<Props> = ({ children }) => {
         leaveTo="right-[100%] opacity-0"
       >
         <Transition.Child className="fixed top-0 block h-screen w-screen overflow-y-scroll bg-hl-background p-4 pb-24 lg:hidden">
-          <div className="flex min-h-full w-full flex-col items-center gap-y-6">
+          <div className="flex min-h-full w-full flex-col items-center gap-y-6 pt-16">
             <NewAccountPanel
               forceNewNetwork={forceNewNetwork}
               isLocalWallet={isLocalWallet}
@@ -81,7 +82,7 @@ export const PageLayout: React.FC<Props> = ({ children }) => {
       </Transition>
 
       <div className="fixed bottom-0 z-50 block w-full lg:hidden">
-        <Footer betsPageOpen={betsPageOpen} toggleBetsPage={toggleBetsPage} />
+        <Footer />
       </div>
 
       <WalletModal
