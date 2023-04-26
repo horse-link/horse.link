@@ -9,6 +9,7 @@ import utc from "dayjs/plugin/utc";
 import classNames from "classnames";
 import { RaceStatus } from "../../constants/status";
 import { Loader } from "../Loader";
+import { Disclosure } from "@headlessui/react";
 
 dayjs.extend(utc);
 
@@ -127,32 +128,50 @@ export const NewHomeTable: React.FC<Props> = ({ meets }) => {
           </div>
         ) : (
           <div className="flex w-full flex-col items-center">
-            {meets.map(meet => {
-              const race = meet.races[0];
-              const text = utils.races.createCellText(race, time);
+            {meets.map(meet => (
+              <Disclosure key={JSON.stringify(meet)}>
+                {({ open }) => (
+                  <React.Fragment>
+                    <Disclosure.Button className="flex w-full items-center justify-between border-b border-hl-border py-2 font-basement text-xl tracking-wider text-hl-secondary">
+                      <h2>{meet.name}</h2>
+                      <p className="font-sans text-base uppercase text-hl-primary">
+                        {open ? "close" : "open"}
+                      </p>
+                    </Disclosure.Button>
+                    <Disclosure.Panel>
+                      {meet.races.map(race => {
+                        const text = utils.races.createCellText(race, time);
 
-              return (
-                <div
-                  key={JSON.stringify(race)}
-                  className="flex w-full items-center justify-between border-t border-hl-border py-2"
-                >
-                  <h2 className="font-basement text-hl-secondary">
-                    R{race.number}
-                  </h2>
-                  <div className="flex w-full items-center justify-center gap-x-2">
-                    <img
-                      src="/images/horse.webp"
-                      alt="HorseLink logo"
-                      className="max-w-[4rem]"
-                    />
-                    <p className="font-basement text-sm font-black text-white">
-                      {meet.name} ({meet.location})
-                    </p>
-                  </div>
-                  <p className="text-right text-hl-secondary">{text}</p>
-                </div>
-              );
-            })}
+                        return (
+                          <Link
+                            key={JSON.stringify(race)}
+                            to={utils.races.createRacingLink(race, meet)}
+                            className="flex w-full items-center justify-between border-t border-hl-border py-2"
+                          >
+                            <h3 className="font-basement text-hl-secondary">
+                              R{race.number}
+                            </h3>
+                            <div className="flex w-full items-center justify-center gap-x-2">
+                              <img
+                                src="/images/horse.webp"
+                                alt="HorseLink logo"
+                                className="max-w-[4rem]"
+                              />
+                              <p className="font-basement text-sm font-black text-white">
+                                {meet.name} ({meet.location})
+                              </p>
+                            </div>
+                            <p className="text-right text-hl-secondary">
+                              {text}
+                            </p>
+                          </Link>
+                        );
+                      })}
+                    </Disclosure.Panel>
+                  </React.Fragment>
+                )}
+              </Disclosure>
+            ))}
           </div>
         )}
       </div>
