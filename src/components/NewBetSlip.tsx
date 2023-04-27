@@ -11,11 +11,12 @@ import { useApiWithForce } from "../providers/Api";
 import { Card } from "./Card";
 import { VscTrash } from "react-icons/vsc";
 import { NewButton } from "./Buttons";
+import { Loader } from "./Loader";
 
 export const NewBetSlip: React.FC = () => {
   const config = useConfig();
   const { data: signer } = useSigner();
-  const { bets, removeBet, forceNewSigner, placeBetsInBetSlip } =
+  const { bets, removeBet, forceNewSigner, placeBetsInBetSlip, txLoading } =
     useBetSlipContext();
   const { getPotentialPayout } = useMarketContract();
   const [slipTotals, setSlipTotals] = useState<BetTotals>();
@@ -199,9 +200,14 @@ export const NewBetSlip: React.FC = () => {
             )}
           </div>
           <div className="mt-6 font-bold">
-            {bets?.length && (
-              <NewButton big text="Bet Now" onClick={placeBetsInBetSlip} />
-            )}
+            {bets?.length &&
+              (txLoading ? (
+                <div className="flex w-full justify-center">
+                  <Loader />
+                </div>
+              ) : (
+                <NewButton big text="Bet Now" onClick={placeBetsInBetSlip} />
+              ))}
           </div>
         </div>
       }
