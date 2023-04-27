@@ -110,7 +110,7 @@ export const NewVaultsTable: React.FC<Props> = ({ setIsModalOpen }) => {
     <div
       key={`vaultstable-${text}-${i}`}
       className={classNames(
-        "w-full py-4 text-left text-xs font-semibold text-hl-primary xl:text-base",
+        "w-full break-words py-4 text-left text-xs font-semibold text-hl-primary xl:text-base",
         {
           "!text-hl-secondary": [1, 5].includes(i)
         }
@@ -122,8 +122,6 @@ export const NewVaultsTable: React.FC<Props> = ({ setIsModalOpen }) => {
 
   const rows = vaultInfoList?.length
     ? vaultInfoList.map((vault, i) => {
-        const style = "w-full text-left py-4 text-xs xl:text-base";
-
         const tvl = `${utils.formatting.formatToFourDecimals(
           ethers.utils.formatUnits(
             vault.totalAssets.add(vault.totalAssetsLocked),
@@ -162,6 +160,8 @@ export const NewVaultsTable: React.FC<Props> = ({ setIsModalOpen }) => {
           myPercentage
         ];
 
+        const style = `text-left py-4 text-xs xl:text-base w-full`;
+
         return [
           ...data.map((text, i) => (
             <div
@@ -174,7 +174,7 @@ export const NewVaultsTable: React.FC<Props> = ({ setIsModalOpen }) => {
             </div>
           )),
           <div
-            className="flex h-full w-full items-center truncate"
+            className="flex h-full w-full items-center"
             key={`vaultstable-${vault.address}-${i}`}
           >
             <a
@@ -183,7 +183,7 @@ export const NewVaultsTable: React.FC<Props> = ({ setIsModalOpen }) => {
               rel="noreferrer noopener"
               className={classNames(
                 style,
-                "max-w-[10ch] truncate xl:max-w-[20ch]"
+                "max-w-[10ch] truncate 3xl:max-w-[20ch]"
               )}
             >
               {vault.address}
