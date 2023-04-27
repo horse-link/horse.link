@@ -13,6 +13,8 @@ import { useBetSlipContext } from "../../providers/BetSlip";
 import { useParams } from "react-router-dom";
 import { useTokenContext } from "../../providers/Token";
 import { BetEntry } from "../../types/context";
+import { NewButton } from "../Buttons";
+import classNames from "classnames";
 
 type Props = {
   runner?: Runner;
@@ -120,6 +122,8 @@ export const PlaceBetModal: React.FC<Props> = ({
     event.preventDefault();
     const value = event.currentTarget.value;
 
+    if (!RegExp(/^[(\d|.)]*$/).test(value)) return;
+
     if (value.includes(".")) {
       const decimals = value.split(".")[1];
       if (decimals.length > userBalance.decimals) {
@@ -217,6 +221,10 @@ export const PlaceBetModal: React.FC<Props> = ({
     return marketSum.add(userWagerBn).gt(userBalance.value);
   }, [bets, wagerAmount, market, config, userBalance]);
 
+  const isScratched = runner
+    ? utils.races.isScratchedRunner(runner)
+    : undefined;
+
   const shouldDisablePlaceBet =
     !market ||
     !wagerAmount ||
@@ -226,6 +234,7 @@ export const PlaceBetModal: React.FC<Props> = ({
     isWagerNegative ||
     isWagerGreaterThanBalance ||
     isWagerPlusBetsExceedingBalance;
+
   return (
     <BaseModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
       {!config || !runner ? (
@@ -233,76 +242,82 @@ export const PlaceBetModal: React.FC<Props> = ({
           <Loader />
         </div>
       ) : (
-        <React.Fragment>
-          <h2 className="font-bold">
-            {runner.name ? `${runner.name} (${runner.barrier ?? " "})` : " "}
+        <div className="p-6">
+          <h2
+            className={classNames("font-basement text-5xl tracking-wider", {
+              "break-words": runner.name.length > 10
+            })}
+          >
+            {runner.name} ({runner.number})
           </h2>
-          <h2 className="mb-6 font-bold">
-            {`Target Odds 
-            ${utils.formatting.formatToTwoDecimals(back.odds.toString())}`}
-          </h2>
-          <div className="flex flex-col">
-            <h3 className="font-semibold">Wager Amount</h3>
-            <input
-              type="number"
-              placeholder="0"
-              onChange={changeWagerAmount}
-              className="mb-6 border-b-[0.12rem] border-black pl-1 pt-1 transition-colors duration-100 disabled:bg-white disabled:text-black/50"
-            />
-            <span className="block font-semibold">
-              Payout:{" "}
-              <span className="font-normal">
-                {payout ? (
-                  utils.formatting.formatToFourDecimals(payout)
-                ) : (
-                  <Loader size={14} />
-                )}{" "}
-                {currentToken?.symbol}
-              </span>
-            </span>
-            <span className="block font-semibold">
-              Available:{" "}
-              <span className="font-normal">
-                {userBalance?.formatted || <Loader size={14} />}{" "}
-                {currentToken?.symbol}
-              </span>
-            </span>
-            <span className="block font-semibold text-red-500">
-              {isWagerNegative ? (
-                <span className="mt-1 block">
-                  Wager amount cannot be negative.
-                </span>
-              ) : isWagerPlusBetsExceedingBalance ? (
-                <span className="mt-1 block">
-                  Current bets plus wager cannot exceed balance.
-                </span>
-              ) : (
-                isWagerGreaterThanBalance && (
-                  <span className="mt-1 block">
-                    Wager amount cannot be greater than token balance.
-                  </span>
-                )
-              )}
-            </span>
-            <div className="mt-4 mb-2 flex flex-col gap-2">
-              <button
-                className="w-full rounded-md border-2 border-black py-2 font-bold transition-colors duration-100 disabled:border-black/50 disabled:bg-white disabled:text-black/50 hover:bg-black hover:text-white"
-                onClick={() => onClickPlaceBet({ betNow: true })}
-                disabled={shouldDisablePlaceBet}
-              >
-                BET NOW
-              </button>
-              <h3 className="self-center font-semibold">or</h3>
-              <button
-                className="w-full rounded-md border-2 border-black py-2 font-bold transition-colors duration-100 disabled:border-black/50 disabled:bg-white disabled:text-black/50 hover:bg-black hover:text-white"
-                onClick={() => onClickPlaceBet()}
-                disabled={shouldDisablePlaceBet}
-              >
-                ADD TO BET SLIP
-              </button>
+
+          <div className="mt-8 flex w-full flex-col items-center gap-y-4 divide-y divide-hl-border">
+            <div className="grid w-full grid-cols-2 grid-rows-2">
+              <h3 className="text-left">Target odds:</h3>
+              <p className="text-left text-hl-tertiary">
+                {utils.formatting.formatToTwoDecimals(back.odds.toString())}
+              </p>
+              <div className="flex items-center">
+                <h3 className="text-left">Wager amount:</h3>
+              </div>
+              <input
+                placeholder="0"
+                value={wagerAmount}
+                onChange={changeWagerAmount}
+                className="border border-hl-border bg-hl-background p-2 text-hl-primary !outline-none !ring-0"
+                disabled={isScratched === true}
+              />
+            </div>
+            <div className="grid w-full grid-cols-2 grid-rows-2 gap-y-4 pt-4">
+              <h3 className="text-left">Payout:</h3>
+              <p className="text-left text-hl-tertiary">
+                {utils.formatting.formatToFourDecimals(payout || "0")}
+              </p>
+              <div className="flex items-center">
+                <h3 className="text-left">Available:</h3>
+              </div>
+              <p className="text-left text-hl-tertiary">
+                {userBalance?.formatted || "0.0000"} {currentToken?.symbol}
+              </p>
             </div>
           </div>
-        </React.Fragment>
+
+          <span className="block font-semibold text-red-500">
+            {isWagerNegative ? (
+              <span className="my-6 block">
+                Wager amount cannot be negative.
+              </span>
+            ) : isWagerPlusBetsExceedingBalance ? (
+              <span className="my-6 block">
+                Current bets plus wager cannot exceed balance.
+              </span>
+            ) : (
+              isWagerGreaterThanBalance && (
+                <span className="my-6 block">
+                  Wager amount cannot be greater than token balance.
+                </span>
+              )
+            )}
+          </span>
+
+          <div className="mt-4 mb-2 flex flex-col gap-2">
+            <NewButton
+              big
+              text="bet now"
+              onClick={() => onClickPlaceBet({ betNow: true })}
+              disabled={shouldDisablePlaceBet || isScratched === true}
+              active={!shouldDisablePlaceBet && isScratched !== true}
+            />
+            <span className=" blockself-center font-semibold">or</span>
+            <NewButton
+              big
+              text="add to bet slip"
+              onClick={() => onClickPlaceBet()}
+              disabled={shouldDisablePlaceBet || isScratched === true}
+              active={!shouldDisablePlaceBet && isScratched !== true}
+            />
+          </div>
+        </div>
       )}
     </BaseModal>
   );

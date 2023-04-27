@@ -25,7 +25,7 @@ export const HomeUserStats: React.FC = () => {
     : undefined;
 
   return (
-    <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
+    <dl className="grid grid-cols-1 gap-5 sm:grid-cols-3">
       <Card title="Deposits" data={formattedDeposits} />
       <Card title="In Play" data={formattedInplay} />
       <Card title="Profits" data={formattedProfits} />

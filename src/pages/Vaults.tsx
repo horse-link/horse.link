@@ -1,18 +1,17 @@
 import React, { useState } from "react";
-import { VaultHistoryTable, VaultsTable } from "../components/Tables";
+import { NewVaultHistoryTable, NewVaultsTable } from "../components/Tables";
 import { useSubgraphVaults } from "../hooks/subgraph";
-import { useConfig } from "../providers/Config";
 import { DepositVaultModal, WithdrawVaultModal } from "../components/Modals";
 import { VaultModalState, VaultTransactionType } from "../types/vaults";
 import { Card, PageLayout } from "../components";
 import utils from "../utils";
 import { ethers } from "ethers";
 import { useVaultStatistics } from "../hooks/stats";
+import { NewButton } from "../components/Buttons";
 
 const Vaults: React.FC = () => {
   const [modal, setModal] = useState<VaultModalState>();
   const vaultHistory = useSubgraphVaults();
-  const config = useConfig();
 
   const closeModal = () => setModal(undefined);
   const {
@@ -24,7 +23,7 @@ const Vaults: React.FC = () => {
 
   return (
     <PageLayout>
-      <div className="mb-4 flex w-full flex-col justify-center gap-x-1 gap-y-2 text-left md:flex-row lg:justify-between lg:gap-x-4">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-4">
         <Card
           title="24H Vault Volume"
           data={
@@ -62,22 +61,38 @@ const Vaults: React.FC = () => {
           }
         />
       </div>
-      <VaultsTable setIsModalOpen={setModal} config={config} />
-      <VaultHistoryTable history={vaultHistory} />
-      {modal?.type === VaultTransactionType.DEPOSIT && (
-        <DepositVaultModal
-          isModalOpen={!!modal}
-          closeModal={closeModal}
-          vault={modal.vault}
+      <div className="mt-10">
+        <NewButton
+          text="vaults & liquidity pools"
+          onClick={() => {}}
+          disabled
+          active={false}
         />
-      )}
-      {modal?.type === VaultTransactionType.WITHDRAW && (
-        <WithdrawVaultModal
-          isModalOpen={!!modal}
-          closeModal={closeModal}
-          vault={modal.vault}
-        />
-      )}
+      </div>
+      <div className="mt-4">
+        <NewVaultsTable setIsModalOpen={setModal} />
+      </div>
+      <div className="mt-10">
+        <NewButton text="history" onClick={() => {}} disabled active={false} />
+      </div>
+      <div className="mt-4">
+        <NewVaultHistoryTable history={vaultHistory} />
+      </div>
+      {modal &&
+        (modal.type === VaultTransactionType.DEPOSIT ? (
+          <DepositVaultModal
+            isModalOpen={!!modal}
+            closeModal={closeModal}
+            vault={modal.vault}
+          />
+        ) : (
+          <WithdrawVaultModal
+            isModalOpen={!!modal}
+            closeModal={closeModal}
+            vault={modal.vault}
+          />
+        ))}
+      <div className="block py-10 lg:hidden" />
     </PageLayout>
   );
 };

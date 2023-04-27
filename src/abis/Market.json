@@ -8,7 +8,7 @@
       },
       {
         "internalType": "uint8",
-        "name": "fee",
+        "name": "margin",
         "type": "uint8"
       },
       {
@@ -20,6 +20,11 @@
         "internalType": "address",
         "name": "oracle",
         "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "metadataBaseURI",
+        "type": "string"
       }
     ],
     "stateMutability": "nonpayable",
@@ -73,6 +78,25 @@
       }
     ],
     "name": "ApprovalForAll",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "index",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "Borrowed",
     "type": "event"
   },
   {
@@ -135,6 +159,44 @@
       }
     ],
     "name": "Placed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "index",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "Refunded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "vault",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "Repaid",
     "type": "event"
   },
   {
@@ -309,19 +371,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "baseURI",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -455,25 +504,6 @@
         "type": "bytes16"
       }
     ],
-    "name": "getMarketCollateral",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes16",
-        "name": "marketId",
-        "type": "bytes16"
-      }
-    ],
     "name": "getMarketTotal",
     "outputs": [
       {
@@ -522,6 +552,19 @@
   {
     "inputs": [],
     "name": "getOracleAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getOwner",
     "outputs": [
       {
         "internalType": "address",
@@ -785,8 +828,14 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "refundCollateral",
+    "inputs": [
+      {
+        "internalType": "uint64",
+        "name": "index",
+        "type": "uint64"
+      }
+    ],
+    "name": "refund",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -858,6 +907,56 @@
       }
     ],
     "name": "safeTransferFrom",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint64",
+        "name": "index",
+        "type": "uint64"
+      },
+      {
+        "internalType": "bytes16",
+        "name": "marketId",
+        "type": "bytes16"
+      },
+      {
+        "internalType": "bytes16",
+        "name": "propositionId",
+        "type": "bytes16"
+      },
+      {
+        "internalType": "uint256",
+        "name": "odds",
+        "type": "uint256"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint8",
+            "name": "v",
+            "type": "uint8"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "r",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "s",
+            "type": "bytes32"
+          }
+        ],
+        "internalType": "struct SignatureLib.Signature",
+        "name": "signature",
+        "type": "tuple"
+      }
+    ],
+    "name": "scratchAndRefund",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

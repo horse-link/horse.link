@@ -9,7 +9,7 @@ type Props = {
 export const Loader: React.FC<Props> = ({
   className,
   size = 30,
-  color = "black"
+  color = "white"
 }) => (
   <ClipLoader
     aria-label="Loading Spinner"
