@@ -161,15 +161,19 @@ export const WithdrawVaultModal: React.FC<Props> = ({
                 className="border border-hl-border bg-hl-background p-2 text-hl-primary !outline-none !ring-0"
               />
             </div>
-            <div className="mt-8 mb-2 flex w-full flex-col">
-              <NewButton
-                text={`Withdraw ${vault.asset.symbol}`}
-                onClick={onClickWithdraw}
-                disabled={shouldDisableButton}
-                active={!shouldDisableButton}
-                big
-                white
-              />
+            <div className="mt-8 mb-2 flex w-full flex-col items-center">
+              {txLoading ? (
+                <Loader />
+              ) : (
+                <NewButton
+                  text={`Withdraw ${vault.asset.symbol}`}
+                  onClick={onClickWithdraw}
+                  disabled={shouldDisableButton}
+                  active={!shouldDisableButton}
+                  big
+                  white
+                />
+              )}
             </div>
           </div>
         </div>

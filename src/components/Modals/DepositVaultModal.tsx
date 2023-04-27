@@ -162,15 +162,19 @@ export const DepositVaultModal: React.FC<Props> = ({
                 className="border border-hl-border bg-hl-background p-2 text-hl-primary !outline-none !ring-0"
               />
             </div>
-            <div className="mt-8 mb-2 flex w-full flex-col">
-              <NewButton
-                text={`Deposit ${vault.asset.symbol}`}
-                onClick={onClickDeposit}
-                disabled={shouldDisableButton}
-                active={!shouldDisableButton}
-                big
-                white
-              />
+            <div className="mt-8 mb-2 flex w-full flex-col items-center">
+              {txLoading ? (
+                <Loader />
+              ) : (
+                <NewButton
+                  text={`Deposit ${vault.asset.symbol}`}
+                  onClick={onClickDeposit}
+                  disabled={shouldDisableButton}
+                  active={!shouldDisableButton}
+                  big
+                  white
+                />
+              )}
             </div>
           </div>
         </div>
