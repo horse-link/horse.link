@@ -76,9 +76,9 @@ export const NewRaceTable: React.FC<Props> = ({
           key={`runnertable-${runner.proposition_id}-${key.toString()}-${i}`}
           onClick={() => onClickRunner(runner)}
         >
-          {key === "odds"
+          {key === "odds" && runner && runner[key]
             ? utils.formatting.formatToTwoDecimals(runner[key].toString())
-            : runner[key].toString()}
+            : runner[key]?.toString()}
         </div>
       )),
       <div
