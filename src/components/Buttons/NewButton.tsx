@@ -27,17 +27,17 @@ export const NewButton: React.FC<Props> = ({
       "bg-hl-secondary text-hl-background": active && !white,
       "bg-hl-primary text-hl-background": active && white,
       "border border-hl-tertiary text-hl-tertiary": !active,
-      "px-8 text-xs xl:text-sm": !big,
-      "w-full py-2 text-sm xl:text-base": big
+      "px-8 text-sm 3xl:text-base": !big,
+      "w-full py-2 text-sm 3xl:text-base": big
     })}
     onClick={onClick}
     disabled={disabled}
   >
     {dropdown ? (
       <div className="flex w-full justify-between">
-        <div className="w-full" />
+        <div className="w-[10px]" />
         <span className="block w-full text-center">{text.toUpperCase()}</span>
-        <div className="flex w-full justify-end">
+        <div className="flex w-[10px] justify-end">
           <span
             className={classNames("relative -left-4 block", {
               "rotate-180": dropdownOpen
