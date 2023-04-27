@@ -29,7 +29,7 @@ export const HomeBannerRow: React.FC<Props> = ({ meet, index }) => {
         "flex w-fit shrink grow items-center gap-x-2 rounded-lg border border-hl-border px-4 py-8",
         {
           "hidden lg:flex": index > 0,
-          "!hidden 3xl:!flex": index > 3
+          "!hidden 3xl:!flex": index > 2
         }
       )}
       to={`/races/${meet.meeting.venueCode}/${meet.jumperRaceNumber}`}
