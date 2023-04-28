@@ -68,8 +68,8 @@ export const NewResultsTable: React.FC<Props> = ({ results }) => {
                 className="flex w-full flex-col items-center gap-y-2 border-t border-hl-border py-2 text-center"
               >
                 <h2 className="font-basement tracking-wider text-hl-secondary">
-                  {utils.formatting.formatOrdinals(horse.place)}. {horse.runner}{" "}
-                  ({horse.number})
+                  {utils.formatting.formatOrdinals(horse.place)}. {horse.number}
+                  : {horse.runner}
                 </h2>
                 <p>{horse.rider}</p>
               </div>
