@@ -132,7 +132,7 @@ export const NewRaceTable: React.FC<Props> = ({
       onClick={() => onClickRunner(runner)}
     >
       <h2 className="font-basement tracking-wider text-hl-secondary">
-        {runner.name} ({runner.number})
+        {runner.number}: {runner.name}
       </h2>
       <div className="flex w-full items-center justify-center gap-x-8">
         <p>Form: {runner.last5Starts}</p>
