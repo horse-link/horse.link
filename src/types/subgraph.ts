@@ -90,6 +90,7 @@ export type Withdraw = {
 export type Borrow = {
   id: Hash;
   betId: BetId;
+  vault: Address;
   amount: BigNumber;
   createdAt: number;
 };

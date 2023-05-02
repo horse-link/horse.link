@@ -1,5 +1,4 @@
 import React from "react";
-import { FormattedVaultTransaction } from "../../types/subgraph";
 import { VaultTransactionType } from "../../types/vaults";
 import { useConfig } from "../../providers/Config";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
@@ -10,19 +9,22 @@ import { ethers } from "ethers";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Loader } from "../Loader";
+import { VaultHistory } from "../../hooks/subgraph";
 
 dayjs.extend(relativeTime);
 
 const txTypeMap = new Map([
   [VaultTransactionType.WITHDRAW, "Withdrawal"],
-  [VaultTransactionType.DEPOSIT, "Deposit"]
+  [VaultTransactionType.DEPOSIT, "Deposit"],
+  [VaultTransactionType.BORROW, "Lending"],
+  [VaultTransactionType.REPAY, "Rewards"]
 ]);
 
 type Props = {
-  history?: Array<FormattedVaultTransaction>;
+  vaultHistory?: VaultHistory;
 };
 
-export const NewVaultHistoryTable: React.FC<Props> = ({ history }) => {
+export const NewVaultHistoryTable: React.FC<Props> = ({ vaultHistory }) => {
   const config = useConfig();
   const scanner = useScannerUrl();
 
@@ -43,25 +45,25 @@ export const NewVaultHistoryTable: React.FC<Props> = ({ history }) => {
   );
 
   const rows =
-    history && config
-      ? history.map((vault, i) => {
+    vaultHistory && config
+      ? vaultHistory.map((history, i) => {
           const style = "w-full text-left py-4 text-xs xl:text-base";
 
-          const formattedTxType = txTypeMap.get(vault.type);
+          const formattedTxType = txTypeMap.get(history.type);
 
-          const details = utils.config.getVault(vault.vaultAddress, config);
+          const details = utils.config.getVault(history.vaultAddress, config);
 
           const amount = utils.formatting.formatToFourDecimals(
-            ethers.utils.formatEther(vault.amount)
+            ethers.utils.formatEther(history.amount)
           );
 
-          const time = dayjs.unix(vault.timestamp).fromNow();
+          const time = dayjs.unix(history.createdAt).fromNow();
 
           const data = [
             formattedTxType,
             amount,
             time,
-            details?.name || `${vault.vaultAddress.slice(0, 20)}...`
+            details?.name || `${history.vaultAddress?.slice(0, 20)}...`
           ];
 
           return [
@@ -77,10 +79,10 @@ export const NewVaultHistoryTable: React.FC<Props> = ({ history }) => {
             )),
             <div
               className="flex h-full w-full items-center truncate"
-              key={`vaulthistorytable-${vault.id}-${i}`}
+              key={`vaulthistorytable-${history.tx}-${i}`}
             >
               <a
-                href={`${scanner}/tx/${vault.id.toLowerCase()}`}
+                href={`${scanner}/tx/${history.tx?.toLowerCase()}`}
                 target="_blank"
                 rel="noreferrer noopener"
                 className={classNames(
@@ -88,7 +90,7 @@ export const NewVaultHistoryTable: React.FC<Props> = ({ history }) => {
                   "max-w-[10ch] truncate xl:max-w-[20ch]"
                 )}
               >
-                {vault.id}
+                {history.tx}
               </a>
             </div>
           ];
@@ -117,24 +119,30 @@ export const NewVaultHistoryTable: React.FC<Props> = ({ history }) => {
 
       {/* mobile */}
       <div className="block lg:hidden">
-        {!history || !config ? (
+        {!vaultHistory || !config ? (
           <div className="flex w-full justify-center py-10">
             <Loader />
           </div>
         ) : (
           <div className="flex w-full flex-col items-center">
-            {history.map(vault => {
-              const formattedTxType = txTypeMap.get(vault.type);
+            {vaultHistory.map(history => {
+              const formattedTxType = txTypeMap.get(history.type);
 
-              const details = utils.config.getVault(vault.vaultAddress, config);
+              const details = utils.config.getVault(
+                history.vaultAddress,
+                config
+              );
 
               const amount = utils.formatting.formatToFourDecimals(
-                ethers.utils.formatUnits(vault.amount, details?.asset.decimals)
+                ethers.utils.formatUnits(
+                  history.amount,
+                  details?.asset.decimals
+                )
               );
 
               return (
                 <div
-                  key={vault.id}
+                  key={history.tx}
                   className="flex w-full flex-col items-center gap-y-2 border-t border-hl-border py-2 text-center"
                 >
                   <h2 className="font-basement tracking-wider text-hl-secondary">
@@ -144,20 +152,20 @@ export const NewVaultHistoryTable: React.FC<Props> = ({ history }) => {
                     {amount} {details?.asset.symbol}
                   </p>
                   <a
-                    href={`${scanner}/address/${vault.vaultAddress}`}
+                    href={`${scanner}/address/${history.vaultAddress}`}
                     target="_blank"
                     rel="noreferrer noopener"
                     className="w-full max-w-full truncate"
                   >
-                    Vault: {vault.vaultAddress}
+                    Vault: {history.vaultAddress}
                   </a>
                   <a
-                    href={`${scanner}/tx/${vault.id}`}
+                    href={`${scanner}/tx/${history.tx}`}
                     target="_blank"
                     rel="noreferrer noopener"
                     className="w-full max-w-full truncate"
                   >
-                    TxID: {vault.id}
+                    TxID: {history.tx}
                   </a>
                 </div>
               );

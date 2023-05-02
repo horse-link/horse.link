@@ -18,9 +18,9 @@ export const getVaultNameFromMarket = (
     vault => vault.marketAddress.toLowerCase() === marketAddress.toLowerCase()
   )?.name;
 
-export const getVault = (vaultAddress: string, config?: Config) =>
+export const getVault = (vaultAddress?: string, config?: Config) =>
   config?.vaults.find(
-    vault => vault.address.toLowerCase() === vaultAddress.toLowerCase()
+    vault => vault.address.toLowerCase() === vaultAddress?.toLowerCase()
   );
 
 export const getVaultFromMarket = (market?: MarketInfo, config?: Config) =>
