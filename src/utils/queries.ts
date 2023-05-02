@@ -67,6 +67,7 @@ export const getBetsQuery = (
     payout
     owner
     createdAt
+    createdAtTx
     settled
     result
     recipient

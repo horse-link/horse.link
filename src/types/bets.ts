@@ -54,6 +54,7 @@ export type BetHistory = {
   marketOracleResultSig?: EcSignature;
   scratched?: ScratchedRunner;
   status: BetStatus;
+  tx: string;
 };
 
 export type TotalBetsOnPropositions = Record<

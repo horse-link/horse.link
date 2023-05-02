@@ -61,6 +61,7 @@ export type Bet = {
   payout: BigNumber;
   owner: Address;
   createdAt: number;
+  createdAtTx: Hash;
   settled: boolean;
   result: BetResult;
   recipient: Address;
