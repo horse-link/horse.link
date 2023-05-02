@@ -40,7 +40,7 @@ export const TokenModal: React.FC<Props> = ({
             {availableTokens.map(t => (
               <div className="w-full" key={t.address}>
                 <button
-                  className="flex w-full items-center rounded-md py-1 px-2 hover:bg-zinc-100"
+                  className="flex w-full items-center rounded-md py-1 px-2 hover:bg-hl-primary hover:text-hl-secondary"
                   onClick={() => onClick(t)}
                 >
                   <img
@@ -50,7 +50,7 @@ export const TokenModal: React.FC<Props> = ({
                   />
                   <div className="flex flex-col items-start justify-start pt-2">
                     <h5 className="text-lg font-semibold">{t?.name}</h5>
-                    <h6 className="relative bottom-2 text-black/50">
+                    <h6 className="relative bottom-2 text-hl-tertiary">
                       {t.symbol}
                     </h6>
                   </div>

@@ -10,6 +10,7 @@ export const SVG_ICONS: Record<string, SvgIcon> = {
 
 export { FaHorseHead as HorseHeadIcon } from "react-icons/fa";
 export { default as TokenomicsChart } from "./chart.svg";
+export { default as JockeyIcon } from "./jockey.svg";
 
 import { default as FXAUD } from "./fxAUD.png";
 import { default as FXUSD } from "./fxUSD.png";

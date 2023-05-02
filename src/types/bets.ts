@@ -26,7 +26,8 @@ export type BetStatus =
   | "PENDING"
   | "SCRATCHED"
   | "SETTLED"
-  | "INVALID";
+  | "INVALID"
+  | "REFUNDED";
 
 export type BetFilterOptions = "ALL_BETS" | BetStatus;
 

@@ -2,17 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer components {
-  .hyperlink {
-    @apply text-blue-600 visited:text-purple-600 hover:text-blue-800;
-  }
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 }
 
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+body {
+  overflow-x: hidden;
 }
-input[type="number"] {
-  -moz-appearance: textfield;
+
+@layer base {
+  @font-face {
+    font-family: "Basement Grotesk";
+    src: url("/fonts/Basement Grotesk.otf");
+  }
 }
