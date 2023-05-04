@@ -70,6 +70,7 @@ export type Bet = {
 
 export type Deposit = {
   id: Hash;
+  vault: Address;
   sender: Address;
   owner: Address;
   assets: BigNumber;
@@ -79,6 +80,7 @@ export type Deposit = {
 
 export type Withdraw = {
   id: Hash;
+  vault: Address;
   sender: Address;
   receiver: Address;
   owner: Address;

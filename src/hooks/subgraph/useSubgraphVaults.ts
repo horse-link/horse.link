@@ -51,7 +51,7 @@ export const useSubgraphVaults = () => {
       type: VaultTransactionType.DEPOSIT,
       amount: deposit.assets,
       createdAt: deposit.createdAt,
-      vaultAddress: deposit.owner,
+      vaultAddress: deposit.vault,
       tx: deposit.id
     });
   });
@@ -60,7 +60,7 @@ export const useSubgraphVaults = () => {
       type: VaultTransactionType.WITHDRAW,
       amount: withdraw.assets,
       createdAt: withdraw.createdAt,
-      vaultAddress: withdraw.owner,
+      vaultAddress: withdraw.vault,
       tx: withdraw.id
     });
   });

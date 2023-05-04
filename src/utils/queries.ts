@@ -155,6 +155,7 @@ export const getVaultHistory = () => `query getVaultHistory{
     owner
     assets
     shares
+    vault
     createdAt
   }
   deposits{
@@ -163,6 +164,7 @@ export const getVaultHistory = () => `query getVaultHistory{
     owner
     assets
     shares
+    vault
     createdAt
   }
   borrows{
