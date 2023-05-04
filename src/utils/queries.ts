@@ -19,7 +19,6 @@ const getFiltersFromObject = (filter?: SubgraphFilter) => {
     .join("\n");
 };
 
-// TODO: fix
 const getOptionalFilterOptions = (now: number, filter?: BetFilterOptions) => {
   switch (filter) {
     case "ALL_BETS":

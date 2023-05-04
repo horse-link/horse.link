@@ -67,6 +67,5 @@ export const useSubgraphVaults = () => {
 
   history.sort((a, b) => b.createdAt - a.createdAt);
 
-  console.log({ history });
   return history;
 };
