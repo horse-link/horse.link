@@ -169,6 +169,7 @@ export const getVaultHistory = () => `query getVaultHistory{
     id
     betId
     amount
+    vault
     createdAt
   }
   repays{
