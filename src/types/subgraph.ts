@@ -66,6 +66,7 @@ export type Bet = {
   result: BetResult;
   recipient: Address;
   settledAt: number;
+  refunded: boolean;
 };
 
 export type Deposit = {
