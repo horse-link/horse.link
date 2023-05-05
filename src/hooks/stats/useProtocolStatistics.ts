@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useApi } from "../../providers/Api";
+import { FormattedProtocol } from "../../types/stats";
 
-export const useProtocolStatistics = () => {
+export const useProtocolStatistics = (): FormattedProtocol | undefined => {
   const api = useApi();
   const [result, setResult] = useState<{
     id: "protocol";
