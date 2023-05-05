@@ -14,7 +14,7 @@ import { Token } from "graphql";
 import { VaultUserData } from "../types/vaults";
 import { Network } from "../types/general";
 import constants from "../constants";
-import { FormattedProtocol } from "../types/subgraph";
+import { FormattedProtocol } from "../types/stats";
 
 export class Api {
   public client: AxiosInstance;
@@ -139,8 +139,9 @@ export class Api {
       this.getTotalLiquidity(),
       this.getTotalPerformance()
     ]);
+
     return {
-      id: "protocol",
+      id: "protocol" as const,
       inPlay: totalInPlay.total,
       tvl: totalLiquidity.assets,
       performance: totalPerformance.performance,

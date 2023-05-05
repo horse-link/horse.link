@@ -1,26 +1,24 @@
 import { BigNumber, ethers } from "ethers";
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import { Bet } from "../../types/subgraph";
 import useSubgraph from "../useSubgraph";
 import utils from "../../utils";
 import constants from "../../constants";
 
 type Response = {
-  bets: Bet[];
+  bets: Array<Bet>;
 };
 
 export const useMarketStatistics = () => {
-  const yesterdayFilter = useMemo(
-    () =>
-      Math.floor(
-        Date.now() / constants.time.ONE_SECOND_MS -
-          constants.time.TWENTY_FOUR_HOURS_S
-      ),
-    []
+  const { current: now } = useRef(
+    Math.floor(Date.now() / constants.time.ONE_SECOND_MS)
+  );
+  const { current: yesterdayFilter } = useRef(
+    now - constants.time.TWENTY_FOUR_HOURS_S
   );
   // This is the last 24 hours of data
   const { data, loading } = useSubgraph<Response>(
-    utils.queries.getMarketStatsQuery({
+    utils.queries.getBetsQueryWithoutPagination(now, {
       createdAt_gte: yesterdayFilter
     })
   );

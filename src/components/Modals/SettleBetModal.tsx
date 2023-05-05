@@ -51,7 +51,7 @@ export const SettleBetModal: React.FC<Props> = ({
 
     api
       .getWinningResultSignature(
-        utils.formatting.parseBytes16String(selectedBet.marketId),
+        selectedBet.marketId,
         // we want to sign if the bet isnt already settled
         !selectedBet.settled
       )
@@ -84,7 +84,7 @@ export const SettleBetModal: React.FC<Props> = ({
   }, [isModalOpen]);
 
   const market = config?.markets.find(
-    m => m.address.toLowerCase() === bet?.marketAddress.toLowerCase()
+    m => m.address.toLowerCase() === bet?.market.toLowerCase()
   );
 
   const token = config?.tokens.find(

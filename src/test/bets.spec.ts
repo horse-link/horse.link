@@ -64,9 +64,11 @@ describe("detect scratched runners", () => {
 
     expect(mockSignedBetData?.scratchedRunners?.length).toBeGreaterThan(0);
     expect(betHistory.propositionId).toEqual(
-      mockSignedBetData!.scratchedRunners![0].b16propositionId
+      mockSignedBetData!.scratchedRunners![0].b16propositionId.toUpperCase()
     );
-    expect(betHistory.propositionId).toEqual(mockBet.propositionId);
+    expect(betHistory.propositionId).toEqual(
+      mockBet.propositionId.toUpperCase()
+    );
     expect(!!betHistory.scratched).toEqual(true);
     expect(betHistory.status).toEqual("SCRATCHED");
   });

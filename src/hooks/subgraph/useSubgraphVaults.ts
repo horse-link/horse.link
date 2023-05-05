@@ -1,42 +1,71 @@
 import { BigNumber } from "ethers";
-import { useEffect, useMemo } from "react";
-import {
-  FormattedVaultTransaction,
-  VaultTransaction
-} from "../../types/subgraph";
-import useSubgraph from "../useSubgraph";
+import { Deposit, Withdraw, Borrow, Repay } from "../../types/subgraph";
 import utils from "../../utils";
-import constants from "../../constants";
+import useSubgraph from "../useSubgraph";
+import { VaultTransactionType } from "../../types/vaults";
 
 type Response = {
-  vaultTransactions: VaultTransaction[];
+  deposits: Array<Deposit>;
+  withdraws: Array<Withdraw>;
+  borrows: Array<Borrow>;
+  repays: Array<Repay>;
 };
 
-export const useSubgraphVaults = (vaultAddress?: string) => {
-  const { data, loading, refetch } = useSubgraph<Response>(
-    utils.queries.getVaultHistoryQuery({
-      vaultAddress: vaultAddress ? vaultAddress.toLowerCase() : undefined
-    })
+export type VaultHistory = {
+  type: VaultTransactionType;
+  amount: BigNumber;
+  createdAt: number;
+  vaultAddress: string;
+  tx: string;
+}[];
+
+export const useSubgraphVaults = () => {
+  const { data, loading } = useSubgraph<Response>(
+    utils.queries.getVaultHistory()
   );
 
-  useEffect(() => {
-    const refetchInterval = setInterval(
-      refetch,
-      constants.time.ONE_SECOND_MS * 5
-    );
+  if (loading) return;
+  if (!data) return [];
 
-    return () => clearInterval(refetchInterval);
-  }, []);
+  const history: VaultHistory = [];
+  data.borrows.forEach(borrow => {
+    history.push({
+      type: VaultTransactionType.BORROW,
+      amount: borrow.amount,
+      createdAt: borrow.createdAt,
+      vaultAddress: borrow.vault,
+      tx: borrow.id
+    });
+  });
+  data.repays.forEach(repay => {
+    history.push({
+      type: VaultTransactionType.REPAY,
+      amount: repay.amount,
+      createdAt: repay.createdAt,
+      vaultAddress: repay.vault,
+      tx: repay.id
+    });
+  });
+  data.deposits.forEach(deposit => {
+    history.push({
+      type: VaultTransactionType.DEPOSIT,
+      amount: deposit.assets,
+      createdAt: deposit.createdAt,
+      vaultAddress: deposit.vault,
+      tx: deposit.id
+    });
+  });
+  data.withdraws.forEach(withdraw => {
+    history.push({
+      type: VaultTransactionType.WITHDRAW,
+      amount: withdraw.assets,
+      createdAt: withdraw.createdAt,
+      vaultAddress: withdraw.vault,
+      tx: withdraw.id
+    });
+  });
 
-  const formattedData = useMemo<FormattedVaultTransaction[] | undefined>(() => {
-    if (loading || !data) return;
+  history.sort((a, b) => b.createdAt - a.createdAt);
 
-    return data.vaultTransactions.map(tx => ({
-      ...tx,
-      amount: BigNumber.from(tx.amount),
-      timestamp: +tx.timestamp
-    }));
-  }, [data, loading]);
-
-  return formattedData;
+  return history;
 };

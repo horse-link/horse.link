@@ -76,7 +76,7 @@ const Vaults: React.FC = () => {
         <NewButton text="history" onClick={() => {}} disabled active={false} />
       </div>
       <div className="mt-4">
-        <NewVaultHistoryTable history={vaultHistory} />
+        <NewVaultHistoryTable vaultHistory={vaultHistory} />
       </div>
       {modal &&
         (modal.type === VaultTransactionType.DEPOSIT ? (

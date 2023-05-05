@@ -81,10 +81,7 @@ export const NewBetTable: React.FC<Props> = ({
             }`;
 
           const winningPropositionId =
-            bet &&
-            utils.id.getPropositionFromId(
-              utils.formatting.parseBytes16String(bet.propositionId)
-            );
+            bet && utils.id.getPropositionFromId(bet.propositionId);
           const isWinning =
             bet && bet.winningPropositionId
               ? bet.winningPropositionId.toLowerCase() ===
@@ -92,10 +89,7 @@ export const NewBetTable: React.FC<Props> = ({
               : undefined;
 
           const raceDetails =
-            bet &&
-            utils.id.getMarketDetailsFromId(
-              utils.formatting.parseBytes16String(bet.marketId)
-            );
+            bet && utils.id.getMarketDetailsFromId(bet.marketId);
 
           const style =
             "w-full text-left py-4 text-hl-tertiary text-xs xl:text-base";
@@ -252,10 +246,7 @@ export const NewBetTable: React.FC<Props> = ({
                 }`;
 
               const winningPropositionId =
-                bet &&
-                utils.id.getPropositionFromId(
-                  utils.formatting.parseBytes16String(bet.propositionId)
-                );
+                bet && utils.id.getPropositionFromId(bet.propositionId);
 
               const isWinning =
                 bet && bet.winningPropositionId
@@ -264,10 +255,7 @@ export const NewBetTable: React.FC<Props> = ({
                   : undefined;
 
               const raceDetails =
-                bet &&
-                utils.id.getMarketDetailsFromId(
-                  utils.formatting.parseBytes16String(bet.marketId)
-                );
+                bet && utils.id.getMarketDetailsFromId(bet.marketId);
 
               return (
                 <div
