@@ -32,7 +32,7 @@ export type Aggregator = {
 };
 
 export type Registry = {
-  // id will always be protocol
+  // id will always be registry
   id: "registry";
 
   markets: Array<Address>;
