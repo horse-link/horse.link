@@ -67,6 +67,7 @@ export type Bet = {
   recipient: Address;
   settledAt: number;
   settledAtTx: Hash;
+  refunded: boolean;
 };
 
 export type Deposit = {

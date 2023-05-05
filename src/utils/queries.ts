@@ -72,6 +72,7 @@ export const getBetsQuery = (
     recipient
     settledAt
     settledAtTx
+    refunded
   }
 }`;
 
@@ -104,6 +105,7 @@ export const getBetsQueryWithoutPagination = (
     recipient
     settledAt
     settledAtTx
+    refunded
   }
 }`;
 

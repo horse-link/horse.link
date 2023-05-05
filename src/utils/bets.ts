@@ -25,6 +25,7 @@ export const getBetStatus = (
   signedBetData: SignedBetDataResponse,
   scratched?: ScratchedRunner
 ): BetStatus => {
+  if (bet.refunded) return "REFUNDED";
   if (bet.settled) return "SETTLED";
   if (scratched) return "SCRATCHED";
 
