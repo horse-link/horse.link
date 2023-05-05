@@ -19,7 +19,8 @@ export const getMockBet = (): Bet => ({
   result: BetResult.INPLAY,
   createdAt: 0,
   settledAt: 0,
-  createdAtTx: ethers.constants.HashZero
+  createdAtTx: ethers.constants.HashZero,
+  settledAtTx: ethers.constants.HashZero
 });
 
 export const getRealExampleMockBet = (): Bet => ({
@@ -38,7 +39,9 @@ export const getRealExampleMockBet = (): Bet => ({
   settledAt: 0,
   createdAt: 1675223604,
   createdAtTx:
-    "0x3198be23014251a9e11b91cc5fd3a1b55cb716bde2e314a6ad5d4bdb35ce5f78"
+    "0x3198be23014251a9e11b91cc5fd3a1b55cb716bde2e314a6ad5d4bdb35ce5f78",
+  settledAtTx:
+    "0x123e7bbc64fc50f88c1852edcf29846a7a56ad60b5450a92249a06192c18b8e3"
 });
 
 export const getMockSignedBetDataResponse = (): SignedBetDataResponse => ({
