@@ -9,7 +9,6 @@ import { Loader, PageLayout } from "../components";
 import { useSubgraphBets } from "../hooks/subgraph";
 import { BetHistory } from "../types/bets";
 import { makeMarketId } from "../utils/markets";
-import { formatBytes16String } from "../utils/formatting";
 import { useConfig } from "../providers/Config";
 import constants from "../constants";
 import dayjs from "dayjs";
@@ -35,12 +34,11 @@ const Races: React.FC = () => {
   }, []);
 
   const marketId = makeMarketId(new Date(), track, raceNumber.toString());
-  const b16MarketId = formatBytes16String(marketId);
   const {
     betData: betHistory,
     totalBetsOnPropositions,
     refetch
-  } = useSubgraphBets("ALL_BETS", b16MarketId);
+  } = useSubgraphBets("ALL_BETS", marketId);
 
   const margin = useMemo(() => {
     if (!race || !race.runners.length) return;

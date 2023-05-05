@@ -20,6 +20,7 @@ export const getMockBet = (): Bet => ({
   createdAt: 0,
   settledAt: 0,
   createdAtTx: ethers.constants.HashZero,
+  settledAtTx: ethers.constants.HashZero,
   refunded: false
 });
 
@@ -40,6 +41,8 @@ export const getRealExampleMockBet = (): Bet => ({
   createdAt: 1675223604,
   createdAtTx:
     "0x3198be23014251a9e11b91cc5fd3a1b55cb716bde2e314a6ad5d4bdb35ce5f78",
+  settledAtTx:
+    "0x123e7bbc64fc50f88c1852edcf29846a7a56ad60b5450a92249a06192c18b8e3",
   refunded: false
 });
 

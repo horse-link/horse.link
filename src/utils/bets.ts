@@ -68,7 +68,8 @@ export const getBetHistory = (
     marketOracleResultSig: signedBetData.marketOracleResultSig,
     scratched: scratched,
     status: getBetStatus(bet, signedBetData, scratched),
-    tx: bet.createdAtTx
+    tx: bet.createdAtTx,
+    settledAtTx: bet.settledAtTx
   };
 };
 
