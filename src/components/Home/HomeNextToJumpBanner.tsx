@@ -6,11 +6,10 @@ export const HomeNextToJumpBanner: React.FC = () => {
   missingLocations?.forEach(console.error);
 
   return nextMeets ? (
-    <div className="flex w-full flex-wrap justify-between gap-4">
-      {[...nextMeets].map((meet, i) => (
+    <div className="flex w-full justify-between gap-4 overflow-scroll lg:flex-wrap lg:overflow-auto">
+      {[...nextMeets].map(meet => (
         <HomeBannerRow
           meet={meet}
-          index={i}
           key={
             // no unique key in meet
             JSON.stringify(meet)
