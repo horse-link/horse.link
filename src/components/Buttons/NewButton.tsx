@@ -10,6 +10,7 @@ type Props = {
   dropdown?: boolean;
   dropdownOpen?: boolean;
   white?: boolean;
+  rounded?: boolean;
 };
 
 export const NewButton: React.FC<Props> = ({
@@ -20,7 +21,8 @@ export const NewButton: React.FC<Props> = ({
   big = false,
   dropdown = false,
   dropdownOpen = false,
-  white = false
+  white = false,
+  rounded = false
 }) => (
   <button
     className={classNames({
@@ -28,7 +30,8 @@ export const NewButton: React.FC<Props> = ({
       "bg-hl-primary text-hl-background": active && white,
       "border border-hl-tertiary text-hl-tertiary": !active,
       "px-8 text-sm 3xl:text-base": !big,
-      "w-full py-2 text-sm 3xl:text-base": big
+      "w-full py-2 text-sm 3xl:text-base": big,
+      "rounded-md": rounded
     })}
     onClick={onClick}
     disabled={disabled}

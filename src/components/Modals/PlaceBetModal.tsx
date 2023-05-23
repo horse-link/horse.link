@@ -252,29 +252,29 @@ export const PlaceBetModal: React.FC<Props> = ({
           </h2>
 
           <div className="mt-8 flex w-full flex-col items-center gap-y-4 divide-y divide-hl-border">
-            <div className="grid w-full grid-cols-2 grid-rows-2">
-              <h3 className="text-left">Target odds:</h3>
+            <div className="grid w-full grid-cols-2 grid-rows-2 gap-2">
+              <h3 className="text-left text-hl-secondary">Target odds:</h3>
               <p className="text-left text-hl-tertiary">
                 {utils.formatting.formatToTwoDecimals(back.odds.toString())}
               </p>
               <div className="flex items-center">
-                <h3 className="text-left">Wager amount:</h3>
+                <h3 className="text-left text-hl-secondary">Wager amount:</h3>
               </div>
               <input
                 placeholder="0"
                 value={wagerAmount}
                 onChange={changeWagerAmount}
-                className="border border-hl-border bg-hl-background p-2 text-hl-primary !outline-none !ring-0"
+                className="bg-hl-background text-hl-primary !outline-none !ring-0"
                 disabled={isScratched === true}
               />
             </div>
-            <div className="grid w-full grid-cols-2 grid-rows-2 gap-y-4 pt-4">
-              <h3 className="text-left">Payout:</h3>
+            <div className="grid w-full grid-cols-2 grid-rows-2 gap-2 pt-4">
+              <h3 className="text-left text-hl-secondary">Payout:</h3>
               <p className="text-left text-hl-tertiary">
                 {utils.formatting.formatToFourDecimals(payout || "0")}
               </p>
               <div className="flex items-center">
-                <h3 className="text-left">Available:</h3>
+                <h3 className="text-left text-hl-secondary">Available:</h3>
               </div>
               <p className="text-left text-hl-tertiary">
                 {userBalance?.formatted || "0.0000"} {currentToken?.symbol}
@@ -303,6 +303,7 @@ export const PlaceBetModal: React.FC<Props> = ({
           <div className="mt-4 mb-2 flex flex-col gap-2">
             <NewButton
               big
+              rounded
               text="bet now"
               onClick={() => onClickPlaceBet({ betNow: true })}
               disabled={shouldDisablePlaceBet || isScratched === true}
@@ -311,6 +312,7 @@ export const PlaceBetModal: React.FC<Props> = ({
             <span className=" blockself-center font-semibold">or</span>
             <NewButton
               big
+              rounded
               text="add to bet slip"
               onClick={() => onClickPlaceBet()}
               disabled={shouldDisablePlaceBet || isScratched === true}
