@@ -148,7 +148,7 @@ export const SettleBetModal: React.FC<Props> = ({
               href={`${scanner}/tx/${bet.settledAtTx}`}
               target="_blank"
               rel="noreferrer noopener"
-              className="underline"
+              className="text-hl-secondary underline"
             >
               {utils.formatting.shortenHash(
                 bet.settledAtTx || ethers.constants.HashZero

@@ -43,11 +43,13 @@ export const TokenModal: React.FC<Props> = ({
                   className="flex w-full items-center rounded-md py-1 px-2 hover:bg-hl-primary hover:text-hl-secondary"
                   onClick={() => onClick(t)}
                 >
-                  <img
-                    src={t.src}
-                    alt={`${t.symbol} icon`}
-                    className="mr-4 h-[2rem]"
-                  />
+                  <div className="w-[4rem]">
+                    <img
+                      src={t.src}
+                      alt={`${t.symbol} icon`}
+                      className="mr-4 h-[2rem]"
+                    />
+                  </div>
                   <div className="flex flex-col items-start justify-start pt-2">
                     <h5 className="text-lg font-semibold">{t?.name}</h5>
                     <h6 className="relative bottom-2 text-hl-tertiary">
