@@ -35,7 +35,7 @@ export const TokenModal: React.FC<Props> = ({
         </div>
       ) : (
         <React.Fragment>
-          <h2 className="text-xl font-bold">Select a Token</h2>
+          <h2 className="text-[32px] font-bold">Select a Token</h2>
           <div className="mt-4 w-full">
             {availableTokens.map(t => (
               <div className="w-full" key={t.address}>

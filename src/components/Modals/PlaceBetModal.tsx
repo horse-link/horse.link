@@ -244,7 +244,7 @@ export const PlaceBetModal: React.FC<Props> = ({
       ) : (
         <div className="p-6">
           <h2
-            className={classNames("font-basement text-5xl tracking-wider", {
+            className={classNames("font-basement text-[32px] tracking-wider", {
               "break-words": runner.name.length > 10
             })}
           >

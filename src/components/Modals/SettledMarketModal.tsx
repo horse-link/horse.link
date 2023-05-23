@@ -19,7 +19,9 @@ export const SettledMarketModal: React.FC<Props> = ({
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}>
       <div className="p-6">
-        <h2 className="font-basement text-5xl tracking-wider">SETTLED RACE</h2>
+        <h2 className="font-basement text-[32px] tracking-wider">
+          SETTLED RACE
+        </h2>
         <div className="mt-8 flex flex-col items-center">
           {hashes?.map(hash => (
             <p key={hash}>
