@@ -157,7 +157,7 @@ export const NewHomeTable: React.FC<Props> = ({ meets }) => {
                             <p className="w-full text-sm font-black text-white">
                               {race.name}
                             </p>
-                            <p className="w-full whitespace-nowrap text-right text-hl-secondary">
+                            <p className="w-[6rem] whitespace-nowrap text-right text-hl-secondary">
                               {text}
                             </p>
                           </Link>
