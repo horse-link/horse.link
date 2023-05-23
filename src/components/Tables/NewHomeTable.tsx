@@ -36,7 +36,7 @@ export const NewHomeTable: React.FC<Props> = ({ meets }) => {
 
   const headers = [
     <div
-      className="w-[220px] py-4 text-left font-black text-white"
+      className="w-[350px] py-4 text-left font-black text-white"
       key={`hometable-race-location`}
     >
       LOCATION
@@ -53,7 +53,7 @@ export const NewHomeTable: React.FC<Props> = ({ meets }) => {
 
   const rows = meets
     ? meets.map(meet => [
-        <div key={meet.id} className="flex w-[220px] items-center gap-x-4">
+        <div key={meet.id} className="flex w-[350px] items-center gap-x-4">
           <img
             src="/images/horse.webp"
             alt="HorseLink logo"
