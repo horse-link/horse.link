@@ -151,13 +151,13 @@ export const NewHomeTable: React.FC<Props> = ({ meets }) => {
                             to={utils.races.createRacingLink(race, meet)}
                             className="flex w-full items-center justify-between border-t border-hl-border py-2"
                           >
-                            <h3 className="w-[6rem] font-basement text-hl-secondary">
+                            <h3 className="w-[6rem] font-basement text-xs text-hl-secondary">
                               R{race.number}
                             </h3>
-                            <p className="w-full text-sm font-black text-white">
+                            <p className="w-full text-xs font-black text-white">
                               {race.name}
                             </p>
-                            <p className="w-[6rem] whitespace-nowrap text-right text-hl-secondary">
+                            <p className="w-[6rem] whitespace-nowrap text-right text-xs text-hl-secondary">
                               {text}
                             </p>
                           </Link>

@@ -88,7 +88,7 @@ const Races: React.FC = () => {
                     </div>
                   ) : (
                     <div className="w-full cursor-pointer border border-hl-primary p-2">
-                      <div className="flex w-full items-center">
+                      <div className="flex w-full">
                         <h1 className="w-full text-left font-basement text-hl-secondary lg:w-auto lg:whitespace-nowrap">
                           {race?.track.name} ({race?.track.code})
                         </h1>
@@ -100,7 +100,11 @@ const Races: React.FC = () => {
                           %
                         </div>
                         <div className="flex w-[6rem] justify-end">
-                          <HiChevronDown size={30} color="white" />
+                          <HiChevronDown
+                            size={30}
+                            color="white"
+                            className="relative bottom-1"
+                          />
                         </div>
                       </div>
                       <p className="mt-1 w-full text-sm">

@@ -303,6 +303,7 @@ export const PlaceBetModal: React.FC<Props> = ({
           <div className="mt-4 mb-2 flex flex-col gap-2">
             <NewButton
               big
+              white
               rounded
               text="bet now"
               onClick={() => onClickPlaceBet({ betNow: true })}
