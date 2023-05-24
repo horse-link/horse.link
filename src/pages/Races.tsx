@@ -5,7 +5,7 @@ import { NewButton, RacesButton } from "../components/Buttons";
 import { NewBetTable, NewRaceTable } from "../components/Tables";
 import { PlaceBetModal, SettleBetModal } from "../components/Modals";
 import { Runner, SignedMeetingsResponse } from "../types/meets";
-import { PageLayout } from "../components"; // Loader
+import { Loader, PageLayout } from "../components";
 import { useSubgraphBets } from "../hooks/subgraph";
 import { BetHistory } from "../types/bets";
 import { makeMarketId } from "../utils/markets";
@@ -73,66 +73,72 @@ const Races: React.FC = () => {
     <PageLayout>
       <div className="flex flex-col gap-6">
         <div className="w-full">
-          <Disclosure as={React.Fragment}>
-            {({ open }) => (
-              <React.Fragment>
-                <Disclosure.Button as={React.Fragment}>
-                  {open ? (
-                    <div className="flex w-full cursor-pointer items-center border border-hl-primary p-2">
-                      <h1 className="w-full text-left font-basement text-hl-secondary">
-                        {race?.track.name} ({race?.track.code})
-                      </h1>
-                      <div className="flex w-[6rem] justify-end">
-                        <HiChevronUp size={30} color="white" />
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="w-full cursor-pointer border border-hl-primary p-2">
-                      <div className="flex w-full">
-                        <h1 className="w-full text-left font-basement text-hl-secondary lg:w-auto lg:whitespace-nowrap">
+          {margin && race && meetingsResponse ? (
+            <Disclosure as={React.Fragment}>
+              {({ open }) => (
+                <React.Fragment>
+                  <Disclosure.Button as={React.Fragment}>
+                    {open ? (
+                      <div className="flex w-full cursor-pointer items-center border border-hl-primary p-2">
+                        <h1 className="w-full text-left font-basement text-hl-secondary">
                           {race?.track.name} ({race?.track.code})
                         </h1>
-                        <div className="w-auto whitespace-nowrap text-sm text-hl-tertiary lg:ml-10 lg:w-full">
-                          Margin:{" "}
-                          {utils.formatting.formatToTwoDecimals(
-                            (+(margin || "0") * 100).toString()
-                          )}
-                          %
-                        </div>
                         <div className="flex w-[6rem] justify-end">
-                          <HiChevronDown
-                            size={30}
-                            color="white"
-                            className="relative bottom-1"
-                          />
+                          <HiChevronUp size={30} color="white" />
                         </div>
                       </div>
-                      <p className="mt-1 w-full text-sm">
-                        {race?.raceData.name} | {race?.raceData.class}
-                      </p>
-                    </div>
-                  )}
-                </Disclosure.Button>
+                    ) : (
+                      <div className="w-full cursor-pointer border border-hl-primary p-2">
+                        <div className="flex w-full">
+                          <h1 className="w-full text-left font-basement text-hl-secondary lg:w-auto lg:whitespace-nowrap">
+                            {race.track.name} ({race.track.code})
+                          </h1>
+                          <div className="w-auto whitespace-nowrap text-sm text-hl-tertiary lg:ml-10 lg:w-full">
+                            Margin:{" "}
+                            {utils.formatting.formatToTwoDecimals(
+                              (+margin * 100).toString()
+                            )}
+                            %
+                          </div>
+                          <div className="flex w-[6rem] justify-end">
+                            <HiChevronDown
+                              size={30}
+                              color="white"
+                              className="relative bottom-1"
+                            />
+                          </div>
+                        </div>
+                        <p className="mt-1 w-full text-sm">
+                          {race.raceData.name} | {race.raceData.class}
+                        </p>
+                      </div>
+                    )}
+                  </Disclosure.Button>
 
-                <Disclosure.Panel>
-                  {meetingsResponse?.data.meetings
-                    .filter(
-                      m =>
-                        m.name.toLowerCase() !== race?.track.name.toLowerCase()
-                    )
-                    .map(m => (
-                      <Link
-                        to={utils.races.createRacingLink(m.races[0], m)} // use first race
-                        className="block w-full bg-hl-primary px-2 py-1 font-basement text-hl-background"
-                        key={JSON.stringify(m)}
-                      >
-                        {m.name}
-                      </Link>
-                    ))}
-                </Disclosure.Panel>
-              </React.Fragment>
-            )}
-          </Disclosure>
+                  <Disclosure.Panel>
+                    {meetingsResponse.data.meetings
+                      .filter(
+                        m =>
+                          m.name.toLowerCase() !== race.track.name.toLowerCase()
+                      )
+                      .map(m => (
+                        <Link
+                          to={utils.races.createRacingLink(m.races[0], m)} // use first race
+                          className="block w-full bg-hl-primary px-2 py-1 font-basement text-hl-background"
+                          key={JSON.stringify(m)}
+                        >
+                          {m.name}
+                        </Link>
+                      ))}
+                  </Disclosure.Panel>
+                </React.Fragment>
+              )}
+            </Disclosure>
+          ) : (
+            <div className="flex w-full justify-center border border-hl-primary py-2">
+              <Loader />
+            </div>
+          )}
         </div>
         <RacesButton params={params} meetRaces={meetRaces?.raceInfo} />
         <NewRaceTable
