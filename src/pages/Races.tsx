@@ -71,14 +71,13 @@ const Races: React.FC = () => {
   return (
     <PageLayout>
       <div className="flex flex-col gap-6">
-        <RacesButton params={params} meetRaces={meetRaces?.raceInfo} />
         <div className="w-full">
           <Disclosure as={React.Fragment}>
             {({ open }) => (
               <React.Fragment>
                 <Disclosure.Button as={React.Fragment}>
                   {open ? (
-                    <div className="flex w-full items-center border border-hl-primary p-2">
+                    <div className="flex w-full cursor-pointer items-center border border-hl-primary p-2">
                       <h1 className="w-full text-left font-basement text-hl-secondary">
                         {race?.track.name} ({race?.track.code})
                       </h1>
@@ -87,14 +86,17 @@ const Races: React.FC = () => {
                       </div>
                     </div>
                   ) : (
-                    <div className="w-full border border-hl-primary p-2">
+                    <div className="w-full cursor-pointer border border-hl-primary p-2">
                       <div className="flex w-full items-center">
-                        <h1 className="w-full text-left font-basement text-hl-secondary">
+                        <h1 className="w-full text-left font-basement text-hl-secondary lg:w-auto lg:whitespace-nowrap">
                           {race?.track.name} ({race?.track.code})
                         </h1>
-                        <div className="w-auto whitespace-nowrap text-sm text-hl-tertiary">
+                        <div className="w-auto whitespace-nowrap text-sm text-hl-tertiary lg:ml-10 lg:w-full">
                           Margin:{" "}
-                          {(+(+(margin || "0") * 100).toFixed(2)).toString()}%
+                          {utils.formatting.formatToTwoDecimals(
+                            (+(margin || "0") * 100).toString()
+                          )}
+                          %
                         </div>
                         <div className="flex w-[6rem] justify-end">
                           <HiChevronDown size={30} color="white" />
@@ -127,6 +129,7 @@ const Races: React.FC = () => {
             )}
           </Disclosure>
         </div>
+        <RacesButton params={params} meetRaces={meetRaces?.raceInfo} />
         <NewRaceTable
           runners={race?.runners}
           setSelectedRunner={setSelectedRunner}
