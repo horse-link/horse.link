@@ -38,6 +38,7 @@ const Races: React.FC = () => {
     api.getMeetings().then(setMeetingsResponse);
   }, []);
 
+  // note: this left in because it may be required for future redesigns
   // const { meetDate } = useMemo(() => {
   //   const meetDate = dayjs().format("DD-MM-YY");
   //   return { config, meetDate };
