@@ -6,7 +6,7 @@ export const HomeNextToJumpBanner: React.FC = () => {
   missingLocations?.forEach(console.error);
 
   return nextMeets ? (
-    <div className="flex w-full justify-between gap-4 overflow-scroll lg:flex-wrap lg:overflow-auto">
+    <div className="flex w-full justify-between gap-4 overflow-scroll lg:grid lg:grid-cols-6 lg:grid-rows-1 lg:overflow-auto">
       {[...nextMeets].map(meet => (
         <HomeBannerRow
           meet={meet}
