@@ -124,22 +124,34 @@ export const NewRaceTable: React.FC<Props> = ({
     <div
       key={JSON.stringify(runner)}
       className={classNames(
-        "flex w-full flex-col items-center gap-y-2 border-t border-hl-border py-2 text-center",
+        "flex w-full gap-x-4 border-x border-b border-hl-primary bg-hl-background-secondary p-4 text-hl-primary",
         {
           "line-through": scratchingArray.includes(runner.status)
         }
       )}
       onClick={() => onClickRunner(runner)}
     >
-      <h2 className="font-basement tracking-wider text-hl-secondary">
-        {runner.number}: {runner.name}
-      </h2>
-      <div className="flex w-full items-center justify-center gap-x-8">
-        <p>Form: {runner.last5Starts}</p>
-        <p>Weight: {runner.handicapWeight}</p>
+      <img
+        src="/images/horse.webp"
+        alt="HorseLink logo"
+        className="h-[3rem] w-[4rem]"
+      />
+      <div className="w-full pt-1">
+        <h2 className="w-full font-basement text-sm tracking-wider">
+          {runner.number}. {runner.name} ({runner.barrier}){" "}
+        </h2>
+        <div className="mt-1 flex w-full gap-x-4 text-xs">
+          <p>
+            <span className="text-hl-secondary">F:</span> {runner.last5Starts}
+          </p>
+          <p>
+            <span className="text-hl-secondary">W:</span>{" "}
+            {runner.handicapWeight}KG
+          </p>
+        </div>
       </div>
-      <p className="text-hl-secondary">
-        Win: {utils.formatting.formatToTwoDecimals(runner.odds.toString())}
+      <p className="w-auto min-w-[70px] font-basement text-sm text-hl-secondary">
+        {utils.formatting.formatToTwoDecimals(runner.odds.toString())}
       </p>
     </div>
   );
@@ -161,6 +173,10 @@ export const NewRaceTable: React.FC<Props> = ({
 
       {/* mobile */}
       <div className="block lg:hidden">
+        <div className="flex w-full items-center justify-between border border-hl-primary p-2">
+          <span className="block">RUNNERS</span>
+          <span className="block w-[5rem] text-hl-secondary">WIN</span>
+        </div>
         {!runners?.length ? (
           <div className="flex w-full justify-center py-10">
             <Loader />

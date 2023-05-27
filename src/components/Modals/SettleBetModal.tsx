@@ -137,7 +137,7 @@ export const SettleBetModal: React.FC<Props> = ({
         </div>
       ) : isSettled ? (
         <div className="p-6">
-          <h2 className="font-basement text-5xl tracking-wider">
+          <h2 className="font-basement text-[32px] tracking-wider">
             {utils.formatting.formatFirstLetterCapitalised(bet.status)} Bet #
             {bet.index}
           </h2>
@@ -148,7 +148,7 @@ export const SettleBetModal: React.FC<Props> = ({
               href={`${scanner}/tx/${bet.settledAtTx}`}
               target="_blank"
               rel="noreferrer noopener"
-              className="underline"
+              className="text-hl-secondary underline"
             >
               {utils.formatting.shortenHash(
                 bet.settledAtTx || ethers.constants.HashZero
@@ -165,7 +165,7 @@ export const SettleBetModal: React.FC<Props> = ({
         <Web3ErrorHandler error={error} />
       ) : (
         <div className="p-6">
-          <h2 className="font-basement text-5xl tracking-wider">
+          <h2 className="font-basement text-[32px] tracking-wider">
             {utils.formatting.formatFirstLetterCapitalised(bet.status)} Bet #
             {bet.index}
           </h2>

@@ -10,6 +10,7 @@ import classNames from "classnames";
 import { RaceStatus } from "../../constants/status";
 import { Loader } from "../Loader";
 import { Disclosure } from "@headlessui/react";
+import { HiChevronUp, HiChevronDown } from "react-icons/hi";
 
 dayjs.extend(utc);
 
@@ -36,7 +37,7 @@ export const NewHomeTable: React.FC<Props> = ({ meets }) => {
 
   const headers = [
     <div
-      className="w-[220px] py-4 text-left font-black text-white"
+      className="w-[350px] py-4 text-left font-black text-white"
       key={`hometable-race-location`}
     >
       LOCATION
@@ -53,7 +54,7 @@ export const NewHomeTable: React.FC<Props> = ({ meets }) => {
 
   const rows = meets
     ? meets.map(meet => [
-        <div key={meet.id} className="flex w-[220px] items-center gap-x-4">
+        <div key={meet.id} className="flex w-[350px] items-center gap-x-4">
           <img
             src="/images/horse.webp"
             alt="HorseLink logo"
@@ -134,9 +135,11 @@ export const NewHomeTable: React.FC<Props> = ({ meets }) => {
                   <React.Fragment>
                     <Disclosure.Button className="flex w-full items-center justify-between border-b border-hl-border py-2 font-basement text-xl tracking-wider text-hl-secondary">
                       <h2>{meet.name}</h2>
-                      <p className="font-sans text-base uppercase text-hl-primary">
-                        {open ? "close" : "open"}
-                      </p>
+                      {open ? (
+                        <HiChevronUp size={30} color="white" />
+                      ) : (
+                        <HiChevronDown size={30} color="white" />
+                      )}
                     </Disclosure.Button>
                     <Disclosure.Panel>
                       {meet.races.map(race => {
@@ -148,20 +151,13 @@ export const NewHomeTable: React.FC<Props> = ({ meets }) => {
                             to={utils.races.createRacingLink(race, meet)}
                             className="flex w-full items-center justify-between border-t border-hl-border py-2"
                           >
-                            <h3 className="mr-6 font-basement text-hl-secondary">
+                            <h3 className="w-[6rem] font-basement text-xs text-hl-secondary">
                               R{race.number}
                             </h3>
-                            <div className="flex w-full items-center justify-center gap-x-2">
-                              <img
-                                src="/images/horse.webp"
-                                alt="HorseLink logo"
-                                className="max-w-[4rem]"
-                              />
-                              <p className="text-sm font-black text-white">
-                                {race.name}
-                              </p>
-                            </div>
-                            <p className="ml-6 whitespace-nowrap text-right text-hl-secondary">
+                            <p className="w-full text-xs font-black text-white">
+                              {race.name}
+                            </p>
+                            <p className="w-[6rem] whitespace-nowrap text-right text-xs text-hl-secondary">
                               {text}
                             </p>
                           </Link>
