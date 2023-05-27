@@ -82,7 +82,7 @@ export const SettleRaceButton: React.FC<Props> = props => {
       }
 
       const marketContractAddresses = new Set(
-        settlableBets.map(bet => bet.marketAddress)
+        settlableBets.map(bet => bet.market)
       );
       const txs: ContractTransaction[] = [];
       for (const marketAddress of marketContractAddresses) {

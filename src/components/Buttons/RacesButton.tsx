@@ -18,6 +18,7 @@ export const RacesButton: React.FC<Props> = ({ meetRaces, params }) => {
     <div className="flex flex-wrap gap-2">
       {meetRaces.map(race => (
         <NewButton
+          autoWidth
           key={`race${race.raceNumber}`}
           text={`R${race.raceNumber}`}
           onClick={() =>

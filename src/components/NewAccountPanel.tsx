@@ -93,7 +93,7 @@ export const NewAccountPanel: React.FC<Props> = ({
                       <Listbox.Option key={chain.id} value={chain.id}>
                         <button
                           onClick={() => forceNewNetwork(chain)}
-                          className="w-full py-2 text-center hover:bg-hl-primary hover:text-hl-secondary"
+                          className="w-full border border-hl-primary py-2 text-center hover:bg-hl-primary hover:text-hl-secondary"
                         >
                           {chain.name}
                         </button>

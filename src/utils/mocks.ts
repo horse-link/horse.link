@@ -1,44 +1,49 @@
 import { ethers } from "ethers";
-import { Bet, FormattedUser } from "../types/subgraph";
+import { Bet, BetResult } from "../types/subgraph";
 import { Back, Meet, Race } from "../types/meets";
 import { SignedBetDataResponse } from "../types/bets";
 import { RaceStatus } from "../constants/status";
 
 export const getMockBet = (): Bet => ({
   id: `BET_${ethers.constants.AddressZero}_0`,
-  propositionId: ethers.constants.AddressZero,
-  marketId: ethers.constants.AddressZero,
-  marketAddress: ethers.constants.AddressZero,
-  assetAddress: ethers.constants.AddressZero,
-  amount: "0",
-  payout: "0",
-  payoutAt: "0",
+  propositionId: ethers.constants.HashZero,
+  marketId: ethers.constants.HashZero,
+  asset: ethers.constants.AddressZero,
+  amount: ethers.constants.Zero,
+  payout: ethers.constants.Zero,
+  payoutAt: 30 * 60,
+  market: ethers.constants.AddressZero,
   owner: ethers.constants.AddressZero,
+  recipient: ethers.constants.AddressZero,
   settled: false,
-  didWin: false,
-  createdAt: "0",
-  settledAt: "0",
-  createdAtTx: ethers.constants.AddressZero,
-  settledAtTx: ethers.constants.AddressZero
+  result: BetResult.INPLAY,
+  createdAt: 0,
+  settledAt: 0,
+  createdAtTx: ethers.constants.HashZero,
+  settledAtTx: ethers.constants.HashZero,
+  refunded: false
 });
 
 export const getRealExampleMockBet = (): Bet => ({
-  amount: "2000000000000000000",
-  assetAddress: "0xf9f36c66854010d61e8f46f9cc46f9ed55996229",
-  createdAt: "1675223604",
-  createdAtTx:
-    "0xe061e4ed94b01e185f836e579573a6c2161f42f002ab6043f393ec312b1f2e25",
-  didWin: false,
   id: "BET_0xb5ee5025c830333faec0c0edc3d1c3be2e85e331_217",
-  marketAddress: "0xb5ee5025c830333faec0c0edc3d1c3be2e85e331",
-  marketId: "0x30313933383943425930310000000000",
-  owner: "0x042bc2d085c0584bd56d62c170c4679e1ee9fc45",
-  payout: "16268426000000000000",
-  payoutAt: "1675226100",
   propositionId: "0x30313933383943425930315730370000",
+  marketId: "0x30313933383943425930310000000000",
+  market: "0xb5ee5025c830333faec0c0edc3d1c3be2e85e331",
+  asset: "0xf9f36c66854010d61e8f46f9cc46f9ed55996229",
+  amount: ethers.utils.parseEther("2"),
+  payout: ethers.utils.parseEther("16.268426"),
+  payoutAt: 1675226100,
+  owner: "0x042bc2d085c0584bd56d62c170c4679e1ee9fc45",
+  recipient: "0xb5ee5025c830333faec0c0edc3d1c3be2e85e331",
   settled: false,
-  settledAt: "0",
-  settledAtTx: ""
+  result: BetResult.INPLAY,
+  settledAt: 0,
+  createdAt: 1675223604,
+  createdAtTx:
+    "0x3198be23014251a9e11b91cc5fd3a1b55cb716bde2e314a6ad5d4bdb35ce5f78",
+  settledAtTx:
+    "0x123e7bbc64fc50f88c1852edcf29846a7a56ad60b5450a92249a06192c18b8e3",
+  refunded: false
 });
 
 export const getMockSignedBetDataResponse = (): SignedBetDataResponse => ({
@@ -64,7 +69,7 @@ export const getMockSignedBetDataResponse = (): SignedBetDataResponse => ({
   ]
 });
 
-export const getMockUser = (): FormattedUser => ({
+export const getMockUser = () => ({
   id: ethers.constants.AddressZero,
   totalDeposited: ethers.constants.Zero,
   inPlay: ethers.constants.Zero,

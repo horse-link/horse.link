@@ -1,4 +1,3 @@
-import { ethers } from "ethers";
 import { BetFilterOptions } from "../types/bets";
 import { SubgraphFilter } from "../types/subgraph";
 import constants from "../constants";
@@ -10,8 +9,9 @@ const getFiltersFromObject = (filter?: SubgraphFilter) => {
     .map(([key, value]) => {
       // if value is undefined
       if (typeof value === "undefined") return "";
-      // if value is boolean
-      if (typeof value === "boolean") return `${key}: ${value}`;
+      // if value is boolean or number
+      if (typeof value === "boolean" || typeof value === "number")
+        return `${key}: ${value}`;
 
       // type is string
       return `${key}: "${value}"`;
@@ -57,20 +57,22 @@ export const getBetsQuery = (
     orderDirection: desc
   ) {
     id
-    propositionId
+    asset
+    payoutAt
+    market
     marketId
-    marketAddress
-    assetAddress
+    propositionId
     amount
     payout
-    payoutAt
     owner
-    settled
-    didWin
     createdAt
-    settledAt
     createdAtTx
+    settled
+    result
+    recipient
+    settledAt
     settledAtTx
+    refunded
   }
 }`;
 
@@ -89,113 +91,97 @@ export const getBetsQueryWithoutPagination = (
     orderDirection: desc
   ) {
     id
-    propositionId
+    asset
+    payoutAt
+    market
     marketId
-    marketAddress
-    assetAddress
+    propositionId
     amount
     payout
-    payoutAt
     owner
-    settled
-    didWin
     createdAt
+    settled
+    result
+    recipient
     settledAt
-    createdAtTx
     settledAtTx
+    refunded
   }
 }`;
 
-export const getAggregatorQuery = () => `{
-  aggregator(id: "aggregator") {
-    id
-    totalBets
-    totalMarkets
-    totalVaults
-  }
-}`;
-
-export const getProtocolStatsQuery = () => `
-query GetProtocols{
-  protocol(id: "protocol") {
-    id
-    inPlay
-    initialTvl
-    currentTvl
-    performance
-    lastUpdate
-  }
-}`;
-
-export const getVaultHistoryQuery = (filter?: SubgraphFilter) => `{
-  vaultTransactions(
+export const getDepositsWithoutPagination = (
+  filter?: SubgraphFilter
+) => `query getDeposits{
+  deposits(
     first: 1000
-    where:{
-      ${getFiltersFromObject(filter)}
-    }
-    orderBy: timestamp
-    orderDirection: desc
-  ) {
-    id
-    type
-    vaultAddress
-    userAddress
-    amount
-    timestamp
-  }
-}`;
-
-export const getVaultStatsQuery = (filter?: SubgraphFilter) => `{
-  vaultTransactions(
-    first: 1000
-    where:{
-      ${getFiltersFromObject(filter)}
-    }
-    orderBy: timestamp
-    orderDirection: desc
-  ) {
-    id
-    type
-    vaultAddress
-    userAddress
-    amount
-    timestamp
-  }
-}`;
-
-export const getMarketStatsQuery = (filter?: SubgraphFilter) => `{
-  bets(
-    first: 1000
-    orderBy: amount
-    orderDirection: desc
     where: {
       ${getFiltersFromObject(filter)}
     }
+    orderBy: createdAt
+    orderDirection: desc
   ) {
     id
-    propositionId
-    marketId
-    marketAddress
-    amount
-    payout
+    sender
     owner
-    settled
-    didWin
+    assets
+    shares
     createdAt
-    settledAt
-    createdAtTx
-    settledAtTx
   }
 }`;
 
-export const getUserStatsQuery = (address?: string) => `{
-  user(id: "${
-    address ? address.toLowerCase() : ethers.constants.AddressZero
-  }") {
+export const getWithdrawsWithoutPagination = (
+  filter?: SubgraphFilter
+) => `query getWithdraws{
+  withdraws(
+    first: 1000
+    where: {
+      ${getFiltersFromObject(filter)}
+    }
+    orderBy: createdAt
+    orderDirection: desc
+  ) {
     id
-    totalDeposited
-    inPlay
-    pnl
-    lastUpdate
+    sender
+    receiver
+    owner
+    assets
+    shares
+    createdAt
   }
 }`;
+
+export const getVaultHistory = () => `query getVaultHistory{
+  withdraws{
+    id
+    sender
+    receiver
+    owner
+    assets
+    shares
+    vault
+    createdAt
+  }
+  deposits{
+    id
+    sender
+    owner
+    assets
+    shares
+    vault
+    createdAt
+  }
+  borrows{
+    id
+    betId
+    amount
+    vault
+    createdAt
+  }
+  repays{
+    id
+    vault
+    amount
+    createdAt
+  }
+}
+`;

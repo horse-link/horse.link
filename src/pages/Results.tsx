@@ -6,7 +6,6 @@ import { SettleBetModal, SettledMarketModal } from "../components/Modals";
 import { useMeetData, useResultsData } from "../hooks/data";
 import { BetHistory } from "../types/bets";
 import { makeMarketId } from "../utils/markets";
-import { formatBytes16String } from "../utils/formatting";
 import { useConfig } from "../providers/Config";
 import utils from "../utils";
 import { useSubgraphBets } from "../hooks/subgraph";
@@ -60,10 +59,9 @@ const Results: React.FC = () => {
     details.race
   );
 
-  const b16MarketId = formatBytes16String(marketId);
   const { betData: betHistory, refetch } = useSubgraphBets(
     "ALL_BETS",
-    b16MarketId
+    marketId
   );
   const results = useResultsData(propositionId);
 

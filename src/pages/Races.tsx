@@ -1,19 +1,21 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useRunnersData, useMeetData } from "../hooks/data";
 import { NewButton, RacesButton } from "../components/Buttons";
 import { NewBetTable, NewRaceTable } from "../components/Tables";
 import { PlaceBetModal, SettleBetModal } from "../components/Modals";
-import { Runner } from "../types/meets";
+import { Runner, SignedMeetingsResponse } from "../types/meets";
 import { Loader, PageLayout } from "../components";
 import { useSubgraphBets } from "../hooks/subgraph";
 import { BetHistory } from "../types/bets";
 import { makeMarketId } from "../utils/markets";
-import { formatBytes16String } from "../utils/formatting";
 import { useConfig } from "../providers/Config";
 import constants from "../constants";
 import dayjs from "dayjs";
 import utils from "../utils";
+import { HiChevronUp, HiChevronDown } from "react-icons/hi";
+import { Disclosure } from "@headlessui/react";
+import { useApi } from "../providers/Api";
 
 const Races: React.FC = () => {
   const params = useParams();
@@ -28,19 +30,26 @@ const Races: React.FC = () => {
   const [closed, setClosed] = useState(false);
   const { race } = useRunnersData(track, raceNumber);
   const config = useConfig();
+  const api = useApi();
+  const [meetingsResponse, setMeetingsResponse] =
+    useState<SignedMeetingsResponse>();
 
-  const { meetDate } = useMemo(() => {
-    const meetDate = dayjs().format("DD-MM-YY");
-    return { config, meetDate };
+  useEffect(() => {
+    api.getMeetings().then(setMeetingsResponse);
   }, []);
 
+  // note: this left in because it may be required for future redesigns
+  // const { meetDate } = useMemo(() => {
+  //   const meetDate = dayjs().format("DD-MM-YY");
+  //   return { config, meetDate };
+  // }, []);
+
   const marketId = makeMarketId(new Date(), track, raceNumber.toString());
-  const b16MarketId = formatBytes16String(marketId);
   const {
     betData: betHistory,
     totalBetsOnPropositions,
     refetch
-  } = useSubgraphBets("ALL_BETS", b16MarketId);
+  } = useSubgraphBets("ALL_BETS", marketId);
 
   const margin = useMemo(() => {
     if (!race || !race.runners.length) return;
@@ -63,39 +72,75 @@ const Races: React.FC = () => {
   return (
     <PageLayout>
       <div className="flex flex-col gap-6">
-        <RacesButton params={params} meetRaces={meetRaces?.raceInfo} />
-        <div className="flex flex-col justify-between border border-hl-border bg-hl-background-secondary px-4 py-3 font-basement text-sm tracking-wider text-hl-primary xl:flex-row">
-          {!race || !margin || !meetRaces ? (
-            <div className="flex w-full justify-center py-2">
+        <div className="w-full">
+          {margin && race && meetingsResponse ? (
+            <Disclosure as={React.Fragment}>
+              {({ open }) => (
+                <React.Fragment>
+                  <Disclosure.Button as={React.Fragment}>
+                    {open ? (
+                      <div className="flex w-full cursor-pointer items-center border border-hl-primary p-2">
+                        <h1 className="w-full text-left font-basement text-hl-secondary">
+                          {race?.track.name} ({race?.track.code})
+                        </h1>
+                        <div className="flex w-[6rem] justify-end">
+                          <HiChevronUp size={30} color="white" />
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="w-full cursor-pointer border border-hl-primary p-2">
+                        <div className="flex w-full">
+                          <h1 className="w-full text-left font-basement text-hl-secondary lg:w-auto lg:whitespace-nowrap">
+                            {race.track.name} ({race.track.code})
+                          </h1>
+                          <div className="w-auto whitespace-nowrap text-sm text-hl-tertiary lg:ml-10 lg:w-full">
+                            Margin:{" "}
+                            {utils.formatting.formatToTwoDecimals(
+                              (+margin * 100).toString()
+                            )}
+                            %
+                          </div>
+                          <div className="flex w-[6rem] justify-end">
+                            <HiChevronDown
+                              size={30}
+                              color="white"
+                              className="relative bottom-1"
+                            />
+                          </div>
+                        </div>
+                        <p className="mt-1 w-full text-sm">
+                          {race.raceData.name} | {race.raceData.class}
+                        </p>
+                      </div>
+                    )}
+                  </Disclosure.Button>
+
+                  <Disclosure.Panel>
+                    {meetingsResponse.data.meetings
+                      .filter(
+                        m =>
+                          m.name.toLowerCase() !== race.track.name.toLowerCase()
+                      )
+                      .map(m => (
+                        <Link
+                          to={utils.races.createRacingLink(m.races[0], m)} // use first race
+                          className="block w-full bg-hl-primary px-2 py-1 font-basement text-hl-background"
+                          key={JSON.stringify(m)}
+                        >
+                          {m.name}
+                        </Link>
+                      ))}
+                  </Disclosure.Panel>
+                </React.Fragment>
+              )}
+            </Disclosure>
+          ) : (
+            <div className="flex w-full justify-center border border-hl-primary py-2">
               <Loader />
             </div>
-          ) : (
-            <React.Fragment>
-              <h1 className="text-center">{race.raceData.name}</h1>
-              <h2 className="text-center">
-                {race.track.name} ({race.track.code})
-              </h2>
-              <h2 className="text-center">{meetDate}</h2>
-              <h2 className="text-center">{race.raceData.distance}</h2>
-              <h2 className="text-center">Race #: {raceNumber}</h2>
-              <h2 className="text-center">Class: {race.raceData.class}</h2>
-              <h2 className="text-center">
-                Margin:{" "}
-                {utils.formatting.formatToTwoDecimals(
-                  (+margin * 100).toString()
-                )}
-                %
-              </h2>
-              <h2 className="text-center">
-                {!utils.formatting.formatTrackCondition(meetRaces)
-                  ? null
-                  : `${utils.formatting.formatTrackCondition(meetRaces)}, ${
-                      meetRaces.weatherCondition
-                    }`}
-              </h2>
-            </React.Fragment>
           )}
         </div>
+        <RacesButton params={params} meetRaces={meetRaces?.raceInfo} />
         <NewRaceTable
           runners={race?.runners}
           setSelectedRunner={setSelectedRunner}

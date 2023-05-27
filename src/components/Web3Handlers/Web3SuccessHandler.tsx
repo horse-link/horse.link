@@ -12,7 +12,7 @@ export const Web3SuccessHandler: React.FC<Props> = ({ hash, message }) => {
 
   return (
     <div className="flex flex-col rounded-md py-4">
-      <h2 className="mr-[8vw] mb-2 text-2xl font-bold">
+      <h2 className="mr-[8vw] mb-2 text-[32px] font-bold">
         Transaction Confirmation
       </h2>
       <span className="block lg:hidden">

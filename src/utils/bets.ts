@@ -25,6 +25,7 @@ export const getBetStatus = (
   signedBetData: SignedBetDataResponse,
   scratched?: ScratchedRunner
 ): BetStatus => {
+  if (bet.refunded) return "REFUNDED";
   if (bet.settled) return "SETTLED";
   if (scratched) return "SCRATCHED";
 
@@ -51,24 +52,24 @@ export const getBetHistory = (
 
   return {
     index: utils.formatting.formatBetId(bet.id),
-    marketId: bet.marketId.toLowerCase(),
-    marketAddress: bet.marketAddress.toLowerCase(),
-    assetAddress: bet.assetAddress.toLowerCase(),
-    propositionId: bet.propositionId.toLowerCase(),
+    marketId: bet.marketId.toUpperCase(),
+    market: bet.market.toLowerCase(),
+    assetAddress: bet.asset.toLowerCase(),
+    propositionId: bet.propositionId.toUpperCase(),
     winningPropositionId: signedBetData.winningPropositionId,
     marketResultAdded: signedBetData.marketResultAdded,
     settled: bet.settled,
     punter: bet.owner.toLowerCase(),
     payoutDate: +bet.payoutAt,
-    amount: bet.amount,
-    payout: bet.payout,
-    tx: bet.createdAtTx.toLowerCase(),
+    amount: bet.amount.toString(),
+    payout: bet.payout.toString(),
     blockNumber: +bet.createdAt,
     settledAt: bet.settled ? +bet.settledAt : undefined,
-    settledAtTx: bet.settled ? bet.settledAtTx.toLowerCase() : undefined,
     marketOracleResultSig: signedBetData.marketOracleResultSig,
     scratched: scratched,
-    status: getBetStatus(bet, signedBetData, scratched)
+    status: getBetStatus(bet, signedBetData, scratched),
+    tx: bet.createdAtTx,
+    settledAtTx: bet.settledAtTx
   };
 };
 

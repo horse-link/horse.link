@@ -16,7 +16,9 @@ export type VaultUserData = {
 
 export enum VaultTransactionType {
   DEPOSIT = "deposit",
-  WITHDRAW = "withdraw"
+  WITHDRAW = "withdraw",
+  BORROW = "borrow",
+  REPAY = "repay"
 }
 
 export type VaultModalState = {
