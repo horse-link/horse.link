@@ -2,7 +2,7 @@ import { useMarketStatistics } from "../hooks/stats";
 import { ethers } from "ethers";
 import utils from "../utils";
 import { PageLayout, Card } from "../components";
-import { NewMarketTable } from "../components/Tables";
+import { MarketTable } from "../components/Tables";
 
 const Markets: React.FC = () => {
   const { totalBets, totalVolume, largestBet } = useMarketStatistics();
@@ -30,7 +30,7 @@ const Markets: React.FC = () => {
           }
         />
       </div>
-      <NewMarketTable />
+      <MarketTable />
       <div className="block py-10 lg:hidden" />
     </PageLayout>
   );

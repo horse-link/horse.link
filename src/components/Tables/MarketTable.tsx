@@ -7,7 +7,7 @@ import { ethers } from "ethers";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
 import { Loader } from "../Loader";
 
-export const NewMarketTable: React.FC = () => {
+export const MarketTable: React.FC = () => {
   const config = useConfig();
   const scanner = useScannerUrl();
 
