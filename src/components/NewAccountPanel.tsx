@@ -187,7 +187,9 @@ export const NewAccountPanel: React.FC<Props> = ({
           data={
             gettingARBBalance
               ? "Loading"
-              : `${ethers.utils.formatEther((balance?.value).toString())}`
+              : `${parseFloat(
+                  ethers.utils.formatEther((balance?.value).toString())
+                ).toFixed(6)}`
           }
         />
       </div>
