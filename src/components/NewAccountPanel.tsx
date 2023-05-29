@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Chain, useAccount, useNetwork, useSigner } from "wagmi";
+import { Chain, useAccount, useNetwork, useSigner, useBalance } from "wagmi";
 import utils from "../utils";
 import { ethers } from "ethers";
 import { useBetSlipContext } from "../providers/BetSlip";
@@ -33,9 +33,14 @@ export const NewAccountPanel: React.FC<Props> = ({
   const config = useConfig();
 
   const { data: signer } = useSigner();
-  const { getBalance } = useERC20Contract();
+
+  const { getBalance, getARBBalance } = useERC20Contract();
   const [userBalance, setUserBalance] = useState<UserBalance>();
   const { chain, chains } = useNetwork();
+  const { data: balance, isLoading: gettingARBBalance } = useBalance({
+    address: account.address,
+    chainId: chain?.id
+  });
   const [showQrCodeModal, setQrCodeModal] = useState(false);
   const closeQrCodeModal = () => setQrCodeModal(false);
 
@@ -175,6 +180,14 @@ export const NewAccountPanel: React.FC<Props> = ({
             userBalance && currentToken
               ? `${userBalance.formatted} ${currentToken.symbol}`
               : undefined
+          }
+        />
+        <Card
+          title="ETH Balance"
+          data={
+            gettingARBBalance
+              ? "Loading"
+              : `${ethers.utils.formatEther((balance?.value).toString())}`
           }
         />
       </div>
