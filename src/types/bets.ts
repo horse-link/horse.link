@@ -57,6 +57,19 @@ export type BetHistory = {
   tx: string;
 };
 
+// What is sent over the wire from the api
+export type BetHistoryResponse2 = {
+  index: number;
+  punter: string;
+  amount: string;
+  time: number;
+  race: string;
+  proposition: string;
+  status: string;
+  result: string;
+  tx: string;
+};
+
 export type TotalBetsOnPropositions = Record<
   string,
   {
