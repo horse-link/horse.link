@@ -57,6 +57,12 @@ export type BetHistory = {
   tx: string;
 };
 
+// NOTE: WILL ALSO ADD
+export type BetHistoryResponseNew = {
+  margin: number;
+  results: BetHistoryResponse2[];
+};
+
 // What is sent over the wire from the api
 export type BetHistoryResponse2 = {
   index: number;

@@ -4,6 +4,7 @@ import { MeetInfo } from "../types/meets";
 import { BetId, Deposit, VaultTransaction, Withdraw } from "../types/subgraph";
 import { Chain } from "wagmi";
 
+// Done on the backend now too
 export const formatToFourDecimals = (amount: string) => {
   const parsedAmount = parseFloat(amount);
   if (parsedAmount === 0) return "0.0000";
@@ -43,6 +44,7 @@ export const formatNumberWithCommas = (amount: string) => {
   return convertToFourDecimalsWithCommas;
 };
 
+// Deprecated
 export const formatBetId = (betId: BetId) => {
   const segments = betId.split("_");
   return +segments[2];

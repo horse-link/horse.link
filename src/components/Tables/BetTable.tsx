@@ -6,7 +6,6 @@ import { useWalletModal } from "../../providers/WalletModal";
 import { NewTable } from "./NewTable";
 import classNames from "classnames";
 import utils from "../../utils";
-import { ethers } from "ethers";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Loader } from "../Loader";
@@ -19,7 +18,7 @@ type Props = {
   paramsAddressExists: boolean;
   betHistory?: Array<BetHistoryResponse2>;
   config?: Config;
-  // setSelectedBet: (bet?: BetHistoryResponse2) => void;
+  // setSelectedBet: (bet?: BetHistoryResponse2) => void; // TODO: Roll back
   setIsModalOpen: (isOpen: boolean) => void;
 };
 
@@ -38,7 +37,7 @@ export const BetTable: React.FC<Props> = ({
   const onClickBet = (bet?: BetHistoryResponse2) => {
     if (!bet) return;
     if (!isConnected) return openWalletModal();
-    // setSelectedBet(bet);
+    // setSelectedBet(bet);  // TODO: Roll back
     setIsModalOpen(true);
   };
 
@@ -68,25 +67,6 @@ export const BetTable: React.FC<Props> = ({
   const rows =
     betHistory && config
       ? betHistory.map((bet, i) => {
-          // const formattedAmount =
-          //   config &&
-          //   bet &&
-          //   `${utils.formatting.formatToFourDecimals(
-          //     ethers.utils.formatEther(bet.amount)
-          //   )} ${
-          //     config.tokens.find(
-          //       token =>
-          //         token.address.toLowerCase() === bet.assetAddress.toLowerCase()
-          //     )?.symbol
-          //   }`;
-
-          const formattedAmount =
-            config &&
-            bet &&
-            `${utils.formatting.formatToFourDecimals(
-              ethers.utils.formatEther(bet.amount)
-            )} `;
-
           const winningPropositionId =
             bet && utils.id.getPropositionFromId(bet.proposition);
 
@@ -96,10 +76,7 @@ export const BetTable: React.FC<Props> = ({
           //       bet.propositionId.toLowerCase()
           //     : undefined;
 
-          // const raceDetails =
-          //   bet && utils.id.getMarketDetailsFromId(bet.marketId);
-
-          const raceDetails = bet.race;
+          const raceDetails = bet && bet.race;
 
           const style =
             "w-full text-left py-4 text-hl-tertiary text-xs xl:text-base";
@@ -127,7 +104,7 @@ export const BetTable: React.FC<Props> = ({
               className={style}
               onClick={() => onClickBet(bet)}
             >
-              {formattedAmount}
+              {bet.amount}
             </div>,
             <div
               key={`racetable-bet-${bet.index}-${i}-blockNumber`}
@@ -235,16 +212,6 @@ export const BetTable: React.FC<Props> = ({
         ) : (
           <div className="flex w-full flex-col items-center">
             {betHistory.map(bet => {
-              const formattedAmount =
-                config &&
-                bet &&
-                `${utils.formatting.formatToFourDecimals(
-                  ethers.utils.formatEther(bet.amount)
-                )}
-                }`;
-
-              // const winningPropositionId = "";
-
               const raceDetails = bet && bet.race;
 
               return (
@@ -257,7 +224,7 @@ export const BetTable: React.FC<Props> = ({
                     {bet.index} {bet.status}
                   </h2>
                   <p>{raceDetails}</p>
-                  <p className="text-hl-secondary">{formattedAmount}</p>
+                  <p className="text-hl-secondary">{bet.amount}</p>
                   <a
                     href={`${scanner}/address/${bet.punter}`}
                     target="_blank"
