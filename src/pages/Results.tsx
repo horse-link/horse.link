@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Loader, PageLayout } from "../components";
-import { NewBetTable, NewResultsTable } from "../components/Tables";
+import { BetTable, NewResultsTable } from "../components/Tables";
 import { SettleBetModal, SettledMarketModal } from "../components/Modals";
 import { useMeetData, useResultsData } from "../hooks/data";
 import { BetHistory } from "../types/bets";
@@ -104,7 +104,7 @@ const Results: React.FC = () => {
         <NewButton text="history" onClick={() => {}} disabled active={false} />
       </div>
       <div className="mt-4">
-        <NewBetTable
+        <BetTable
           paramsAddressExists={true}
           allBetsEnabled={true}
           // betHistory={betHistory}
