@@ -1,5 +1,5 @@
 import React from "react";
-import { BetHistory } from "../../types/bets";
+import { BetHistoryResponse2 } from "../../types/bets";
 import { Config } from "../../types/config";
 import { useAccount } from "wagmi";
 import { useWalletModal } from "../../providers/WalletModal";
@@ -17,9 +17,9 @@ dayjs.extend(relativeTime);
 type Props = {
   allBetsEnabled: boolean;
   paramsAddressExists: boolean;
-  betHistory?: Array<BetHistory>;
+  betHistory?: Array<BetHistoryResponse2>;
   config?: Config;
-  setSelectedBet: (bet?: BetHistory) => void;
+  // setSelectedBet: (bet?: BetHistoryResponse2) => void;
   setIsModalOpen: (isOpen: boolean) => void;
 };
 
@@ -28,17 +28,17 @@ export const NewBetTable: React.FC<Props> = ({
   paramsAddressExists,
   betHistory,
   config,
-  setSelectedBet,
+  // setSelectedBet,
   setIsModalOpen
 }) => {
   const { isConnected } = useAccount();
   const { openWalletModal } = useWalletModal();
   const scanner = useScannerUrl();
 
-  const onClickBet = (bet?: BetHistory) => {
+  const onClickBet = (bet?: BetHistoryResponse2) => {
     if (!bet) return;
     if (!isConnected) return openWalletModal();
-    setSelectedBet(bet);
+    // setSelectedBet(bet);
     setIsModalOpen(true);
   };
 
@@ -68,28 +68,38 @@ export const NewBetTable: React.FC<Props> = ({
   const rows =
     betHistory && config
       ? betHistory.map((bet, i) => {
+          // const formattedAmount =
+          //   config &&
+          //   bet &&
+          //   `${utils.formatting.formatToFourDecimals(
+          //     ethers.utils.formatEther(bet.amount)
+          //   )} ${
+          //     config.tokens.find(
+          //       token =>
+          //         token.address.toLowerCase() === bet.assetAddress.toLowerCase()
+          //     )?.symbol
+          //   }`;
+
           const formattedAmount =
             config &&
             bet &&
             `${utils.formatting.formatToFourDecimals(
               ethers.utils.formatEther(bet.amount)
-            )} ${
-              config.tokens.find(
-                token =>
-                  token.address.toLowerCase() === bet.assetAddress.toLowerCase()
-              )?.symbol
-            }`;
+            )} `;
 
           const winningPropositionId =
-            bet && utils.id.getPropositionFromId(bet.propositionId);
-          const isWinning =
-            bet && bet.winningPropositionId
-              ? bet.winningPropositionId.toLowerCase() ===
-                bet.propositionId.toLowerCase()
-              : undefined;
+            bet && utils.id.getPropositionFromId(bet.proposition);
 
-          const raceDetails =
-            bet && utils.id.getMarketDetailsFromId(bet.marketId);
+          // const isWinning =
+          //   bet && bet.winningPropositionId
+          //     ? bet.winningPropositionId.toLowerCase() ===
+          //       bet.propositionId.toLowerCase()
+          //     : undefined;
+
+          // const raceDetails =
+          //   bet && utils.id.getMarketDetailsFromId(bet.marketId);
+
+          const raceDetails = bet.race;
 
           const style =
             "w-full text-left py-4 text-hl-tertiary text-xs xl:text-base";
@@ -124,15 +134,14 @@ export const NewBetTable: React.FC<Props> = ({
               className={style}
               onClick={() => onClickBet(bet)}
             >
-              {dayjs.unix(bet.blockNumber).fromNow()}
+              {dayjs.unix(bet.time).fromNow()}
             </div>,
             <div
               key={`racetable-bet-${bet.index}-${i}-date`}
               className={classNames(style, "!text-hl-secondary")}
               onClick={() => onClickBet(bet)}
             >
-              {raceDetails.date} {raceDetails.location} Race{" "}
-              {raceDetails.raceNumber}
+              {raceDetails}
             </div>,
             <div
               key={`racetable-bet-${bet.index}-${i}-winningPropositionId`}
@@ -153,13 +162,7 @@ export const NewBetTable: React.FC<Props> = ({
               className={style}
               onClick={() => onClickBet(bet)}
             >
-              {bet.status === "REFUNDED" || bet.status === "SCRATCHED"
-                ? "SCRATCHED"
-                : isWinning
-                ? "WON"
-                : isWinning === undefined
-                ? "IN PLAY"
-                : "LOST"}
+              {bet.status}
             </div>
           ];
         })
@@ -237,25 +240,12 @@ export const NewBetTable: React.FC<Props> = ({
                 bet &&
                 `${utils.formatting.formatToFourDecimals(
                   ethers.utils.formatEther(bet.amount)
-                )} ${
-                  config.tokens.find(
-                    token =>
-                      token.address.toLowerCase() ===
-                      bet.assetAddress.toLowerCase()
-                  )?.symbol
+                )}
                 }`;
 
-              const winningPropositionId =
-                bet && utils.id.getPropositionFromId(bet.propositionId);
+              // const winningPropositionId = "";
 
-              const isWinning =
-                bet && bet.winningPropositionId
-                  ? bet.winningPropositionId.toLowerCase() ===
-                    bet.propositionId.toLowerCase()
-                  : undefined;
-
-              const raceDetails =
-                bet && utils.id.getMarketDetailsFromId(bet.marketId);
+              const raceDetails = bet && bet.race;
 
               return (
                 <div
@@ -264,19 +254,9 @@ export const NewBetTable: React.FC<Props> = ({
                   onClick={() => onClickBet(bet)}
                 >
                   <h2 className="font-basement tracking-wider text-hl-secondary">
-                    {bet.index}{" "}
-                    {bet.status === "REFUNDED" || bet.status === "SCRATCHED"
-                      ? "SCRATCHED"
-                      : isWinning
-                      ? "WON"
-                      : isWinning === undefined
-                      ? "IN PLAY"
-                      : "LOST"}
+                    {bet.index} {bet.status}
                   </h2>
-                  <p>
-                    {raceDetails.date} {raceDetails.location} Race{" "}
-                    {raceDetails.raceNumber} Horse {winningPropositionId}
-                  </p>
+                  <p>{raceDetails}</p>
                   <p className="text-hl-secondary">{formattedAmount}</p>
                   <a
                     href={`${scanner}/address/${bet.punter}`}

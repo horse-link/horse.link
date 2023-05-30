@@ -5,13 +5,18 @@ import { PageLayout, Card } from "../components";
 import { BetFilterGroup } from "../components/Bets";
 import { NewBetTable } from "../components/Tables";
 import { SettleBetModal } from "../components/Modals";
-import { BetFilterOptions, BetHistory } from "../types/bets";
+import {
+  BetFilterOptions,
+  BetHistory,
+  BetHistoryResponse2
+} from "../types/bets";
 import { useConfig } from "../providers/Config";
 import utils from "../utils";
 import { ethers } from "ethers";
 import { useBetsStatistics } from "../hooks/stats";
 import { useSubgraphBets } from "../hooks/subgraph";
 import { NewButton } from "../components/Buttons";
+import useSwr from "../hooks/useSwr";
 
 const Bets: React.FC = () => {
   const config = useConfig();
@@ -23,7 +28,7 @@ const Bets: React.FC = () => {
     useBetsStatistics();
   const [allBetsEnabled, setAllBetsEnabled] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedBet, setSelectedBet] = useState<BetHistory>();
+  const [selectedBet] = useState<BetHistory>();
   const [betTableFilter, setBetTableFilter] =
     useState<BetFilterOptions>("ALL_BETS");
 
@@ -46,7 +51,7 @@ const Bets: React.FC = () => {
   }, [address]);
 
   const {
-    betData: betHistory,
+    // betData: betHistory,
     currentPage,
     incrementPage,
     decrementPage,
@@ -58,6 +63,11 @@ const Bets: React.FC = () => {
     allBetsEnabled ? undefined : paramsAddress
   );
 
+  // fetch http://localhost:3003/bets/history
+  const { data, isLoading } = useSwr<BetHistoryResponse2[]>(`/bets/history`);
+
+  const betHistory = data;
+
   const onMyBetToggle = () => setAllBetsEnabled(prev => !prev);
 
   const onFilterChange = (option: BetFilterOptions) => {
@@ -65,7 +75,7 @@ const Bets: React.FC = () => {
     setSkipMultiplier(0);
   };
 
-  const isLoading = !betHistory;
+  // const isLoading = !betHistory;
 
   return (
     <PageLayout>
@@ -107,7 +117,7 @@ const Bets: React.FC = () => {
         paramsAddressExists={!!paramsAddress}
         betHistory={betHistory}
         config={config}
-        setSelectedBet={setSelectedBet}
+        // setSelectedBet={setSelectedBet}
         setIsModalOpen={setIsModalOpen}
       />
       <div className="mt-2 flex w-full justify-end">

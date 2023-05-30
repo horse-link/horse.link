@@ -7,7 +7,7 @@ import { PlaceBetModal, SettleBetModal } from "../components/Modals";
 import { Runner, SignedMeetingsResponse } from "../types/meets";
 import { Loader, PageLayout } from "../components";
 import { useSubgraphBets } from "../hooks/subgraph";
-import { BetHistory } from "../types/bets";
+import { BetHistory, BetHistoryResponse2 } from "../types/bets";
 import { makeMarketId } from "../utils/markets";
 import { useConfig } from "../providers/Config";
 import constants from "../constants";
@@ -16,6 +16,7 @@ import utils from "../utils";
 import { HiChevronUp, HiChevronDown } from "react-icons/hi";
 import { Disclosure } from "@headlessui/react";
 import { useApi } from "../providers/Api";
+import useSwr from "../hooks/useSwr";
 
 const Races: React.FC = () => {
   const params = useParams();
@@ -26,7 +27,8 @@ const Races: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSettleModalOpen, setIsSettleModalOpen] = useState(false);
   const [selectedRunner, setSelectedRunner] = useState<Runner>();
-  const [selectedBet, setSelectedBet] = useState<BetHistory>();
+  // const [selectedBet, setSelectedBet] = useState<BetHistory>();
+  const [selectedBet] = useState<BetHistory>();
   const [closed, setClosed] = useState(false);
   const { race } = useRunnersData(track, raceNumber);
   const config = useConfig();
@@ -46,10 +48,13 @@ const Races: React.FC = () => {
 
   const marketId = makeMarketId(new Date(), track, raceNumber.toString());
   const {
-    betData: betHistory,
+    // betData: betHistory,
     totalBetsOnPropositions,
     refetch
   } = useSubgraphBets("ALL_BETS", marketId);
+
+  const { data } = useSwr<BetHistoryResponse2[]>(`/bets/history`);
+  const betHistory = data;
 
   const margin = useMemo(() => {
     if (!race || !race.runners.length) return;
@@ -158,7 +163,7 @@ const Races: React.FC = () => {
           allBetsEnabled={true}
           betHistory={betHistory}
           config={config}
-          setSelectedBet={setSelectedBet}
+          // setSelectedBet={setSelectedBet}
           setIsModalOpen={setIsSettleModalOpen}
         />
       </div>

@@ -25,7 +25,7 @@ const Results: React.FC = () => {
     useState(false);
   const [thisRace, setThisRace] = useState<RaceInfo>();
   const [isSettleModalOpen, setIsSettleModalOpen] = useState(false);
-  const [selectedBet, setSelectedBet] = useState<BetHistory>();
+  const [selectedBet] = useState<BetHistory>();
 
   const config = useConfig();
   const params = useParams();
@@ -107,9 +107,9 @@ const Results: React.FC = () => {
         <NewBetTable
           paramsAddressExists={true}
           allBetsEnabled={true}
-          betHistory={betHistory}
+          // betHistory={betHistory}
           config={config}
-          setSelectedBet={setSelectedBet}
+          // setSelectedBet={setSelectedBet}
           setIsModalOpen={setIsSettleModalOpen}
         />
       </div>
