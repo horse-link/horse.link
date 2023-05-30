@@ -8,6 +8,7 @@ import dayjs, { Dayjs } from "dayjs";
 export const isScratchedRunner = (runner: Runner) =>
   ["LateScratched", "Scratched"].includes(runner.status);
 
+// REMOVE THIS FROM THE FRONTEND
 export const calculateRaceMargin = (odds: number[]) => {
   // all ones case
   if (odds.every(odd => odd == 1)) {

@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useRunnersData, useMeetData } from "../hooks/data";
 import { NewButton, RacesButton } from "../components/Buttons";
-import { NewBetTable, NewRaceTable } from "../components/Tables";
+import { BetTable, NewRaceTable } from "../components/Tables";
 import { PlaceBetModal, SettleBetModal } from "../components/Modals";
 import { Runner, SignedMeetingsResponse } from "../types/meets";
 import { Loader, PageLayout } from "../components";
@@ -53,9 +53,10 @@ const Races: React.FC = () => {
     refetch
   } = useSubgraphBets("ALL_BETS", marketId);
 
-  const { data } = useSwr<BetHistoryResponse2[]>(`/bets/history`);
+  const { data } = useSwr<BetHistoryResponse2[]>(`/bets/history/${marketId}`);
   const betHistory = data;
 
+  // TODO: REMOVE MARGIN FROM THE FRONT END!
   const margin = useMemo(() => {
     if (!race || !race.runners.length) return;
 
@@ -158,7 +159,7 @@ const Races: React.FC = () => {
         <NewButton text="history" onClick={() => {}} disabled active={false} />
       </div>
       <div className="mt-4">
-        <NewBetTable
+        <BetTable
           paramsAddressExists={true}
           allBetsEnabled={true}
           betHistory={betHistory}

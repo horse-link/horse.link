@@ -23,7 +23,7 @@ type Props = {
   setIsModalOpen: (isOpen: boolean) => void;
 };
 
-export const NewBetTable: React.FC<Props> = ({
+export const BetTable: React.FC<Props> = ({
   allBetsEnabled,
   paramsAddressExists,
   betHistory,
