@@ -63,7 +63,7 @@ const Bets: React.FC = () => {
     allBetsEnabled ? undefined : paramsAddress
   );
 
-  // fetch http://localhost:3003/bets/history
+  // TODO: CHANGE TO BetHistoryResponseNew
   const { data, isLoading } = useSwr<BetHistoryResponse2[]>(`/bets/history`);
 
   const betHistory = data;
@@ -75,6 +75,7 @@ const Bets: React.FC = () => {
     setSkipMultiplier(0);
   };
 
+  // not sure about this
   // const isLoading = !betHistory;
 
   return (

@@ -53,9 +53,11 @@ const Races: React.FC = () => {
     refetch
   } = useSubgraphBets("ALL_BETS", marketId);
 
+  // TODO: CHANGE TO BetHistoryResponseNew WITH MARGIN
   const { data } = useSwr<BetHistoryResponse2[]>(`/bets/history/${marketId}`);
   const betHistory = data;
 
+  // TODO: CHANGE TO BetHistoryResponseNew WITH MARGIN
   // TODO: REMOVE MARGIN FROM THE FRONT END!
   const margin = useMemo(() => {
     if (!race || !race.runners.length) return;
