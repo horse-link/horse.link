@@ -18,7 +18,7 @@ type Props = {
   paramsAddressExists: boolean;
   betHistory?: Array<BetHistoryResponse2>;
   config?: Config;
-  // setSelectedBet: (bet?: BetHistoryResponse2) => void; // TODO: Roll back
+  setSelectedBet: (bet?: BetHistoryResponse2) => void;
   setIsModalOpen: (isOpen: boolean) => void;
 };
 
@@ -27,7 +27,7 @@ export const BetTable: React.FC<Props> = ({
   paramsAddressExists,
   betHistory,
   config,
-  // setSelectedBet,
+  setSelectedBet,
   setIsModalOpen
 }) => {
   const { isConnected } = useAccount();
@@ -37,7 +37,8 @@ export const BetTable: React.FC<Props> = ({
   const onClickBet = (bet?: BetHistoryResponse2) => {
     if (!bet) return;
     if (!isConnected) return openWalletModal();
-    // setSelectedBet(bet);  // TODO: Roll back
+
+    setSelectedBet(bet);
     setIsModalOpen(true);
   };
 
@@ -67,8 +68,6 @@ export const BetTable: React.FC<Props> = ({
   const rows =
     betHistory && config
       ? betHistory.map((bet, i) => {
-          const raceDetails = bet && bet.race;
-
           const style =
             "w-full text-left py-4 text-hl-tertiary text-xs xl:text-base";
 
@@ -109,7 +108,7 @@ export const BetTable: React.FC<Props> = ({
               className={classNames(style, "!text-hl-secondary")}
               onClick={() => onClickBet(bet)}
             >
-              {raceDetails}
+              {bet.race}
             </div>,
             <div
               key={`racetable-bet-${bet.index}-${i}-propositionId`}
@@ -202,39 +201,35 @@ export const BetTable: React.FC<Props> = ({
           </div>
         ) : (
           <div className="flex w-full flex-col items-center">
-            {betHistory.map(bet => {
-              const raceDetails = bet && bet.race;
-
-              return (
-                <div
-                  key={JSON.stringify(bet)}
-                  className="flex w-full flex-col items-center gap-y-2 border-t border-hl-border py-2 text-center"
-                  onClick={() => onClickBet(bet)}
+            {betHistory.map(bet => (
+              <div
+                key={JSON.stringify(bet)}
+                className="flex w-full flex-col items-center gap-y-2 border-t border-hl-border py-2 text-center"
+                onClick={() => onClickBet(bet)}
+              >
+                <h2 className="font-basement tracking-wider text-hl-secondary">
+                  {bet.index} {bet.status}
+                </h2>
+                <p>{bet.race}</p>
+                <p className="text-hl-secondary">{bet.amount}</p>
+                <a
+                  href={`${scanner}/address/${bet.punter}`}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="w-full max-w-full truncate"
                 >
-                  <h2 className="font-basement tracking-wider text-hl-secondary">
-                    {bet.index} {bet.status}
-                  </h2>
-                  <p>{raceDetails}</p>
-                  <p className="text-hl-secondary">{bet.amount}</p>
-                  <a
-                    href={`${scanner}/address/${bet.punter}`}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="w-full max-w-full truncate"
-                  >
-                    Punter: {bet.punter}
-                  </a>
-                  <a
-                    href={`${scanner}/tx/${bet.tx}`}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="w-full max-w-full truncate"
-                  >
-                    TxID: {bet.tx}
-                  </a>
-                </div>
-              );
-            })}
+                  Punter: {bet.punter}
+                </a>
+                <a
+                  href={`${scanner}/tx/${bet.tx}`}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="w-full max-w-full truncate"
+                >
+                  TxID: {bet.tx}
+                </a>
+              </div>
+            ))}
           </div>
         )}
       </div>
