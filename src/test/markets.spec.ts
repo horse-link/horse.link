@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import utils from "../utils";
 
-describe("making market id tests", () => {
+describe("making marketId tests", () => {
   it("should return correctly formatted id for given date", () => {
     const result = utils.markets.makeMarketId(
       new Date("2021-01-01"),
@@ -23,5 +23,14 @@ describe("making market id tests", () => {
       "1"
     );
     expect(resultThree).to.equal("019335DBN01");
+  });
+});
+
+describe("propositionId tests", () => {
+  it("should get the marketId from the propositionId", () => {
+    const propositionId = "019508DBN08W07";
+    const marketId = utils.markets.getMarketIdFromPropositionId(propositionId);
+
+    expect(marketId).to.equal("019508DBN08");
   });
 });

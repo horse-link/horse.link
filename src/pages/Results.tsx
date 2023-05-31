@@ -14,6 +14,7 @@ import {
 import dayjs from "dayjs";
 import { RaceInfo } from "../types/meets";
 import { useAccount, useSigner } from "wagmi";
+import { BetHistoryResponse2 } from "../types/bets";
 
 const Results: React.FC = () => {
   const [loading, setLoading] = useState(false);
@@ -22,6 +23,7 @@ const Results: React.FC = () => {
     useState(false);
   const [thisRace, setThisRace] = useState<RaceInfo>();
   const [isSettleModalOpen, setIsSettleModalOpen] = useState(false);
+  const [selectedBet, setSelectedBet] = useState<BetHistoryResponse2>();
 
   const config = useConfig();
   const params = useParams();
@@ -97,7 +99,7 @@ const Results: React.FC = () => {
           allBetsEnabled={true}
           betHistory={betHistory}
           config={config}
-          setSelectedBet={() => {}} // TODO: fix
+          setSelectedBet={setSelectedBet}
           setIsModalOpen={setIsSettleModalOpen}
         />
       </div>
@@ -117,7 +119,7 @@ const Results: React.FC = () => {
       <SettleBetModal
         isModalOpen={isSettleModalOpen}
         setIsModalOpen={setIsSettleModalOpen}
-        // selectedBet={selectedBet}
+        selectedBet={selectedBet}
         config={config}
       />
       <SettledMarketModal

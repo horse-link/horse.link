@@ -8,7 +8,11 @@ import { BigNumber, ethers, Signer } from "ethers";
 import { Config, MarketInfo } from "../../types/config";
 import utils from "../../utils";
 import { Back, BackParams } from "../../types/meets";
-import { BetHistory, MarketMultiBetInfo } from "../../types/bets";
+import {
+  BetHistory,
+  MarketMultiBetInfo,
+  SignedBetHistoryResponse2
+} from "../../types/bets";
 import constants from "../../constants";
 
 export const useMarketContract = () => {
@@ -256,7 +260,7 @@ export const useMarketContract = () => {
 
   const settleBet = async (
     market: MarketInfo,
-    bet: BetHistory,
+    bet: SignedBetHistoryResponse2,
     signer: Signer,
     config: Config
   ) => {
@@ -392,7 +396,7 @@ export const useMarketContract = () => {
 
   const refundBet = async (
     market: MarketInfo,
-    bet: BetHistory,
+    bet: SignedBetHistoryResponse2,
     signer: Signer
   ) => {
     const marketContract = Market__factory.connect(market.address, signer);

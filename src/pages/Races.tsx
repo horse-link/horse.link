@@ -15,6 +15,7 @@ import utils from "../utils";
 import { HiChevronUp, HiChevronDown } from "react-icons/hi";
 import { Disclosure } from "@headlessui/react";
 import { useApi } from "../providers/Api";
+import { BetHistoryResponse2 } from "../types/bets";
 
 const Races: React.FC = () => {
   const params = useParams();
@@ -31,6 +32,7 @@ const Races: React.FC = () => {
   const api = useApi();
   const [meetingsResponse, setMeetingsResponse] =
     useState<SignedMeetingsResponse>();
+  const [selectedBet, setSelectedBet] = useState<BetHistoryResponse2>();
 
   useEffect(() => {
     api.getMeetings().then(setMeetingsResponse);
@@ -140,7 +142,7 @@ const Races: React.FC = () => {
           allBetsEnabled={true}
           betHistory={betHistory}
           config={config}
-          setSelectedBet={() => {}} // TODO: fix
+          setSelectedBet={setSelectedBet}
           setIsModalOpen={setIsSettleModalOpen}
         />
       </div>
@@ -154,7 +156,7 @@ const Races: React.FC = () => {
       <SettleBetModal
         isModalOpen={isSettleModalOpen}
         setIsModalOpen={setIsSettleModalOpen}
-        // selectedBet={selectedBet}
+        selectedBet={selectedBet}
         config={config}
       />
     </PageLayout>

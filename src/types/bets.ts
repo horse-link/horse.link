@@ -66,6 +66,7 @@ export type BetHistoryResponse2 = {
   index: number; // bet index
   punter: Address; // address of punter
   amount: string; // raw ether amount (always ether as it comes direct from subgraph)
+  asset: Address; // address of asset
   time: number; // timestamp
   race: string; // full text race name
   propositionId: string; // propositionId as bytes16
@@ -74,6 +75,9 @@ export type BetHistoryResponse2 = {
   result: BetResult; // won or lost
   tx: Hash; // tx id
 };
+
+export type SignedBetHistoryResponse2 = BetHistoryResponse2 &
+  SignedBetDataResponse;
 
 export type TotalBetsOnPropositions = Record<
   string,

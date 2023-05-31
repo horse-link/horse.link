@@ -6,7 +6,10 @@ import { useMarketContract } from "../../hooks/contracts";
 import { Web3ErrorHandler, Web3SuccessHandler } from "../Web3Handlers";
 import { useSigner } from "wagmi";
 import utils from "../../utils";
-import { BetHistory } from "../../types/bets";
+import {
+  BetHistoryResponse2,
+  SignedBetHistoryResponse2
+} from "../../types/bets";
 import { Config } from "../../types/config";
 import { useApi } from "../../providers/Api";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
@@ -19,7 +22,7 @@ dayjs.extend(advancedFormat);
 type Props = {
   isModalOpen: boolean;
   setIsModalOpen: (open: boolean) => void;
-  selectedBet?: BetHistory;
+  selectedBet?: BetHistoryResponse2;
   config?: Config;
 };
 
@@ -33,7 +36,7 @@ export const SettleBetModal: React.FC<Props> = ({
   const [txHash, setTxHash] = useState<string>();
   const [error, setError] = useState<ethers.errors>();
 
-  const [bet, setBet] = useState<BetHistory>();
+  const [bet, setBet] = useState<SignedBetHistoryResponse2>();
 
   const { data: signer } = useSigner();
   const { settleBet, refundBet } = useMarketContract();
@@ -49,23 +52,16 @@ export const SettleBetModal: React.FC<Props> = ({
 
     api
       .getWinningResultSignature(
-        selectedBet.marketId,
+        utils.markets.getMarketIdFromPropositionId(selectedBet.propositionId),
         // we want to sign if the bet isnt already settled
-        !selectedBet.settled
+        selectedBet.status !== "SETTLED"
       )
-      .then(signedData => {
-        const formattedBet: BetHistory = {
+      .then(signedData =>
+        setBet({
           ...selectedBet,
-          marketResultAdded: signedData.marketResultAdded,
-          winningPropositionId: signedData.winningPropositionId,
-          marketOracleResultSig: signedData.marketOracleResultSig,
-          scratched: signedData.scratchedRunners?.find(
-            s => s.b16propositionId === selectedBet.propositionId
-          )
-        };
-
-        setBet(formattedBet);
-      })
+          ...signedData
+        })
+      )
       .catch(console.error);
   }, [selectedBet, isModalOpen]);
 
@@ -81,12 +77,16 @@ export const SettleBetModal: React.FC<Props> = ({
     }, 300);
   }, [isModalOpen]);
 
-  const market = config?.markets.find(
-    m => m.address.toLowerCase() === bet?.market.toLowerCase()
+  const token = config?.tokens.find(
+    t => t.address.toLowerCase() === bet?.asset.toLowerCase()
   );
 
-  const token = config?.tokens.find(
-    t => t.address.toLowerCase() === bet?.assetAddress.toLowerCase()
+  const vault = config?.vaults.find(
+    v => v.asset.address.toLowerCase() === token?.address.toLowerCase()
+  );
+
+  const market = config?.markets.find(
+    m => m.vaultAddress.toLowerCase() === vault?.address.toLowerCase()
   );
 
   const isWinning =
@@ -95,11 +95,11 @@ export const SettleBetModal: React.FC<Props> = ({
         bet.propositionId.toLowerCase()
       : undefined;
 
-  const isScratched = bet?.scratched !== undefined;
+  const isScratched = bet?.status === "SCRATCHED";
 
-  const isPastPayoutDate = now > (bet?.payoutDate || 0);
+  const isPastPayoutDate = now > (bet?.time || 0);
 
-  const isSettled = bet?.settled;
+  const isSettled = bet?.status === "SETTLED";
 
   const onClickSettleBet = async () => {
     if (!bet || !market || !signer || !config) return;
@@ -142,14 +142,12 @@ export const SettleBetModal: React.FC<Props> = ({
           <p className="mt-2 font-semibold">
             Tx Hash:{" "}
             <a
-              href={`${scanner}/tx/${bet.settledAtTx}`}
+              href={`${scanner}/tx/${bet.tx}`}
               target="_blank"
               rel="noreferrer noopener"
               className="text-hl-secondary underline"
             >
-              {utils.formatting.shortenHash(
-                bet.settledAtTx || ethers.constants.HashZero
-              )}
+              {utils.formatting.shortenHash(bet.tx)}
             </a>
           </p>
         </div>
@@ -171,7 +169,7 @@ export const SettleBetModal: React.FC<Props> = ({
             <div className="grid w-full grid-cols-2">
               <h3 className="text-left text-hl-secondary">Placed:</h3>
               <p className="text-left text-hl-tertiary">
-                {dayjs.unix(bet.blockNumber).format("dddd Do MMMM")}
+                {dayjs.unix(bet.time).format("dddd Do MMMM")}
               </p>
               <h3 className="text-left text-hl-secondary">Market:</h3>
               <p className="text-left text-hl-tertiary">
@@ -181,7 +179,7 @@ export const SettleBetModal: React.FC<Props> = ({
                 <React.Fragment>
                   <h3 className="text-left text-hl-secondary">Win:</h3>
                   <p className="text-left text-hl-tertiary">
-                    {ethers.utils.formatEther(bet.payout)} {token?.symbol}
+                    {/* {ethers.utils.formatEther(bet.payout)} {token?.symbol} */}
                   </p>
                 </React.Fragment>
               ) : isWinning === false ? (
@@ -190,7 +188,7 @@ export const SettleBetModal: React.FC<Props> = ({
                     {isScratched ? "Refund" : "Loss"}
                   </h3>
                   <p className="text-left text-hl-tertiary">
-                    {ethers.utils.formatEther(bet.payout)} {token.symbol}
+                    {/* {ethers.utils.formatEther(bet.payout)} {token.symbol} */}
                   </p>
                 </React.Fragment>
               ) : (
@@ -203,9 +201,9 @@ export const SettleBetModal: React.FC<Props> = ({
                     {isScratched ? "Refunded:" : "Potential Payout:"}
                   </h3>
                   <p className="text-left text-hl-tertiary">
-                    {utils.formatting.formatToFourDecimals(
+                    {/* {utils.formatting.formatToFourDecimals(
                       ethers.utils.formatEther(bet.payout)
-                    )}
+                    )} */}
                   </p>
                 </React.Fragment>
               )}
@@ -217,7 +215,7 @@ export const SettleBetModal: React.FC<Props> = ({
               onClick={onClickSettleBet}
               disabled={
                 !signer ||
-                bet.settled ||
+                isSettled ||
                 bet.status === "PENDING" ||
                 !isPastPayoutDate ||
                 txLoading ||

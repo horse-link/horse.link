@@ -5,7 +5,7 @@ import { PageLayout, Card } from "../components";
 import { BetFilterGroup } from "../components/Bets";
 import { BetTable } from "../components/Tables";
 import { SettleBetModal } from "../components/Modals";
-import { BetFilterOptions } from "../types/bets";
+import { BetFilterOptions, BetHistoryResponse2 } from "../types/bets";
 import { useConfig } from "../providers/Config";
 import utils from "../utils";
 import { ethers } from "ethers";
@@ -26,6 +26,7 @@ const Bets: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [betTableFilter, setBetTableFilter] =
     useState<BetFilterOptions>("ALL_BETS");
+  const [selectedBet, setSelectedBet] = useState<BetHistoryResponse2>();
 
   useEffect(() => {
     // redirect back to /bets if disconnected
@@ -101,7 +102,7 @@ const Bets: React.FC = () => {
         paramsAddressExists={!!paramsAddress}
         betHistory={betHistory}
         config={config}
-        setSelectedBet={() => {}} // TODO: fix
+        setSelectedBet={setSelectedBet}
         setIsModalOpen={setIsModalOpen}
       />
       <div className="mt-2 flex w-full justify-end">
@@ -124,7 +125,7 @@ const Bets: React.FC = () => {
       <SettleBetModal
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
-        // selectedBet={selectedBet}
+        selectedBet={selectedBet}
         config={config}
       />
     </PageLayout>
