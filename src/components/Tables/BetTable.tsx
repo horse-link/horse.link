@@ -119,14 +119,14 @@ export const BetTable: React.FC<Props> = ({
               {bet.proposition}
             </div>,
             <div
-              key={`racetable-bet-${bet.index}-${i}-status`}
+              key={`racetable-bet-${bet.index}-${i}-result`}
               className={style}
               onClick={() => onClickBet(bet)}
             >
-              {bet.status}
+              {bet.result}
             </div>,
             <div
-              key={`racetable-bet-${bet.index}-${i}-isWinning`}
+              key={`racetable-bet-${bet.index}-${i}-status`}
               className={style}
               onClick={() => onClickBet(bet)}
             >
