@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useRunnersData, useMeetData } from "../hooks/data";
 import { NewButton, RacesButton } from "../components/Buttons";
@@ -7,7 +7,7 @@ import { PlaceBetModal, SettleBetModal } from "../components/Modals";
 import { Runner, SignedMeetingsResponse } from "../types/meets";
 import { Loader, PageLayout } from "../components";
 import { useSubgraphBets } from "../hooks/subgraph";
-import { BetHistory, BetHistoryResponse2 } from "../types/bets";
+import { BetHistoryResponseNew } from "../types/bets";
 import { makeMarketId } from "../utils/markets";
 import { useConfig } from "../providers/Config";
 import constants from "../constants";
@@ -15,8 +15,8 @@ import dayjs from "dayjs";
 import utils from "../utils";
 import { HiChevronUp, HiChevronDown } from "react-icons/hi";
 import { Disclosure } from "@headlessui/react";
-import { useApi } from "../providers/Api";
 import useSwr from "../hooks/useSwr";
+import { useApi } from "../providers/Api";
 
 const Races: React.FC = () => {
   const params = useParams();
@@ -27,8 +27,6 @@ const Races: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSettleModalOpen, setIsSettleModalOpen] = useState(false);
   const [selectedRunner, setSelectedRunner] = useState<Runner>();
-  // const [selectedBet, setSelectedBet] = useState<BetHistory>();
-  const [selectedBet] = useState<BetHistory>();
   const [closed, setClosed] = useState(false);
   const { race } = useRunnersData(track, raceNumber);
   const config = useConfig();
@@ -47,27 +45,14 @@ const Races: React.FC = () => {
   // }, []);
 
   const marketId = makeMarketId(new Date(), track, raceNumber.toString());
-  const {
-    // betData: betHistory,
-    totalBetsOnPropositions,
-    refetch
-  } = useSubgraphBets("ALL_BETS", marketId);
+  const { totalBetsOnPropositions, refetch } = useSubgraphBets(
+    "ALL_BETS",
+    marketId
+  );
 
-  // TODO: CHANGE TO BetHistoryResponseNew WITH MARGIN
-  const { data } = useSwr<BetHistoryResponse2[]>(`/bets/history/${marketId}`);
-  const betHistory = data;
-
-  // TODO: CHANGE TO BetHistoryResponseNew WITH MARGIN
-  // TODO: REMOVE MARGIN FROM THE FRONT END!
-  const margin = useMemo(() => {
-    if (!race || !race.runners.length) return;
-
-    const validRunners = race.runners.filter(
-      runner => !utils.races.isScratchedRunner(runner)
-    );
-
-    return utils.races.calculateRaceMargin(validRunners.map(r => r.odds));
-  }, [race]);
+  const { data: betHistory } = useSwr<BetHistoryResponseNew>(
+    `/bets/history/${marketId}`
+  );
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -81,7 +66,7 @@ const Races: React.FC = () => {
     <PageLayout>
       <div className="flex flex-col gap-6">
         <div className="w-full">
-          {margin && race && meetingsResponse ? (
+          {race && betHistory && meetingsResponse ? (
             <Disclosure as={React.Fragment}>
               {({ open }) => (
                 <React.Fragment>
@@ -104,7 +89,7 @@ const Races: React.FC = () => {
                           <div className="w-auto whitespace-nowrap text-sm text-hl-tertiary lg:ml-10 lg:w-full">
                             Margin:{" "}
                             {utils.formatting.formatToTwoDecimals(
-                              (+margin * 100).toString()
+                              (betHistory.margin * 100).toString()
                             )}
                             %
                           </div>
@@ -164,7 +149,7 @@ const Races: React.FC = () => {
         <BetTable
           paramsAddressExists={true}
           allBetsEnabled={true}
-          betHistory={betHistory}
+          betHistory={betHistory?.results}
           config={config}
           // setSelectedBet={setSelectedBet}
           setIsModalOpen={setIsSettleModalOpen}
@@ -180,7 +165,7 @@ const Races: React.FC = () => {
       <SettleBetModal
         isModalOpen={isSettleModalOpen}
         setIsModalOpen={setIsSettleModalOpen}
-        selectedBet={selectedBet}
+        // selectedBet={selectedBet}
         refetch={refetch}
         config={config}
       />
