@@ -1,14 +1,15 @@
-import React, { useCallback, useMemo, useRef } from "react";
+import React, { useCallback, useMemo } from "react";
 import { NewButton } from ".";
 import { Config } from "../../types/config";
-import { BetHistoryResponse2 } from "../../types/bets";
+import { SignedBetHistoryResponse2 } from "../../types/bets";
 import { ContractTransaction, Signer } from "ethers";
 import { useWalletModal } from "../../providers/WalletModal";
 import { MarketOracle__factory, Market__factory } from "../../typechain";
 import { BYTES_16_ZERO } from "../../constants/blockchain";
+import utils from "../../utils";
 
 type Props = {
-  betHistory?: BetHistoryResponse2[];
+  betHistory?: SignedBetHistoryResponse2[];
   loading: boolean;
   isConnected: boolean;
   config?: Config;
@@ -17,8 +18,6 @@ type Props = {
   setLoading: (loading: boolean) => void;
   setSettleHashes: (hashes?: string[]) => void;
 };
-
-// TODO: fix when signing is a thing
 
 export const SettleRaceButton: React.FC<Props> = props => {
   const {
@@ -54,8 +53,10 @@ export const SettleRaceButton: React.FC<Props> = props => {
         signer
       );
       // get winning data (all bets should have data and have the same data)
-      const { marketId, marketOracleResultSig, winningPropositionId } =
-        settlableBets[0];
+      const { marketOracleResultSig, winningPropositionId } = settlableBets[0];
+      const marketId = utils.markets.getMarketIdFromPropositionId(
+        settlableBets[0].propositionId
+      );
 
       // add result
       const result = await oracleContract.getResult(marketId);
@@ -77,8 +78,22 @@ export const SettleRaceButton: React.FC<Props> = props => {
       }
 
       const marketContractAddresses = new Set(
-        settlableBets.map(bet => bet.market)
+        settlableBets.map(bet => {
+          // get market address
+          const vault = config.vaults.find(
+            v => v.asset.address.toLowerCase() === bet.asset.toLowerCase()
+          );
+          const market = config.markets.find(
+            m => m.vaultAddress.toLowerCase() === vault?.address.toLowerCase()
+          );
+
+          if (!market)
+            throw new Error(`Could not find market for bet asset ${bet.asset}`);
+
+          return market.address;
+        })
       );
+
       const txs: ContractTransaction[] = [];
       for (const marketAddress of marketContractAddresses) {
         const marketContract = Market__factory.connect(marketAddress, signer);

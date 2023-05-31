@@ -271,12 +271,17 @@ export const useMarketContract = () => {
       signer
     );
 
-    if (bet.marketOracleResultSig && !bet.scratched) {
+    const isScratched = bet.status === "SCRATCHED";
+    const marketId = utils.markets.getMarketIdFromPropositionId(
+      bet.propositionId
+    );
+
+    if (bet.marketOracleResultSig && !isScratched) {
       if (
         bet.winningPropositionId &&
         bet.marketOracleResultSig &&
         !utils.bets.recoverSigSigner(
-          bet.marketId,
+          marketId,
           bet.winningPropositionId,
           bet.marketOracleResultSig,
           config
@@ -291,7 +296,7 @@ export const useMarketContract = () => {
       ) {
         const [gasLimit, gasPrice] = await Promise.all([
           marketOracleContract.estimateGas.setResult(
-            bet.marketId,
+            marketId,
             bet.winningPropositionId,
             bet.marketOracleResultSig
           ),
@@ -300,7 +305,7 @@ export const useMarketContract = () => {
 
         await (
           await marketOracleContract.setResult(
-            bet.marketId,
+            marketId,
             bet.winningPropositionId,
             bet.marketOracleResultSig,
             {
@@ -310,12 +315,12 @@ export const useMarketContract = () => {
           )
         ).wait();
       }
-    } else if (bet.scratched && bet.scratched.signature) {
+    } else if (isScratched && bet.marketOracleResultSig) {
       if (
         !utils.bets.recoverSigSigner(
-          bet.marketId,
+          marketId,
           bet.propositionId,
-          bet.scratched.signature,
+          bet.marketOracleResultSig,
           config,
           ethers.utils.parseUnits(
             bet.scratched.odds.toString(),
@@ -328,14 +333,14 @@ export const useMarketContract = () => {
 
       const [gasLimit, gasPrice] = await Promise.all([
         marketOracleContract.estimateGas.setScratchedResult(
-          bet.marketId,
+          marketId,
           bet.propositionId,
           ethers.utils.parseUnits(
             bet.scratched.odds.toString(),
             constants.contracts.MARKET_ODDS_DECIMALS
           ),
           ethers.BigNumber.from(bet.scratched.totalOdds),
-          bet.scratched.signature
+          bet.marketOracleResultSig
         ),
         signer.getGasPrice()
       ]);
@@ -343,14 +348,14 @@ export const useMarketContract = () => {
       // tx can fail if the result is already set
       await (
         await marketOracleContract.setScratchedResult(
-          bet.marketId,
+          marketId,
           bet.propositionId,
           ethers.utils.parseUnits(
             bet.scratched.odds.toString(),
             constants.contracts.MARKET_ODDS_DECIMALS
           ),
           ethers.BigNumber.from(bet.scratched.totalOdds),
-          bet.scratched.signature,
+          bet.marketOracleResultSig,
           {
             gasLimit,
             gasPrice
@@ -405,10 +410,14 @@ export const useMarketContract = () => {
       constants.contracts.MARKET_ODDS_DECIMALS
     );
 
+    const marketId = utils.markets.getMarketIdFromPropositionId(
+      bet.propositionId
+    );
+
     const [gasLimit, gasPrice] = await Promise.all([
       marketContract.estimateGas.scratchAndRefund(
         bet.index,
-        bet.marketId,
+        marketId,
         bet.propositionId,
         odds,
         bet.scratched!.signature!
@@ -418,7 +427,7 @@ export const useMarketContract = () => {
     const receipt = await (
       await marketContract.scratchAndRefund(
         bet.index,
-        bet.marketId,
+        marketId,
         bet.propositionId,
         odds,
         bet.scratched!.signature!,
