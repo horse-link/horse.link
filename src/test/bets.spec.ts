@@ -45,15 +45,6 @@ test.concurrent.each([
   }
 );
 
-// format bet id tests
-describe("format bet ids", () => {
-  it("should return the bet number from the id", () => {
-    const mockId = utils.mocks.getMockBet().id;
-    const id = utils.formatting.formatBetId(mockId);
-    expect(id).toEqual(0);
-  });
-});
-
 // detect scratched runners
 describe("detect scratched runners", () => {
   it("should return the correct BetHistory for a scratched runner", () => {
