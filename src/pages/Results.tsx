@@ -4,7 +4,6 @@ import { Loader, PageLayout } from "../components";
 import { BetTable, NewResultsTable } from "../components/Tables";
 import { SettleBetModal, SettledMarketModal } from "../components/Modals";
 import { useMeetData, useResultsData } from "../hooks/data";
-import { BetHistory } from "../types/bets";
 import { makeMarketId } from "../utils/markets";
 import { useConfig } from "../providers/Config";
 import utils from "../utils";
@@ -25,7 +24,6 @@ const Results: React.FC = () => {
     useState(false);
   const [thisRace, setThisRace] = useState<RaceInfo>();
   const [isSettleModalOpen, setIsSettleModalOpen] = useState(false);
-  const [selectedBet] = useState<BetHistory>();
 
   const config = useConfig();
   const params = useParams();
@@ -130,7 +128,7 @@ const Results: React.FC = () => {
       <SettleBetModal
         isModalOpen={isSettleModalOpen}
         setIsModalOpen={setIsSettleModalOpen}
-        selectedBet={selectedBet}
+        // selectedBet={selectedBet}
         refetch={refetch}
         config={config}
       />
