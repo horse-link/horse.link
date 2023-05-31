@@ -112,76 +112,69 @@ export const getBetsQueryWithoutPagination = (
 export const getDepositsWithoutPagination = (
   filter?: SubgraphFilter
 ) => `query getDeposits{
-  deposits(
+  vaultTransactions(
     first: 1000
     where: {
       ${getFiltersFromObject(filter)}
+      type: "deposit"
     }
-    orderBy: createdAt
+    orderBy: timestamp
     orderDirection: desc
   ) {
     id
-    sender
-    owner
-    assets
-    shares
-    createdAt
+    type
+    vaultAddress
+    userAddress
+    amount
+    timestamp
   }
 }`;
 
 export const getWithdrawsWithoutPagination = (
   filter?: SubgraphFilter
 ) => `query getWithdraws{
-  withdraws(
+  vaultTransactions(
     first: 1000
     where: {
       ${getFiltersFromObject(filter)}
+      type: "withdraw"
     }
-    orderBy: createdAt
+    orderBy: timestamp
     orderDirection: desc
   ) {
     id
-    sender
-    receiver
-    owner
-    assets
-    shares
-    createdAt
+    type
+    vaultAddress
+    userAddress
+    amount
+    timestamp
   }
 }`;
 
 export const getVaultHistory = () => `query getVaultHistory{
-  withdraws{
+  withdraws: vaultTransactions(
+    where: {
+      type: "withdraw"
+    }
+  ) {
     id
-    sender
-    receiver
-    owner
-    assets
-    shares
-    vault
-    createdAt
-  }
-  deposits{
-    id
-    sender
-    owner
-    assets
-    shares
-    vault
-    createdAt
-  }
-  borrows{
-    id
-    betId
+    type
+    vaultAddress
+    userAddress
     amount
-    vault
-    createdAt
+    timestamp
   }
-  repays{
+  deposits: vaultTransactions(
+    where: {
+      type: "deposit"
+    }
+  ) {
     id
-    vault
+    type
+    vaultAddress
+    userAddress
     amount
-    createdAt
+    timestamp
   }
 }
 `;
