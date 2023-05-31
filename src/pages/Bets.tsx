@@ -5,11 +5,7 @@ import { PageLayout, Card } from "../components";
 import { BetFilterGroup } from "../components/Bets";
 import { BetTable } from "../components/Tables";
 import { SettleBetModal } from "../components/Modals";
-import {
-  BetFilterOptions,
-  BetHistory,
-  BetHistoryResponse2
-} from "../types/bets";
+import { BetFilterOptions, BetHistoryResponseNew } from "../types/bets";
 import { useConfig } from "../providers/Config";
 import utils from "../utils";
 import { ethers } from "ethers";
@@ -28,7 +24,6 @@ const Bets: React.FC = () => {
     useBetsStatistics();
   const [allBetsEnabled, setAllBetsEnabled] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedBet] = useState<BetHistory>();
   const [betTableFilter, setBetTableFilter] =
     useState<BetFilterOptions>("ALL_BETS");
 
@@ -51,7 +46,6 @@ const Bets: React.FC = () => {
   }, [address]);
 
   const {
-    // betData: betHistory,
     currentPage,
     incrementPage,
     decrementPage,
@@ -63,10 +57,8 @@ const Bets: React.FC = () => {
     allBetsEnabled ? undefined : paramsAddress
   );
 
-  // TODO: CHANGE TO BetHistoryResponseNew
-  const { data, isLoading } = useSwr<BetHistoryResponse2[]>(`/bets/history`);
-
-  const betHistory = data;
+  const { data: betHistory, isLoading } =
+    useSwr<BetHistoryResponseNew>(`/bets/history`);
 
   const onMyBetToggle = () => setAllBetsEnabled(prev => !prev);
 
@@ -74,9 +66,6 @@ const Bets: React.FC = () => {
     setBetTableFilter(option);
     setSkipMultiplier(0);
   };
-
-  // not sure about this
-  // const isLoading = !betHistory;
 
   return (
     <PageLayout>
@@ -116,7 +105,7 @@ const Bets: React.FC = () => {
       <BetTable
         allBetsEnabled={allBetsEnabled}
         paramsAddressExists={!!paramsAddress}
-        betHistory={betHistory}
+        betHistory={betHistory?.results}
         config={config}
         // setSelectedBet={setSelectedBet}
         setIsModalOpen={setIsModalOpen}
@@ -141,7 +130,7 @@ const Bets: React.FC = () => {
       <SettleBetModal
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
-        selectedBet={selectedBet}
+        // selectedBet={selectedBet}
         refetch={refetch}
         config={config}
       />
