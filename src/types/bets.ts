@@ -3,6 +3,8 @@ import { ERC20, Market } from "../typechain";
 import { EcSignature } from "./general";
 
 import { BackParams } from "./meets";
+import { Address } from "wagmi";
+import { Hash } from "@wagmi/core";
 
 export type ScratchedRunner = {
   b16propositionId: string;
@@ -20,6 +22,8 @@ export type SignedBetDataResponse = {
 };
 
 export type BetTablePaginationValues = 25 | 50 | 100;
+
+export type BetResult = "WON" | "LOST";
 
 export type BetStatus =
   | "RESULTED"
@@ -57,23 +61,18 @@ export type BetHistory = {
   tx: string;
 };
 
-export type BetHistoryResponseNew = {
-  margin: number;
-  results: BetHistoryResponse2[];
-};
-
 // TODO: remove old type once full transition complete
 export type BetHistoryResponse2 = {
-  index: number;
-  punter: string;
-  amount: string;
-  time: number;
-  race: string;
-  propositionId: string;
-  proposition: string;
-  status: string;
-  result: string;
-  tx: string;
+  index: number; // bet index
+  punter: Address; // address of punter
+  amount: string; // raw ether amount (always ether as it comes direct from subgraph)
+  time: number; // timestamp
+  race: string; // full text race name
+  propositionId: string; // propositionId as bytes16
+  proposition: string; // english "Horse 0 Win"
+  status: BetStatus;
+  result: BetResult; // won or lost
+  tx: Hash; // tx id
 };
 
 export type TotalBetsOnPropositions = Record<

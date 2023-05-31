@@ -1,15 +1,14 @@
 import React, { useCallback, useMemo, useRef } from "react";
 import { NewButton } from ".";
 import { Config } from "../../types/config";
-import { BetHistory } from "../../types/bets";
+import { BetHistoryResponse2 } from "../../types/bets";
 import { ContractTransaction, Signer } from "ethers";
 import { useWalletModal } from "../../providers/WalletModal";
 import { MarketOracle__factory, Market__factory } from "../../typechain";
 import { BYTES_16_ZERO } from "../../constants/blockchain";
 
-//Props
 type Props = {
-  betHistory?: BetHistory[];
+  betHistory?: BetHistoryResponse2[];
   loading: boolean;
   isConnected: boolean;
   config?: Config;
@@ -17,8 +16,9 @@ type Props = {
   setIsSettledMarketModalOpen: (state: boolean) => void;
   setLoading: (loading: boolean) => void;
   setSettleHashes: (hashes?: string[]) => void;
-  refetch: () => void;
 };
+
+// TODO: fix when signing is a thing
 
 export const SettleRaceButton: React.FC<Props> = props => {
   const {
@@ -29,18 +29,13 @@ export const SettleRaceButton: React.FC<Props> = props => {
     signer,
     setIsSettledMarketModalOpen,
     setSettleHashes,
-    setLoading,
-    refetch
+    setLoading
   } = props;
   const { openWalletModal } = useWalletModal();
-  const { current: now } = useRef(Math.floor(Date.now() / 1000));
 
   // Get list of bets that are not settled
   const settlableBets = useMemo(
-    () =>
-      betHistory?.filter(bet => {
-        return !bet.settled && bet.payoutDate < now;
-      }),
+    () => betHistory?.filter(bet => bet.status !== "SETTLED"),
     [betHistory]
   );
 
@@ -102,7 +97,6 @@ export const SettleRaceButton: React.FC<Props> = props => {
       console.error(err);
     } finally {
       setLoading(false);
-      refetch();
     }
   }, [props, settlableBets]);
 

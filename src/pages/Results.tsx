@@ -3,11 +3,9 @@ import { useParams } from "react-router-dom";
 import { Loader, PageLayout } from "../components";
 import { BetTable, NewResultsTable } from "../components/Tables";
 import { SettleBetModal, SettledMarketModal } from "../components/Modals";
-import { useMeetData, useResultsData } from "../hooks/data";
-import { makeMarketId } from "../utils/markets";
+import { useBetsData, useMeetData, useResultsData } from "../hooks/data";
 import { useConfig } from "../providers/Config";
 import utils from "../utils";
-import { useSubgraphBets } from "../hooks/subgraph";
 import {
   RacesButton,
   NewButton,
@@ -51,19 +49,11 @@ const Results: React.FC = () => {
     number: details.race
   };
 
-  const marketId = makeMarketId(
-    new Date(details.date),
-    details.track,
-    details.race
-  );
-
-  const { betData: betHistory, refetch } = useSubgraphBets(
-    "ALL_BETS",
-    marketId
-  );
   const results = useResultsData(propositionId);
 
   const closeSettledMarketModal = () => setIsSettledMarketModalOpen(false);
+
+  const betHistory = useBetsData();
 
   return (
     <PageLayout>
@@ -105,9 +95,9 @@ const Results: React.FC = () => {
         <BetTable
           paramsAddressExists={true}
           allBetsEnabled={true}
-          // betHistory={betHistory}
+          betHistory={betHistory}
           config={config}
-          // setSelectedBet={setSelectedBet}
+          setSelectedBet={() => {}} // TODO: fix
           setIsModalOpen={setIsSettleModalOpen}
         />
       </div>
@@ -121,7 +111,6 @@ const Results: React.FC = () => {
           setIsSettledMarketModalOpen={setIsSettledMarketModalOpen}
           setLoading={setLoading}
           setSettleHashes={setSettleHashes}
-          refetch={refetch}
         />
       </div>
       <div className="block py-10 lg:hidden" />
@@ -129,7 +118,6 @@ const Results: React.FC = () => {
         isModalOpen={isSettleModalOpen}
         setIsModalOpen={setIsSettleModalOpen}
         // selectedBet={selectedBet}
-        refetch={refetch}
         config={config}
       />
       <SettledMarketModal

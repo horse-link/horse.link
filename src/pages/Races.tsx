@@ -43,10 +43,7 @@ const Races: React.FC = () => {
   // }, []);
 
   const marketId = makeMarketId(new Date(), track, raceNumber.toString());
-  const { totalBetsOnPropositions, refetch } = useSubgraphBets(
-    "ALL_BETS",
-    marketId
-  );
+  const { totalBetsOnPropositions } = useSubgraphBets("ALL_BETS", marketId);
 
   const betHistory = useBetsData();
 
@@ -83,11 +80,7 @@ const Races: React.FC = () => {
                             {race.track.name} ({race.track.code})
                           </h1>
                           <div className="w-auto whitespace-nowrap text-sm text-hl-tertiary lg:ml-10 lg:w-full">
-                            Margin:{" "}
-                            {utils.formatting.formatToTwoDecimals(
-                              (betHistory.margin * 100).toString()
-                            )}
-                            %
+                            Margin: 0
                           </div>
                           <div className="flex w-[6rem] justify-end">
                             <HiChevronDown
@@ -145,9 +138,9 @@ const Races: React.FC = () => {
         <BetTable
           paramsAddressExists={true}
           allBetsEnabled={true}
-          betHistory={betHistory?.results}
+          betHistory={betHistory}
           config={config}
-          // setSelectedBet={setSelectedBet}
+          setSelectedBet={() => {}} // TODO: fix
           setIsModalOpen={setIsSettleModalOpen}
         />
       </div>
@@ -162,7 +155,6 @@ const Races: React.FC = () => {
         isModalOpen={isSettleModalOpen}
         setIsModalOpen={setIsSettleModalOpen}
         // selectedBet={selectedBet}
-        refetch={refetch}
         config={config}
       />
     </PageLayout>

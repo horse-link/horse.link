@@ -45,17 +45,12 @@ const Bets: React.FC = () => {
     setAllBetsEnabled(true);
   }, [address]);
 
-  const {
-    currentPage,
-    incrementPage,
-    decrementPage,
-    refetch,
-    setSkipMultiplier
-  } = useSubgraphBets(
-    betTableFilter,
-    undefined,
-    allBetsEnabled ? undefined : paramsAddress
-  );
+  const { currentPage, incrementPage, decrementPage, setSkipMultiplier } =
+    useSubgraphBets(
+      betTableFilter,
+      undefined,
+      allBetsEnabled ? undefined : paramsAddress
+    );
 
   const betHistory = useBetsData();
 
@@ -104,9 +99,9 @@ const Bets: React.FC = () => {
       <BetTable
         allBetsEnabled={allBetsEnabled}
         paramsAddressExists={!!paramsAddress}
-        betHistory={betHistory?.results}
+        betHistory={betHistory}
         config={config}
-        // setSelectedBet={setSelectedBet}
+        setSelectedBet={() => {}} // TODO: fix
         setIsModalOpen={setIsModalOpen}
       />
       <div className="mt-2 flex w-full justify-end">
@@ -130,7 +125,6 @@ const Bets: React.FC = () => {
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         // selectedBet={selectedBet}
-        refetch={refetch}
         config={config}
       />
     </PageLayout>

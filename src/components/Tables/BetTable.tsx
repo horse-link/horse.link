@@ -10,6 +10,8 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Loader } from "../Loader";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
+import { ethers } from "ethers";
+import utils from "../../utils";
 
 dayjs.extend(relativeTime);
 
@@ -94,7 +96,9 @@ export const BetTable: React.FC<Props> = ({
               className={style}
               onClick={() => onClickBet(bet)}
             >
-              {bet.amount}
+              {utils.formatting.formatToFourDecimals(
+                ethers.utils.formatEther(bet.amount)
+              )}
             </div>,
             <div
               key={`racetable-bet-${bet.index}-${i}-blockNumber`}
@@ -211,7 +215,11 @@ export const BetTable: React.FC<Props> = ({
                   {bet.index} {bet.status}
                 </h2>
                 <p>{bet.race}</p>
-                <p className="text-hl-secondary">{bet.amount}</p>
+                <p className="text-hl-secondary">
+                  {utils.formatting.formatToFourDecimals(
+                    ethers.utils.formatEther(bet.amount)
+                  )}
+                </p>
                 <a
                   href={`${scanner}/address/${bet.punter}`}
                   target="_blank"
