@@ -27,6 +27,8 @@ export const useSubgraphVaults = () => {
 
   const history: VaultHistory = [];
 
+  // TODO: reintroduce when new subgraph entities are added
+
   // data.borrows.forEach(borrow => {
   //   history.push({
   //     type: VaultTransactionType.BORROW,
