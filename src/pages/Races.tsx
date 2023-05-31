@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useRunnersData, useMeetData } from "../hooks/data";
+import { useRunnersData, useMeetData, useBetsData } from "../hooks/data";
 import { NewButton, RacesButton } from "../components/Buttons";
 import { BetTable, NewRaceTable } from "../components/Tables";
 import { PlaceBetModal, SettleBetModal } from "../components/Modals";
 import { Runner, SignedMeetingsResponse } from "../types/meets";
 import { Loader, PageLayout } from "../components";
 import { useSubgraphBets } from "../hooks/subgraph";
-import { BetHistoryResponseNew } from "../types/bets";
 import { makeMarketId } from "../utils/markets";
 import { useConfig } from "../providers/Config";
 import constants from "../constants";
@@ -15,7 +14,6 @@ import dayjs from "dayjs";
 import utils from "../utils";
 import { HiChevronUp, HiChevronDown } from "react-icons/hi";
 import { Disclosure } from "@headlessui/react";
-import useSwr from "../hooks/useSwr";
 import { useApi } from "../providers/Api";
 
 const Races: React.FC = () => {
@@ -50,9 +48,7 @@ const Races: React.FC = () => {
     marketId
   );
 
-  const { data: betHistory } = useSwr<BetHistoryResponseNew>(
-    `/bets/history/${marketId}`
-  );
+  const betHistory = useBetsData();
 
   useEffect(() => {
     const interval = setInterval(() => {

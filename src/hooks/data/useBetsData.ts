@@ -1,8 +1,8 @@
 import useSwr from "../useSwr";
-import { BetHistoryResponse2 } from "../../types/bets";
+import { BetHistoryResponseNew } from "../../types/bets";
 
-export const useBetHistoryData = () => {
-  const { data } = useSwr<BetHistoryResponse2[]>(`/bets/history`);
+export const useBetsData = () => {
+  const { data } = useSwr<BetHistoryResponseNew>(`/bets/history`);
 
   return data;
 };

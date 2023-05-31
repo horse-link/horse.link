@@ -5,14 +5,14 @@ import { PageLayout, Card } from "../components";
 import { BetFilterGroup } from "../components/Bets";
 import { BetTable } from "../components/Tables";
 import { SettleBetModal } from "../components/Modals";
-import { BetFilterOptions, BetHistoryResponseNew } from "../types/bets";
+import { BetFilterOptions } from "../types/bets";
 import { useConfig } from "../providers/Config";
 import utils from "../utils";
 import { ethers } from "ethers";
 import { useBetsStatistics } from "../hooks/stats";
 import { useSubgraphBets } from "../hooks/subgraph";
 import { NewButton } from "../components/Buttons";
-import useSwr from "../hooks/useSwr";
+import { useBetsData } from "../hooks/data";
 
 const Bets: React.FC = () => {
   const config = useConfig();
@@ -57,8 +57,7 @@ const Bets: React.FC = () => {
     allBetsEnabled ? undefined : paramsAddress
   );
 
-  const { data: betHistory, isLoading } =
-    useSwr<BetHistoryResponseNew>(`/bets/history`);
+  const betHistory = useBetsData();
 
   const onMyBetToggle = () => setAllBetsEnabled(prev => !prev);
 
@@ -94,7 +93,7 @@ const Bets: React.FC = () => {
         <BetFilterGroup
           value={betTableFilter}
           onChange={onFilterChange}
-          disabled={isLoading}
+          disabled={!betHistory}
         />
         <NewButton
           text={allBetsEnabled ? "ALL BETS" : "MY BETS"}
