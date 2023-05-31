@@ -23,7 +23,7 @@ export const useUserStatistics = () => {
   const { data: depositData, loading: depositLoading } =
     useSubgraph<DepositsResponse>(
       utils.queries.getDepositsWithoutPagination({
-        sender: address
+        userAddress: address
       })
     );
 
