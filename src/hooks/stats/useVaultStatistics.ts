@@ -6,14 +6,10 @@ import { useVaultContract } from "../contracts";
 import { useConfig } from "../../providers/Config";
 import { useProvider } from "wagmi";
 import constants from "../../constants";
-import { Deposit, Withdraw } from "../../types/subgraph";
+import { VaultTransaction } from "../../types/subgraph";
 
-type DepositsResponse = {
-  deposits: Array<Deposit>;
-};
-
-type WithdrawResponse = {
-  withdraws: Array<Withdraw>;
+type VaultTransactionResponse = {
+  vaultTransactions: Array<VaultTransaction>;
 };
 
 export const useVaultStatistics = () => {
@@ -30,15 +26,15 @@ export const useVaultStatistics = () => {
   );
   // This is the last 24 hours of data
   const { data: depositData, loading: depositLoading } =
-    useSubgraph<DepositsResponse>(
+    useSubgraph<VaultTransactionResponse>(
       utils.queries.getDepositsWithoutPagination({
-        createdAt_gte: yesterdayFilter
+        timestamp_gte: yesterdayFilter
       })
     );
   const { data: withdrawData, loading: withdrawLoading } =
-    useSubgraph<WithdrawResponse>(
+    useSubgraph<VaultTransactionResponse>(
       utils.queries.getWithdrawsWithoutPagination({
-        createdAt_gte: yesterdayFilter
+        timestamp_gte: yesterdayFilter
       })
     );
 
@@ -47,8 +43,12 @@ export const useVaultStatistics = () => {
       return;
 
     return {
-      deposits: depositData.deposits,
-      withdraws: withdrawData.withdraws
+      deposits: depositData.vaultTransactions.map(
+        utils.formatting.formatVaultTransactionIntoDeposit
+      ),
+      withdraws: withdrawData.vaultTransactions.map(
+        utils.formatting.formatVaultTransactionIntoWithdraw
+      )
     };
   }, [depositData, depositLoading, withdrawData, withdrawLoading]);
 
@@ -56,7 +56,7 @@ export const useVaultStatistics = () => {
     if (!vaultsTransactionData) return;
 
     return vaultsTransactionData.deposits.reduce(
-      (sum, curr) => sum.add(curr.assets),
+      (sum, curr) => sum.add(curr?.assets || "0"),
       ethers.constants.Zero
     );
   }, [vaultsTransactionData]);
@@ -65,7 +65,7 @@ export const useVaultStatistics = () => {
     if (!vaultsTransactionData) return;
 
     return vaultsTransactionData.withdraws.reduce(
-      (sum, curr) => sum.add(curr.assets),
+      (sum, curr) => sum.add(curr?.assets || "0"),
       ethers.constants.Zero
     );
   }, [vaultsTransactionData]);
