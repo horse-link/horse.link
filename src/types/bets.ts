@@ -70,6 +70,7 @@ export type BetHistoryResponse2 = {
   amount: string;
   time: number;
   race: string;
+  propositionId: string;
   proposition: string;
   status: string;
   result: string;

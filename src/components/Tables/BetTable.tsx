@@ -5,7 +5,7 @@ import { useAccount } from "wagmi";
 import { useWalletModal } from "../../providers/WalletModal";
 import { NewTable } from "./NewTable";
 import classNames from "classnames";
-import utils from "../../utils";
+
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Loader } from "../Loader";
@@ -67,15 +67,6 @@ export const BetTable: React.FC<Props> = ({
   const rows =
     betHistory && config
       ? betHistory.map((bet, i) => {
-          const winningPropositionId =
-            bet && utils.id.getPropositionFromId(bet.proposition);
-
-          // const isWinning =
-          //   bet && bet.winningPropositionId
-          //     ? bet.winningPropositionId.toLowerCase() ===
-          //       bet.propositionId.toLowerCase()
-          //     : undefined;
-
           const raceDetails = bet && bet.race;
 
           const style =
@@ -121,11 +112,11 @@ export const BetTable: React.FC<Props> = ({
               {raceDetails}
             </div>,
             <div
-              key={`racetable-bet-${bet.index}-${i}-winningPropositionId`}
+              key={`racetable-bet-${bet.index}-${i}-propositionId`}
               className={style}
               onClick={() => onClickBet(bet)}
             >
-              Horse {winningPropositionId} win
+              {bet.proposition}
             </div>,
             <div
               key={`racetable-bet-${bet.index}-${i}-status`}
