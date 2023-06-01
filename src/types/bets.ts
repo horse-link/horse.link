@@ -77,7 +77,9 @@ export type BetHistoryResponse2 = {
 };
 
 export type SignedBetHistoryResponse2 = BetHistoryResponse2 &
-  SignedBetDataResponse;
+  SignedBetDataResponse & {
+    scratched?: ScratchedRunner;
+  };
 
 export type TotalBetsOnPropositions = Record<
   string,

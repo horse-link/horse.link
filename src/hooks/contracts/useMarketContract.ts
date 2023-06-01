@@ -272,6 +272,7 @@ export const useMarketContract = () => {
     );
 
     const isScratched = bet.status === "SCRATCHED";
+
     const marketId = utils.markets.getMarketIdFromPropositionId(
       bet.propositionId
     );
@@ -315,12 +316,12 @@ export const useMarketContract = () => {
           )
         ).wait();
       }
-    } else if (isScratched && bet.marketOracleResultSig) {
+    } else if (isScratched && bet.scratched?.signature) {
       if (
         !utils.bets.recoverSigSigner(
           marketId,
           bet.propositionId,
-          bet.marketOracleResultSig,
+          bet.scratched.signature,
           config,
           ethers.utils.parseUnits(
             bet.scratched.odds.toString(),
@@ -340,7 +341,7 @@ export const useMarketContract = () => {
             constants.contracts.MARKET_ODDS_DECIMALS
           ),
           ethers.BigNumber.from(bet.scratched.totalOdds),
-          bet.marketOracleResultSig
+          bet.scratched.signature
         ),
         signer.getGasPrice()
       ]);
@@ -355,7 +356,7 @@ export const useMarketContract = () => {
             constants.contracts.MARKET_ODDS_DECIMALS
           ),
           ethers.BigNumber.from(bet.scratched.totalOdds),
-          bet.marketOracleResultSig,
+          bet.scratched.signature,
           {
             gasLimit,
             gasPrice

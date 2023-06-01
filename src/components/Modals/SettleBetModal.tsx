@@ -59,7 +59,14 @@ export const SettleBetModal: React.FC<Props> = ({
       .then(signedData =>
         setBet({
           ...selectedBet,
-          ...signedData
+          ...signedData,
+          scratched: signedData.scratchedRunners?.find(
+            runner =>
+              runner.b16propositionId.toLowerCase() ===
+              utils.formatting
+                .formatBytes16String(selectedBet.propositionId)
+                .toLowerCase()
+          )
         })
       )
       .catch(console.error);
