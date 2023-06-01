@@ -96,11 +96,7 @@ export const SettleBetModal: React.FC<Props> = ({
     m => m.vaultAddress.toLowerCase() === vault?.address.toLowerCase()
   );
 
-  const isWinning =
-    bet && bet.winningPropositionId
-      ? bet.winningPropositionId.toLowerCase() ===
-        bet.propositionId.toLowerCase()
-      : undefined;
+  const isWinning = bet ? bet.result === "WIN" : undefined;
 
   const isScratched = bet?.status === "SCRATCHED";
 

@@ -23,7 +23,7 @@ export type SignedBetDataResponse = {
 
 export type BetTablePaginationValues = 25 | 50 | 100;
 
-export type BetResult = "WON" | "LOST";
+export type BetResult = "WIN" | "LOSE";
 
 export type BetStatus =
   | "RESULTED"
