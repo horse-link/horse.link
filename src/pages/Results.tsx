@@ -57,6 +57,17 @@ const Results: React.FC = () => {
 
   const betHistory = useBetsData();
 
+  // filter bet history for current market
+  const resultsForRace = betHistory?.filter(b => {
+    const marketId = utils.markets.getMarketIdFromPropositionId(
+      b.propositionId
+    );
+
+    return marketId
+      .toLowerCase()
+      .includes(meetRaces?.venueMnemonic.toLowerCase() || "");
+  });
+
   return (
     <PageLayout>
       <div className="flex flex-col gap-6">
@@ -105,7 +116,7 @@ const Results: React.FC = () => {
       </div>
       <div className="mt-4 flex w-full justify-end">
         <SettleRaceButton
-          betHistory={betHistory}
+          betHistory={resultsForRace}
           loading={loading}
           isConnected={isConnected}
           config={config}

@@ -1,15 +1,16 @@
 import React, { useCallback, useMemo } from "react";
 import { NewButton } from ".";
 import { Config } from "../../types/config";
-import { SignedBetHistoryResponse2 } from "../../types/bets";
+import { BetHistoryResponse2 } from "../../types/bets";
 import { ContractTransaction, Signer } from "ethers";
 import { useWalletModal } from "../../providers/WalletModal";
 import { MarketOracle__factory, Market__factory } from "../../typechain";
 import { BYTES_16_ZERO } from "../../constants/blockchain";
 import utils from "../../utils";
+import { useApi } from "../../providers/Api";
 
 type Props = {
-  betHistory?: SignedBetHistoryResponse2[];
+  betHistory?: BetHistoryResponse2[];
   loading: boolean;
   isConnected: boolean;
   config?: Config;
@@ -31,15 +32,16 @@ export const SettleRaceButton: React.FC<Props> = props => {
     setLoading
   } = props;
   const { openWalletModal } = useWalletModal();
+  const api = useApi();
 
   // Get list of bets that are not settled
-  const settlableBets = useMemo(
+  const processableBets = useMemo(
     () => betHistory?.filter(bet => bet.status !== "SETTLED"),
     [betHistory]
   );
 
   const settleRace = useCallback(async () => {
-    if (!settlableBets?.length || !config || loading || !config) return;
+    if (!processableBets?.length || !config || loading || !config) return;
     if (!isConnected || !signer) return openWalletModal();
 
     setIsSettledMarketModalOpen(false);
@@ -52,6 +54,32 @@ export const SettleRaceButton: React.FC<Props> = props => {
         config.addresses.marketOracle,
         signer
       );
+
+      // get signed data for bets
+      const settlableBets = await Promise.all(
+        processableBets.map(async bet => {
+          const marketId = utils.markets.getMarketIdFromPropositionId(
+            bet.propositionId
+          );
+          const signedData = await api.getWinningResultSignature(
+            marketId,
+            true
+          );
+
+          return {
+            ...bet,
+            ...signedData,
+            scratched: signedData.scratchedRunners?.find(
+              runner =>
+                runner.b16propositionId.toLowerCase() ===
+                utils.formatting
+                  .formatBytes16String(bet.propositionId)
+                  .toLowerCase()
+            )
+          };
+        })
+      );
+
       // get winning data (all bets should have data and have the same data)
       const { marketOracleResultSig, winningPropositionId } = settlableBets[0];
       const marketId = utils.markets.getMarketIdFromPropositionId(
@@ -113,16 +141,16 @@ export const SettleRaceButton: React.FC<Props> = props => {
     } finally {
       setLoading(false);
     }
-  }, [props, settlableBets]);
+  }, [props, processableBets]);
 
   const buttonLoading = !config || loading;
 
   return (
     <NewButton
-      disabled={!settlableBets?.length || buttonLoading}
+      disabled={!processableBets?.length || buttonLoading}
       onClick={settleRace}
       text={buttonLoading ? "loading..." : "settle race"}
-      active={!buttonLoading && !!settlableBets?.length}
+      active={!buttonLoading && !!processableBets?.length}
     />
   );
 };
