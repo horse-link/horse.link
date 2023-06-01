@@ -1,29 +1,30 @@
 import React from "react";
-import { BetHistory } from "../../types/bets";
+import { BetHistoryResponse2 } from "../../types/bets";
 import { Config } from "../../types/config";
 import { useAccount } from "wagmi";
 import { useWalletModal } from "../../providers/WalletModal";
 import { NewTable } from "./NewTable";
 import classNames from "classnames";
-import utils from "../../utils";
-import { ethers } from "ethers";
+
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Loader } from "../Loader";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
+import { ethers } from "ethers";
+import utils from "../../utils";
 
 dayjs.extend(relativeTime);
 
 type Props = {
   allBetsEnabled: boolean;
   paramsAddressExists: boolean;
-  betHistory?: Array<BetHistory>;
+  betHistory?: Array<BetHistoryResponse2>;
   config?: Config;
-  setSelectedBet: (bet?: BetHistory) => void;
+  setSelectedBet: (bet?: BetHistoryResponse2) => void;
   setIsModalOpen: (isOpen: boolean) => void;
 };
 
-export const NewBetTable: React.FC<Props> = ({
+export const BetTable: React.FC<Props> = ({
   allBetsEnabled,
   paramsAddressExists,
   betHistory,
@@ -35,9 +36,10 @@ export const NewBetTable: React.FC<Props> = ({
   const { openWalletModal } = useWalletModal();
   const scanner = useScannerUrl();
 
-  const onClickBet = (bet?: BetHistory) => {
+  const onClickBet = (bet?: BetHistoryResponse2) => {
     if (!bet) return;
     if (!isConnected) return openWalletModal();
+
     setSelectedBet(bet);
     setIsModalOpen(true);
   };
@@ -68,29 +70,6 @@ export const NewBetTable: React.FC<Props> = ({
   const rows =
     betHistory && config
       ? betHistory.map((bet, i) => {
-          const formattedAmount =
-            config &&
-            bet &&
-            `${utils.formatting.formatToFourDecimals(
-              ethers.utils.formatEther(bet.amount)
-            )} ${
-              config.tokens.find(
-                token =>
-                  token.address.toLowerCase() === bet.assetAddress.toLowerCase()
-              )?.symbol
-            }`;
-
-          const winningPropositionId =
-            bet && utils.id.getPropositionFromId(bet.propositionId);
-          const isWinning =
-            bet && bet.winningPropositionId
-              ? bet.winningPropositionId.toLowerCase() ===
-                bet.propositionId.toLowerCase()
-              : undefined;
-
-          const raceDetails =
-            bet && utils.id.getMarketDetailsFromId(bet.marketId);
-
           const style =
             "w-full text-left py-4 text-hl-tertiary text-xs xl:text-base";
 
@@ -117,29 +96,37 @@ export const NewBetTable: React.FC<Props> = ({
               className={style}
               onClick={() => onClickBet(bet)}
             >
-              {formattedAmount}
+              {utils.formatting.formatToFourDecimals(
+                ethers.utils.formatEther(bet.amount)
+              )}
             </div>,
             <div
               key={`racetable-bet-${bet.index}-${i}-blockNumber`}
               className={style}
               onClick={() => onClickBet(bet)}
             >
-              {dayjs.unix(bet.blockNumber).fromNow()}
+              {dayjs.unix(bet.time).fromNow()}
             </div>,
             <div
               key={`racetable-bet-${bet.index}-${i}-date`}
               className={classNames(style, "!text-hl-secondary")}
               onClick={() => onClickBet(bet)}
             >
-              {raceDetails.date} {raceDetails.location} Race{" "}
-              {raceDetails.raceNumber}
+              {bet.race}
             </div>,
             <div
-              key={`racetable-bet-${bet.index}-${i}-winningPropositionId`}
+              key={`racetable-bet-${bet.index}-${i}-propositionId`}
               className={style}
               onClick={() => onClickBet(bet)}
             >
-              Horse {winningPropositionId} win
+              {bet.proposition}
+            </div>,
+            <div
+              key={`racetable-bet-${bet.index}-${i}-result`}
+              className={style}
+              onClick={() => onClickBet(bet)}
+            >
+              {bet.result}
             </div>,
             <div
               key={`racetable-bet-${bet.index}-${i}-status`}
@@ -147,19 +134,6 @@ export const NewBetTable: React.FC<Props> = ({
               onClick={() => onClickBet(bet)}
             >
               {bet.status}
-            </div>,
-            <div
-              key={`racetable-bet-${bet.index}-${i}-isWinning`}
-              className={style}
-              onClick={() => onClickBet(bet)}
-            >
-              {bet.status === "REFUNDED" || bet.status === "SCRATCHED"
-                ? "SCRATCHED"
-                : isWinning
-                ? "WON"
-                : isWinning === undefined
-                ? "IN PLAY"
-                : "LOST"}
             </div>
           ];
         })
@@ -231,72 +205,39 @@ export const NewBetTable: React.FC<Props> = ({
           </div>
         ) : (
           <div className="flex w-full flex-col items-center">
-            {betHistory.map(bet => {
-              const formattedAmount =
-                config &&
-                bet &&
-                `${utils.formatting.formatToFourDecimals(
-                  ethers.utils.formatEther(bet.amount)
-                )} ${
-                  config.tokens.find(
-                    token =>
-                      token.address.toLowerCase() ===
-                      bet.assetAddress.toLowerCase()
-                  )?.symbol
-                }`;
-
-              const winningPropositionId =
-                bet && utils.id.getPropositionFromId(bet.propositionId);
-
-              const isWinning =
-                bet && bet.winningPropositionId
-                  ? bet.winningPropositionId.toLowerCase() ===
-                    bet.propositionId.toLowerCase()
-                  : undefined;
-
-              const raceDetails =
-                bet && utils.id.getMarketDetailsFromId(bet.marketId);
-
-              return (
-                <div
-                  key={JSON.stringify(bet)}
-                  className="flex w-full flex-col items-center gap-y-2 border-t border-hl-border py-2 text-center"
-                  onClick={() => onClickBet(bet)}
+            {betHistory.map(bet => (
+              <div
+                key={JSON.stringify(bet)}
+                className="flex w-full flex-col items-center gap-y-2 border-t border-hl-border py-2 text-center"
+                onClick={() => onClickBet(bet)}
+              >
+                <h2 className="font-basement tracking-wider text-hl-secondary">
+                  {bet.index} {bet.status}
+                </h2>
+                <p>{bet.race}</p>
+                <p className="text-hl-secondary">
+                  {utils.formatting.formatToFourDecimals(
+                    ethers.utils.formatEther(bet.amount)
+                  )}
+                </p>
+                <a
+                  href={`${scanner}/address/${bet.punter}`}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="w-full max-w-full truncate"
                 >
-                  <h2 className="font-basement tracking-wider text-hl-secondary">
-                    {bet.index}{" "}
-                    {bet.status === "REFUNDED" || bet.status === "SCRATCHED"
-                      ? "SCRATCHED"
-                      : isWinning
-                      ? "WON"
-                      : isWinning === undefined
-                      ? "IN PLAY"
-                      : "LOST"}
-                  </h2>
-                  <p>
-                    {raceDetails.date} {raceDetails.location} Race{" "}
-                    {raceDetails.raceNumber} Horse {winningPropositionId}
-                  </p>
-                  <p className="text-hl-secondary">{formattedAmount}</p>
-                  <a
-                    href={`${scanner}/address/${bet.punter}`}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="w-full max-w-full truncate"
-                  >
-                    Punter: {bet.punter}
-                  </a>
-                  <a
-                    href={`${scanner}/tx/${bet.tx}`}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="w-full max-w-full truncate"
-                  >
-                    TxID: {bet.tx}
-                  </a>
-                </div>
-              );
-            })}
+                  Punter: {bet.punter}
+                </a>
+                <a
+                  href={`${scanner}/tx/${bet.tx}`}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="w-full max-w-full truncate"
+                >
+                  TxID: {bet.tx}
+                </a>
+              </div>
+            ))}
           </div>
         )}
       </div>

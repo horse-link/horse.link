@@ -3,15 +3,16 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useAccount } from "wagmi";
 import { PageLayout, Card } from "../components";
 import { BetFilterGroup } from "../components/Bets";
-import { NewBetTable } from "../components/Tables";
+import { BetTable } from "../components/Tables";
 import { SettleBetModal } from "../components/Modals";
-import { BetFilterOptions, BetHistory } from "../types/bets";
+import { BetFilterOptions, BetHistoryResponse2 } from "../types/bets";
 import { useConfig } from "../providers/Config";
 import utils from "../utils";
 import { ethers } from "ethers";
 import { useBetsStatistics } from "../hooks/stats";
 import { useSubgraphBets } from "../hooks/subgraph";
 import { NewButton } from "../components/Buttons";
+import { useBetsData } from "../hooks/data";
 
 const Bets: React.FC = () => {
   const config = useConfig();
@@ -23,9 +24,9 @@ const Bets: React.FC = () => {
     useBetsStatistics();
   const [allBetsEnabled, setAllBetsEnabled] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedBet, setSelectedBet] = useState<BetHistory>();
   const [betTableFilter, setBetTableFilter] =
     useState<BetFilterOptions>("ALL_BETS");
+  const [selectedBet, setSelectedBet] = useState<BetHistoryResponse2>();
 
   useEffect(() => {
     // redirect back to /bets if disconnected
@@ -45,18 +46,14 @@ const Bets: React.FC = () => {
     setAllBetsEnabled(true);
   }, [address]);
 
-  const {
-    betData: betHistory,
-    currentPage,
-    incrementPage,
-    decrementPage,
-    refetch,
-    setSkipMultiplier
-  } = useSubgraphBets(
-    betTableFilter,
-    undefined,
-    allBetsEnabled ? undefined : paramsAddress
-  );
+  const { currentPage, incrementPage, decrementPage, setSkipMultiplier } =
+    useSubgraphBets(
+      betTableFilter,
+      undefined,
+      allBetsEnabled ? undefined : paramsAddress
+    );
+
+  const betHistory = useBetsData();
 
   const onMyBetToggle = () => setAllBetsEnabled(prev => !prev);
 
@@ -64,8 +61,6 @@ const Bets: React.FC = () => {
     setBetTableFilter(option);
     setSkipMultiplier(0);
   };
-
-  const isLoading = !betHistory;
 
   return (
     <PageLayout>
@@ -94,7 +89,7 @@ const Bets: React.FC = () => {
         <BetFilterGroup
           value={betTableFilter}
           onChange={onFilterChange}
-          disabled={isLoading}
+          disabled={!betHistory}
         />
         <NewButton
           text={allBetsEnabled ? "ALL BETS" : "MY BETS"}
@@ -102,7 +97,7 @@ const Bets: React.FC = () => {
           active={!allBetsEnabled}
         />
       </div>
-      <NewBetTable
+      <BetTable
         allBetsEnabled={allBetsEnabled}
         paramsAddressExists={!!paramsAddress}
         betHistory={betHistory}
@@ -131,7 +126,6 @@ const Bets: React.FC = () => {
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         selectedBet={selectedBet}
-        refetch={refetch}
         config={config}
       />
     </PageLayout>

@@ -1,14 +1,12 @@
-import { BigNumber } from "ethers";
-import { Deposit, Withdraw, Borrow, Repay } from "../../types/subgraph";
+import { BigNumber, ethers } from "ethers";
+import { VaultTransaction } from "../../types/subgraph";
 import utils from "../../utils";
 import useSubgraph from "../useSubgraph";
 import { VaultTransactionType } from "../../types/vaults";
 
 type Response = {
-  deposits: Array<Deposit>;
-  withdraws: Array<Withdraw>;
-  borrows: Array<Borrow>;
-  repays: Array<Repay>;
+  deposits: Array<VaultTransaction>;
+  withdraws: Array<VaultTransaction>;
 };
 
 export type VaultHistory = {
@@ -28,42 +26,52 @@ export const useSubgraphVaults = () => {
   if (!data) return [];
 
   const history: VaultHistory = [];
-  data.borrows.forEach(borrow => {
-    history.push({
-      type: VaultTransactionType.BORROW,
-      amount: borrow.amount,
-      createdAt: borrow.createdAt,
-      vaultAddress: borrow.vault,
-      tx: borrow.id
+
+  // TODO: reintroduce when new subgraph entities are added
+
+  // data.borrows.forEach(borrow => {
+  //   history.push({
+  //     type: VaultTransactionType.BORROW,
+  //     amount: borrow.amount,
+  //     createdAt: borrow.createdAt,
+  //     vaultAddress: borrow.vault,
+  //     tx: borrow.id
+  //   });
+  // });
+
+  // data.repays.forEach(repay => {
+  //   history.push({
+  //     type: VaultTransactionType.REPAY,
+  //     amount: repay.amount,
+  //     createdAt: repay.createdAt,
+  //     vaultAddress: repay.vault,
+  //     tx: repay.id
+  //   });
+  // });
+
+  data.deposits
+    .map(utils.formatting.formatVaultTransactionIntoDeposit)
+    .forEach(deposit => {
+      history.push({
+        type: VaultTransactionType.DEPOSIT,
+        amount: deposit.assets || ethers.constants.Zero,
+        createdAt: deposit.createdAt || 0,
+        vaultAddress: deposit.vault || ethers.constants.AddressZero,
+        tx: deposit.id || ""
+      });
     });
-  });
-  data.repays.forEach(repay => {
-    history.push({
-      type: VaultTransactionType.REPAY,
-      amount: repay.amount,
-      createdAt: repay.createdAt,
-      vaultAddress: repay.vault,
-      tx: repay.id
+
+  data.withdraws
+    .map(utils.formatting.formatVaultTransactionIntoWithdraw)
+    .forEach(withdraw => {
+      history.push({
+        type: VaultTransactionType.WITHDRAW,
+        amount: withdraw.assets || ethers.constants.Zero,
+        createdAt: withdraw.createdAt || 0,
+        vaultAddress: withdraw.vault || ethers.constants.AddressZero,
+        tx: withdraw.id || ""
+      });
     });
-  });
-  data.deposits.forEach(deposit => {
-    history.push({
-      type: VaultTransactionType.DEPOSIT,
-      amount: deposit.assets,
-      createdAt: deposit.createdAt,
-      vaultAddress: deposit.vault,
-      tx: deposit.id
-    });
-  });
-  data.withdraws.forEach(withdraw => {
-    history.push({
-      type: VaultTransactionType.WITHDRAW,
-      amount: withdraw.assets,
-      createdAt: withdraw.createdAt,
-      vaultAddress: withdraw.vault,
-      tx: withdraw.id
-    });
-  });
 
   history.sort((a, b) => b.createdAt - a.createdAt);
 

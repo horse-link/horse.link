@@ -15,8 +15,7 @@ export type SubgraphKeys =
   | Subgraphable<keyof Aggregator>
   | Subgraphable<keyof Registry>
   | Subgraphable<keyof Bet>
-  | Subgraphable<keyof Deposit>
-  | Subgraphable<keyof Withdraw>
+  | Subgraphable<keyof VaultTransaction>
   | Subgraphable<keyof Borrow>
   | Subgraphable<keyof Repay>;
 
@@ -70,6 +69,18 @@ export type Bet = {
   refunded: boolean;
 };
 
+export type VaultTransactionType = "deposit" | "withdraw";
+
+export type VaultTransaction = {
+  id: Hash;
+  type: VaultTransactionType;
+  vaultAddress: Address;
+  userAddress: Address;
+  amount: BigNumber;
+  timestamp: number;
+};
+
+// leave these in for backwards compatibility
 export type Deposit = {
   id: Hash;
   vault: Address;

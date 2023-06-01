@@ -16,7 +16,7 @@ The market will find an equilibrium between the depth of the Vault and the size 
 
 ![image](https://user-images.githubusercontent.com/8411406/219231046-c3388f69-f48d-4042-ba0b-bcc0f3dbe685.png)
 
-# How it works
+## How it works
 
 Horse Link’s smart contract guaranteed bets are always placed within the slippage band of the constant product function. Like other AMM protocols based on curve functions, bets based within the range of slippage based on the potential payout will be placed.
 
@@ -45,23 +45,23 @@ Status
 
 - Settled: Settled transaction has been done by the users or another actor
 
-# Vaults
+## Vaults
 
 ERC4626 Vaults are created to allow users to deposit ERC20 tokens "underlying" into a smart contract and earn dividends on their deposits. Vault operators then allow markets to draw down liqidity from their reserves to fund bets. The Vault operator can also set the percentage of the bet that is distributed to the Vault share holders.
 
 Vaults earn income by lending to the markets.
 
-# Market makers
+## Market makers
 
 Market makers can run the the dapp and set their own odds and fees. They can also set the percentage of the bet that is distributed to the Vault share holders.
 
-# The API
+## The API
 
-Our own market odds can be found at https://api.horse.link/. These requests are signed by the owner with a UUID as a nonce.
+Our own market odds can be found at https://horse.link/api. These requests are signed by the owner with a UUID as a nonce.
 
-# Contract Addresses
+## Contract Addresses
 
-## Arbitrum
+### Arbitrum
 
 Owner: `0x1Ab4C6d9e25Fc65C917aFBEfB4E963C400Fb9814`  
 Horse Link Token `0x06d0164b1bFb040D667a82C64De870dDeac38b86`  
@@ -74,8 +74,7 @@ fxUSD Market: `0xb9943E1Eef2AF75a058ABa664846B6F80BDE9EEd`
 Registry: `0x607105259Bf6c66b0501c8BCD9D574C96088869d`  
 Market Oracle: `0x14478dECfb070329948b7Ed16878F84048680bF9`  
 
-
-## Goerli
+### Goerli
 
 Owner: `0x1Ab4C6d9e25Fc65C917aFBEfB4E963C400Fb9814`  
 Horse Link Token `0x5e5fB4d58121dd3e50CB9c6aDAFa82b678e8b545`  
@@ -88,7 +87,7 @@ DAI Market: `0xCaEE99685Ff8cf80e605cb0E5C073056B2cf642d`
 Registry: `0xCFa36F3692b19FF9472aEc18f7dcf5EB0A29A633`  
 Market Oracle: `0x5b559E0E44aeB2bccfd82CACF9d877EbDd28F116`
 
-## Mainnet
+### Mainnet
 
 Horse Link Token `0xfdc066DF7d7A188786A1580a9DDFbfbE716c31d5`
 

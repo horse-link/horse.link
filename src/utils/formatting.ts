@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { ethers } from "ethers";
 import { MeetInfo } from "../types/meets";
-import { BetId } from "../types/subgraph";
+import { BetId, Deposit, VaultTransaction, Withdraw } from "../types/subgraph";
 import { Chain } from "wagmi";
 
 export const formatToFourDecimals = (amount: string) => {
@@ -43,6 +43,9 @@ export const formatNumberWithCommas = (amount: string) => {
   return convertToFourDecimalsWithCommas;
 };
 
+/**
+ * @deprecated
+ */
 export const formatBetId = (betId: BetId) => {
   const segments = betId.split("_");
   return +segments[2];
@@ -181,4 +184,32 @@ export const formatChain = (chain: Chain): Chain => ({
   ...chain,
   // take out spaces and capitals
   name: chain.name.split(" ")[0].toLowerCase()
+});
+
+export const formatVaultTransactionIntoDeposit = ({
+  id,
+  vaultAddress,
+  userAddress,
+  amount,
+  timestamp
+}: VaultTransaction): Partial<Deposit> => ({
+  id,
+  vault: vaultAddress,
+  sender: userAddress,
+  assets: amount,
+  createdAt: timestamp
+});
+
+export const formatVaultTransactionIntoWithdraw = ({
+  id,
+  vaultAddress,
+  userAddress,
+  amount,
+  timestamp
+}: VaultTransaction): Partial<Withdraw> => ({
+  id,
+  vault: vaultAddress,
+  sender: userAddress,
+  assets: amount,
+  createdAt: timestamp
 });

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Chain, useAccount, useNetwork, useSigner } from "wagmi";
+import { Chain, useAccount, useBalance, useNetwork, useSigner } from "wagmi";
 import utils from "../utils";
 import { ethers } from "ethers";
 import { useBetSlipContext } from "../providers/BetSlip";
@@ -32,6 +32,9 @@ export const NewAccountPanel: React.FC<Props> = ({
   const account = useAccount();
   const config = useConfig();
 
+  const { data: balanceData } = useBalance({
+    address: account.address
+  });
   const { data: signer } = useSigner();
   const { getBalance } = useERC20Contract();
   const [userBalance, setUserBalance] = useState<UserBalance>();
@@ -170,7 +173,15 @@ export const NewAccountPanel: React.FC<Props> = ({
           }
         />
         <Card
-          title="Balance"
+          title={`${chain?.name || ""} ETH Balance`}
+          data={
+            balanceData
+              ? `${(+balanceData.formatted).toFixed(4)} ETH`
+              : undefined
+          }
+        />
+        <Card
+          title={`${currentToken ? currentToken.symbol : "Token"} Balance`}
           data={
             userBalance && currentToken
               ? `${userBalance.formatted} ${currentToken.symbol}`

@@ -1,15 +1,16 @@
-import React, { useCallback, useMemo, useRef } from "react";
+import React, { useCallback, useMemo } from "react";
 import { NewButton } from ".";
 import { Config } from "../../types/config";
-import { BetHistory } from "../../types/bets";
+import { BetHistoryResponse2 } from "../../types/bets";
 import { ContractTransaction, Signer } from "ethers";
 import { useWalletModal } from "../../providers/WalletModal";
 import { MarketOracle__factory, Market__factory } from "../../typechain";
 import { BYTES_16_ZERO } from "../../constants/blockchain";
+import utils from "../../utils";
+import { useApi } from "../../providers/Api";
 
-//Props
 type Props = {
-  betHistory?: BetHistory[];
+  betHistory?: BetHistoryResponse2[];
   loading: boolean;
   isConnected: boolean;
   config?: Config;
@@ -17,7 +18,6 @@ type Props = {
   setIsSettledMarketModalOpen: (state: boolean) => void;
   setLoading: (loading: boolean) => void;
   setSettleHashes: (hashes?: string[]) => void;
-  refetch: () => void;
 };
 
 export const SettleRaceButton: React.FC<Props> = props => {
@@ -29,23 +29,19 @@ export const SettleRaceButton: React.FC<Props> = props => {
     signer,
     setIsSettledMarketModalOpen,
     setSettleHashes,
-    setLoading,
-    refetch
+    setLoading
   } = props;
   const { openWalletModal } = useWalletModal();
-  const { current: now } = useRef(Math.floor(Date.now() / 1000));
+  const api = useApi();
 
   // Get list of bets that are not settled
-  const settlableBets = useMemo(
-    () =>
-      betHistory?.filter(bet => {
-        return !bet.settled && bet.payoutDate < now;
-      }),
+  const processableBets = useMemo(
+    () => betHistory?.filter(bet => bet.status !== "SETTLED"),
     [betHistory]
   );
 
   const settleRace = useCallback(async () => {
-    if (!settlableBets?.length || !config || loading || !config) return;
+    if (!processableBets?.length || !config || loading || !config) return;
     if (!isConnected || !signer) return openWalletModal();
 
     setIsSettledMarketModalOpen(false);
@@ -58,9 +54,37 @@ export const SettleRaceButton: React.FC<Props> = props => {
         config.addresses.marketOracle,
         signer
       );
+
+      // get signed data for bets
+      const settlableBets = await Promise.all(
+        processableBets.map(async bet => {
+          const marketId = utils.markets.getMarketIdFromPropositionId(
+            bet.propositionId
+          );
+          const signedData = await api.getWinningResultSignature(
+            marketId,
+            true
+          );
+
+          return {
+            ...bet,
+            ...signedData,
+            scratched: signedData.scratchedRunners?.find(
+              runner =>
+                runner.b16propositionId.toLowerCase() ===
+                utils.formatting
+                  .formatBytes16String(bet.propositionId)
+                  .toLowerCase()
+            )
+          };
+        })
+      );
+
       // get winning data (all bets should have data and have the same data)
-      const { marketId, marketOracleResultSig, winningPropositionId } =
-        settlableBets[0];
+      const { marketOracleResultSig, winningPropositionId } = settlableBets[0];
+      const marketId = utils.markets.getMarketIdFromPropositionId(
+        settlableBets[0].propositionId
+      );
 
       // add result
       const result = await oracleContract.getResult(marketId);
@@ -82,8 +106,22 @@ export const SettleRaceButton: React.FC<Props> = props => {
       }
 
       const marketContractAddresses = new Set(
-        settlableBets.map(bet => bet.market)
+        settlableBets.map(bet => {
+          // get market address
+          const vault = config.vaults.find(
+            v => v.asset.address.toLowerCase() === bet.asset.toLowerCase()
+          );
+          const market = config.markets.find(
+            m => m.vaultAddress.toLowerCase() === vault?.address.toLowerCase()
+          );
+
+          if (!market)
+            throw new Error(`Could not find market for bet asset ${bet.asset}`);
+
+          return market.address;
+        })
       );
+
       const txs: ContractTransaction[] = [];
       for (const marketAddress of marketContractAddresses) {
         const marketContract = Market__factory.connect(marketAddress, signer);
@@ -102,18 +140,17 @@ export const SettleRaceButton: React.FC<Props> = props => {
       console.error(err);
     } finally {
       setLoading(false);
-      refetch();
     }
-  }, [props, settlableBets]);
+  }, [props, processableBets]);
 
   const buttonLoading = !config || loading;
 
   return (
     <NewButton
-      disabled={!settlableBets?.length || buttonLoading}
+      disabled={!processableBets?.length || buttonLoading}
       onClick={settleRace}
       text={buttonLoading ? "loading..." : "settle race"}
-      active={!buttonLoading && !!settlableBets?.length}
+      active={!buttonLoading && !!processableBets?.length}
     />
   );
 };

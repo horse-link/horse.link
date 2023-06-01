@@ -1,14 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Loader, PageLayout } from "../components";
-import { NewBetTable, NewResultsTable } from "../components/Tables";
+import { BetTable, NewResultsTable } from "../components/Tables";
 import { SettleBetModal, SettledMarketModal } from "../components/Modals";
-import { useMeetData, useResultsData } from "../hooks/data";
-import { BetHistory } from "../types/bets";
-import { makeMarketId } from "../utils/markets";
+import { useBetsData, useMeetData, useResultsData } from "../hooks/data";
 import { useConfig } from "../providers/Config";
 import utils from "../utils";
-import { useSubgraphBets } from "../hooks/subgraph";
 import {
   RacesButton,
   NewButton,
@@ -17,6 +14,7 @@ import {
 import dayjs from "dayjs";
 import { RaceInfo } from "../types/meets";
 import { useAccount, useSigner } from "wagmi";
+import { BetHistoryResponse2 } from "../types/bets";
 
 const Results: React.FC = () => {
   const [loading, setLoading] = useState(false);
@@ -25,7 +23,7 @@ const Results: React.FC = () => {
     useState(false);
   const [thisRace, setThisRace] = useState<RaceInfo>();
   const [isSettleModalOpen, setIsSettleModalOpen] = useState(false);
-  const [selectedBet, setSelectedBet] = useState<BetHistory>();
+  const [selectedBet, setSelectedBet] = useState<BetHistoryResponse2>();
 
   const config = useConfig();
   const params = useParams();
@@ -53,19 +51,22 @@ const Results: React.FC = () => {
     number: details.race
   };
 
-  const marketId = makeMarketId(
-    new Date(details.date),
-    details.track,
-    details.race
-  );
-
-  const { betData: betHistory, refetch } = useSubgraphBets(
-    "ALL_BETS",
-    marketId
-  );
   const results = useResultsData(propositionId);
 
   const closeSettledMarketModal = () => setIsSettledMarketModalOpen(false);
+
+  const betHistory = useBetsData();
+
+  // filter bet history for current market
+  const resultsForRace = betHistory?.filter(b => {
+    const marketId = utils.markets.getMarketIdFromPropositionId(
+      b.propositionId
+    );
+
+    return marketId
+      .toLowerCase()
+      .includes(meetRaces?.venueMnemonic.toLowerCase() || "");
+  });
 
   return (
     <PageLayout>
@@ -104,7 +105,7 @@ const Results: React.FC = () => {
         <NewButton text="history" onClick={() => {}} disabled active={false} />
       </div>
       <div className="mt-4">
-        <NewBetTable
+        <BetTable
           paramsAddressExists={true}
           allBetsEnabled={true}
           betHistory={betHistory}
@@ -115,7 +116,7 @@ const Results: React.FC = () => {
       </div>
       <div className="mt-4 flex w-full justify-end">
         <SettleRaceButton
-          betHistory={betHistory}
+          betHistory={resultsForRace}
           loading={loading}
           isConnected={isConnected}
           config={config}
@@ -123,7 +124,6 @@ const Results: React.FC = () => {
           setIsSettledMarketModalOpen={setIsSettledMarketModalOpen}
           setLoading={setLoading}
           setSettleHashes={setSettleHashes}
-          refetch={refetch}
         />
       </div>
       <div className="block py-10 lg:hidden" />
@@ -131,7 +131,6 @@ const Results: React.FC = () => {
         isModalOpen={isSettleModalOpen}
         setIsModalOpen={setIsSettleModalOpen}
         selectedBet={selectedBet}
-        refetch={refetch}
         config={config}
       />
       <SettledMarketModal

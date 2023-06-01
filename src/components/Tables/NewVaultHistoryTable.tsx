@@ -54,7 +54,7 @@ export const NewVaultHistoryTable: React.FC<Props> = ({ vaultHistory }) => {
           const details = utils.config.getVault(history.vaultAddress, config);
 
           const amount = utils.formatting.formatToFourDecimals(
-            ethers.utils.formatEther(history.amount)
+            ethers.utils.formatEther(history?.amount || "0")
           );
 
           const time = dayjs.unix(history.createdAt).fromNow();
@@ -135,7 +135,7 @@ export const NewVaultHistoryTable: React.FC<Props> = ({ vaultHistory }) => {
 
               const amount = utils.formatting.formatToFourDecimals(
                 ethers.utils.formatUnits(
-                  history.amount,
+                  history?.amount || "0",
                   details?.asset.decimals
                 )
               );
