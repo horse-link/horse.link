@@ -66,6 +66,7 @@ export type BetHistoryResponse2 = {
   index: number; // bet index
   punter: Address; // address of punter
   amount: string; // raw ether amount (always ether as it comes direct from subgraph)
+  payout: string; // potential payout of the bet
   asset: Address; // address of asset
   time: number; // timestamp
   race: string; // full text race name
