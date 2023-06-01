@@ -1,13 +1,12 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useRunnersData, useMeetData } from "../hooks/data";
+import { useRunnersData, useMeetData, useBetsData } from "../hooks/data";
 import { NewButton, RacesButton } from "../components/Buttons";
-import { NewBetTable, NewRaceTable } from "../components/Tables";
+import { BetTable, NewRaceTable } from "../components/Tables";
 import { PlaceBetModal, SettleBetModal } from "../components/Modals";
 import { Runner, SignedMeetingsResponse } from "../types/meets";
 import { Loader, PageLayout } from "../components";
 import { useSubgraphBets } from "../hooks/subgraph";
-import { BetHistory } from "../types/bets";
 import { makeMarketId } from "../utils/markets";
 import { useConfig } from "../providers/Config";
 import constants from "../constants";
@@ -16,6 +15,7 @@ import utils from "../utils";
 import { HiChevronUp, HiChevronDown } from "react-icons/hi";
 import { Disclosure } from "@headlessui/react";
 import { useApi } from "../providers/Api";
+import { BetHistoryResponse2 } from "../types/bets";
 
 const Races: React.FC = () => {
   const params = useParams();
@@ -26,13 +26,13 @@ const Races: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSettleModalOpen, setIsSettleModalOpen] = useState(false);
   const [selectedRunner, setSelectedRunner] = useState<Runner>();
-  const [selectedBet, setSelectedBet] = useState<BetHistory>();
   const [closed, setClosed] = useState(false);
   const { race } = useRunnersData(track, raceNumber);
   const config = useConfig();
   const api = useApi();
   const [meetingsResponse, setMeetingsResponse] =
     useState<SignedMeetingsResponse>();
+  const [selectedBet, setSelectedBet] = useState<BetHistoryResponse2>();
 
   useEffect(() => {
     api.getMeetings().then(setMeetingsResponse);
@@ -45,21 +45,9 @@ const Races: React.FC = () => {
   // }, []);
 
   const marketId = makeMarketId(new Date(), track, raceNumber.toString());
-  const {
-    betData: betHistory,
-    totalBetsOnPropositions,
-    refetch
-  } = useSubgraphBets("ALL_BETS", marketId);
+  const { totalBetsOnPropositions } = useSubgraphBets("ALL_BETS", marketId);
 
-  const margin = useMemo(() => {
-    if (!race || !race.runners.length) return;
-
-    const validRunners = race.runners.filter(
-      runner => !utils.races.isScratchedRunner(runner)
-    );
-
-    return utils.races.calculateRaceMargin(validRunners.map(r => r.odds));
-  }, [race]);
+  const betHistory = useBetsData();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -73,7 +61,7 @@ const Races: React.FC = () => {
     <PageLayout>
       <div className="flex flex-col gap-6">
         <div className="w-full">
-          {margin && race && meetingsResponse ? (
+          {race && betHistory && meetingsResponse ? (
             <Disclosure as={React.Fragment}>
               {({ open }) => (
                 <React.Fragment>
@@ -94,11 +82,7 @@ const Races: React.FC = () => {
                             {race.track.name} ({race.track.code})
                           </h1>
                           <div className="w-auto whitespace-nowrap text-sm text-hl-tertiary lg:ml-10 lg:w-full">
-                            Margin:{" "}
-                            {utils.formatting.formatToTwoDecimals(
-                              (+margin * 100).toString()
-                            )}
-                            %
+                            Margin: 0
                           </div>
                           <div className="flex w-[6rem] justify-end">
                             <HiChevronDown
@@ -153,7 +137,7 @@ const Races: React.FC = () => {
         <NewButton text="history" onClick={() => {}} disabled active={false} />
       </div>
       <div className="mt-4">
-        <NewBetTable
+        <BetTable
           paramsAddressExists={true}
           allBetsEnabled={true}
           betHistory={betHistory}
@@ -173,7 +157,6 @@ const Races: React.FC = () => {
         isModalOpen={isSettleModalOpen}
         setIsModalOpen={setIsSettleModalOpen}
         selectedBet={selectedBet}
-        refetch={refetch}
         config={config}
       />
     </PageLayout>

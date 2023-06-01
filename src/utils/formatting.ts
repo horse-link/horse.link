@@ -43,6 +43,9 @@ export const formatNumberWithCommas = (amount: string) => {
   return convertToFourDecimalsWithCommas;
 };
 
+/**
+ * @deprecated
+ */
 export const formatBetId = (betId: BetId) => {
   const segments = betId.split("_");
   return +segments[2];

@@ -77,7 +77,9 @@ export class Api {
     marketId: string,
     sign: boolean = false
   ): Promise<SignedBetDataResponse> => {
-    const { data } = await this.client.get(`/bets/${marketId}?sign=${sign}`);
+    const { data } = await this.client.get(
+      `/bets/market/${marketId}?sign=${sign}`
+    );
 
     return data;
   };
