@@ -108,7 +108,7 @@ const Results: React.FC = () => {
         <BetTable
           paramsAddressExists={true}
           allBetsEnabled={true}
-          betHistory={betHistory}
+          betHistory={resultsForRace}
           config={config}
           setSelectedBet={setSelectedBet}
           setIsModalOpen={setIsSettleModalOpen}

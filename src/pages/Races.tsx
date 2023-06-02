@@ -49,6 +49,17 @@ const Races: React.FC = () => {
 
   const betHistory = useBetsData();
 
+  // filter bet history for current market
+  const resultsForRace = betHistory?.filter(b => {
+    const marketId = utils.markets.getMarketIdFromPropositionId(
+      b.propositionId
+    );
+
+    return marketId
+      .toLowerCase()
+      .includes(meetRaces?.venueMnemonic.toLowerCase() || "");
+  });
+
   useEffect(() => {
     const interval = setInterval(() => {
       setClosed(dayjs().unix() > (race?.raceData.close || 0));
@@ -140,7 +151,7 @@ const Races: React.FC = () => {
         <BetTable
           paramsAddressExists={true}
           allBetsEnabled={true}
-          betHistory={betHistory}
+          betHistory={resultsForRace}
           config={config}
           setSelectedBet={setSelectedBet}
           setIsModalOpen={setIsSettleModalOpen}
