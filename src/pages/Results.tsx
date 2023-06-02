@@ -55,27 +55,12 @@ const Results: React.FC = () => {
 
   const closeSettledMarketModal = () => setIsSettledMarketModalOpen(false);
 
-  const betHistory = useBetsData();
-
-  // filter bet history for current market and race
-  const resultsForRace = betHistory?.filter(b => {
-    const marketId = utils.markets.getMarketIdFromPropositionId(
-      b.propositionId
-    );
-
-    const isValidMarket = marketId
-      .toLowerCase()
-      .includes(meetRaces?.venueMnemonic.toLowerCase() || "");
-
-    const isValidRace = marketId.slice(-2).includes(raceParams.number);
-
-    const daysSinceEpoch = +marketId.slice(0, 6);
-    const epochPlusDaysTs = dayjs(0).add(daysSinceEpoch, "days");
-
-    const isValidTime = epochPlusDaysTs.isAfter(dayjs().startOf("day"));
-
-    return isValidMarket && isValidRace && isValidTime;
-  });
+  const marketId = utils.markets.makeMarketId(
+    new Date(date),
+    details.track,
+    raceParams.number
+  );
+  const betHistory = useBetsData(marketId);
 
   return (
     <PageLayout>
@@ -117,7 +102,7 @@ const Results: React.FC = () => {
         <BetTable
           paramsAddressExists={true}
           allBetsEnabled={true}
-          betHistory={resultsForRace}
+          betHistory={betHistory}
           config={config}
           setSelectedBet={setSelectedBet}
           setIsModalOpen={setIsSettleModalOpen}
@@ -125,7 +110,7 @@ const Results: React.FC = () => {
       </div>
       <div className="mt-4 flex w-full justify-end">
         <SettleRaceButton
-          betHistory={resultsForRace}
+          betHistory={betHistory}
           loading={loading}
           isConnected={isConnected}
           config={config}
