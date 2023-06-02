@@ -49,15 +49,24 @@ const Races: React.FC = () => {
 
   const betHistory = useBetsData();
 
-  // filter bet history for current market
+  // filter bet history for current market and race
   const resultsForRace = betHistory?.filter(b => {
     const marketId = utils.markets.getMarketIdFromPropositionId(
       b.propositionId
     );
 
-    return marketId
+    const isValidMarket = marketId
       .toLowerCase()
       .includes(meetRaces?.venueMnemonic.toLowerCase() || "");
+
+    const isValidRace = marketId.slice(-2).includes(raceNumber.toString());
+
+    const daysSinceEpoch = +marketId.slice(0, 6);
+    const epochPlusDaysTs = dayjs(0).add(daysSinceEpoch, "days");
+
+    const isValidTime = epochPlusDaysTs.isAfter(dayjs().startOf("day"));
+
+    return isValidMarket && isValidRace && isValidTime;
   });
 
   useEffect(() => {
