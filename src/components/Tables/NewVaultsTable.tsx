@@ -131,10 +131,12 @@ export const NewVaultsTable: React.FC<Props> = ({ setIsModalOpen }) => {
 
         const myShares = utils.formatting.formatToFourDecimals(
           vault.userShareTotal
-            ? ethers.utils.formatUnits(
-                vault.userShareTotal,
-                vault.asset.decimals
-              )
+            ? (
+                +ethers.utils.formatUnits(
+                  vault.userShareTotal,
+                  vault.asset.decimals
+                ) / 100
+              ).toString()
             : "0"
         );
 
