@@ -56,7 +56,7 @@ const Results: React.FC = () => {
   const closeSettledMarketModal = () => setIsSettledMarketModalOpen(false);
 
   const marketId = utils.markets.makeMarketId(
-    new Date(date),
+    new Date(),
     details.track,
     raceParams.number
   );
