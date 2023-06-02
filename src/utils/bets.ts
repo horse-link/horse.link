@@ -101,9 +101,11 @@ export const recoverSigSigner = (
       [marketId, propositionId]
     );
   }
+
   const address = ethers.utils.verifyMessage(
     ethers.utils.arrayify(messageHash),
     signature
   );
+
   return address.toLowerCase() === config.addresses.ownerAddress.toLowerCase();
 };

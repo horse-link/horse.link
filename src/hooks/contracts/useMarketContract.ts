@@ -258,6 +258,7 @@ export const useMarketContract = () => {
     ).wait();
   };
 
+  // TODO: fix setting result
   const settleBet = async (
     market: MarketInfo,
     bet: SignedBetHistoryResponse2,

@@ -176,7 +176,7 @@ export const BetTable: React.FC<Props> = ({
           rows={
             !allBetsEnabled && !paramsAddressExists
               ? notAllBetsAndNoParamAddress
-              : !betHistory
+              : !betHistory || !config
               ? loading
               : !betHistory.length
               ? noBets
