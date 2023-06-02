@@ -12,13 +12,11 @@ export const Web3SuccessHandler: React.FC<Props> = ({ hash, message }) => {
 
   return (
     <div className="flex flex-col rounded-md py-4">
-      <h2 className="mr-[8vw] mb-2 text-[32px] font-bold">
-        Transaction Confirmation
-      </h2>
+      <h2 className="mb-2 text-[32px] font-bold">Transaction Confirmation</h2>
       <span className="block lg:hidden">
         {`${message}: `}
         <a
-          className="hyperlink underline"
+          className="hyperlink text-hl-secondary underline"
           href={`${scanner}/tx/${hash}`}
           target="_blank"
           rel="noreferrer noopener"
@@ -30,7 +28,7 @@ export const Web3SuccessHandler: React.FC<Props> = ({ hash, message }) => {
         {`${message}: `}
         <br />
         <a
-          className="hyperlink underline"
+          className="hyperlink text-hl-secondary underline"
           href={`${scanner}/tx/${hash}`}
           target="_blank"
           rel="noreferrer noopener"
