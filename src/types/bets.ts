@@ -75,6 +75,7 @@ export type BetHistoryResponse2 = {
   status: BetStatus;
   result: BetResult; // won or lost
   tx: Hash; // tx id
+  settledAtTx: Hash; // tx id for settled
 };
 
 export type SignedBetHistoryResponse2 = BetHistoryResponse2 &
