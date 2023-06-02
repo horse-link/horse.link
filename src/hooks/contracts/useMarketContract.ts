@@ -283,7 +283,7 @@ export const useMarketContract = () => {
         bet.winningPropositionId &&
         bet.marketOracleResultSig &&
         !utils.bets.recoverSigSigner(
-          marketId,
+          utils.formatting.formatBytes16String(marketId),
           bet.winningPropositionId,
           bet.marketOracleResultSig,
           config
@@ -298,7 +298,7 @@ export const useMarketContract = () => {
       ) {
         const [gasLimit, gasPrice] = await Promise.all([
           marketOracleContract.estimateGas.setResult(
-            marketId,
+            utils.formatting.formatBytes16String(marketId),
             bet.winningPropositionId,
             bet.marketOracleResultSig
           ),
@@ -307,7 +307,7 @@ export const useMarketContract = () => {
 
         await (
           await marketOracleContract.setResult(
-            marketId,
+            utils.formatting.formatBytes16String(marketId),
             bet.winningPropositionId,
             bet.marketOracleResultSig,
             {
@@ -320,7 +320,7 @@ export const useMarketContract = () => {
     } else if (isScratched && bet.scratched?.signature) {
       if (
         !utils.bets.recoverSigSigner(
-          marketId,
+          utils.formatting.formatBytes16String(marketId),
           bet.propositionId,
           bet.scratched.signature,
           config,
@@ -335,7 +335,7 @@ export const useMarketContract = () => {
 
       const [gasLimit, gasPrice] = await Promise.all([
         marketOracleContract.estimateGas.setScratchedResult(
-          marketId,
+          utils.formatting.formatBytes16String(marketId),
           bet.propositionId,
           ethers.utils.parseUnits(
             bet.scratched.odds.toString(),
@@ -350,7 +350,7 @@ export const useMarketContract = () => {
       // tx can fail if the result is already set
       await (
         await marketOracleContract.setScratchedResult(
-          marketId,
+          utils.formatting.formatBytes16String(marketId),
           bet.propositionId,
           ethers.utils.parseUnits(
             bet.scratched.odds.toString(),
