@@ -112,13 +112,21 @@ export const NewAccountPanel: React.FC<Props> = ({
           title="Account"
           data={
             <div className="w-full font-sans text-base font-normal">
-              <div className="mb-2 flex items-center gap-x-2">
-                <h3>WALLET ADDRESS</h3>
-                {isLocalWallet && (
-                  <button onClick={() => setQrCodeModal(true)}>
-                    <AiOutlineQrcode className="mr-2 h-[2rem] w-[2rem]" />
-                  </button>
-                )}
+              <div className="mb-2 flex w-full items-center justify-between">
+                <h3 className="flex items-center gap-x-2">
+                  WALLET ADDRESS
+                  {isLocalWallet && (
+                    <button onClick={() => setQrCodeModal(true)}>
+                      <AiOutlineQrcode className="mr-2 h-[2rem] w-[2rem]" />
+                    </button>
+                  )}
+                </h3>
+                <NewButton
+                  text="COPY"
+                  onClick={() =>
+                    navigator.clipboard.writeText(account.address || "")
+                  }
+                />
               </div>
               <p className="mb-6 truncate border border-hl-border p-2">
                 {account.address}
