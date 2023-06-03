@@ -1,29 +1,29 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Loader, PageLayout } from "../components";
-import { BetTable, ResultsTable } from "../components/Tables";
+import { BetTable, NewResultsTable } from "../components/Tables";
 import { SettleBetModal, SettledMarketModal } from "../components/Modals";
-import { useMeetData, useResultsData } from "../hooks/data";
-import { BetHistory } from "../types/bets";
-import { makeMarketId } from "../utils/markets";
-import { formatBytes16String } from "../utils/formatting";
+import { useBetsData, useMeetData, useResultsData } from "../hooks/data";
 import { useConfig } from "../providers/Config";
 import utils from "../utils";
-import { useSubgraphBets } from "../hooks/subgraph";
-import { SettleRaceButton, RacesButton } from "../components/Buttons";
-import { useAccount, useSigner } from "wagmi";
+import {
+  RacesButton,
+  NewButton,
+  SettleRaceButton
+} from "../components/Buttons";
 import dayjs from "dayjs";
 import { RaceInfo } from "../types/meets";
-import Skeleton from "react-loading-skeleton";
+import { useAccount, useSigner } from "wagmi";
+import { BetHistoryResponse2 } from "../types/bets";
 
 const Results: React.FC = () => {
   const [loading, setLoading] = useState(false);
-  const [settleHashes, setSettleHashes] = useState<string[]>();
+  const [settleHashes, setSettleHashes] = useState<Array<string>>();
   const [isSettledMarketModalOpen, setIsSettledMarketModalOpen] =
     useState(false);
   const [thisRace, setThisRace] = useState<RaceInfo>();
   const [isSettleModalOpen, setIsSettleModalOpen] = useState(false);
-  const [selectedBet, setSelectedBet] = useState<BetHistory>();
+  const [selectedBet, setSelectedBet] = useState<BetHistoryResponse2>();
 
   const config = useConfig();
   const params = useParams();
@@ -50,57 +50,57 @@ const Results: React.FC = () => {
     track: details.track,
     number: details.race
   };
-  const marketId = makeMarketId(
-    new Date(details.date),
-    details.track,
-    details.race
-  );
-  const b16MarketId = formatBytes16String(marketId);
-  const { betData: betHistory, refetch } = useSubgraphBets(
-    "ALL_BETS",
-    b16MarketId
-  );
 
   const results = useResultsData(propositionId);
 
-  const closeSettledMarketModal = useCallback(
-    () => setIsSettledMarketModalOpen(false),
-    [isSettledMarketModalOpen, setIsSettledMarketModalOpen]
+  const closeSettledMarketModal = () => setIsSettledMarketModalOpen(false);
+
+  const marketId = utils.markets.makeMarketId(
+    new Date(),
+    details.track,
+    raceParams.number
   );
+  const betHistory = useBetsData(marketId);
 
   return (
     <PageLayout>
       <div className="flex flex-col gap-6">
-        <RacesButton params={raceParams} meetRaces={meetRaces?.raceInfo} />
-        <div className="flex-row gap-6 overflow-scroll rounded-lg border-b border-gray-200 bg-white p-2 text-center shadow lg:flex lg:justify-around">
-          <h1>{thisRace ? thisRace.raceName : <Skeleton />}</h1>
-          <h1>
-            Track:{" "}
-            {results
-              ? `${results.track.name} - (${results.track.code})`
-              : details.track}
-          </h1>
-          <h1>Race #: {thisRace ? thisRace.raceNumber : <Skeleton />}</h1>
-          <h1>Date: {date}</h1>
-          <h1>
-            Distance: {thisRace ? `${thisRace.raceDistance}m` : <Skeleton />}
-          </h1>
-          <h1>
-            Class: {thisRace ? thisRace.raceClassConditions : <Skeleton />}
-          </h1>
+        <div className="flex gap-2">
+          <RacesButton params={raceParams} meetRaces={meetRaces?.raceInfo} />
         </div>
-        {results ? (
-          <ResultsTable results={results} />
-        ) : (
-          <span className="flex w-full items-center justify-center">
-            <Loader />
-          </span>
-        )}
+        <div className="flex flex-col justify-between border border-hl-border bg-hl-background-secondary px-4 py-3 font-basement text-sm tracking-wider text-hl-primary xl:flex-row">
+          {!thisRace ? (
+            <div className="flex w-full justify-center py-2">
+              <Loader />
+            </div>
+          ) : (
+            <React.Fragment>
+              <h1 className="text-center">{thisRace.raceName}</h1>
+              <h2 className="text-center">
+                Track:{" "}
+                {results
+                  ? `${results.track.name} - (${results.track.code})`
+                  : details.track}
+              </h2>
+              <h2 className="text-center">Race #: {thisRace.raceNumber}</h2>
+              <h2 className="text-center">Date: {date}</h2>
+              <h2 className="text-center">
+                Distance: {thisRace.raceDistance}m
+              </h2>
+              <h2 className="text-center">
+                Class: {thisRace.raceClassConditions}
+              </h2>
+            </React.Fragment>
+          )}
+        </div>
+        <NewResultsTable results={results} />
       </div>
-      <div className="flex flex-col gap-6">
-        <h1 className="mt-4 text-2xl font-bold">History</h1>
+      <div className="mt-10">
+        <NewButton text="history" onClick={() => {}} disabled active={false} />
+      </div>
+      <div className="mt-4">
         <BetTable
-          paramsAddressExists={false}
+          paramsAddressExists={true}
           allBetsEnabled={true}
           betHistory={betHistory}
           config={config}
@@ -116,16 +116,15 @@ const Results: React.FC = () => {
           config={config}
           signer={signer}
           setIsSettledMarketModalOpen={setIsSettledMarketModalOpen}
-          setSettleHashes={setSettleHashes}
           setLoading={setLoading}
-          refetch={refetch}
+          setSettleHashes={setSettleHashes}
         />
       </div>
+      <div className="block py-10 lg:hidden" />
       <SettleBetModal
         isModalOpen={isSettleModalOpen}
         setIsModalOpen={setIsSettleModalOpen}
         selectedBet={selectedBet}
-        refetch={refetch}
         config={config}
       />
       <SettledMarketModal

@@ -3,6 +3,8 @@ import { ERC20, Market } from "../typechain";
 import { EcSignature } from "./general";
 
 import { BackParams } from "./meets";
+import { Address } from "wagmi";
+import { Hash } from "@wagmi/core";
 
 export type ScratchedRunner = {
   b16propositionId: string;
@@ -21,12 +23,15 @@ export type SignedBetDataResponse = {
 
 export type BetTablePaginationValues = 25 | 50 | 100;
 
+export type BetResult = "WIN" | "LOSE";
+
 export type BetStatus =
   | "RESULTED"
   | "PENDING"
   | "SCRATCHED"
   | "SETTLED"
-  | "INVALID";
+  | "INVALID"
+  | "REFUNDED";
 
 export type BetFilterOptions = "ALL_BETS" | BetStatus;
 
@@ -37,7 +42,7 @@ export type BetHistoryResponse = {
 export type BetHistory = {
   index: number;
   marketId: string;
-  marketAddress: string;
+  market: string;
   assetAddress: string;
   propositionId: string;
   marketResultAdded: boolean;
@@ -46,7 +51,6 @@ export type BetHistory = {
   amount: string;
   payout: string;
   payoutDate: number;
-  tx: string;
   blockNumber: number;
   settledAt?: number;
   settledAtTx?: string;
@@ -54,7 +58,30 @@ export type BetHistory = {
   marketOracleResultSig?: EcSignature;
   scratched?: ScratchedRunner;
   status: BetStatus;
+  tx: string;
 };
+
+// TODO: remove old type once full transition complete
+export type BetHistoryResponse2 = {
+  index: number; // bet index
+  punter: Address; // address of punter
+  amount: string; // raw ether amount (always ether as it comes direct from subgraph)
+  payout: string; // potential payout of the bet
+  asset: Address; // address of asset
+  time: number; // timestamp
+  race: string; // full text race name
+  propositionId: string; // propositionId as bytes16
+  proposition: string; // english "Horse 0 Win"
+  status: BetStatus;
+  result: BetResult; // won or lost
+  tx: Hash; // tx id
+  settledAtTx: Hash; // tx id for settled
+};
+
+export type SignedBetHistoryResponse2 = BetHistoryResponse2 &
+  SignedBetDataResponse & {
+    scratched?: ScratchedRunner;
+  };
 
 export type TotalBetsOnPropositions = Record<
   string,

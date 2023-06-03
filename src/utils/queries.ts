@@ -1,4 +1,3 @@
-import { ethers } from "ethers";
 import { BetFilterOptions } from "../types/bets";
 import { SubgraphFilter } from "../types/subgraph";
 import constants from "../constants";
@@ -10,8 +9,9 @@ const getFiltersFromObject = (filter?: SubgraphFilter) => {
     .map(([key, value]) => {
       // if value is undefined
       if (typeof value === "undefined") return "";
-      // if value is boolean
-      if (typeof value === "boolean") return `${key}: ${value}`;
+      // if value is boolean or number
+      if (typeof value === "boolean" || typeof value === "number")
+        return `${key}: ${value}`;
 
       // type is string
       return `${key}: "${value}"`;
@@ -57,20 +57,22 @@ export const getBetsQuery = (
     orderDirection: desc
   ) {
     id
-    propositionId
+    asset
+    payoutAt
+    market
     marketId
-    marketAddress
-    assetAddress
+    propositionId
     amount
     payout
-    payoutAt
     owner
-    settled
-    didWin
     createdAt
-    settledAt
     createdAtTx
+    settled
+    result
+    recipient
+    settledAt
     settledAtTx
+    refunded
   }
 }`;
 
@@ -89,113 +91,90 @@ export const getBetsQueryWithoutPagination = (
     orderDirection: desc
   ) {
     id
-    propositionId
+    asset
+    payoutAt
+    market
     marketId
-    marketAddress
-    assetAddress
+    propositionId
     amount
     payout
-    payoutAt
     owner
-    settled
-    didWin
     createdAt
+    settled
+    result
+    recipient
     settledAt
-    createdAtTx
     settledAtTx
+    refunded
   }
 }`;
 
-export const getAggregatorQuery = () => `{
-  aggregator(id: "aggregator") {
-    id
-    totalBets
-    totalMarkets
-    totalVaults
-  }
-}`;
-
-export const getProtocolStatsQuery = () => `
-query GetProtocols{
-  protocol(id: "protocol") {
-    id
-    inPlay
-    initialTvl
-    currentTvl
-    performance
-    lastUpdate
-  }
-}`;
-
-export const getVaultHistoryQuery = (filter?: SubgraphFilter) => `{
+export const getDepositsWithoutPagination = (
+  filter?: SubgraphFilter
+) => `query getDeposits{
   vaultTransactions(
     first: 1000
-    where:{
-      ${getFiltersFromObject(filter)}
-    }
-    orderBy: timestamp
-    orderDirection: desc
-  ) {
-    id
-    type
-    vaultAddress
-    userAddress
-    amount
-    timestamp
-  }
-}`;
-
-export const getVaultStatsQuery = (filter?: SubgraphFilter) => `{
-  vaultTransactions(
-    first: 1000
-    where:{
-      ${getFiltersFromObject(filter)}
-    }
-    orderBy: timestamp
-    orderDirection: desc
-  ) {
-    id
-    type
-    vaultAddress
-    userAddress
-    amount
-    timestamp
-  }
-}`;
-
-export const getMarketStatsQuery = (filter?: SubgraphFilter) => `{
-  bets(
-    first: 1000
-    orderBy: amount
-    orderDirection: desc
     where: {
       ${getFiltersFromObject(filter)}
+      type: "deposit"
     }
+    orderBy: timestamp
+    orderDirection: desc
   ) {
     id
-    propositionId
-    marketId
-    marketAddress
+    type
+    vaultAddress
+    userAddress
     amount
-    payout
-    owner
-    settled
-    didWin
-    createdAt
-    settledAt
-    createdAtTx
-    settledAtTx
+    timestamp
   }
 }`;
 
-export const getUserStatsQuery = (address?: string) => `{
-  user(id: "${
-    address ? address.toLowerCase() : ethers.constants.AddressZero
-  }") {
+export const getWithdrawsWithoutPagination = (
+  filter?: SubgraphFilter
+) => `query getWithdraws{
+  vaultTransactions(
+    first: 1000
+    where: {
+      ${getFiltersFromObject(filter)}
+      type: "withdraw"
+    }
+    orderBy: timestamp
+    orderDirection: desc
+  ) {
     id
-    totalDeposited
-    inPlay
-    pnl
-    lastUpdate
+    type
+    vaultAddress
+    userAddress
+    amount
+    timestamp
   }
 }`;
+
+export const getVaultHistory = () => `query getVaultHistory{
+  withdraws: vaultTransactions(
+    where: {
+      type: "withdraw"
+    }
+  ) {
+    id
+    type
+    vaultAddress
+    userAddress
+    amount
+    timestamp
+  }
+  deposits: vaultTransactions(
+    where: {
+      type: "deposit"
+    }
+  ) {
+    id
+    type
+    vaultAddress
+    userAddress
+    amount
+    timestamp
+  }
+}
+`;

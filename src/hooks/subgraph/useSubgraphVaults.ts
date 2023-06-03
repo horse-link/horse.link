@@ -1,42 +1,79 @@
-import { BigNumber } from "ethers";
-import { useEffect, useMemo } from "react";
-import {
-  FormattedVaultTransaction,
-  VaultTransaction
-} from "../../types/subgraph";
-import useSubgraph from "../useSubgraph";
+import { BigNumber, ethers } from "ethers";
+import { VaultTransaction } from "../../types/subgraph";
 import utils from "../../utils";
-import constants from "../../constants";
+import useSubgraph from "../useSubgraph";
+import { VaultTransactionType } from "../../types/vaults";
 
 type Response = {
-  vaultTransactions: VaultTransaction[];
+  deposits: Array<VaultTransaction>;
+  withdraws: Array<VaultTransaction>;
 };
 
-export const useSubgraphVaults = (vaultAddress?: string) => {
-  const { data, loading, refetch } = useSubgraph<Response>(
-    utils.queries.getVaultHistoryQuery({
-      vaultAddress: vaultAddress ? vaultAddress.toLowerCase() : undefined
-    })
+export type VaultHistory = {
+  type: VaultTransactionType;
+  amount: BigNumber;
+  createdAt: number;
+  vaultAddress: string;
+  tx: string;
+}[];
+
+export const useSubgraphVaults = () => {
+  const { data, loading } = useSubgraph<Response>(
+    utils.queries.getVaultHistory()
   );
 
-  useEffect(() => {
-    const refetchInterval = setInterval(
-      refetch,
-      constants.time.ONE_SECOND_MS * 5
-    );
+  if (loading) return;
+  if (!data) return [];
 
-    return () => clearInterval(refetchInterval);
-  }, []);
+  const history: VaultHistory = [];
 
-  const formattedData = useMemo<FormattedVaultTransaction[] | undefined>(() => {
-    if (loading || !data) return;
+  // TODO: reintroduce when new subgraph entities are added
 
-    return data.vaultTransactions.map(tx => ({
-      ...tx,
-      amount: BigNumber.from(tx.amount),
-      timestamp: +tx.timestamp
-    }));
-  }, [data, loading]);
+  // data.borrows.forEach(borrow => {
+  //   history.push({
+  //     type: VaultTransactionType.BORROW,
+  //     amount: borrow.amount,
+  //     createdAt: borrow.createdAt,
+  //     vaultAddress: borrow.vault,
+  //     tx: borrow.id
+  //   });
+  // });
 
-  return formattedData;
+  // data.repays.forEach(repay => {
+  //   history.push({
+  //     type: VaultTransactionType.REPAY,
+  //     amount: repay.amount,
+  //     createdAt: repay.createdAt,
+  //     vaultAddress: repay.vault,
+  //     tx: repay.id
+  //   });
+  // });
+
+  data.deposits
+    .map(utils.formatting.formatVaultTransactionIntoDeposit)
+    .forEach(deposit => {
+      history.push({
+        type: VaultTransactionType.DEPOSIT,
+        amount: deposit.assets || ethers.constants.Zero,
+        createdAt: deposit.createdAt || 0,
+        vaultAddress: deposit.vault || ethers.constants.AddressZero,
+        tx: deposit.id || ""
+      });
+    });
+
+  data.withdraws
+    .map(utils.formatting.formatVaultTransactionIntoWithdraw)
+    .forEach(withdraw => {
+      history.push({
+        type: VaultTransactionType.WITHDRAW,
+        amount: withdraw.assets || ethers.constants.Zero,
+        createdAt: withdraw.createdAt || 0,
+        vaultAddress: withdraw.vault || ethers.constants.AddressZero,
+        tx: withdraw.id || ""
+      });
+    });
+
+  history.sort((a, b) => b.createdAt - a.createdAt);
+
+  return history;
 };

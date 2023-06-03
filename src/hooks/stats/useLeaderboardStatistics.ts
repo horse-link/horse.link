@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useConfig } from "../../providers/Config";
-import { Bet } from "../../types/subgraph";
+import { Bet, BetResult } from "../../types/subgraph";
 import utils from "../../utils";
 import useSubgraph from "../useSubgraph";
 import { BigNumber, ethers } from "ethers";
@@ -24,14 +24,16 @@ export const useLeaderboardStatistics = () => {
   const [balances, setBalances] = useState<Array<LeaderboardBalance>>();
   const [userBalance, setUserBalance] = useState<LeaderboardUserBalance>();
 
-  const hlToken = config?.tokens.find(t => t.symbol.toLowerCase() === "hl");
+  const hlToken = config?.tokens.find(t =>
+    t.symbol.toLowerCase().includes("hl")
+  );
 
   const { current: now } = useRef(Math.floor(Date.now() / 1000));
 
   // get bets that were made with horse link token and have been settled, within the last week
   const { data, loading } = useSubgraph<Response>(
     utils.queries.getBetsQueryWithoutPagination(now, {
-      assetAddress: hlToken?.address.toLowerCase(),
+      asset: hlToken?.address.toLowerCase(),
       settled: true,
       createdAt_gte: Math.floor(+constants.env.EVENT_TS / 1000)
     })
@@ -61,7 +63,10 @@ export const useLeaderboardStatistics = () => {
 
       return {
         ...prevObject,
-        [bet.owner]: (bet.didWin ? winChange : lossChange).add(prevValue)
+        [bet.owner]: (bet.result === BetResult.WINNER
+          ? winChange
+          : lossChange
+        ).add(prevValue)
       };
     }, {} as Record<string, BigNumber>);
 

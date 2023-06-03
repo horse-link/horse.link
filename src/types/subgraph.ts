@@ -1,6 +1,6 @@
+import { Hash } from "@wagmi/core";
 import { BigNumber } from "ethers";
 import { Address } from "wagmi";
-import { VaultTransactionType } from "./vaults";
 
 export type SubgraphValues = string | number | boolean;
 
@@ -13,128 +13,106 @@ export type Subgraphable<T extends string> =
 
 export type SubgraphKeys =
   | Subgraphable<keyof Aggregator>
-  | Subgraphable<keyof Protocol>
   | Subgraphable<keyof Registry>
   | Subgraphable<keyof Bet>
   | Subgraphable<keyof VaultTransaction>
-  | Subgraphable<keyof User>;
+  | Subgraphable<keyof Borrow>
+  | Subgraphable<keyof Repay>;
 
 export type SubgraphFilter = Partial<Record<SubgraphKeys, SubgraphValues>>;
 
 export type Aggregator = {
   // id will always be aggregator
   id: "aggregator";
-  totalBets: string;
-  totalMarkets: string;
-  totalVaults: string;
-  lastUpdate: string;
-};
 
-export type FormattedAggregator = Pick<Aggregator, "id"> & {
   totalBets: number;
   totalMarkets: number;
   totalVaults: number;
-  lastUpdate: number;
-};
-
-export type Protocol = {
-  // id will always be protocol
-  id: "protocol";
-  inPlay: string;
-  initialTvl: string;
-  currentTvl: string;
-  performance: string;
-  lastUpdate: string;
-};
-
-export type FormattedProtocol = Pick<Protocol, "id"> & {
-  inPlay: BigNumber;
-  tvl: BigNumber;
-  performance: number;
-  lastUpdate: number;
 };
 
 export type Registry = {
   // id will always be registry
   id: "registry";
-  vaults: string[];
-  markets: string[];
-  lastUpdate: string;
-};
 
-export type FormattedRegistry = Pick<Registry, "id" | "vaults" | "markets"> & {
-  lastUpdate: number;
+  markets: Array<Address>;
+  vaults: Array<Address>;
 };
 
 // bet id will be BET_<MARKET_ADDRESS>_<BET_NUMBER>
 export type BetId = `BET_${Address}_${number}`;
 
+// shadowed from contracts
+export const enum BetResult {
+  INPLAY,
+  WINNER,
+  LOSER,
+  SCRATCHED
+}
+
 export type Bet = {
   id: BetId;
-  propositionId: string;
+  asset: Address;
+  payoutAt: number;
+  market: Address;
   marketId: string;
-  marketAddress: Address;
-  assetAddress: Address;
-  amount: string;
-  payout: string;
-  payoutAt: string;
-  owner: Address;
-  settled: boolean;
-  didWin: boolean;
-  createdAt: string;
-  settledAt: string;
-  createdAtTx: string;
-  settledAtTx: string;
-};
-
-export type FormattedBet = Pick<
-  Bet,
-  | "propositionId"
-  | "marketId"
-  | "marketAddress"
-  | "assetAddress"
-  | "settled"
-  | "didWin"
-  | "createdAtTx"
-  | "settledAtTx"
-> & {
-  index: number;
+  propositionId: string;
   amount: BigNumber;
   payout: BigNumber;
-  punter: Address;
-  payoutAt: number;
+  owner: Address;
   createdAt: number;
+  createdAtTx: Hash;
+  settled: boolean;
+  result: BetResult;
+  recipient: Address;
   settledAt: number;
+  settledAtTx: Hash;
+  refunded: boolean;
 };
 
+export type VaultTransactionType = "deposit" | "withdraw";
+
 export type VaultTransaction = {
-  id: Address;
+  id: Hash;
   type: VaultTransactionType;
   vaultAddress: Address;
   userAddress: Address;
-  amount: string;
-  timestamp: string;
-};
-
-export type FormattedVaultTransaction = Pick<
-  VaultTransaction,
-  "id" | "vaultAddress" | "userAddress" | "type"
-> & {
   amount: BigNumber;
   timestamp: number;
 };
 
-export type User = {
-  id: Address;
-  totalDeposited: string;
-  inPlay: string;
-  pnl: string;
-  lastUpdate: string;
+// leave these in for backwards compatibility
+export type Deposit = {
+  id: Hash;
+  vault: Address;
+  sender: Address;
+  owner: Address;
+  assets: BigNumber;
+  shares: BigNumber;
+  createdAt: number;
 };
 
-export type FormattedUser = Pick<User, "id"> & {
-  totalDeposited: BigNumber;
-  inPlay: BigNumber;
-  pnl: BigNumber;
-  lastUpdate: number;
+export type Withdraw = {
+  id: Hash;
+  vault: Address;
+  sender: Address;
+  receiver: Address;
+  owner: Address;
+  assets: BigNumber;
+  shares: BigNumber;
+  createdAt: number;
+};
+
+export type Borrow = {
+  id: Hash;
+  betId: BetId;
+  vault: Address;
+  amount: BigNumber;
+  createdAt: number;
+};
+
+export type Repay = {
+  id: Hash;
+  vault: Address;
+  amount: BigNumber;
+  createdAt: number;
 };

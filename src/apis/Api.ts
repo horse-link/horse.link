@@ -14,6 +14,7 @@ import { Token } from "graphql";
 import { VaultUserData } from "../types/vaults";
 import { Network } from "../types/general";
 import constants from "../constants";
+import { FormattedProtocol } from "../types/stats";
 
 export class Api {
   public client: AxiosInstance;
@@ -76,7 +77,9 @@ export class Api {
     marketId: string,
     sign: boolean = false
   ): Promise<SignedBetDataResponse> => {
-    const { data } = await this.client.get(`/bets/${marketId}?sign=${sign}`);
+    const { data } = await this.client.get(
+      `/bets/market/${marketId}?sign=${sign}`
+    );
 
     return data;
   };
@@ -130,6 +133,22 @@ export class Api {
   public getMarketDetail = async (marketAddress: string): Promise<Market> => {
     const { data } = await this.client.get<Market>(`/markets/${marketAddress}`);
     return data;
+  };
+
+  public getPrototcolStats = async (): Promise<FormattedProtocol> => {
+    const [totalInPlay, totalLiquidity, totalPerformance] = await Promise.all([
+      this.getTotalInPlay(),
+      this.getTotalLiquidity(),
+      this.getTotalPerformance()
+    ]);
+
+    return {
+      id: "protocol" as const,
+      inPlay: totalInPlay.total,
+      tvl: totalLiquidity.assets,
+      performance: totalPerformance.performance,
+      lastUpdate: new Date().getTime()
+    };
   };
 
   public getVaultAddresses = async (): Promise<string[]> => {

@@ -9,6 +9,7 @@ import useRefetch from "../../hooks/useRefetch";
 import utils from "../../utils";
 import { UserBalance } from "../../types/users";
 import { Loader } from "../";
+import { NewButton } from "../Buttons";
 
 type Props = {
   isModalOpen: boolean;
@@ -78,6 +79,8 @@ export const DepositVaultModal: React.FC<Props> = ({
     event.preventDefault();
     const value = event.currentTarget.value;
 
+    if (!RegExp(/^[(\d|.)]*$/).test(value)) return;
+
     if (value.includes(".")) {
       const decimals = value.split(".")[1];
       if (decimals.length > userBalance.decimals) {
@@ -113,55 +116,67 @@ export const DepositVaultModal: React.FC<Props> = ({
       ? +depositAmount > +userBalance.formatted
       : false;
 
+  const shouldDisableButton =
+    !depositAmount ||
+    !signer ||
+    !userBalance ||
+    +userBalance.formatted === 0 ||
+    txLoading ||
+    isDepositNegative ||
+    isDepositGreaterThanBalance;
+
   return (
     <BaseModal isOpen={isModalOpen} onClose={closeModal} isLarge={!!txHash}>
-      <h2 className="mb-6 text-2xl font-bold">Deposit</h2>
-      <div className="flex flex-col">
-        <h3 className="mb-2 font-semibold">
-          Name: <span className="font-normal">{vault.name}</span>
-        </h3>
-        <h3 className="mb-2 font-semibold">
-          Available:{" "}
-          <span className="font-normal">
-            {userBalance?.formatted || <Loader size={14} />}
-          </span>
-        </h3>
-        {!txHash && !error && (
-          <React.Fragment>
-            <h3 className="font-semibold">Deposit Amount</h3>
-            <input
-              type="number"
-              placeholder="0"
-              onChange={changeDepositAmount}
-              className="mb-6 border-b-[0.12rem] border-black pl-1 pt-1 transition-colors duration-100 disabled:bg-white disabled:text-black/50"
-              disabled={txLoading || !userBalance}
-            />
-            <button
-              className="relative top-6 mb-3 w-full rounded-md border-2 border-black py-2 font-bold transition-colors duration-100 disabled:border-black/50 disabled:bg-white disabled:text-black/50 enabled:hover:bg-black enabled:hover:text-white"
-              onClick={onClickDeposit}
-              disabled={
-                !depositAmount ||
-                !signer ||
-                !userBalance ||
-                +userBalance.formatted === 0 ||
-                txLoading ||
-                isDepositNegative ||
-                isDepositGreaterThanBalance
-              }
-            >
-              {txLoading ? <Loader /> : `DEPOSIT ${vault.asset.symbol}`}
-            </button>
-            <br />
-          </React.Fragment>
-        )}
-        {txHash && (
-          <Web3SuccessHandler
-            hash={txHash}
-            message="Your deposit has been placed, click here to view the transaction"
-          />
-        )}
-        {error && <Web3ErrorHandler error={error} />}
-      </div>
+      {!userBalance ? (
+        <div className="p-10">
+          <Loader />
+        </div>
+      ) : txHash ? (
+        <Web3SuccessHandler
+          hash={txHash}
+          message="Your deposit has been placed, click here to view the transaction"
+        />
+      ) : error ? (
+        <Web3ErrorHandler error={error} />
+      ) : (
+        <div className="p-6">
+          <h2 className="font-basement text-[32px] tracking-wider">DEPOSIT</h2>
+
+          <div className="mt-8 flex w-full flex-col items-center">
+            <div className="grid w-full grid-cols-2 grid-rows-3">
+              <h3 className="text-left text-hl-secondary">Name:</h3>
+              <p className="text-left text-hl-tertiary">{vault.name}</p>
+              <h3 className="text-left text-hl-secondary">Available:</h3>
+              <p className="text-left text-hl-tertiary">
+                {userBalance.formatted}
+              </p>
+              <div className="flex items-center">
+                <h3 className="text-left text-hl-secondary">Deposit amount:</h3>
+              </div>
+              <input
+                placeholder="0"
+                value={depositAmount}
+                onChange={changeDepositAmount}
+                className="border border-hl-border bg-hl-background p-2 text-hl-primary !outline-none !ring-0"
+              />
+            </div>
+            <div className="mt-8 mb-2 flex w-full flex-col items-center">
+              {txLoading ? (
+                <Loader />
+              ) : (
+                <NewButton
+                  text={`Deposit ${vault.asset.symbol}`}
+                  onClick={onClickDeposit}
+                  disabled={shouldDisableButton}
+                  active={!shouldDisableButton}
+                  big
+                  white
+                />
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </BaseModal>
   );
 };

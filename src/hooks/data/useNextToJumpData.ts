@@ -11,14 +11,16 @@ export const useNextToJumpData = () => {
 
   const nextMeets = useMemo(() => {
     if (!data || error) return;
-    // data.slice(0, 5) so that only the next 5 races are returned
-    return data.races.slice(0, 5);
+    // data.slice(0, 6) so that only the next 6 races are returned
+    return data.races.slice(0, 6);
   }, [data, error]);
+
   const missingLocations = useMemo(() => {
     if (!data || error) return;
 
     return data.missingLocations;
   }, [data, error]);
+
   return {
     nextMeets,
     isLoading,

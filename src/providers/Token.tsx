@@ -52,21 +52,22 @@ export const TokenContextProvider: React.FC<{ children: React.ReactNode }> = ({
 
     if (!tokens.length) return setTokensLoading(false);
 
+    const defaultToken = tokens[0];
+    let selectedToken = defaultToken;
+
     // load from local storage
     const localToken = localStorage.getItem(LOCAL_STORAGE_KEY);
-    let defaultToken = tokens.find(t => t.symbol.toLowerCase() === "hl");
+
+    // if it's not in the list of tokens, use the default;
     if (!!localToken) {
       const parsedToken = JSON.parse(localToken) as Token;
-
-      // check if network switched
-      const networkCheck = tokens.find(
-        t => t.address.toLowerCase() === parsedToken.address.toLowerCase()
-      );
-      if (!!networkCheck) defaultToken = parsedToken;
+      if (tokens.find(t => t.symbol === parsedToken.symbol)) {
+        selectedToken = parsedToken;
+      }
     }
 
     setAvailableTokens(tokens);
-    setCurrentToken(defaultToken);
+    setCurrentToken(selectedToken);
 
     setTokensLoading(false);
   }, [config]);

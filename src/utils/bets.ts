@@ -25,10 +25,8 @@ export const getBetStatus = (
   signedBetData: SignedBetDataResponse,
   scratched?: ScratchedRunner
 ): BetStatus => {
-  // if the bet is settled
+  if (bet.refunded) return "REFUNDED";
   if (bet.settled) return "SETTLED";
-
-  // if the bet is scratched
   if (scratched) return "SCRATCHED";
 
   // if the payout date is in the future
@@ -38,7 +36,7 @@ export const getBetStatus = (
   if (signedBetData.winningPropositionId) {
     return "RESULTED";
   } else {
-    return "INVALID";
+    return "PENDING";
   }
 };
 
@@ -54,24 +52,24 @@ export const getBetHistory = (
 
   return {
     index: utils.formatting.formatBetId(bet.id),
-    marketId: bet.marketId.toLowerCase(),
-    marketAddress: bet.marketAddress.toLowerCase(),
-    assetAddress: bet.assetAddress.toLowerCase(),
-    propositionId: bet.propositionId.toLowerCase(),
+    marketId: bet.marketId.toUpperCase(),
+    market: bet.market.toLowerCase(),
+    assetAddress: bet.asset.toLowerCase(),
+    propositionId: bet.propositionId.toUpperCase(),
     winningPropositionId: signedBetData.winningPropositionId,
     marketResultAdded: signedBetData.marketResultAdded,
     settled: bet.settled,
     punter: bet.owner.toLowerCase(),
     payoutDate: +bet.payoutAt,
-    amount: bet.amount,
-    payout: bet.payout,
-    tx: bet.createdAtTx.toLowerCase(),
+    amount: bet.amount.toString(),
+    payout: bet.payout.toString(),
     blockNumber: +bet.createdAt,
     settledAt: bet.settled ? +bet.settledAt : undefined,
-    settledAtTx: bet.settled ? bet.settledAtTx.toLowerCase() : undefined,
     marketOracleResultSig: signedBetData.marketOracleResultSig,
     scratched: scratched,
-    status: getBetStatus(bet, signedBetData, scratched)
+    status: getBetStatus(bet, signedBetData, scratched),
+    tx: bet.createdAtTx,
+    settledAtTx: bet.settledAtTx
   };
 };
 
@@ -103,9 +101,11 @@ export const recoverSigSigner = (
       [marketId, propositionId]
     );
   }
+
   const address = ethers.utils.verifyMessage(
     ethers.utils.arrayify(messageHash),
     signature
   );
+
   return address.toLowerCase() === config.addresses.ownerAddress.toLowerCase();
 };

@@ -1,19 +1,21 @@
-import { useMemo, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
-import { useRunnersData, useMeetData } from "../hooks/data";
-import { RacesButton } from "../components/Buttons";
-import { RaceTable, BetTable } from "../components/Tables";
+import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { useRunnersData, useMeetData, useBetsData } from "../hooks/data";
+import { NewButton, RacesButton } from "../components/Buttons";
+import { BetTable, NewRaceTable } from "../components/Tables";
 import { PlaceBetModal, SettleBetModal } from "../components/Modals";
-import { Runner } from "../types/meets";
-import { PageLayout } from "../components";
+import { Runner, SignedMeetingsResponse } from "../types/meets";
+import { Loader, PageLayout } from "../components";
 import { useSubgraphBets } from "../hooks/subgraph";
-import { BetHistory } from "../types/bets";
 import { makeMarketId } from "../utils/markets";
-import { formatBytes16String } from "../utils/formatting";
 import { useConfig } from "../providers/Config";
-import Skeleton from "react-loading-skeleton";
+import constants from "../constants";
 import dayjs from "dayjs";
 import utils from "../utils";
+import { HiChevronUp, HiChevronDown } from "react-icons/hi";
+import { Disclosure } from "@headlessui/react";
+import { useApi } from "../providers/Api";
+import { BetHistoryResponse2 } from "../types/bets";
 
 const Races: React.FC = () => {
   const params = useParams();
@@ -24,85 +26,106 @@ const Races: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSettleModalOpen, setIsSettleModalOpen] = useState(false);
   const [selectedRunner, setSelectedRunner] = useState<Runner>();
-  const [selectedBet, setSelectedBet] = useState<BetHistory>();
+  const [closed, setClosed] = useState(false);
   const { race } = useRunnersData(track, raceNumber);
   const config = useConfig();
+  const api = useApi();
+  const [meetingsResponse, setMeetingsResponse] =
+    useState<SignedMeetingsResponse>();
+  const [selectedBet, setSelectedBet] = useState<BetHistoryResponse2>();
 
-  const { meetDate } = useMemo(() => {
-    const meetDate = dayjs().format("DD-MM-YY");
-    return { config, meetDate };
+  useEffect(() => {
+    api.getMeetings().then(setMeetingsResponse);
   }, []);
 
+  // note: this left in because it may be required for future redesigns
+  // const { meetDate } = useMemo(() => {
+  //   const meetDate = dayjs().format("DD-MM-YY");
+  //   return { config, meetDate };
+  // }, []);
+
   const marketId = makeMarketId(new Date(), track, raceNumber.toString());
-  const b16MarketId = formatBytes16String(marketId);
+  const { totalBetsOnPropositions } = useSubgraphBets("ALL_BETS", marketId);
 
-  const {
-    betData: betHistory,
-    totalBetsOnPropositions,
-    refetch
-  } = useSubgraphBets("ALL_BETS", b16MarketId);
+  const betHistory = useBetsData(marketId);
 
-  const margin = useMemo(() => {
-    if (!race || !race.runners.length) return;
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setClosed(dayjs().unix() > (race?.raceData.close || 0));
+    }, constants.time.ONE_SECOND_MS);
 
-    const validRunners = race.runners.filter(
-      runner => !utils.races.isScratchedRunner(runner)
-    );
-
-    return utils.races.calculateRaceMargin(validRunners.map(r => r.odds));
-  }, [race]);
-
-  const { current: now } = useRef(dayjs());
-  const closed = now.isAfter(dayjs(race?.raceData.close));
+    return () => clearInterval(interval);
+  });
 
   return (
     <PageLayout>
-      <PlaceBetModal
-        runner={selectedRunner}
-        race={race}
-        isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
-      />
       <div className="flex flex-col gap-6">
-        <div className="flex gap-2">
-          <RacesButton params={params} meetRaces={meetRaces?.raceInfo} />
+        <div className="w-full">
+          {race && betHistory && meetingsResponse ? (
+            <Disclosure as={React.Fragment}>
+              {({ open }) => (
+                <React.Fragment>
+                  <Disclosure.Button as={React.Fragment}>
+                    {open ? (
+                      <div className="flex w-full cursor-pointer items-center border border-hl-primary p-2">
+                        <h1 className="w-full text-left font-basement text-hl-secondary">
+                          {race?.track.name} ({race?.track.code})
+                        </h1>
+                        <div className="flex w-[6rem] justify-end">
+                          <HiChevronUp size={30} color="white" />
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="w-full cursor-pointer border border-hl-primary p-2">
+                        <div className="flex w-full">
+                          <h1 className="w-full text-left font-basement text-hl-secondary lg:w-auto lg:whitespace-nowrap">
+                            {race.track.name} ({race.track.code})
+                          </h1>
+                          <div className="w-auto whitespace-nowrap text-sm text-hl-tertiary lg:ml-10 lg:w-full">
+                            Margin: 0
+                          </div>
+                          <div className="flex w-[6rem] justify-end">
+                            <HiChevronDown
+                              size={30}
+                              color="white"
+                              className="relative bottom-1"
+                            />
+                          </div>
+                        </div>
+                        <p className="mt-1 w-full text-sm">
+                          {race.raceData.name} | {race.raceData.class}
+                        </p>
+                      </div>
+                    )}
+                  </Disclosure.Button>
+
+                  <Disclosure.Panel>
+                    {meetingsResponse.data.meetings
+                      .filter(
+                        m =>
+                          m.name.toLowerCase() !== race.track.name.toLowerCase()
+                      )
+                      .map(m => (
+                        <Link
+                          to={utils.races.createRacingLink(m.races[0], m)} // use first race
+                          className="block w-full bg-hl-primary px-2 py-1 font-basement text-hl-background"
+                          key={JSON.stringify(m)}
+                        >
+                          {m.name}
+                        </Link>
+                      ))}
+                  </Disclosure.Panel>
+                </React.Fragment>
+              )}
+            </Disclosure>
+          ) : (
+            <div className="flex w-full justify-center border border-hl-primary py-2">
+              <Loader />
+            </div>
+          )}
         </div>
-        <div className="justify-around gap-2 rounded-lg border-b border-gray-200 bg-white p-2 text-center shadow lg:flex lg:text-sm">
-          <h1>{race ? race.raceData.name : <Skeleton width={200} />}</h1>
-          <h1>
-            {race ? (
-              `${race.track.name} - (${race.track.code})`
-            ) : (
-              <Skeleton width={150} />
-            )}
-          </h1>
-          <h1>{meetDate}</h1>
-          <h1>
-            {race ? `${race.raceData.distance}m` : <Skeleton width={50} />}
-          </h1>
-          <h1>Race #: {raceNumber}</h1>
-          <h1>Class: {race ? race.raceData.class : <Skeleton width={30} />}</h1>
-          <h1>
-            Margin:{" "}
-            {margin ? (
-              `${utils.formatting.formatToTwoDecimals(
-                (+margin * 100).toString()
-              )}%`
-            ) : (
-              <Skeleton width={50} />
-            )}
-          </h1>
-          <h2>
-            {!meetRaces ? (
-              <Skeleton />
-            ) : !utils.formatting.formatTrackCondition(meetRaces) ? null : (
-              `${utils.formatting.formatTrackCondition(meetRaces)}, ${
-                meetRaces.weatherCondition
-              }`
-            )}
-          </h2>
-        </div>
-        <RaceTable
+        <RacesButton params={params} meetRaces={meetRaces?.raceInfo} />
+        <NewRaceTable
           runners={race?.runners}
           setSelectedRunner={setSelectedRunner}
           setIsModalOpen={setIsModalOpen}
@@ -110,10 +133,12 @@ const Races: React.FC = () => {
           closed={closed}
         />
       </div>
-      <div className="flex flex-col gap-6">
-        <h1 className="mt-4 text-2xl font-bold">History</h1>
+      <div className="mt-10">
+        <NewButton text="history" onClick={() => {}} disabled active={false} />
+      </div>
+      <div className="mt-4">
         <BetTable
-          paramsAddressExists={false}
+          paramsAddressExists={true}
           allBetsEnabled={true}
           betHistory={betHistory}
           config={config}
@@ -121,11 +146,17 @@ const Races: React.FC = () => {
           setIsModalOpen={setIsSettleModalOpen}
         />
       </div>
+      <div className="block py-10 lg:hidden" />
+      <PlaceBetModal
+        runner={selectedRunner}
+        race={race}
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+      />
       <SettleBetModal
         isModalOpen={isSettleModalOpen}
         setIsModalOpen={setIsSettleModalOpen}
         selectedBet={selectedBet}
-        refetch={refetch}
         config={config}
       />
     </PageLayout>

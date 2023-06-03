@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAccount } from "wagmi";
-import { Toggle, PageLayout, Card } from "../components";
+import { PageLayout, Card } from "../components";
 import { BetFilterGroup } from "../components/Bets";
 import { BetTable } from "../components/Tables";
 import { SettleBetModal } from "../components/Modals";
-import { BetFilterOptions, BetHistory } from "../types/bets";
+import { BetFilterOptions, BetHistoryResponse2 } from "../types/bets";
 import { useConfig } from "../providers/Config";
 import utils from "../utils";
 import { ethers } from "ethers";
 import { useBetsStatistics } from "../hooks/stats";
 import { useSubgraphBets } from "../hooks/subgraph";
+import { NewButton } from "../components/Buttons";
+import { useBetsData } from "../hooks/data";
 
 const Bets: React.FC = () => {
   const config = useConfig();
@@ -22,9 +24,9 @@ const Bets: React.FC = () => {
     useBetsStatistics();
   const [allBetsEnabled, setAllBetsEnabled] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedBet, setSelectedBet] = useState<BetHistory>();
   const [betTableFilter, setBetTableFilter] =
     useState<BetFilterOptions>("ALL_BETS");
+  const [selectedBet, setSelectedBet] = useState<BetHistoryResponse2>();
 
   useEffect(() => {
     // redirect back to /bets if disconnected
@@ -44,18 +46,14 @@ const Bets: React.FC = () => {
     setAllBetsEnabled(true);
   }, [address]);
 
-  const {
-    betData: betHistory,
-    currentPage,
-    incrementPage,
-    decrementPage,
-    refetch,
-    setSkipMultiplier
-  } = useSubgraphBets(
-    betTableFilter,
-    undefined,
-    allBetsEnabled ? undefined : paramsAddress
-  );
+  const { currentPage, incrementPage, decrementPage, setSkipMultiplier } =
+    useSubgraphBets(
+      betTableFilter,
+      undefined,
+      allBetsEnabled ? undefined : paramsAddress
+    );
+
+  const betHistory = useBetsData();
 
   const onMyBetToggle = () => setAllBetsEnabled(prev => !prev);
 
@@ -63,8 +61,6 @@ const Bets: React.FC = () => {
     setBetTableFilter(option);
     setSkipMultiplier(0);
   };
-
-  const isLoading = !betHistory;
 
   return (
     <PageLayout>
@@ -89,21 +85,17 @@ const Bets: React.FC = () => {
           }
         />
       </div>
-      <div className="mb-3 w-full p-3 lg:flex lg:justify-between">
-        <h3 className="my-3 flex items-center text-lg font-medium text-gray-900">
-          Bets History
-        </h3>
-        <div className="my-3 flex">
-          <BetFilterGroup
-            value={betTableFilter}
-            onChange={onFilterChange}
-            disabled={isLoading}
-          />
-        </div>
-        <div className="flex items-center gap-3">
-          <Toggle enabled={allBetsEnabled} onChange={onMyBetToggle} />
-          <div className="font-semibold">All Bets</div>
-        </div>
+      <div className="my-4 flex w-full justify-between">
+        <BetFilterGroup
+          value={betTableFilter}
+          onChange={onFilterChange}
+          disabled={!betHistory}
+        />
+        <NewButton
+          text={allBetsEnabled ? "ALL BETS" : "MY BETS"}
+          onClick={onMyBetToggle}
+          active={!allBetsEnabled}
+        />
       </div>
       <BetTable
         allBetsEnabled={allBetsEnabled}
@@ -114,29 +106,26 @@ const Bets: React.FC = () => {
         setIsModalOpen={setIsModalOpen}
       />
       <div className="mt-2 flex w-full justify-end">
-        <div className="flex w-auto items-center gap-x-4 rounded-lg bg-gray-200 px-4 py-2">
-          <button
-            className="text-[0.8rem] font-semibold uppercase text-gray-600"
+        <div className="flex items-center gap-x-4">
+          <NewButton
+            text="prev"
             onClick={decrementPage}
-          >
-            prev
-          </button>
-          <span className="block text-[1rem] font-semibold uppercase text-gray-600">
-            {currentPage}
-          </span>
-          <button
-            className="text-[0.8rem] font-semibold uppercase text-gray-600"
+            active={false}
+            disabled={!betHistory}
+          />
+          <p className="px-2 font-semibold">{currentPage}</p>
+          <NewButton
+            text="next"
             onClick={incrementPage}
-          >
-            next
-          </button>
+            disabled={!betHistory}
+          />
         </div>
       </div>
+      <div className="block py-10 lg:hidden" />
       <SettleBetModal
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         selectedBet={selectedBet}
-        refetch={refetch}
         config={config}
       />
     </PageLayout>

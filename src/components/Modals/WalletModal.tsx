@@ -7,11 +7,14 @@ import classNames from "classnames";
 type Props = {
   isModalOpen: boolean;
   closeWalletModal: () => void;
+  setLoading: (loading: boolean) => void;
 };
 
 export const WalletModal: React.FC<Props> = (props: Props) => {
-  const { isModalOpen, closeWalletModal } = props;
-  const { connect, connectors } = useConnect();
+  const { isModalOpen, closeWalletModal, setLoading } = props;
+  const { connect, connectors, isLoading } = useConnect();
+  // hours spent debugging "set state during render": 1
+  setLoading(isLoading);
 
   const connectorsWithIcons = connectors.map(connector => ({
     connector,

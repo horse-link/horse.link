@@ -15,8 +15,10 @@ export type Runner = {
   proposition_id: string;
   barrier: number;
   signature: EcSignature;
-  status: "Open" | "Scratched" | "LateScratched";
+  status: RunnerStatus;
 };
+
+export type RunnerStatus = "Open" | "Scratched" | "LateScratched";
 
 export type NextToJumpRace = {
   jumperRaceStartTime: string;

@@ -1,34 +1,83 @@
-import { BigNumber } from "ethers";
-import { useMemo } from "react";
+import { ethers } from "ethers";
+import { useMemo, useRef } from "react";
 import { useAccount } from "wagmi";
-import { FormattedUser, User } from "../../types/subgraph";
+import { Bet, BetResult, Deposit } from "../../types/subgraph";
 import useSubgraph from "../useSubgraph";
 import utils from "../../utils";
 
-type Response = {
-  user: User;
+type BetResponse = {
+  bets: Array<Bet>;
+};
+
+type DepositsResponse = {
+  deposits: Array<Deposit>;
 };
 
 export const useUserStatistics = () => {
   const { address } = useAccount();
-  const { data, loading } = useSubgraph<Response>(
-    utils.queries.getUserStatsQuery(address)
+  const { current: now } = useRef(Math.floor(Date.now() / 1000));
+
+  const { data: betsData, loading: betsLoading } = useSubgraph<BetResponse>(
+    utils.queries.getBetsQueryWithoutPagination(now)
   );
+  const { data: depositData, loading: depositLoading } =
+    useSubgraph<DepositsResponse>(
+      utils.queries.getDepositsWithoutPagination({
+        userAddress: address
+      })
+    );
 
-  const formattedUserStats = useMemo<FormattedUser | undefined>(() => {
-    if (loading || !data || !address) return;
-    if (!data.user) return utils.mocks.getMockUser();
+  const bets = useMemo(() => {
+    if (betsLoading || !betsData) return;
 
-    const user = data.user;
+    return betsData.bets;
+  }, [betsData, betsLoading]);
 
-    return {
-      id: user.id,
-      totalDeposited: BigNumber.from(user.totalDeposited),
-      inPlay: BigNumber.from(user.inPlay),
-      pnl: BigNumber.from(user.pnl),
-      lastUpdate: +user.lastUpdate
-    };
-  }, [data, loading]);
+  const deposits = useMemo(() => {
+    if (depositLoading || !depositData) return;
 
-  return formattedUserStats;
+    return depositData.deposits;
+  }, [depositData, depositLoading]);
+
+  // get total deposited into the vault
+  const totalDeposited = useMemo(() => {
+    if (!deposits) return;
+
+    return deposits.reduce(
+      (sum, cur) => sum.add(cur.assets),
+      ethers.constants.Zero
+    );
+  }, [deposits]);
+
+  // get total inplay
+  const inPlay = useMemo(() => {
+    if (!bets) return;
+
+    return bets
+      .filter(b => !b.settled)
+      .reduce((sum, cur) => sum.add(cur.amount), ethers.constants.Zero);
+  }, [bets]);
+
+  // get pnl
+  const pnl = useMemo(() => {
+    if (!bets) return;
+
+    return bets
+      .filter(b => b.settled)
+      .reduce((sum, cur) => {
+        const isWin = cur.result === BetResult.WINNER;
+        let delta = cur.payout;
+
+        if (!isWin) delta = delta.mul(-1);
+
+        return sum.add(delta);
+      }, ethers.constants.Zero);
+  }, [bets]);
+
+  return {
+    totalDeposited,
+    inPlay,
+    pnl,
+    lastUpdate: now
+  };
 };

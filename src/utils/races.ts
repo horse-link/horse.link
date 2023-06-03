@@ -1,12 +1,34 @@
 import { Race, Runner, Meet } from "../types/meets";
-import { ethers } from "ethers";
-import constants from "../constants";
 import { RaceStatus } from "../constants/status";
 import utils from "../utils";
 import dayjs, { Dayjs } from "dayjs";
+import { ethers } from "ethers";
+import constants from "../constants";
 
 export const isScratchedRunner = (runner: Runner) =>
   ["LateScratched", "Scratched"].includes(runner.status);
+
+export const createRacingLink = (race: Race, meet: Meet) =>
+  race.status !== RaceStatus.PAYING
+    ? `/races/${meet.id}/${race.number}`
+    : `/results/${utils.markets.getPropositionIdFromRaceMeet(race, meet)}`;
+
+export const createCellText = (race: Race, now: Dayjs) => {
+  const isAfterClosingTime = now.isAfter(dayjs(race.close));
+  const timeString = utils.formatting.formatTimeToHMSFromNow(
+    now,
+    race.start!,
+    true
+  );
+
+  return race.status == RaceStatus.PAYING
+    ? race.results?.join(", ")
+    : race.status === RaceStatus.ABANDONED
+    ? "ABND"
+    : isAfterClosingTime
+    ? "CLSD"
+    : timeString;
+};
 
 export const calculateRaceMargin = (odds: number[]) => {
   // all ones case
@@ -28,26 +50,4 @@ export const calculateRaceMargin = (odds: number[]) => {
   );
 
   return ethers.utils.formatEther(summed);
-};
-
-export const createRacingLink = (race: Race, meet: Meet) =>
-  race.status !== RaceStatus.PAYING
-    ? `/races/${meet.id}/${race.number}`
-    : `/results/${utils.markets.getPropositionIdFromRaceMeet(race, meet)}`;
-
-export const createCellText = (race: Race, now: Dayjs) => {
-  const isAfterClosingTime = now.isAfter(dayjs(race.close));
-  const timeString = utils.formatting.formatTimeToHMSFromNow(
-    now,
-    race.start!,
-    true
-  );
-
-  return race.status == RaceStatus.PAYING
-    ? race.results?.join(" ")
-    : race.status === RaceStatus.ABANDONED
-    ? "ABND"
-    : isAfterClosingTime
-    ? "CLSD"
-    : timeString;
 };

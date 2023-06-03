@@ -19,14 +19,14 @@ export const BetSlipTxModal: React.FC<Props> = ({ isOpen, onClose }) => {
       {!hashes?.length ? (
         !errors?.length ? (
           <React.Fragment>
-            <h2 className="text-2xl font-bold">Transaction Loading</h2>
+            <h2 className="text-[32px] font-bold">Transaction Loading</h2>
             <div className="mt-4 flex w-full justify-center">
               <Loader />
             </div>
           </React.Fragment>
         ) : (
           <React.Fragment>
-            <h2 className="text-2xl font-bold">Bet Slip Errors</h2>
+            <h2 className="text-[32px] font-bold">Bet Slip Errors</h2>
             {errors.length === 1 ? (
               <div className="mt-6 w-full rounded-md bg-red-600 py-4 text-center text-white">
                 {utils.errors.getMeaningfulMessage(errors[0])}
@@ -36,7 +36,7 @@ export const BetSlipTxModal: React.FC<Props> = ({ isOpen, onClose }) => {
                 <h3 className="mt-2">
                   Placing your bets returned the following errors:
                 </h3>
-                <ol className="ml-4 mt-2 list-decimal">
+                <ol className="mt-2">
                   {errors.map((err, i) => (
                     <li key={`${err}-${i}`}>
                       A bet rejected with reason:{" "}
@@ -50,8 +50,8 @@ export const BetSlipTxModal: React.FC<Props> = ({ isOpen, onClose }) => {
         )
       ) : (
         <React.Fragment>
-          <h2 className="text-2xl font-bold">Bet Slip Transactions</h2>
-          <ol className="ml-4 mt-6 list-decimal">
+          <h2 className="text-[32px] font-bold">Bet Slip Transactions</h2>
+          <ol className="mt-6">
             {hashes.map(hash => (
               <li key={hash}>
                 <a

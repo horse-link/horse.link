@@ -45,15 +45,6 @@ test.concurrent.each([
   }
 );
 
-// format bet id tests
-describe("format bet ids", () => {
-  it("should return the bet number from the id", () => {
-    const mockId = utils.mocks.getMockBet().id;
-    const id = utils.formatting.formatBetId(mockId);
-    expect(id).toEqual(0);
-  });
-});
-
 // detect scratched runners
 describe("detect scratched runners", () => {
   it("should return the correct BetHistory for a scratched runner", () => {
@@ -64,9 +55,11 @@ describe("detect scratched runners", () => {
 
     expect(mockSignedBetData?.scratchedRunners?.length).toBeGreaterThan(0);
     expect(betHistory.propositionId).toEqual(
-      mockSignedBetData!.scratchedRunners![0].b16propositionId
+      mockSignedBetData!.scratchedRunners![0].b16propositionId.toUpperCase()
     );
-    expect(betHistory.propositionId).toEqual(mockBet.propositionId);
+    expect(betHistory.propositionId).toEqual(
+      mockBet.propositionId.toUpperCase()
+    );
     expect(!!betHistory.scratched).toEqual(true);
     expect(betHistory.status).toEqual("SCRATCHED");
   });

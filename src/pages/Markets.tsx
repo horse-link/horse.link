@@ -1,12 +1,10 @@
 import { useMarketStatistics } from "../hooks/stats";
 import { ethers } from "ethers";
 import utils from "../utils";
-import { useConfig } from "../providers/Config";
 import { PageLayout, Card } from "../components";
-import { MarketsTable } from "../components/Tables";
+import { NewMarketTable } from "../components/Tables";
 
 const Markets: React.FC = () => {
-  const config = useConfig();
   const { totalBets, totalVolume, largestBet } = useMarketStatistics();
 
   return (
@@ -32,7 +30,8 @@ const Markets: React.FC = () => {
           }
         />
       </div>
-      <MarketsTable config={config} />
+      <NewMarketTable />
+      <div className="block py-10 lg:hidden" />
     </PageLayout>
   );
 };
