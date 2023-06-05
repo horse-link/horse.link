@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAccount } from "wagmi";
 import { PageLayout, Card } from "../components";
@@ -10,7 +10,6 @@ import { useConfig } from "../providers/Config";
 import utils from "../utils";
 import { ethers } from "ethers";
 import { useBetsStatistics } from "../hooks/stats";
-import { useSubgraphBets } from "../hooks/subgraph";
 import { NewButton } from "../components/Buttons";
 import { useBetsData } from "../hooks/data";
 
@@ -46,20 +45,24 @@ const Bets: React.FC = () => {
     setAllBetsEnabled(true);
   }, [address]);
 
-  const { currentPage, incrementPage, decrementPage, setSkipMultiplier } =
-    useSubgraphBets(
-      betTableFilter,
-      undefined,
-      allBetsEnabled ? undefined : paramsAddress
-    );
+  const betHistoryRequest = useBetsData();
 
-  const betHistory = useBetsData();
+  const betHistory = useMemo(() => {
+    if (!betHistoryRequest?.length || !address) return;
+
+    const getUserbets = address && !allBetsEnabled;
+
+    return getUserbets
+      ? betHistoryRequest.filter(
+          b => b.punter.toLowerCase() === address.toLowerCase()
+        )
+      : betHistoryRequest;
+  }, [betHistoryRequest, allBetsEnabled, address]);
 
   const onMyBetToggle = () => setAllBetsEnabled(prev => !prev);
 
   const onFilterChange = (option: BetFilterOptions) => {
     setBetTableFilter(option);
-    setSkipMultiplier(0);
   };
 
   return (
@@ -109,16 +112,12 @@ const Bets: React.FC = () => {
         <div className="flex items-center gap-x-4">
           <NewButton
             text="prev"
-            onClick={decrementPage}
+            onClick={() => {}}
             active={false}
             disabled={!betHistory}
           />
-          <p className="px-2 font-semibold">{currentPage}</p>
-          <NewButton
-            text="next"
-            onClick={incrementPage}
-            disabled={!betHistory}
-          />
+          <p className="px-2 font-semibold">0</p>
+          <NewButton text="next" onClick={() => {}} disabled={!betHistory} />
         </div>
       </div>
       <div className="block py-10 lg:hidden" />
