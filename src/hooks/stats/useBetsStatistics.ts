@@ -1,34 +1,16 @@
 import { BigNumber, ethers } from "ethers";
-import { useMemo, useRef } from "react";
-import { Bet, BetResult } from "../../types/subgraph";
-import useSubgraph from "../useSubgraph";
+import { useEffect, useMemo, useState } from "react";
+import { Bet } from "../../types/subgraph";
 import utils from "../../utils";
-import constants from "../../constants";
-
-type Response = {
-  bets: Array<Bet>;
-};
+import { useApi } from "../../providers/Api";
 
 export const useBetsStatistics = () => {
-  const { current: now } = useRef(
-    Math.floor(Date.now() / constants.time.ONE_SECOND_MS)
-  );
-  const { current: yesterdayFilter } = useRef(
-    now - constants.time.TWENTY_FOUR_HOURS_S
-  );
+  const api = useApi();
+  const [betsData, setBetsData] = useState<Partial<Bet>[]>();
 
-  const { data, loading } = useSubgraph<Response>(
-    utils.queries.getBetsQueryWithoutPagination(now, {
-      settledAt_gte: yesterdayFilter,
-      result: BetResult.WINNER
-    })
-  );
-
-  const betsData = useMemo(() => {
-    if (loading || !data) return;
-
-    return data.bets;
-  }, [data, loading]);
+  useEffect(() => {
+    api.getBetStats().then(setBetsData);
+  }, []);
 
   //Total winning bets for the bets page
   const totalWinningBets = useMemo(() => {

@@ -15,6 +15,7 @@ import { VaultUserData } from "../types/vaults";
 import { Network } from "../types/general";
 import constants from "../constants";
 import { FormattedProtocol } from "../types/stats";
+import { Bet } from "../types/subgraph";
 
 export class Api {
   public client: AxiosInstance;
@@ -217,6 +218,18 @@ export class Api {
         tokenDecimal
       }
     });
+    return data;
+  };
+
+  public getBetStats = async () => {
+    const { data } = await this.client.get<Partial<Bet>[]>("/bets/stats/");
+
+    return data;
+  };
+
+  public getMarketStats = async () => {
+    const { data } = await this.client.get<Partial<Bet>[]>("/markets/stats/");
+
     return data;
   };
 }
