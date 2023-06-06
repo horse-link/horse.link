@@ -51,8 +51,8 @@ export const BetTable: React.FC<Props> = ({
     "Time",
     "Race",
     "Proposition",
-    "Status",
-    "Result"
+    "Result",
+    "Status"
   ].map((text, i) => (
     <div
       key={`racetable-${text}-${i}`}
@@ -126,7 +126,7 @@ export const BetTable: React.FC<Props> = ({
               className={style}
               onClick={() => onClickBet(bet)}
             >
-              {bet.result}
+              {bet.status === "SETTLED" ? bet.result : "PENDING"}
             </div>,
             <div
               key={`racetable-bet-${bet.index}-${i}-status`}
