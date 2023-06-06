@@ -227,8 +227,11 @@ export class Api {
     return data;
   };
 
+  // TSOA generating weird routes
   public getMarketStats = async () => {
-    const { data } = await this.client.get<Partial<Bet>[]>("/markets/stats/");
+    const { data } = await this.client.get<Partial<Bet>[]>(
+      "/markets/stats/stats/"
+    );
 
     return data;
   };
