@@ -12,14 +12,12 @@ export const useMarketStatistics = () => {
     api.getMarketStats().then(setBetsData);
   }, []);
 
-  //Total bets used on the market page
   const totalBets = useMemo(() => {
     if (!betsData) return;
 
     return betsData.length;
   }, [betsData]);
 
-  //Total volume bets used on the market page
   const totalVolume = useMemo(() => {
     if (!betsData) return;
     if (!totalBets) return ethers.constants.Zero;
@@ -32,7 +30,6 @@ export const useMarketStatistics = () => {
     );
   }, [betsData, totalBets]);
 
-  //Largest bet used on the market page
   const largestBet = useMemo(() => {
     if (!betsData) return;
     if (!totalBets) return utils.mocks.getMockBet();
