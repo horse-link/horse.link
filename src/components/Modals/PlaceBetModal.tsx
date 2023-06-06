@@ -260,11 +260,22 @@ export const PlaceBetModal: React.FC<Props> = ({
               <div className="flex items-center">
                 <h3 className="text-left text-hl-secondary">Wager amount:</h3>
               </div>
+              {/* desktop */}
               <input
                 placeholder="0"
                 value={wagerAmount}
                 onChange={changeWagerAmount}
-                className="border border-hl-border bg-hl-background p-2 text-hl-primary !outline-none !ring-0"
+                className="hidden border border-hl-border bg-hl-background p-2 text-hl-primary !outline-none !ring-0 lg:block"
+                disabled={isScratched === true}
+              />
+
+              {/* mobile */}
+              <input
+                placeholder="0"
+                value={wagerAmount}
+                type="number"
+                onChange={changeWagerAmount}
+                className="block border border-hl-border bg-hl-background p-2 text-hl-primary !outline-none !ring-0 lg:hidden"
                 disabled={isScratched === true}
               />
             </div>
