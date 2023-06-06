@@ -1,16 +1,12 @@
 import { BigNumber, ethers } from "ethers";
-import { useEffect, useMemo, useState } from "react";
-import { Bet } from "../../types/subgraph";
+import { useMemo } from "react";
 import utils from "../../utils";
 import { useApi } from "../../providers/Api";
+import { usePromise } from "../usePromise";
 
 export const useMarketStatistics = () => {
   const api = useApi();
-  const [betsData, setBetsData] = useState<Partial<Bet>[]>();
-
-  useEffect(() => {
-    api.getMarketStats().then(setBetsData);
-  }, []);
+  const betsData = usePromise(api.getMarketStats);
 
   const totalBets = useMemo(() => {
     if (!betsData) return;
