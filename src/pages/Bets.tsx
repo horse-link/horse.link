@@ -83,7 +83,9 @@ const Bets: React.FC = () => {
           data={
             largestWinningBet &&
             `$${utils.formatting.formatToFourDecimals(
-              ethers.utils.formatEther(largestWinningBet.payout)
+              ethers.utils.formatEther(
+                largestWinningBet?.payout || ethers.constants.Zero
+              )
             )}`
           }
         />
