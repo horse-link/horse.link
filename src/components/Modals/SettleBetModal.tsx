@@ -191,7 +191,7 @@ export const SettleBetModal: React.FC<Props> = ({
                     {isScratched ? "Refund" : "Loss"}
                   </h3>
                   <p className="text-left text-hl-tertiary">
-                    {ethers.utils.formatEther(bet.payout)} {token.symbol}
+                    {ethers.utils.formatEther(bet.amount)} {token.symbol}
                   </p>
                 </React.Fragment>
               ) : (
