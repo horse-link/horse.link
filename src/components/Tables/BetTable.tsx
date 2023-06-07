@@ -1,5 +1,5 @@
 import React from "react";
-import { BetHistoryResponse2 } from "../../types/bets";
+import { BetHistoryResponse2, BetStatus } from "../../types/bets";
 import { Config } from "../../types/config";
 import { useAccount } from "wagmi";
 import { useWalletModal } from "../../providers/WalletModal";
@@ -73,6 +73,10 @@ export const BetTable: React.FC<Props> = ({
           const style =
             "w-full text-left py-4 text-hl-tertiary text-xs xl:text-base";
 
+          const betClosed = (
+            ["SETTLED", "REFUNDED"] as Array<BetStatus>
+          ).includes(bet.status);
+
           return [
             <div
               key={`racetable-bet-${bet.index}-${i}-index`}
@@ -126,7 +130,7 @@ export const BetTable: React.FC<Props> = ({
               className={style}
               onClick={() => onClickBet(bet)}
             >
-              {bet.status === "SETTLED" ? bet.result : "PENDING"}
+              {betClosed ? bet.result : "PENDING"}
             </div>,
             <div
               key={`racetable-bet-${bet.index}-${i}-status`}
