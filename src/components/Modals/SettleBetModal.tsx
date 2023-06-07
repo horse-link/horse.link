@@ -125,6 +125,14 @@ export const SettleBetModal: React.FC<Props> = ({
     }
   };
 
+  const settleButtonDisabled =
+    !signer ||
+    isSettled ||
+    bet?.status === "PENDING" ||
+    !isPastPayoutDate ||
+    txLoading ||
+    !!txHash;
+
   return (
     <BaseModal
       isOpen={isModalOpen}
@@ -216,14 +224,8 @@ export const SettleBetModal: React.FC<Props> = ({
             <NewButton
               text={txLoading ? "loading..." : "SETTLE BET"}
               onClick={onClickSettleBet}
-              disabled={
-                !signer ||
-                isSettled ||
-                bet.status === "PENDING" ||
-                !isPastPayoutDate ||
-                txLoading ||
-                !!txHash
-              }
+              active={!settleButtonDisabled}
+              disabled={settleButtonDisabled}
               big
             />
             {!bet.marketResultAdded && (
