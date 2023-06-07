@@ -209,39 +209,45 @@ export const BetTable: React.FC<Props> = ({
           </div>
         ) : (
           <div className="flex w-full flex-col items-center">
-            {betHistory.map(bet => (
-              <div
-                key={JSON.stringify(bet)}
-                className="flex w-full flex-col items-center gap-y-2 border-t border-hl-border py-2 text-center"
-                onClick={() => onClickBet(bet)}
-              >
-                <h2 className="font-basement tracking-wider text-hl-secondary">
-                  {bet.index} {bet.status}
-                </h2>
-                <p>{bet.race}</p>
-                <p className="text-hl-secondary">
-                  {utils.formatting.formatToFourDecimals(
-                    ethers.utils.formatEther(bet.amount)
-                  )}
-                </p>
-                <a
-                  href={`${scanner}/address/${bet.punter}`}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="w-full max-w-full truncate"
+            {betHistory.map(bet => {
+              const betClosed = (
+                ["SETTLED", "REFUNDED"] as Array<BetStatus>
+              ).includes(bet.status);
+
+              return (
+                <div
+                  key={JSON.stringify(bet)}
+                  className="flex w-full flex-col items-center gap-y-2 border-t border-hl-border py-2 text-center"
+                  onClick={() => onClickBet(bet)}
                 >
-                  Punter: {bet.punter}
-                </a>
-                <a
-                  href={`${scanner}/tx/${bet.tx}`}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="w-full max-w-full truncate"
-                >
-                  TxID: {bet.tx}
-                </a>
-              </div>
-            ))}
+                  <h2 className="font-basement tracking-wider text-hl-secondary">
+                    {bet.index} {bet.status} {betClosed ? bet.result : ""}
+                  </h2>
+                  <p>{bet.race}</p>
+                  <p className="text-hl-secondary">
+                    {utils.formatting.formatToFourDecimals(
+                      ethers.utils.formatEther(bet.amount)
+                    )}
+                  </p>
+                  <a
+                    href={`${scanner}/address/${bet.punter}`}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="w-full max-w-full truncate"
+                  >
+                    Punter: {bet.punter}
+                  </a>
+                  <a
+                    href={`${scanner}/tx/${bet.tx}`}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="w-full max-w-full truncate"
+                  >
+                    TxID: {bet.tx}
+                  </a>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>
