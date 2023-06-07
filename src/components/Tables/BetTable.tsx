@@ -214,6 +214,8 @@ export const BetTable: React.FC<Props> = ({
                 ["SETTLED", "REFUNDED"] as Array<BetStatus>
               ).includes(bet.status);
 
+              const betDidWin = betClosed ? bet.result === "WIN" : undefined;
+
               return (
                 <div
                   key={JSON.stringify(bet)}
@@ -226,7 +228,9 @@ export const BetTable: React.FC<Props> = ({
                   <p>{bet.race}</p>
                   <p className="text-hl-secondary">
                     {utils.formatting.formatToFourDecimals(
-                      ethers.utils.formatEther(bet.amount)
+                      ethers.utils.formatEther(
+                        betDidWin === true ? bet.payout : bet.amount
+                      )
                     )}
                   </p>
                   <a
