@@ -96,8 +96,6 @@ export const SettleBetModal: React.FC<Props> = ({
     m => m.vaultAddress.toLowerCase() === vault?.address.toLowerCase()
   );
 
-  const isWinning = bet ? bet.result === "WIN" : undefined;
-
   const isScratched = bet?.status === "SCRATCHED";
 
   const isPastPayoutDate = now > (bet?.time || 0);
@@ -186,17 +184,17 @@ export const SettleBetModal: React.FC<Props> = ({
               <p className="text-left text-hl-tertiary">
                 {utils.config.getVaultNameFromMarket(market.address, config)}
               </p>
-              {isWinning === true ? (
+              {bet.result === "WIN" ? (
                 <React.Fragment>
                   <h3 className="text-left text-hl-secondary">Win:</h3>
                   <p className="text-left text-hl-tertiary">
                     {ethers.utils.formatEther(bet.payout)} {token.symbol}
                   </p>
                 </React.Fragment>
-              ) : isWinning === false ? (
+              ) : bet.result === "LOSE" ? (
                 <React.Fragment>
                   <h3 className="text-left text-hl-secondary">
-                    {isScratched ? "Refund" : "Loss"}
+                    {isScratched ? "Refund" : "Loss"}:
                   </h3>
                   <p className="text-left text-hl-tertiary">
                     {ethers.utils.formatEther(bet.amount)} {token.symbol}
