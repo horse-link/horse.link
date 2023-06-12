@@ -62,18 +62,13 @@ const Vaults: React.FC = () => {
         />
       </div>
       <div className="mt-10">
-        <NewButton
-          text="vaults & liquidity pools"
-          onClick={() => {}}
-          disabled
-          active={false}
-        />
+        <p>VAULTS & LIQUIDITY POOLS</p>
       </div>
       <div className="mt-4">
         <NewVaultsTable setIsModalOpen={setModal} />
       </div>
       <div className="mt-10">
-        <NewButton text="history" onClick={() => {}} disabled active={false} />
+        <p>HISTORY</p>
       </div>
       <div className="mt-4">
         <NewVaultHistoryTable vaultHistory={vaultHistory} />

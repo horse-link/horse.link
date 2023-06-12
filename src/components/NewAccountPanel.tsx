@@ -181,18 +181,18 @@ export const NewAccountPanel: React.FC<Props> = ({
           }
         />
         <Card
-          title={`${chain?.name || ""} ETH Balance`}
-          data={
-            balanceData
-              ? `${(+balanceData.formatted).toFixed(4)} ETH`
-              : undefined
-          }
-        />
-        <Card
           title={`${currentToken ? currentToken.symbol : "Token"} Balance`}
           data={
             userBalance && currentToken
               ? `${userBalance.formatted} ${currentToken.symbol}`
+              : undefined
+          }
+        />
+        <Card
+          title={`${chain?.name || ""} ETH Balance`}
+          data={
+            balanceData
+              ? `${(+balanceData.formatted).toFixed(4)} ETH`
               : undefined
           }
         />
