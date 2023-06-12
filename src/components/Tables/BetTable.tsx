@@ -1,5 +1,5 @@
 import React from "react";
-import { BetHistoryResponse2 } from "../../types/bets";
+import { BetHistoryResponse2, BetStatus } from "../../types/bets";
 import { Config } from "../../types/config";
 import { useAccount } from "wagmi";
 import { useWalletModal } from "../../providers/WalletModal";
@@ -51,8 +51,8 @@ export const BetTable: React.FC<Props> = ({
     "Time",
     "Race",
     "Proposition",
-    "Status",
-    "Result"
+    "Result",
+    "Status"
   ].map((text, i) => (
     <div
       key={`racetable-${text}-${i}`}
@@ -72,6 +72,10 @@ export const BetTable: React.FC<Props> = ({
       ? betHistory.map((bet, i) => {
           const style =
             "w-full text-left py-4 text-hl-tertiary text-xs xl:text-base";
+
+          const betClosed = (
+            ["SETTLED", "REFUNDED"] as Array<BetStatus>
+          ).includes(bet.status);
 
           return [
             <div
@@ -126,7 +130,7 @@ export const BetTable: React.FC<Props> = ({
               className={style}
               onClick={() => onClickBet(bet)}
             >
-              {bet.result}
+              {betClosed ? bet.result : "PENDING"}
             </div>,
             <div
               key={`racetable-bet-${bet.index}-${i}-status`}
@@ -205,39 +209,49 @@ export const BetTable: React.FC<Props> = ({
           </div>
         ) : (
           <div className="flex w-full flex-col items-center">
-            {betHistory.map(bet => (
-              <div
-                key={JSON.stringify(bet)}
-                className="flex w-full flex-col items-center gap-y-2 border-t border-hl-border py-2 text-center"
-                onClick={() => onClickBet(bet)}
-              >
-                <h2 className="font-basement tracking-wider text-hl-secondary">
-                  {bet.index} {bet.status}
-                </h2>
-                <p>{bet.race}</p>
-                <p className="text-hl-secondary">
-                  {utils.formatting.formatToFourDecimals(
-                    ethers.utils.formatEther(bet.amount)
-                  )}
-                </p>
-                <a
-                  href={`${scanner}/address/${bet.punter}`}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="w-full max-w-full truncate"
+            {betHistory.map(bet => {
+              const betClosed = (
+                ["SETTLED", "REFUNDED"] as Array<BetStatus>
+              ).includes(bet.status);
+
+              const betDidWin = betClosed ? bet.result === "WIN" : undefined;
+
+              return (
+                <div
+                  key={JSON.stringify(bet)}
+                  className="flex w-full flex-col items-center gap-y-2 border-t border-hl-border py-2 text-center"
+                  onClick={() => onClickBet(bet)}
                 >
-                  Punter: {bet.punter}
-                </a>
-                <a
-                  href={`${scanner}/tx/${bet.tx}`}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="w-full max-w-full truncate"
-                >
-                  TxID: {bet.tx}
-                </a>
-              </div>
-            ))}
+                  <h2 className="font-basement tracking-wider text-hl-secondary">
+                    {bet.index} {bet.status} {betClosed ? bet.result : ""}
+                  </h2>
+                  <p>{bet.race}</p>
+                  <p className="text-hl-secondary">
+                    {utils.formatting.formatToFourDecimals(
+                      ethers.utils.formatEther(
+                        betDidWin === true ? bet.payout : bet.amount
+                      )
+                    )}
+                  </p>
+                  <a
+                    href={`${scanner}/address/${bet.punter}`}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="w-full max-w-full truncate"
+                  >
+                    Punter: {bet.punter}
+                  </a>
+                  <a
+                    href={`${scanner}/tx/${bet.tx}`}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="w-full max-w-full truncate"
+                  >
+                    TxID: {bet.tx}
+                  </a>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>

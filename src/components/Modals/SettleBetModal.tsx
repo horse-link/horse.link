@@ -96,8 +96,6 @@ export const SettleBetModal: React.FC<Props> = ({
     m => m.vaultAddress.toLowerCase() === vault?.address.toLowerCase()
   );
 
-  const isWinning = bet ? bet.result === "WIN" : undefined;
-
   const isScratched = bet?.status === "SCRATCHED";
 
   const isPastPayoutDate = now > (bet?.time || 0);
@@ -125,6 +123,14 @@ export const SettleBetModal: React.FC<Props> = ({
     }
   };
 
+  const settleButtonDisabled =
+    !signer ||
+    isSettled ||
+    bet?.status === "PENDING" ||
+    !isPastPayoutDate ||
+    txLoading ||
+    !!txHash;
+
   return (
     <BaseModal
       isOpen={isModalOpen}
@@ -136,7 +142,7 @@ export const SettleBetModal: React.FC<Props> = ({
           <Loader />
         </div>
       ) : isSettled ? (
-        <div className="p-6">
+        <div className="p-4">
           <h2 className="font-basement text-[32px] tracking-wider">
             {utils.formatting.formatFirstLetterCapitalised(bet.status)} Bet #
             {bet.index}
@@ -148,7 +154,7 @@ export const SettleBetModal: React.FC<Props> = ({
               href={`${scanner}/tx/${bet.settledAtTx}`}
               target="_blank"
               rel="noreferrer noopener"
-              className="text-hl-secondary underline"
+              className="text-sm text-hl-secondary underline"
             >
               {utils.formatting.shortenHash(bet.settledAtTx)}
             </a>
@@ -178,20 +184,20 @@ export const SettleBetModal: React.FC<Props> = ({
               <p className="text-left text-hl-tertiary">
                 {utils.config.getVaultNameFromMarket(market.address, config)}
               </p>
-              {isWinning === true ? (
+              {bet.result === "WIN" ? (
                 <React.Fragment>
                   <h3 className="text-left text-hl-secondary">Win:</h3>
                   <p className="text-left text-hl-tertiary">
                     {ethers.utils.formatEther(bet.payout)} {token.symbol}
                   </p>
                 </React.Fragment>
-              ) : isWinning === false ? (
+              ) : bet.result === "LOSE" ? (
                 <React.Fragment>
                   <h3 className="text-left text-hl-secondary">
-                    {isScratched ? "Refund" : "Loss"}
+                    {isScratched ? "Refund" : "Loss"}:
                   </h3>
                   <p className="text-left text-hl-tertiary">
-                    {ethers.utils.formatEther(bet.payout)} {token.symbol}
+                    {ethers.utils.formatEther(bet.amount)} {token.symbol}
                   </p>
                 </React.Fragment>
               ) : (
@@ -216,14 +222,8 @@ export const SettleBetModal: React.FC<Props> = ({
             <NewButton
               text={txLoading ? "loading..." : "SETTLE BET"}
               onClick={onClickSettleBet}
-              disabled={
-                !signer ||
-                isSettled ||
-                bet.status === "PENDING" ||
-                !isPastPayoutDate ||
-                txLoading ||
-                !!txHash
-              }
+              active={!settleButtonDisabled}
+              disabled={settleButtonDisabled}
               big
             />
             {!bet.marketResultAdded && (

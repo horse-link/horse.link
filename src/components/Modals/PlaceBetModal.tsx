@@ -252,7 +252,7 @@ export const PlaceBetModal: React.FC<Props> = ({
           </h2>
 
           <div className="mt-8 flex w-full flex-col items-center gap-y-4 divide-y divide-hl-border">
-            <div className="grid w-full grid-cols-2 grid-rows-2 gap-2">
+            <div className="grid w-full grid-cols-2 grid-rows-2 gap-x-2">
               <h3 className="text-left text-hl-secondary">Target odds:</h3>
               <p className="text-left text-hl-tertiary">
                 {utils.formatting.formatToTwoDecimals(back.odds.toString())}
@@ -260,11 +260,22 @@ export const PlaceBetModal: React.FC<Props> = ({
               <div className="flex items-center">
                 <h3 className="text-left text-hl-secondary">Wager amount:</h3>
               </div>
+              {/* desktop */}
               <input
                 placeholder="0"
                 value={wagerAmount}
                 onChange={changeWagerAmount}
-                className="bg-hl-background text-hl-primary !outline-none !ring-0"
+                className="hidden border border-hl-border bg-hl-background p-2 text-hl-primary !outline-none !ring-0 lg:block"
+                disabled={isScratched === true}
+              />
+
+              {/* mobile */}
+              <input
+                placeholder="0"
+                value={wagerAmount}
+                type="number"
+                onChange={changeWagerAmount}
+                className="block border border-hl-border bg-hl-background p-2 text-hl-primary !outline-none !ring-0 lg:hidden"
                 disabled={isScratched === true}
               />
             </div>
