@@ -102,8 +102,8 @@ export const MarketHistoryTable: React.FC = () => {
 
   const noEntities = [
     [
-      <div key="markethistorytable-nobets-blank" />,
-      <div className="py-4" key="markethistorytable-nobets-message">
+      <div key="markethistorytable-noentities-blank" />,
+      <div className="py-4" key="markethistorytable-noentities-message">
         No entities!
       </div>
     ]
@@ -129,7 +129,35 @@ export const MarketHistoryTable: React.FC = () => {
         ) : (
           <div className="flex w-full flex-col items-center">
             {history.map(h => (
-              <div></div>
+              <div
+                key={h.id}
+                className="flex w-full flex-col items-center gap-y-2 border-t border-hl-border py-2 text-center"
+              >
+                <h2 className="font-basement tracking-wider text-hl-secondary">
+                  {h.type}
+                </h2>
+                <p>
+                  {utils.formatting.formatToFourDecimals(
+                    ethers.utils.formatEther(h.amount)
+                  )}
+                </p>
+                <a
+                  href={`${scanner}/tx/${h.id}`}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="w-full max-w-full truncate"
+                >
+                  TxId: {h.id}
+                </a>
+                <a
+                  href={`${scanner}/address/${h.vaultAddress}`}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="w-full max-w-full truncate"
+                >
+                  Vault: {h.vaultAddress}
+                </a>
+              </div>
             ))}
           </div>
         )}
