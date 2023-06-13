@@ -36,8 +36,8 @@ export const MarketHistoryTable: React.FC = () => {
 
         return [
           <div
-            className="flex h-full w-full items-center truncate"
             key={`markethistorytable-${h.id}-${i}`}
+            className="flex h-full w-full items-center truncate"
           >
             <a
               href={`${scanner}/tx/${h.id}`}
@@ -52,8 +52,8 @@ export const MarketHistoryTable: React.FC = () => {
             </a>
           </div>,
           <div
-            className="flex h-full w-full items-center truncate"
             key={`markethistorytable-${h.vaultAddress}-${i}`}
+            className="flex h-full w-full items-center truncate"
           >
             <a
               href={`${scanner}/address/${h.vaultAddress}`}
@@ -61,15 +61,15 @@ export const MarketHistoryTable: React.FC = () => {
               rel="noreferrer noopener"
               className={classNames(
                 style,
-                "max-w-[10ch] truncate xl:max-w-[20ch]"
+                "max-w-[10ch] truncate text-hl-secondary xl:max-w-[20ch]"
               )}
             >
               {h.vaultAddress}
             </a>
           </div>,
           <div
-            className="w-full py-4 text-left"
             key={`markethistorytable-${h.amount.toString()}-${i}`}
+            className="w-full py-4 text-left"
           >
             {utils.formatting.formatToFourDecimals(
               ethers.utils.formatEther(h.amount)
@@ -82,8 +82,8 @@ export const MarketHistoryTable: React.FC = () => {
             {dayjs.unix(h.createdAt).fromNow()}
           </div>,
           <div
-            className="w-full py-4 text-left"
             key={`markethistorytable-${h.type}-${i}`}
+            className="w-full py-4 text-left text-hl-secondary"
           >
             {h.type}
           </div>
