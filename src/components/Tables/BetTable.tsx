@@ -226,6 +226,7 @@ export const BetTable: React.FC<Props> = ({
                     {bet.index} {bet.status} {betClosed ? bet.result : ""}
                   </h2>
                   <p>{bet.race}</p>
+                  <p>{bet.proposition}</p>
                   <p className="text-hl-secondary">
                     {utils.formatting.formatToFourDecimals(
                       ethers.utils.formatEther(
