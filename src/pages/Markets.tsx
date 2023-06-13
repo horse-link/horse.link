@@ -2,7 +2,8 @@ import { useMarketStatistics } from "../hooks/stats";
 import { ethers } from "ethers";
 import utils from "../utils";
 import { PageLayout, Card } from "../components";
-import { NewMarketTable } from "../components/Tables";
+import { MarketHistoryTable, NewMarketTable } from "../components/Tables";
+import { NewButton } from "../components/Buttons";
 
 const Markets: React.FC = () => {
   const { totalBets, totalVolume, largestBet } = useMarketStatistics();
@@ -33,6 +34,12 @@ const Markets: React.FC = () => {
         />
       </div>
       <NewMarketTable />
+      <div className="mt-10">
+        <NewButton text="history" onClick={() => {}} disabled active={false} />
+      </div>
+      <div className="mt-4">
+        <MarketHistoryTable />
+      </div>
       <div className="block py-10 lg:hidden" />
     </PageLayout>
   );
