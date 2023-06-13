@@ -15,7 +15,7 @@ import { VaultUserData } from "../types/vaults";
 import { Network } from "../types/general";
 import constants from "../constants";
 import { FormattedProtocol } from "../types/stats";
-import { Bet, Borrow, Repay } from "../types/subgraph";
+import { Bet } from "../types/subgraph";
 import { MarketHistory } from "../types/markets";
 
 export class Api {
