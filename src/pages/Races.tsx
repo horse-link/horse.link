@@ -49,6 +49,9 @@ const Races: React.FC = () => {
 
   const betHistory = useBetsData(marketId);
 
+  // TODO: FETCH FROM API
+  const margin = 115;
+
   useEffect(() => {
     const interval = setInterval(() => {
       setClosed(dayjs().unix() > (race?.raceData.close || 0));
@@ -82,7 +85,7 @@ const Races: React.FC = () => {
                             {race.track.name} ({race.track.code})
                           </h1>
                           <div className="w-auto whitespace-nowrap text-sm text-hl-tertiary lg:ml-10 lg:w-full">
-                            Margin: 0
+                            Margin: {margin}
                           </div>
                           <div className="flex w-[6rem] justify-end">
                             <HiChevronDown
