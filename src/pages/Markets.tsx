@@ -35,7 +35,7 @@ const Markets: React.FC = () => {
       </div>
       <NewMarketTable />
       <div className="mt-10">
-        <Button text="history" onClick={() => {}} disabled active={false} />
+        <h2>HISTORY</h2>
       </div>
       <div className="mt-4">
         <MarketHistoryTable />
