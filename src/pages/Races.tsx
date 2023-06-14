@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useRunnersData, useMeetData, useBetsData } from "../hooks/data";
 import { Button, RacesButton } from "../components/Buttons";
-import { BetTable, NewRaceTable } from "../components/Tables";
+import { BetTable, RaceTable } from "../components/Tables";
 import { PlaceBetModal, SettleBetModal } from "../components/Modals";
 import { Runner, SignedMeetingsResponse } from "../types/meets";
 import { Loader, PageLayout } from "../components";
@@ -128,7 +128,7 @@ const Races: React.FC = () => {
           )}
         </div>
         <RacesButton params={params} meetRaces={meetRaces?.raceInfo} />
-        <NewRaceTable
+        <RaceTable
           runners={race?.runners}
           setSelectedRunner={setSelectedRunner}
           setIsModalOpen={setIsModalOpen}

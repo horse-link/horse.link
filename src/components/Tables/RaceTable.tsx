@@ -15,7 +15,7 @@ type Props = {
   closed: boolean;
 };
 
-export const NewRaceTable: React.FC<Props> = ({
+export const RaceTable: React.FC<Props> = ({
   runners,
   totalBetsOnPropositions,
   setSelectedRunner,

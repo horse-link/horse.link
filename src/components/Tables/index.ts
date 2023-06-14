@@ -1,5 +1,5 @@
 export * from "./NewTable";
-export * from "./NewRaceTable";
+export * from "./RaceTable";
 export * from "./NewHomeTable";
 export * from "./BetTable";
 export * from "./NewResultsTable";
