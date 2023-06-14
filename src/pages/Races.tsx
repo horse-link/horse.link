@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useRunnersData, useMeetData, useBetsData } from "../hooks/data";
-import { Button, RacesButton } from "../components/Buttons";
+import { RacesButton } from "../components/Buttons";
 import { BetTable, RaceTable } from "../components/Tables";
 import { PlaceBetModal, SettleBetModal } from "../components/Modals";
 import { Runner, SignedMeetingsResponse } from "../types/meets";

@@ -1,21 +1,16 @@
-import { BigNumber, ethers } from "ethers";
-import { VaultTransaction } from "../../types/subgraph";
+import { ethers } from "ethers";
 import utils from "../../utils";
 import useSubgraph from "../useSubgraph";
-import { VaultTransactionType } from "../../types/vaults";
+import {
+  VaultHistory,
+  VaultTransaction,
+  VaultTransactionType
+} from "../../types/vaults";
 
 type Response = {
   deposits: Array<VaultTransaction>;
   withdraws: Array<VaultTransaction>;
 };
-
-export type VaultHistory = {
-  type: VaultTransactionType;
-  amount: BigNumber;
-  createdAt: number;
-  vaultAddress: string;
-  tx: string;
-}[];
 
 export const useSubgraphVaults = () => {
   const { data, loading } = useSubgraph<Response>(

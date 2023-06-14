@@ -1,6 +1,7 @@
 import { Hash } from "@wagmi/core";
 import { BigNumber } from "ethers";
 import { Address } from "wagmi";
+import { VaultTransaction } from "./vaults";
 
 export type SubgraphValues = string | number | boolean;
 
@@ -67,17 +68,6 @@ export type Bet = {
   settledAt: number;
   settledAtTx: Hash;
   refunded: boolean;
-};
-
-export type VaultTransactionType = "deposit" | "withdraw";
-
-export type VaultTransaction = {
-  id: Hash;
-  type: VaultTransactionType;
-  vaultAddress: Address;
-  userAddress: Address;
-  amount: BigNumber;
-  timestamp: number;
 };
 
 // leave these in for backwards compatibility
