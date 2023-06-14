@@ -47,7 +47,9 @@ const Races: React.FC = () => {
   const marketId = makeMarketId(new Date(), track, raceNumber.toString());
   const { totalBetsOnPropositions } = useSubgraphBets("ALL_BETS", marketId);
 
-  const betHistory = useBetsData(marketId);
+  const betHistory = useBetsData({
+    marketId
+  });
 
   // TODO: FETCH FROM API
   const margin = 115;

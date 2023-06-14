@@ -60,7 +60,9 @@ const Results: React.FC = () => {
     details.track,
     raceParams.number
   );
-  const betHistory = useBetsData(marketId);
+  const betHistory = useBetsData({
+    marketId
+  });
 
   return (
     <PageLayout>

@@ -45,7 +45,9 @@ const Bets: React.FC = () => {
     setAllBetsEnabled(true);
   }, [address]);
 
-  const betHistoryRequest = useBetsData();
+  const betHistoryRequest = useBetsData({
+    betFilterOption: betTableFilter
+  });
 
   const betHistory = useMemo(() => {
     if (!betHistoryRequest?.length || !address) return;

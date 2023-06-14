@@ -1,11 +1,18 @@
 import useSwr from "../useSwr";
-import { BetHistoryResponse2 } from "../../types/bets";
+import { BetFilterOptions, BetHistoryResponse2 } from "../../types/bets";
 import utils from "../../utils";
 
-export const useBetsData = (marketId?: string) => {
+export const useBetsData = (filters?: {
+  marketId?: string;
+  betFilterOption?: BetFilterOptions;
+}) => {
   const { data } = useSwr<{
     bets: Array<BetHistoryResponse2>;
-  }>(marketId ? `/bets/history/${marketId}` : `/bets/history`);
+  }>(
+    filters?.marketId
+      ? `/bets/history/${filters.marketId}`
+      : `/bets/history?filter=${filters?.betFilterOption || "ALL_BETS"}`
+  );
 
   return data?.bets.map(b => ({
     ...b,
