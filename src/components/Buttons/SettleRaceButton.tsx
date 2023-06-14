@@ -40,6 +40,7 @@ export const SettleRaceButton: React.FC<Props> = props => {
     [betHistory]
   );
 
+  // TODO: investigate to fix
   const settleRace = useCallback(async () => {
     if (!processableBets?.length || !config || loading || !config) return;
     if (!isConnected || !signer) return openWalletModal();
@@ -99,7 +100,7 @@ export const SettleRaceButton: React.FC<Props> = props => {
           );
         }
         await oracleContract.setResult(
-          marketId,
+          utils.formatting.formatBytes16String(marketId),
           winningPropositionId,
           marketOracleResultSig!
         );
