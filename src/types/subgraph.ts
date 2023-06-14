@@ -104,15 +104,13 @@ export type Withdraw = {
 
 export type Borrow = {
   id: Hash;
-  betId: BetId;
-  vault: Address;
+  vaultAddress: Address;
+  betIndex: number;
   amount: BigNumber;
-  createdAt: number;
 };
 
 export type Repay = {
   id: Hash;
-  vault: Address;
+  vaultAddress: Address;
   amount: BigNumber;
-  createdAt: number;
 };

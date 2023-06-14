@@ -8,3 +8,4 @@ export * from "./NewVaultHistoryTable";
 export * from "./NewMarketTable";
 export * from "./NewFaucetTable";
 export * from "./NewLeaderboardTable";
+export * from "./MarketHistoryTable";

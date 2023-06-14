@@ -6,7 +6,7 @@ import { SettleBetModal, SettledMarketModal } from "../components/Modals";
 import { useBetsData, useMeetData, useResultsData } from "../hooks/data";
 import { useConfig } from "../providers/Config";
 import utils from "../utils";
-import { RacesButton, Button, SettleRaceButton } from "../components/Buttons";
+import { RacesButton, SettleRaceButton } from "../components/Buttons";
 import dayjs from "dayjs";
 import { RaceInfo } from "../types/meets";
 import { useAccount, useSigner } from "wagmi";
@@ -56,7 +56,9 @@ const Results: React.FC = () => {
     details.track,
     raceParams.number
   );
-  const betHistory = useBetsData(marketId);
+  const betHistory = useBetsData({
+    marketId
+  });
 
   return (
     <PageLayout>

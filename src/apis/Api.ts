@@ -16,6 +16,7 @@ import { Network } from "../types/general";
 import constants from "../constants";
 import { FormattedProtocol } from "../types/stats";
 import { Bet } from "../types/subgraph";
+import { MarketHistory } from "../types/markets";
 
 export class Api {
   public client: AxiosInstance;
@@ -231,6 +232,15 @@ export class Api {
   public getMarketStats = async () => {
     const { data } = await this.client.get<Partial<Bet>[]>(
       "/markets/stats/stats/"
+    );
+
+    return data;
+  };
+
+  // TSOA generating weird routes
+  public getMarketHistory = async () => {
+    const { data } = await this.client.get<MarketHistory[]>(
+      "/markets/history/history/"
     );
 
     return data;
