@@ -3,7 +3,7 @@ import { BetFilterOptions } from "../../types/bets";
 import { Button } from "../Buttons";
 
 const options: Map<BetFilterOptions, string> = new Map([
-  ["ALL_BETS", "All Bets"],
+  ["ALL_BETS", "All"],
   ["PENDING", "Pending"],
   ["RESULTED", "Resulted"],
   ["SETTLED", "Settled"]

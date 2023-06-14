@@ -61,13 +61,13 @@ const Vaults: React.FC = () => {
         />
       </div>
       <div className="mt-10">
-        <p>VAULTS & LIQUIDITY POOLS</p>
+        <h2>VAULTS & LIQUIDITY POOLS</h2>
       </div>
       <div className="mt-4">
         <NewVaultsTable setIsModalOpen={setModal} />
       </div>
       <div className="mt-10">
-        <p>HISTORY</p>
+        <h2>HISTORY</h2>
       </div>
       <div className="mt-4">
         <NewVaultHistoryTable vaultHistory={vaultHistory} />
