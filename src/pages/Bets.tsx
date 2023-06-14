@@ -90,7 +90,7 @@ const Bets: React.FC = () => {
           }
         />
       </div>
-      <div className="my-4 flex w-full justify-between">
+      <div className="my-4 flex w-full justify-between gap-x-3">
         <BetFilterGroup
           value={betTableFilter}
           onChange={onFilterChange}
