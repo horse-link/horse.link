@@ -1,6 +1,6 @@
 import React from "react";
 import { BetFilterOptions } from "../../types/bets";
-import { NewButton } from "../Buttons";
+import { Button } from "../Buttons";
 
 const options: Map<BetFilterOptions, string> = new Map([
   ["ALL_BETS", "All Bets"],
@@ -22,7 +22,7 @@ export const BetFilterGroup: React.FC<Props> = ({
 }) => (
   <div className="flex flex-wrap gap-3">
     {[...options].map(([key, text]) => (
-      <NewButton
+      <Button
         text={text}
         key={key}
         onClick={() => onChange(key)}

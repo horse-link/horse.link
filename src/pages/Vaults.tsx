@@ -7,7 +7,6 @@ import { Card, PageLayout } from "../components";
 import utils from "../utils";
 import { ethers } from "ethers";
 import { useVaultStatistics } from "../hooks/stats";
-import { NewButton } from "../components/Buttons";
 
 const Vaults: React.FC = () => {
   const [modal, setModal] = useState<VaultModalState>();

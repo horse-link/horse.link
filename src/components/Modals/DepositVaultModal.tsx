@@ -9,7 +9,7 @@ import useRefetch from "../../hooks/useRefetch";
 import utils from "../../utils";
 import { UserBalance } from "../../types/users";
 import { Loader } from "../";
-import { NewButton } from "../Buttons";
+import { Button } from "../Buttons";
 
 type Props = {
   isModalOpen: boolean;
@@ -164,7 +164,7 @@ export const DepositVaultModal: React.FC<Props> = ({
               {txLoading ? (
                 <Loader />
               ) : (
-                <NewButton
+                <Button
                   text={`Deposit ${vault.asset.symbol}`}
                   onClick={onClickDeposit}
                   disabled={shouldDisableButton}

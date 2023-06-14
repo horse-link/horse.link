@@ -10,7 +10,7 @@ import { useApolloWithForce } from "../providers/Apollo";
 import { useApiWithForce } from "../providers/Api";
 import { Card } from "./Card";
 import { VscTrash } from "react-icons/vsc";
-import { NewButton } from "./Buttons";
+import { Button } from "./Buttons";
 import { Loader } from "./Loader";
 
 export const NewBetSlip: React.FC = () => {
@@ -206,7 +206,7 @@ export const NewBetSlip: React.FC = () => {
                   <Loader />
                 </div>
               ) : (
-                <NewButton big text="Bet Now" onClick={placeBetsInBetSlip} />
+                <Button big text="Bet Now" onClick={placeBetsInBetSlip} />
               ))}
           </div>
         </div>

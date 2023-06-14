@@ -13,7 +13,7 @@ import {
 import { Config } from "../../types/config";
 import { useApi } from "../../providers/Api";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
-import { NewButton } from "../Buttons";
+import { Button } from "../Buttons";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
 
@@ -219,8 +219,8 @@ export const SettleBetModal: React.FC<Props> = ({
             </div>
           </div>
           <div className="mt-6">
-            <NewButton
-              text={txLoading ? "loading..." : "SETTLE BET"}
+            <Button
+              text={txLoading ? "processing..." : "SETTLE BET"}
               onClick={onClickSettleBet}
               active={!settleButtonDisabled}
               disabled={settleButtonDisabled}

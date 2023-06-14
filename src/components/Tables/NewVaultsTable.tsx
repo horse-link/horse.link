@@ -11,7 +11,7 @@ import { ethers } from "ethers";
 import { VaultInfo } from "../../types/config";
 import classNames from "classnames";
 import utils from "../../utils";
-import { NewButton } from "../Buttons";
+import { Button } from "../Buttons";
 import { Loader } from "../Loader";
 
 type Props = {
@@ -195,7 +195,7 @@ export const NewVaultsTable: React.FC<Props> = ({ setIsModalOpen }) => {
             key={`vaultstable-${VaultTransactionType.DEPOSIT}-${i}`}
             className="relative right-2 flex h-full w-full items-center px-2"
           >
-            <NewButton
+            <Button
               text="deposit"
               onClick={() =>
                 openModal({
@@ -211,7 +211,7 @@ export const NewVaultsTable: React.FC<Props> = ({ setIsModalOpen }) => {
             key={`vaultstable-${VaultTransactionType.WITHDRAW}-${i}`}
             className="relative right-2 flex h-full w-full items-center px-2"
           >
-            <NewButton
+            <Button
               text="withdraw"
               onClick={() =>
                 openModal({
@@ -281,7 +281,7 @@ export const NewVaultsTable: React.FC<Props> = ({ setIsModalOpen }) => {
                     {vault.address}
                   </a>
                   <div className="flex w-full items-center gap-x-2">
-                    <NewButton
+                    <Button
                       text="deposit"
                       onClick={() =>
                         openModal({
@@ -292,7 +292,7 @@ export const NewVaultsTable: React.FC<Props> = ({ setIsModalOpen }) => {
                       active
                       big
                     />
-                    <NewButton
+                    <Button
                       text="withdraw"
                       onClick={() =>
                         openModal({

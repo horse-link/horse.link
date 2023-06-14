@@ -79,6 +79,7 @@
   },
   "scripts": {
     "dev": "vite --port 3000",
+    "start:dev": "vite --port 3000",
     "build": "yarn lint && yarn typechain && tsc && vite build",
     "serve": "vite preview --port 3000",
     "test": "vitest",

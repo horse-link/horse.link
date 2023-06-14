@@ -10,7 +10,7 @@ import { useConfig } from "../providers/Config";
 import utils from "../utils";
 import { ethers } from "ethers";
 import { useBetsStatistics } from "../hooks/stats";
-import { NewButton } from "../components/Buttons";
+import { Button } from "../components/Buttons";
 import { useBetsData } from "../hooks/data";
 
 const Bets: React.FC = () => {
@@ -96,7 +96,7 @@ const Bets: React.FC = () => {
           onChange={onFilterChange}
           disabled={!betHistory}
         />
-        <NewButton
+        <Button
           text={allBetsEnabled ? "ALL BETS" : "MY BETS"}
           onClick={onMyBetToggle}
           active={!allBetsEnabled}
@@ -112,14 +112,14 @@ const Bets: React.FC = () => {
       />
       <div className="mt-2 flex w-full justify-end">
         <div className="flex items-center gap-x-4">
-          <NewButton
+          <Button
             text="prev"
             onClick={() => {}}
             active={false}
             disabled={!betHistory}
           />
           <p className="px-2 font-semibold">0</p>
-          <NewButton text="next" onClick={() => {}} disabled={!betHistory} />
+          <Button text="next" onClick={() => {}} disabled={!betHistory} />
         </div>
       </div>
       <div className="block py-10 lg:hidden" />

@@ -6,11 +6,7 @@ import { SettleBetModal, SettledMarketModal } from "../components/Modals";
 import { useBetsData, useMeetData, useResultsData } from "../hooks/data";
 import { useConfig } from "../providers/Config";
 import utils from "../utils";
-import {
-  RacesButton,
-  NewButton,
-  SettleRaceButton
-} from "../components/Buttons";
+import { RacesButton, Button, SettleRaceButton } from "../components/Buttons";
 import dayjs from "dayjs";
 import { RaceInfo } from "../types/meets";
 import { useAccount, useSigner } from "wagmi";
@@ -96,7 +92,7 @@ const Results: React.FC = () => {
         <NewResultsTable results={results} />
       </div>
       <div className="mt-10">
-        <NewButton text="history" onClick={() => {}} disabled active={false} />
+        <Button text="history" onClick={() => {}} disabled active={false} />
       </div>
       <div className="mt-4">
         <BetTable

@@ -11,7 +11,7 @@ import { useTokenContext } from "../providers/Token";
 import { UserBalance } from "../types/users";
 import constants from "../constants";
 import { Card } from "./Card";
-import { NewButton } from "./Buttons";
+import { Button } from "./Buttons";
 import { AiFillEyeInvisible, AiOutlineQrcode } from "react-icons/ai";
 import { QrCodeModal } from "./Modals";
 import { Listbox } from "@headlessui/react";
@@ -81,7 +81,7 @@ export const NewAccountPanel: React.FC<Props> = ({
               {({ open }) => (
                 <React.Fragment>
                   <Listbox.Button className="w-full font-sans">
-                    <NewButton
+                    <Button
                       big
                       text={chain?.name || "Please connect"}
                       onClick={() => {}}
@@ -121,7 +121,7 @@ export const NewAccountPanel: React.FC<Props> = ({
                     </button>
                   )}
                 </h3>
-                <NewButton
+                <Button
                   text="COPY"
                   onClick={() =>
                     navigator.clipboard.writeText(account.address || "")
@@ -135,7 +135,7 @@ export const NewAccountPanel: React.FC<Props> = ({
                 <React.Fragment>
                   <div className="mb-2 flex w-full items-center justify-between">
                     <h3>PRIVATE KEY</h3>
-                    <NewButton
+                    <Button
                       text="COPY"
                       onClick={() =>
                         navigator.clipboard.writeText(privateKey || "")
@@ -157,7 +157,7 @@ export const NewAccountPanel: React.FC<Props> = ({
                 </React.Fragment>
               )}
               <div className="w-full font-black">
-                <NewButton big text="change wallet" onClick={openWalletModal} />
+                <Button big text="change wallet" onClick={openWalletModal} />
               </div>
             </div>
           }

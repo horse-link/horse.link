@@ -9,7 +9,7 @@ import { NewTable } from "./NewTable";
 import utils from "../../utils";
 import { ethers } from "ethers";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
-import { NewButton } from "../Buttons";
+import { Button } from "../Buttons";
 
 type Props = {
   balances?: Array<FaucetBalance>;
@@ -105,7 +105,7 @@ export const NewFaucetTable: React.FC<Props> = ({
               className="flex h-full w-full items-center truncate"
               key={`faucettable-${token.address}-${i}`}
             >
-              <NewButton
+              <Button
                 text={token.name}
                 onClick={() => claim(token.address)}
                 big

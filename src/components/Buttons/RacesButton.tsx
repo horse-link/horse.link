@@ -3,7 +3,7 @@ import React from "react";
 import { Params, useNavigate } from "react-router-dom";
 import { RaceInfo } from "../../types/meets";
 import { RaceStatus } from "../../constants/status";
-import { NewButton } from "./NewButton";
+import { Button } from "./Button";
 
 type Props = {
   meetRaces?: RaceInfo[];
@@ -17,7 +17,7 @@ export const RacesButton: React.FC<Props> = ({ meetRaces, params }) => {
   return params && meetRaces ? (
     <div className="flex flex-wrap gap-2">
       {meetRaces.map(race => (
-        <NewButton
+        <Button
           autoWidth
           key={`race${race.raceNumber}`}
           text={`R${race.raceNumber}`}

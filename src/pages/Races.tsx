@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useRunnersData, useMeetData, useBetsData } from "../hooks/data";
-import { NewButton, RacesButton } from "../components/Buttons";
+import { Button, RacesButton } from "../components/Buttons";
 import { BetTable, NewRaceTable } from "../components/Tables";
 import { PlaceBetModal, SettleBetModal } from "../components/Modals";
 import { Runner, SignedMeetingsResponse } from "../types/meets";
@@ -137,7 +137,7 @@ const Races: React.FC = () => {
         />
       </div>
       <div className="mt-10">
-        <NewButton text="history" onClick={() => {}} disabled active={false} />
+        <Button text="history" onClick={() => {}} disabled active={false} />
       </div>
       <div className="mt-4">
         <BetTable

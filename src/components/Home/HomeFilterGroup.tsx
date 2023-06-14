@@ -1,6 +1,6 @@
 import React from "react";
 import { MeetFilters } from "../../types/meets";
-import { NewButton } from "../Buttons";
+import { Button } from "../Buttons";
 
 const options: Map<MeetFilters, string> = new Map([
   ["ALL", "All"],
@@ -21,7 +21,7 @@ export const HomeFilterGroup: React.FC<Props> = ({
 }) => (
   <div className="flex gap-x-4">
     {[...options].map(([key, text]) => (
-      <NewButton
+      <Button
         text={text}
         onClick={() => onChange(key)}
         key={key}

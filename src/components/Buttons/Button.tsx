@@ -14,7 +14,7 @@ type Props = {
   autoWidth?: boolean;
 };
 
-export const NewButton: React.FC<Props> = ({
+export const Button: React.FC<Props> = ({
   text,
   onClick,
   disabled,

@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from "react";
-import { NewButton } from ".";
+import { Button } from ".";
 import { Config } from "../../types/config";
 import { BetHistoryResponse2 } from "../../types/bets";
 import { ContractTransaction, Signer } from "ethers";
@@ -146,7 +146,7 @@ export const SettleRaceButton: React.FC<Props> = props => {
   const buttonLoading = !config || loading;
 
   return (
-    <NewButton
+    <Button
       disabled={!processableBets?.length || buttonLoading}
       onClick={settleRace}
       text={buttonLoading ? "loading..." : "settle race"}

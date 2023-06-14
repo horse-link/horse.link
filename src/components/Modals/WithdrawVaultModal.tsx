@@ -9,7 +9,7 @@ import { useVaultContract } from "../../hooks/contracts";
 import { Vault__factory } from "../../typechain";
 import useRefetch from "../../hooks/useRefetch";
 import { UserBalance } from "../../types/users";
-import { NewButton } from "../Buttons";
+import { Button } from "../Buttons";
 
 type Props = {
   isModalOpen: boolean;
@@ -163,7 +163,7 @@ export const WithdrawVaultModal: React.FC<Props> = ({
               {txLoading ? (
                 <Loader />
               ) : (
-                <NewButton
+                <Button
                   text={`Withdraw ${vault.asset.symbol}`}
                   onClick={onClickWithdraw}
                   disabled={shouldDisableButton}

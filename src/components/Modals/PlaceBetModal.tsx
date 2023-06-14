@@ -13,7 +13,7 @@ import { useBetSlipContext } from "../../providers/BetSlip";
 import { useParams } from "react-router-dom";
 import { useTokenContext } from "../../providers/Token";
 import { BetEntry } from "../../types/context";
-import { NewButton } from "../Buttons";
+import { Button } from "../Buttons";
 import classNames from "classnames";
 
 type Props = {
@@ -312,7 +312,7 @@ export const PlaceBetModal: React.FC<Props> = ({
           </span>
 
           <div className="mt-4 mb-2 flex flex-col gap-2">
-            <NewButton
+            <Button
               big
               white
               rounded
@@ -322,7 +322,7 @@ export const PlaceBetModal: React.FC<Props> = ({
               active={!shouldDisablePlaceBet && isScratched !== true}
             />
             <span className=" blockself-center font-semibold">or</span>
-            <NewButton
+            <Button
               big
               rounded
               text="add to bet slip"

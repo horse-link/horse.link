@@ -10,7 +10,7 @@ import { SignedMeetingsResponse, MeetFilters, Meet } from "../types/meets";
 import constants from "../constants";
 import { useApi } from "../providers/Api";
 import { NewHomeTable } from "../components/Tables";
-import { NewButton } from "../components/Buttons";
+import { Button } from "../components/Buttons";
 
 const Home: React.FC = () => {
   const [response, setResponse] = useState<SignedMeetingsResponse>();
@@ -65,7 +65,7 @@ const Home: React.FC = () => {
         <HomeOverallStats />
         <HomeNextToJumpBanner />
         <div className="flex w-full justify-between">
-          <NewButton text="today" onClick={() => {}} disabled />
+          <Button text="today" onClick={() => {}} disabled />
           <div className="hidden lg:block">
             <HomeFilterGroup
               value={meetsFilter}
