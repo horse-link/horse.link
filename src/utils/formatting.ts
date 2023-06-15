@@ -1,8 +1,9 @@
 import dayjs from "dayjs";
 import { ethers } from "ethers";
 import { MeetInfo } from "../types/meets";
-import { BetId, Deposit, VaultTransaction, Withdraw } from "../types/subgraph";
+import { BetId, Deposit, Withdraw } from "../types/subgraph";
 import { Chain } from "wagmi";
+import { VaultTransaction } from "../types/vaults";
 
 export const formatToFourDecimals = (amount: string) => {
   const parsedAmount = parseFloat(amount);

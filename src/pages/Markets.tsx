@@ -3,7 +3,6 @@ import { ethers } from "ethers";
 import utils from "../utils";
 import { PageLayout, Card } from "../components";
 import { MarketHistoryTable, NewMarketTable } from "../components/Tables";
-import { Button } from "../components/Buttons";
 
 const Markets: React.FC = () => {
   const { totalBets, totalVolume, largestBet } = useMarketStatistics();

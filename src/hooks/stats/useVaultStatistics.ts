@@ -6,7 +6,7 @@ import { useVaultContract } from "../contracts";
 import { useConfig } from "../../providers/Config";
 import { useProvider } from "wagmi";
 import constants from "../../constants";
-import { VaultTransaction } from "../../types/subgraph";
+import { VaultTransaction } from "../../types/vaults";
 
 type VaultTransactionResponse = {
   vaultTransactions: Array<VaultTransaction>;

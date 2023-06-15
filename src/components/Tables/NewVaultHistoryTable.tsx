@@ -1,5 +1,5 @@
 import React from "react";
-import { VaultTransactionType } from "../../types/vaults";
+import { VaultHistory, VaultTransactionType } from "../../types/vaults";
 import { useConfig } from "../../providers/Config";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
 import { NewTable } from "./NewTable";
@@ -9,7 +9,6 @@ import { ethers } from "ethers";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Loader } from "../Loader";
-import { VaultHistory } from "../../hooks/subgraph";
 
 dayjs.extend(relativeTime);
 
