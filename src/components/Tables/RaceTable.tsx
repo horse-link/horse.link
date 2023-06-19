@@ -38,7 +38,7 @@ export const RaceTable: React.FC<Props> = ({
     "Weight",
     "Win",
     "Backed",
-    "Proposition"
+    "Percentage"
   ].map((text, i) => (
     <div
       key={`racetable-${text}-${i}`}
