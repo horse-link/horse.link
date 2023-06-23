@@ -77,6 +77,8 @@ export const BetTable: React.FC<Props> = ({
             ["SETTLED", "REFUNDED"] as Array<BetStatus>
           ).includes(bet.status);
 
+          const betDidWin = betClosed ? bet.result === "WIN" : undefined;
+
           return [
             <div
               key={`racetable-bet-${bet.index}-${i}-index`}
@@ -101,7 +103,9 @@ export const BetTable: React.FC<Props> = ({
               onClick={() => onClickBet(bet)}
             >
               {utils.formatting.formatToFourDecimals(
-                ethers.utils.formatEther(bet.amount)
+                ethers.utils.formatEther(
+                  betDidWin === true ? bet.payout : bet.amount
+                )
               )}
             </div>,
             <div
