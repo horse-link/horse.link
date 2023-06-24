@@ -3,6 +3,7 @@ import { NewTable } from "./NewTable";
 import { useConfig } from "../../providers/Config";
 import classNames from "classnames";
 import utils from "../../utils";
+import { formatToFourDecimals } from "sdk.horse.link";
 import { ethers } from "ethers";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
 import { Loader } from "../Loader";
@@ -38,7 +39,7 @@ export const NewMarketTable: React.FC = () => {
 
         const style = "w-full text-left py-4";
 
-        const totalInPlay = `${utils.formatting.formatToFourDecimals(
+        const totalInPlay = `${formatToFourDecimals(
           ethers.utils.formatUnits(market.totalInPlay, vault.asset.decimals)
         )} ${vault.asset.symbol}`;
 
@@ -117,7 +118,7 @@ export const NewMarketTable: React.FC = () => {
                   `Could not find vault for market ${market.address}`
                 );
 
-              const totalInPlay = `${utils.formatting.formatToFourDecimals(
+              const totalInPlay = `${formatToFourDecimals(
                 ethers.utils.formatUnits(
                   market.totalInPlay,
                   vault.asset.decimals

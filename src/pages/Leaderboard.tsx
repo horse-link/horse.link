@@ -4,6 +4,7 @@ import { useLeaderboardStatistics } from "../hooks/stats";
 import { NewLeaderboardTable } from "../components/Tables";
 import { useAccount } from "wagmi";
 import utils from "../utils";
+import { formatToFourDecimals } from "sdk.horse.link";
 import { ethers } from "ethers";
 import { Countdown } from "../components/Countdown";
 import constants from "../constants";
@@ -52,7 +53,7 @@ const Leaderboard: React.FC = () => {
     : undefined;
 
   const balance = userStats?.balance.formatted
-    ? `${utils.formatting.formatToFourDecimals(userStats.balance.formatted)} HL`
+    ? `${formatToFourDecimals(userStats.balance.formatted)} HL`
     : undefined;
 
   return (

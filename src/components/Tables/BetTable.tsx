@@ -232,7 +232,7 @@ export const BetTable: React.FC<Props> = ({
                   <p>{bet.race}</p>
                   <p>{bet.proposition}</p>
                   <p className="text-hl-secondary">
-                    {utils.formatting.formatToFourDecimals(
+                    {formatToFourDecimals(
                       ethers.utils.formatEther(
                         betDidWin === true ? bet.payout : bet.amount
                       )

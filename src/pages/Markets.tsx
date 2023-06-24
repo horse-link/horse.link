@@ -1,6 +1,6 @@
 import { useMarketStatistics } from "../hooks/stats";
 import { ethers } from "ethers";
-import utils from "../utils";
+import { formatToFourDecimals } from "sdk.horse.link";
 import { PageLayout, Card } from "../components";
 import { MarketHistoryTable, NewMarketTable } from "../components/Tables";
 
@@ -14,9 +14,7 @@ const Markets: React.FC = () => {
           title="24H Volume"
           data={
             totalVolume &&
-            `$${utils.formatting.formatToFourDecimals(
-              ethers.utils.formatEther(totalVolume)
-            )}`
+            `$${formatToFourDecimals(ethers.utils.formatEther(totalVolume))}`
           }
         />
         <Card title="24H Bets" data={totalBets?.toString()} />
@@ -24,7 +22,7 @@ const Markets: React.FC = () => {
           title="24H Largest Bet"
           data={
             largestBet &&
-            `$${utils.formatting.formatToFourDecimals(
+            `$${formatToFourDecimals(
               ethers.utils.formatEther(
                 largestBet?.amount || ethers.constants.Zero
               )

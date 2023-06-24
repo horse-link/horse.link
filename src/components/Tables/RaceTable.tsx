@@ -5,6 +5,7 @@ import { NewTable } from "./NewTable";
 import classNames from "classnames";
 import { ethers } from "ethers";
 import utils from "../../utils";
+import { formatToFourDecimals } from "sdk.horse.link";
 import { Loader } from "../Loader";
 
 type Props = {
@@ -86,16 +87,14 @@ export const RaceTable: React.FC<Props> = ({
         key={`runnertable-${runner.proposition_id}-${i}`}
         onClick={() => onClickRunner(runner)}
       >
-        {utils.formatting.formatToFourDecimals(formattedBacked)}
+        {formatToFourDecimals(formattedBacked)}
       </div>,
       <div
         className={classNames(style, "text-hl-secondary")}
         key={`runnertable-${runner.proposition_id}-${i}`}
         onClick={() => onClickRunner(runner)}
       >
-        {utils.formatting.formatToFourDecimals(
-          stats?.percentage.toString() || "0"
-        )}
+        {formatToFourDecimals(stats?.percentage.toString() || "0")}
       </div>
     ];
   };

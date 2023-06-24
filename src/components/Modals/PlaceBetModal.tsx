@@ -7,6 +7,7 @@ import { BaseModal } from ".";
 import { useMarketContract, useERC20Contract } from "../../hooks/contracts";
 import useRefetch from "../../hooks/useRefetch";
 import utils from "../../utils";
+import { formatToFourDecimals } from "horselink-sdk";
 import { Back, RaceData, Runner } from "../../types/meets";
 import { UserBalance } from "../../types/users";
 import { useBetSlipContext } from "../../providers/BetSlip";
@@ -101,7 +102,7 @@ export const PlaceBetModal: React.FC<Props> = ({
       setUserBalance({
         value: balance,
         decimals,
-        formatted: utils.formatting.formatToFourDecimals(
+        formatted: formatToFourDecimals(
           ethers.utils.formatUnits(balance, decimals)
         )
       });
@@ -282,7 +283,7 @@ export const PlaceBetModal: React.FC<Props> = ({
             <div className="grid w-full grid-cols-2 grid-rows-2 gap-2 pt-4">
               <h3 className="text-left text-hl-secondary">Payout:</h3>
               <p className="text-left text-hl-tertiary">
-                {utils.formatting.formatToFourDecimals(payout || "0")}
+                {formatToFourDecimals(payout || "0")}
               </p>
               <div className="flex items-center">
                 <h3 className="text-left text-hl-secondary">Available:</h3>

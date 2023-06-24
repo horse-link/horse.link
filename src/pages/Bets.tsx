@@ -8,6 +8,7 @@ import { SettleBetModal } from "../components/Modals";
 import { BetFilterOptions, BetHistoryResponse2 } from "../types/bets";
 import { useConfig } from "../providers/Config";
 import utils from "../utils";
+import { formatToFourDecimals } from "sdk.horse.link";
 import { ethers } from "ethers";
 import { useBetsStatistics } from "../hooks/stats";
 import { Button } from "../components/Buttons";
@@ -74,7 +75,7 @@ const Bets: React.FC = () => {
           title="24H Winning Bets Value"
           data={
             totalWinningVolume &&
-            `$${utils.formatting.formatToFourDecimals(
+            `$${formatToFourDecimals(
               ethers.utils.formatEther(totalWinningVolume)
             )}`
           }
@@ -84,7 +85,7 @@ const Bets: React.FC = () => {
           title="24H Largest Winning Bet"
           data={
             largestWinningBet &&
-            `$${utils.formatting.formatToFourDecimals(
+            `$${formatToFourDecimals(
               ethers.utils.formatEther(
                 largestWinningBet?.payout || ethers.constants.Zero
               )
