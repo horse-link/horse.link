@@ -4,7 +4,7 @@ import { useSubgraphVaults } from "../hooks/subgraph";
 import { DepositVaultModal, WithdrawVaultModal } from "../components/Modals";
 import { VaultModalState, VaultTransactionType } from "../types/vaults";
 import { Card, PageLayout } from "../components";
-import { formatToFourDecimals } from "sdk.horse.link";
+import { formatToFourDecimals } from "horselink-sdk/dist/utils/formatting";
 import { ethers } from "ethers";
 import { useVaultStatistics } from "../hooks/stats";
 

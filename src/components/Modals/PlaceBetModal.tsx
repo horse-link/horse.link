@@ -7,7 +7,7 @@ import { BaseModal } from ".";
 import { useMarketContract, useERC20Contract } from "../../hooks/contracts";
 import useRefetch from "../../hooks/useRefetch";
 import utils from "../../utils";
-import { formatToFourDecimals } from "horselink-sdk";
+import formatToFourDecimals from "horselink-sdk";
 import { Back, RaceData, Runner } from "../../types/meets";
 import { UserBalance } from "../../types/users";
 import { useBetSlipContext } from "../../providers/BetSlip";

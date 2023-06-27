@@ -3,7 +3,7 @@ import { NewTable } from "./NewTable";
 import { useConfig } from "../../providers/Config";
 import classNames from "classnames";
 import utils from "../../utils";
-import { formatToFourDecimals } from "sdk.horse.link";
+import formatToFourDecimals from "horselink-sdk";
 import { ethers } from "ethers";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
 import { Loader } from "../Loader";

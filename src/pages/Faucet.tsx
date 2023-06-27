@@ -5,8 +5,7 @@ import { FaucetBalance } from "../types/faucet";
 import { useConfig } from "../providers/Config";
 import { ERC20__factory } from "../typechain";
 import { useBalance, useProvider } from "wagmi";
-import utils from "../utils";
-import { formatToFourDecimals } from "sdk.horse.link";
+import { formatToFourDecimals } from "horselink-sdk/dist/utils/formatting";
 import { FaucetModal } from "../components/Modals";
 import { NewFaucetTable } from "../components/Tables";
 

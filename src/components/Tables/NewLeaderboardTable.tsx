@@ -3,7 +3,7 @@ import React from "react";
 import { LeaderboardBalance } from "../../types/leaderboard";
 import classNames from "classnames";
 import { NewTable } from "./NewTable";
-import { formatToFourDecimals, formatToFourDecimalsRaw } from "sdk.horse.link";
+import formatToFourDecimals from "horselink-sdk";
 
 type Props = {
   stats?: Array<{

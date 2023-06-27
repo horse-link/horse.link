@@ -1,8 +1,9 @@
 import { useMarketStatistics } from "../hooks/stats";
 import { ethers } from "ethers";
-import { formatToFourDecimals } from "sdk.horse.link";
+
 import { PageLayout, Card } from "../components";
 import { MarketHistoryTable, NewMarketTable } from "../components/Tables";
+import { formatToFourDecimals } from "horselink-sdk/dist/utils/formatting";
 
 const Markets: React.FC = () => {
   const { totalBets, totalVolume, largestBet } = useMarketStatistics();

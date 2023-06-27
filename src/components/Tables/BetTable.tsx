@@ -12,6 +12,7 @@ import { Loader } from "../Loader";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
 import { ethers } from "ethers";
 import utils from "../../utils";
+import { formatToFourDecimals } from "horselink-sdk/dist/utils/formatting";
 
 dayjs.extend(relativeTime);
 

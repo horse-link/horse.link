@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Chain, useAccount, useBalance, useNetwork, useSigner } from "wagmi";
-import utils from "../utils";
+import { formatToFourDecimals } from "horselink-sdk/dist/utils/formatting";
 import { ethers } from "ethers";
 import { useBetSlipContext } from "../providers/BetSlip";
 import { useWalletModal } from "../providers/WalletModal";
@@ -64,7 +64,7 @@ export const NewAccountPanel: React.FC<Props> = ({
       setUserBalance({
         value: balance,
         decimals: +currentToken.decimals,
-        formatted: utils.formatting.formatToFourDecimals(
+        formatted: formatToFourDecimals(
           ethers.utils.formatUnits(balance, currentToken.decimals)
         )
       })

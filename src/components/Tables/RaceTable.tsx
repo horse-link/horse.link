@@ -5,8 +5,9 @@ import { NewTable } from "./NewTable";
 import classNames from "classnames";
 import { ethers } from "ethers";
 import utils from "../../utils";
-import { formatToFourDecimals } from "sdk.horse.link";
+]
 import { Loader } from "../Loader";
+import { formatToFourDecimals } from "horselink-sdk/dist/utils/formatting";
 
 type Props = {
   runners?: Array<Runner>;

@@ -3,8 +3,10 @@ import { Card, PageLayout } from "../components";
 import { useLeaderboardStatistics } from "../hooks/stats";
 import { NewLeaderboardTable } from "../components/Tables";
 import { useAccount } from "wagmi";
-import utils from "../utils";
-import { formatToFourDecimals } from "sdk.horse.link";
+import {
+  formatToFourDecimals,
+  formatToFourDecimalsRaw
+} from "horselink-sdk/dist/utils/formatting";
 import { ethers } from "ethers";
 import { Countdown } from "../components/Countdown";
 import constants from "../constants";
@@ -47,7 +49,7 @@ const Leaderboard: React.FC = () => {
   const userHasNoStats = isConnected && !userStats;
 
   const earnings = userStats?.earnings.value
-    ? `${utils.formatting.formatToFourDecimalsRaw(
+    ? `${formatToFourDecimalsRaw(
         ethers.utils.formatEther(userStats.earnings.value)
       )} HL`
     : undefined;

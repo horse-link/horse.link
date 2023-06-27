@@ -4703,10 +4703,10 @@ hoist-non-react-statics@^3.3.1, hoist-non-react-statics@^3.3.2:
   dependencies:
     react-is "^16.7.0"
 
-horselink-sdk@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/horselink-sdk/-/horselink-sdk-1.0.2.tgz#54644aa7073225fda9b6ac151b112a5206b0358a"
-  integrity sha512-TpW4FnwCFY54NOFIb2oS3qVl6pdTkclfViOHMF/Ne5Rd1mlSp5DQgb+P1MHSRJ3sc2059gRzORvXQOV7Fual6w==
+horselink-sdk@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/horselink-sdk/-/horselink-sdk-1.0.4.tgz#a8cd89d57508adc3cdcd558d4a255f0443bb3364"
+  integrity sha512-kjEtVQFR8iGjfLg5Yfg1kWNWgkumy/ZA8jhdpkuva+3+m1jtiTODC0WNks0PHMhxGB+MVkW4Hu+liMmMVPXMwQ==
   dependencies:
     "@types/mocha" "^10.0.1"
     dayjs "^1.11.8"

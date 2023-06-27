@@ -12,7 +12,7 @@ import { VaultInfo } from "../../types/config";
 import classNames from "classnames";
 import { Button } from "../Buttons";
 import { Loader } from "../Loader";
-import { formatToFourDecimals } from "sdk.horse.link";
+import { formatToFourDecimals } from "horselink-sdk/dist/utils/formatting";
 
 type Props = {
   setIsModalOpen: (state: VaultModalState) => void;

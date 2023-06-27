@@ -5,7 +5,7 @@ import { useScannerUrl } from "../../hooks/useScannerUrl";
 import { NewTable } from "./NewTable";
 import classNames from "classnames";
 import utils from "../../utils";
-import { formatToFourDecimals } from "sdk.horse.link";
+import formatToFourDecimals from "horselink-sdk";
 import { ethers } from "ethers";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
