@@ -5,7 +5,6 @@ import { NewTable } from "./NewTable";
 import classNames from "classnames";
 import { ethers } from "ethers";
 import utils from "../../utils";
-]
 import { Loader } from "../Loader";
 import { formatToFourDecimals } from "horselink-sdk/dist/utils/formatting";
 
