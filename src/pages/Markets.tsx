@@ -15,7 +15,7 @@ const Markets: React.FC = () => {
           data={
             totalVolume &&
             `$${utils.formatting.formatToFourDecimals(
-              ethers.utils.formatEther(totalVolume)
+              ethers.utils.formatEther(totalVolume?.toString())
             )}`
           }
         />
@@ -25,9 +25,7 @@ const Markets: React.FC = () => {
           data={
             largestBet &&
             `$${utils.formatting.formatToFourDecimals(
-              ethers.utils.formatEther(
-                largestBet?.amount || ethers.constants.Zero
-              )
+              ethers.utils.formatEther(largestBet?.toString())
             )}`
           }
         />

@@ -237,7 +237,7 @@ export class Api {
 
   public getMarketStats = async (): Promise<MarketStats> => {
     const { data } = await this.client.get<MarketStats>(
-      "/markets/stats/stats2/"
+      "/markets/stats/stats/"
     );
 
     return data;
