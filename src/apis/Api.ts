@@ -14,9 +14,10 @@ import { Token } from "graphql";
 import { VaultUserData } from "../types/vaults";
 import { Network } from "../types/general";
 import constants from "../constants";
-import { FormattedProtocol, MarketStats } from "../types/stats";
+import { FormattedProtocol } from "../types/stats";
 import { Bet } from "../types/subgraph";
 import { MarketHistory } from "../types/markets";
+import type { MarketStats } from "horselink-sdk";
 
 export class Api {
   public client: AxiosInstance;
@@ -236,9 +237,7 @@ export class Api {
   };
 
   public getMarketStats = async (): Promise<MarketStats> => {
-    const { data } = await this.client.get<MarketStats>(
-      "/markets/stats"
-    );
+    const { data } = await this.client.get<MarketStats>("/markets/stats");
 
     return data;
   };
