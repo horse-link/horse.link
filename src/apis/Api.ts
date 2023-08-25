@@ -14,10 +14,9 @@ import { Token } from "graphql";
 import { VaultUserData } from "../types/vaults";
 import { Network } from "../types/general";
 import constants from "../constants";
-import { FormattedProtocol } from "../types/stats";
 import { Bet } from "../types/subgraph";
 import { MarketHistory } from "../types/markets";
-import type { MarketStats } from "horselink-sdk";
+import type { FormattedProtocol, MarketStats } from "horselink-sdk";
 
 export class Api {
   public client: AxiosInstance;
