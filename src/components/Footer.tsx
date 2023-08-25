@@ -28,11 +28,11 @@ export const Footer: React.FC = () => (
       <label className="text-hl-background">MARKETS</label>
     </Link>
     <Link
-      to="/bets"
+      to="/history"
       className="flex h-fit w-full flex-col items-center justify-center"
     >
       <GiHorseHead color="black" size={40} />
-      <label className="text-hl-background">BETS</label>
+      <label className="text-hl-background">HISTORY</label>
     </Link>
   </div>
 );

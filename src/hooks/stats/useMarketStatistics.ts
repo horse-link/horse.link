@@ -3,37 +3,40 @@ import { useMemo } from "react";
 import utils from "../../utils";
 import { useApi } from "../../providers/Api";
 import { usePromise } from "../usePromise";
+import { BetResult } from "../../types/subgraph";
 
 export const useMarketStatistics = () => {
   const api = useApi();
-  const betsData = usePromise(api.getMarketStats);
+  // const betsData = usePromise(api.getMarketStatsOld);
+  const statsData = usePromise(api.getMarketStats);
 
   const totalBets = useMemo(() => {
-    if (!betsData) return;
+    if (!statsData) return ethers.constants.Zero;
 
-    return betsData.length;
-  }, [betsData]);
+    return statsData.totalBets;
+  }, []);
 
   const totalVolume = useMemo(() => {
-    if (!betsData) return;
-    if (!totalBets) return ethers.constants.Zero;
+    if (!statsData) return ethers.constants.Zero;
 
-    const amountBigNumbers = betsData.map(bet => BigNumber.from(bet.amount));
-
-    return amountBigNumbers.reduce(
-      (sum, value) => sum.add(value),
-      ethers.constants.Zero
-    );
-  }, [betsData, totalBets]);
+    const totalVolume = BigNumber.from(statsData.totalVolume);
+    return totalVolume;
+  }, []);
 
   const largestBet = useMemo(() => {
-    if (!betsData) return;
-    if (!totalBets) return utils.mocks.getMockBet();
+    if (!statsData) return ethers.constants.Zero;
 
-    return betsData.reduce((prev, curr) =>
-      BigNumber.from(curr.amount).gt(BigNumber.from(prev.amount)) ? curr : prev
-    );
-  }, [betsData, totalBets]);
+    const largestBet = BigNumber.from(statsData.largestBet);
+    return largestBet;
+  }, []);
+
+  // const profitablity = useMemo(() => {
+  //   if (!betsData) return;
+
+  //   const winningBets = betsData.filter(bet => bet.result === BetResult.WINNER);
+
+  //   return betsData.length;
+  // }, [betsData]);
 
   return {
     totalBets,

@@ -5,3 +5,10 @@ export type FormattedProtocol = {
   performance: number;
   lastUpdate: number;
 };
+
+// move to SDK (duplicate)
+export type MarketStats = {
+  totalBets: number;
+  totalVolume: number;
+  largestBet: number;
+};

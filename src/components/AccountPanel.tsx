@@ -21,7 +21,7 @@ type Props = {
   isLocalWallet: boolean;
 };
 
-export const NewAccountPanel: React.FC<Props> = ({
+export const AccountPanel: React.FC<Props> = ({
   forceNewNetwork,
   isLocalWallet
 }) => {

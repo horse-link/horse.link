@@ -4,7 +4,7 @@ import { useWalletModal } from "../providers/WalletModal";
 import { Navbar } from "./Navbar";
 import { useNavigate } from "react-router";
 import { useWalletOverrides } from "../hooks/useWalletOverrides";
-import { NewAccountPanel } from "./NewAccountPanel";
+import { AccountPanel } from "./AccountPanel";
 import { NewBetSlip } from "./NewBetSlip";
 import { MobileNavbar } from "./MobileNavbar";
 import { Footer } from "./Footer";
@@ -50,7 +50,7 @@ export const PageLayout: React.FC<Props> = ({ children }) => {
           <div className="col-span-4">{children}</div>
           <div className="col-span-1 hidden px-4 lg:block">
             <div className="sticky top-4 flex w-full flex-col gap-y-6">
-              <NewAccountPanel
+              <AccountPanel
                 forceNewNetwork={forceNewNetwork}
                 isLocalWallet={isLocalWallet}
               />
@@ -72,7 +72,7 @@ export const PageLayout: React.FC<Props> = ({ children }) => {
       >
         <Transition.Child className="fixed top-0 block h-screen w-screen overflow-y-scroll bg-hl-background p-4 pb-24 lg:hidden">
           <div className="flex min-h-full w-full flex-col items-center gap-y-6 pt-16">
-            <NewAccountPanel
+            <AccountPanel
               forceNewNetwork={forceNewNetwork}
               isLocalWallet={isLocalWallet}
             />

@@ -13,7 +13,7 @@ import { useBetsStatistics } from "../hooks/stats";
 import { Button } from "../components/Buttons";
 import { useBetsData } from "../hooks/data";
 
-const Bets: React.FC = () => {
+const History: React.FC = () => {
   const config = useConfig();
   const navigate = useNavigate();
   const { owner: paramsAddress } = useParams();
@@ -30,7 +30,7 @@ const Bets: React.FC = () => {
   useEffect(() => {
     // redirect back to /bets if disconnected
     if (!isConnected && !paramsAddress)
-      navigate("/bets", {
+      navigate("/history", {
         replace: true
       });
   }, [isConnected]);
@@ -39,7 +39,7 @@ const Bets: React.FC = () => {
     if (!address || paramsAddress) return;
 
     // if user is logged in navigate to static url
-    navigate(`/bets/${address}`, {
+    navigate(`/history/${address}`, {
       replace: true
     });
     setAllBetsEnabled(true);
@@ -135,4 +135,4 @@ const Bets: React.FC = () => {
   );
 };
 
-export default Bets;
+export default History;

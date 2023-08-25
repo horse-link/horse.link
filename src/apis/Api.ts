@@ -14,7 +14,7 @@ import { Token } from "graphql";
 import { VaultUserData } from "../types/vaults";
 import { Network } from "../types/general";
 import constants from "../constants";
-import { FormattedProtocol } from "../types/stats";
+import { FormattedProtocol, MarketStats } from "../types/stats";
 import { Bet } from "../types/subgraph";
 import { MarketHistory } from "../types/markets";
 
@@ -70,7 +70,7 @@ export class Api {
   };
 
   public getBetHistory = async (): Promise<BetHistoryResponse> => {
-    const { data } = await this.client.get("/bets");
+    const { data } = await this.client.get("/history");
 
     return data;
   };
@@ -89,7 +89,7 @@ export class Api {
   public getUserBetHistory = async (
     account: string
   ): Promise<BetHistoryResponse> => {
-    const { data } = await this.client.get(`/bets/${account}`);
+    const { data } = await this.client.get(`/history/${account}`);
 
     return data;
   };
@@ -229,16 +229,22 @@ export class Api {
   };
 
   // TSOA generating weird routes
-  public getMarketStats = async () => {
-    const { data } = await this.client.get<Partial<Bet>[]>(
-      "/markets/stats/stats/"
+  public getMarketStatsOld = async (): Promise<Bet[]> => {
+    const { data } = await this.client.get<Bet[]>("/markets/stats/stats/");
+
+    return data;
+  };
+
+  public getMarketStats = async (): Promise<MarketStats> => {
+    const { data } = await this.client.get<MarketStats>(
+      "/markets/stats/stats2/"
     );
 
     return data;
   };
 
   // TSOA generating weird routes
-  public getMarketHistory = async () => {
+  public getMarketHistory = async (): Promise<MarketHistory[]> => {
     const { data } = await this.client.get<MarketHistory[]>(
       "/markets/history/history/"
     );

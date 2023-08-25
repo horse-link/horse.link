@@ -3,7 +3,7 @@ import Home from "./pages/Home";
 import { AppRoutes, NavbarRoutes } from "./types/app";
 
 // lazy load pages
-const Bets = lazy(() => import("./pages/Bets"));
+const History = lazy(() => import("./pages/History"));
 const Markets = lazy(() => import("./pages/Markets"));
 const Races = lazy(() => import("./pages/Races"));
 const Tokens = lazy(() => import("./pages/Tokens"));
@@ -44,12 +44,12 @@ const Routing: AppRoutes = [
     element: <Faucet />
   },
   {
-    path: "/bets",
-    element: <Bets />
+    path: "/history",
+    element: <History />
   },
   {
-    path: "/bets/:owner",
-    element: <Bets />
+    path: "/history/:owner",
+    element: <History />
   },
   {
     path: "/leaderboard",
@@ -75,8 +75,8 @@ export const NavbarRouting: NavbarRoutes = [
     path: "/markets"
   },
   {
-    name: "Bets",
-    path: "/bets"
+    name: "History",
+    path: "/history"
   },
   {
     name: "Faucet",
