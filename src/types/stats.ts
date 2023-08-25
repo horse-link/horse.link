@@ -11,4 +11,5 @@ export type MarketStats = {
   totalBets: number;
   totalVolume: number;
   largestBet: number;
+  profit: number;
 };
