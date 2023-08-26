@@ -3,4 +3,5 @@ export type EnvVariable =
   | "VITE_ALCHEMY_API_KEY"
   | "VITE_SUBGRAPH_URL"
   | "VITE_EVENT_TS"
-  | "VITE_SALT";
+  | "VITE_SALT"
+  | "VITE_RPC_URL";

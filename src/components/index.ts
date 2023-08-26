@@ -5,7 +5,7 @@ export * from "./Card";
 export * from "./AddressLink";
 export * from "./Countdown";
 export * from "./Navbar";
-export * from "./NewAccountPanel";
+export * from "./AccountPanel";
 export * from "./NewBetSlip";
 export * from "./MobileNavbar";
 export * from "./Footer";

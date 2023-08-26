@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useApi } from "../../providers/Api";
-import { FormattedProtocol } from "../../types/stats";
+import { FormattedProtocol } from "horselink-sdk";
 
 export const useProtocolStatistics = (): FormattedProtocol | undefined => {
   const api = useApi();
