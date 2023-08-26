@@ -4698,10 +4698,10 @@ hoist-non-react-statics@^3.3.1, hoist-non-react-statics@^3.3.2:
   dependencies:
     react-is "^16.7.0"
 
-horselink-sdk@^1.0.11:
-  version "1.0.11"
-  resolved "https://registry.yarnpkg.com/horselink-sdk/-/horselink-sdk-1.0.11.tgz#9eb65462fd4724fca188c7d9a796247b085abd9c"
-  integrity sha512-zywnRHnHsYNdxNDlWHc7v83DErezEimGwEo19yJ38jvyL8WueHb2b3oZ+jZjicO035O2D6H2OD0LRt8T/D7uxQ==
+horselink-sdk@^1.0.12:
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/horselink-sdk/-/horselink-sdk-1.0.12.tgz#6c0adc6ab993710385f446e014d9aad030117285"
+  integrity sha512-oolSqK4rwcLm1mliQLCCsXnFjcrKppz76UXGAh6QP1Bij/iIb8o2m4Qu44s2Avp5v2pTaciMX9AHUaxLDqOvnw==
   dependencies:
     dayjs "^1.11.8"
     ethers "^5.7.2"
