@@ -3389,12 +3389,7 @@ data-urls@^3.0.2:
     whatwg-mimetype "^3.0.0"
     whatwg-url "^11.0.0"
 
-dayjs@^1.11.7:
-  version "1.11.7"
-  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.7.tgz#4b296922642f70999544d1144a2c25730fce63e2"
-  integrity sha512-+Yw9U6YO5TQohxLcIkrXBeY73WP3ejHWVvx8XCk3gxvQDCTEmS48ZrSZCKciI7Bhl/uCMyxYtE9UqRILmFphkQ==
-
-dayjs@^1.11.8:
+dayjs@^1.11.8, dayjs@^1.11.9:
   version "1.11.9"
   resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.9.tgz#9ca491933fadd0a60a2c19f6c237c03517d71d1a"
   integrity sha512-QvzAURSbQ0pKdIye2txOzNaHmxtUBXerpY0FJsFXUMKbIZeFm5ht1LS/jFsrncjnmtv8HsG0W2g6c0zUjZWmpA==
@@ -4587,10 +4582,15 @@ graphql-tag@^2.12.6:
   dependencies:
     tslib "^2.1.0"
 
-"graphql@^15.0.0 || ^16.0.0", graphql@^16.6.0:
+"graphql@^15.0.0 || ^16.0.0":
   version "16.6.0"
   resolved "https://registry.yarnpkg.com/graphql/-/graphql-16.6.0.tgz#c2dcffa4649db149f6282af726c8c83f1c7c5fdb"
   integrity sha512-KPIBPDlW7NxrbT/eh4qPXz5FiFdL5UbaA0XUNz2Rp3Z3hqBSkbj0GVjwFDztsWVauZUWsbKHgMg++sk8UX0bkw==
+
+graphql@^16.8.0:
+  version "16.8.0"
+  resolved "https://registry.yarnpkg.com/graphql/-/graphql-16.8.0.tgz#374478b7f27b2dc6153c8f42c1b80157f79d79d4"
+  integrity sha512-0oKGaR+y3qcS5mCu1vb7KG+a89vjn06C7Ihq/dDl3jA+A8B3TKomvi3CiEcVLJQGalbu8F52LxkOym7U5sSfbg==
 
 growl@1.10.5:
   version "1.10.5"
@@ -4698,10 +4698,10 @@ hoist-non-react-statics@^3.3.1, hoist-non-react-statics@^3.3.2:
   dependencies:
     react-is "^16.7.0"
 
-horselink-sdk@^1.0.11:
-  version "1.0.11"
-  resolved "https://registry.yarnpkg.com/horselink-sdk/-/horselink-sdk-1.0.11.tgz#9eb65462fd4724fca188c7d9a796247b085abd9c"
-  integrity sha512-zywnRHnHsYNdxNDlWHc7v83DErezEimGwEo19yJ38jvyL8WueHb2b3oZ+jZjicO035O2D6H2OD0LRt8T/D7uxQ==
+horselink-sdk@^1.0.12:
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/horselink-sdk/-/horselink-sdk-1.0.12.tgz#6c0adc6ab993710385f446e014d9aad030117285"
+  integrity sha512-oolSqK4rwcLm1mliQLCCsXnFjcrKppz76UXGAh6QP1Bij/iIb8o2m4Qu44s2Avp5v2pTaciMX9AHUaxLDqOvnw==
   dependencies:
     dayjs "^1.11.8"
     ethers "^5.7.2"
