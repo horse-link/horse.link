@@ -5,7 +5,7 @@ import { PageLayout, Card } from "../components";
 import { MarketHistoryTable, NewMarketTable } from "../components/Tables";
 
 const Markets: React.FC = () => {
-  const { totalBets, totalVolume, largestBet } = useMarketStatistics();
+  const { profit, totalBets, totalVolume, largestBet } = useMarketStatistics();
 
   return (
     <PageLayout>
@@ -20,6 +20,15 @@ const Markets: React.FC = () => {
           }
         />
         <Card title="24H Bets" data={totalBets?.toString()} />
+        <Card
+          title="Profit/Loss"
+          data={
+            profit &&
+            `$${utils.formatting.formatToFourDecimals(
+              ethers.utils.formatEther(profit?.toString())
+            )}`
+          }
+        />
         <Card
           title="24H Largest Bet"
           data={

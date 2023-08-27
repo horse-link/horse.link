@@ -28,15 +28,14 @@ export const useMarketStatistics = () => {
     return largestBet;
   }, [statsData]);
 
-  // const profitability = useMemo(() => {
-  //   if (!betsData) return;
+  const profit = useMemo(() => {
+    if (!statsData) return ethers.constants.Zero;
 
-  //   const winningBets = betsData.filter(bet => bet.result === BetResult.WINNER);
-
-  //   return betsData.length;
-  // }, [betsData]);
+    return statsData.profit;
+  }, [statsData]);
 
   return {
+    profit,
     totalBets,
     totalVolume,
     largestBet
