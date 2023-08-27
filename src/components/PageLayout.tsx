@@ -5,7 +5,7 @@ import { Navbar } from "./Navbar";
 import { useNavigate } from "react-router";
 import { useWalletOverrides } from "../hooks/useWalletOverrides";
 import { AccountPanel } from "./AccountPanel";
-import { NewBetSlip } from "./BetSlip";
+import { BetSlip } from "./BetSlip";
 import { MobileNavbar } from "./MobileNavbar";
 import { Footer } from "./Footer";
 import { Transition } from "@headlessui/react";
@@ -54,7 +54,7 @@ export const PageLayout: React.FC<Props> = ({ children }) => {
                 forceNewNetwork={forceNewNetwork}
                 isLocalWallet={isLocalWallet}
               />
-              <NewBetSlip />
+              <BetSlip />
             </div>
           </div>
         </main>
@@ -76,7 +76,7 @@ export const PageLayout: React.FC<Props> = ({ children }) => {
               forceNewNetwork={forceNewNetwork}
               isLocalWallet={isLocalWallet}
             />
-            <NewBetSlip />
+            <BetSlip />
           </div>
         </Transition.Child>
       </Transition>
