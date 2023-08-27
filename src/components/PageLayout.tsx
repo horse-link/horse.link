@@ -5,7 +5,7 @@ import { Navbar } from "./Navbar";
 import { useNavigate } from "react-router";
 import { useWalletOverrides } from "../hooks/useWalletOverrides";
 import { AccountPanel } from "./AccountPanel";
-import { NewBetSlip } from "./NewBetSlip";
+import { NewBetSlip } from "./BetSlip";
 import { MobileNavbar } from "./MobileNavbar";
 import { Footer } from "./Footer";
 import { Transition } from "@headlessui/react";
