@@ -11,7 +11,7 @@ export const Footer: React.FC = () => (
       className="flex h-fit w-full flex-col items-center justify-center"
     >
       <FaHome color="black" size={40} />
-      <label className="text-hl-background">HOME</label>
+      <label className="text-hl-background">RACES</label>
     </Link>
     <Link
       to="/vaults"

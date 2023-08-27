@@ -13,7 +13,7 @@ import { VscTrash } from "react-icons/vsc";
 import { Button } from "./Buttons";
 import { Loader } from "./Loader";
 
-export const NewBetSlip: React.FC = () => {
+export const BetSlip: React.FC = () => {
   const config = useConfig();
   const { data: signer } = useSigner();
   const { bets, removeBet, forceNewSigner, placeBetsInBetSlip, txLoading } =

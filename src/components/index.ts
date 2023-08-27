@@ -6,6 +6,6 @@ export * from "./AddressLink";
 export * from "./Countdown";
 export * from "./Navbar";
 export * from "./AccountPanel";
-export * from "./NewBetSlip";
+export * from "./BetSlip";
 export * from "./MobileNavbar";
 export * from "./Footer";
