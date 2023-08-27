@@ -75,6 +75,40 @@ export const AccountPanel: React.FC<Props> = ({
     <React.Fragment>
       <div className="flex w-full flex-col gap-y-6">
         <Card
+          title="Token"
+          data={
+            <button
+              className="flex w-full items-center border border-hl-border py-3 px-4 font-sans"
+              onClick={openModal}
+            >
+              <img
+                src={currentToken?.src || "/images/horse.webp"}
+                alt="HorseLink logo"
+                className="max-w-[2rem]"
+              />
+              <div className="w-full text-center text-base font-normal">
+                {currentToken?.name || "Token"}
+              </div>
+            </button>
+          }
+        />
+        <Card
+          title={`${currentToken ? currentToken.symbol : "Token"} Balance`}
+          data={
+            userBalance && currentToken
+              ? `${userBalance.formatted} ${currentToken.symbol}`
+              : undefined
+          }
+        />
+        <Card
+          title={`${chain?.name || ""} Balance`}
+          data={
+            balanceData
+              ? `${(+balanceData.formatted).toFixed(4)} ETH`
+              : undefined
+          }
+        />
+        <Card
           title="Network"
           data={
             <Listbox as={React.Fragment}>
@@ -160,40 +194,6 @@ export const AccountPanel: React.FC<Props> = ({
                 <Button big text="change wallet" onClick={openWalletModal} />
               </div>
             </div>
-          }
-        />
-        <Card
-          title="Token"
-          data={
-            <button
-              className="flex w-full items-center border border-hl-border py-3 px-4 font-sans"
-              onClick={openModal}
-            >
-              <img
-                src={currentToken?.src || "/images/horse.webp"}
-                alt="HorseLink logo"
-                className="max-w-[2rem]"
-              />
-              <div className="w-full text-center text-base font-normal">
-                {currentToken?.name || "Token"}
-              </div>
-            </button>
-          }
-        />
-        <Card
-          title={`${currentToken ? currentToken.symbol : "Token"} Balance`}
-          data={
-            userBalance && currentToken
-              ? `${userBalance.formatted} ${currentToken.symbol}`
-              : undefined
-          }
-        />
-        <Card
-          title={`${chain?.name || ""} ETH Balance`}
-          data={
-            balanceData
-              ? `${(+balanceData.formatted).toFixed(4)} ETH`
-              : undefined
           }
         />
       </div>
