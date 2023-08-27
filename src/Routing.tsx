@@ -63,7 +63,7 @@ const Routing: AppRoutes = [
 
 export const NavbarRouting: NavbarRoutes = [
   {
-    name: "Home",
+    name: "Races",
     path: "/"
   },
   {
