@@ -15,6 +15,7 @@ import { Button } from "./Buttons";
 import { AiFillEyeInvisible, AiOutlineQrcode } from "react-icons/ai";
 import { QrCodeModal } from "./Modals";
 import { Listbox } from "@headlessui/react";
+import { formatToFourDecimals } from "horselink-sdk";
 
 type Props = {
   forceNewNetwork: (chain: Chain) => void;
@@ -64,7 +65,7 @@ export const AccountPanel: React.FC<Props> = ({
       setUserBalance({
         value: balance,
         decimals: +currentToken.decimals,
-        formatted: utils.formatting.formatToFourDecimals(
+        formatted: formatToFourDecimals(
           ethers.utils.formatUnits(balance, currentToken.decimals)
         )
       })

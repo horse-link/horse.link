@@ -117,13 +117,19 @@ export class Api {
     return data;
   };
 
-  public getTotalInPlay = async (): Promise<{ total: number }> => {
-    const { data } = await this.client.get("/inplay");
+  public getVaultHistory = async (): Promise<MarketStats> => {
+    const { data } = await this.client.get<MarketStats>("/vault/history");
+
     return data;
   };
 
   public getTotalPerformance = async (): Promise<{ performance: number }> => {
     const { data } = await this.client.get("/vaults/performance");
+    return data;
+  };
+
+  public getTotalInPlay = async (): Promise<{ total: number }> => {
+    const { data } = await this.client.get("/inplay");
     return data;
   };
 
@@ -228,12 +234,12 @@ export class Api {
     return data;
   };
 
-  // TSOA generating weird routes
-  public getMarketStatsOld = async (): Promise<Bet[]> => {
-    const { data } = await this.client.get<Bet[]>("/markets/stats/stats/");
+  // // TSOA generating weird routes
+  // public getMarketStatsOld = async (): Promise<Bet[]> => {
+  //   const { data } = await this.client.get<Bet[]>("/markets/stats/stats/");
 
-    return data;
-  };
+  //   return data;
+  // };
 
   public getMarketStats = async (): Promise<MarketStats> => {
     const { data } = await this.client.get<MarketStats>("/markets/stats");
@@ -244,7 +250,7 @@ export class Api {
   // TSOA generating weird routes
   public getMarketHistory = async (): Promise<MarketHistory[]> => {
     const { data } = await this.client.get<MarketHistory[]>(
-      "/markets/history/history/"
+      "/markets/history/"
     );
 
     return data;

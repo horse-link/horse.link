@@ -2,8 +2,8 @@ import React from "react";
 import { MeetResults } from "../../types/meets";
 import { NewTable } from "./NewTable";
 import classNames from "classnames";
-import utils from "../../utils";
 import { Loader } from "../Loader";
+import { formatOrdinals } from "../../utils/formatting";
 
 type Props = {
   results?: MeetResults;
@@ -39,7 +39,7 @@ export const NewResultsTable: React.FC<Props> = ({ results }) => {
               key={`resultstable-${horse.number}-${key.toString()}-${i}`}
             >
               {key === "place"
-                ? utils.formatting.formatOrdinals(horse.place)
+                ? formatOrdinals(horse.place)
                 : horse[key].toString()}
             </div>
           );
@@ -68,8 +68,7 @@ export const NewResultsTable: React.FC<Props> = ({ results }) => {
                 className="flex w-full flex-col items-center gap-y-2 border-t border-hl-border py-2 text-center"
               >
                 <h2 className="font-basement tracking-wider text-hl-secondary">
-                  {utils.formatting.formatOrdinals(horse.place)}. {horse.number}
-                  : {horse.runner}
+                  {formatOrdinals(horse.place)}. {horse.number}: {horse.runner}
                 </h2>
                 <p>{horse.rider}</p>
               </div>

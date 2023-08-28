@@ -12,6 +12,7 @@ import { Card } from "./Card";
 import { VscTrash } from "react-icons/vsc";
 import { Button } from "./Buttons";
 import { Loader } from "./Loader";
+import { formatToFourDecimals, formatToTwoDecimals } from "horselink-sdk";
 
 export const BetSlip: React.FC = () => {
   const config = useConfig();
@@ -132,7 +133,7 @@ export const BetSlip: React.FC = () => {
                         {bet.runner.name}
                       </p>
                       <p className="text-hl-tertiary">
-                        {utils.formatting.formatToFourDecimals(
+                        {formatToFourDecimals(
                           ethers.utils.formatUnits(
                             bet.wager,
                             vault?.asset.decimals
@@ -148,10 +149,7 @@ export const BetSlip: React.FC = () => {
                         {bet.race.track.name} {bet.race.raceNumber}
                       </p>
                       <p className="text-hl-secondary">
-                        {utils.formatting.formatToTwoDecimals(
-                          bet.back.odds.toString()
-                        )}{" "}
-                        Win
+                        {formatToTwoDecimals(bet.back.odds.toString())} Win
                       </p>
                     </div>
                     <VscTrash
@@ -175,7 +173,7 @@ export const BetSlip: React.FC = () => {
                   <div className="text-hl-secondary">
                     {Object.entries(slipTotals).map(([symbol, details]) => (
                       <span className="block text-right" key={symbol}>
-                        {utils.formatting.formatToFourDecimals(
+                        {formatToFourDecimals(
                           ethers.utils.formatEther(details.payout)
                         )}
                         {` ${details.symbol}`}
@@ -188,7 +186,7 @@ export const BetSlip: React.FC = () => {
                   <div className="text-hl-secondary">
                     {Object.entries(slipTotals).map(([symbol, details]) => (
                       <span className="block text-right" key={symbol}>
-                        {utils.formatting.formatToFourDecimals(
+                        {formatToFourDecimals(
                           ethers.utils.formatEther(details.stake)
                         )}
                         {` ${details.symbol}`}
