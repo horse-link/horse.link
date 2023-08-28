@@ -24,7 +24,7 @@ export const HomeOverallStats: React.FC = () => {
     <dl className="flex w-full flex-col gap-6 lg:flex-row lg:justify-between">
       <Card title="Total Liquidity" data={formattedTvl} />
       <Card title="In Play" data={formattedInplay} />
-      <Card title="Performance" data={formattedPerformace} />
+      <Card title="APY Last 30 Days" data={formattedPerformace} />
     </dl>
   );
 };

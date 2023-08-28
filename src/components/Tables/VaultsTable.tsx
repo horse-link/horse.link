@@ -18,7 +18,7 @@ type Props = {
   setIsModalOpen: (state: VaultModalState) => void;
 };
 
-export const NewVaultsTable: React.FC<Props> = ({ setIsModalOpen }) => {
+export const VaultsTable: React.FC<Props> = ({ setIsModalOpen }) => {
   const config = useConfig();
   const { isConnected } = useAccount();
   const { openWalletModal } = useWalletModal();
