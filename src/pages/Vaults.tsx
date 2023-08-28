@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NewVaultHistoryTable, NewVaultsTable } from "../components/Tables";
+import { NewVaultHistoryTable, VaultsTable } from "../components/Tables";
 import { useSubgraphVaults } from "../hooks/subgraph";
 import { DepositVaultModal, WithdrawVaultModal } from "../components/Modals";
 import { VaultModalState, VaultTransactionType } from "../types/vaults";
@@ -64,7 +64,7 @@ const Vaults: React.FC = () => {
         <h2>VAULTS & LIQUIDITY POOLS</h2>
       </div>
       <div className="mt-4">
-        <NewVaultsTable setIsModalOpen={setModal} />
+        <VaultsTable setIsModalOpen={setModal} />
       </div>
       <div className="mt-10">
         <h2>HISTORY</h2>
