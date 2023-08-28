@@ -7,6 +7,7 @@ import { ERC20__factory } from "../typechain";
 import { useBalance, useProvider } from "wagmi";
 import { FaucetModal } from "../components/Modals";
 import { NewFaucetTable } from "../components/Tables";
+import { formatToFourDecimals } from "horselink-sdk";
 
 const FAUCET_ADDRESS = "0xf919eaf2e37aac718aa19668b9071ee42c02c081";
 

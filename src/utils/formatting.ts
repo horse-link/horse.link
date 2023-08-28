@@ -167,19 +167,19 @@ export const formatTrackCondition = (meetRaces: MeetInfo) => {
   return LookupMap.get(meetRaces.trackCondition.toUpperCase());
 };
 
-// export const formatOrdinals = (n: number) => {
-//   const pr = new Intl.PluralRules("en-US", { type: "ordinal" });
+export const formatOrdinals = (n: number) => {
+  const pr = new Intl.PluralRules("en-US", { type: "ordinal" });
 
-//   const suffixes = new Map([
-//     ["one", "st"],
-//     ["two", "nd"],
-//     ["few", "rd"],
-//     ["other", "th"]
-//   ]);
-//   const rule = pr.select(n);
-//   const suffix = suffixes.get(rule);
-//   return `${n}${suffix}`;
-// };
+  const suffixes = new Map([
+    ["one", "st"],
+    ["two", "nd"],
+    ["few", "rd"],
+    ["other", "th"]
+  ]);
+  const rule = pr.select(n);
+  const suffix = suffixes.get(rule);
+  return `${n}${suffix}`;
+};
 
 export const formatChain = (chain: Chain): Chain => ({
   ...chain,

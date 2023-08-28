@@ -11,7 +11,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { Loader } from "../Loader";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
 import { ethers } from "ethers";
-import utils from "../../utils";
+import { formatToFourDecimals } from "horselink-sdk";
 
 dayjs.extend(relativeTime);
 
@@ -102,7 +102,7 @@ export const BetTable: React.FC<Props> = ({
               className={style}
               onClick={() => onClickBet(bet)}
             >
-              {utils.formatting.formatToFourDecimals(
+              {formatToFourDecimals(
                 ethers.utils.formatEther(
                   betDidWin === true ? bet.payout : bet.amount
                 )
@@ -232,7 +232,7 @@ export const BetTable: React.FC<Props> = ({
                   <p>{bet.race}</p>
                   <p>{bet.proposition}</p>
                   <p className="text-hl-secondary">
-                    {utils.formatting.formatToFourDecimals(
+                    {formatToFourDecimals(
                       ethers.utils.formatEther(
                         betDidWin === true ? bet.payout : bet.amount
                       )

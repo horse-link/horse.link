@@ -12,7 +12,7 @@ import { Card } from "./Card";
 import { VscTrash } from "react-icons/vsc";
 import { Button } from "./Buttons";
 import { Loader } from "./Loader";
-import { formatToFourDecimalsRaw } from "horselink-sdk";
+import { formatToFourDecimals, formatToTwoDecimals } from "horselink-sdk";
 
 export const BetSlip: React.FC = () => {
   const config = useConfig();

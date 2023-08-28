@@ -53,7 +53,7 @@ export const NewVaultHistoryTable: React.FC<Props> = ({ vaultHistory }) => {
 
           const details = utils.config.getVault(history.vaultAddress, config);
 
-          const amount = utils.formatting.formatToFourDecimals(
+          const amount = formatToFourDecimals(
             ethers.utils.formatEther(history?.amount || "0")
           );
 

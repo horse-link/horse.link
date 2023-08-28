@@ -4,10 +4,10 @@ import { useApi } from "../../providers/Api";
 import { NewTable } from "./NewTable";
 import classNames from "classnames";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
-import utils from "../../utils";
 import { ethers } from "ethers";
 import dayjs from "dayjs";
 import { Loader } from "../Loader";
+import { formatToFourDecimals } from "horselink-sdk";
 
 export const MarketHistoryTable: React.FC = () => {
   const api = useApi();
@@ -71,9 +71,7 @@ export const MarketHistoryTable: React.FC = () => {
             key={`markethistorytable-${h.amount.toString()}-${i}`}
             className="w-full py-4 text-left"
           >
-            {utils.formatting.formatToFourDecimals(
-              ethers.utils.formatEther(h.amount)
-            )}
+            {formatToFourDecimals(ethers.utils.formatEther(h.amount))}
           </div>,
           <div
             key={`markethistorytable-${h.createdAt}-${i}`}
@@ -137,9 +135,7 @@ export const MarketHistoryTable: React.FC = () => {
                   {h.type}
                 </h2>
                 <p>
-                  {utils.formatting.formatToFourDecimals(
-                    ethers.utils.formatEther(h.amount)
-                  )}
+                  {formatToFourDecimals(ethers.utils.formatEther(h.amount))}
                 </p>
                 <a
                   href={`${scanner}/tx/${h.id}`}

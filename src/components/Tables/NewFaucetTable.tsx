@@ -6,10 +6,10 @@ import { useConfig } from "../../providers/Config";
 import { useWalletModal } from "../../providers/WalletModal";
 import classNames from "classnames";
 import { NewTable } from "./NewTable";
-import utils from "../../utils";
 import { ethers } from "ethers";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
 import { Button } from "../Buttons";
+import { formatToFourDecimals } from "horselink-sdk";
 
 type Props = {
   balances?: Array<FaucetBalance>;
@@ -67,7 +67,7 @@ export const NewFaucetTable: React.FC<Props> = ({
             amount => amount.symbol.toLowerCase() === token.symbol.toLowerCase()
           );
 
-          const amount = `${utils.formatting.formatToFourDecimals(
+          const amount = `${formatToFourDecimals(
             ethers.utils.formatUnits(
               tokenBalance?.amount || ethers.constants.Zero,
               tokenBalance?.decimals
