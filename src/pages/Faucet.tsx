@@ -5,7 +5,6 @@ import { FaucetBalance } from "../types/faucet";
 import { useConfig } from "../providers/Config";
 import { ERC20__factory } from "../typechain";
 import { useBalance, useProvider } from "wagmi";
-import utils from "../utils";
 import { FaucetModal } from "../components/Modals";
 import { NewFaucetTable } from "../components/Tables";
 
@@ -68,7 +67,7 @@ const Faucet: React.FC = () => {
             <Card
               key={b.name}
               title={b.name}
-              data={`${utils.formatting.formatToFourDecimals(
+              data={`${formatToFourDecimals(
                 ethers.utils.formatUnits(b.amount, b.decimals)
               )} ${b.symbol}`}
             />

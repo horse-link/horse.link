@@ -10,9 +10,9 @@ import { useScannerUrl } from "../../hooks/useScannerUrl";
 import { ethers } from "ethers";
 import { VaultInfo } from "../../types/config";
 import classNames from "classnames";
-import utils from "../../utils";
 import { Button } from "../Buttons";
 import { Loader } from "../Loader";
+import { formatToFourDecimals } from "horselink-sdk";
 
 type Props = {
   setIsModalOpen: (state: VaultModalState) => void;
@@ -122,14 +122,14 @@ export const NewVaultsTable: React.FC<Props> = ({ setIsModalOpen }) => {
 
   const rows = vaultInfoList?.length
     ? vaultInfoList.map((vault, i) => {
-        const tvl = `${utils.formatting.formatToFourDecimals(
+        const tvl = `${formatToFourDecimals(
           ethers.utils.formatUnits(
             vault.totalAssets.add(vault.totalAssetsLocked),
             vault.asset.decimals
           )
         )} ${vault.asset.symbol}`;
 
-        const myShares = utils.formatting.formatToFourDecimals(
+        const myShares = formatToFourDecimals(
           vault.userShareTotal
             ? (
                 +ethers.utils.formatUnits(
@@ -140,7 +140,7 @@ export const NewVaultsTable: React.FC<Props> = ({ setIsModalOpen }) => {
             : "0"
         );
 
-        const myValue = utils.formatting.formatToFourDecimals(
+        const myValue = formatToFourDecimals(
           vault.userAssetTotal
             ? ethers.utils.formatUnits(
                 vault.userAssetTotal,
@@ -256,7 +256,7 @@ export const NewVaultsTable: React.FC<Props> = ({ setIsModalOpen }) => {
         ) : (
           <div className="flex w-full flex-col items-center">
             {vaultInfoList.map(vault => {
-              const tvl = `${utils.formatting.formatToFourDecimals(
+              const tvl = `${formatToFourDecimals(
                 ethers.utils.formatUnits(
                   vault.totalAssets.add(vault.totalAssetsLocked),
                   vault.asset.decimals

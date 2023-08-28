@@ -3,12 +3,12 @@ import { Card, PageLayout } from "../components";
 import { useLeaderboardStatistics } from "../hooks/stats";
 import { NewLeaderboardTable } from "../components/Tables";
 import { useAccount } from "wagmi";
-import utils from "../utils";
 import { ethers } from "ethers";
 import { Countdown } from "../components/Countdown";
 import constants from "../constants";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
+import { formatToFourDecimals, formatToFourDecimalsRaw } from "horselink-sdk";
 
 dayjs.extend(duration);
 
@@ -46,13 +46,13 @@ const Leaderboard: React.FC = () => {
   const userHasNoStats = isConnected && !userStats;
 
   const earnings = userStats?.earnings.value
-    ? `${utils.formatting.formatToFourDecimalsRaw(
+    ? `${formatToFourDecimalsRaw(
         ethers.utils.formatEther(userStats.earnings.value)
       )} HL`
     : undefined;
 
   const balance = userStats?.balance.formatted
-    ? `${utils.formatting.formatToFourDecimals(userStats.balance.formatted)} HL`
+    ? `${formatToFourDecimals(userStats.balance.formatted)} HL`
     : undefined;
 
   return (

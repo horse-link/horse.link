@@ -5,29 +5,29 @@ import { BetId, Deposit, Withdraw } from "../types/subgraph";
 import { Chain } from "wagmi";
 import { VaultTransaction } from "../types/vaults";
 
-export const formatToFourDecimals = (amount: string) => {
-  const parsedAmount = parseFloat(amount);
-  if (parsedAmount === 0) return "0.0000";
-  if (parsedAmount < 0.0001) return "<0.0001";
+// export const formatToFourDecimals = (amount: string) => {
+//   const parsedAmount = parseFloat(amount);
+//   if (parsedAmount === 0) return "0.0000";
+//   if (parsedAmount < 0.0001) return "<0.0001";
 
-  const roundedToFourDecimal = parsedAmount.toFixed(4);
-  return roundedToFourDecimal;
-};
+//   const roundedToFourDecimal = parsedAmount.toFixed(4);
+//   return roundedToFourDecimal;
+// };
 
-// returns four decimals without special formatting
-export const formatToFourDecimalsRaw = (amount: string) => {
-  const parsedAmount = parseFloat(amount);
-  // parsedAmount === 0
-  if (!parsedAmount) return "0.0000";
+// // returns four decimals without special formatting
+// export const formatToFourDecimalsRaw = (amount: string) => {
+//   const parsedAmount = parseFloat(amount);
+//   // parsedAmount === 0
+//   if (!parsedAmount) return "0.0000";
 
-  return parsedAmount.toFixed(4);
-};
+//   return parsedAmount.toFixed(4);
+// };
 
-export const formatToTwoDecimals = (amount: string) => {
-  const parsedAmount = parseFloat(amount);
-  const roundedToTwoDecimals = parsedAmount.toFixed(2);
-  return roundedToTwoDecimals;
-};
+// export const formatToTwoDecimals = (amount: string) => {
+//   const parsedAmount = parseFloat(amount);
+//   const roundedToTwoDecimals = parsedAmount.toFixed(2);
+//   return roundedToTwoDecimals;
+// };
 
 // add a comma every 3 digits
 export const formatNumberWithCommas = (amount: string) => {
@@ -167,19 +167,19 @@ export const formatTrackCondition = (meetRaces: MeetInfo) => {
   return LookupMap.get(meetRaces.trackCondition.toUpperCase());
 };
 
-export const formatOrdinals = (n: number) => {
-  const pr = new Intl.PluralRules("en-US", { type: "ordinal" });
+// export const formatOrdinals = (n: number) => {
+//   const pr = new Intl.PluralRules("en-US", { type: "ordinal" });
 
-  const suffixes = new Map([
-    ["one", "st"],
-    ["two", "nd"],
-    ["few", "rd"],
-    ["other", "th"]
-  ]);
-  const rule = pr.select(n);
-  const suffix = suffixes.get(rule);
-  return `${n}${suffix}`;
-};
+//   const suffixes = new Map([
+//     ["one", "st"],
+//     ["two", "nd"],
+//     ["few", "rd"],
+//     ["other", "th"]
+//   ]);
+//   const rule = pr.select(n);
+//   const suffix = suffixes.get(rule);
+//   return `${n}${suffix}`;
+// };
 
 export const formatChain = (chain: Chain): Chain => ({
   ...chain,
