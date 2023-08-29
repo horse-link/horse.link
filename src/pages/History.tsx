@@ -69,28 +69,30 @@ const History: React.FC = () => {
 
   return (
     <PageLayout>
-      <div className="mb-4 flex w-full flex-col justify-center gap-x-1 gap-y-2 text-left md:flex-row lg:justify-between lg:gap-x-4">
-        <Card
-          title="24H Winning Bets Value"
-          data={
-            totalWinningVolume &&
-            `$${formatToFourDecimals(
-              ethers.utils.formatEther(totalWinningVolume)
-            )}`
-          }
-        />
-        <Card title="24H Winning Bets" data={totalWinningBets?.toString()} />
-        <Card
-          title="24H Largest Winning Bet"
-          data={
-            largestWinningBet &&
-            `$${formatToFourDecimals(
-              ethers.utils.formatEther(
-                largestWinningBet?.payout || ethers.constants.Zero
-              )
-            )}`
-          }
-        />
+      <div className="hidden lg:block">
+        <div className="mb-4 flex w-full flex-col justify-center gap-x-1 gap-y-2 text-left md:flex-row lg:justify-between lg:gap-x-4">
+          <Card
+            title="24H Winning Bets Value"
+            data={
+              totalWinningVolume &&
+              `$${formatToFourDecimals(
+                ethers.utils.formatEther(totalWinningVolume)
+              )}`
+            }
+          />
+          <Card title="24H Winning Bets" data={totalWinningBets?.toString()} />
+          <Card
+            title="24H Largest Winning Bet"
+            data={
+              largestWinningBet &&
+              `$${formatToFourDecimals(
+                ethers.utils.formatEther(
+                  largestWinningBet?.payout || ethers.constants.Zero
+                )
+              )}`
+            }
+          />
+        </div>
       </div>
       <div className="my-4 flex w-full justify-between gap-x-3">
         <BetFilterGroup
