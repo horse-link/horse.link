@@ -62,7 +62,9 @@ const Home: React.FC = () => {
   return (
     <PageLayout>
       <div className="grid w-full gap-6">
-        <HomeOverallStats />
+        <div className="hidden lg:block">
+          <HomeOverallStats />
+        </div>
         <HomeNextToJumpBanner />
         <div className="flex w-full justify-between">
           <Button text="today" onClick={() => {}} disabled />
