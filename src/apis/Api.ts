@@ -247,7 +247,6 @@ export class Api {
     return data;
   };
 
-  // TSOA generating weird routes
   public getMarketHistory = async (): Promise<MarketHistory[]> => {
     const { data } = await this.client.get<MarketHistory[]>(
       "/markets/history/"
