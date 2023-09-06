@@ -9,7 +9,7 @@ import {
 import { SignedMeetingsResponse, MeetFilters, Meet } from "../types/meets";
 import constants from "../constants";
 import { useApi } from "../providers/Api";
-import { NewHomeTable } from "../components/Tables";
+import { HomeTable } from "../components/Tables";
 import { Button } from "../components/Buttons";
 
 const Home: React.FC = () => {
@@ -76,7 +76,7 @@ const Home: React.FC = () => {
             />
           </div>
         </div>
-        <NewHomeTable meets={meets} />
+        <HomeTable meets={meets} />
         <div className="block py-10 lg:hidden" />
       </div>
     </PageLayout>

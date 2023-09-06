@@ -2,7 +2,7 @@ import { BigNumber, ethers } from "ethers";
 import React from "react";
 import { LeaderboardBalance } from "../../types/leaderboard";
 import classNames from "classnames";
-import { NewTable } from "./NewTable";
+import { Table } from "./Table";
 import { formatToFourDecimals, formatToFourDecimalsRaw } from "horselink-sdk";
 
 type Props = {
@@ -14,7 +14,7 @@ type Props = {
   loading: boolean;
 };
 
-export const NewLeaderboardTable: React.FC<Props> = ({ stats, balances }) => {
+export const LeaderboardTable: React.FC<Props> = ({ stats, balances }) => {
   const headers = ["Rank", "Address", "Earnings", "Balance"].map((text, i) => (
     <div
       key={`markettable-${text}-${i}`}
@@ -70,7 +70,7 @@ export const NewLeaderboardTable: React.FC<Props> = ({ stats, balances }) => {
       </p>
     </div>
   ) : (
-    <NewTable
+    <Table
       headers={headers}
       headerStyles="font-basement tracking-wider"
       rows={rows}

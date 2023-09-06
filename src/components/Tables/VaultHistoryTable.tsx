@@ -2,7 +2,7 @@ import React from "react";
 import { VaultHistory, VaultTransactionType } from "../../types/vaults";
 import { useConfig } from "../../providers/Config";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
-import { NewTable } from "./NewTable";
+import { Table } from "./Table";
 import classNames from "classnames";
 import utils from "../../utils";
 import { ethers } from "ethers";
@@ -24,7 +24,7 @@ type Props = {
   vaultHistory?: VaultHistory;
 };
 
-export const NewVaultHistoryTable: React.FC<Props> = ({ vaultHistory }) => {
+export const VaultHistoryTable: React.FC<Props> = ({ vaultHistory }) => {
   const config = useConfig();
   const scanner = useScannerUrl();
 
@@ -110,7 +110,7 @@ export const NewVaultHistoryTable: React.FC<Props> = ({ vaultHistory }) => {
     <React.Fragment>
       {/* non-mobile */}
       <div className="hidden lg:block">
-        <NewTable
+        <Table
           headers={headers}
           headerStyles="font-basement tracking-wider"
           rows={!history || !config ? loading : rows}

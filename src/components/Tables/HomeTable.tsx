@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Meet } from "../../types/meets";
-import { NewTable } from "./NewTable";
+import { Table } from "./Table";
 import { Link } from "react-router-dom";
 import utils from "../../utils";
 import dayjs from "dayjs";
@@ -18,7 +18,7 @@ type Props = {
   meets?: Array<Meet>;
 };
 
-export const NewHomeTable: React.FC<Props> = ({ meets }) => {
+export const HomeTable: React.FC<Props> = ({ meets }) => {
   const [time, setTime] = useState(dayjs());
   useEffect(() => {
     const interval = setInterval(() => {
@@ -114,7 +114,7 @@ export const NewHomeTable: React.FC<Props> = ({ meets }) => {
     <React.Fragment>
       {/* non-mobile */}
       <div className="hidden lg:block">
-        <NewTable
+        <Table
           headers={headers}
           headerStyles="font-basement tracking-wider"
           rows={!meets ? loading : rows}

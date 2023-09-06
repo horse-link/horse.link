@@ -1,7 +1,7 @@
 import React from "react";
 import { TotalBetsOnPropositions } from "../../types/bets";
 import { Runner, RunnerStatus } from "../../types/meets";
-import { NewTable } from "./NewTable";
+import { Table } from "./Table";
 import classNames from "classnames";
 import { ethers } from "ethers";
 import { Loader } from "../Loader";
@@ -158,7 +158,7 @@ export const RaceTable: React.FC<Props> = ({
     <React.Fragment>
       {/* non-mobile */}
       <div className="hidden lg:block">
-        <NewTable
+        <Table
           headers={headers}
           headerStyles="font-basement tracking-wider"
           rows={!runners?.length ? loading : rows}

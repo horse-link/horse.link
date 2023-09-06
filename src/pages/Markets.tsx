@@ -1,7 +1,7 @@
 import { useMarketStatistics } from "../hooks/stats";
 import { ethers } from "ethers";
 import { PageLayout, Card } from "../components";
-import { MarketHistoryTable, NewMarketTable } from "../components/Tables";
+import { MarketHistoryTable, MarketTable } from "../components/Tables";
 import { formatToFourDecimals } from "horselink-sdk";
 
 const Markets: React.FC = () => {
@@ -39,7 +39,7 @@ const Markets: React.FC = () => {
           }
         />
       </div>
-      <NewMarketTable />
+      <MarketTable />
       <div className="mt-10">
         <h2>HISTORY</h2>
       </div>

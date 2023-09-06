@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Loader, PageLayout } from "../components";
-import { BetTable, NewResultsTable } from "../components/Tables";
+import { BetTable, ResultsTable } from "../components/Tables";
 import { SettleBetModal, SettledMarketModal } from "../components/Modals";
 import { useBetsData, useMeetData, useResultsData } from "../hooks/data";
 import { useConfig } from "../providers/Config";
@@ -91,7 +91,7 @@ const Results: React.FC = () => {
             </React.Fragment>
           )}
         </div>
-        <NewResultsTable results={results} />
+        <ResultsTable results={results} />
       </div>
       <div className="mt-10">
         <h2>HISTORY</h2>

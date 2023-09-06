@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { NewTable } from "./NewTable";
+import { Table } from "./Table";
 import { VaultModalState, VaultTransactionType } from "../../types/vaults";
 import { useConfig } from "../../providers/Config";
 import { useAccount, useSigner } from "wagmi";
@@ -240,7 +240,7 @@ export const VaultsTable: React.FC<Props> = ({ setIsModalOpen }) => {
     <React.Fragment>
       {/* non-mobile */}
       <div className="hidden lg:block">
-        <NewTable
+        <Table
           headers={headers}
           headerStyles="font-basement tracking-wider"
           rows={!vaultInfoList?.length ? loading : rows}
