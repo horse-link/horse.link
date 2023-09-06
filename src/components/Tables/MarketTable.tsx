@@ -1,5 +1,5 @@
 import React from "react";
-import { NewTable } from "./NewTable";
+import { Table } from "./Table";
 import { useConfig } from "../../providers/Config";
 import classNames from "classnames";
 import utils from "../../utils";
@@ -8,7 +8,7 @@ import { useScannerUrl } from "../../hooks/useScannerUrl";
 import { Loader } from "../Loader";
 import { formatToFourDecimals } from "horselink-sdk";
 
-export const NewMarketTable: React.FC = () => {
+export const MarketTable: React.FC = () => {
   const config = useConfig();
   const scanner = useScannerUrl();
 
@@ -96,7 +96,7 @@ export const NewMarketTable: React.FC = () => {
     <React.Fragment>
       {/* non-mobile */}
       <div className="hidden lg:block">
-        <NewTable
+        <Table
           headers={headers}
           headerStyles="font-basement tracking-wider"
           rows={rows}

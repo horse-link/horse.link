@@ -1,6 +1,6 @@
 import React from "react";
 import { MeetResults } from "../../types/meets";
-import { NewTable } from "./NewTable";
+import { Table } from "./Table";
 import classNames from "classnames";
 import { Loader } from "../Loader";
 import { formatOrdinals } from "../../utils/formatting";
@@ -9,7 +9,7 @@ type Props = {
   results?: MeetResults;
 };
 
-export const NewResultsTable: React.FC<Props> = ({ results }) => {
+export const ResultsTable: React.FC<Props> = ({ results }) => {
   const headers = ["#", "Runner", "Number", "Rider"].map((text, i) => (
     <div
       key={`racetable-${text}-${i}`}
@@ -51,7 +51,7 @@ export const NewResultsTable: React.FC<Props> = ({ results }) => {
     <React.Fragment>
       {/* non-mobile */}
       <div className="hidden lg:block">
-        <NewTable headers={headers} rows={rows} />
+        <Table headers={headers} rows={rows} />
       </div>
 
       {/* mobile */}

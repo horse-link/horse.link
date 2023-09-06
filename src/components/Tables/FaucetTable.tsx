@@ -5,7 +5,7 @@ import { useApi } from "../../providers/Api";
 import { useConfig } from "../../providers/Config";
 import { useWalletModal } from "../../providers/WalletModal";
 import classNames from "classnames";
-import { NewTable } from "./NewTable";
+import { Table } from "./Table";
 import { ethers } from "ethers";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
 import { Button } from "../Buttons";
@@ -17,7 +17,7 @@ type Props = {
   setIsModalOpen: (isOpen: boolean) => void;
 };
 
-export const NewFaucetTable: React.FC<Props> = ({
+export const FaucetTable: React.FC<Props> = ({
   balances,
   setHash,
   setIsModalOpen
@@ -125,7 +125,7 @@ export const NewFaucetTable: React.FC<Props> = ({
   ];
 
   return (
-    <NewTable
+    <Table
       headers={headers}
       headerStyles="font-basement tracking-wider"
       rows={!config || !balances ? loading : rows}

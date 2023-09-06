@@ -3,7 +3,7 @@ import { BetHistoryResponse2, BetStatus } from "../../types/bets";
 import { Config } from "../../types/config";
 import { useAccount } from "wagmi";
 import { useWalletModal } from "../../providers/WalletModal";
-import { NewTable } from "./NewTable";
+import { Table } from "./Table";
 import classNames from "classnames";
 
 import dayjs from "dayjs";
@@ -178,7 +178,7 @@ export const BetTable: React.FC<Props> = ({
     <React.Fragment>
       {/* non-mobile */}
       <div className="hidden lg:block">
-        <NewTable
+        <Table
           headers={headers}
           headerStyles="font-basement tracking-wider"
           rows={

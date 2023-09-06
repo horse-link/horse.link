@@ -1,7 +1,7 @@
 import React from "react";
 import { usePromise } from "../../hooks/usePromise";
 import { useApi } from "../../providers/Api";
-import { NewTable } from "./NewTable";
+import { Table } from "./Table";
 import classNames from "classnames";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
 import { ethers } from "ethers";
@@ -111,7 +111,7 @@ export const MarketHistoryTable: React.FC = () => {
     <React.Fragment>
       {/* non-mobile */}
       <div className="hidden lg:block">
-        <NewTable
+        <Table
           headers={headers}
           headerStyles="font-basement tracking-wider"
           rows={!history ? loading : !history.length ? noEntities : rows}

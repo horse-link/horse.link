@@ -9,7 +9,7 @@ type Props = {
   rowStyles?: string;
 };
 
-export const NewTable: React.FC<Props> = ({
+export const Table: React.FC<Props> = ({
   headers,
   headerStyles,
   rows,
