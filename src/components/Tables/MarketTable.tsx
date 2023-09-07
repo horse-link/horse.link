@@ -6,7 +6,7 @@ import { ethers } from "ethers";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
 import { Loader } from "../Loader";
 import { formatToFourDecimals } from "horselink-sdk";
-import { MkTable } from "./MkTable";
+import { MarketSummaryTable } from "./MarketSummaryTable";
 
 export const MarketTable: React.FC = () => {
   const config = useConfig();
@@ -14,7 +14,7 @@ export const MarketTable: React.FC = () => {
 
   const headers = [
     "Name",
-    "Total In Play",
+    "Total Wagered",
     "Market Address",
     "Vault Address"
   ].map((text, i) => (
@@ -96,7 +96,7 @@ export const MarketTable: React.FC = () => {
     <React.Fragment>
       {/* non-mobile */}
       <div className="hidden lg:block">
-        <MkTable
+        <MarketSummaryTable
           headers={headers}
           headerStyles="font-basement tracking-wider"
           rows={rows}
