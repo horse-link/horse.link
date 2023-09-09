@@ -1,5 +1,4 @@
 import React from "react";
-import { Table } from "./Table";
 import { useConfig } from "../../providers/Config";
 import classNames from "classnames";
 import utils from "../../utils";
@@ -7,6 +6,7 @@ import { ethers } from "ethers";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
 import { Loader } from "../Loader";
 import { formatToFourDecimals } from "horselink-sdk";
+import { MarketSummaryTable } from "./MarketSummaryTable";
 
 export const MarketTable: React.FC = () => {
   const config = useConfig();
@@ -14,14 +14,14 @@ export const MarketTable: React.FC = () => {
 
   const headers = [
     "Name",
-    "Total In Play",
+    "Total Wagered",
     "Market Address",
     "Vault Address"
   ].map((text, i) => (
     <div
       key={`markettable-${text}-${i}`}
       className={classNames(
-        "w-full py-4 text-left font-semibold text-hl-primary",
+        "py-4 text-left font-semibold text-hl-primary",
         {
           "!text-hl-secondary": i === 1
         }
@@ -66,7 +66,7 @@ export const MarketTable: React.FC = () => {
               rel="noreferrer noopener"
               className={classNames(
                 style,
-                "max-w-[10ch] truncate xl:max-w-[20ch]"
+                "max-w-[20ch] truncate xl:max-w-[35ch]"
               )}
             >
               {market.address}
@@ -82,7 +82,7 @@ export const MarketTable: React.FC = () => {
               rel="noreferrer noopener"
               className={classNames(
                 style,
-                "max-w-[10ch] truncate xl:max-w-[20ch]"
+                "max-w-[20ch] truncate xl:max-w-[35ch]"
               )}
             >
               {market.vaultAddress}
@@ -96,7 +96,7 @@ export const MarketTable: React.FC = () => {
     <React.Fragment>
       {/* non-mobile */}
       <div className="hidden lg:block">
-        <Table
+        <MarketSummaryTable
           headers={headers}
           headerStyles="font-basement tracking-wider"
           rows={rows}
