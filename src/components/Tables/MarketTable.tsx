@@ -20,12 +20,9 @@ export const MarketTable: React.FC = () => {
   ].map((text, i) => (
     <div
       key={`markettable-${text}-${i}`}
-      className={classNames(
-        "py-4 text-left font-semibold text-hl-primary",
-        {
-          "!text-hl-secondary": i === 1
-        }
-      )}
+      className={classNames("py-4 text-left font-semibold text-hl-primary", {
+        "!text-hl-secondary": i === 1
+      })}
     >
       {text}
     </div>
