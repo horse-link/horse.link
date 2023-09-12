@@ -124,7 +124,8 @@ export const VaultsTable: React.FC<Props> = ({ setIsModalOpen }) => {
     ? vaultInfoList.map((vault, i) => {
         const tvl = `${formatToFourDecimals(
           ethers.utils.formatUnits(
-            vault.totalAssets.add(vault.totalAssetsLocked),
+            // vault.totalAssets.add(vault.totalAssetsLocked),
+            vault.totalAssets,
             vault.asset.decimals
           )
         )} ${vault.asset.symbol}`;
