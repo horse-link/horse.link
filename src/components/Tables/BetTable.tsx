@@ -47,7 +47,8 @@ export const BetTable: React.FC<Props> = ({
   const headers = [
     "#",
     "Punter",
-    "Amount",
+    "Wager",
+    "Payout",
     "Time",
     "Race",
     "Proposition",
@@ -59,7 +60,7 @@ export const BetTable: React.FC<Props> = ({
       className={classNames(
         "w-full py-4 text-left text-xs font-semibold text-hl-primary xl:text-base",
         {
-          "!text-hl-secondary": [1, 4].includes(i)
+          "!text-hl-secondary": [1, 5].includes(i)
         }
       )}
     >
@@ -77,7 +78,7 @@ export const BetTable: React.FC<Props> = ({
             ["SETTLED", "REFUNDED"] as Array<BetStatus>
           ).includes(bet.status);
 
-          const betDidWin = betClosed ? bet.result === "WIN" : undefined;
+          // const betDidWin = betClosed ? bet.result === "WIN" : undefined;
 
           return [
             <div
@@ -98,15 +99,18 @@ export const BetTable: React.FC<Props> = ({
               {bet.punter}
             </div>,
             <div
-              key={`racetable-bet-${bet.index}-${i}-formattedAmount`}
+              key={`racetable-bet-${bet.index}-${i}-formattedWager`}
               className={style}
               onClick={() => onClickBet(bet)}
             >
-              {formatToFourDecimals(
-                ethers.utils.formatEther(
-                  betDidWin === true ? bet.payout : bet.amount
-                )
-              )}
+              {formatToFourDecimals(ethers.utils.formatEther(bet.amount))}
+            </div>,
+            <div
+              key={`racetable-bet-${bet.index}-${i}-payout`}
+              className={style}
+              onClick={() => onClickBet(bet)}
+            >
+              {formatToFourDecimals(ethers.utils.formatEther(bet.payout))}
             </div>,
             <div
               key={`racetable-bet-${bet.index}-${i}-blockNumber`}
