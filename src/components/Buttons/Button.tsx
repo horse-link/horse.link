@@ -24,7 +24,7 @@ export const Button: React.FC<Props> = ({
   dropdownOpen = false,
   white = false,
   rounded = false,
-  autoWidth = false
+  autoWidth = false,
 }) => (
   <button
     className={classNames({
@@ -35,7 +35,7 @@ export const Button: React.FC<Props> = ({
       "px-8 text-sm 3xl:text-base": !big,
       "w-full py-2 text-sm 3xl:text-base": big,
       "rounded-md": rounded,
-      [`max-w-1/2 min-w-[48%] lg:min-w-fit lg:max-w-none lg:grow-0`]: autoWidth // use primarily for mobile
+      [`w-64 lg:min-w-fit lg:max-w-none lg:grow-0`]: autoWidth, // use primarily for mobile
     })}
     onClick={onClick}
     disabled={disabled}
