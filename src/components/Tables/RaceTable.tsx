@@ -34,6 +34,7 @@ export const RaceTable: React.FC<Props> = ({
   const headers = [
     "#",
     "Runner",
+    "Rider",
     "Form",
     "Weight",
     "Win",
@@ -45,7 +46,7 @@ export const RaceTable: React.FC<Props> = ({
       className={classNames(
         "w-full py-4 text-left font-semibold text-hl-primary",
         {
-          "!text-hl-secondary": [1, 4, 7].includes(i)
+          "!text-hl-secondary": [1, 5, 7].includes(i)
         }
       )}
     >
@@ -65,13 +66,13 @@ export const RaceTable: React.FC<Props> = ({
 
     return [
       ...(
-        ["number", "name", "last5Starts", "handicapWeight", "odds"] as Array<
+        ["number", "name", "rider","last5Starts", "handicapWeight", "odds"] as Array<
           keyof typeof runner
         >
       ).map((key, i) => (
         <div
           className={classNames(style, {
-            "text-hl-secondary": [1, 4].includes(i)
+            "text-hl-secondary": [1, 5].includes(i)
           })}
           key={`runnertable-${runner.proposition_id}-${key.toString()}-${i}`}
           onClick={() => onClickRunner(runner)}
