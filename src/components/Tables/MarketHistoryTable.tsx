@@ -1,7 +1,7 @@
 import React from "react";
 import { usePromise } from "../../hooks/usePromise";
 import { useApi } from "../../providers/Api";
-import { Table } from "./Table";
+import { HistorySummaryTable } from "./HistorySummaryTable";
 import classNames from "classnames";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
 import { ethers } from "ethers";
@@ -45,7 +45,7 @@ export const MarketHistoryTable: React.FC = () => {
               rel="noreferrer noopener"
               className={classNames(
                 style,
-                "max-w-[10ch] truncate xl:max-w-[20ch]"
+                "max-w-[10ch] truncate xl:max-w-[30ch]"
               )}
             >
               {h.id}
@@ -61,7 +61,7 @@ export const MarketHistoryTable: React.FC = () => {
               rel="noreferrer noopener"
               className={classNames(
                 style,
-                "max-w-[10ch] truncate text-hl-secondary xl:max-w-[20ch]"
+                "max-w-[10ch] truncate text-hl-secondary xl:max-w-[30ch]"
               )}
             >
               {h.vaultAddress}
@@ -111,7 +111,7 @@ export const MarketHistoryTable: React.FC = () => {
     <React.Fragment>
       {/* non-mobile */}
       <div className="hidden lg:block">
-        <Table
+        <HistorySummaryTable
           headers={headers}
           headerStyles="font-basement tracking-wider"
           rows={!history ? loading : !history.length ? noEntities : rows}
