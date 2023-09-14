@@ -5,7 +5,7 @@ import { Table } from "./Table";
 import classNames from "classnames";
 import { ethers } from "ethers";
 import { Loader } from "../Loader";
-import { formatToFourDecimals, formatToTwoDecimals } from "horselink-sdk";
+import { formatToTwoDecimals } from "horselink-sdk";
 
 type Props = {
   runners?: Array<Runner>;
