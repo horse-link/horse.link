@@ -55,10 +55,9 @@ export const RaceTable: React.FC<Props> = ({
   ));
 
   const runnerMapping = (runner: Runner, i: number) => {
-    const stats = totalBetsOnPropositions?.[runner.proposition_id || ""];
-    const formattedBacked = stats
-      ? ethers.utils.formatEther((+stats.amount).toString())
-      : "0.0000";
+    const formattedBacked = runner
+      ? ethers.utils.formatEther((+runner.backed).toString())
+      : "0.00";
 
     const style = classNames("w-full text-left py-4", {
       "line-through": scratchingArray.includes(runner.status)
@@ -87,14 +86,14 @@ export const RaceTable: React.FC<Props> = ({
         key={`runnertable-${runner.proposition_id}-${i}`}
         onClick={() => onClickRunner(runner)}
       >
-        {formatToFourDecimals(formattedBacked)}
+        {formatToTwoDecimals(formattedBacked)}
       </div>,
       <div
         className={classNames(style, "text-hl-secondary")}
         key={`runnertable-${runner.proposition_id}-${i}`}
         onClick={() => onClickRunner(runner)}
       >
-        {formatToFourDecimals(stats?.percentage.toString() || "0")}
+        {formatToTwoDecimals(runner?.percentage || "0.00") }
       </div>
     ];
   };
