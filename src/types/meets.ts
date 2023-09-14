@@ -16,6 +16,8 @@ export type Runner = {
   barrier: number;
   signature: EcSignature;
   status: RunnerStatus;
+  backed: number;
+  percentage: number;
 };
 
 export type RunnerStatus = "Open" | "Scratched" | "LateScratched";
