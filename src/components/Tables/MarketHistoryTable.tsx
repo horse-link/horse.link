@@ -1,7 +1,7 @@
 import React from "react";
 import { usePromise } from "../../hooks/usePromise";
 import { useApi } from "../../providers/Api";
-import { Table } from "./Table";
+import { HistorySummaryTable } from "./HistorySummaryTable";
 import classNames from "classnames";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
 import { ethers } from "ethers";
@@ -11,7 +11,16 @@ import { formatToFourDecimals } from "horselink-sdk";
 
 export const MarketHistoryTable: React.FC = () => {
   const api = useApi();
-  const history = usePromise(api.getMarketHistory);
+  const history = usePromise(api.getMarketHistory)?.sort((a,b) => {
+    if (a.createdAt > b.createdAt) {
+      return -1;
+    }
+    if (a.createdAt < b.createdAt) {
+      return 1;
+    }
+    return 0;
+    });
+  
   const scanner = useScannerUrl();
 
   const headers = ["TxID", "Vault Address", "Amount", "Time", "Type"].map(
@@ -33,6 +42,8 @@ export const MarketHistoryTable: React.FC = () => {
   const rows = history
     ? history.map((h, i) => {
         const style = "w-full text-left py-4";
+        
+
 
         return [
           <div
@@ -45,7 +56,7 @@ export const MarketHistoryTable: React.FC = () => {
               rel="noreferrer noopener"
               className={classNames(
                 style,
-                "max-w-[10ch] truncate xl:max-w-[20ch]"
+                "max-w-[10ch] truncate xl:max-w-[30ch]"
               )}
             >
               {h.id}
@@ -61,7 +72,7 @@ export const MarketHistoryTable: React.FC = () => {
               rel="noreferrer noopener"
               className={classNames(
                 style,
-                "max-w-[10ch] truncate text-hl-secondary xl:max-w-[20ch]"
+                "max-w-[10ch] truncate text-hl-secondary xl:max-w-[30ch]"
               )}
             >
               {h.vaultAddress}
@@ -111,7 +122,7 @@ export const MarketHistoryTable: React.FC = () => {
     <React.Fragment>
       {/* non-mobile */}
       <div className="hidden lg:block">
-        <Table
+        <HistorySummaryTable
           headers={headers}
           headerStyles="font-basement tracking-wider"
           rows={!history ? loading : !history.length ? noEntities : rows}

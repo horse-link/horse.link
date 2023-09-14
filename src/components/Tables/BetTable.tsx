@@ -110,7 +110,7 @@ export const BetTable: React.FC<Props> = ({
               className={style}
               onClick={() => onClickBet(bet)}
             >
-              {formatToFourDecimals(ethers.utils.formatEther(bet.payout))}
+              {bet.result === "LOSE" ? "0" : formatToFourDecimals(ethers.utils.formatEther(bet.payout))}
             </div>,
             <div
               key={`racetable-bet-${bet.index}-${i}-blockNumber`}
