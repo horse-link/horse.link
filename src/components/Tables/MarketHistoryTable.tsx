@@ -11,7 +11,7 @@ import { formatToFourDecimals } from "horselink-sdk";
 
 export const MarketHistoryTable: React.FC = () => {
   const api = useApi();
-  const history = usePromise(api.getMarketHistory)?.sort((a,b) => {
+  const history = usePromise(api.getMarketHistory)?.sort((a, b) => {
     if (a.createdAt > b.createdAt) {
       return -1;
     }
@@ -19,8 +19,8 @@ export const MarketHistoryTable: React.FC = () => {
       return 1;
     }
     return 0;
-    });
-  
+  });
+
   const scanner = useScannerUrl();
 
   const headers = ["TxID", "Vault Address", "Amount", "Time", "Type"].map(
@@ -42,8 +42,6 @@ export const MarketHistoryTable: React.FC = () => {
   const rows = history
     ? history.map((h, i) => {
         const style = "w-full text-left py-4";
-        
-
 
         return [
           <div

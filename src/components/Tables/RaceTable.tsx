@@ -17,7 +17,6 @@ type Props = {
 
 export const RaceTable: React.FC<Props> = ({
   runners,
-  totalBetsOnPropositions,
   setSelectedRunner,
   setIsModalOpen,
   closed
@@ -65,9 +64,14 @@ export const RaceTable: React.FC<Props> = ({
 
     return [
       ...(
-        ["number", "name", "rider","last5Starts", "handicapWeight", "odds"] as Array<
-          keyof typeof runner
-        >
+        [
+          "number",
+          "name",
+          "rider",
+          "last5Starts",
+          "handicapWeight",
+          "odds"
+        ] as Array<keyof typeof runner>
       ).map((key, i) => (
         <div
           className={classNames(style, {
@@ -93,7 +97,7 @@ export const RaceTable: React.FC<Props> = ({
         key={`runnertable-${runner.proposition_id}-${i}`}
         onClick={() => onClickRunner(runner)}
       >
-        {formatToTwoDecimals(runner?.percentage || "0.00") }
+        {formatToTwoDecimals(runner?.percentage.toString() || "0.00")}
       </div>
     ];
   };
