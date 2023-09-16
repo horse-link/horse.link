@@ -55,7 +55,7 @@ export const RaceTable: React.FC<Props> = ({
 
   const runnerMapping = (runner: Runner, i: number) => {
     const formattedBacked = runner
-      ? ethers.utils.formatEther((+runner.backed).toString())
+      ? ethers.utils.formatEther((+runner?.backed).toString())
       : "0.00";
 
     const style = classNames("w-full text-left py-4", {
