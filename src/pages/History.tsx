@@ -26,7 +26,7 @@ const History: React.FC = () => {
   const [betTableFilter, setBetTableFilter] =
     useState<BetFilterOptions>("ALL_BETS");
   const [selectedBet, setSelectedBet] = useState<BetHistoryResponse2>();
-
+  
   useEffect(() => {
     // redirect back to /bets if disconnected
     if (!isConnected && !paramsAddress)
@@ -66,6 +66,15 @@ const History: React.FC = () => {
   const onFilterChange = (option: BetFilterOptions) => {
     setBetTableFilter(option);
   };
+  
+  const [page, setPage] = useState(0);
+
+  const pageData = useMemo(() => {
+    return betHistory?.slice(page*10, (page*10)+10)
+  }, [page])
+
+  const nextPage = () => setPage(prev => betHistory ? prev+1 : prev)
+  const prevPage = () => setPage(prev => prev > 0 ? prev-1: prev)
 
   return (
     <PageLayout>
@@ -109,7 +118,7 @@ const History: React.FC = () => {
       <BetTable
         allBetsEnabled={allBetsEnabled}
         paramsAddressExists={!!paramsAddress}
-        betHistory={betHistory}
+        betHistory={pageData}
         config={config}
         setSelectedBet={setSelectedBet}
         setIsModalOpen={setIsModalOpen}
@@ -118,12 +127,17 @@ const History: React.FC = () => {
         <div className="flex items-center gap-x-4">
           <Button
             text="prev"
-            onClick={() => {}}
-            active={false}
-            disabled={!betHistory}
+            disabled={!pageData?.length}
+            onClick={prevPage}
+            active={page === 0 ? false : true }
           />
-          <p className="px-2 font-semibold">0</p>
-          <Button text="next" onClick={() => {}} disabled={!betHistory} />
+          <p className="px-2 font-semibold">{page+1}</p>
+          <Button 
+            text="next" 
+            disabled={!pageData?.length}
+            onClick={nextPage}
+            active={!pageData?.length ? false : true}
+          />
         </div>
       </div>
       <div className="block py-10 lg:hidden" />
