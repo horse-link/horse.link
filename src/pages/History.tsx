@@ -127,7 +127,7 @@ const History: React.FC = () => {
         <div className="flex items-center gap-x-4">
           <Button
             text="prev"
-            disabled={!pageData?.length}
+            disabled={!pageData}
             onClick={prevPage}
             active={page === 0 ? false : true }
           />
