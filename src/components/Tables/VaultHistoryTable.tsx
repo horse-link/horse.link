@@ -2,7 +2,7 @@ import React from "react";
 import { VaultHistory, VaultTransactionType } from "../../types/vaults";
 import { useConfig } from "../../providers/Config";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
-import { Table } from "./Table";
+import { VaultSummaryTable } from "./VaultSummaryTable";
 import classNames from "classnames";
 import utils from "../../utils";
 import { ethers } from "ethers";
@@ -87,7 +87,7 @@ export const VaultHistoryTable: React.FC<Props> = ({ vaultHistory }) => {
                 rel="noreferrer noopener"
                 className={classNames(
                   style,
-                  "max-w-[10ch] truncate xl:max-w-[20ch]"
+                  "max-w-[10ch] truncate xl:max-w-[30ch]"
                 )}
               >
                 {history.tx}
@@ -110,7 +110,7 @@ export const VaultHistoryTable: React.FC<Props> = ({ vaultHistory }) => {
     <React.Fragment>
       {/* non-mobile */}
       <div className="hidden lg:block">
-        <Table
+        <VaultSummaryTable
           headers={headers}
           headerStyles="font-basement tracking-wider"
           rows={!history || !config ? loading : rows}
