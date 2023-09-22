@@ -100,11 +100,18 @@ const History: React.FC = () => {
           onChange={onFilterChange}
           disabled={!betHistory}
         />
-        <Button
-          text={allBetsEnabled ? "ALL BETS" : "MY BETS"}
-          onClick={onMyBetToggle}
-          active={!allBetsEnabled}
-        />
+        <div className= "flex flex-gap gap-3">
+          <Button
+            text="ALL BETS"
+            onClick={onMyBetToggle}
+            active={allBetsEnabled}
+          />
+          <Button
+            text="MY BETS"
+            onClick={onMyBetToggle}
+            active={!allBetsEnabled}
+          />
+        </div>
       </div>
       <BetTable
         allBetsEnabled={allBetsEnabled}
