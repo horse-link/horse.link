@@ -8,6 +8,7 @@ import constants from "../../constants";
 import utc from "dayjs/plugin/utc";
 import classNames from "classnames";
 import { RaceStatus } from "../../constants/status";
+// import { RaceStatus } from "horselink-sdk";
 import { Loader } from "../Loader";
 import { Disclosure } from "@headlessui/react";
 import { HiChevronUp, HiChevronDown } from "react-icons/hi";
