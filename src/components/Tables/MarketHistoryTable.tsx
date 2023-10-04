@@ -54,7 +54,7 @@ export const MarketHistoryTable: React.FC = () => {
               rel="noreferrer noopener"
               className={classNames(
                 style,
-                "max-w-[10ch] truncate xl:max-w-[30ch]"
+                "max-w-[20ch] truncate xl:max-w-[45ch]"
               )}
             >
               {h.id}
@@ -70,7 +70,7 @@ export const MarketHistoryTable: React.FC = () => {
               rel="noreferrer noopener"
               className={classNames(
                 style,
-                "max-w-[10ch] truncate text-hl-secondary xl:max-w-[30ch]"
+                "max-w-[20ch] truncate text-hl-secondary xl:max-w-[45ch]"
               )}
             >
               {h.vaultAddress}
