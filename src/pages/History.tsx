@@ -100,7 +100,7 @@ const History: React.FC = () => {
           onChange={onFilterChange}
           disabled={!betHistory}
         />
-        <div className= "flex flex-gap gap-3">
+        <div className= "flex gap-3 flex-wrap md:flex-nowrap">
           <Button
             text="ALL BETS"
             onClick={onMyBetToggle}
