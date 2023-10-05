@@ -23,6 +23,9 @@ module.exports = {
       },
       screens: {
         "3xl": "1900px"
+      },
+      letterSpacing: {
+        tightest: "-0.1em"
       }
     }
   },
