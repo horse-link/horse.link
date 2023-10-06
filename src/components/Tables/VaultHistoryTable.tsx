@@ -87,7 +87,7 @@ export const VaultHistoryTable: React.FC<Props> = ({ vaultHistory }) => {
                 rel="noreferrer noopener"
                 className={classNames(
                   style,
-                  "max-w-[10ch] truncate xl:max-w-[30ch]"
+                  "max-w-[30ch] truncate xl:max-w-[50ch]"
                 )}
               >
                 {history.tx}
