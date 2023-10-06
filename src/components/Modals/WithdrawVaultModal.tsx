@@ -143,6 +143,10 @@ export const WithdrawVaultModal: React.FC<Props> = ({
             <div className="grid w-full grid-cols-2 grid-rows-3">
               <h3 className="text-left text-hl-secondary">Name:</h3>
               <p className="text-left text-hl-tertiary">{vault.name}</p>
+              <h3 className="text-left text-hl-secondary">Address:</h3>
+              <p className="break-words text-left text-hl-tertiary">
+                {vault.address}
+              </p>
               <h3 className="text-left text-hl-secondary">Available:</h3>
               <p className="text-left text-hl-tertiary">
                 {userAssets.formatted}
