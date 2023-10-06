@@ -10,6 +10,8 @@ import { Vault__factory } from "../../typechain";
 import useRefetch from "../../hooks/useRefetch";
 import { UserBalance } from "../../types/users";
 import { Button } from "../Buttons";
+import { useScannerUrl } from "../../hooks/useScannerUrl";
+import utils from "../../utils";
 
 type Props = {
   isModalOpen: boolean;
@@ -122,6 +124,8 @@ export const WithdrawVaultModal: React.FC<Props> = ({
     isWithdrawNegative ||
     isWithdrawGreaterThanAssets;
 
+  const scanner = useScannerUrl();
+
   return (
     <BaseModal isOpen={isModalOpen} onClose={closeModal} isLarge={!!txHash}>
       {!userAssets ? (
@@ -143,6 +147,16 @@ export const WithdrawVaultModal: React.FC<Props> = ({
             <div className="grid w-full grid-cols-2 grid-rows-3">
               <h3 className="text-left text-hl-secondary">Name:</h3>
               <p className="text-left text-hl-tertiary">{vault.name}</p>
+              <h3 className="text-left text-hl-secondary">Address:</h3>
+              <p className="text-left text-hl-tertiary">
+                <a
+                  href={`${scanner}/address/${vault.address}`}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  {utils.formatting.shortenAddress(vault.address)}
+                </a>
+              </p>
               <h3 className="text-left text-hl-secondary">Available:</h3>
               <p className="text-left text-hl-tertiary">
                 {userAssets.formatted}

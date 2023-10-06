@@ -103,7 +103,6 @@ export const VaultsTable: React.FC<Props> = ({ setIsModalOpen }) => {
     "My Shares",
     "My Value",
     "My Percentage",
-    "Vault Address",
     "Deposit",
     "Withdraw"
   ].map((text, i) => (
@@ -176,22 +175,6 @@ export const VaultsTable: React.FC<Props> = ({ setIsModalOpen }) => {
               {text}
             </div>
           )),
-          <div
-            className="flex h-full w-full items-center"
-            key={`vaultstable-${vault.address}-${i}`}
-          >
-            <a
-              href={`${scanner}/address/${vault.address}`}
-              target="_blank"
-              rel="noreferrer noopener"
-              className={classNames(
-                style,
-                "max-w-[10ch] truncate 3xl:max-w-[20ch]"
-              )}
-            >
-              {vault.address}
-            </a>
-          </div>,
           <div
             key={`vaultstable-${VaultTransactionType.DEPOSIT}-${i}`}
             className="relative right-2 flex h-full w-full items-center px-2"
