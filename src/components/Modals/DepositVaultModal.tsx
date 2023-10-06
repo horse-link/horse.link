@@ -10,6 +10,8 @@ import { UserBalance } from "../../types/users";
 import { Loader } from "../";
 import { Button } from "../Buttons";
 import { formatToFourDecimals } from "horselink-sdk";
+import { useScannerUrl } from "../../hooks/useScannerUrl";
+import utils from "../../utils";
 
 type Props = {
   isModalOpen: boolean;
@@ -125,6 +127,8 @@ export const DepositVaultModal: React.FC<Props> = ({
     isDepositNegative ||
     isDepositGreaterThanBalance;
 
+  const scanner = useScannerUrl();
+
   return (
     <BaseModal isOpen={isModalOpen} onClose={closeModal} isLarge={!!txHash}>
       {!userBalance ? (
@@ -147,8 +151,14 @@ export const DepositVaultModal: React.FC<Props> = ({
               <h3 className="text-left text-hl-secondary">Name:</h3>
               <p className="text-left text-hl-tertiary">{vault.name}</p>
               <h3 className="text-left text-hl-secondary">Address:</h3>
-              <p className="break-words text-left text-hl-tertiary">
-                {vault.address}
+              <p className="text-left text-hl-tertiary">
+                <a
+                  href={`${scanner}/address/${vault.address}`}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  {utils.formatting.shortenAddress(vault.address)}
+                </a>
               </p>
               <h3 className="text-left text-hl-secondary">Available:</h3>
               <p className="text-left text-hl-tertiary">
