@@ -85,7 +85,10 @@ export const HomeTable: React.FC<Props> = ({ meets }) => {
                     "hover:!bg-hl-primary hover:!text-hl-secondary": ![
                       RaceStatus.CLOSED,
                       RaceStatus.PAYING
-                    ].includes(race.status)
+                    ].includes(race.status),
+                    "!text-hl-outstanding":
+                      Math.abs(dayjs(race.start).diff(time, "hours")) < 1 &&
+                      Math.abs(dayjs(race.start).diff(time, "minutes")) <= 5
                   }
                 )}
               >
