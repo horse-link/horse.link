@@ -100,7 +100,7 @@ export const BetTable: React.FC<Props> = ({
               className={style}
               onClick={() => onClickBet(bet)}
             >
-              {bet.race}
+              {bet.race.slice(11)} {bet.race.slice(8,10)}-{bet.race.slice(5,7)}-{bet.race.slice(0,4)}
             </div>,
             <div
               key={`racetable-bet-${bet.index}-${i}-formattedWager`}
