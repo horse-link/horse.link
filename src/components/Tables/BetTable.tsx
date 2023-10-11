@@ -46,21 +46,21 @@ export const BetTable: React.FC<Props> = ({
 
   const headers = [
     "#",
-    "Punter",
+    "Proposition",
+    "Race",
     "Wager",
     "Payout",
-    "Time",
-    "Race",
-    "Proposition",
+    "Status",
     "Result",
-    "Status"
+    "Time",
+    "Punter"
   ].map((text, i) => (
     <div
       key={`racetable-${text}-${i}`}
       className={classNames(
         "w-full py-4 text-left text-xs font-semibold text-hl-primary xl:text-base",
         {
-          "!text-hl-secondary": [1, 5].includes(i)
+          "!text-hl-secondary": [1, 4, 6].includes(i)
         }
       )}
     >
@@ -89,14 +89,18 @@ export const BetTable: React.FC<Props> = ({
               {bet.index}
             </div>,
             <div
-              key={`racetable-bet-${bet.index}-${i}-punter`}
-              className={classNames(
-                style,
-                "max-w-[10ch] truncate !text-hl-secondary xl:max-w-[20ch]"
-              )}
+              key={`racetable-bet-${bet.index}-${i}-propositionId`}
+              className={classNames(style, "!text-hl-secondary ")}
               onClick={() => onClickBet(bet)}
             >
-              {bet.punter}
+              {bet.proposition}
+            </div>,
+            <div
+              key={`racetable-bet-${bet.index}-${i}-date`}
+              className={style}
+              onClick={() => onClickBet(bet)}
+            >
+              {bet.race}
             </div>,
             <div
               key={`racetable-bet-${bet.index}-${i}-formattedWager`}
@@ -107,12 +111,26 @@ export const BetTable: React.FC<Props> = ({
             </div>,
             <div
               key={`racetable-bet-${bet.index}-${i}-payout`}
-              className={style}
+              className={classNames(style, "!text-hl-secondary ")}
               onClick={() => onClickBet(bet)}
             >
               {bet.result === "LOSE"
                 ? "0"
                 : formatToFourDecimals(ethers.utils.formatEther(bet.payout))}
+            </div>,
+            <div
+              key={`racetable-bet-${bet.index}-${i}-status`}
+              className={style}
+              onClick={() => onClickBet(bet)}
+            >
+              {bet.status}
+            </div>,
+            <div
+              key={`racetable-bet-${bet.index}-${i}-result`}
+              className={classNames(style, "!text-hl-secondary ")}
+              onClick={() => onClickBet(bet)}
+            >
+              {betClosed ? bet.result : "PENDING"}
             </div>,
             <div
               key={`racetable-bet-${bet.index}-${i}-blockNumber`}
@@ -122,32 +140,14 @@ export const BetTable: React.FC<Props> = ({
               {dayjs.unix(bet.time).fromNow()}
             </div>,
             <div
-              key={`racetable-bet-${bet.index}-${i}-date`}
-              className={classNames(style, "!text-hl-secondary")}
+              key={`racetable-bet-${bet.index}-${i}-punter`}
+              className={classNames(
+                style,
+                "max-w-[10ch] truncate xl:max-w-[20ch]"
+              )}
               onClick={() => onClickBet(bet)}
             >
-              {bet.race}
-            </div>,
-            <div
-              key={`racetable-bet-${bet.index}-${i}-propositionId`}
-              className={style}
-              onClick={() => onClickBet(bet)}
-            >
-              {bet.proposition}
-            </div>,
-            <div
-              key={`racetable-bet-${bet.index}-${i}-result`}
-              className={style}
-              onClick={() => onClickBet(bet)}
-            >
-              {betClosed ? bet.result : "PENDING"}
-            </div>,
-            <div
-              key={`racetable-bet-${bet.index}-${i}-status`}
-              className={style}
-              onClick={() => onClickBet(bet)}
-            >
-              {bet.status}
+              {bet.punter}
             </div>
           ];
         })
