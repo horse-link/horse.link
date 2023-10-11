@@ -87,6 +87,7 @@ export const HomeTable: React.FC<Props> = ({ meets }) => {
                       RaceStatus.PAYING
                     ].includes(race.status),
                     "!text-hl-outstanding":
+                      text !== "CLSD" &&
                       Math.abs(dayjs(race.start).diff(time, "hours")) < 1 &&
                       Math.abs(dayjs(race.start).diff(time, "minutes")) <= 5
                   }
