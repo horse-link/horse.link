@@ -1,11 +1,11 @@
 import React from "react";
 import { TotalBetsOnPropositions } from "../../types/bets";
-import { Runner, RunnerStatus } from "../../types/meets";
+import { Runner } from "../../types/meets";
 import { Table } from "./Table";
 import classNames from "classnames";
 import { ethers } from "ethers";
 import { Loader } from "../Loader";
-import { formatToTwoDecimals } from "horselink-sdk";
+import { formatToTwoDecimals, RunnerStatus } from "horselink-sdk";
 
 type Props = {
   runners?: Array<Runner>;
@@ -54,9 +54,15 @@ export const RaceTable: React.FC<Props> = ({
   ));
 
   const runnerMapping = (runner: Runner, i: number) => {
-    const formattedBacked = runner
+    let formattedBacked = runner
       ? ethers.utils.formatEther((+runner.backed).toString())
       : "0.00";
+
+    formattedBacked = formatToTwoDecimals(formattedBacked);
+
+    const formatPercentage = formatToTwoDecimals(
+      runner?.percentage?.toString() || "0.00"
+    );
 
     const style = classNames("w-full text-left py-4", {
       "line-through": scratchingArray.includes(runner.status)
@@ -70,7 +76,7 @@ export const RaceTable: React.FC<Props> = ({
           "rider",
           "last5Starts",
           "handicapWeight",
-          "odds"
+          "win"
         ] as Array<keyof typeof runner>
       ).map((key, i) => (
         <div
@@ -80,7 +86,7 @@ export const RaceTable: React.FC<Props> = ({
           key={`runnertable-${runner.proposition_id}-${key.toString()}-${i}`}
           onClick={() => onClickRunner(runner)}
         >
-          {key === "odds" && runner && runner[key]
+          {key === "win" && runner && runner[key]
             ? formatToTwoDecimals(runner[key].toString())
             : runner[key]?.toString()}
         </div>
@@ -90,14 +96,14 @@ export const RaceTable: React.FC<Props> = ({
         key={`runnertable-${runner.proposition_id}-${i}`}
         onClick={() => onClickRunner(runner)}
       >
-        {formatToTwoDecimals(formattedBacked)}
+        {formattedBacked}
       </div>,
       <div
         className={classNames(style, "text-hl-secondary")}
         key={`runnertable-${runner.proposition_id}-${i}`}
         onClick={() => onClickRunner(runner)}
       >
-        {formatToTwoDecimals(runner?.percentage.toString() || "0.00")}
+        {formatPercentage}
       </div>
     ];
   };

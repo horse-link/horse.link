@@ -20,11 +20,23 @@ describe("Race utils tests", () => {
       close: 0,
       end: 0,
       odds: 0,
+      win: 0,
+      place: 0,
       handicapWeight: 0,
       last5Starts: "x1111",
       proposition_id: "1",
       barrier: 1,
       signature: {
+        r: "1",
+        s: "1",
+        v: 1
+      },
+      win_signature: {
+        r: "1",
+        s: "1",
+        v: 1
+      },
+      place_signature: {
         r: "1",
         s: "1",
         v: 1

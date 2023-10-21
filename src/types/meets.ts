@@ -1,7 +1,9 @@
 import dayjs from "dayjs";
 import { RaceStatus } from "../constants/status";
 import { EcSignature, SignedResponse } from "./general";
+import { RunnerStatus } from "horselink-sdk";
 
+// Move to SDK
 export type Runner = {
   number: number;
   name: string;
@@ -10,33 +12,20 @@ export type Runner = {
   close: number;
   end: number;
   odds: number;
+  win: number;
+  place: number;
   handicapWeight: number;
   last5Starts: string;
   proposition_id: string;
   barrier: number;
   signature: EcSignature;
+  win_signature: EcSignature;
+  place_signature: EcSignature;
   status: RunnerStatus;
   backed: number;
   percentage: number;
 };
 
-export type RunnerStatus = "Open" | "Scratched" | "LateScratched";
-
-export type NextToJumpRace = {
-  jumperRaceStartTime: string;
-  jumperRaceNumber: number;
-  meeting: {
-    jumperMeetingName: string;
-    location: string;
-    raceType: string;
-    venueCode: string;
-  };
-};
-
-export type NextToJump = {
-  races: NextToJumpRace[];
-  missingLocations: string[];
-};
 
 export type Race = {
   number: number;
