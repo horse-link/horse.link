@@ -1,7 +1,8 @@
 import React from "react";
-import { MeetFilters } from "../../types/meets";
+import { MeetFilters } from "horselink-sdk";
 import { Button } from "../Buttons";
 
+// TODO: Remove these duplicate types
 const options: Map<MeetFilters, string> = new Map([
   ["ALL", "All"],
   ["AUS_NZ", "AUS & NZ"],

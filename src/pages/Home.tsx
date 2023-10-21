@@ -6,11 +6,12 @@ import {
   HomeFilterGroup,
   HomeNextToJumpBanner
 } from "../components/Home";
-import { SignedMeetingsResponse, MeetFilters, Meet } from "../types/meets";
+import { SignedMeetingsResponse, Meet } from "../types/meets";
 import constants from "../constants";
 import { useApi } from "../providers/Api";
 import { HomeTable } from "../components/Tables";
 import { Button } from "../components/Buttons";
+import { MeetFilters } from "horselink-sdk";
 
 const Home: React.FC = () => {
   const [response, setResponse] = useState<SignedMeetingsResponse>();

@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { RaceData, SignedRunnersResponse } from "../../types/meets";
+import { RaceData, SignedRunnersResponse } from "horselink-sdk";
 import useSwr from "../useSwr";
 
 export const useRunnersData = (track: string, raceNumber: number) => {

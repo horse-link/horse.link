@@ -57,24 +57,24 @@ export type RaceData = {
   runners: Runner[];
 };
 
-export type SignedRunnersResponse = {
-  data: {
-    raceData: {
-      name: string;
-      distance: number;
-      class: string;
-      hasOdds: boolean;
-      start: dayjs.Dayjs;
-      close: number;
-      end: number;
-    };
-    track: {
-      name: string;
-      code: string;
-    };
-    runners: Runner[];
-  };
-} & SignedResponse;
+// export type SignedRunnersResponse = {
+//   data: {
+//     raceData: {
+//       name: string;
+//       distance: number;
+//       class: string;
+//       hasOdds: boolean;
+//       start: dayjs.Dayjs;
+//       close: number;
+//       end: number;
+//     };
+//     track: {
+//       name: string;
+//       code: string;
+//     };
+//     runners: Runner[];
+//   };
+// } & SignedResponse;
 
 export type SignedMeetingsResponse = {
   data: MeetResponse;
@@ -148,4 +148,3 @@ export type MeetResults = {
   winningHorses: WinningHorse[];
 };
 
-export type MeetFilters = "ALL" | "AUS_NZ" | "INTERNATIONAL";
