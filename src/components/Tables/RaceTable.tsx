@@ -37,15 +37,16 @@ export const RaceTable: React.FC<Props> = ({
     "Form",
     "Weight",
     "Win",
+    "Place",
     "Backed",
-    "Percentage"
+    // "Percentage"
   ].map((text, i) => (
     <div
       key={`racetable-${text}-${i}`}
       className={classNames(
         "w-full py-4 text-left font-semibold text-hl-primary",
         {
-          "!text-hl-secondary": [1, 5, 7].includes(i)
+          "!text-hl-secondary": [1, 5, 6].includes(i)
         }
       )}
     >
@@ -60,9 +61,9 @@ export const RaceTable: React.FC<Props> = ({
 
     formattedBacked = formatToTwoDecimals(formattedBacked);
 
-    const formatPercentage = formatToTwoDecimals(
-      runner?.percentage?.toString() || "0.00"
-    );
+    // const formatPercentage = formatToTwoDecimals(
+    //   runner?.percentage?.toString() || "0.00"
+    // );
 
     const style = classNames("w-full text-left py-4", {
       "line-through": scratchingArray.includes(runner.status)
@@ -76,17 +77,18 @@ export const RaceTable: React.FC<Props> = ({
           "rider",
           "last5Starts",
           "handicapWeight",
-          "win"
+          "win",
+          "place"
         ] as Array<keyof typeof runner>
       ).map((key, i) => (
         <div
           className={classNames(style, {
-            "text-hl-secondary": [1, 5].includes(i)
+            "text-hl-secondary": [1, 5, 6].includes(i)
           })}
           key={`runnertable-${runner.proposition_id}-${key.toString()}-${i}`}
           onClick={() => onClickRunner(runner)}
         >
-          {key === "win" && runner && runner[key]
+          {(key === "win" || key === "place") && runner && runner[key]
             ? formatToTwoDecimals(runner[key].toString())
             : runner[key]?.toString()}
         </div>
@@ -98,13 +100,13 @@ export const RaceTable: React.FC<Props> = ({
       >
         {formattedBacked}
       </div>,
-      <div
-        className={classNames(style, "text-hl-secondary")}
-        key={`runnertable-${runner.proposition_id}-${i}`}
-        onClick={() => onClickRunner(runner)}
-      >
-        {formatPercentage}
-      </div>
+      // <div
+      //   className={classNames(style, "text-hl-secondary")}
+      //   key={`runnertable-${runner.proposition_id}-${i}`}
+      //   onClick={() => onClickRunner(runner)}
+      // >
+      //   {formatPercentage}
+      // </div>
     ];
   };
 
@@ -159,7 +161,7 @@ export const RaceTable: React.FC<Props> = ({
         </div>
       </div>
       <p className="w-auto min-w-[70px] font-basement text-sm text-hl-secondary">
-        {formatToTwoDecimals(runner.odds.toString())}
+        {formatToTwoDecimals(runner.win.toString())}
       </p>
     </div>
   );
