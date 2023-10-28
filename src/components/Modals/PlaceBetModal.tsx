@@ -7,7 +7,7 @@ import { BaseModal } from ".";
 import { useMarketContract, useERC20Contract } from "../../hooks/contracts";
 import useRefetch from "../../hooks/useRefetch";
 import utils from "../../utils";
-import { Back, RaceData, Runner } from "../../types/meets";
+import { Back, Runner } from "../../types/meets";
 import { UserBalance } from "../../types/users";
 import { useBetSlipContext } from "../../providers/BetSlip";
 import { useParams } from "react-router-dom";
@@ -15,11 +15,11 @@ import { useTokenContext } from "../../providers/Token";
 import { BetEntry } from "../../types/context";
 import { Button } from "../Buttons";
 import classNames from "classnames";
-import { formatToFourDecimals, formatToTwoDecimals } from "horselink-sdk";
+import { Race, formatToFourDecimals, formatToTwoDecimals } from "horselink-sdk";
 
 type Props = {
   runner?: Runner;
-  race?: RaceData;
+  race?: Race;
   isModalOpen: boolean;
   setIsModalOpen: (open: boolean) => void;
 };

@@ -7,7 +7,7 @@ import dayjs from "dayjs";
 import constants from "../../constants";
 import utc from "dayjs/plugin/utc";
 import classNames from "classnames";
-import { RaceStatus } from "../../constants/status";
+import { RaceStatus } from "horselink-sdk/src/constants/status";
 // import { RaceStatus } from "horselink-sdk";
 import { Loader } from "../Loader";
 import { Disclosure } from "@headlessui/react";
@@ -79,9 +79,10 @@ export const HomeTable: React.FC<Props> = ({ meets }) => {
                   "flex h-full w-full items-center justify-center break-words text-center tracking-tightest text-hl-tertiary",
                   {
                     "!bg-hl-primary !text-hl-background":
-                      race.status === RaceStatus.PAYING,
+                      race.status.toString() === RaceStatus.PAYING,
                     "!bg-hl-secondary !text-hl-background":
-                      race.status === RaceStatus.CLOSED || text === "CLSD",
+                      race.status.toString() === RaceStatus.CLOSED ||
+                      text === "CLSD",
                     "hover:!bg-hl-primary hover:!text-hl-secondary": ![
                       RaceStatus.CLOSED,
                       RaceStatus.PAYING

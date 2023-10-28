@@ -1,7 +1,7 @@
-import dayjs from "dayjs";
+// import dayjs from "dayjs";
 import { RaceStatus } from "../constants/status";
-import { EcSignature, SignedResponse } from "./general";
-import { RunnerStatus } from "horselink-sdk";
+import { EcSignature } from "./general";
+import { Race, RunnerStatus } from "horselink-sdk";
 
 // Move to SDK
 export type Runner = {
@@ -26,59 +26,39 @@ export type Runner = {
   percentage: number;
 };
 
+// export type Race = {
+//   number: number;
+//   name: string;
+//   start?: string;
+//   start_unix?: number;
+//   end?: string;
+//   end_unix?: number;
+//   close?: string;
+//   close_unix?: number;
+//   status: RaceStatus;
+//   results?: number[];
+// };
 
-export type Race = {
-  number: number;
-  name: string;
-  start?: string;
-  start_unix?: number;
-  end?: string;
-  end_unix?: number;
-  close?: string;
-  close_unix?: number;
-  status: RaceStatus;
-  results?: number[];
-};
-
-export type RaceData = {
-  raceData: {
-    name: string;
-    distance: number;
-    class: string;
-    hasOdds: boolean;
-    start: dayjs.Dayjs;
-    close: number;
-    end: number;
-  };
-  track: {
-    name: string;
-    code: string;
-  };
-  runners: Runner[];
-};
-
-// export type SignedRunnersResponse = {
-//   data: {
-//     raceData: {
-//       name: string;
-//       distance: number;
-//       class: string;
-//       hasOdds: boolean;
-//       start: dayjs.Dayjs;
-//       close: number;
-//       end: number;
-//     };
-//     track: {
-//       name: string;
-//       code: string;
-//     };
-//     runners: Runner[];
+// export type RaceData = {
+//   raceData: {
+//     name: string;
+//     distance: number;
+//     class: string;
+//     hasOdds: boolean;
+//     start: dayjs.Dayjs;
+//     close: number;
+//     end: number;
 //   };
-// } & SignedResponse;
+//   track: {
+//     name: string;
+//     code: string;
+//   };
+//   runners: Runner[];
+// };
 
-export type SignedMeetingsResponse = {
-  data: MeetResponse;
-} & SignedResponse;
+// export type SignedMeetingsResponse = {
+//   data: MeetResponse;
+// } & SignedResponse;
 
 export type Meet = {
   id: string;
@@ -147,4 +127,3 @@ export type MeetResults = {
   };
   winningHorses: WinningHorse[];
 };
-

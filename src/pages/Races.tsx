@@ -27,7 +27,7 @@ const Races: React.FC = () => {
   const [isSettleModalOpen, setIsSettleModalOpen] = useState(false);
   const [selectedRunner, setSelectedRunner] = useState<Runner>();
   const [closed, setClosed] = useState(false);
-  const { race } = useRunnersData(track, raceNumber);
+  const { data } = useRunnersData(track, raceNumber);
   const config = useConfig();
   const api = useApi();
   const [meetingsResponse, setMeetingsResponse] =
@@ -56,7 +56,7 @@ const Races: React.FC = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setClosed(dayjs().unix() > (race?.raceData.close || 0));
+      setClosed(dayjs().unix() > (data?.data?.raceData.close_unix || 0));
     }, constants.time.ONE_SECOND_MS);
 
     return () => clearInterval(interval);
@@ -66,7 +66,7 @@ const Races: React.FC = () => {
     <PageLayout>
       <div className="flex flex-col gap-6">
         <div className="w-full">
-          {race && betHistory && meetingsResponse ? (
+          {data?.data?.raceData && betHistory && meetingsResponse ? (
             <Disclosure as={React.Fragment}>
               {({ open }) => (
                 <React.Fragment>
@@ -74,7 +74,7 @@ const Races: React.FC = () => {
                     {open ? (
                       <div className="flex w-full cursor-pointer items-center border border-hl-primary p-2">
                         <h1 className="w-full text-left font-basement text-hl-secondary">
-                          {race?.track.name} ({race?.track.code})
+                          {data?.data?.track.name} ({data?.data?.track.code})
                         </h1>
                         <div className="flex w-[6rem] justify-end">
                           <HiChevronUp size={30} color="white" />
@@ -84,7 +84,7 @@ const Races: React.FC = () => {
                       <div className="w-full cursor-pointer border border-hl-primary p-2">
                         <div className="flex w-full">
                           <h1 className="w-full text-left font-basement text-hl-secondary lg:w-auto lg:whitespace-nowrap">
-                            {race.track.name} ({race.track.code})
+                            {data?.data?.track.name} ({data?.data?.track.code})
                           </h1>
                           <div className="w-auto whitespace-nowrap text-sm text-hl-tertiary lg:ml-10 lg:w-full">
                             Margin: {margin}
@@ -98,7 +98,8 @@ const Races: React.FC = () => {
                           </div>
                         </div>
                         <p className="mt-1 w-full text-sm">
-                          {race.raceData.name} | {race.raceData.class}
+                          {/* {data?.data?.raceData.name} | {data?.data?.raceData.class} */}
+                          {data?.data?.raceData.name}
                         </p>
                       </div>
                     )}
@@ -108,7 +109,8 @@ const Races: React.FC = () => {
                     {meetingsResponse.data.meetings
                       .filter(
                         m =>
-                          m.name.toLowerCase() !== race.track.name.toLowerCase()
+                          m.name.toLowerCase() !==
+                          data?.data?.track.name.toLowerCase()
                       )
                       .map(m => (
                         <Link
@@ -131,7 +133,7 @@ const Races: React.FC = () => {
         </div>
         <RacesButton params={params} meetRaces={meetRaces?.raceInfo} />
         <RaceTable
-          runners={race?.runners}
+          runners={data?.data?.runners}
           setSelectedRunner={setSelectedRunner}
           setIsModalOpen={setIsModalOpen}
           totalBetsOnPropositions={totalBetsOnPropositions}
@@ -154,7 +156,7 @@ const Races: React.FC = () => {
       <div className="block py-10 lg:hidden" />
       <PlaceBetModal
         runner={selectedRunner}
-        race={race}
+        race={data?.data?.raceData}
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
       />

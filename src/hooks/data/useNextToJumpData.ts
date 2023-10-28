@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { NextToJump } from "../../types/meets";
+import { NextToJump } from "horselink-sdk";
 import useSwr from "../useSwr";
 import constants from "../../constants";
 

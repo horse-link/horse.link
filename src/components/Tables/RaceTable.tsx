@@ -38,7 +38,7 @@ export const RaceTable: React.FC<Props> = ({
     "Weight",
     "Win",
     "Place",
-    "Backed",
+    "Backed"
     // "Percentage"
   ].map((text, i) => (
     <div
@@ -99,7 +99,7 @@ export const RaceTable: React.FC<Props> = ({
         onClick={() => onClickRunner(runner)}
       >
         {formattedBacked}
-      </div>,
+      </div>
       // <div
       //   className={classNames(style, "text-hl-secondary")}
       //   key={`runnertable-${runner.proposition_id}-${i}`}
