@@ -99,7 +99,7 @@ export const RaceTable: React.FC<Props> = ({
         key={`runnertable-${runner.proposition_id}-${i}`}
         onClick={() => onClickRunner(runner)}
       >
-        {formatToTwoDecimals(formattedPercentage.toString())}
+        {formattedPercentage}
       </div>
     ];
   };
