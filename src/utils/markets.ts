@@ -1,4 +1,5 @@
-import { Meet, Race } from "../types/meets";
+import { Meet } from "../types/meets";
+import { Race } from "horselink-sdk";
 import dayjs from "dayjs";
 import constants from "../constants";
 

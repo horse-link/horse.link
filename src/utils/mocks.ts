@@ -1,8 +1,9 @@
 import { ethers } from "ethers";
 import { Bet, BetResult } from "../types/subgraph";
-import { Back, Meet, Race } from "../types/meets";
+import { Back, Meet } from "../types/meets";
 import { SignedBetDataResponse } from "../types/bets";
 import { RaceStatus } from "../constants/status";
+import { Race } from "horselink-sdk";
 
 export const getMockBet = (): Bet => ({
   id: `BET_${ethers.constants.AddressZero}_0`,

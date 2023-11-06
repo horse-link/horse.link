@@ -4,7 +4,7 @@ import { useRunnersData, useMeetData, useBetsData } from "../hooks/data";
 import { RacesButton } from "../components/Buttons";
 import { BetTable, RaceTable } from "../components/Tables";
 import { PlaceBetModal, SettleBetModal } from "../components/Modals";
-import { Runner, SignedMeetingsResponse } from "../types/meets";
+import { Runner } from "../types/meets";
 import { Loader, PageLayout } from "../components";
 import { useSubgraphBets } from "../hooks/subgraph";
 import { makeMarketId } from "../utils/markets";
@@ -16,6 +16,7 @@ import { HiChevronUp, HiChevronDown } from "react-icons/hi";
 import { Disclosure } from "@headlessui/react";
 import { useApi } from "../providers/Api";
 import { BetHistoryResponse2 } from "../types/bets";
+import { SignedMeetingsResponse } from "horselink-sdk";
 
 const Races: React.FC = () => {
   const params = useParams();
@@ -30,6 +31,7 @@ const Races: React.FC = () => {
   const { data } = useRunnersData(track, raceNumber);
   const config = useConfig();
   const api = useApi();
+
   const [meetingsResponse, setMeetingsResponse] =
     useState<SignedMeetingsResponse>();
   const [selectedBet, setSelectedBet] = useState<BetHistoryResponse2>();
