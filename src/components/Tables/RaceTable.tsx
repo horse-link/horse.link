@@ -94,8 +94,7 @@ export const RaceTable: React.FC<Props> = ({
         key={`runnertable-${runner.proposition_id}-${i}`}
         onClick={() => onClickRunner(runner)}
       >
-        {formattedBacked}
-        {/* {formatToTwoDecimals(formattedBacked)} */}
+        {formatToTwoDecimals(formattedBacked)}
       </div>,
       <div
         className={classNames(style, "text-hl-secondary")}
