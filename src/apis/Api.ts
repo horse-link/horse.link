@@ -2,7 +2,7 @@ import axios, { AxiosInstance } from "axios";
 import { ethers } from "ethers";
 import utils from "../utils";
 import { Config, VaultInfo } from "../types/config";
-import { MeetInfo, MeetResults, Runner } from "../types/meets";
+import { MeetInfo, MeetResults } from "../types/meets";
 import { BetHistoryResponse, SignedBetDataResponse } from "../types/bets";
 import { Market } from "../typechain";
 import { Token } from "graphql";
@@ -11,10 +11,12 @@ import { Network } from "../types/general";
 import constants from "../constants";
 import { Bet } from "../types/subgraph";
 import { MarketHistory } from "../types/markets";
+
 import type {
   FormattedProtocol,
   MarketStats,
-  SignedMeetingsResponse
+  SignedMeetingsResponse,
+  Runner
 } from "horselink-sdk";
 
 export class Api {

@@ -1,10 +1,8 @@
 import React from "react";
-import { Meet, Race } from "horselink-sdk";
+import { Meet, Race, RaceStatus } from "horselink-sdk";
 import dayjs, { Dayjs } from "dayjs";
 import classnames from "classnames";
 import { Link } from "react-router-dom";
-// import { RaceStatus } from "../../constants/status";
-import { RaceStatus } from "horselink-sdk/dist/constants/status";
 import utils from "../../utils/";
 
 type Props = {

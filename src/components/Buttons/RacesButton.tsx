@@ -1,8 +1,7 @@
 import dayjs from "dayjs";
 import React from "react";
 import { Params, useNavigate } from "react-router-dom";
-import { RaceInfo } from "../../types/meets";
-import { RaceStatus } from "../../constants/status";
+import { RaceInfo, RaceStatus } from "horselink-sdk";
 import { Button } from "./Button";
 
 type Props = {

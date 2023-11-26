@@ -146,7 +146,7 @@ export const BetSlip: React.FC = () => {
                   <div className="mt-2 flex w-full flex-col items-center gap-x-4 gap-y-2 3xl:mt-0 3xl:flex-row 3xl:justify-end 3xl:gap-y-0">
                     <div className="w-full text-center 3xl:text-right">
                       <p>
-                        {bet.race.track.name} {bet.race.raceNumber}
+                        {bet.name} {bet.number}
                       </p>
                       <p className="text-hl-secondary">
                         {formatToTwoDecimals(bet.back.odds.toString())} Win

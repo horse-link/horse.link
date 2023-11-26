@@ -4,8 +4,8 @@ import {
   createRacingLink,
   isScratchedRunner
 } from "../utils/races";
-import { Meet, Race, Runner } from "../types/meets";
-import { RaceStatus } from "../constants/status";
+import { Meet } from "../types/meets";
+import { RaceStatus, Race, Runner } from "horselink-sdk";
 import dayjs from "dayjs";
 
 describe("Race utils tests", () => {
@@ -19,13 +19,13 @@ describe("Race utils tests", () => {
       market_id: "1",
       close: 0,
       end: 0,
-      odds: 0,
       win: 0,
       place: 0,
       handicapWeight: 0,
       last5Starts: "x1111",
       proposition_id: "1",
       barrier: 1,
+      rider: "Mock Rider 1",
       signature: {
         r: "1",
         s: "1",
@@ -56,7 +56,11 @@ describe("Race utils tests", () => {
     const mockRace: Race = {
       number: 2,
       name: "Mock Race 2",
-      status: RaceStatus.NORMAL
+      status: RaceStatus.NORMAL,
+      start: "2023-01-01 10:55:00",
+      close: "2023-01-01 10:50:00",
+      distance: 1000,
+      hasOdds: true
     };
 
     const mockMeet: Meet = {
@@ -77,7 +81,11 @@ describe("Race utils tests", () => {
     const mockRace: Race = {
       number: 2,
       name: "Mock Race 2",
-      status: RaceStatus.CLOSED
+      status: RaceStatus.CLOSED,
+      start: "2023-01-01 10:55:00",
+      close: "2023-01-01 10:50:00",
+      distance: 1000,
+      hasOdds: true
     };
 
     const mockMeet: Meet = {
@@ -98,7 +106,11 @@ describe("Race utils tests", () => {
     const mockRace: Race = {
       number: 2,
       name: "Mock Race 2",
-      status: RaceStatus.PAYING
+      status: RaceStatus.PAYING,
+      start: "2023-01-01 10:55:00",
+      close: "2023-01-01 10:50:00",
+      distance: 1000,
+      hasOdds: true
     };
 
     const mockMeet: Meet = {
@@ -121,7 +133,9 @@ describe("Race utils tests", () => {
       name: "Mock Race 2",
       status: RaceStatus.NORMAL,
       start: "2023-01-01 10:55:00",
-      close: "2023-01-01 10:50:00"
+      close: "2023-01-01 10:50:00",
+      distance: 1000,
+      hasOdds: true
     };
 
     const result = createCellText(mockRace, now);
@@ -135,7 +149,9 @@ describe("Race utils tests", () => {
       number: 2,
       name: "Mock Race 2",
       status: RaceStatus.CLOSED,
-      close: "2023-01-01 09:55:00"
+      close: "2023-01-01 09:55:00",
+      distance: 1000,
+      hasOdds: true
     };
 
     const result = createCellText(mockRace, now);
@@ -148,7 +164,10 @@ describe("Race utils tests", () => {
     const mockRace: Race = {
       number: 2,
       name: "Mock Race 2",
-      status: RaceStatus.ABANDONED
+      status: RaceStatus.ABANDONED,
+      close: "2023-01-01 09:55:00",
+      distance: 1000,
+      hasOdds: true
     };
 
     const result = createCellText(mockRace, now);
@@ -162,7 +181,10 @@ describe("Race utils tests", () => {
       number: 2,
       name: "Mock Race 2",
       status: RaceStatus.PAYING,
-      results: [1, 2, 3]
+      close: "2023-01-01 09:55:00",
+      distance: 1000,
+      hasOdds: true
+      // results: [1, 2, 3]
     };
 
     const result = createCellText(mockRace, now);

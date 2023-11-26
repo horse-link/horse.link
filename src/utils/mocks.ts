@@ -2,8 +2,7 @@ import { ethers } from "ethers";
 import { Bet, BetResult } from "../types/subgraph";
 import { Back, Meet } from "../types/meets";
 import { SignedBetDataResponse } from "../types/bets";
-import { RaceStatus } from "../constants/status";
-import { Race } from "horselink-sdk";
+import { Race, RaceStatus } from "horselink-sdk";
 
 export const getMockBet = (): Bet => ({
   id: `BET_${ethers.constants.AddressZero}_0`,
@@ -98,7 +97,9 @@ export const getMockRaces = (length?: number): Race[] =>
     number: i,
     name: "",
     status: RaceStatus.NORMAL,
-    results: [9, 1, 2, 7]
+    distance: 1000,
+    hasOdds: true
+    // results: [9, 1, 2, 7]
   }));
 
 export const getMockMeets = (): Meet[] =>

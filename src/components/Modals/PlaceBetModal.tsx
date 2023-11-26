@@ -7,7 +7,7 @@ import { BaseModal } from ".";
 import { useMarketContract, useERC20Contract } from "../../hooks/contracts";
 import useRefetch from "../../hooks/useRefetch";
 import utils from "../../utils";
-import { Back, Runner } from "../../types/meets";
+import { Back } from "../../types/meets";
 import { UserBalance } from "../../types/users";
 import { useBetSlipContext } from "../../providers/BetSlip";
 import { useParams } from "react-router-dom";
@@ -15,7 +15,12 @@ import { useTokenContext } from "../../providers/Token";
 import { BetEntry } from "../../types/context";
 import { Button } from "../Buttons";
 import classNames from "classnames";
-import { Race, formatToFourDecimals, formatToTwoDecimals } from "horselink-sdk";
+import {
+  Race,
+  Runner,
+  formatToFourDecimals,
+  formatToTwoDecimals
+} from "horselink-sdk";
 
 type Props = {
   runner?: Runner;
@@ -65,7 +70,7 @@ export const PlaceBetModal: React.FC<Props> = ({
       market_id: runner.market_id,
       close: runner.close,
       end: runner.end,
-      odds: runner.odds,
+      odds: runner.win,
       proposition_id: runner.proposition_id,
       signature: runner.signature
     };
@@ -154,10 +159,8 @@ export const PlaceBetModal: React.FC<Props> = ({
           .parseUnits(wagerAmount, vault.asset.decimals)
           .toString(),
         runner,
-        race: {
-          ...race,
-          raceNumber
-        },
+        name: race.name,
+        number: race.number,
         timestamp: Math.floor(Date.now() / 1000)
       };
 

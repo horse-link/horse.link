@@ -1,11 +1,10 @@
 import React from "react";
 import { TotalBetsOnPropositions } from "../../types/bets";
-import { Runner } from "../../types/meets";
 import { Table } from "./Table";
 import classNames from "classnames";
 import { ethers } from "ethers";
 import { Loader } from "../Loader";
-import { formatToTwoDecimals, RunnerStatus } from "horselink-sdk";
+import { Runner, formatToTwoDecimals, RunnerStatus } from "horselink-sdk";
 
 type Props = {
   runners?: Array<Runner>;

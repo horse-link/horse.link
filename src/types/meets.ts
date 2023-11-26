@@ -1,30 +1,29 @@
 // import dayjs from "dayjs";
-import { RaceStatus } from "../constants/status";
 import { EcSignature } from "./general";
-import { Race, RunnerStatus } from "horselink-sdk";
+import { Race, RaceInfo } from "horselink-sdk";
 
-// Move to SDK
-export type Runner = {
-  number: number;
-  name: string;
-  nonce: string;
-  market_id: string;
-  close: number;
-  end: number;
-  odds: number;
-  win: number;
-  place: number;
-  handicapWeight: number;
-  last5Starts: string;
-  proposition_id: string;
-  barrier: number;
-  signature: EcSignature;
-  win_signature: EcSignature;
-  place_signature: EcSignature;
-  status: RunnerStatus;
-  backed: number;
-  percentage: number;
-};
+// // Move to SDK
+// export type Runner = {
+//   number: number;
+//   name: string;
+//   nonce: string;
+//   market_id: string;
+//   close: number;
+//   end: number;
+//   odds: number;
+//   win: number;
+//   place: number;
+//   handicapWeight: number;
+//   last5Starts: string;
+//   proposition_id: string;
+//   barrier: number;
+//   signature: EcSignature;
+//   win_signature: EcSignature;
+//   place_signature: EcSignature;
+//   status: RunnerStatus;
+//   backed: number;
+//   percentage: number;
+// };
 
 // export type Race = {
 //   number: number;
@@ -88,14 +87,14 @@ export type MeetInfo = {
   raceInfo: RaceInfo[];
 };
 
-export type RaceInfo = {
-  raceNumber: number;
-  raceName: string;
-  raceClassConditions: string;
-  raceDistance: number;
-  raceStartTime: string;
-  raceStatus: RaceStatus;
-};
+// export type RaceInfo = {
+//   raceNumber: number;
+//   raceName: string;
+//   raceClassConditions: string;
+//   raceDistance: number;
+//   raceStartTime: string;
+//   raceStatus: RaceStatus;
+// };
 
 export type Back = {
   nonce: string;
