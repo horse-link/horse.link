@@ -1,5 +1,5 @@
 import React from "react";
-import { MeetResults } from "../../types/meets";
+import { MeetResults } from "horselink-sdk";
 import { Table } from "./Table";
 import classNames from "classnames";
 import { Loader } from "../Loader";

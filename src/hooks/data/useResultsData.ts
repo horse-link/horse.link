@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { MeetResults } from "../../types/meets";
+import { MeetResults } from "horselink-sdk";
 import { useApi } from "../../providers/Api";
 
 export const useResultsData = (propositionId: string) => {

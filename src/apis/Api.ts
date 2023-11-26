@@ -2,7 +2,7 @@ import axios, { AxiosInstance } from "axios";
 import { ethers } from "ethers";
 import utils from "../utils";
 import { Config, VaultInfo } from "../types/config";
-import { MeetInfo, MeetResults } from "../types/meets";
+import { MeetInfo, MeetResults } from "horselink-sdk";
 import { BetHistoryResponse, SignedBetDataResponse } from "../types/bets";
 import { Market } from "../typechain";
 import { Token } from "graphql";
