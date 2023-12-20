@@ -5,7 +5,7 @@ import {
   isScratchedRunner
 } from "../utils/races";
 import { Meet } from "../types/meets";
-import { RaceStatus, Race, Runner } from "horselink-sdk";
+import { RaceStatus, Race, Runner, RaceWithResults } from "horselink-sdk";
 import dayjs from "dayjs";
 
 describe("Race utils tests", () => {
@@ -177,14 +177,14 @@ describe("Race utils tests", () => {
   });
 
   it("Should create cell text for paying race", () => {
-    const mockRace: Race = {
+    const mockRace: RaceWithResults = {
       number: 2,
       name: "Mock Race 2",
       status: RaceStatus.PAYING,
       close: "2023-01-01 09:55:00",
       distance: 1000,
-      hasOdds: true
-      // results: [1, 2, 3]
+      hasOdds: true,
+      results: [1, 2, 3]
     };
 
     const result = createCellText(mockRace, now);
