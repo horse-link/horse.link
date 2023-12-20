@@ -14,6 +14,7 @@ import {
   SignedBetHistoryResponse2
 } from "../../types/bets";
 import constants from "../../constants";
+import { formatting } from "horselink-sdk";
 
 export const useMarketContract = () => {
   const placeMultipleBets = async (
@@ -104,10 +105,8 @@ export const useMarketContract = () => {
         const backStructs = marketMultiBetInfo.backs.map((back: BackParams) => {
           return {
             nonce: back.nonce,
-            propositionId: utils.formatting.formatBytes16String(
-              back.proposition_id
-            ),
-            marketId: utils.formatting.formatBytes16String(back.market_id),
+            propositionId: formatting.formatBytes16String(back.proposition_id),
+            marketId: formatting.formatBytes16String(back.market_id),
             wager: back.wager,
             odds: ethers.utils.parseUnits(
               back.odds.toString(),
@@ -182,8 +181,8 @@ export const useMarketContract = () => {
 
     const backData = {
       nonce: back.nonce,
-      propositionId: utils.formatting.formatBytes16String(back.proposition_id),
-      marketId: utils.formatting.formatBytes16String(back.market_id),
+      propositionId: formatting.formatBytes16String(back.proposition_id),
+      marketId: formatting.formatBytes16String(back.market_id),
       wager,
       odds: ethers.utils.parseUnits(
         back.odds.toString(),
@@ -282,7 +281,7 @@ export const useMarketContract = () => {
         bet.winningPropositionId &&
         bet.marketOracleResultSig &&
         !utils.bets.recoverSigSigner(
-          utils.formatting.formatBytes16String(marketId),
+          formatting.formatBytes16String(marketId),
           bet.winningPropositionId,
           bet.marketOracleResultSig,
           config
@@ -297,7 +296,7 @@ export const useMarketContract = () => {
       ) {
         const [gasLimit, gasPrice] = await Promise.all([
           marketOracleContract.estimateGas.setResult(
-            utils.formatting.formatBytes16String(marketId),
+            formatting.formatBytes16String(marketId),
             bet.winningPropositionId,
             bet.marketOracleResultSig
           ),
@@ -306,7 +305,7 @@ export const useMarketContract = () => {
 
         await (
           await marketOracleContract.setResult(
-            utils.formatting.formatBytes16String(marketId),
+            formatting.formatBytes16String(marketId),
             bet.winningPropositionId,
             bet.marketOracleResultSig,
             {
@@ -319,7 +318,7 @@ export const useMarketContract = () => {
     } else if (isScratched && bet.scratched?.signature) {
       if (
         !utils.bets.recoverSigSigner(
-          utils.formatting.formatBytes16String(marketId),
+          formatting.formatBytes16String(marketId),
           bet.propositionId,
           bet.scratched.signature,
           config,
@@ -334,7 +333,7 @@ export const useMarketContract = () => {
 
       const [gasLimit, gasPrice] = await Promise.all([
         marketOracleContract.estimateGas.setScratchedResult(
-          utils.formatting.formatBytes16String(marketId),
+          formatting.formatBytes16String(marketId),
           bet.propositionId,
           ethers.utils.parseUnits(
             bet.scratched.odds.toString(),
@@ -349,7 +348,7 @@ export const useMarketContract = () => {
       // tx can fail if the result is already set
       await (
         await marketOracleContract.setScratchedResult(
-          utils.formatting.formatBytes16String(marketId),
+          formatting.formatBytes16String(marketId),
           bet.propositionId,
           ethers.utils.parseUnits(
             bet.scratched.odds.toString(),
@@ -392,8 +391,8 @@ export const useMarketContract = () => {
       constants.contracts.MARKET_ODDS_DECIMALS
     );
     const payout = await marketContract.getPotentialPayout(
-      utils.formatting.formatBytes16String(back.proposition_id),
-      utils.formatting.formatBytes16String(back.market_id),
+      formatting.formatBytes16String(back.proposition_id),
+      formatting.formatBytes16String(back.market_id),
       wager,
       odds
     );

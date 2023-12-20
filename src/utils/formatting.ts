@@ -52,27 +52,6 @@ export const formatBetId = (betId: BetId) => {
   return +segments[2];
 };
 
-// export const shortenHash = (hash: string) => {
-//   const start = hash.substring(0, 15);
-//   const end = hash.substring(hash.length - 15, hash.length);
-//   return `${start}...${end}`;
-// };
-
-// Derived from EthersJS version for Bytes32
-export const formatBytes16String = (text: string) => {
-  // Get the bytes
-  const bytes = ethers.utils.toUtf8Bytes(text);
-
-  // Check we have room for null-termination
-  if (bytes.length > 15)
-    throw new Error("bytes16 string must be less than 16 bytes");
-
-  // Zero-pad (implicitly null-terminates)
-  return ethers.utils.hexlify(
-    ethers.utils.concat([bytes, ethers.constants.HashZero]).slice(0, 16)
-  );
-};
-
 // Derived from EthersJS version for Bytes32
 export const parseBytes16String = (bytes: ethers.BytesLike) => {
   const data = ethers.utils.arrayify(bytes);

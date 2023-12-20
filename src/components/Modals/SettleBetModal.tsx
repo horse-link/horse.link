@@ -64,7 +64,7 @@ export const SettleBetModal: React.FC<Props> = ({
           scratched: signedData.scratchedRunners?.find(
             runner =>
               runner.b16propositionId.toLowerCase() ===
-              utils.formatting
+              formatting
                 .formatBytes16String(selectedBet.propositionId)
                 .toLowerCase()
           )
