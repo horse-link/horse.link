@@ -52,11 +52,11 @@ export const formatBetId = (betId: BetId) => {
   return +segments[2];
 };
 
-export const shortenHash = (hash: string) => {
-  const start = hash.substring(0, 15);
-  const end = hash.substring(hash.length - 15, hash.length);
-  return `${start}...${end}`;
-};
+// export const shortenHash = (hash: string) => {
+//   const start = hash.substring(0, 15);
+//   const end = hash.substring(hash.length - 15, hash.length);
+//   return `${start}...${end}`;
+// };
 
 // Derived from EthersJS version for Bytes32
 export const formatBytes16String = (text: string) => {
