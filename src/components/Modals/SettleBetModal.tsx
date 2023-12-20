@@ -157,7 +157,7 @@ export const SettleBetModal: React.FC<Props> = ({
               rel="noreferrer noopener"
               className="text-sm text-hl-secondary underline"
             >
-              {utils.formatting.shortenHash(bet.settledAtTx)}
+              {formatting.shortenHash(bet.settledAtTx)}
             </a>
           </p>
         </div>
