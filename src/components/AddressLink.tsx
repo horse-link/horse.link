@@ -1,5 +1,5 @@
 import { Address } from "wagmi";
-import utils from "../utils";
+import { formatting } from "horselink-sdk";
 import classNames from "classnames";
 import { useScannerUrl } from "../hooks/useScannerUrl";
 
@@ -26,7 +26,7 @@ export const AddressLink: React.FC<Props> = ({
         [className!]: !!className
       })}
     >
-      {isTruncated ? utils.formatting.shortenAddress(address) : address}
+      {isTruncated ? formatting.shortenAddress(address) : address}
     </a>
   );
 };

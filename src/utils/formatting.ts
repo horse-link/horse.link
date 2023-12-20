@@ -52,9 +52,6 @@ export const formatBetId = (betId: BetId) => {
   return +segments[2];
 };
 
-export const shortenAddress = (address: string) =>
-  `${address.slice(0, 5)}...${address.slice(address.length - 5)}`;
-
 export const shortenHash = (hash: string) => {
   const start = hash.substring(0, 15);
   const end = hash.substring(hash.length - 15, hash.length);

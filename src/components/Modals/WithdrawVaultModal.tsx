@@ -11,7 +11,7 @@ import useRefetch from "../../hooks/useRefetch";
 import { UserBalance } from "../../types/users";
 import { Button } from "../Buttons";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
-import utils from "../../utils";
+import { formatting } from "horselink-sdk";
 
 type Props = {
   isModalOpen: boolean;
@@ -154,7 +154,7 @@ export const WithdrawVaultModal: React.FC<Props> = ({
                   target="_blank"
                   rel="noreferrer noopener"
                 >
-                  {utils.formatting.shortenAddress(vault.address)}
+                  {formatting.shortenAddress(vault.address)}
                 </a>
               </p>
               <h3 className="text-left text-hl-secondary">Available:</h3>
