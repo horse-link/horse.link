@@ -2,26 +2,6 @@ import dayjs from "dayjs";
 import utils from "../utils";
 
 describe("general formatting tests", () => {
-  it("should capitalise the first letter", () => {
-    const wordOne = "foo";
-    const wordTwo = "Bar";
-    const wordThree = "FOO";
-    const wordFour = "bAR";
-
-    expect(utils.formatting.formatFirstLetterCapitalised(wordOne)).toEqual(
-      "Foo"
-    );
-    expect(utils.formatting.formatFirstLetterCapitalised(wordTwo)).toEqual(
-      "Bar"
-    );
-    expect(utils.formatting.formatFirstLetterCapitalised(wordThree)).toEqual(
-      "Foo"
-    );
-    expect(utils.formatting.formatFirstLetterCapitalised(wordFour)).toEqual(
-      "Bar"
-    );
-  });
-
   it("should get the time difference formatted (minutes and seconds)", () => {
     const dateOne = dayjs().add(1, "minute");
     const dateOneFormatted = utils.formatting.formatTimeToHMS(

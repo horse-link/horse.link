@@ -145,7 +145,7 @@ export const SettleBetModal: React.FC<Props> = ({
       ) : isSettled ? (
         <div className="p-4">
           <h2 className="font-basement text-[32px] tracking-wider">
-            {utils.formatting.formatFirstLetterCapitalised(bet.status)} Bet #
+            {formatting.formatFirstLetterCapitalised(bet.status)} Bet #
             {bet.index}
           </h2>
 
@@ -171,7 +171,7 @@ export const SettleBetModal: React.FC<Props> = ({
       ) : (
         <div className="p-6">
           <h2 className="font-basement text-[32px] tracking-wider">
-            {utils.formatting.formatFirstLetterCapitalised(bet.result)} Bet #
+            {formatting.formatFirstLetterCapitalised(bet.result)} Bet #
             {bet.index}
           </h2>
 
