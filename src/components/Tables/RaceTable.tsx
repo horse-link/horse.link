@@ -4,7 +4,7 @@ import { Table } from "./Table";
 import classNames from "classnames";
 import { ethers } from "ethers";
 import { Loader } from "../Loader";
-import { Runner, formatToTwoDecimals, RunnerStatus } from "horselink-sdk";
+import { Runner, RunnerStatus, formatting } from "horselink-sdk";
 
 type Props = {
   runners?: Array<Runner>;
@@ -84,7 +84,7 @@ export const RaceTable: React.FC<Props> = ({
           onClick={() => onClickRunner(runner)}
         >
           {(key === "win" || key === "place") && runner && runner[key]
-            ? formatToTwoDecimals(runner[key].toString())
+            ? formatting.formatToTwoDecimals(runner[key].toString())
             : runner[key]?.toString()}
         </div>
       )),
@@ -93,7 +93,7 @@ export const RaceTable: React.FC<Props> = ({
         key={`runnertable-${runner.proposition_id}-${i}`}
         onClick={() => onClickRunner(runner)}
       >
-        {formatToTwoDecimals(formattedBacked)}
+        {formatting.formatToTwoDecimals(formattedBacked)}
       </div>,
       <div
         className={classNames(style, "text-hl-secondary")}
@@ -163,7 +163,7 @@ export const RaceTable: React.FC<Props> = ({
         </div>
       </div>
       <p className="w-auto min-w-[70px] font-basement text-sm text-hl-secondary">
-        {formatToTwoDecimals(runner.win.toString())}
+        {formatting.formatToTwoDecimals(runner.win.toString())}
       </p>
     </div>
   );

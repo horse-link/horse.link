@@ -9,7 +9,7 @@ import useRefetch from "../../hooks/useRefetch";
 import { UserBalance } from "../../types/users";
 import { Loader } from "../";
 import { Button } from "../Buttons";
-import { formatToFourDecimals } from "horselink-sdk";
+import { formatting } from "horselink-sdk";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
 import utils from "../../utils";
 
@@ -50,7 +50,7 @@ export const DepositVaultModal: React.FC<Props> = ({
       setUserBalance({
         value: balance,
         decimals,
-        formatted: formatToFourDecimals(
+        formatted: formatting.formatToFourDecimals(
           ethers.utils.formatUnits(balance, decimals)
         )
       });

@@ -3,7 +3,7 @@ import React from "react";
 import { LeaderboardBalance } from "../../types/leaderboard";
 import classNames from "classnames";
 import { Table } from "./Table";
-import { formatToFourDecimals, formatToFourDecimalsRaw } from "horselink-sdk";
+import { formatting } from "horselink-sdk";
 
 type Props = {
   stats?: Array<{
@@ -42,11 +42,13 @@ export const LeaderboardTable: React.FC<Props> = ({ stats, balances }) => {
 
           const style = "w-full text-left py-4";
 
-          const earnings = `${formatToFourDecimalsRaw(
+          const earnings = `${formatting.formatToFourDecimalsRaw(
             ethers.utils.formatEther(stat.value)
           )} HL`;
 
-          const bal = `${formatToFourDecimals(balance.formatted)} HL`;
+          const bal = `${formatting.formatToFourDecimals(
+            balance.formatted
+          )} HL`;
 
           const data = [(i + 1).toString(), stat.address, earnings, bal];
 

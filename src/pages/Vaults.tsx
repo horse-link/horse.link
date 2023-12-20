@@ -6,7 +6,7 @@ import { VaultModalState, VaultTransactionType } from "../types/vaults";
 import { Card, PageLayout } from "../components";
 import { ethers } from "ethers";
 import { useVaultStatistics } from "../hooks/stats";
-import { formatToFourDecimals } from "horselink-sdk";
+import { formatting } from "horselink-sdk";
 
 const Vaults: React.FC = () => {
   const [modal, setModal] = useState<VaultModalState>();
@@ -27,7 +27,7 @@ const Vaults: React.FC = () => {
           title="24H Vault Volume"
           data={
             totalVaultVolume &&
-            `$${formatToFourDecimals(
+            `$${formatting.formatToFourDecimals(
               ethers.utils.formatEther(totalVaultVolume)
             )}`
           }
@@ -36,7 +36,7 @@ const Vaults: React.FC = () => {
           title="Total Vault Exposure"
           data={
             totalVaultsExposure &&
-            `$${formatToFourDecimals(
+            `$${formatting.formatToFourDecimals(
               ethers.utils.formatEther(totalVaultsExposure)
             )}`
           }
@@ -45,7 +45,7 @@ const Vaults: React.FC = () => {
           title="24H Deposits"
           data={
             totalVaultDeposits &&
-            `$${formatToFourDecimals(
+            `$${formatting.formatToFourDecimals(
               ethers.utils.formatEther(totalVaultDeposits)
             )}`
           }
@@ -54,7 +54,7 @@ const Vaults: React.FC = () => {
           title="24H Withdrawals"
           data={
             totalVaultWithdrawals &&
-            `$${formatToFourDecimals(
+            `$${formatting.formatToFourDecimals(
               ethers.utils.formatEther(totalVaultWithdrawals)
             )}`
           }

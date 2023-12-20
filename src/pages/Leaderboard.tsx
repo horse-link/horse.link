@@ -8,7 +8,7 @@ import { Countdown } from "../components/Countdown";
 import constants from "../constants";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
-import { formatToFourDecimals, formatToFourDecimalsRaw } from "horselink-sdk";
+import { formatting } from "horselink-sdk";
 
 dayjs.extend(duration);
 
@@ -46,13 +46,13 @@ const Leaderboard: React.FC = () => {
   const userHasNoStats = isConnected && !userStats;
 
   const earnings = userStats?.earnings.value
-    ? `${formatToFourDecimalsRaw(
+    ? `${formatting.formatToFourDecimalsRaw(
         ethers.utils.formatEther(userStats.earnings.value)
       )} HL`
     : undefined;
 
   const balance = userStats?.balance.formatted
-    ? `${formatToFourDecimals(userStats.balance.formatted)} HL`
+    ? `${formatting.formatToFourDecimals(userStats.balance.formatted)} HL`
     : undefined;
 
   return (

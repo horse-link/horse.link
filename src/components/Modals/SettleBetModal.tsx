@@ -16,7 +16,7 @@ import { useScannerUrl } from "../../hooks/useScannerUrl";
 import { Button } from "../Buttons";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
-import { formatToFourDecimals } from "horselink-sdk";
+import { formatting } from "horselink-sdk";
 
 dayjs.extend(advancedFormat);
 
@@ -211,7 +211,9 @@ export const SettleBetModal: React.FC<Props> = ({
                     {isScratched ? "Refunded:" : "Potential Payout:"}
                   </h3>
                   <p className="text-left text-hl-tertiary">
-                    {formatToFourDecimals(ethers.utils.formatEther(bet.payout))}
+                    {formatting.formatToFourDecimals(
+                      ethers.utils.formatEther(bet.payout)
+                    )}
                   </p>
                 </React.Fragment>
               )}

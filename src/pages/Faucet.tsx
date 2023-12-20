@@ -7,7 +7,7 @@ import { ERC20__factory } from "../typechain";
 import { useBalance, useProvider } from "wagmi";
 import { FaucetModal } from "../components/Modals";
 import { FaucetTable } from "../components/Tables";
-import { formatToFourDecimals } from "horselink-sdk";
+import { formatting } from "horselink-sdk";
 
 const FAUCET_ADDRESS = "0xf919eaf2e37aac718aa19668b9071ee42c02c081";
 
@@ -68,7 +68,7 @@ const Faucet: React.FC = () => {
             <Card
               key={b.name}
               title={b.name}
-              data={`${formatToFourDecimals(
+              data={`${formatting.formatToFourDecimals(
                 ethers.utils.formatUnits(b.amount, b.decimals)
               )} ${b.symbol}`}
             />

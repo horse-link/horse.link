@@ -15,12 +15,7 @@ import { useTokenContext } from "../../providers/Token";
 import { BetEntry } from "../../types/context";
 import { Button } from "../Buttons";
 import classNames from "classnames";
-import {
-  Race,
-  Runner,
-  formatToFourDecimals,
-  formatToTwoDecimals
-} from "horselink-sdk";
+import { Race, Runner, formatting } from "horselink-sdk";
 
 type Props = {
   runner?: Runner;
@@ -107,7 +102,7 @@ export const PlaceBetModal: React.FC<Props> = ({
       setUserBalance({
         value: balance,
         decimals,
-        formatted: formatToFourDecimals(
+        formatted: formatting.formatToFourDecimals(
           ethers.utils.formatUnits(balance, decimals)
         )
       });
@@ -259,7 +254,7 @@ export const PlaceBetModal: React.FC<Props> = ({
             <div className="grid w-full grid-cols-2 grid-rows-2 gap-x-2">
               <h3 className="text-left text-hl-secondary">Target odds:</h3>
               <p className="text-left text-hl-tertiary">
-                {formatToTwoDecimals(back.odds.toString())}
+                {formatting.formatToTwoDecimals(back.odds.toString())}
               </p>
               <div className="flex items-center">
                 <h3 className="text-left text-hl-secondary">Wager amount:</h3>
@@ -286,7 +281,7 @@ export const PlaceBetModal: React.FC<Props> = ({
             <div className="grid w-full grid-cols-2 grid-rows-2 gap-2 pt-4">
               <h3 className="text-left text-hl-secondary">Payout:</h3>
               <p className="text-left text-hl-tertiary">
-                {formatToFourDecimals(payout || "0")}
+                {formatting.formatToFourDecimals(payout || "0")}
               </p>
               <div className="flex items-center">
                 <h3 className="text-left text-hl-secondary">Available:</h3>

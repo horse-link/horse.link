@@ -9,7 +9,7 @@ import { ethers } from "ethers";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Loader } from "../Loader";
-import { formatToFourDecimals } from "horselink-sdk";
+import { formatting } from "horselink-sdk";
 
 dayjs.extend(relativeTime);
 
@@ -53,7 +53,7 @@ export const VaultHistoryTable: React.FC<Props> = ({ vaultHistory }) => {
 
           const details = utils.config.getVault(history.vaultAddress, config);
 
-          const amount = formatToFourDecimals(
+          const amount = formatting.formatToFourDecimals(
             ethers.utils.formatEther(history?.amount || "0")
           );
 
@@ -133,7 +133,7 @@ export const VaultHistoryTable: React.FC<Props> = ({ vaultHistory }) => {
                 config
               );
 
-              const amount = formatToFourDecimals(
+              const amount = formatting.formatToFourDecimals(
                 ethers.utils.formatUnits(
                   history?.amount || "0",
                   details?.asset.decimals
