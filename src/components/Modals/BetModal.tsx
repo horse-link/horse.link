@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useConfig } from "../../providers/Config";
 import { useSigner } from "wagmi";
-import { Loader } from "../";
+import { Loader } from "..";
 import { BaseModal } from ".";
 import { useMarketContract, useERC20Contract } from "../../hooks/contracts";
 import useRefetch from "../../hooks/useRefetch";
@@ -24,15 +24,17 @@ type Props = {
   setIsModalOpen: (open: boolean) => void;
 };
 
-export const PlaceBetModal: React.FC<Props> = ({
+export const BetModal: React.FC<Props> = ({
   runner,
   race,
   isModalOpen,
   setIsModalOpen
 }) => {
   const [userBalance, setUserBalance] = useState<UserBalance>();
-  const [wagerAmount, setWagerAmount] = useState<string>();
+  const [winWagerAmount, setWinWagerAmount] = useState<string>();
+  const [placeWagerAmount, setPlaceWagerAmount] = useState<number>();
   const [payout, setPayout] = useState<string>();
+  const [payout2, setPayout2] = useState<ethers.BigNumber>();
 
   const { data: signer } = useSigner();
 
@@ -65,27 +67,28 @@ export const PlaceBetModal: React.FC<Props> = ({
       market_id: runner.market_id,
       close: runner.close,
       end: runner.end,
-      odds: runner.win,
+      win: runner.win,
+      place: runner.place,
       proposition_id: runner.proposition_id,
       signature: runner.signature
     };
   }, [runner]);
 
   useEffect(() => {
-    if (!market || !signer || !back || !wagerAmount || !userBalance)
+    if (!market || !signer || !back || !winWagerAmount || !userBalance)
       return setPayout("0");
 
     (async () => {
       setPayout(undefined);
       const payout = await getPotentialPayout(
         market,
-        ethers.utils.parseUnits(wagerAmount, userBalance.decimals),
+        ethers.utils.parseUnits(winWagerAmount, userBalance.decimals),
         back,
         signer
       );
       setPayout(ethers.utils.formatUnits(payout, userBalance.decimals));
     })();
-  }, [market, signer, back, wagerAmount, userBalance, shouldRefetch]);
+  }, [market, signer, back, winWagerAmount, userBalance, shouldRefetch]);
 
   useEffect(() => {
     if (!market || !signer || !config) return;
@@ -113,11 +116,11 @@ export const PlaceBetModal: React.FC<Props> = ({
     if (isModalOpen) return refetchUserBalance();
 
     setTimeout(() => {
-      setWagerAmount(undefined);
+      setWinWagerAmount(undefined);
     }, 300);
   }, [isModalOpen]);
 
-  const changeWagerAmount = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const changeWinWagerAmount = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!userBalance) return;
 
     event.preventDefault();
@@ -128,17 +131,38 @@ export const PlaceBetModal: React.FC<Props> = ({
     if (value.includes(".")) {
       const decimals = value.split(".")[1];
       if (decimals.length > userBalance.decimals) {
-        event.currentTarget.value = wagerAmount || "";
+        event.currentTarget.value = winWagerAmount || "";
         return;
       }
     }
 
-    setWagerAmount(value);
+    setWinWagerAmount(value);
+  };
+
+  const changePlaceWagerAmount = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!userBalance) return;
+
+    event.preventDefault();
+    const value = event.currentTarget.value;
+
+    if (!RegExp(/^[(\d|.)]*$/).test(value)) return;
+
+    const _value: number = +value;
+
+    // if (value.includes(".")) {
+    //   const decimals = value.split(".")[1];
+    //   if (decimals.length > userBalance.decimals) {
+    //     event.currentTarget.value = winWagerAmount || "";
+    //     return;
+    //   }
+    // }
+
+    setPlaceWagerAmount(_value);
   };
 
   const onClickPlaceBet = useCallback(
     async (option?: { betNow: boolean }) => {
-      if (!market || !wagerAmount || !runner || !config || !race || !raceNumber)
+      if (!market || !winWagerAmount || !runner || !config || !race || !raceNumber)
         return;
 
       const vault = utils.config.getVaultFromMarket(market, config);
@@ -151,7 +175,7 @@ export const PlaceBetModal: React.FC<Props> = ({
         market,
         back,
         wager: ethers.utils
-          .parseUnits(wagerAmount, vault.asset.decimals)
+          .parseUnits(winWagerAmount, vault.asset.decimals)
           .toString(),
         runner,
         name: race.name,
@@ -167,19 +191,19 @@ export const PlaceBetModal: React.FC<Props> = ({
         addBet(betSlip);
       }
     },
-    [market, back, wagerAmount, race, raceNumber]
+    [market, back, winWagerAmount, race, raceNumber]
   );
 
-  const isWagerNegative = wagerAmount ? +wagerAmount < 0 : false;
+  const isWagerNegative = winWagerAmount ? +winWagerAmount < 0 : false;
   const isWagerGreaterThanBalance =
-    wagerAmount && userBalance ? +wagerAmount > +userBalance.formatted : false;
+    winWagerAmount && userBalance ? +winWagerAmount > +userBalance.formatted : false;
 
   const isWagerPlusBetsExceedingBalance = useMemo(() => {
     if (
       !bets ||
       !bets.length ||
       !market ||
-      !wagerAmount ||
+      !winWagerAmount ||
       !config ||
       !userBalance
     )
@@ -189,6 +213,7 @@ export const PlaceBetModal: React.FC<Props> = ({
     const betMarkets = bets.filter(
       bet => bet.market.address.toLowerCase() === market.address.toLowerCase()
     );
+
     // get sum of all wagers
     const marketSum = betMarkets.reduce((sum, cur) => {
       const betVault = utils.config.getVaultFromMarket(cur.market, config);
@@ -213,12 +238,12 @@ export const PlaceBetModal: React.FC<Props> = ({
       );
 
     const userWagerBn = ethers.utils.parseUnits(
-      wagerAmount,
+      winWagerAmount,
       marketVault.asset.decimals
     );
 
     return marketSum.add(userWagerBn).gt(userBalance.value);
-  }, [bets, wagerAmount, market, config, userBalance]);
+  }, [bets, winWagerAmount, market, config, userBalance]);
 
   const isScratched = runner
     ? utils.races.isScratchedRunner(runner)
@@ -226,7 +251,7 @@ export const PlaceBetModal: React.FC<Props> = ({
 
   const shouldDisablePlaceBet =
     !market ||
-    !wagerAmount ||
+    !winWagerAmount ||
     !signer ||
     !userBalance ||
     !+userBalance.formatted ||
@@ -252,18 +277,37 @@ export const PlaceBetModal: React.FC<Props> = ({
 
           <div className="mt-8 flex w-full flex-col items-center gap-y-4 divide-y divide-hl-border">
             <div className="grid w-full grid-cols-2 grid-rows-2 gap-x-2">
-              <h3 className="text-left text-hl-secondary">Target odds:</h3>
+              
+              <h3 className="text-left text-hl-secondary">Target win:</h3>
               <p className="text-left text-hl-tertiary">
-                {formatting.formatToTwoDecimals(back.odds.toString())}
+                {formatting.formatToTwoDecimals(back.win.toString())}
               </p>
               <div className="flex items-center">
-                <h3 className="text-left text-hl-secondary">Wager amount:</h3>
+                <h3 className="text-left text-hl-secondary">Win amount:</h3>
               </div>
+
               {/* desktop */}
               <input
                 placeholder="0"
-                value={wagerAmount}
-                onChange={changeWagerAmount}
+                value={winWagerAmount}
+                onChange={changeWinWagerAmount}
+                className="hidden border border-hl-border bg-hl-background p-2 text-hl-primary !outline-none !ring-0 lg:block"
+                disabled={isScratched === true}
+              />
+
+              <h3 className="text-left text-hl-secondary">Target place:</h3>
+              <p className="text-left text-hl-tertiary">
+                {formatting.formatToTwoDecimals(back.place.toString())}
+              </p>
+              <div className="flex items-center">
+                <h3 className="text-left text-hl-secondary">Place amount:</h3>
+              </div>
+
+              {/* desktop */}
+              <input
+                placeholder="0"
+                value={placeWagerAmount}
+                onChange={changePlaceWagerAmount}
                 className="hidden border border-hl-border bg-hl-background p-2 text-hl-primary !outline-none !ring-0 lg:block"
                 disabled={isScratched === true}
               />
@@ -271,9 +315,9 @@ export const PlaceBetModal: React.FC<Props> = ({
               {/* mobile */}
               <input
                 placeholder="0"
-                value={wagerAmount}
+                value={winWagerAmount}
                 type="number"
-                onChange={changeWagerAmount}
+                onChange={changeWinWagerAmount}
                 className="block border border-hl-border bg-hl-background p-2 text-hl-primary !outline-none !ring-0 lg:hidden"
                 disabled={isScratched === true}
               />

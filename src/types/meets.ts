@@ -1,21 +1,21 @@
 // import dayjs from "dayjs";
 import { EcSignature } from "./general";
-import { Race, RaceInfo } from "horselink-sdk";
+import { Race, RaceInfo, Meet } from "horselink-sdk";
 
-export type Meet = {
-  id: string;
-  name: string;
-  location: string;
-  date: string;
-  races: Race[];
-};
+// export type Meet = {
+//   id: string;
+//   name: string;
+//   location: string;
+//   date: string;
+//   races: Race[];
+// };
 
-export type MeetResponse = {
-  nonce: string;
-  created: number;
-  expires: number;
-  meetings: Meet[];
-};
+// export type MeetResponse = {
+//   nonce: string;
+//   created: number;
+//   expires: number;
+//   meetings: Meet[];
+// };
 
 export type MeetInfo = {
   meetingName: string;
@@ -34,7 +34,8 @@ export type Back = {
   market_id: string;
   close: number;
   end: number;
-  odds: number;
+  win: number;
+  place: number;
   proposition_id: string;
   signature: EcSignature;
 };

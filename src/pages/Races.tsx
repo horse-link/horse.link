@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { useRunnersData, useMeetData, useBetsData } from "../hooks/data";
 import { RacesButton } from "../components/Buttons";
 import { BetTable, RaceTable } from "../components/Tables";
-import { PlaceBetModal, SettleBetModal } from "../components/Modals";
+import { BetModal, SettleBetModal } from "../components/Modals";
 import { Loader, PageLayout } from "../components";
 import { useSubgraphBets } from "../hooks/subgraph";
 import { makeMarketId } from "../utils/markets";
@@ -157,7 +157,7 @@ const Races: React.FC = () => {
         />
       </div>
       <div className="block py-10 lg:hidden" />
-      <PlaceBetModal
+      <BetModal
         runner={selectedRunner}
         race={data?.raceData?.race}
         isModalOpen={isModalOpen}

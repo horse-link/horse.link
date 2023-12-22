@@ -1,4 +1,4 @@
-export * from "./PlaceBetModal";
+export * from "./BetModal";
 export * from "./SettleBetModal";
 export * from "./DepositVaultModal";
 export * from "./WithdrawVaultModal";
