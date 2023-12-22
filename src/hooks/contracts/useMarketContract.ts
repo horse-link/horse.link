@@ -26,9 +26,11 @@ export const useMarketContract = () => {
     }>,
     skipAllowanceCheck?: boolean
   ) => {
+    
     const userAddress = await signer.getAddress();
     const marketAddresses = [...new Set(data.map(d => d.market.address))];
     const marketLookup: { [marketAddress: string]: MarketMultiBetInfo } = {};
+    
     const marketMultiBetInfoList: MarketMultiBetInfo[] = await Promise.all(
       marketAddresses.map(async marketAddress => {
         const marketContract = Market__factory.connect(marketAddress, signer);
@@ -386,10 +388,12 @@ export const useMarketContract = () => {
     signer: Signer
   ) => {
     const marketContract = Market__factory.connect(market.address, signer);
+    
     const odds = ethers.utils.parseUnits(
       back.odds.toString(),
       constants.contracts.MARKET_ODDS_DECIMALS
     );
+
     const payout = await marketContract.getPotentialPayout(
       formatting.formatBytes16String(back.proposition_id),
       formatting.formatBytes16String(back.market_id),
@@ -424,6 +428,7 @@ export const useMarketContract = () => {
       ),
       signer.getGasPrice()
     ]);
+
     const receipt = await (
       await marketContract.scratchAndRefund(
         bet.index,

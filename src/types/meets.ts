@@ -34,8 +34,7 @@ export type Back = {
   market_id: string;
   close: number;
   end: number;
-  win: number;
-  place: number;
+  odds: number; // win or place
   proposition_id: string;
   signature: EcSignature;
 };

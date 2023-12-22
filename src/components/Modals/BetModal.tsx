@@ -31,10 +31,19 @@ export const BetModal: React.FC<Props> = ({
   setIsModalOpen
 }) => {
   const [userBalance, setUserBalance] = useState<UserBalance>();
+  // const [userBalanceBn, setUserBalanceBn] = useState<ethers.BigNumber>(ethers.constants.Zero);
+
   const [winWagerAmount, setWinWagerAmount] = useState<string>();
-  const [placeWagerAmount, setPlaceWagerAmount] = useState<number>();
+  const [placeWagerAmount, setPlaceWagerAmount] = useState<number>(0);
   const [payout, setPayout] = useState<string>();
-  const [payout2, setPayout2] = useState<ethers.BigNumber>();
+  
+  const [payout2, setPayout2] = useState<ethers.BigNumber>(
+    ethers.constants.Zero
+  );
+
+  const [placePayout, setPlacePayout] = useState<ethers.BigNumber>(
+    ethers.constants.Zero
+  );
 
   const { data: signer } = useSigner();
 
@@ -59,7 +68,8 @@ export const BetModal: React.FC<Props> = ({
     return utils.config.getMarketFromToken(currentToken, config);
   }, [config, currentToken]);
 
-  const back = useMemo<Back>(() => {
+  const backWin = useMemo<Back>(() => {
+    // remove this
     if (!runner) return utils.mocks.getMockBack();
 
     return {
@@ -67,7 +77,22 @@ export const BetModal: React.FC<Props> = ({
       market_id: runner.market_id,
       close: runner.close,
       end: runner.end,
-      win: runner.win,
+      odds: runner.win,
+      place: runner.place,
+      proposition_id: runner.proposition_id,
+      signature: runner.signature
+    };
+  }, [runner]);
+
+  const backPlace = useMemo<Back>(() => {
+    if (!runner) return utils.mocks.getMockBack();
+
+    return {
+      nonce: runner.nonce,
+      market_id: runner.market_id,
+      close: runner.close,
+      end: runner.end,
+      odds: runner.place,
       place: runner.place,
       proposition_id: runner.proposition_id,
       signature: runner.signature
@@ -75,28 +100,37 @@ export const BetModal: React.FC<Props> = ({
   }, [runner]);
 
   useEffect(() => {
-    if (!market || !signer || !back || !winWagerAmount || !userBalance)
-      return setPayout("0");
+    if (!market || !signer || !backWin || !winWagerAmount || !userBalance)
+      // return setPayout("0");
+      return setPayout2(ethers.constants.Zero);
 
     (async () => {
-      setPayout(undefined);
+      // setPayout(undefined);
+      setPayout2(ethers.constants.Zero);
+
       const payout = await getPotentialPayout(
         market,
         ethers.utils.parseUnits(winWagerAmount, userBalance.decimals),
-        back,
+        backWin,
         signer
       );
-      setPayout(ethers.utils.formatUnits(payout, userBalance.decimals));
+
+      console.log("payout", payout);
+
+      // setPayout(ethers.utils.formatUnits(payout, userBalance.decimals));
+      setPayout2(payout);
     })();
-  }, [market, signer, back, winWagerAmount, userBalance, shouldRefetch]);
+  }, [market, signer, backWin, winWagerAmount, userBalance, shouldRefetch]);
 
   useEffect(() => {
     if (!market || !signer || !config) return;
 
     (async () => {
       setUserBalance(undefined);
+
       const assetAddress = utils.config.getVaultFromMarket(market, config)!
         .asset.address;
+
       const [balance, decimals] = await Promise.all([
         getBalance(assetAddress, signer),
         getDecimals(assetAddress, signer)
@@ -130,6 +164,7 @@ export const BetModal: React.FC<Props> = ({
 
     if (value.includes(".")) {
       const decimals = value.split(".")[1];
+
       if (decimals.length > userBalance.decimals) {
         event.currentTarget.value = winWagerAmount || "";
         return;
@@ -139,7 +174,9 @@ export const BetModal: React.FC<Props> = ({
     setWinWagerAmount(value);
   };
 
-  const changePlaceWagerAmount = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const changePlaceWagerAmount = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     if (!userBalance) return;
 
     event.preventDefault();
@@ -162,10 +199,18 @@ export const BetModal: React.FC<Props> = ({
 
   const onClickPlaceBet = useCallback(
     async (option?: { betNow: boolean }) => {
-      if (!market || !winWagerAmount || !runner || !config || !race || !raceNumber)
+      if (
+        !market ||
+        !winWagerAmount ||
+        !runner ||
+        !config ||
+        !race ||
+        !raceNumber
+      )
         return;
 
       const vault = utils.config.getVaultFromMarket(market, config);
+
       if (!vault)
         throw new Error(
           `Could not find vault associated with market ${market.address}`
@@ -173,7 +218,7 @@ export const BetModal: React.FC<Props> = ({
 
       const betSlip: BetEntry = {
         market,
-        back,
+        back: backWin,
         wager: ethers.utils
           .parseUnits(winWagerAmount, vault.asset.decimals)
           .toString(),
@@ -191,12 +236,19 @@ export const BetModal: React.FC<Props> = ({
         addBet(betSlip);
       }
     },
-    [market, back, winWagerAmount, race, raceNumber]
+    [market, backWin, winWagerAmount, race, raceNumber]
   );
 
   const isWagerNegative = winWagerAmount ? +winWagerAmount < 0 : false;
+  const isPlaceWagerNegative = placeWagerAmount < 0;
+
   const isWagerGreaterThanBalance =
-    winWagerAmount && userBalance ? +winWagerAmount > +userBalance.formatted : false;
+    winWagerAmount && userBalance
+      ? +winWagerAmount > +userBalance.value
+      : false;
+
+  const isPlaceWagerGreaterThanBalance =
+    userBalance && placeWagerAmount > +userBalance.value;
 
   const isWagerPlusBetsExceedingBalance = useMemo(() => {
     if (
@@ -249,7 +301,7 @@ export const BetModal: React.FC<Props> = ({
     ? utils.races.isScratchedRunner(runner)
     : undefined;
 
-  const shouldDisablePlaceBet =
+  const shouldDisableBet =
     !market ||
     !winWagerAmount ||
     !signer ||
@@ -277,10 +329,9 @@ export const BetModal: React.FC<Props> = ({
 
           <div className="mt-8 flex w-full flex-col items-center gap-y-4 divide-y divide-hl-border">
             <div className="grid w-full grid-cols-2 grid-rows-2 gap-x-2">
-              
               <h3 className="text-left text-hl-secondary">Target win:</h3>
               <p className="text-left text-hl-tertiary">
-                {formatting.formatToTwoDecimals(back.win.toString())}
+                {formatting.formatToTwoDecimals(backWin.odds.toString())}
               </p>
               <div className="flex items-center">
                 <h3 className="text-left text-hl-secondary">Win amount:</h3>
@@ -297,7 +348,7 @@ export const BetModal: React.FC<Props> = ({
 
               <h3 className="text-left text-hl-secondary">Target place:</h3>
               <p className="text-left text-hl-tertiary">
-                {formatting.formatToTwoDecimals(back.place.toString())}
+                {formatting.formatToTwoDecimals(backPlace.odds.toString())}
               </p>
               <div className="flex items-center">
                 <h3 className="text-left text-hl-secondary">Place amount:</h3>
@@ -322,10 +373,11 @@ export const BetModal: React.FC<Props> = ({
                 disabled={isScratched === true}
               />
             </div>
+            
             <div className="grid w-full grid-cols-2 grid-rows-2 gap-2 pt-4">
               <h3 className="text-left text-hl-secondary">Payout:</h3>
               <p className="text-left text-hl-tertiary">
-                {formatting.formatToFourDecimals(payout || "0")}
+                {formatting.formatToFourDecimals(payout2.toString() || "0")}
               </p>
               <div className="flex items-center">
                 <h3 className="text-left text-hl-secondary">Available:</h3>
@@ -361,8 +413,8 @@ export const BetModal: React.FC<Props> = ({
               rounded
               text="bet now"
               onClick={() => onClickPlaceBet({ betNow: true })}
-              disabled={shouldDisablePlaceBet || isScratched === true}
-              active={!shouldDisablePlaceBet && isScratched !== true}
+              disabled={shouldDisableBet || isScratched === true}
+              active={!shouldDisableBet && isScratched !== true}
             />
             <span className=" blockself-center font-semibold">or</span>
             <Button
@@ -370,8 +422,8 @@ export const BetModal: React.FC<Props> = ({
               rounded
               text="add to bet slip"
               onClick={() => onClickPlaceBet()}
-              disabled={shouldDisablePlaceBet || isScratched === true}
-              active={!shouldDisablePlaceBet && isScratched !== true}
+              disabled={shouldDisableBet || isScratched === true}
+              active={!shouldDisableBet && isScratched !== true}
             />
           </div>
         </div>
