@@ -81,8 +81,7 @@ export const getMockBack = (): Back => ({
   nonce: "0",
   proposition_id: "",
   market_id: "",
-  win: 0,
-  place: 0,
+  odds: 0,
   close: 0,
   end: 0,
   signature: { r: "", s: "", v: 0 }

@@ -4,7 +4,7 @@ import { Token } from "./tokens";
 import { Api } from "../apis/Api";
 import { Network } from "./general";
 import { ApolloClient, NormalizedCacheObject } from "@apollo/client";
-import { Signer } from "ethers";
+import { Signer, ethers } from "ethers";
 import { Runner } from "horselink-sdk";
 
 export type BetSlipErrorEntry = {
@@ -12,13 +12,11 @@ export type BetSlipErrorEntry = {
   errorMessage: string;
 };
 
-export type BetEntry = Omit<BetSlipEntry, "id">;
-
-export type BetSlipEntry = {
-  id: number;
+// export type BetEntry = Omit<BetSlipEntry, "id">;
+export type BetEntry = {
   market: MarketInfo;
   back: Back;
-  wager: string;
+  wager: ethers.BigNumber;
   runner: Runner;
   name: string; // name
   number: number; // number
@@ -29,6 +27,10 @@ export type BetSlipEntry = {
   //   "runners"
   // >;
   timestamp: number;
+};
+
+export type BetSlipEntry = & BetEntry & {
+  id: number;
 };
 
 export type BetSlipContextType = {

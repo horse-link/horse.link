@@ -1,6 +1,6 @@
 import { CRYPTO_ICONS, SVG_ICONS } from "../icons";
 
-export const getCryptoIcon = (symbol: string) => {
+export const getCryptoIcon = (symbol: string): string => {
   // temporary workaround to get the right token symbol
   if (symbol.toLowerCase().includes("hl")) {
     return "/images/horse.webp";

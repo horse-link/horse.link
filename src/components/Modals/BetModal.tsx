@@ -31,13 +31,12 @@ export const BetModal: React.FC<Props> = ({
   setIsModalOpen
 }) => {
   const [userBalance, setUserBalance] = useState<UserBalance>();
-  // const [userBalanceBn, setUserBalanceBn] = useState<ethers.BigNumber>(ethers.constants.Zero);
 
+  // use string for the controlled input
   const [winWagerAmount, setWinWagerAmount] = useState<string>();
-  const [placeWagerAmount, setPlaceWagerAmount] = useState<number>(0);
-  const [payout, setPayout] = useState<string>();
+  const [placeWagerAmount, setPlaceWagerAmount] = useState<string>();
   
-  const [payout2, setPayout2] = useState<ethers.BigNumber>(
+  const [payout, setPayout] = useState<ethers.BigNumber>(
     ethers.constants.Zero
   );
 
@@ -101,24 +100,19 @@ export const BetModal: React.FC<Props> = ({
 
   useEffect(() => {
     if (!market || !signer || !backWin || !winWagerAmount || !userBalance)
-      // return setPayout("0");
-      return setPayout2(ethers.constants.Zero);
+      return setPayout(ethers.constants.Zero);
 
     (async () => {
-      // setPayout(undefined);
-      setPayout2(ethers.constants.Zero);
+      setPayout(ethers.constants.Zero);
 
       const payout = await getPotentialPayout(
         market,
-        ethers.utils.parseUnits(winWagerAmount, userBalance.decimals),
+        ethers.utils.parseUnits(winWagerAmount.toString(), userBalance.decimals),
         backWin,
         signer
       );
 
-      console.log("payout", payout);
-
-      // setPayout(ethers.utils.formatUnits(payout, userBalance.decimals));
-      setPayout2(payout);
+      setPayout(payout);
     })();
   }, [market, signer, backWin, winWagerAmount, userBalance, shouldRefetch]);
 
@@ -160,6 +154,7 @@ export const BetModal: React.FC<Props> = ({
     event.preventDefault();
     const value = event.currentTarget.value;
 
+    // make this a utils function with a unit test
     if (!RegExp(/^[(\d|.)]*$/).test(value)) return;
 
     if (value.includes(".")) {
@@ -185,6 +180,7 @@ export const BetModal: React.FC<Props> = ({
     if (!RegExp(/^[(\d|.)]*$/).test(value)) return;
 
     const _value: number = +value;
+    console.log("_value", _value);
 
     // if (value.includes(".")) {
     //   const decimals = value.split(".")[1];
@@ -194,7 +190,7 @@ export const BetModal: React.FC<Props> = ({
     //   }
     // }
 
-    setPlaceWagerAmount(_value);
+    setPlaceWagerAmount(value);
   };
 
   const onClickPlaceBet = useCallback(
@@ -220,8 +216,9 @@ export const BetModal: React.FC<Props> = ({
         market,
         back: backWin,
         wager: ethers.utils
-          .parseUnits(winWagerAmount, vault.asset.decimals)
-          .toString(),
+          .parseUnits(winWagerAmount, vault.asset.decimals),
+          // .toString(),
+        // wager: winWagerAmount,
         runner,
         name: race.name,
         number: race.number,
@@ -240,15 +237,15 @@ export const BetModal: React.FC<Props> = ({
   );
 
   const isWagerNegative = winWagerAmount ? +winWagerAmount < 0 : false;
-  const isPlaceWagerNegative = placeWagerAmount < 0;
+  //const isPlaceWagerNegative = placeWagerAmount < 0;
 
   const isWagerGreaterThanBalance =
     winWagerAmount && userBalance
       ? +winWagerAmount > +userBalance.value
       : false;
 
-  const isPlaceWagerGreaterThanBalance =
-    userBalance && placeWagerAmount > +userBalance.value;
+  // const isPlaceWagerGreaterThanBalance =
+  //   userBalance && placeWagerAmount > +userBalance.value;
 
   const isWagerPlusBetsExceedingBalance = useMemo(() => {
     if (
@@ -290,7 +287,7 @@ export const BetModal: React.FC<Props> = ({
       );
 
     const userWagerBn = ethers.utils.parseUnits(
-      winWagerAmount,
+      winWagerAmount.toString(),
       marketVault.asset.decimals
     );
 
@@ -373,11 +370,11 @@ export const BetModal: React.FC<Props> = ({
                 disabled={isScratched === true}
               />
             </div>
-            
+
             <div className="grid w-full grid-cols-2 grid-rows-2 gap-2 pt-4">
               <h3 className="text-left text-hl-secondary">Payout:</h3>
               <p className="text-left text-hl-tertiary">
-                {formatting.formatToFourDecimals(payout2.toString() || "0")}
+                {ethers.utils.formatUnits(payout, userBalance?.decimals || 0)}
               </p>
               <div className="flex items-center">
                 <h3 className="text-left text-hl-secondary">Available:</h3>

@@ -1,5 +1,4 @@
-import { Meet } from "../types/meets";
-import { Race, RaceStatus, RaceWithResults, Runner } from "horselink-sdk";
+import { Meet, Race, RaceStatus, RaceWithResults, Runner } from "horselink-sdk";
 
 import utils from "../utils";
 import dayjs, { Dayjs } from "dayjs";
