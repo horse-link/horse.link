@@ -20,6 +20,7 @@ type Props = {
 
 export const HomeTable: React.FC<Props> = ({ meets }) => {
   const [time, setTime] = useState(dayjs());
+
   useEffect(() => {
     const interval = setInterval(() => {
       setTime(dayjs());
@@ -85,7 +86,7 @@ export const HomeTable: React.FC<Props> = ({ meets }) => {
                     "hover:!bg-hl-primary hover:!text-hl-secondary": ![
                       RaceStatus.CLOSED,
                       RaceStatus.PAYING
-                    ].includes(race.status),
+                    ].includes(race.status.toString()),
                     "!text-hl-outstanding":
                       text !== "CLSD" &&
                       Math.abs(dayjs(race.start).diff(time, "hours")) < 1 &&

@@ -39,7 +39,7 @@ export const formatTimeToHMSFromNow = (
   now: dayjs.Dayjs,
   time: string,
   shortForm?: boolean
-) => {
+):string => {
   const date = dayjs(time);
 
   const isNegative = now > date;

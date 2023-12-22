@@ -34,10 +34,10 @@ export const RaceTable: React.FC<Props> = ({
     "Runner",
     "Rider",
     "Form",
-    "Weight",
+    // "Weight",
     "Win",
     "Place",
-    "Backed"
+    "Backed",
     // "Percentage"
   ].map((text, i) => (
     <div
@@ -45,7 +45,7 @@ export const RaceTable: React.FC<Props> = ({
       className={classNames(
         "w-full py-4 text-left font-semibold text-hl-primary",
         {
-          "!text-hl-secondary": [1, 5, 6].includes(i)
+          "!text-hl-secondary": [1, 4, 5].includes(i)
         }
       )}
     >
@@ -71,14 +71,16 @@ export const RaceTable: React.FC<Props> = ({
           "name",
           "rider",
           "last5Starts",
-          "handicapWeight",
+          // "handicapWeight",
           "win",
           "place"
+          // "backed",
+          // "percentage"
         ] as Array<keyof typeof runner>
       ).map((key, i) => (
         <div
           className={classNames(style, {
-            "text-hl-secondary": [1, 5, 6].includes(i)
+            "text-hl-secondary": [1, 4, 5].includes(i)
           })}
           key={`runnertable-${runner.proposition_id}-${key.toString()}-${i}`}
           onClick={() => onClickRunner(runner)}
@@ -95,13 +97,13 @@ export const RaceTable: React.FC<Props> = ({
       >
         {formatting.formatToTwoDecimals(formattedBacked)}
       </div>,
-      <div
-        className={classNames(style, "text-hl-secondary")}
-        key={`runnertable-${runner.proposition_id}-${i}`}
-        onClick={() => onClickRunner(runner)}
-      >
-        {formattedPercentage}
-      </div>
+      // <div
+      //   className={classNames(style, "text-hl-secondary")}
+      //   key={`runnertable-${runner.proposition_id}-${i}`}
+      //   onClick={() => onClickRunner(runner)}
+      // >
+      //   {formattedPercentage}
+      // </div>
       // <div
       //   className={classNames(style, "text-hl-secondary")}
       //   key={`runnertable-${runner.proposition_id}-${i}`}

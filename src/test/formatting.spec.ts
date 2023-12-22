@@ -73,4 +73,16 @@ describe("general formatting tests", () => {
     );
     expect(dateFourFormatted).toEqual("-1h 30m 0s");
   });
+
+  it.only("should format time to hms from 2hrs from now", () => {
+    const now = dayjs("2023-12-25T09:00:00.000Z");
+    const jumpTime = "2023-12-25T11:00:00.000Z";
+    const result = utils.formatting.formatTimeToHMSFromNow(now, jumpTime, false);
+    expect(result).toEqual("2h 0m 0s");
+  });
+
+  it.skip("formatTrackCondition", () => {
+
+
+  });
 });

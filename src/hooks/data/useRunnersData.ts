@@ -1,10 +1,10 @@
-// import { useMemo } from "react";
 import { SignedRunnersResponse } from "horselink-sdk";
 import useSwr from "../useSwr";
 
+// TODO: ADD TYPES
 export const useRunnersData = (track: string, raceNumber: number) => {
   const { data, isLoading, error } = useSwr<SignedRunnersResponse>(
-    `/runners/${track}/${raceNumber}/win`
+    `/runners/${track}/${raceNumber}`
   );
 
   // const race: Race = useMemo(() => {
