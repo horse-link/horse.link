@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 import { ethers } from "ethers";
 import utils from "../utils";
-import { Config, VaultInfo } from "../types/config";
+import { Config } from "../types/config";
 import { MeetInfo, MeetResults } from "horselink-sdk";
 import { BetHistoryResponse, SignedBetDataResponse } from "../types/bets";
 import { Market } from "../typechain";
@@ -11,6 +11,7 @@ import { Network } from "../types/general";
 import constants from "../constants";
 import { Bet } from "../types/subgraph";
 import { MarketHistory } from "../types/markets";
+import { VaultInfo } from "horselink-sdk";
 
 import type {
   FormattedProtocol,

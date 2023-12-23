@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { BaseButton } from ".";
 import { VaultModalState, VaultTransactionType } from "../../types/vaults";
-import { VaultInfo } from "../../types/config";
+import { VaultInfo } from "horselink-sdk";
 
 type Props = {
   title: string;

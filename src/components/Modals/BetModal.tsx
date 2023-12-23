@@ -12,10 +12,10 @@ import { UserBalance } from "../../types/users";
 import { useBetSlipContext } from "../../providers/BetSlip";
 import { useParams } from "react-router-dom";
 import { useTokenContext } from "../../providers/Token";
-import { BetEntry } from "../../types/context";
+import { BetEntry, BetSlipEntry } from "../../types/context";
 import { Button } from "../Buttons";
 import classNames from "classnames";
-import { Race, Runner, formatting } from "horselink-sdk";
+import { formatting, Race, Runner } from "horselink-sdk";
 
 type Props = {
   runner?: Runner;
@@ -24,21 +24,26 @@ type Props = {
   setIsModalOpen: (open: boolean) => void;
 };
 
+const defaultUserBalance: UserBalance = {
+  value: ethers.constants.Zero,
+  decimals: 6,
+  formatted: "0.0000"
+};
+
 export const BetModal: React.FC<Props> = ({
   runner,
   race,
   isModalOpen,
   setIsModalOpen
 }) => {
-  const [userBalance, setUserBalance] = useState<UserBalance>();
+  const [userBalance, setUserBalance] =
+    useState<UserBalance>(defaultUserBalance);
 
   // use string for the controlled input
   const [winWagerAmount, setWinWagerAmount] = useState<string>();
   const [placeWagerAmount, setPlaceWagerAmount] = useState<string>();
-  
-  const [payout, setPayout] = useState<ethers.BigNumber>(
-    ethers.constants.Zero
-  );
+
+  const [payout, setPayout] = useState<ethers.BigNumber>(ethers.constants.Zero);
 
   const [placePayout, setPlacePayout] = useState<ethers.BigNumber>(
     ethers.constants.Zero
@@ -105,14 +110,19 @@ export const BetModal: React.FC<Props> = ({
     (async () => {
       setPayout(ethers.constants.Zero);
 
-      const payout = await getPotentialPayout(
+      const wager = ethers.utils.parseUnits(
+        winWagerAmount.toString(),
+        userBalance.decimals
+      );
+
+      const calculatedPayout = await getPotentialPayout(
         market,
-        ethers.utils.parseUnits(winWagerAmount.toString(), userBalance.decimals),
+        wager,
         backWin,
         signer
       );
 
-      setPayout(payout);
+      setPayout(calculatedPayout);
     })();
   }, [market, signer, backWin, winWagerAmount, userBalance, shouldRefetch]);
 
@@ -120,7 +130,7 @@ export const BetModal: React.FC<Props> = ({
     if (!market || !signer || !config) return;
 
     (async () => {
-      setUserBalance(undefined);
+      setUserBalance(defaultUserBalance);
 
       const assetAddress = utils.config.getVaultFromMarket(market, config)!
         .asset.address;
@@ -166,7 +176,7 @@ export const BetModal: React.FC<Props> = ({
       }
     }
 
-    setWinWagerAmount(value);
+    value;
   };
 
   const changePlaceWagerAmount = (
@@ -179,16 +189,13 @@ export const BetModal: React.FC<Props> = ({
 
     if (!RegExp(/^[(\d|.)]*$/).test(value)) return;
 
-    const _value: number = +value;
-    console.log("_value", _value);
-
-    // if (value.includes(".")) {
-    //   const decimals = value.split(".")[1];
-    //   if (decimals.length > userBalance.decimals) {
-    //     event.currentTarget.value = winWagerAmount || "";
-    //     return;
-    //   }
-    // }
+    if (value.includes(".")) {
+      const decimals = value.split(".")[1];
+      if (decimals.length > userBalance.decimals) {
+        event.currentTarget.value = winWagerAmount || "";
+        return;
+      }
+    }
 
     setPlaceWagerAmount(value);
   };
@@ -215,10 +222,7 @@ export const BetModal: React.FC<Props> = ({
       const betSlip: BetEntry = {
         market,
         back: backWin,
-        wager: ethers.utils
-          .parseUnits(winWagerAmount, vault.asset.decimals),
-          // .toString(),
-        // wager: winWagerAmount,
+        wager: ethers.utils.parseUnits(winWagerAmount, vault.asset.decimals),
         runner,
         name: race.name,
         number: race.number,
@@ -247,7 +251,7 @@ export const BetModal: React.FC<Props> = ({
   // const isPlaceWagerGreaterThanBalance =
   //   userBalance && placeWagerAmount > +userBalance.value;
 
-  const isWagerPlusBetsExceedingBalance = useMemo(() => {
+  const isWagerPlusBetsExceedingBalance: boolean = useMemo(() => {
     if (
       !bets ||
       !bets.length ||
@@ -259,7 +263,7 @@ export const BetModal: React.FC<Props> = ({
       return false;
 
     // find all bets for given market
-    const betMarkets = bets.filter(
+    const betMarkets: BetSlipEntry[] = bets.filter(
       bet => bet.market.address.toLowerCase() === market.address.toLowerCase()
     );
 

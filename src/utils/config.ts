@@ -1,12 +1,13 @@
-import { Config, MarketInfo, VaultInfo } from "../types/config";
+import { Config, MarketInfo } from "../types/config";
 import { Token } from "../types/tokens";
+import { VaultInfo } from "horselink-sdk";
 
 export const getTokenFromSymbol = (symbol: string, config?: Config) =>
   config?.tokens.find(
     token => token.symbol.toLowerCase() === symbol.toLowerCase()
   );
 
-export const isUsdt = (address: string, config?: Config) =>
+export const isUsdt = (address: string, config?: Config): boolean =>
   getTokenFromSymbol("USDT", config)?.address.toLowerCase() ===
   address.toLowerCase();
 
@@ -23,10 +24,15 @@ export const getVault = (vaultAddress?: string, config?: Config) =>
     vault => vault.address.toLowerCase() === vaultAddress?.toLowerCase()
   );
 
-export const getVaultFromMarket = (market?: MarketInfo, config?: Config) =>
-  config?.vaults.find(
+export const getVaultFromMarket = (market?: MarketInfo, config?: Config) => {
+  const vault = config?.vaults.find(
     vault => vault.address.toLowerCase() === market?.vaultAddress.toLowerCase()
   );
+
+  if (!vault) throw new Error("Vault not found");
+
+  return vault;
+};
 
 export const getVaultFromAssetAddress = (address: string, config?: Config) =>
   config?.vaults.find(

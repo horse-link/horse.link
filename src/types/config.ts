@@ -26,20 +26,20 @@ export type MarketInfo = {
   vaultAddress: Address;
 };
 
-export type VaultInfo = {
-  name: string;
-  address: Address;
-  owner: Address;
-  asset: TokenInfo;
-  marketAddress: Address;
-  performance: BigNumber;
-  totalAssets: BigNumber;
-  totalSupply: BigNumber;
-  totalAssetsLocked: BigNumber;
-  userAssetTotal?: BigNumber;
-  userShareTotal?: BigNumber;
-  userSharePercentage?: string;
-};
+// export type VaultInfo = {
+//   name: string;
+//   address: Address;
+//   owner: Address;
+//   asset: TokenInfo;
+//   marketAddress: Address;
+//   performance: BigNumber;
+//   totalAssets: BigNumber;
+//   totalSupply: BigNumber;
+//   totalAssetsLocked: BigNumber;
+//   userAssetTotal?: BigNumber;
+//   userShareTotal?: BigNumber;
+//   userSharePercentage?: string;
+// };
 
 export type Config = {
   addresses: ProtocolAddresses;
