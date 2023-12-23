@@ -60,9 +60,19 @@ export const BetModal: React.FC<Props> = ({
   const { number: raceNumber } = useParams();
   const { currentToken } = useTokenContext();
 
-  // If there is a win or place bet
+  // If there is a win or place bet. zero values dont count
   const hasBet = (): Boolean => {
-    return !winWagerAmount || !placeWagerAmount;
+    const winWager = ethers.utils.parseUnits(
+      winWagerAmount || "0",
+      userBalance.decimals
+    );
+
+    const placeWager = ethers.utils.parseUnits(
+      placeWagerAmount || "0",
+      userBalance.decimals
+    );
+
+    return !winWager.isZero() || !placeWager.isZero();
   };
 
   useEffect(() => {
@@ -365,7 +375,6 @@ export const BetModal: React.FC<Props> = ({
 
   const shouldDisableBet =
     !market ||
-    hasBet() ||
     !signer ||
     !userBalance ||
     !+userBalance.formatted ||
@@ -485,7 +494,7 @@ export const BetModal: React.FC<Props> = ({
               text="add to bet slip"
               onClick={() => onClickPlaceBet()}
               disabled={shouldDisableBet || isScratched === true}
-              active={!shouldDisableBet && isScratched !== true}
+              active={!shouldDisableBet && hasBet() && isScratched !== true}
             />
           </div>
         </div>
