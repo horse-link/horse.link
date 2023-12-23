@@ -4,8 +4,7 @@ import {
   createRacingLink,
   isScratchedRunner
 } from "../utils/races";
-import { Meet } from "../types/meets";
-import { RaceStatus, Race, Runner, RaceWithResults } from "horselink-sdk";
+import { Meet, RaceStatus, Race, Runner, RaceWithResults } from "horselink-sdk";
 import dayjs from "dayjs";
 
 describe("Race utils tests", () => {

@@ -30,6 +30,11 @@ const defaultUserBalance: UserBalance = {
   formatted: "0.0000"
 };
 
+// const convert = (amount: string) => {
+//   winWagerAmount.toString(),
+//   userBalance.decimals
+// };
+
 export const BetModal: React.FC<Props> = ({
   runner,
   race,
@@ -44,11 +49,6 @@ export const BetModal: React.FC<Props> = ({
   const [placeWagerAmount, setPlaceWagerAmount] = useState<string>();
 
   const [payout, setPayout] = useState<ethers.BigNumber>(ethers.constants.Zero);
-
-  const [placePayout, setPlacePayout] = useState<ethers.BigNumber>(
-    ethers.constants.Zero
-  );
-
   const { data: signer } = useSigner();
 
   const config = useConfig();
@@ -104,27 +104,60 @@ export const BetModal: React.FC<Props> = ({
   }, [runner]);
 
   useEffect(() => {
-    if (!market || !signer || !backWin || !winWagerAmount || !userBalance)
+    if (!market || !signer || !backWin || !winWagerAmount || !placeWagerAmount)
       return setPayout(ethers.constants.Zero);
 
     (async () => {
       setPayout(ethers.constants.Zero);
+      let calculatedPayout = ethers.constants.Zero;
 
-      const wager = ethers.utils.parseUnits(
-        winWagerAmount.toString(),
+      const placeWager = ethers.utils.parseUnits(
+        placeWagerAmount,
         userBalance.decimals
       );
 
-      const calculatedPayout = await getPotentialPayout(
-        market,
-        wager,
-        backWin,
-        signer
+      const winWager = ethers.utils.parseUnits(
+        winWagerAmount,
+        userBalance.decimals
       );
 
+      console.log("wager " + winWager);
+
+      if (!winWager.isZero()) {
+        const payout = await getPotentialPayout(
+          market,
+          winWager,
+          backWin,
+          signer
+        );
+
+        calculatedPayout.add(payout);
+      }
+
+      if (!placeWager.isZero()) {
+        const payout = await getPotentialPayout(
+          market,
+          winWager,
+          backWin,
+          signer
+        );
+
+        calculatedPayout.add(payout);
+      }
+
+      console.log("calculatedPayout " + calculatedPayout);
       setPayout(calculatedPayout);
     })();
-  }, [market, signer, backWin, winWagerAmount, userBalance, shouldRefetch]);
+  }, [
+    market,
+    signer,
+    backWin,
+    winWagerAmount,
+    backPlace,
+    placeWagerAmount,
+    userBalance,
+    shouldRefetch
+  ]);
 
   useEffect(() => {
     if (!market || !signer || !config) return;
@@ -155,11 +188,12 @@ export const BetModal: React.FC<Props> = ({
 
     setTimeout(() => {
       setWinWagerAmount(undefined);
+      setPlaceWagerAmount(undefined);
     }, 300);
   }, [isModalOpen]);
 
   const changeWinWagerAmount = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!userBalance) return;
+    // if (!userBalance) return;
 
     event.preventDefault();
     const value = event.currentTarget.value;
@@ -176,13 +210,13 @@ export const BetModal: React.FC<Props> = ({
       }
     }
 
-    value;
+    setWinWagerAmount(value);
   };
 
   const changePlaceWagerAmount = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    if (!userBalance) return;
+    // if (!userBalance) return;
 
     event.preventDefault();
     const value = event.currentTarget.value;
@@ -196,6 +230,8 @@ export const BetModal: React.FC<Props> = ({
         return;
       }
     }
+
+    console.log("place amount " + value);
 
     setPlaceWagerAmount(value);
   };

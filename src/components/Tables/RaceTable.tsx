@@ -58,7 +58,7 @@ export const RaceTable: React.FC<Props> = ({
       ? ethers.utils.formatEther((+runner?.backed).toString())
       : "0.00";
 
-    const formattedPercentage = runner ? runner?.percentage : "0.00";
+    // const formattedPercentage = runner ? runner?.percentage : "0.00";
 
     const style = classNames("w-full text-left py-4", {
       "line-through": scratchingArray.includes(runner.status)

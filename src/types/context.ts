@@ -29,7 +29,7 @@ export type BetEntry = {
   timestamp: number;
 };
 
-export type BetSlipEntry = & BetEntry & {
+export type BetSlipEntry = BetEntry & {
   id: number;
 };
 

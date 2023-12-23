@@ -1,5 +1,6 @@
 import { BigNumber } from "ethers";
 import { Address } from "wagmi";
+import { VaultInfo } from "horselink-sdk";
 
 export type ProtocolAddresses = {
   registry: Address;

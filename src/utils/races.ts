@@ -13,7 +13,7 @@ export const createRacingLink = (race: Race, meet: Meet) =>
 
 export const createCellText = (race: RaceWithResults, now: Dayjs) => {
   const isAfterClosingTime = now.isAfter(dayjs(race.close));
-  
+
   const timeString = utils.formatting.formatTimeToHMSFromNow(
     now,
     race.start!,

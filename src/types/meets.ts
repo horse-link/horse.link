@@ -1,6 +1,6 @@
-// import dayjs from "dayjs";
+import { BigNumber } from "ethers";
 import { EcSignature } from "./general";
-import { Race, RaceInfo, Meet } from "horselink-sdk";
+import { RaceInfo } from "horselink-sdk";
 
 // export type Meet = {
 //   id: string;
@@ -42,5 +42,5 @@ export type Back = {
 // The parameters for a call to back() on the Market contract.
 // Same as Back but with a wager attribute
 export type BackParams = Back & {
-  wager: string;
+  wager: BigNumber;
 };

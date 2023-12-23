@@ -8,10 +8,10 @@ export const useVaultContract = () => {
     amount: BigNumber,
     signer: Signer
   ) => {
-    const userAddress = await signer.getAddress();
-
     const vaultContract = Vault__factory.connect(vault.address, signer);
     const erc20Contract = ERC20__factory.connect(vault.asset.address, signer);
+
+    const userAddress = await signer.getAddress();
 
     const userAllowance = await erc20Contract.allowance(
       userAddress,
@@ -56,7 +56,7 @@ export const useVaultContract = () => {
   const totalAssetsLocked = async (
     vault: VaultInfo,
     provider: ethers.providers.Provider
-  ) => {
+  ): Promise<BigNumber> => {
     const vaultContract = Vault__factory.connect(vault.address, provider);
     return vaultContract.totalAssetsLocked();
   };
@@ -65,7 +65,7 @@ export const useVaultContract = () => {
     vault: VaultInfo,
     amount: BigNumber,
     signer: Signer
-  ) => {
+  ): Promise<string> => {
     const userAddress = await signer.getAddress();
 
     const vaultContract = Vault__factory.connect(vault.address, signer);
@@ -84,14 +84,21 @@ export const useVaultContract = () => {
 
     return receipt.transactionHash;
   };
-  const getIndividualShareTotal = async (vault: VaultInfo, signer: Signer) => {
+
+  const getIndividualShareTotal = async (
+    vault: VaultInfo,
+    signer: Signer
+  ): Promise<BigNumber> => {
     const userAddress = await signer.getAddress();
     const vaultContract = Vault__factory.connect(vault.address, signer);
     const shares = await vaultContract.balanceOf(userAddress);
     return shares.mul(100);
   };
 
-  const getIndividualAssetTotal = async (vault: VaultInfo, signer: Signer) => {
+  const getIndividualAssetTotal = async (
+    vault: VaultInfo,
+    signer: Signer
+  ): Promise<BigNumber> => {
     const userAddress = await signer.getAddress();
     const vaultContract = Vault__factory.connect(vault.address, signer);
     const shares = await vaultContract.balanceOf(userAddress);
@@ -99,7 +106,11 @@ export const useVaultContract = () => {
 
     return assets;
   };
-  const getSupplyTotal = async (vault: VaultInfo, signer: Signer) => {
+
+  const getSupplyTotal = async (
+    vault: VaultInfo,
+    signer: Signer
+  ): Promise<BigNumber> => {
     const vaultContract = Vault__factory.connect(vault.address, signer);
     const supply = await vaultContract.totalSupply();
     return supply;
