@@ -60,6 +60,11 @@ export const BetModal: React.FC<Props> = ({
   const { number: raceNumber } = useParams();
   const { currentToken } = useTokenContext();
 
+  // If there is a win or place bet
+  const hasBet = (): Boolean => {
+    return !winWagerAmount || !placeWagerAmount;
+  };
+
   useEffect(() => {
     if (!signer) return;
 
@@ -88,9 +93,8 @@ export const BetModal: React.FC<Props> = ({
   }, [runner]);
 
   const backPlace = useMemo<Back>(() => {
+    // remove this
     if (!runner) return utils.mocks.getMockBack();
-
-    console.log("runner " + runner);
 
     return {
       nonce: runner.nonce,
@@ -104,8 +108,13 @@ export const BetModal: React.FC<Props> = ({
   }, [runner]);
 
   useEffect(() => {
-    if (!market || !signer || !backWin || !winWagerAmount)
+    if (!market || !signer || !backWin) {
       return setPayout(ethers.constants.Zero);
+    }
+
+    if (!winWagerAmount && !placeWagerAmount) {
+      return setPayout(ethers.constants.Zero);
+    }
 
     (async () => {
       setPayout(ethers.constants.Zero);
@@ -117,7 +126,7 @@ export const BetModal: React.FC<Props> = ({
       );
 
       const winWager = ethers.utils.parseUnits(
-        winWagerAmount,
+        winWagerAmount || "0",
         userBalance.decimals
       );
 
@@ -144,8 +153,6 @@ export const BetModal: React.FC<Props> = ({
 
         calculatedPayout = calculatedPayout.add(payout);
       }
-
-      console.log("calculatedPayout " + calculatedPayout);
 
       if (!calculatedPayout.isZero()) setPayout(calculatedPayout);
     })();
@@ -194,8 +201,6 @@ export const BetModal: React.FC<Props> = ({
   }, [isModalOpen]);
 
   const changeWinWagerAmount = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // if (!userBalance) return;
-
     event.preventDefault();
     const value = event.currentTarget.value;
 
@@ -217,8 +222,6 @@ export const BetModal: React.FC<Props> = ({
   const changePlaceWagerAmount = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    // if (!userBalance) return;
-
     event.preventDefault();
     const value = event.currentTarget.value;
 
@@ -232,21 +235,12 @@ export const BetModal: React.FC<Props> = ({
       }
     }
 
-    console.log("place amount " + value);
-
     setPlaceWagerAmount(value);
   };
 
   const onClickPlaceBet = useCallback(
     async (option?: { betNow: boolean }) => {
-      if (
-        !market ||
-        !winWagerAmount ||
-        !runner ||
-        !config ||
-        !race ||
-        !raceNumber
-      )
+      if (!market || !hasBet() || !runner || !config || !race || !raceNumber)
         return;
 
       const vault = utils.config.getVaultFromMarket(market, config);
@@ -256,10 +250,34 @@ export const BetModal: React.FC<Props> = ({
           `Could not find vault associated with market ${market.address}`
         );
 
-      const betSlip: BetEntry = {
+      const placeWager = ethers.utils.parseUnits(
+        placeWagerAmount || "0",
+        userBalance.decimals
+        // vault.asset.decimals
+      );
+
+      // todo: check wager is not zero
+      const placeBetSlip: BetEntry = {
+        market,
+        back: backPlace,
+        wager: placeWager,
+        runner,
+        name: race.name,
+        number: race.number,
+        timestamp: Math.floor(Date.now() / 1000)
+      };
+
+      const winWager = ethers.utils.parseUnits(
+        winWagerAmount || "0",
+        userBalance.decimals
+        // vault.asset.decimals
+      );
+
+      // todo: check wager is not zero
+      const winBetSlip: BetEntry = {
         market,
         back: backWin,
-        wager: ethers.utils.parseUnits(winWagerAmount, vault.asset.decimals),
+        wager: winWager,
         runner,
         name: race.name,
         number: race.number,
@@ -269,9 +287,15 @@ export const BetModal: React.FC<Props> = ({
       setIsModalOpen(false);
 
       if (option?.betNow) {
-        await placeBetImmediately(betSlip);
+        await placeBetImmediately(winBetSlip);
       } else {
-        addBet(betSlip);
+        if (!placeBetSlip.wager.isZero()) {
+          addBet(placeBetSlip);
+        }
+
+        if (!winBetSlip.wager.isZero()) {
+          addBet(winBetSlip);
+        }
       }
     },
     [market, backWin, winWagerAmount, race, raceNumber]
@@ -341,7 +365,7 @@ export const BetModal: React.FC<Props> = ({
 
   const shouldDisableBet =
     !market ||
-    !winWagerAmount ||
+    hasBet() ||
     !signer ||
     !userBalance ||
     !+userBalance.formatted ||

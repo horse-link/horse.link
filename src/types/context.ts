@@ -12,7 +12,6 @@ export type BetSlipErrorEntry = {
   errorMessage: string;
 };
 
-// export type BetEntry = Omit<BetSlipEntry, "id">;
 export type BetEntry = {
   market: MarketInfo;
   back: Back;
@@ -20,12 +19,6 @@ export type BetEntry = {
   runner: Runner;
   name: string; // name
   number: number; // number
-  // race: Omit<
-  //   RaceData & {
-  //     raceNumber: string;
-  //   },
-  //   "runners"
-  // >;
   timestamp: number;
 };
 
@@ -34,16 +27,17 @@ export type BetSlipEntry = BetEntry & {
 };
 
 export type BetSlipContextType = {
-  txLoading: boolean;
-  hashes?: string[];
-  bets?: BetSlipEntry[];
-  errors?: string[];
   addBet: (bet: BetEntry) => void;
-  removeBet: (id: number) => void;
+  addBets: (bet: BetEntry[]) => void;
+  bets?: BetSlipEntry[];
   clearBets: () => void;
-  placeBetsInBetSlip: () => void;
-  placeBetImmediately: (bet: BetEntry) => Promise<void>;
+  errors?: string[];
   forceNewSigner: (signer: Signer) => void;
+  hashes?: string[];
+  placeBetImmediately: (bet: BetEntry) => Promise<void>;
+  placeBetsInBetSlip: () => void;
+  removeBet: (id: number) => void;
+  txLoading: boolean;
 };
 
 export type TokenContextType = {

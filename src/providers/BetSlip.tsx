@@ -21,13 +21,14 @@ dayjs.extend(isYesterday);
 const LOCAL_STORAGE_KEY = "horse.link-bet-slip";
 
 export const BetSlipContext = createContext<BetSlipContextType>({
-  txLoading: false,
   addBet: () => {},
-  removeBet: () => {},
+  addBets: () => {},
   clearBets: () => {},
-  placeBetsInBetSlip: () => {},
+  forceNewSigner: () => {},
   placeBetImmediately: async () => {},
-  forceNewSigner: () => {}
+  placeBetsInBetSlip: () => {},
+  removeBet: () => {},
+  txLoading: false
 });
 
 export const useBetSlipContext = () => useContext(BetSlipContext);
@@ -105,6 +106,39 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
           id: i
         }))
       );
+    },
+    [bets]
+  );
+
+  const addBets = useCallback(
+    (bet: BetEntry[]) => {
+      // if there are no bets, set the bets state to the new bet, id 0
+      if (!bets?.length) {
+        bet.forEach(b => {
+          setBets([
+            {
+              ...b,
+              id: 0,
+              timestamp: Math.floor(Date.now() / 1000)
+            }
+          ]);
+        });
+
+        return;
+      }
+      
+      // create a new reference to bets and add timestamp
+      const oldBets = [...bets];
+
+      // and append the new bet, id is the index
+      bet.forEach(b => {
+        setBets(
+          [...oldBets, b].map((bet, i) => ({
+            ...bet,
+            id: i
+          }))
+        );
+      });
     },
     [bets]
   );
