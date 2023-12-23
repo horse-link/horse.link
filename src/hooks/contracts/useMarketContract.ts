@@ -401,8 +401,6 @@ export const useMarketContract = () => {
       odds
     );
 
-    console.log("payout", payout.toString());
-
     return payout;
   };
 

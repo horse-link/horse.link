@@ -15,7 +15,7 @@ import { useTokenContext } from "../../providers/Token";
 import { BetEntry, BetSlipEntry } from "../../types/context";
 import { Button } from "../Buttons";
 import classNames from "classnames";
-import { formatting, Race, Runner } from "horselink-sdk";
+import { formatting, Race, Runner, VaultInfo } from "horselink-sdk";
 
 type Props = {
   runner?: Runner;
@@ -300,15 +300,17 @@ export const BetModal: React.FC<Props> = ({
         await placeBetImmediately(winBetSlip);
       } else {
         if (!placeBetSlip.wager.isZero()) {
+          console.log("adding place bet");
           addBet(placeBetSlip);
         }
 
         if (!winBetSlip.wager.isZero()) {
+          console.log("adding win bet");
           addBet(winBetSlip);
         }
       }
     },
-    [market, backWin, winWagerAmount, race, raceNumber]
+    [market, backPlace, backWin, placeWagerAmount, winWagerAmount, race, raceNumber]
   );
 
   const isWagerNegative = winWagerAmount ? +winWagerAmount < 0 : false;
@@ -327,7 +329,8 @@ export const BetModal: React.FC<Props> = ({
       !bets ||
       !bets.length ||
       !market ||
-      !winWagerAmount ||
+      // !winWagerAmount ||
+      !hasBet() ||
       !config ||
       !userBalance
     )
@@ -340,7 +343,10 @@ export const BetModal: React.FC<Props> = ({
 
     // get sum of all wagers
     const marketSum = betMarkets.reduce((sum, cur) => {
-      const betVault = utils.config.getVaultFromMarket(cur.market, config);
+      const betVault: VaultInfo = utils.config.getVaultFromMarket(
+        cur.market,
+        config
+      );
       if (!betVault)
         throw new Error(
           `Could not find vault associated with market ${cur.market.address}`
@@ -350,6 +356,7 @@ export const BetModal: React.FC<Props> = ({
         cur.wager,
         betVault.asset.decimals
       );
+
       const bn = ethers.utils.parseUnits(formatted, betVault.asset.decimals);
 
       return sum.add(bn);
@@ -361,13 +368,20 @@ export const BetModal: React.FC<Props> = ({
         `Could not find vault associated with market ${market.address}`
       );
 
-    const userWagerBn = ethers.utils.parseUnits(
-      winWagerAmount.toString(),
-      marketVault.asset.decimals
+    const placeWager = ethers.utils.parseUnits(
+      placeWagerAmount || "0",
+      userBalance.decimals
+      // marketVault.asset.decimals
     );
 
-    return marketSum.add(userWagerBn).gt(userBalance.value);
-  }, [bets, winWagerAmount, market, config, userBalance]);
+    const winWager = ethers.utils.parseUnits(
+      winWagerAmount || "0",
+      userBalance.decimals
+      // marketVault.asset.decimals
+    );
+
+    return marketSum.add(winWager).add(placeWager).gt(userBalance.value);
+  }, [bets, placeWagerAmount, winWagerAmount, market, config, userBalance]);
 
   const isScratched = runner
     ? utils.races.isScratchedRunner(runner)
