@@ -394,14 +394,15 @@ export const useMarketContract = () => {
       constants.contracts.MARKET_ODDS_DECIMALS
     );
 
-    console.log("odds", odds.toString());
-
     const payout: BigNumber = await marketContract.getPotentialPayout(
       formatting.formatBytes16String(back.proposition_id),
       formatting.formatBytes16String(back.market_id),
       wager,
       odds
     );
+
+    console.log("payout", payout.toString());
+
     return payout;
   };
 

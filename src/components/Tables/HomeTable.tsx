@@ -28,7 +28,7 @@ export const HomeTable: React.FC<Props> = ({ meets }) => {
     return () => clearInterval(interval);
   }, []);
 
-  const totalRaces = meets
+  const totalRaces: number = meets
     ? meets.reduce(
         (prev, cur) => (cur.races.length > prev ? cur.races.length : prev),
         0

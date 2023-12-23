@@ -82,7 +82,6 @@ export const BetModal: React.FC<Props> = ({
       close: runner.close,
       end: runner.end,
       odds: runner.win,
-      place: runner.place,
       proposition_id: runner.proposition_id,
       signature: runner.signature
     };
@@ -91,20 +90,21 @@ export const BetModal: React.FC<Props> = ({
   const backPlace = useMemo<Back>(() => {
     if (!runner) return utils.mocks.getMockBack();
 
+    console.log("runner " + runner);
+
     return {
       nonce: runner.nonce,
       market_id: runner.market_id,
       close: runner.close,
       end: runner.end,
       odds: runner.place,
-      place: runner.place,
       proposition_id: runner.proposition_id,
       signature: runner.signature
     };
   }, [runner]);
 
   useEffect(() => {
-    if (!market || !signer || !backWin || !winWagerAmount || !placeWagerAmount)
+    if (!market || !signer || !backWin || !winWagerAmount)
       return setPayout(ethers.constants.Zero);
 
     (async () => {
@@ -112,7 +112,7 @@ export const BetModal: React.FC<Props> = ({
       let calculatedPayout = ethers.constants.Zero;
 
       const placeWager = ethers.utils.parseUnits(
-        placeWagerAmount,
+        placeWagerAmount || "0",
         userBalance.decimals
       );
 
@@ -121,8 +121,7 @@ export const BetModal: React.FC<Props> = ({
         userBalance.decimals
       );
 
-      console.log("wager " + winWager);
-
+      // do in parallel
       if (!winWager.isZero()) {
         const payout = await getPotentialPayout(
           market,
@@ -131,22 +130,24 @@ export const BetModal: React.FC<Props> = ({
           signer
         );
 
-        calculatedPayout.add(payout);
+        calculatedPayout = calculatedPayout.add(payout);
       }
 
+      // do in parallel
       if (!placeWager.isZero()) {
         const payout = await getPotentialPayout(
           market,
-          winWager,
-          backWin,
+          placeWager,
+          backPlace,
           signer
         );
 
-        calculatedPayout.add(payout);
+        calculatedPayout = calculatedPayout.add(payout);
       }
 
       console.log("calculatedPayout " + calculatedPayout);
-      setPayout(calculatedPayout);
+
+      if (!calculatedPayout.isZero()) setPayout(calculatedPayout);
     })();
   }, [
     market,
