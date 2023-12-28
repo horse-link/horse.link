@@ -60,7 +60,7 @@ export const BetModal: React.FC<Props> = ({
   const { number: raceNumber } = useParams();
   const { currentToken } = useTokenContext();
 
-  // If there is a win or place bet. zero values dont count
+  // If there is a win or place bet. zero values don't count
   const hasBet = (): Boolean => {
     const winWager = ethers.utils.parseUnits(
       winWagerAmount || "0",
@@ -91,14 +91,16 @@ export const BetModal: React.FC<Props> = ({
     // remove this
     if (!runner) return utils.mocks.getMockBack();
 
+    const win: Back = runner.backs.find(back => back.type === "win")!;
+
     return {
-      nonce: runner.nonce,
-      market_id: runner.market_id,
-      close: runner.close,
-      end: runner.end,
-      odds: runner.win,
-      proposition_id: runner.proposition_id,
-      signature: runner.signature
+      nonce: win.nonce,
+      market_id: win.market_id,
+      close: win.close,
+      end: win.end,
+      odds: win.odds,
+      proposition_id: win.proposition_id,
+      signature: win.signature
     };
   }, [runner]);
 
@@ -106,13 +108,15 @@ export const BetModal: React.FC<Props> = ({
     // remove this
     if (!runner) return utils.mocks.getMockBack();
 
+    const place: Back = runner.backs.find(back => back.type === "place")!;
+
     return {
-      nonce: runner.nonce,
-      market_id: runner.market_id,
-      close: runner.close,
-      end: runner.end,
-      odds: runner.place,
-      proposition_id: runner.proposition_id,
+      nonce: place.nonce,
+      market_id: place.market_id,
+      close: place.close,
+      end: place.end,
+      odds: place.odds,
+      proposition_id: place.proposition_id, //`${runner.market_id}W${runner.number.toString().padStart(2, "0")}`,
       signature: runner.signature
     };
   }, [runner]);
@@ -310,7 +314,15 @@ export const BetModal: React.FC<Props> = ({
         }
       }
     },
-    [market, backPlace, backWin, placeWagerAmount, winWagerAmount, race, raceNumber]
+    [
+      market,
+      backPlace,
+      backWin,
+      placeWagerAmount,
+      winWagerAmount,
+      race,
+      raceNumber
+    ]
   );
 
   const isWagerNegative = winWagerAmount ? +winWagerAmount < 0 : false;
