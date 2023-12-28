@@ -1,5 +1,4 @@
-import { Meet } from "../types/meets";
-import { Race, RaceStatus, RaceWithResults, Runner } from "horselink-sdk";
+import { Meet, Race, RaceStatus, RaceWithResults, Runner } from "horselink-sdk";
 
 import utils from "../utils";
 import dayjs, { Dayjs } from "dayjs";
@@ -14,7 +13,7 @@ export const createRacingLink = (race: Race, meet: Meet) =>
 
 export const createCellText = (race: RaceWithResults, now: Dayjs) => {
   const isAfterClosingTime = now.isAfter(dayjs(race.close));
-  
+
   const timeString = utils.formatting.formatTimeToHMSFromNow(
     now,
     race.start!,

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useAccount, useSigner } from "wagmi";
-import { VaultInfo } from "../../types/config";
 import { BaseModal } from ".";
 import { Loader } from "../";
 import { ethers } from "ethers";
@@ -11,7 +10,7 @@ import useRefetch from "../../hooks/useRefetch";
 import { UserBalance } from "../../types/users";
 import { Button } from "../Buttons";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
-import { formatting } from "horselink-sdk";
+import { formatting, VaultInfo } from "horselink-sdk";
 
 type Props = {
   isModalOpen: boolean;

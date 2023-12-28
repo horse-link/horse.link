@@ -1,5 +1,5 @@
 import { BigNumber } from "ethers";
-import { VaultInfo } from "./config";
+import { VaultInfo } from "horselink-sdk";
 import { Hash } from "@wagmi/core";
 import { Address } from "wagmi";
 

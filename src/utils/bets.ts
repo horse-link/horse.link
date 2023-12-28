@@ -35,9 +35,8 @@ export const getBetStatus = (
   // if there is a winning proposition id, race is resulted
   if (signedBetData.winningPropositionId) {
     return "RESULTED";
-  } else {
-    return "PENDING";
   }
+  return "PENDING";
 };
 
 export const getBetHistory = (

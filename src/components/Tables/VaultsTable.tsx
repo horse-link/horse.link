@@ -8,11 +8,10 @@ import { useApi } from "../../providers/Api";
 import { useVaultContract } from "../../hooks/contracts";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
 import { ethers } from "ethers";
-import { VaultInfo } from "../../types/config";
 import classNames from "classnames";
 import { Button } from "../Buttons";
 import { Loader } from "../Loader";
-import { formatting } from "horselink-sdk";
+import { formatting, VaultInfo } from "horselink-sdk";
 
 type Props = {
   setIsModalOpen: (state: VaultModalState) => void;

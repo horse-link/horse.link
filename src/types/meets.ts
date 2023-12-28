@@ -1,21 +1,21 @@
-// import dayjs from "dayjs";
+import { BigNumber } from "ethers";
 import { EcSignature } from "./general";
-import { Race, RaceInfo } from "horselink-sdk";
+import { RaceInfo } from "horselink-sdk";
 
-export type Meet = {
-  id: string;
-  name: string;
-  location: string;
-  date: string;
-  races: Race[];
-};
+// export type Meet = {
+//   id: string;
+//   name: string;
+//   location: string;
+//   date: string;
+//   races: Race[];
+// };
 
-export type MeetResponse = {
-  nonce: string;
-  created: number;
-  expires: number;
-  meetings: Meet[];
-};
+// export type MeetResponse = {
+//   nonce: string;
+//   created: number;
+//   expires: number;
+//   meetings: Meet[];
+// };
 
 export type MeetInfo = {
   meetingName: string;
@@ -34,7 +34,7 @@ export type Back = {
   market_id: string;
   close: number;
   end: number;
-  odds: number;
+  odds: number; // win or place
   proposition_id: string;
   signature: EcSignature;
 };
@@ -42,5 +42,5 @@ export type Back = {
 // The parameters for a call to back() on the Market contract.
 // Same as Back but with a wager attribute
 export type BackParams = Back & {
-  wager: string;
+  wager: BigNumber;
 };

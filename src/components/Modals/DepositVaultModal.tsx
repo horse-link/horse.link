@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSigner } from "wagmi";
-import { VaultInfo } from "../../types/config";
+import { VaultInfo } from "horselink-sdk";
 import { BaseModal } from ".";
 import { ethers } from "ethers";
 import { Web3ErrorHandler, Web3SuccessHandler } from "../Web3Handlers";

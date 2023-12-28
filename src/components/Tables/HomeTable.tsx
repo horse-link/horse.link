@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Meet } from "../../types/meets";
 import { Table } from "./Table";
 import { Link } from "react-router-dom";
 import utils from "../../utils";
@@ -7,7 +6,7 @@ import dayjs from "dayjs";
 import constants from "../../constants";
 import utc from "dayjs/plugin/utc";
 import classNames from "classnames";
-import { RaceStatus } from "horselink-sdk";
+import { Meet, RaceStatus } from "horselink-sdk";
 import { Loader } from "../Loader";
 import { Disclosure } from "@headlessui/react";
 import { HiChevronUp, HiChevronDown } from "react-icons/hi";
@@ -29,7 +28,7 @@ export const HomeTable: React.FC<Props> = ({ meets }) => {
     return () => clearInterval(interval);
   }, []);
 
-  const totalRaces = meets
+  const totalRaces: number = meets
     ? meets.reduce(
         (prev, cur) => (cur.races.length > prev ? cur.races.length : prev),
         0
@@ -84,9 +83,11 @@ export const HomeTable: React.FC<Props> = ({ meets }) => {
                       race.status.toString() === RaceStatus.CLOSED ||
                       text === "CLSD",
                     "hover:!bg-hl-primary hover:!text-hl-secondary": ![
-                      RaceStatus.CLOSED,
-                      RaceStatus.PAYING
-                    ].includes(race.status.toString()),
+                      // RaceStatus.CLOSED,
+                      // RaceStatus.PAYING
+                      "Closed",
+                      "Paying"
+                    ].includes(race.status),
                     "!text-hl-outstanding":
                       text !== "CLSD" &&
                       Math.abs(dayjs(race.start).diff(time, "hours")) < 1 &&

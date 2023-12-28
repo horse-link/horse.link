@@ -14,6 +14,27 @@ import { Button } from "./Buttons";
 import { Loader } from "./Loader";
 import { formatting } from "horselink-sdk";
 
+const getBetType = (propositionId: string): string => {
+  switch (name) {
+    case "Win":
+      return "W";
+    case "Place":
+      return "P";
+    case "Show":
+      return "S";
+    case "Exacta":
+      return "E";
+    case "Quinella":
+      return "Q";
+    case "Trifecta":
+      return "T";
+    case "First 4":
+      return "F4";
+    default:
+      return "";
+  }
+}
+
 export const BetSlip: React.FC = () => {
   const config = useConfig();
   const { data: signer } = useSigner();
