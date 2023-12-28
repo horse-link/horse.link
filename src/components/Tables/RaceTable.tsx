@@ -185,8 +185,8 @@ export const RaceTable: React.FC<Props> = ({
               </th>
             </thead>
             <tbody className="flex flex-col divide-y divide-hl-border px-4">
-              {runners?.map((runner, i) =>
-                mapDesktopRunner(runner, i)
+              {runners?.map(
+                (runner, i) => mapDesktopRunner(runner, i)
                 // <tr
                 //   className={classNames("flex w-full justify-evenly", {
                 //     "cursor-pointer hover:bg-hl-primary hover:!text-hl-secondary":

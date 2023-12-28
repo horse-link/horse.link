@@ -42,7 +42,8 @@ describe("Race utils tests", () => {
       },
       status: "Scratched",
       percentage: 0,
-      backed: 0
+      backed: 0,
+      backs: []
     };
 
     const result = isScratchedRunner(mockRunner);

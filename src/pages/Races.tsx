@@ -6,7 +6,6 @@ import { BetTable, RaceTable } from "../components/Tables";
 import { BetModal, SettleBetModal } from "../components/Modals";
 import { Loader, PageLayout } from "../components";
 import { useSubgraphBets } from "../hooks/subgraph";
-import { makeMarketId } from "../utils/markets";
 import { useConfig } from "../providers/Config";
 import constants from "../constants";
 import dayjs from "dayjs";
@@ -15,7 +14,7 @@ import { HiChevronUp, HiChevronDown } from "react-icons/hi";
 import { Disclosure } from "@headlessui/react";
 import { useApi } from "../providers/Api";
 import { BetHistoryResponse2 } from "../types/bets";
-import { Runner, SignedMeetingsResponse } from "horselink-sdk";
+import { Runner, SignedMeetingsResponse, markets } from "horselink-sdk";
 
 const Races: React.FC = () => {
   const params = useParams();
@@ -45,12 +44,31 @@ const Races: React.FC = () => {
   //   return { config, meetDate };
   // }, []);
 
-  const marketId = makeMarketId(new Date(), track, raceNumber.toString());
-  const { totalBetsOnPropositions } = useSubgraphBets("ALL_BETS", marketId);
+  const winMarketId = markets.makeMarketId(
+    new Date(),
+    track,
+    raceNumber.toString(),
+    "W"
+  );
 
-  const betHistory = useBetsData({
-    marketId
+  const placeMarketId = markets.makeMarketId(
+    new Date(),
+    track,
+    raceNumber.toString(),
+    "P"
+  );
+
+  const { totalBetsOnPropositions } = useSubgraphBets("ALL_BETS", winMarketId);
+
+  const winBetHistory = useBetsData({
+    marketId: winMarketId
   });
+
+  const placeBetHistory = useBetsData({
+    marketId: placeMarketId
+  });
+
+  const betHistory = winBetHistory?.concat(placeBetHistory || []);
 
   // TODO: FETCH FROM API
   const margin = 115;

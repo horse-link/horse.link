@@ -126,7 +126,7 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
 
         return;
       }
-      
+
       // create a new reference to bets and add timestamp
       const oldBets = [...bets];
 
@@ -257,6 +257,7 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
       bets,
       errors,
       addBet,
+      addBets,
       removeBet,
       clearBets,
       placeBetsInBetSlip,
@@ -269,6 +270,7 @@ export const BetSlipContextProvider: React.FC<{ children: ReactNode }> = ({
       bets,
       errors,
       addBet,
+      addBets,
       removeBet,
       clearBets,
       placeBetsInBetSlip,
