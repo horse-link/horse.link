@@ -19,9 +19,9 @@ const UnsupportedNetwork: React.FC = () => {
   return (
     <PageLayout>
       <p className="w-full rounded-lg bg-indigo-600 p-6 text-center text-2xl font-bold text-white lg:p-4">
-        Unsupported network selected
+        Unsupported network selected.
         <br />
-        We recommend that you switch to the Arbitrum network
+        We recommend that you switch to the Arbitrum network.
       </p>
     </PageLayout>
   );

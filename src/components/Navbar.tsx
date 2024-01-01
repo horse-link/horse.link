@@ -3,17 +3,17 @@ import classNames from "classnames";
 import { Link, useLocation } from "react-router-dom";
 import { NavbarRouting } from "../Routing";
 import { useNetwork } from "wagmi";
-import { goerli } from "@wagmi/chains";
+import { sepolia } from "@wagmi/chains";
 
 export const Navbar: React.FC = () => {
   const { pathname } = useLocation();
   const currentPath = pathname.split("/", 2).join("/");
 
   const { chain } = useNetwork();
-  const isGoerli = chain?.id === goerli.id;
+  const isTestnet = chain?.id === sepolia.id;
 
   const Routes = NavbarRouting.filter(r => {
-    if (!isGoerli) {
+    if (!isTestnet) {
       const withoutLeaderboard = !r.path.includes("leaderboard");
       const withoutFaucet = !r.path.includes("faucet");
 

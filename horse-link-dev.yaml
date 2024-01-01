@@ -10,7 +10,7 @@ region: syd
 services:
   - dockerfile_path: Dockerfile
     envs:
-      - key: PRIVATE_KEY_GOERLI
+      - key: PRIVATE_KEY_SEPOLIA
         scope: RUN_AND_BUILD_TIME
         type: SECRET
         value: EV[1:1Sv2T++U14jMxMl6GW84rBbuE3QJ0qKW:asXIsQ4CXUvZclUEW3xQmPl4y2YlMBwoOApOvtxMHc/3r9ZeStdjuctgp+a+XVr9dZ7qXyGpvEEHsmX0+jvEs2o1TmgaxU2h8zvkdlfsABXAgg==]
@@ -22,7 +22,7 @@ services:
         scope: RUN_AND_BUILD_TIME
         type: SECRET
         value: EV[1:LQNBNV533OCKc7vCbPyXcN1qpBoCmjFC:v93fN1X+2WsZTX8AUoM7blUmbhYHHkE1NlvVlp5IfnUmAOXqtxN4P6D2Rvm4qoZ7c2dwZWsXX7OFB0reNzn6zpYrGyXE6z4pShuBiWZSv+qtQrFmDXY=]
-      - key: PROVIDER_URL_GOERLI
+      - key: PROVIDER_URL_SEPOLIA
         scope: RUN_AND_BUILD_TIME
         type: SECRET
         value: EV[1:0alTb4wLbCxuyzVOlWB2/2RgEXFkOZzZ:pMguNKex+IgSZpTcgB+DNJDMXZ63Lra0VF+wwzIqP3pGzxBYfn0fKadnyAfeX4sqThyzh+6TY/lYTjwJHcba1w/HDALDYwLP/GaRSg==]

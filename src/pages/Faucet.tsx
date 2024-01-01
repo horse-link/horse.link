@@ -81,7 +81,7 @@ const Faucet: React.FC = () => {
       )}
       <div className="w-full border border-hl-border p-6 text-hl-primary">
         <h2 className="mb-3">
-          Claim tokens on the Goerli Testnet and start punting!
+          Claim tokens on the Sepolia Testnet and start punting!
         </h2>
         <p className="my-2 text-xs">
           You can find the faucet at{" "}

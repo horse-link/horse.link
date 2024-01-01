@@ -68,7 +68,9 @@ const Races: React.FC = () => {
     marketId: placeMarketId
   });
 
-  const betHistory = winBetHistory?.concat(placeBetHistory || []);
+  console.log("placeBetHistory", placeBetHistory);
+
+  const betHistory = winBetHistory; // ?.concat(placeBetHistory || []);
 
   // TODO: FETCH FROM API
   const margin = 115;
