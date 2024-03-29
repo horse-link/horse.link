@@ -2,7 +2,7 @@ import React from "react";
 import { TotalBetsOnPropositions } from "../../types/bets";
 import classNames from "classnames";
 import { Loader } from "../Loader";
-import { Runner, RunnerStatus, formatting } from "horselink-sdk";
+import { Back, Runner, RunnerStatus, formatting } from "horselink-sdk";
 
 type Props = {
   runners?: Array<Runner>;
@@ -35,6 +35,13 @@ export const RaceTable: React.FC<Props> = ({
       </div>
     ]
   ];
+
+  const getOdds = (backs: Back[], type: string): string => {
+    const back = backs.find(back => back.type === type);
+    if (!back) return "0.00";
+
+    return back.odds.toFixed(2);
+  };
 
   const mapDesktopRunner = (runner: Runner, i: number) => {
     const style = classNames("w-full text-left py-4", {
@@ -82,15 +89,13 @@ export const RaceTable: React.FC<Props> = ({
         {/* win */}
         <td className={classNames("block w-full")} key={`table-row-data-${i}`}>
           <div className={style} onClick={() => onClickRunner(runner)}>
-            {runner.backs.length &&
-              formatting.formatToTwoDecimals(runner.backs[0].odds.toString())}
+            {getOdds(runner.backs, "win")}
           </div>
         </td>
         {/* place */}
         <td className={classNames("block w-full")} key={`table-row-data-${i}`}>
           <div className={style} onClick={() => onClickRunner(runner)}>
-            {runner.backs.length > 0 &&
-              formatting.formatToTwoDecimals(runner.backs[1].odds.toString())}
+            {getOdds(runner.backs, "place")}
           </div>
         </td>
         {/* backed */}

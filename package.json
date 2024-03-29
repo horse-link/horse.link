@@ -1,6 +1,6 @@
 {
   "name": "horse.link",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "license": "MIT",
   "type": "module",
@@ -39,7 +39,7 @@
     "eth-gas-reporter": "^0.2.25",
     "ethers": "^5.7.2",
     "graphql": "^16.6.0",
-    "horselink-sdk": "^1.0.47",
+    "horselink-sdk": "^1.0.51",
     "moment": "^2.29.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -97,6 +97,6 @@
     "not op_mini all"
   ],
   "engines": {
-    "node": "16.x"
+    "node": "18.19"
   }
 }
