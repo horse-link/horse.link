@@ -63,29 +63,25 @@ Our own market odds can be found at https://horse.link/api. These requests are s
 
 ### Arbitrum
 
-Owner: `0x1Ab4C6d9e25Fc65C917aFBEfB4E963C400Fb9814`  
-Horse Link Token `0x06d0164b1bFb040D667a82C64De870dDeac38b86`  
-USDC Vault: `0x58FEa77B43aDC70d8f077598320aF6BE87135768`  
-USDC Market: `0xe8aF6fa3cD01f1F2e460aBB69e054B0eF9e2d07A`  
-fxAUD Vault: `0xb9943E1Eef2AF75a058ABa664846B6F80BDE9EEd`  
-fxAUD Market: `0xDeEE4529E2825bae459e27866f911d188e6b54A0`  
-fxUSD Vault: `0x1ACdD5D0aF0FFd42616ECC1AFf03Ba23824c8CA3`  
-fxUSD Market: `0xb9943E1Eef2AF75a058ABa664846B6F80BDE9EEd`  
-Registry: `0x607105259Bf6c66b0501c8BCD9D574C96088869d`  
+Owner: `0x0212132Ee2e40d7D525e948CBd467bAfa370EF4C`
+Horse Link Token `0x06d0164b1bFb040D667a82C64De870dDeac38b86`
+USDC Vault: `0xd66F756b39AB7A9Ad1b2CfB85846226AC12475ae`
+USDC Market: `0x4141F107BCEca259A8aDf97fF22Bb15B84EdC0De`
+fxAUD Vault: `0xb9943E1Eef2AF75a058ABa664846B6F80BDE9EEd`
+fxAUD Market: `0xDeEE4529E2825bae459e27866f911d188e6b54A0`
+fxUSD Vault: `0x1ACdD5D0aF0FFd42616ECC1AFf03Ba23824c8CA3`
+fxUSD Market: `0xb9943E1Eef2AF75a058ABa664846B6F80BDE9EEd`
+Registry: `0x607105259Bf6c66b0501c8BCD9D574C96088869d`
 Market Oracle: `0x14478dECfb070329948b7Ed16878F84048680bF9`
 
-### Goerli
+### Sepolia
 
 Owner: `0x1Ab4C6d9e25Fc65C917aFBEfB4E963C400Fb9814`  
-Horse Link Token `0x5e5fB4d58121dd3e50CB9c6aDAFa82b678e8b545`  
-Mock USDT : `0xcF005F728e0c1998373cDB5012eadE8ce604ceff`  
-Mock DAI: `0x6B54366642BFE522D647c77C422f1e6E11F02356`  
-USDT Vault: `0xe2de33276983F28332A755c5D2Db62380a88e912`  
-USDT Market: `0x44e4cA9f8939142971D5DF043fbdD5Fa6fA1273e`  
-DAI Vault: `0xf6A36eCd0b09C680C2E6AC3DaE3c7C397D9fBe10`  
-DAI Market: `0xCaEE99685Ff8cf80e605cb0E5C073056B2cf642d`  
-Registry: `0xCFa36F3692b19FF9472aEc18f7dcf5EB0A29A633`  
-Market Oracle: `0x5b559E0E44aeB2bccfd82CACF9d877EbDd28F116`
+Horse Link Token ` Mock USDT :`  
+Mock DAI: ` USDT Vault:`  
+USDT Market: ` DAI Vault:`  
+DAI Market: ` Registry:`  
+Market Oracle: ``
 
 ### Mainnet
 
@@ -93,10 +89,10 @@ Horse Link Token `0xfdc066DF7d7A188786A1580a9DDFbfbE716c31d5`
 
 ## Notes
 
-`npx hardhat verify --network goerli 0xd90AE997C32EdE8feCe39694460543868Da0d0D1 0xd87E8BF1327f10685c9283859A4Eb022ADbe03F9`  
-`npx truffle run verify Vault@0x21D068720BDBc7EdC49Ce8D1b1E1fb2d6c3526eb --network goerli`  
-`npx truffle run verify Vault@0x6F47f0864ab7a02f9E7866d2bc8aC0BCf3C4924E --network goerli`  
-`npx truffle run verify Registry --forceConstructorArgs string: --network goerli`
+`npx hardhat verify --network sepolia 0xd90AE997C32EdE8feCe39694460543868Da0d0D1 0xd87E8BF1327f10685c9283859A4Eb022ADbe03F9`  
+`npx truffle run verify Vault@0x21D068720BDBc7EdC49Ce8D1b1E1fb2d6c3526eb --network sepolia`  
+`npx truffle run verify Vault@0x6F47f0864ab7a02f9E7866d2bc8aC0BCf3C4924E --network sepolia`  
+`npx truffle run verify Registry --forceConstructorArgs string: --network sepolia`
 
 ## PGP Public Key
 

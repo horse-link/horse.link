@@ -1,11 +1,8 @@
 import React from "react";
 import { TotalBetsOnPropositions } from "../../types/bets";
-import { Runner, RunnerStatus } from "../../types/meets";
-import { Table } from "./Table";
 import classNames from "classnames";
-import { ethers } from "ethers";
 import { Loader } from "../Loader";
-import { formatToTwoDecimals } from "horselink-sdk";
+import { Back, Runner, RunnerStatus, formatting } from "horselink-sdk";
 
 type Props = {
   runners?: Array<Runner>;
@@ -30,91 +27,6 @@ export const RaceTable: React.FC<Props> = ({
     setIsModalOpen(true);
   };
 
-  const headers = [
-    "#",
-    "Runner",
-    "Rider",
-    "Form",
-    "Weight",
-    "Win",
-    "Backed",
-    "Percentage"
-  ].map((text, i) => (
-    <div
-      key={`racetable-${text}-${i}`}
-      className={classNames(
-        "w-full py-4 text-left font-semibold text-hl-primary",
-        {
-          "!text-hl-secondary": [1, 5, 7].includes(i)
-        }
-      )}
-    >
-      {text}
-    </div>
-  ));
-
-  const runnerMapping = (runner: Runner, i: number) => {
-    const formattedBacked = runner
-      ? ethers.utils.formatEther((+runner?.backed).toString())
-      : "0.00";
-
-    const formattedPercentage = runner ? runner?.percentage : "0.00";
-
-    const style = classNames("w-full text-left py-4", {
-      "line-through": scratchingArray.includes(runner.status)
-    });
-
-    return [
-      ...(
-        [
-          "number",
-          "name",
-          "rider",
-          "last5Starts",
-          "handicapWeight",
-          "odds"
-        ] as Array<keyof typeof runner>
-      ).map((key, i) => (
-        <div
-          className={classNames(style, {
-            "text-hl-secondary": [1, 5].includes(i)
-          })}
-          key={`runnertable-${runner.proposition_id}-${key.toString()}-${i}`}
-          onClick={() => onClickRunner(runner)}
-        >
-          {key === "odds" && runner && runner[key]
-            ? formatToTwoDecimals(runner[key].toString())
-            : runner[key]?.toString()}
-        </div>
-      )),
-      <div
-        className={style}
-        key={`runnertable-${runner.proposition_id}-${i}`}
-        onClick={() => onClickRunner(runner)}
-      >
-        {formatToTwoDecimals(formattedBacked)}
-      </div>,
-      <div
-        className={classNames(style, "text-hl-secondary")}
-        key={`runnertable-${runner.proposition_id}-${i}`}
-        onClick={() => onClickRunner(runner)}
-      >
-        {formattedPercentage}
-      </div>
-    ];
-  };
-
-  const rows = runners
-    ? [
-        ...runners
-          .filter(r => !scratchingArray.includes(r.status))
-          .map(runnerMapping),
-        ...runners
-          .filter(r => scratchingArray.includes(r.status))
-          .map(runnerMapping)
-      ]
-    : [];
-
   const loading = [
     [
       <div key="racetable-loading-blank" />,
@@ -123,6 +35,78 @@ export const RaceTable: React.FC<Props> = ({
       </div>
     ]
   ];
+
+  const getOdds = (backs: Back[], type: string): string => {
+    const back = backs.find(back => back.type === type);
+    if (!back) return "0.00";
+
+    return back.odds.toFixed(2);
+  };
+
+  const mapDesktopRunner = (runner: Runner, i: number) => {
+    const style = classNames("w-full text-left py-4", {
+      "line-through": scratchingArray.includes(runner.status)
+    });
+
+    return (
+      <tr
+        className={classNames("flex w-full justify-evenly", {
+          "cursor-pointer hover:bg-hl-primary hover:!text-hl-secondary": !closed
+        })}
+        key={`table-rows-${i}`}
+      >
+        <td className={classNames("block w-full")} key={`table-row-data-${i}`}>
+          <div
+            className={style}
+            key={`runnertable-${runner.proposition_id}-${i}`}
+            onClick={() => onClickRunner(runner)}
+          >
+            {i}
+          </div>
+        </td>
+        {/* runner name */}
+        <td className={classNames("block w-full")} key={`table-row-data-${i}`}>
+          <div
+            className={classNames(style, "text-hl-secondary")}
+            key={`runnertable-${runner.proposition_id}-${i}`}
+            onClick={() => onClickRunner(runner)}
+          >
+            {runner.name}
+          </div>
+        </td>
+        {/* rider */}
+        <td className={classNames("block w-full")} key={`table-row-data-${i}`}>
+          <div className={style} onClick={() => onClickRunner(runner)}>
+            {runner.rider}
+          </div>
+        </td>
+        {/* form */}
+        <td className={classNames("block w-full")} key={`table-row-data-${i}`}>
+          <div className={style} onClick={() => onClickRunner(runner)}>
+            {runner.last5Starts}
+          </div>
+        </td>
+        {/* win */}
+        <td className={classNames("block w-full")} key={`table-row-data-${i}`}>
+          <div className={style} onClick={() => onClickRunner(runner)}>
+            {getOdds(runner.backs, "win")}
+          </div>
+        </td>
+        {/* place */}
+        <td className={classNames("block w-full")} key={`table-row-data-${i}`}>
+          <div className={style} onClick={() => onClickRunner(runner)}>
+            {getOdds(runner.backs, "place")}
+          </div>
+        </td>
+        {/* backed */}
+        <td className={classNames("block w-full")} key={`table-row-data-${i}`}>
+          <div className={style} onClick={() => onClickRunner(runner)}>
+            0
+          </div>
+        </td>
+      </tr>
+    );
+  };
 
   const mapMobileRunner = (runner: Runner) => (
     <div
@@ -155,7 +139,7 @@ export const RaceTable: React.FC<Props> = ({
         </div>
       </div>
       <p className="w-auto min-w-[70px] font-basement text-sm text-hl-secondary">
-        {formatToTwoDecimals(runner.odds.toString())}
+        {formatting.formatToTwoDecimals(runner.win.toString())}
       </p>
     </div>
   );
@@ -164,15 +148,154 @@ export const RaceTable: React.FC<Props> = ({
     <React.Fragment>
       {/* non-mobile */}
       <div className="hidden lg:block">
-        <Table
-          headers={headers}
-          headerStyles="font-basement tracking-wider"
-          rows={!runners?.length ? loading : rows}
-          rowStyles={classNames({
-            "hover:bg-hl-primary cursor-pointer hover:!text-hl-secondary":
-              !closed
-          })}
-        />
+        {!runners?.length ? (
+          loading
+        ) : (
+          <table className="block w-full border border-hl-border">
+            <thead className="flex justify-evenly bg-hl-background-secondary px-4">
+              <th>
+                <div className="w-full py-4 text-left font-semibold text-hl-primary">
+                  #
+                </div>
+              </th>
+              <th>
+                <div className="w-full py-4 text-left font-semibold text-hl-primary !text-hl-secondary">
+                  Runner
+                </div>
+              </th>
+              <th>
+                <div className="w-full py-4 text-left font-semibold text-hl-primary">
+                  Rider
+                </div>
+              </th>
+              <th>
+                <div className="w-full py-4 text-left font-semibold text-hl-primary">
+                  Form
+                </div>
+              </th>
+              <th>
+                <div className="w-full py-4 text-left font-semibold text-hl-primary !text-hl-secondary">
+                  Win
+                </div>
+              </th>
+              <th>
+                <div className="w-full py-4 text-left font-semibold text-hl-primary !text-hl-secondary">
+                  Place
+                </div>
+              </th>
+              <th>
+                <div className="w-full py-4 text-left font-semibold text-hl-primary">
+                  Backed
+                </div>
+              </th>
+            </thead>
+            <tbody className="flex flex-col divide-y divide-hl-border px-4">
+              {runners?.map(
+                (runner, i) => mapDesktopRunner(runner, i)
+                // <tr
+                //   className={classNames("flex w-full justify-evenly", {
+                //     "cursor-pointer hover:bg-hl-primary hover:!text-hl-secondary":
+                //       !closed
+                //   })}
+                //   key={`table-rows-${i}`}
+                // >
+                //   <td
+                //     className={classNames("block w-full")}
+                //     key={`table-row-data-${i}`}
+                //   >
+                //     <div
+                //       className={classNames("w-full py-4 text-left")}
+                //       key={`runnertable-${runner.proposition_id}-${i}`}
+                //       onClick={() => onClickRunner(runner)}
+                //     >
+                //       {i}
+                //     </div>
+                //   </td>
+                //   {/* runner name */}
+                //   <td
+                //     className={classNames("block w-full")}
+                //     key={`table-row-data-${i}`}
+                //   >
+                //     <div
+                //       className={classNames(
+                //         "w-full py-4 text-left text-hl-secondary"
+                //       )}
+                //       key={`runnertable-${runner.proposition_id}-${i}`}
+                //       onClick={() => onClickRunner(runner)}
+                //     >
+                //       {runner.name}
+                //     </div>
+                //   </td>
+                //   {/* rider */}
+                //   <td
+                //     className={classNames("block w-full")}
+                //     key={`table-row-data-${i}`}
+                //   >
+                //     <div
+                //       className={classNames("w-full py-4 text-left")}
+                //       onClick={() => onClickRunner(runner)}
+                //     >
+                //       {runner.rider}
+                //     </div>
+                //   </td>
+                //   {/* form */}
+                //   <td
+                //     className={classNames("block w-full")}
+                //     key={`table-row-data-${i}`}
+                //   >
+                //     <div
+                //       className={classNames("w-full py-4 text-left")}
+                //       onClick={() => onClickRunner(runner)}
+                //     >
+                //       {runner.last5Starts}
+                //     </div>
+                //   </td>
+                //   {/* win */}
+                //   <td
+                //     className={classNames("block w-full")}
+                //     key={`table-row-data-${i}`}
+                //   >
+                //     <div
+                //       className={classNames("w-full py-4 text-left")}
+                //       onClick={() => onClickRunner(runner)}
+                //     >
+                //       {runner.backs.length &&
+                //         formatting.formatToTwoDecimals(
+                //           runner.backs[0].odds.toString()
+                //         )}
+                //     </div>
+                //   </td>
+                //   {/* place */}
+                //   <td
+                //     className={classNames("block w-full")}
+                //     key={`table-row-data-${i}`}
+                //   >
+                //     <div
+                //       className={classNames("w-full py-4 text-left")}
+                //       onClick={() => onClickRunner(runner)}
+                //     >
+                //       {runner.backs.length > 0 &&
+                //         formatting.formatToTwoDecimals(
+                //           runner.backs[1].odds.toString()
+                //         )}
+                //     </div>
+                //   </td>
+                //   {/* backed */}
+                //   <td
+                //     className={classNames("block w-full")}
+                //     key={`table-row-data-${i}`}
+                //   >
+                //     <div
+                //       className={classNames("w-full py-4 text-left")}
+                //       onClick={() => onClickRunner(runner)}
+                //     >
+                //       0
+                //     </div>
+                //   </td>
+              )}
+            </tbody>
+          </table>
+        )}
       </div>
 
       {/* mobile */}

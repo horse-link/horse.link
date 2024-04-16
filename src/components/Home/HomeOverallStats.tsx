@@ -1,4 +1,4 @@
-import { formatNumberWithCommas, formatToTwoDecimals } from "horselink-sdk";
+import { formatting } from "horselink-sdk";
 import { Card } from "..";
 import { useProtocolStatistics } from "../../hooks/stats";
 
@@ -7,17 +7,17 @@ export const HomeOverallStats: React.FC = () => {
 
   const formattedTvl =
     stats?.tvl !== undefined
-      ? `$${formatNumberWithCommas(stats.tvl.toString())}`
+      ? `$${formatting.formatNumberWithCommas(stats.tvl.toString())}`
       : undefined;
 
   const formattedInplay =
     stats?.inPlay !== undefined
-      ? `$${formatNumberWithCommas(stats.inPlay.toString())}`
+      ? `$${formatting.formatNumberWithCommas(stats.inPlay.toString())}`
       : undefined;
 
   const formattedPerformace =
     stats?.performance !== undefined
-      ? `${formatToTwoDecimals(stats.performance.toString())}%`
+      ? `${formatting.formatToTwoDecimals(stats.performance.toString())}%`
       : undefined;
 
   return (

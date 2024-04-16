@@ -8,6 +8,7 @@ import { MarketOracle__factory, Market__factory } from "../../typechain";
 import { BYTES_16_ZERO } from "../../constants/blockchain";
 import utils from "../../utils";
 import { useApi } from "../../providers/Api";
+import { formatting } from "horselink-sdk";
 
 type Props = {
   betHistory?: BetHistoryResponse2[];
@@ -73,9 +74,7 @@ export const SettleRaceButton: React.FC<Props> = props => {
             scratched: signedData.scratchedRunners?.find(
               runner =>
                 runner.b16propositionId.toLowerCase() ===
-                utils.formatting
-                  .formatBytes16String(bet.propositionId)
-                  .toLowerCase()
+                formatting.formatBytes16String(bet.propositionId).toLowerCase()
             )
           };
         })
@@ -100,7 +99,7 @@ export const SettleRaceButton: React.FC<Props> = props => {
           );
         }
         await oracleContract.setResult(
-          utils.formatting.formatBytes16String(marketId),
+          formatting.formatBytes16String(marketId),
           winningPropositionId,
           marketOracleResultSig!
         );

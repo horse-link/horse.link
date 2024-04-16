@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { NextToJumpRace } from "../../types/meets";
+import { NextToJumpRace } from "horselink-sdk";
 import utils from "../../utils";
 import constants from "../../constants";
 import classNames from "classnames";

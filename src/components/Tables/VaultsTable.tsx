@@ -8,11 +8,10 @@ import { useApi } from "../../providers/Api";
 import { useVaultContract } from "../../hooks/contracts";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
 import { ethers } from "ethers";
-import { VaultInfo } from "../../types/config";
 import classNames from "classnames";
 import { Button } from "../Buttons";
 import { Loader } from "../Loader";
-import { formatToFourDecimals } from "horselink-sdk";
+import { formatting, VaultInfo } from "horselink-sdk";
 
 type Props = {
   setIsModalOpen: (state: VaultModalState) => void;
@@ -103,7 +102,6 @@ export const VaultsTable: React.FC<Props> = ({ setIsModalOpen }) => {
     "My Shares",
     "My Value",
     "My Percentage",
-    "Vault Address",
     "Deposit",
     "Withdraw"
   ].map((text, i) => (
@@ -122,7 +120,7 @@ export const VaultsTable: React.FC<Props> = ({ setIsModalOpen }) => {
 
   const rows = vaultInfoList?.length
     ? vaultInfoList.map((vault, i) => {
-        const tvl = `${formatToFourDecimals(
+        const tvl = `${formatting.formatToFourDecimals(
           ethers.utils.formatUnits(
             // vault.totalAssets.add(vault.totalAssetsLocked),
             vault.totalAssets,
@@ -130,7 +128,7 @@ export const VaultsTable: React.FC<Props> = ({ setIsModalOpen }) => {
           )
         )} ${vault.asset.symbol}`;
 
-        const myShares = formatToFourDecimals(
+        const myShares = formatting.formatToFourDecimals(
           vault.userShareTotal
             ? (
                 +ethers.utils.formatUnits(
@@ -141,7 +139,7 @@ export const VaultsTable: React.FC<Props> = ({ setIsModalOpen }) => {
             : "0"
         );
 
-        const myValue = formatToFourDecimals(
+        const myValue = formatting.formatToFourDecimals(
           vault.userAssetTotal
             ? ethers.utils.formatUnits(
                 vault.userAssetTotal,
@@ -176,22 +174,6 @@ export const VaultsTable: React.FC<Props> = ({ setIsModalOpen }) => {
               {text}
             </div>
           )),
-          <div
-            className="flex h-full w-full items-center"
-            key={`vaultstable-${vault.address}-${i}`}
-          >
-            <a
-              href={`${scanner}/address/${vault.address}`}
-              target="_blank"
-              rel="noreferrer noopener"
-              className={classNames(
-                style,
-                "max-w-[10ch] truncate 3xl:max-w-[20ch]"
-              )}
-            >
-              {vault.address}
-            </a>
-          </div>,
           <div
             key={`vaultstable-${VaultTransactionType.DEPOSIT}-${i}`}
             className="relative right-2 flex h-full w-full items-center px-2"
@@ -257,7 +239,7 @@ export const VaultsTable: React.FC<Props> = ({ setIsModalOpen }) => {
         ) : (
           <div className="flex w-full flex-col items-center">
             {vaultInfoList.map(vault => {
-              const tvl = `${formatToFourDecimals(
+              const tvl = `${formatting.formatToFourDecimals(
                 ethers.utils.formatUnits(
                   vault.totalAssets.add(vault.totalAssetsLocked),
                   vault.asset.decimals

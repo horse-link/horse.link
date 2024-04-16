@@ -1,117 +1,27 @@
-import dayjs from "dayjs";
-import { RaceStatus } from "../constants/status";
-import { EcSignature, SignedResponse } from "./general";
+import { BigNumber } from "ethers";
+import { EcSignature } from "./general";
+import { RaceInfo } from "horselink-sdk";
 
-export type Runner = {
-  number: number;
-  name: string;
-  nonce: string;
-  market_id: string;
-  close: number;
-  end: number;
-  odds: number;
-  handicapWeight: number;
-  last5Starts: string;
-  proposition_id: string;
-  barrier: number;
-  signature: EcSignature;
-  status: RunnerStatus;
-  backed: number;
-  percentage: number;
-};
+// export type Meet = {
+//   id: string;
+//   name: string;
+//   location: string;
+//   date: string;
+//   races: Race[];
+// };
 
-export type RunnerStatus = "Open" | "Scratched" | "LateScratched";
-
-export type NextToJumpRace = {
-  jumperRaceStartTime: string;
-  jumperRaceNumber: number;
-  meeting: {
-    jumperMeetingName: string;
-    location: string;
-    raceType: string;
-    venueCode: string;
-  };
-};
-
-export type NextToJump = {
-  races: NextToJumpRace[];
-  missingLocations: string[];
-};
-
-export type Race = {
-  number: number;
-  name: string;
-  start?: string;
-  start_unix?: number;
-  end?: string;
-  end_unix?: number;
-  close?: string;
-  close_unix?: number;
-  status: RaceStatus;
-  results?: number[];
-};
-
-export type RaceData = {
-  raceData: {
-    name: string;
-    distance: number;
-    class: string;
-    hasOdds: boolean;
-    start: dayjs.Dayjs;
-    close: number;
-    end: number;
-  };
-  track: {
-    name: string;
-    code: string;
-  };
-  runners: Runner[];
-};
-
-export type SignedRunnersResponse = {
-  data: {
-    raceData: {
-      name: string;
-      distance: number;
-      class: string;
-      hasOdds: boolean;
-      start: dayjs.Dayjs;
-      close: number;
-      end: number;
-    };
-    track: {
-      name: string;
-      code: string;
-    };
-    runners: Runner[];
-  };
-} & SignedResponse;
-
-export type SignedMeetingsResponse = {
-  data: MeetResponse;
-} & SignedResponse;
-
-export type Meet = {
-  id: string;
-  name: string;
-  location: string;
-  date: string;
-  races: Race[];
-};
-
-export type MeetResponse = {
-  nonce: string;
-  created: number;
-  expires: number;
-  meetings: Meet[];
-};
+// export type MeetResponse = {
+//   nonce: string;
+//   created: number;
+//   expires: number;
+//   meetings: Meet[];
+// };
 
 export type MeetInfo = {
   meetingName: string;
   location: string;
   raceType: string;
   meetingDate: string;
-  prizeMoney: string;
   weatherCondition: string | null;
   trackCondition: string | null;
   railPosition: string | null;
@@ -119,21 +29,12 @@ export type MeetInfo = {
   raceInfo: RaceInfo[];
 };
 
-export type RaceInfo = {
-  raceNumber: number;
-  raceName: string;
-  raceClassConditions: string;
-  raceDistance: number;
-  raceStartTime: string;
-  raceStatus: RaceStatus;
-};
-
 export type Back = {
   nonce: string;
   market_id: string;
   close: number;
   end: number;
-  odds: number;
+  odds: number; // win or place
   proposition_id: string;
   signature: EcSignature;
 };
@@ -141,22 +42,5 @@ export type Back = {
 // The parameters for a call to back() on the Market contract.
 // Same as Back but with a wager attribute
 export type BackParams = Back & {
-  wager: string;
+  wager: BigNumber;
 };
-
-export type WinningHorse = {
-  runner: string;
-  number: number;
-  rider: string;
-  place: number;
-};
-
-export type MeetResults = {
-  track: {
-    name: string;
-    code: string;
-  };
-  winningHorses: WinningHorse[];
-};
-
-export type MeetFilters = "ALL" | "AUS_NZ" | "INTERNATIONAL";

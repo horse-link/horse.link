@@ -4,6 +4,7 @@ import { BaseModal } from "./BaseModal";
 import { Loader } from "../Loader";
 import utils from "../../utils";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
+import { formatting } from "horselink-sdk";
 
 type Props = {
   isOpen: boolean;
@@ -60,7 +61,7 @@ export const BetSlipTxModal: React.FC<Props> = ({ isOpen, onClose }) => {
                   rel="noopener noreferrer"
                   className="hyperlink underline underline-offset-2"
                 >
-                  {utils.formatting.shortenHash(hash)}
+                  {formatting.shortenHash(hash)}
                 </a>
               </li>
             ))}

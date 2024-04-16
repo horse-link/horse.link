@@ -1,6 +1,6 @@
 import React from "react";
 import { BaseModal } from ".";
-import utils from "../../utils";
+import { formatting } from "horselink-sdk";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
 
 type Props = {
@@ -30,7 +30,7 @@ export const SettledMarketModal: React.FC<Props> = ({
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {utils.formatting.shortenHash(hash)}
+                {formatting.shortenHash(hash)}
               </a>
             </p>
           ))}

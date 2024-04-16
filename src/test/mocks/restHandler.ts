@@ -1,11 +1,11 @@
 import { rest } from "msw";
-import { SignedMeetingsResponse } from "../../types/meets";
-import { RaceStatus } from "../../constants/status";
+import { RaceStatus, SignedMeetingsResponse } from "horselink-sdk";
 
 export const restHandler = [
   rest.get("/meetings", (_, res, ctx) => {
     const meetingsDataMock: SignedMeetingsResponse = {
       owner: "0x155c21c846b68121ca59879B3CCB5194F5Ae115E",
+      hash: "todo",
       data: {
         nonce: "23f011f3-356f-4e44-8b7a-79618da10040",
         created: 1668658519,
@@ -27,7 +27,9 @@ export const restHandler = [
                 close: "2022-11-17T04:18:00.000Z",
                 close_unix: 1668658680,
                 status: RaceStatus.PAYING,
-                results: [1, 5, 4, 2]
+                distance: 1000,
+                hasOdds: true
+                // results: [1, 5, 4, 2]
               },
               {
                 number: 2,
@@ -39,7 +41,9 @@ export const restHandler = [
                 close: "2022-11-17T04:53:00.000Z",
                 close_unix: 1668660780,
                 status: RaceStatus.PAYING,
-                results: [1, 2, 3, 4]
+                distance: 1000,
+                hasOdds: true
+                // results: [1, 2, 3, 4]
               },
               {
                 number: 3,
@@ -51,7 +55,9 @@ export const restHandler = [
                 close: "2022-11-17T05:30:00.000Z",
                 close_unix: 1668663000,
                 status: RaceStatus.NORMAL,
-                results: []
+                distance: 1000,
+                hasOdds: true
+                // results: []
               },
               {
                 number: 4,
@@ -63,7 +69,9 @@ export const restHandler = [
                 close: "2022-11-17T06:10:00.000Z",
                 close_unix: 1668665400,
                 status: RaceStatus.NORMAL,
-                results: []
+                distance: 1000,
+                hasOdds: true
+                // results: []
               },
               {
                 number: 5,
@@ -75,7 +83,9 @@ export const restHandler = [
                 close: "2022-11-17T06:50:00.000Z",
                 close_unix: 1668667800,
                 status: RaceStatus.NORMAL,
-                results: []
+                distance: 1000,
+                hasOdds: true
+                // results: []
               },
               {
                 number: 6,
@@ -87,7 +97,9 @@ export const restHandler = [
                 close: "2022-11-17T07:30:00.000Z",
                 close_unix: 1668670200,
                 status: RaceStatus.NORMAL,
-                results: []
+                distance: 1000,
+                hasOdds: true
+                // results: []
               },
               {
                 number: 7,
@@ -99,7 +111,9 @@ export const restHandler = [
                 close: "2022-11-17T08:05:00.000Z",
                 close_unix: 1668672300,
                 status: RaceStatus.NORMAL,
-                results: []
+                distance: 1000,
+                hasOdds: true
+                // results: []
               },
               {
                 number: 8,
@@ -111,7 +125,9 @@ export const restHandler = [
                 close: "2022-11-17T08:41:00.000Z",
                 close_unix: 1668674460,
                 status: RaceStatus.NORMAL,
-                results: []
+                distance: 1000,
+                hasOdds: true
+                // results: []
               }
             ]
           },
@@ -131,7 +147,9 @@ export const restHandler = [
                 close: "2022-11-17T02:56:00.000Z",
                 close_unix: 1668653760,
                 status: RaceStatus.PAYING,
-                results: [6, 3, 8, 5]
+                distance: 1000,
+                hasOdds: true
+                // results: [6, 3, 8, 5]
               },
               {
                 number: 2,
@@ -143,7 +161,9 @@ export const restHandler = [
                 close: "2022-11-17T03:31:00.000Z",
                 close_unix: 1668655860,
                 status: RaceStatus.PAYING,
-                results: [1, 4, 8, 3]
+                distance: 1000,
+                hasOdds: true
+                // results: [1, 4, 8, 3]
               },
               {
                 number: 3,
@@ -155,7 +175,9 @@ export const restHandler = [
                 close: "2022-11-17T04:06:00.000Z",
                 close_unix: 1668657960,
                 status: RaceStatus.PAYING,
-                results: [9, 6, 7, 3]
+                distance: 1000,
+                hasOdds: true
+                // results: [9, 6, 7, 3]
               },
               {
                 number: 4,
@@ -167,7 +189,9 @@ export const restHandler = [
                 close: "2022-11-17T04:41:00.000Z",
                 close_unix: 1668660060,
                 status: RaceStatus.PAYING,
-                results: [8, 12, 1, 11]
+                distance: 1000,
+                hasOdds: true
+                // results: [8, 12, 1, 11]
               },
               {
                 number: 5,
@@ -179,7 +203,9 @@ export const restHandler = [
                 close: "2022-11-17T05:16:00.000Z",
                 close_unix: 1668662160,
                 status: RaceStatus.NORMAL,
-                results: []
+                distance: 1000,
+                hasOdds: true
+                // results: []
               },
               {
                 number: 6,
@@ -191,7 +217,9 @@ export const restHandler = [
                 close: "2022-11-17T05:56:00.000Z",
                 close_unix: 1668664560,
                 status: RaceStatus.NORMAL,
-                results: []
+                distance: 1000,
+                hasOdds: true
+                // results: []
               },
               {
                 number: 7,
@@ -203,7 +231,9 @@ export const restHandler = [
                 close: "2022-11-17T06:36:00.000Z",
                 close_unix: 1668666960,
                 status: RaceStatus.NORMAL,
-                results: []
+                distance: 1000,
+                hasOdds: true
+                // results: []
               },
               {
                 number: 8,
@@ -215,7 +245,9 @@ export const restHandler = [
                 close: "2022-11-17T07:16:00.000Z",
                 close_unix: 1668669360,
                 status: RaceStatus.NORMAL,
-                results: []
+                distance: 1000,
+                hasOdds: true
+                // results: []
               }
             ]
           },
@@ -235,7 +267,9 @@ export const restHandler = [
                 close: "2022-11-17T03:21:00.000Z",
                 close_unix: 1668655260,
                 status: RaceStatus.PAYING,
-                results: [1, 8, 11, 2]
+                distance: 1000,
+                hasOdds: true
+                // results: [1, 8, 11, 2]
               },
               {
                 number: 2,
@@ -247,7 +281,9 @@ export const restHandler = [
                 close: "2022-11-17T03:56:00.000Z",
                 close_unix: 1668657360,
                 status: RaceStatus.PAYING,
-                results: [5, 12, 4, 3]
+                distance: 1000,
+                hasOdds: true
+                // results: [5, 12, 4, 3]
               },
               {
                 number: 3,
@@ -259,7 +295,9 @@ export const restHandler = [
                 close: "2022-11-17T04:31:00.000Z",
                 close_unix: 1668659460,
                 status: RaceStatus.PAYING,
-                results: [7, 13, 3, 14]
+                distance: 1000,
+                hasOdds: true
+                // results: [7, 13, 3, 14]
               },
               {
                 number: 4,
@@ -271,7 +309,9 @@ export const restHandler = [
                 close: "2022-11-17T05:06:00.000Z",
                 close_unix: 1668661560,
                 status: RaceStatus.INTERIM,
-                results: [2, 5, 1, 7]
+                distance: 1000,
+                hasOdds: true
+                // results: [2, 5, 1, 7]
               },
               {
                 number: 5,
@@ -283,7 +323,9 @@ export const restHandler = [
                 close: "2022-11-17T05:46:00.000Z",
                 close_unix: 1668663960,
                 status: RaceStatus.NORMAL,
-                results: []
+                distance: 1000,
+                hasOdds: true
+                // results: []
               },
               {
                 number: 6,
@@ -295,7 +337,9 @@ export const restHandler = [
                 close: "2022-11-17T06:26:00.000Z",
                 close_unix: 1668666360,
                 status: RaceStatus.NORMAL,
-                results: []
+                distance: 1000,
+                hasOdds: true
+                // results: []
               },
               {
                 number: 7,
@@ -307,7 +351,9 @@ export const restHandler = [
                 close: "2022-11-17T07:06:00.000Z",
                 close_unix: 1668668760,
                 status: RaceStatus.NORMAL,
-                results: []
+                distance: 1000,
+                hasOdds: true
+                // results: []
               },
               {
                 number: 8,
@@ -319,7 +365,9 @@ export const restHandler = [
                 close: "2022-11-17T07:46:00.000Z",
                 close_unix: 1668671160,
                 status: RaceStatus.NORMAL,
-                results: []
+                distance: 1000,
+                hasOdds: true
+                // results: []
               }
             ]
           }

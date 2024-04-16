@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSigner } from "wagmi";
-import { VaultInfo } from "../../types/config";
+import { VaultInfo } from "horselink-sdk";
 import { BaseModal } from ".";
 import { ethers } from "ethers";
 import { Web3ErrorHandler, Web3SuccessHandler } from "../Web3Handlers";
@@ -9,7 +9,8 @@ import useRefetch from "../../hooks/useRefetch";
 import { UserBalance } from "../../types/users";
 import { Loader } from "../";
 import { Button } from "../Buttons";
-import { formatToFourDecimals } from "horselink-sdk";
+import { formatting } from "horselink-sdk";
+import { useScannerUrl } from "../../hooks/useScannerUrl";
 
 type Props = {
   isModalOpen: boolean;
@@ -48,7 +49,7 @@ export const DepositVaultModal: React.FC<Props> = ({
       setUserBalance({
         value: balance,
         decimals,
-        formatted: formatToFourDecimals(
+        formatted: formatting.formatToFourDecimals(
           ethers.utils.formatUnits(balance, decimals)
         )
       });
@@ -125,6 +126,8 @@ export const DepositVaultModal: React.FC<Props> = ({
     isDepositNegative ||
     isDepositGreaterThanBalance;
 
+  const scanner = useScannerUrl();
+
   return (
     <BaseModal isOpen={isModalOpen} onClose={closeModal} isLarge={!!txHash}>
       {!userBalance ? (
@@ -146,6 +149,16 @@ export const DepositVaultModal: React.FC<Props> = ({
             <div className="grid w-full grid-cols-2 grid-rows-3">
               <h3 className="text-left text-hl-secondary">Name:</h3>
               <p className="text-left text-hl-tertiary">{vault.name}</p>
+              <h3 className="text-left text-hl-secondary">Address:</h3>
+              <p className="text-left text-hl-tertiary">
+                <a
+                  href={`${scanner}/address/${vault.address}`}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  {formatting.shortenAddress(vault.address)}
+                </a>
+              </p>
               <h3 className="text-left text-hl-secondary">Available:</h3>
               <p className="text-left text-hl-tertiary">
                 {userBalance.formatted}

@@ -8,9 +8,9 @@ import { useConfig } from "../providers/Config";
 import utils from "../utils";
 import { RacesButton, SettleRaceButton } from "../components/Buttons";
 import dayjs from "dayjs";
-import { RaceInfo } from "../types/meets";
 import { useAccount, useSigner } from "wagmi";
 import { BetHistoryResponse2 } from "../types/bets";
+import { RaceInfo, markets } from "horselink-sdk";
 
 const Results: React.FC = () => {
   const [loading, setLoading] = useState(false);
@@ -51,10 +51,11 @@ const Results: React.FC = () => {
 
   const closeSettledMarketModal = () => setIsSettledMarketModalOpen(false);
 
-  const marketId = utils.markets.makeMarketId(
+  const marketId = markets.makeMarketId(
     new Date(),
     details.track,
-    raceParams.number
+    raceParams.number,
+    "W"
   );
   const betHistory = useBetsData({
     marketId

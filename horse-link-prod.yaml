@@ -32,7 +32,7 @@ services:
         scope: RUN_AND_BUILD_TIME
         type: SECRET
         value: EV[1:yta1fcq31BorQ8On4kQ2OHFVAtuZ6ei0:9/1zTS5LXhAMwIl7c5RNPlyVovLqageyvuuedBvKWtc2dyxfqxn1R2IBWYkDh659VWUN4LRpVJwfktblclgQEIxOfGNJARoS0Trrz2NyE1C4RA==]
-      - key: PRIVATE_KEY_GOERLI
+      - key: PRIVATE_KEY_SEPOLIA
         scope: RUN_AND_BUILD_TIME
         type: SECRET
         value: EV[1:riOQSkKg94XsOJXUXl8Lh6BVNzSh6CgD:m/1WVpjtKK4KP6RoAYpOmGNZqB8C7Dvga8kxbC+lzpuA3v8GrAglRKf6Rjd7qqEw06hr58TC/VQ2OjQGrkLs1llcNL5jvLCr+mKkCShxKGGc+w==]
@@ -49,9 +49,9 @@ services:
       - key: PROVIDER_URL_SEPOLIA
         scope: RUN_AND_BUILD_TIME
         value: https://sepolia.infura.io/v3/0c1875a2978649b584bb88f94509bdfa
-      - key: PROVIDER_URL_GOERLI
+      - key: PROVIDER_URL_SEPOLIA
         scope: RUN_AND_BUILD_TIME
-        value: https://goerli.infura.io/v3/0c1875a2978649b584bb88f94509bdfa
+        value: https://sepolia.infura.io/v3/0c1875a2978649b584bb88f94509bdfa
       - key: OWNER
         scope: RUN_AND_BUILD_TIME
         value: 0x155c21c846b68121ca59879B3CCB5194F5Ae115E
@@ -114,7 +114,7 @@ services:
         value: EV[1:kx2v2R001xVHwIBQBiFk5WfYIcaXOetb:7jxRnJOlBA6JDwJAq2uNzSooYWSdWtmoRd+48BMjHRhPzGkktM5BIfaMkEcKIeOB]
       - key: NETWORK
         scope: RUN_AND_BUILD_TIME
-        value: goerli
+        value: sepolia
       - key: DATABASE_URL
         scope: RUN_TIME
         value: ${db-redis-syd1-25631.DATABASE_URL}

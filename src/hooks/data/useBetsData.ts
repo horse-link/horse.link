@@ -1,6 +1,6 @@
 import useSwr from "../useSwr";
 import { BetFilterOptions, BetHistoryResponse2 } from "../../types/bets";
-import utils from "../../utils";
+import { formatting } from "horselink-sdk";
 
 export const useBetsData = (filters?: {
   marketId?: string;
@@ -16,6 +16,6 @@ export const useBetsData = (filters?: {
 
   return data?.bets.map(b => ({
     ...b,
-    propositionId: utils.formatting.parseBytes16String(b.propositionId)
+    propositionId: formatting.parseBytes16String(b.propositionId)
   }));
 };

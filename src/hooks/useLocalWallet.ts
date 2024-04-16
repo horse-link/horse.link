@@ -26,21 +26,17 @@ export const useLocalWallet = (chains: Array<Network>) => {
   const providers = useMemo(
     () =>
       chains.map(c => {
-        const { name, id } = utils.formatting.formatChain(c);
+        const { name } = utils.formatting.formatChain(c);
 
-        return new ethers.providers.AlchemyProvider(
-          {
-            name,
-            chainId: id
-          },
-          constants.env.ALCHEMY_KEY
-        );
+        return new ethers.providers.JsonRpcProvider({
+          url: `https://eth-${name.toLowerCase()}.g.alchemy.com/v2/-Lh1_OMuwKGBKgoU4nk07nz98TYeUZxj`
+        });
       }),
     [chains]
   );
 
   const wallet = useMemo(() => {
-    const provider = providers.find(p => p._network.chainId === chain.id);
+    const provider = providers[0]; // providers.find(p => p._network.chainId === chain.id);
     if (!provider) throw new Error(`No provider available`);
 
     if (!localKey) {

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Meet } from "../../types/meets";
 import { Table } from "./Table";
 import { Link } from "react-router-dom";
 import utils from "../../utils";
@@ -7,8 +6,7 @@ import dayjs from "dayjs";
 import constants from "../../constants";
 import utc from "dayjs/plugin/utc";
 import classNames from "classnames";
-import { RaceStatus } from "../../constants/status";
-// import { RaceStatus } from "horselink-sdk";
+import { Meet, RaceStatus } from "horselink-sdk";
 import { Loader } from "../Loader";
 import { Disclosure } from "@headlessui/react";
 import { HiChevronUp, HiChevronDown } from "react-icons/hi";
@@ -21,6 +19,7 @@ type Props = {
 
 export const HomeTable: React.FC<Props> = ({ meets }) => {
   const [time, setTime] = useState(dayjs());
+
   useEffect(() => {
     const interval = setInterval(() => {
       setTime(dayjs());
@@ -29,7 +28,7 @@ export const HomeTable: React.FC<Props> = ({ meets }) => {
     return () => clearInterval(interval);
   }, []);
 
-  const totalRaces = meets
+  const totalRaces: number = meets
     ? meets.reduce(
         (prev, cur) => (cur.races.length > prev ? cur.races.length : prev),
         0
@@ -76,16 +75,23 @@ export const HomeTable: React.FC<Props> = ({ meets }) => {
               <Link
                 to={utils.races.createRacingLink(race, meet)}
                 className={classNames(
-                  "flex h-full w-full items-center justify-center break-words text-center text-hl-tertiary",
+                  "flex h-full w-full items-center justify-center break-words text-center tracking-tightest text-hl-tertiary",
                   {
                     "!bg-hl-primary !text-hl-background":
-                      race.status === RaceStatus.PAYING,
+                      race.status.toString() === RaceStatus.PAYING,
                     "!bg-hl-secondary !text-hl-background":
-                      race.status === RaceStatus.CLOSED || text === "CLSD",
+                      race.status.toString() === RaceStatus.CLOSED ||
+                      text === "CLSD",
                     "hover:!bg-hl-primary hover:!text-hl-secondary": ![
-                      RaceStatus.CLOSED,
-                      RaceStatus.PAYING
-                    ].includes(race.status)
+                      // RaceStatus.CLOSED,
+                      // RaceStatus.PAYING
+                      "Closed",
+                      "Paying"
+                    ].includes(race.status),
+                    "!text-hl-outstanding":
+                      text !== "CLSD" &&
+                      Math.abs(dayjs(race.start).diff(time, "hours")) < 1 &&
+                      Math.abs(dayjs(race.start).diff(time, "minutes")) <= 5
                   }
                 )}
               >

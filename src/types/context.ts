@@ -1,44 +1,43 @@
 import { MarketInfo } from "./config";
-import { Back, RaceData, Runner } from "./meets";
+import { Back } from "./meets";
 import { Token } from "./tokens";
 import { Api } from "../apis/Api";
 import { Network } from "./general";
 import { ApolloClient, NormalizedCacheObject } from "@apollo/client";
-import { Signer } from "ethers";
+import { Signer, ethers } from "ethers";
+import { Runner } from "horselink-sdk";
 
 export type BetSlipErrorEntry = {
   bet: Omit<BetSlipEntry, "id">;
   errorMessage: string;
 };
 
-export type BetEntry = Omit<BetSlipEntry, "id">;
-
-export type BetSlipEntry = {
-  id: number;
+export type BetEntry = {
   market: MarketInfo;
   back: Back;
-  wager: string;
+  wager: ethers.BigNumber;
   runner: Runner;
-  race: Omit<
-    RaceData & {
-      raceNumber: string;
-    },
-    "runners"
-  >;
+  name: string; // name
+  number: number; // number
   timestamp: number;
 };
 
+export type BetSlipEntry = BetEntry & {
+  id: number;
+};
+
 export type BetSlipContextType = {
-  txLoading: boolean;
-  hashes?: string[];
-  bets?: BetSlipEntry[];
-  errors?: string[];
   addBet: (bet: BetEntry) => void;
-  removeBet: (id: number) => void;
+  addBets: (bet: BetEntry[]) => void;
+  bets?: BetSlipEntry[];
   clearBets: () => void;
-  placeBetsInBetSlip: () => void;
-  placeBetImmediately: (bet: BetEntry) => Promise<void>;
+  errors?: string[];
   forceNewSigner: (signer: Signer) => void;
+  hashes?: string[];
+  placeBetImmediately: (bet: BetEntry) => Promise<void>;
+  placeBetsInBetSlip: () => void;
+  removeBet: (id: number) => void;
+  txLoading: boolean;
 };
 
 export type TokenContextType = {

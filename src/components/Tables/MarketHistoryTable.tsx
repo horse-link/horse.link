@@ -7,7 +7,7 @@ import { useScannerUrl } from "../../hooks/useScannerUrl";
 import { ethers } from "ethers";
 import dayjs from "dayjs";
 import { Loader } from "../Loader";
-import { formatToFourDecimals } from "horselink-sdk";
+import { formatting } from "horselink-sdk";
 
 export const MarketHistoryTable: React.FC = () => {
   const api = useApi();
@@ -80,7 +80,9 @@ export const MarketHistoryTable: React.FC = () => {
             key={`markethistorytable-${h.amount.toString()}-${i}`}
             className="w-full py-4 text-left"
           >
-            {formatToFourDecimals(ethers.utils.formatEther(h.amount))}
+            {formatting.formatToFourDecimals(
+              ethers.utils.formatEther(h.amount)
+            )}
           </div>,
           <div
             key={`markethistorytable-${h.createdAt}-${i}`}
@@ -144,7 +146,9 @@ export const MarketHistoryTable: React.FC = () => {
                   {h.type}
                 </h2>
                 <p>
-                  {formatToFourDecimals(ethers.utils.formatEther(h.amount))}
+                  {formatting.formatToFourDecimals(
+                    ethers.utils.formatEther(h.amount)
+                  )}
                 </p>
                 <a
                   href={`${scanner}/tx/${h.id}`}

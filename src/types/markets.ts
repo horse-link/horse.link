@@ -1,15 +1,6 @@
 import { Address, Hash } from "@wagmi/core";
 import { BigNumber } from "ethers";
-
-export type Market = {
-  address: string;
-  vaultAddress: string;
-  name: string;
-  target: number;
-  totalInPlay: string;
-};
-
-export type MarketHistoryType = "BORROW" | "REPAY";
+import { MarketHistoryType } from "horselink-sdk";
 
 export type MarketHistory = {
   id: Hash; // tx id

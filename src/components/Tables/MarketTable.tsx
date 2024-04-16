@@ -5,7 +5,7 @@ import utils from "../../utils";
 import { ethers } from "ethers";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
 import { Loader } from "../Loader";
-import { formatToFourDecimals } from "horselink-sdk";
+import { formatting } from "horselink-sdk";
 import { MarketSummaryTable } from "./MarketSummaryTable";
 
 export const MarketTable: React.FC = () => {
@@ -36,7 +36,7 @@ export const MarketTable: React.FC = () => {
 
         const style = "w-full text-left py-4";
 
-        const totalInPlay = `${formatToFourDecimals(
+        const totalInPlay = `${formatting.formatToFourDecimals(
           ethers.utils.formatUnits(market.totalInPlay, vault.asset.decimals)
         )} ${vault.asset.symbol}`;
 
@@ -115,7 +115,7 @@ export const MarketTable: React.FC = () => {
                   `Could not find vault for market ${market.address}`
                 );
 
-              const totalInPlay = `${formatToFourDecimals(
+              const totalInPlay = `${formatting.formatToFourDecimals(
                 ethers.utils.formatUnits(
                   market.totalInPlay,
                   vault.asset.decimals

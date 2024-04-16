@@ -9,7 +9,7 @@ import { Table } from "./Table";
 import { ethers } from "ethers";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
 import { Button } from "../Buttons";
-import { formatToFourDecimals } from "horselink-sdk";
+import { formatting } from "horselink-sdk";
 
 type Props = {
   balances?: Array<FaucetBalance>;
@@ -67,7 +67,7 @@ export const FaucetTable: React.FC<Props> = ({
             amount => amount.symbol.toLowerCase() === token.symbol.toLowerCase()
           );
 
-          const amount = `${formatToFourDecimals(
+          const amount = `${formatting.formatToFourDecimals(
             ethers.utils.formatUnits(
               tokenBalance?.amount || ethers.constants.Zero,
               tokenBalance?.decimals

@@ -16,7 +16,7 @@ import { useScannerUrl } from "../../hooks/useScannerUrl";
 import { Button } from "../Buttons";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
-import { formatToFourDecimals } from "horselink-sdk";
+import { formatting } from "horselink-sdk";
 
 dayjs.extend(advancedFormat);
 
@@ -64,7 +64,7 @@ export const SettleBetModal: React.FC<Props> = ({
           scratched: signedData.scratchedRunners?.find(
             runner =>
               runner.b16propositionId.toLowerCase() ===
-              utils.formatting
+              formatting
                 .formatBytes16String(selectedBet.propositionId)
                 .toLowerCase()
           )
@@ -145,7 +145,7 @@ export const SettleBetModal: React.FC<Props> = ({
       ) : isSettled ? (
         <div className="p-4">
           <h2 className="font-basement text-[32px] tracking-wider">
-            {utils.formatting.formatFirstLetterCapitalised(bet.status)} Bet #
+            {formatting.formatFirstLetterCapitalised(bet.status)} Bet #
             {bet.index}
           </h2>
 
@@ -157,7 +157,7 @@ export const SettleBetModal: React.FC<Props> = ({
               rel="noreferrer noopener"
               className="text-sm text-hl-secondary underline"
             >
-              {utils.formatting.shortenHash(bet.settledAtTx)}
+              {formatting.shortenHash(bet.settledAtTx)}
             </a>
           </p>
         </div>
@@ -171,7 +171,7 @@ export const SettleBetModal: React.FC<Props> = ({
       ) : (
         <div className="p-6">
           <h2 className="font-basement text-[32px] tracking-wider">
-            {utils.formatting.formatFirstLetterCapitalised(bet.result)} Bet #
+            {formatting.formatFirstLetterCapitalised(bet.result)} Bet #
             {bet.index}
           </h2>
 
@@ -211,7 +211,9 @@ export const SettleBetModal: React.FC<Props> = ({
                     {isScratched ? "Refunded:" : "Potential Payout:"}
                   </h3>
                   <p className="text-left text-hl-tertiary">
-                    {formatToFourDecimals(ethers.utils.formatEther(bet.payout))}
+                    {formatting.formatToFourDecimals(
+                      ethers.utils.formatEther(bet.payout)
+                    )}
                   </p>
                 </React.Fragment>
               )}

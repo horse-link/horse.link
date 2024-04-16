@@ -1,18 +1,25 @@
 import { configureChains, createClient, WagmiConfig } from "wagmi";
-import { publicProvider } from "wagmi/providers/public";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { WalletConnectLegacyConnector } from "wagmi/connectors/walletConnectLegacy";
-import { alchemyProvider } from "wagmi/providers/alchemy";
+import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
+
 import constants from "../constants";
 import { useHorseLinkConnector } from "../hooks/useHorseLinkConnector";
 
 const { chains, provider, webSocketProvider } = configureChains(
   constants.blockchain.CHAINS,
+  // [
+  //   alchemyProvider({
+  //     apiKey: constants.env.ALCHEMY_KEY
+  //   }),
+  //   publicProvider()
+  // ]
   [
-    alchemyProvider({
-      apiKey: constants.env.ALCHEMY_KEY
-    }),
-    publicProvider()
+    jsonRpcProvider({
+      rpc: chain => ({
+        http: `https://eth-${chain.name.toLowerCase()}.g.alchemy.com/v2/-Lh1_OMuwKGBKgoU4nk07nz98TYeUZxj`
+      })
+    })
   ]
 );
 

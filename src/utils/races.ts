@@ -1,5 +1,5 @@
-import { Race, Runner, Meet } from "../types/meets";
-import { RaceStatus } from "../constants/status";
+import { Meet, Race, RaceStatus, RaceWithResults, Runner } from "horselink-sdk";
+
 import utils from "../utils";
 import dayjs, { Dayjs } from "dayjs";
 
@@ -11,8 +11,9 @@ export const createRacingLink = (race: Race, meet: Meet) =>
     ? `/races/${meet.id}/${race.number}`
     : `/results/${utils.markets.getPropositionIdFromRaceMeet(race, meet)}`;
 
-export const createCellText = (race: Race, now: Dayjs) => {
+export const createCellText = (race: RaceWithResults, now: Dayjs) => {
   const isAfterClosingTime = now.isAfter(dayjs(race.close));
+
   const timeString = utils.formatting.formatTimeToHMSFromNow(
     now,
     race.start!,

@@ -1,34 +1,34 @@
-import { useMemo } from "react";
-import { RaceData, SignedRunnersResponse } from "../../types/meets";
+import { SignedRunnersResponse } from "horselink-sdk";
 import useSwr from "../useSwr";
 
+// TODO: ADD TYPES
 export const useRunnersData = (track: string, raceNumber: number) => {
   const { data, isLoading, error } = useSwr<SignedRunnersResponse>(
-    `/runners/${track}/${raceNumber}/win`
+    `/runners/${track}/${raceNumber}`
   );
 
-  const race: RaceData | undefined = useMemo(() => {
-    if (!data || error) return;
+  // const race: Race = useMemo(() => {
+  //   if (!data || error) return;
 
-    // data.data is the SignedRunnersResponse from api
-    const rData = data.data;
-    if (rData.raceData.hasOdds) {
-      return rData;
-    }
+  //   // data.data is the SignedRunnersResponse from api
+  //   const rData = data.data;
+  //   if (rData.raceData.hasOdds) {
+  //     return rData;
+  //   }
 
-    return {
-      ...rData,
-      runners: rData.runners.map(runner => {
-        return {
-          ...runner,
-          odds: 1.0
-        };
-      })
-    };
-  }, [data, error]);
+  //   return {
+  //     ...rData,
+  //     runners: rData.runners.map(runner => {
+  //       return {
+  //         ...runner,
+  //         odds: 1.0
+  //       };
+  //     })
+  //   };
+  // }, [data, error]);
 
   return {
-    race,
+    data,
     isLoading,
     error
   };

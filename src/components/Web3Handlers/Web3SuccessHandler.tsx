@@ -1,5 +1,5 @@
 import React from "react";
-import utils from "../../utils";
+import { formatting } from "horselink-sdk";
 import { useScannerUrl } from "../../hooks/useScannerUrl";
 
 type Props = {
@@ -21,7 +21,7 @@ export const Web3SuccessHandler: React.FC<Props> = ({ hash, message }) => {
           target="_blank"
           rel="noreferrer noopener"
         >
-          {utils.formatting.shortenAddress(hash)}
+          {formatting.shortenAddress(hash)}
         </a>
       </span>
       <span className="hidden lg:block">

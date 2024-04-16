@@ -14,6 +14,7 @@ import {
   SignedBetHistoryResponse2
 } from "../../types/bets";
 import constants from "../../constants";
+import { formatting } from "horselink-sdk";
 
 export const useMarketContract = () => {
   const placeMultipleBets = async (
@@ -21,13 +22,14 @@ export const useMarketContract = () => {
     data: Array<{
       back: Back;
       market: MarketInfo;
-      wager: string;
+      wager: BigNumber;
     }>,
     skipAllowanceCheck?: boolean
   ) => {
     const userAddress = await signer.getAddress();
     const marketAddresses = [...new Set(data.map(d => d.market.address))];
     const marketLookup: { [marketAddress: string]: MarketMultiBetInfo } = {};
+
     const marketMultiBetInfoList: MarketMultiBetInfo[] = await Promise.all(
       marketAddresses.map(async marketAddress => {
         const marketContract = Market__factory.connect(marketAddress, signer);
@@ -39,13 +41,14 @@ export const useMarketContract = () => {
           userAddress,
           marketAddress
         );
-        const decimals = await vaultContract.decimals();
+        // const decimals = await vaultContract.decimals();
         const totalWagers = data
           .filter(
             d => d.market.address.toLowerCase() === marketAddress.toLowerCase()
           )
           .reduce((acc, curr) => {
-            return acc.add(ethers.utils.parseUnits(curr.wager, decimals));
+            // return acc.add(ethers.utils.parseUnits(curr.wager, decimals));
+            return acc.add(curr.wager);
           }, BigNumber.from(0));
         const backs = data
           .filter(
@@ -99,15 +102,13 @@ export const useMarketContract = () => {
     }
 
     // place bets
-    const transactionHashList = await Promise.all(
+    const transactionHashList: string[] = await Promise.all(
       marketMultiBetInfoList.map(async marketMultiBetInfo => {
         const backStructs = marketMultiBetInfo.backs.map((back: BackParams) => {
           return {
             nonce: back.nonce,
-            propositionId: utils.formatting.formatBytes16String(
-              back.proposition_id
-            ),
-            marketId: utils.formatting.formatBytes16String(back.market_id),
+            propositionId: formatting.formatBytes16String(back.proposition_id),
+            marketId: formatting.formatBytes16String(back.market_id),
             wager: back.wager,
             odds: ethers.utils.parseUnits(
               back.odds.toString(),
@@ -144,13 +145,13 @@ export const useMarketContract = () => {
     wager: BigNumber,
     signer: Signer,
     skipAllowanceCheck?: boolean
-  ) => {
-    const userAddress = await signer.getAddress();
-
+  ): Promise<string> => {
     const marketContract = Market__factory.connect(market.address, signer);
     const vaultContract = Vault__factory.connect(market.vaultAddress, signer);
 
+    const userAddress = await signer.getAddress();
     const assetAddress = await vaultContract.asset();
+
     const erc20Contract = ERC20__factory.connect(assetAddress, signer);
 
     if (!skipAllowanceCheck) {
@@ -182,8 +183,8 @@ export const useMarketContract = () => {
 
     const backData = {
       nonce: back.nonce,
-      propositionId: utils.formatting.formatBytes16String(back.proposition_id),
-      marketId: utils.formatting.formatBytes16String(back.market_id),
+      propositionId: formatting.formatBytes16String(back.proposition_id),
+      marketId: formatting.formatBytes16String(back.market_id),
       wager,
       odds: ethers.utils.parseUnits(
         back.odds.toString(),
@@ -282,7 +283,7 @@ export const useMarketContract = () => {
         bet.winningPropositionId &&
         bet.marketOracleResultSig &&
         !utils.bets.recoverSigSigner(
-          utils.formatting.formatBytes16String(marketId),
+          formatting.formatBytes16String(marketId),
           bet.winningPropositionId,
           bet.marketOracleResultSig,
           config
@@ -297,7 +298,7 @@ export const useMarketContract = () => {
       ) {
         const [gasLimit, gasPrice] = await Promise.all([
           marketOracleContract.estimateGas.setResult(
-            utils.formatting.formatBytes16String(marketId),
+            formatting.formatBytes16String(marketId),
             bet.winningPropositionId,
             bet.marketOracleResultSig
           ),
@@ -306,7 +307,7 @@ export const useMarketContract = () => {
 
         await (
           await marketOracleContract.setResult(
-            utils.formatting.formatBytes16String(marketId),
+            formatting.formatBytes16String(marketId),
             bet.winningPropositionId,
             bet.marketOracleResultSig,
             {
@@ -319,7 +320,7 @@ export const useMarketContract = () => {
     } else if (isScratched && bet.scratched?.signature) {
       if (
         !utils.bets.recoverSigSigner(
-          utils.formatting.formatBytes16String(marketId),
+          formatting.formatBytes16String(marketId),
           bet.propositionId,
           bet.scratched.signature,
           config,
@@ -334,7 +335,7 @@ export const useMarketContract = () => {
 
       const [gasLimit, gasPrice] = await Promise.all([
         marketOracleContract.estimateGas.setScratchedResult(
-          utils.formatting.formatBytes16String(marketId),
+          formatting.formatBytes16String(marketId),
           bet.propositionId,
           ethers.utils.parseUnits(
             bet.scratched.odds.toString(),
@@ -349,7 +350,7 @@ export const useMarketContract = () => {
       // tx can fail if the result is already set
       await (
         await marketOracleContract.setScratchedResult(
-          utils.formatting.formatBytes16String(marketId),
+          formatting.formatBytes16String(marketId),
           bet.propositionId,
           ethers.utils.parseUnits(
             bet.scratched.odds.toString(),
@@ -385,18 +386,21 @@ export const useMarketContract = () => {
     wager: BigNumber,
     back: Back,
     signer: Signer
-  ) => {
+  ): Promise<BigNumber> => {
     const marketContract = Market__factory.connect(market.address, signer);
-    const odds = ethers.utils.parseUnits(
+
+    const odds: BigNumber = ethers.utils.parseUnits(
       back.odds.toString(),
       constants.contracts.MARKET_ODDS_DECIMALS
     );
-    const payout = await marketContract.getPotentialPayout(
-      utils.formatting.formatBytes16String(back.proposition_id),
-      utils.formatting.formatBytes16String(back.market_id),
+
+    const payout: BigNumber = await marketContract.getPotentialPayout(
+      formatting.formatBytes16String(back.proposition_id),
+      formatting.formatBytes16String(back.market_id),
       wager,
       odds
     );
+
     return payout;
   };
 
@@ -404,9 +408,9 @@ export const useMarketContract = () => {
     market: MarketInfo,
     bet: SignedBetHistoryResponse2,
     signer: Signer
-  ) => {
+  ): Promise<string> => {
     const marketContract = Market__factory.connect(market.address, signer);
-    const odds = ethers.utils.parseUnits(
+    const odds: BigNumber = ethers.utils.parseUnits(
       bet.scratched!.odds.toFixed(constants.contracts.MARKET_ODDS_DECIMALS),
       constants.contracts.MARKET_ODDS_DECIMALS
     );
@@ -425,6 +429,7 @@ export const useMarketContract = () => {
       ),
       signer.getGasPrice()
     ]);
+
     const receipt = await (
       await marketContract.scratchAndRefund(
         bet.index,

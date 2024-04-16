@@ -8,7 +8,7 @@ import { WalletConnectLegacyConnector } from "wagmi/connectors/walletConnectLega
 import { publicProvider } from "wagmi/providers/public";
 
 const { chains, provider } = configureChains(
-  [chain.goerli],
+  [chain.sepolia],
   [publicProvider()]
 );
 
