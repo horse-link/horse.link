@@ -58,7 +58,7 @@ export const RaceTable: React.FC<Props> = ({
         <td className={classNames("block w-full")} key={`table-row-data-${i}`}>
           <div
             className={style}
-            key={`runnertable-${runner.proposition_id}-${i}`}
+            key={`runnertable-${runner.number}-${i}`}
             onClick={() => onClickRunner(runner)}
           >
             {i}
@@ -68,7 +68,7 @@ export const RaceTable: React.FC<Props> = ({
         <td className={classNames("block w-full")} key={`table-row-data-${i}`}>
           <div
             className={classNames(style, "text-hl-secondary")}
-            key={`runnertable-${runner.proposition_id}-${i}`}
+            key={`runnertable-${runner.number}-${i}`}
             onClick={() => onClickRunner(runner)}
           >
             {runner.name}
@@ -139,7 +139,7 @@ export const RaceTable: React.FC<Props> = ({
         </div>
       </div>
       <p className="w-auto min-w-[70px] font-basement text-sm text-hl-secondary">
-        {formatting.formatToTwoDecimals(runner.win.toString())}
+        {formatting.formatToTwoDecimals(runner.backs[0].odds.toString())}
       </p>
     </div>
   );
