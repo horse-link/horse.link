@@ -17,6 +17,7 @@ const { chains, provider, webSocketProvider } = configureChains(
   [
     jsonRpcProvider({
       rpc: chain => ({
+        chainId: chain.id,
         http: `https://eth-${chain.name.toLowerCase()}.g.alchemy.com/v2/-Lh1_OMuwKGBKgoU4nk07nz98TYeUZxj`
       })
     })

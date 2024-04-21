@@ -4304,9 +4304,9 @@ flat@^4.1.0:
     is-buffer "~2.0.3"
 
 follow-redirects@^1.14.0:
-  version "1.15.2"
-  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.2.tgz#b460864144ba63f2681096f274c4e57026da2c13"
-  integrity sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==
+  version "1.15.6"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.6.tgz#7f815c0cda4249c74ff09e95ef97c23b5fd0399b"
+  integrity sha512-wWN62YITEaOpSK584EZXJafH1AGpO8RVgElfkuXbTOrPX4fIfOyEpW/CsiNd8JdYrAoOvafRTOEnvsO++qCqFA==
 
 for-each@^0.3.3:
   version "0.3.3"
@@ -4526,10 +4526,15 @@ graphql-tag@^2.12.6:
   dependencies:
     tslib "^2.1.0"
 
-"graphql@^15.0.0 || ^16.0.0", graphql@^16.6.0:
+"graphql@^15.0.0 || ^16.0.0":
   version "16.6.0"
   resolved "https://registry.yarnpkg.com/graphql/-/graphql-16.6.0.tgz#c2dcffa4649db149f6282af726c8c83f1c7c5fdb"
   integrity sha512-KPIBPDlW7NxrbT/eh4qPXz5FiFdL5UbaA0XUNz2Rp3Z3hqBSkbj0GVjwFDztsWVauZUWsbKHgMg++sk8UX0bkw==
+
+graphql@^16.6.0:
+  version "16.8.1"
+  resolved "https://registry.yarnpkg.com/graphql/-/graphql-16.8.1.tgz#1930a965bef1170603702acdb68aedd3f3cf6f07"
+  integrity sha512-59LZHPdGZVh695Ud9lRzPBVTtlX9ZCV150Er2W43ro37wVof0ctenSaskPPjN7lVTIN8mSZt8PHUNKZuNQUuxw==
 
 growl@1.10.5:
   version "1.10.5"
@@ -4638,9 +4643,9 @@ hoist-non-react-statics@^3.3.1, hoist-non-react-statics@^3.3.2:
     react-is "^16.7.0"
 
 horselink-sdk@^1.0.51:
-  version "1.0.51"
-  resolved "https://registry.yarnpkg.com/horselink-sdk/-/horselink-sdk-1.0.51.tgz#3667b523e87a7dd4f1af5b844fd4431219475b22"
-  integrity sha512-8axHiZj+MKUjETRNoSmayyqn0rE++wgPneJO43kVw8f0MBSSBMSbBLuRHsb5BKcBsXcpw8QwdB6Y/Xm6kIHSNg==
+  version "1.0.52"
+  resolved "https://registry.yarnpkg.com/horselink-sdk/-/horselink-sdk-1.0.52.tgz#8fab768bac09acecaef1136bf141280dc17fdf1d"
+  integrity sha512-glRongG+HX47XM/PeNBQ61Bic5loxLwZLXGc2mAq4S0cvW0eP/DL7kFj5P8sZ3irEwIcNTJ94Qi+j/eJEo3Ubg==
   dependencies:
     dayjs "^1.11.8"
     ethers "^5.7.2"
