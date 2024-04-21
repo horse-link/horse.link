@@ -57,7 +57,7 @@
     "vite": "^5.2.10",
     "vite-plugin-svgr": "^2.2.2",
     "wagmi": "^0.12.13",
-    "yup": "^0.32.11"
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@testing-library/react": "^13.4.0",
