@@ -117,7 +117,7 @@ export const BetModal: React.FC<Props> = ({
       end: place.end,
       odds: place.odds,
       proposition_id: place.proposition_id, //`${runner.market_id}W${runner.number.toString().padStart(2, "0")}`,
-      signature: runner.signature
+      signature: place.signature
     };
   }, [runner]);
 
