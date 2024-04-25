@@ -65,12 +65,12 @@ export const HomeTable: React.FC<Props> = ({ meets }) => {
           </p>
         </div>,
         ...meet.races.map(race => {
-          const text = utils.races.createCellText(race, time);
+          const text: string = utils.races.createCellText(race, time);
 
           return (
             <div
               className={classNames("flex h-full w-full justify-center")}
-              key={JSON.stringify(race)}
+              key={race.name}
             >
               <Link
                 to={utils.races.createRacingLink(race, meet)}
