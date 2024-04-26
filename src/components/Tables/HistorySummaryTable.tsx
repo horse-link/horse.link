@@ -16,7 +16,8 @@ export const HistorySummaryTable: React.FC<Props> = ({
   rowStyles
 }) => (
   <table className="block w-full border border-hl-border">
-    <thead className="flex grid grid-cols-12 bg-hl-background-secondary px-4">
+    <thead  className="block w-full border border-hl-border">
+      <tr className="flex grid grid-cols-12 bg-hl-background-secondary px-4">
       <th
         className={classNames("col-span-4", {
           [headerStyles!]: !!headerStyles
@@ -57,6 +58,7 @@ export const HistorySummaryTable: React.FC<Props> = ({
       >
         {headers[4]}
       </th>
+      </tr>
     </thead>
     <tbody className="flex flex-col divide-y divide-hl-border px-4">
       {rows.map((row, i) => (
