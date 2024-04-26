@@ -115,14 +115,8 @@ export const AccountPanel: React.FC<Props> = ({
             <Listbox as={React.Fragment}>
               {({ open }) => (
                 <React.Fragment>
-                  <Listbox.Button className="w-full font-sans">
-                    <Button
-                      big
-                      text={chain?.name || "Please connect"}
-                      onClick={() => {}}
-                      dropdown
-                      dropdownOpen={open}
-                    />
+                  <Listbox.Button className="w-full font-sans border border-hl-secondary bg-hl-secondary text-hl-background w-full py-2 text-sm 3xl:text-base">
+                    {chain?.name || "Please connect"}
                   </Listbox.Button>
                   <Listbox.Options className="pt-2 font-sans text-base font-normal">
                     {[
