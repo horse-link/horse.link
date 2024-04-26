@@ -55,7 +55,7 @@ export const RaceTable: React.FC<Props> = ({
         })}
         key={`table-rows-${i}`}
       >
-        <td className={classNames("block w-full")} key={`table-row-data-${i}`}>
+        <td className={classNames("block w-full")} key={`table-row-data-number-${i}`}>
           <div
             className={style}
             key={`runnertable-${runner.number}-${i}`}
@@ -65,7 +65,7 @@ export const RaceTable: React.FC<Props> = ({
           </div>
         </td>
         {/* runner name */}
-        <td className={classNames("block w-full")} key={`table-row-data-${i}`}>
+        <td className={classNames("block w-full")} key={`table-row-data-runner-${i}`}>
           <div
             className={classNames(style, "text-hl-secondary")}
             key={`runnertable-${runner.number}-${i}`}
@@ -75,31 +75,31 @@ export const RaceTable: React.FC<Props> = ({
           </div>
         </td>
         {/* rider */}
-        <td className={classNames("block w-full")} key={`table-row-data-${i}`}>
+        <td className={classNames("block w-full")} key={`table-row-data-rider-${i}`}>
           <div className={style} onClick={() => onClickRunner(runner)}>
             {runner.rider}
           </div>
         </td>
         {/* form */}
-        <td className={classNames("block w-full")} key={`table-row-data-${i}`}>
+        <td className={classNames("block w-full")} key={`table-row-data-form-${i}`}>
           <div className={style} onClick={() => onClickRunner(runner)}>
             {runner.last5Starts}
           </div>
         </td>
         {/* win */}
-        <td className={classNames("block w-full")} key={`table-row-data-${i}`}>
+        <td className={classNames("block w-full")} key={`table-row-data-odds-${i}`}>
           <div className={style} onClick={() => onClickRunner(runner)}>
             {getOdds(runner.backs, "win")}
           </div>
         </td>
         {/* place */}
-        <td className={classNames("block w-full")} key={`table-row-data-${i}`}>
+        <td className={classNames("block w-full")} key={`table-row-data-place-${i}`}>
           <div className={style} onClick={() => onClickRunner(runner)}>
             {getOdds(runner.backs, "place")}
           </div>
         </td>
         {/* backed */}
-        <td className={classNames("block w-full")} key={`table-row-data-${i}`}>
+        <td className={classNames("block w-full")} key={`table-row-data-backed-${i}`}>
           <div className={style} onClick={() => onClickRunner(runner)}>
             0
           </div>
