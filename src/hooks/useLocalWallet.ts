@@ -27,7 +27,8 @@ export const useLocalWallet = (chains: Array<Network>) => {
     () =>
       chains.map(c => {
         const { name } = utils.formatting.formatChain(c);
-
+        console.log(`Creating provider for ${name}`);
+        // TODO propery mapping for each chain, just loading from env now
         return new ethers.providers.JsonRpcProvider({
           url: `${constants.env.RPC_URL}`
         });
