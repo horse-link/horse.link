@@ -16,17 +16,19 @@ export const Table: React.FC<Props> = ({
   rowStyles
 }) => (
   <table className="block w-full border border-hl-border">
-    <thead className="flex justify-evenly bg-hl-background-secondary px-4">
-      {headers.map((h, i) => (
-        <th
-          className={classNames("block w-full", {
-            [headerStyles!]: !!headerStyles
-          })}
-          key={`table-header-${i}`}
-        >
-          {h}
-        </th>
-      ))}
+    <thead className="block w-full border border-hl-border">
+      <tr className="flex justify-evenly bg-hl-background-secondary px-4">
+        {headers.map((h, i) => (
+          <th
+            className={classNames("block w-full", {
+              [headerStyles!]: !!headerStyles
+            })}
+            key={`table-header-${i}`}
+          >
+            {h}
+          </th>
+        ))}
+      </tr>
     </thead>
     <tbody className="flex flex-col divide-y divide-hl-border px-4">
       {rows.map((row, i) => (
