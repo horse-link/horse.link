@@ -29,7 +29,7 @@ export const useLocalWallet = (chains: Array<Network>) => {
         const { name } = utils.formatting.formatChain(c);
 
         return new ethers.providers.JsonRpcProvider({
-          url: `https://eth-${name.toLowerCase()}.g.alchemy.com/v2/-Lh1_OMuwKGBKgoU4nk07nz98TYeUZxj`
+          url: `${constants.env.RPC_URL}`
         });
       }),
     [chains]
