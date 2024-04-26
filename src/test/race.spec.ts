@@ -24,7 +24,26 @@ describe("Race utils tests", () => {
       status: "Scratched",
       percentage: 0,
       backed: 0,
-      backs: []
+      backs: [],
+      market_id: "",
+      proposition_id: "",
+      win: 0,
+      place: 0,
+      signature: {
+        v: 0,
+        r: "",
+        s: ""
+      },
+      win_signature: {
+        v: 0,
+        r: "",
+        s: ""
+      },
+      place_signature: {
+        v: 0,
+        r: "",
+        s: ""
+      }
     };
 
     const result = isScratchedRunner(mockRunner);

@@ -20,13 +20,14 @@ export const createCellText = (race: RaceWithResults, now: Dayjs): string => {
     true
   );
 
-  const status = race.status == RaceStatus.PAYING
-    ? race.results?.join(",")
-    : race.status === RaceStatus.ABANDONED
-    ? "ABND"
-    : isAfterClosingTime
-    ? "CLSD"
-    : timeString;
+  const status =
+    race.status == RaceStatus.PAYING
+      ? race.results?.join(",")
+      : race.status === RaceStatus.ABANDONED
+      ? "ABND"
+      : isAfterClosingTime
+      ? "CLSD"
+      : timeString;
 
   return status || "NA";
 };
