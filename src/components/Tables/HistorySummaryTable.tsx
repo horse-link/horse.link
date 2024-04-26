@@ -78,7 +78,7 @@ export const HistorySummaryTable: React.FC<Props> = ({
           <td className={classNames("col-span-2")} key={`table-row-data-3`}>
             {row[3]}
           </td>
-          <td className={classNames("col-span-1")} key={`table-row-data-3`}>
+          <td className={classNames("col-span-1")} key={`table-row-data-4`}>
             {row[4]}
           </td>
         </tr>
